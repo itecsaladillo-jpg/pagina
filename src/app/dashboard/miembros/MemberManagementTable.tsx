@@ -16,22 +16,27 @@ export function MemberManagementTable({ members, commissions }: Props) {
   const handleApprove = async (id: string) => {
     setLoadingId(id)
     try {
-      await approveMemberAction(id)
+      const res = await approveMemberAction(id)
+      if (!res.success) {
+        alert('Error: ' + (res.error || 'No se pudo aprobar al miembro'))
+      }
     } catch (err) {
-      alert('Error al aprobar miembro')
+      alert('Error crítico de conexión')
     }
     setLoadingId(null)
   }
 
   const handleRoleChange = async (id: string, role: string) => {
     setLoadingId(id)
-    await updateRoleAction(id, role as any)
+    const res = await updateRoleAction(id, role as any)
+    if (!res.success) alert('Error: ' + (res.error || 'No se pudo cambiar el rol'))
     setLoadingId(null)
   }
 
   const handleCommissionChange = async (id: string, commissionId: string) => {
     setLoadingId(id)
-    await assignCommissionAction(id, commissionId, false)
+    const res = await assignCommissionAction(id, commissionId, false)
+    if (!res.success) alert('Error: ' + (res.error || 'No se pudo asignar la comisión'))
     setLoadingId(null)
   }
 
