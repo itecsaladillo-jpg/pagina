@@ -15,7 +15,7 @@ export default async function MiComisionPage() {
   const supabase = await createClient()
 
   // Obtener comisiones del miembro con info completa
-  const { data: memberCommissions } = await supabase
+  const { data: rawMemberCommissions } = await supabase
     .from('commission_members')
     .select(`
       is_coordinator,
@@ -27,11 +27,16 @@ export default async function MiComisionPage() {
     `)
     .eq('member_id', member.id)
 
+  // Normalizar los datos: Supabase a veces devuelve las relaciones como arrays
+  const normalizedMemberCommissions = (rawMemberCommissions || []).map(mc => ({
+    ...mc,
+    commissions: (Array.isArray(mc.commissions) ? mc.commissions[0] : mc.commissions) as any
+  }))
+
   // Obtener compañeros de la primera comisión
-  // Nota: Supabase devuelve las relaciones como arrays aunque sea 1:1 en el select
-  const commissionData = memberCommissions?.[0]?.commissions as any
-  const firstCommissionId = Array.isArray(commissionData) ? commissionData[0]?.id : commissionData?.id
-  const firstCommissionSlug = Array.isArray(commissionData) ? commissionData[0]?.slug : commissionData?.slug
+  const firstCommission = normalizedMemberCommissions?.[0]?.commissions
+  const firstCommissionId = firstCommission?.id ?? null
+  const firstCommissionSlug = firstCommission?.slug ?? null
 
   const { data: companions } = firstCommissionId
     ? await supabase
@@ -53,7 +58,7 @@ export default async function MiComisionPage() {
         </p>
       </div>
 
-      {!memberCommissions || memberCommissions.length === 0 ? (
+      {normalizedMemberCommissions.length === 0 ? (
         <div className="glass border border-[var(--border-subtle)] rounded-xl p-12 text-center">
           <p className="text-[var(--text-muted)] text-sm">
             Aún no estás asignado a ninguna comisión. Un administrador te asignará próximamente.
@@ -61,7 +66,7 @@ export default async function MiComisionPage() {
         </div>
       ) : (
         <div className="space-y-6">
-          {memberCommissions.map((mc) => {
+          {normalizedMemberCommissions.map((mc) => {
             const commission = mc.commissions
             if (!commission) return null
             return (
@@ -93,8 +98,8 @@ export default async function MiComisionPage() {
                       Miembros de la comisión
                     </h3>
                     <div className="flex flex-wrap gap-3">
-                      {companions.map((c) => {
-                        const m = c.members as { id: string; full_name: string; avatar_url: string | null; role: string } | null
+                      {companions.map((c: any) => {
+                        const m = c.members
                         if (!m) return null
                         return (
                           <div key={m.id} className="flex items-center gap-2 bg-black/30 border border-[var(--border-subtle)] rounded-lg px-3 py-2">
