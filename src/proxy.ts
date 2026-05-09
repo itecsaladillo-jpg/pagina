@@ -2,16 +2,13 @@ import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
 /**
- * proxy.ts — Funciona como middleware en este setup de Next.js.
- * 
- * Rutas protegidas:   /dashboard (requiere sesión activa + miembro activo)
- * Rutas de auth:      /login, /register (redirige al dashboard si ya está logueado)
+ * proxy.ts — Reemplaza al tradicional middleware.ts en Next.js 16.
  */
 
 const PROTECTED_ROUTES = ['/dashboard']
 const AUTH_ONLY_ROUTES = ['/login', '/register']
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request })
 
   const supabase = createServerClient(
@@ -35,12 +32,12 @@ export async function middleware(request: NextRequest) {
     }
   )
 
-  // Refrescar sesión — no agregar lógica entre createServerClient y getUser
+  // Refrescar sesión
   const { data: { user } } = await supabase.auth.getUser()
 
   const { pathname } = request.nextUrl
 
-  // ─── Rutas protegidas: redirige al login si no está autenticado ───
+  // Rutas protegidas
   const isProtectedRoute = PROTECTED_ROUTES.some(
     (route) => pathname === route || pathname.startsWith(`${route}/`)
   )
@@ -52,7 +49,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(loginUrl)
   }
 
-  // ─── Verificar rol de miembro activo para el dashboard ───
+  // Verificar estado del miembro
   if (isProtectedRoute && user) {
     const { data: member } = await supabase
       .from('members')
@@ -67,7 +64,7 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  // ─── Rutas de auth: redirige al dashboard si ya está logueado ───
+  // Rutas de auth
   const isAuthRoute = AUTH_ONLY_ROUTES.some(
     (route) => pathname === route || pathname.startsWith(`${route}/`)
   )
