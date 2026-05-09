@@ -12,6 +12,7 @@ export function SponsorForm({ sponsor, onClose }: Props) {
   const [loading, setLoading] = useState(false)
   const [formData, setFormData] = useState({
     name: sponsor?.name || '',
+    rubro: sponsor?.rubro || '',
     ai_summary: sponsor?.ai_summary || '',
     impact_data: sponsor?.impact_data || { alumnos: 0, capacitaciones: 0, horas: 0 }
   })
@@ -34,86 +35,62 @@ export function SponsorForm({ sponsor, onClose }: Props) {
 
   return (
     <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="glass border border-white/10 rounded-2xl p-8 max-w-xl w-full shadow-2xl">
+      <div className="glass border border-white/10 rounded-2xl p-8 max-w-xl w-full shadow-2xl max-h-[90vh] overflow-y-auto">
         <h3 className="text-2xl font-bold text-white mb-6">
-          {sponsor ? 'Editar Sponsor' : 'Nuevo Sponsor'}
+          {sponsor ? 'Editar Socio' : 'Nuevo Socio Estratégico'}
         </h3>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label className="block text-[10px] uppercase tracking-widest text-[var(--text-muted)] mb-2">Nombre de la Organización</label>
-            <input
-              required
-              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-[var(--accent-primary)] outline-none transition-all"
+            <label className="block text-[10px] uppercase tracking-widest text-[var(--text-muted)] mb-2">Nombre de la Organización *</label>
+            <input required
+              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-[var(--accent-primary)] outline-none"
               value={formData.name}
-              onChange={e => setFormData({ ...formData, name: e.target.value })}
-            />
+              onChange={e => setFormData({ ...formData, name: e.target.value })} />
           </div>
 
           <div>
-            <label className="block text-[10px] uppercase tracking-widest text-[var(--text-muted)] mb-2">Resumen IA (Logros)</label>
-            <textarea
-              rows={4}
-              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-[var(--accent-primary)] outline-none transition-all text-sm italic"
-              placeholder="Ej: Liderazgo en la formación técnica..."
+            <label className="block text-[10px] uppercase tracking-widest text-[var(--text-muted)] mb-2">Rubro / Sector</label>
+            <input placeholder="Ej: tecnología, agroindustria, salud"
+              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-[var(--accent-primary)] outline-none"
+              value={formData.rubro}
+              onChange={e => setFormData({ ...formData, rubro: e.target.value })} />
+            <p className="text-[10px] text-gray-500 mt-1">Se usará para identificar actividades relevantes para este socio.</p>
+          </div>
+
+          <div>
+            <label className="block text-[10px] uppercase tracking-widest text-[var(--text-muted)] mb-2">Resumen de Impacto (IA)</label>
+            <textarea rows={3}
+              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-[var(--accent-primary)] outline-none text-sm italic"
+              placeholder="Redactá manualmente o generalo con IA en la sección de Reportes..."
               value={formData.ai_summary}
-              onChange={e => setFormData({ ...formData, ai_summary: e.target.value })}
-            />
+              onChange={e => setFormData({ ...formData, ai_summary: e.target.value })} />
           </div>
 
           <div className="grid grid-cols-3 gap-4">
-            <div>
-              <label className="block text-[10px] uppercase tracking-widest text-[var(--text-muted)] mb-2">Alumnos</label>
-              <input
-                type="number"
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-[var(--accent-primary)] outline-none transition-all"
-                value={formData.impact_data.alumnos}
-                onChange={e => setFormData({ 
-                  ...formData, 
-                  impact_data: { ...formData.impact_data, alumnos: parseInt(e.target.value) } 
-                })}
-              />
-            </div>
-            <div>
-              <label className="block text-[10px] uppercase tracking-widest text-[var(--text-muted)] mb-2">Capacit.</label>
-              <input
-                type="number"
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-[var(--accent-primary)] outline-none transition-all"
-                value={formData.impact_data.capacitaciones}
-                onChange={e => setFormData({ 
-                  ...formData, 
-                  impact_data: { ...formData.impact_data, capacitaciones: parseInt(e.target.value) } 
-                })}
-              />
-            </div>
-            <div>
-              <label className="block text-[10px] uppercase tracking-widest text-[var(--text-muted)] mb-2">Horas</label>
-              <input
-                type="number"
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-[var(--accent-primary)] outline-none transition-all"
-                value={formData.impact_data.horas}
-                onChange={e => setFormData({ 
-                  ...formData, 
-                  impact_data: { ...formData.impact_data, horas: parseInt(e.target.value) } 
-                })}
-              />
-            </div>
+            {[
+              { label: 'Alumnos', key: 'alumnos' },
+              { label: 'Capacitaciones', key: 'capacitaciones' },
+              { label: 'Horas', key: 'horas' },
+            ].map(f => (
+              <div key={f.key}>
+                <label className="block text-[10px] uppercase tracking-widest text-[var(--text-muted)] mb-2">{f.label}</label>
+                <input type="number"
+                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-[var(--accent-primary)] outline-none"
+                  value={formData.impact_data[f.key]}
+                  onChange={e => setFormData({ ...formData, impact_data: { ...formData.impact_data, [f.key]: parseInt(e.target.value) || 0 } })} />
+              </div>
+            ))}
           </div>
 
-          <div className="flex gap-4 pt-4">
-            <button
-              type="button"
-              onClick={onClose}
-              className="flex-1 px-6 py-3 rounded-xl border border-white/10 text-white hover:bg-white/5 transition-all text-sm font-bold"
-            >
+          <div className="flex gap-4 pt-2">
+            <button type="button" onClick={onClose}
+              className="flex-1 px-6 py-3 rounded-xl border border-white/10 text-white hover:bg-white/5 transition-all text-sm">
               Cancelar
             </button>
-            <button
-              type="submit"
-              disabled={loading}
-              className="flex-2 px-8 py-3 rounded-xl bg-[var(--accent-primary)] text-black hover:shadow-[0_0_20px_rgba(59,130,246,0.5)] transition-all text-sm font-black uppercase"
-            >
-              {loading ? 'Guardando...' : 'Guardar Sponsor'}
+            <button type="submit" disabled={loading}
+              className="flex-1 px-8 py-3 rounded-xl btn-primary text-sm font-black">
+              {loading ? 'Guardando...' : 'Guardar'}
             </button>
           </div>
         </form>
