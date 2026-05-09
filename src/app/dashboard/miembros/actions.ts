@@ -5,7 +5,7 @@ import { getCurrentMember } from '@/services/auth'
 import { sendApprovalEmail } from '@/lib/email'
 import { revalidatePath } from 'next/cache'
 
-export async function approveMemberAction(memberId: string) {
+export async function approveMemberAction(memberId: string, sendEmail: boolean = true) {
   try {
     const admin = await getCurrentMember()
     if (!admin || admin.role !== 'admin') {
@@ -19,8 +19,8 @@ export async function approveMemberAction(memberId: string) {
       let emailSent = false
       let emailError = null
 
-      // 2. Intentar enviar email
-      if (process.env.RESEND_API_KEY) {
+      // 2. Intentar enviar email solo si se solicita
+      if (sendEmail && process.env.RESEND_API_KEY) {
         try {
           const emailRes = await sendApprovalEmail(res.data.email, res.data.full_name)
           emailSent = !!emailRes?.success

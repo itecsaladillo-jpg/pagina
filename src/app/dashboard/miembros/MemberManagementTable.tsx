@@ -13,15 +13,20 @@ export function MemberManagementTable({ members, commissions }: Props) {
   const [loadingId, setLoadingId] = useState<string | null>(null)
   const [activeTab, setActiveTab] = useState<'pending' | 'active' | 'all'>('pending')
 
-  const handleApprove = async (id: string) => {
+  const handleApprove = async (id: string, isNew: boolean = true) => {
     setLoadingId(id)
     try {
-      const res = await approveMemberAction(id) as any
+      const res = await approveMemberAction(id, isNew) as any
       if (res.success) {
-        if (res.emailStatus === 'sent') {
-          alert('¡Miembro aprobado y correo enviado con éxito!')
+        if (isNew) {
+          if (res.emailStatus === 'sent') {
+            alert('¡Miembro aprobado y correo enviado con éxito!')
+          } else {
+            alert(`Miembro aprobado, pero el correo falló: ${res.emailError || 'Verificar dominio en Resend'}`)
+          }
         } else {
-          alert(`Miembro aprobado, pero el correo falló: ${res.emailError || 'Verificar dominio en Resend'}`)
+          // Si no es nuevo, no mostramos lo del mail
+          alert('¡Miembro re-habilitado con éxito!')
         }
       } else {
         alert('Error: ' + (res.error || 'No se pudo aprobar al miembro'))
@@ -178,7 +183,7 @@ export function MemberManagementTable({ members, commissions }: Props) {
                         </button>
                       ) : (
                         <button
-                          onClick={() => handleApprove(m.id)}
+                          onClick={() => handleApprove(m.id, false)}
                           disabled={loadingId === m.id}
                           className="text-green-400 hover:text-green-300 text-[10px] font-bold uppercase tracking-wider transition-colors"
                         >
