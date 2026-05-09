@@ -20,13 +20,16 @@ export function MemberManagementTable({ members, commissions }: Props) {
       if (res.success) {
         if (isNew) {
           if (res.emailStatus === 'sent') {
-            alert('¡Miembro aprobado y correo enviado con éxito!')
+            alert('¡Miembro aprobado y correo de BIENVENIDA enviado!')
           } else {
-            alert(`Miembro aprobado, pero el correo falló: ${res.emailError || 'Verificar dominio en Resend'}`)
+            alert(`Miembro aprobado, pero falló el mail de bienvenida: ${res.emailError || 'Verificar Resend'}`)
           }
         } else {
-          // Si no es nuevo, no mostramos lo del mail
-          alert('¡Miembro re-habilitado con éxito!')
+          if (res.emailStatus === 'sent') {
+            alert('¡Miembro re-habilitado y correo de REACTIVACIÓN enviado!')
+          } else {
+            alert(`Miembro re-habilitado, pero falló el mail de reactivación: ${res.emailError || 'Verificar Resend'}`)
+          }
         }
       } else {
         alert('Error: ' + (res.error || 'No se pudo aprobar al miembro'))

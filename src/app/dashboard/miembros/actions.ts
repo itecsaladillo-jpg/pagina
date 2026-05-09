@@ -2,7 +2,7 @@
 
 import { approveMember, updateMemberRole, assignToCommission, deactivateMember } from '@/services/admin'
 import { getCurrentMember } from '@/services/auth'
-import { sendApprovalEmail } from '@/lib/email'
+import { sendApprovalEmail, sendReactivationEmail } from '@/lib/email'
 import { revalidatePath } from 'next/cache'
 
 export async function approveMemberAction(memberId: string, sendEmail: boolean = true) {
@@ -19,10 +19,13 @@ export async function approveMemberAction(memberId: string, sendEmail: boolean =
       let emailSent = false
       let emailError = null
 
-      // 2. Intentar enviar email solo si se solicita
-      if (sendEmail && process.env.RESEND_API_KEY) {
+      // 2. Intentar enviar email
+      if (process.env.RESEND_API_KEY) {
         try {
-          const emailRes = await sendApprovalEmail(res.data.email, res.data.full_name)
+          const emailRes = sendEmail 
+            ? await sendApprovalEmail(res.data.email, res.data.full_name)
+            : await sendReactivationEmail(res.data.email, res.data.full_name)
+          
           emailSent = !!emailRes?.success
           if (emailRes && !emailRes.success) emailError = emailRes.error
         } catch (err: any) {

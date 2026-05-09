@@ -43,9 +43,50 @@ export async function sendApprovalEmail(toEmail: string, fullName: string) {
       return { success: false, error }
     }
 
-    return { success: true, data }
+    return { success: true, data: data }
   } catch (err) {
     console.error('[email] Error inesperado:', err)
+    return { success: false, error: err }
+  }
+}
+
+/**
+ * Envía un correo avisando que la cuenta ha sido reactivada.
+ */
+export async function sendReactivationEmail(toEmail: string, fullName: string) {
+  const apiKey = process.env.RESEND_API_KEY
+  if (!apiKey || apiKey === 're_123456789...') return
+
+  try {
+    const resend = new Resend(apiKey)
+    const { data, error } = await resend.emails.send({
+      from: 'ITEC Augusto Cicaré <onboarding@resend.dev>',
+      to: [toEmail],
+      subject: 'Tu acceso al ITEC ha sido reactivado',
+      html: `
+        <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 40px; border: 1px solid #e5e7eb; border-radius: 10px;">
+          <h1 style="color: #1e40af; font-size: 24px;">¡Hola de nuevo, ${fullName}!</h1>
+          <p style="color: #374151; font-size: 16px; line-height: 1.5;">
+            Te informamos que tu acceso al panel de miembros del <b>ITEC "Augusto Cicaré"</b> ha sido reactivado por la administración.
+          </p>
+          <p style="color: #374151; font-size: 16px; line-height: 1.5;">
+            Ya podés volver a ingresar y participar de todas las actividades.
+          </p>
+          <div style="text-align: center; margin: 40px 0;">
+            <a href="${process.env.NEXT_PUBLIC_SITE_URL || 'https://pagina-eight-alpha.vercel.app'}/dashboard" 
+               style="background-color: #10b981; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block;">
+               Volver al Dashboard
+            </a>
+          </div>
+          <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 30px 0;">
+          <p style="color: #9ca3af; font-size: 12px; text-align: center;">
+            ITEC Augusto Cicaré - Saladillo, Buenos Aires.
+          </p>
+        </div>
+      `,
+    })
+    return { success: !error, data, error }
+  } catch (err) {
     return { success: false, error: err }
   }
 }
