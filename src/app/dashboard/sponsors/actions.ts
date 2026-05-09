@@ -2,7 +2,7 @@
 
 import { createClient } from '@/lib/supabase/server'
 import { getCurrentMember } from '@/services/auth'
-import { GoogleGenerativeAI } from '@google/generative-ai'
+import { generateSponsorReport } from '@/services/sponsorReport'
 import { revalidatePath } from 'next/cache'
 
 // ─────────────────────────────────────────
@@ -59,49 +59,71 @@ export async function createReporteAction(data: {
 
   const supabase = await createClient()
 
-  // 1. Obtener info de las acciones seleccionadas para el prompt de IA
+  // 1. Obtener info completa de las acciones seleccionadas
   const { data: acciones } = await supabase
     .from('acciones_itec')
-    .select('titulo, impacto_social, trascendencia_regional, presupuesto_total, categoria')
+    .select('titulo, categoria, descripcion, impacto_social, trascendencia_regional, presupuesto_total, rubros_relacionados')
     .in('id', data.acciones_ids)
 
-  // 2. Generar reporte IA persuasivo
+  // 2. Obtener datos del sponsor (nombre, rubro, métricas)
+  const { data: sponsor } = await supabase
+    .from('sponsors')
+    .select('name, rubro, impact_data')
+    .eq('id', data.sponsor_id)
+    .single()
+
+  // 3. Identificar acciones que coinciden con el rubro del sponsor
+  const accionesDestacadas = (sponsor?.rubro && acciones)
+    ? acciones.filter((a: any) =>
+        a.rubros_relacionados?.some((r: string) =>
+          r.toLowerCase().includes(sponsor.rubro.toLowerCase())
+        )
+      )
+    : []
+
+  // 4. Calcular métricas totales del período
+  const totalInversion = (acciones || []).reduce((sum: number, a: any) => sum + (a.presupuesto_total || 0), 0)
+
+  // 5. Generar reporte con el Motor de Redacción de Impacto
   let ai_reporte: string | null = null
-  if (process.env.GEMINI_API_KEY && acciones?.length) {
-    try {
-      const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY)
-      const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' })
 
-      const accionesTexto = acciones.map(a =>
-        `• ${a.titulo}: ${a.impacto_social || ''} — ${a.trascendencia_regional || ''}`
-      ).join('\n')
+  if (acciones?.length && sponsor) {
+    const reporteOutput = await generateSponsorReport({
+      sponsor_nombre: sponsor.name,
+      sponsor_rubro: sponsor.rubro || '',
+      periodo: data.periodo,
+      acciones: acciones.map((a: any) => ({
+        titulo: a.titulo,
+        categoria: a.categoria,
+        descripcion: a.descripcion || '',
+        impacto_social: a.impacto_social || '',
+        trascendencia_regional: a.trascendencia_regional || '',
+        presupuesto_total: a.presupuesto_total || 0,
+      })),
+      metricas: {
+        total_alumnos: sponsor.impact_data?.alumnos || 0,
+        total_horas: sponsor.impact_data?.horas || 0,
+        total_inversion: totalInversion,
+      },
+      fondo_comun: data.fondo_comun_detalle,
+      acciones_destacadas: accionesDestacadas.map((a: any) => ({
+        titulo: a.titulo,
+        categoria: a.categoria,
+        descripcion: a.descripcion || '',
+        impacto_social: a.impacto_social || '',
+        trascendencia_regional: a.trascendencia_regional || '',
+        presupuesto_total: a.presupuesto_total || 0,
+      })),
+    })
 
-      const { response } = await model.generateContent({
-        contents: [{
-          role: 'user',
-          parts: [{
-            text: `Sos el Director Ejecutivo de una ONG tecnológica de vanguardia. Redactá un párrafo de 3-4 oraciones, en primera persona plural, dirigido al sponsor.
+    ai_reporte = reporteOutput.texto_completo
 
-El párrafo debe:
-- Comenzar agradeciendo su aporte sin usar "gracias" directamente (usá sinónimos como "valoramos profundamente", "reconocemos con orgullo")
-- Describir el valor INTANGIBLE de las acciones (impacto en el futuro productivo, vocaciones técnicas, posicionamiento regional)
-- Usar lenguaje vanguardista y profesional
-- PROHIBIDO usar: viste, che, pibe, hoy, ayer, mañana, gracias (como primera palabra), básicamente
-
-Acciones del período:
-${accionesTexto}
-
-Respondé SOLO con el párrafo, sin introducción ni comillas.`
-          }]
-        }]
-      })
-      ai_reporte = response.text().trim()
-    } catch (err) {
-      console.error('[IA] Error generando reporte:', err)
+    if (reporteOutput.error) {
+      console.warn('[createReporte] IA usó fallback:', reporteOutput.error)
     }
   }
 
-  // 3. Guardar el reporte
+  // 6. Guardar el reporte en la base de datos
   const { data: result, error } = await supabase
     .from('sponsor_reportes')
     .insert([{ ...data, ai_reporte }])
