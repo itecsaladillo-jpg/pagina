@@ -2,53 +2,21 @@
 
 import { approveMember, updateMemberRole, assignToCommission, deactivateMember } from '@/services/admin'
 import { getCurrentMember } from '@/services/auth'
-import { sendApprovalEmail, sendReactivationEmail } from '@/lib/email'
 import { revalidatePath } from 'next/cache'
 
-export async function approveMemberAction(memberId: string, sendEmail: boolean = true) {
+export async function approveMemberAction(memberId: string) {
   try {
     const admin = await getCurrentMember()
     if (!admin || admin.role !== 'admin') {
       return { success: false, error: 'No tenés permisos de administrador.' }
     }
     
-    // 1. Aprobar en la base de datos
     const res = await approveMember(memberId)
-    
-    if (res.success && res.data) {
-      let emailSent = false
-      let emailError = null
-
-      // 2. Intentar enviar email
-      if (process.env.RESEND_API_KEY) {
-        try {
-          const emailRes = sendEmail 
-            ? await sendApprovalEmail(res.data.email, res.data.full_name)
-            : await sendReactivationEmail(res.data.email, res.data.full_name)
-          
-          emailSent = !!emailRes?.success
-          if (emailRes && !emailRes.success) emailError = emailRes.error
-        } catch (err: any) {
-          console.error('[Action] Error crítico en sendApprovalEmail:', err)
-          emailError = err.message
-        }
-      } else {
-        emailError = 'API Key de Resend no configurada.'
-      }
-
-      revalidatePath('/dashboard/miembros')
-      return { 
-        success: true, 
-        data: res.data,
-        emailStatus: emailSent ? 'sent' : 'failed',
-        emailError
-      }
-    }
-    
+    if (res.success) revalidatePath('/dashboard/miembros')
     return res
   } catch (err: any) {
-    console.error('[approveMemberAction] Error fatal:', err)
-    return { success: false, error: 'Error interno del servidor al procesar la aprobación.' }
+    console.error('[approveMemberAction] Error:', err)
+    return { success: false, error: 'Error al procesar la aprobación.' }
   }
 }
 

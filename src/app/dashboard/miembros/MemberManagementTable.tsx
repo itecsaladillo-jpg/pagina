@@ -16,23 +16,11 @@ export function MemberManagementTable({ members, commissions }: Props) {
   const handleApprove = async (id: string, isNew: boolean = true) => {
     setLoadingId(id)
     try {
-      const res = await approveMemberAction(id, isNew) as any
+      const res = await approveMemberAction(id)
       if (res.success) {
-        if (isNew) {
-          if (res.emailStatus === 'sent') {
-            alert('¡Miembro aprobado y correo de BIENVENIDA enviado!')
-          } else {
-            alert(`Miembro aprobado, pero falló el mail de bienvenida: ${res.emailError || 'Verificar Resend'}`)
-          }
-        } else {
-          if (res.emailStatus === 'sent') {
-            alert('¡Miembro re-habilitado y correo de REACTIVACIÓN enviado!')
-          } else {
-            alert(`Miembro re-habilitado, pero falló el mail de reactivación: ${res.emailError || 'Verificar Resend'}`)
-          }
-        }
+        alert(isNew ? '¡Miembro aprobado con éxito!' : '¡Miembro re-habilitado con éxito!')
       } else {
-        alert('Error: ' + (res.error || 'No se pudo aprobar al miembro'))
+        alert('Error: ' + (res.error || 'No se pudo procesar la solicitud'))
       }
     } catch (err) {
       alert('Error crítico de conexión')
