@@ -11,13 +11,13 @@ export async function approveMember(memberId: string) {
     .update({ status: 'activo' })
     .eq('id', memberId)
     .select()
-    .single()
 
   if (error) {
     console.error('[adminService] approveMember error:', error.message)
     return { success: false, error: error.message }
   }
-  return { success: true, data }
+  
+  return { success: true, data: data?.[0] || null }
 }
 
 /**
