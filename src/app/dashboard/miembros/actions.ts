@@ -6,32 +6,61 @@ import { sendApprovalEmail } from '@/lib/email'
 import { revalidatePath } from 'next/cache'
 
 export async function approveMemberAction(memberId: string) {
-  const admin = await getCurrentMember()
-  if (admin?.role !== 'admin') throw new Error('No autorizado')
-  
-  const res = await approveMember(memberId)
-  if (res.success && res.data) {
-    // Intentar enviar email (no bloquea la respuesta)
-    sendApprovalEmail(res.data.email, res.data.full_name).catch(console.error)
-    revalidatePath('/dashboard/miembros')
+  try {
+    const admin = await getCurrentMember()
+    if (!admin || admin.role !== 'admin') {
+      return { success: false, error: 'No tenés permisos de administrador.' }
+    }
+    
+    // 1. Aprobar en la base de datos
+    const res = await approveMember(memberId)
+    
+    if (res.success && res.data) {
+      // 2. Intentar enviar email (en segundo plano, sin await para no trabar la UI)
+      // Envolvemos en otro try/catch por seguridad extrema
+      try {
+        if (process.env.RESEND_API_KEY) {
+          sendApprovalEmail(res.data.email, res.data.full_name).catch(err => {
+            console.error('[Action] Error en catch de sendApprovalEmail:', err)
+          })
+        }
+      } catch (emailErr) {
+        console.error('[Action] Error crítico al llamar a sendApprovalEmail:', emailErr)
+      }
+
+      revalidatePath('/dashboard/miembros')
+      return { success: true, data: res.data }
+    }
+    
+    return res
+  } catch (err: any) {
+    console.error('[approveMemberAction] Error fatal:', err)
+    return { success: false, error: 'Error interno del servidor al procesar la aprobación.' }
   }
-  return res
 }
 
 export async function updateRoleAction(memberId: string, role: any) {
-  const admin = await getCurrentMember()
-  if (admin?.role !== 'admin') throw new Error('No autorizado')
-  
-  const res = await updateMemberRole(memberId, role)
-  if (res.success) revalidatePath('/dashboard/miembros')
-  return res
+  try {
+    const admin = await getCurrentMember()
+    if (!admin || admin.role !== 'admin') return { success: false, error: 'No autorizado' }
+    
+    const res = await updateMemberRole(memberId, role)
+    if (res.success) revalidatePath('/dashboard/miembros')
+    return res
+  } catch (err) {
+    return { success: false, error: 'Error al cambiar el rol.' }
+  }
 }
 
 export async function assignCommissionAction(memberId: string, commissionId: string, isCoordinator: boolean) {
-  const admin = await getCurrentMember()
-  if (admin?.role !== 'admin') throw new Error('No autorizado')
-  
-  const res = await assignToCommission(memberId, commissionId, isCoordinator)
-  if (res.success) revalidatePath('/dashboard/miembros')
-  return res
+  try {
+    const admin = await getCurrentMember()
+    if (!admin || admin.role !== 'admin') return { success: false, error: 'No autorizado' }
+    
+    const res = await assignToCommission(memberId, commissionId, isCoordinator)
+    if (res.success) revalidatePath('/dashboard/miembros')
+    return res
+  } catch (err) {
+    return { success: false, error: 'Error al asignar comisión.' }
+  }
 }
