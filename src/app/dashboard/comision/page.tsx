@@ -28,8 +28,10 @@ export default async function MiComisionPage() {
     .eq('member_id', member.id)
 
   // Obtener compañeros de la primera comisión
-  const firstCommissionId = memberCommissions?.[0]?.commissions?.id ?? null
-  const firstCommissionSlug = memberCommissions?.[0]?.commissions?.slug ?? null
+  // Nota: Supabase devuelve las relaciones como arrays aunque sea 1:1 en el select
+  const commissionData = memberCommissions?.[0]?.commissions as any
+  const firstCommissionId = Array.isArray(commissionData) ? commissionData[0]?.id : commissionData?.id
+  const firstCommissionSlug = Array.isArray(commissionData) ? commissionData[0]?.slug : commissionData?.slug
 
   const { data: companions } = firstCommissionId
     ? await supabase
