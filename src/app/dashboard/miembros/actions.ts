@@ -16,20 +16,30 @@ export async function approveMemberAction(memberId: string) {
     const res = await approveMember(memberId)
     
     if (res.success && res.data) {
-      // 2. Intentar enviar email (en segundo plano, sin await para no trabar la UI)
-      // Envolvemos en otro try/catch por seguridad extrema
-      try {
-        if (process.env.RESEND_API_KEY) {
-          sendApprovalEmail(res.data.email, res.data.full_name).catch(err => {
-            console.error('[Action] Error en catch de sendApprovalEmail:', err)
-          })
+      let emailSent = false
+      let emailError = null
+
+      // 2. Intentar enviar email
+      if (process.env.RESEND_API_KEY) {
+        try {
+          const emailRes = await sendApprovalEmail(res.data.email, res.data.full_name)
+          emailSent = !!emailRes?.success
+          if (emailRes && !emailRes.success) emailError = emailRes.error
+        } catch (err: any) {
+          console.error('[Action] Error crítico en sendApprovalEmail:', err)
+          emailError = err.message
         }
-      } catch (emailErr) {
-        console.error('[Action] Error crítico al llamar a sendApprovalEmail:', emailErr)
+      } else {
+        emailError = 'API Key de Resend no configurada.'
       }
 
       revalidatePath('/dashboard/miembros')
-      return { success: true, data: res.data }
+      return { 
+        success: true, 
+        data: res.data,
+        emailStatus: emailSent ? 'sent' : 'failed',
+        emailError
+      }
     }
     
     return res

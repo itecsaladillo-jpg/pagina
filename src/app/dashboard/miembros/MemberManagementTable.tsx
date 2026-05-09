@@ -16,8 +16,14 @@ export function MemberManagementTable({ members, commissions }: Props) {
   const handleApprove = async (id: string) => {
     setLoadingId(id)
     try {
-      const res = await approveMemberAction(id)
-      if (!res.success) {
+      const res = await approveMemberAction(id) as any
+      if (res.success) {
+        if (res.emailStatus === 'sent') {
+          alert('¡Miembro aprobado y correo enviado con éxito!')
+        } else {
+          alert(`Miembro aprobado, pero el correo falló: ${res.emailError || 'Verificar dominio en Resend'}`)
+        }
+      } else {
         alert('Error: ' + (res.error || 'No se pudo aprobar al miembro'))
       }
     } catch (err) {
