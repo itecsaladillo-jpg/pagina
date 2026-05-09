@@ -21,6 +21,24 @@ export async function approveMember(memberId: string) {
 }
 
 /**
+ * Deshabilita a un miembro (estado inactivo).
+ */
+export async function deactivateMember(memberId: string) {
+  const supabase = await createClient()
+  const { data, error } = await supabase
+    .from('members')
+    .update({ status: 'inactivo' })
+    .eq('id', memberId)
+    .select()
+
+  if (error) {
+    console.error('[adminService] deactivateMember error:', error.message)
+    return { success: false, error: error.message }
+  }
+  return { success: true, data: data?.[0] || null }
+}
+
+/**
  * Cambia el rol de un miembro.
  */
 export async function updateMemberRole(memberId: string, role: Member['role']) {

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { approveMemberAction, updateRoleAction, assignCommissionAction } from './actions'
+import { approveMemberAction, updateRoleAction, assignCommissionAction, deactivateMemberAction } from './actions'
 import type { Member, Commission } from '@/types/database'
 
 interface Props {
@@ -43,6 +43,14 @@ export function MemberManagementTable({ members, commissions }: Props) {
     setLoadingId(id)
     const res = await assignCommissionAction(id, commissionId, false)
     if (!res.success) alert('Error: ' + (res.error || 'No se pudo asignar la comisión'))
+    setLoadingId(null)
+  }
+
+  const handleDeactivate = async (id: string) => {
+    if (!confirm('¿Estás seguro de que querés deshabilitar a este miembro? Perderá el acceso al panel.')) return
+    setLoadingId(id)
+    const res = await deactivateMemberAction(id)
+    if (!res.success) alert('Error: ' + (res.error || 'No se pudo deshabilitar'))
     setLoadingId(null)
   }
 
@@ -160,8 +168,22 @@ export function MemberManagementTable({ members, commissions }: Props) {
                         >
                           {loadingId === m.id ? '...' : 'Aprobar e informar'}
                         </button>
+                      ) : m.status === 'activo' ? (
+                        <button
+                          onClick={() => handleDeactivate(m.id)}
+                          disabled={loadingId === m.id}
+                          className="text-red-400 hover:text-red-300 text-[10px] font-bold uppercase tracking-wider transition-colors"
+                        >
+                          {loadingId === m.id ? '...' : 'Deshabilitar'}
+                        </button>
                       ) : (
-                        <span className="text-[var(--text-muted)] text-[10px]">Aprobado</span>
+                        <button
+                          onClick={() => handleApprove(m.id)}
+                          disabled={loadingId === m.id}
+                          className="text-green-400 hover:text-green-300 text-[10px] font-bold uppercase tracking-wider transition-colors"
+                        >
+                          {loadingId === m.id ? '...' : 'Re-habilitar'}
+                        </button>
                       )}
                     </td>
                   </tr>

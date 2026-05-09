@@ -1,6 +1,6 @@
 'use server'
 
-import { approveMember, updateMemberRole, assignToCommission } from '@/services/admin'
+import { approveMember, updateMemberRole, assignToCommission, deactivateMember } from '@/services/admin'
 import { getCurrentMember } from '@/services/auth'
 import { sendApprovalEmail } from '@/lib/email'
 import { revalidatePath } from 'next/cache'
@@ -46,6 +46,19 @@ export async function approveMemberAction(memberId: string) {
   } catch (err: any) {
     console.error('[approveMemberAction] Error fatal:', err)
     return { success: false, error: 'Error interno del servidor al procesar la aprobación.' }
+  }
+}
+
+export async function deactivateMemberAction(memberId: string) {
+  try {
+    const admin = await getCurrentMember()
+    if (!admin || admin.role !== 'admin') return { success: false, error: 'No autorizado' }
+    
+    const res = await deactivateMember(memberId)
+    if (res.success) revalidatePath('/dashboard/miembros')
+    return res
+  } catch (err) {
+    return { success: false, error: 'Error al deshabilitar miembro.' }
   }
 }
 
