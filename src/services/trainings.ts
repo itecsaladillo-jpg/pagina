@@ -1,13 +1,13 @@
 import { createClient } from '@/lib/supabase/server'
-import type { Training, TrainingEnrollment } from '@/types/database'
+import type { ItecAction, ActionRegistration } from '@/types/database'
 
-export async function getPublicTrainings(): Promise<Training[]> {
+export async function getPublicTrainings(): Promise<ItecAction[]> {
   const supabase = await createClient()
   const { data, error } = await supabase
-    .from('trainings')
+    .from('itec_actions')
     .select('*')
-    .eq('is_public', true)
-    .in('status', ['planificada', 'en_curso', 'finalizada'])
+    .eq('type', 'capacitacion')
+    .in('status', ['planificacion', 'en_curso', 'finalizada'])
     .order('start_date', { ascending: false })
 
   if (error) {
@@ -17,10 +17,10 @@ export async function getPublicTrainings(): Promise<Training[]> {
   return data ?? []
 }
 
-export async function getAllTrainings(): Promise<Training[]> {
+export async function getAllTrainings(): Promise<ItecAction[]> {
   const supabase = await createClient()
   const { data, error } = await supabase
-    .from('trainings')
+    .from('itec_actions')
     .select('*')
     .order('start_date', { ascending: false })
 
@@ -31,43 +31,14 @@ export async function getAllTrainings(): Promise<Training[]> {
   return data ?? []
 }
 
-export async function getTrainingById(id: string): Promise<Training | null> {
+export async function getTrainingById(id: string): Promise<ItecAction | null> {
   const supabase = await createClient()
   const { data, error } = await supabase
-    .from('trainings')
+    .from('itec_actions')
     .select('*')
     .eq('id', id)
     .single()
 
   if (error) return null
   return data
-}
-
-export async function enrollInTraining(
-  trainingId: string,
-  memberId: string
-): Promise<TrainingEnrollment | null> {
-  const supabase = await createClient()
-  const { data, error } = await supabase
-    .from('training_enrollments')
-    .insert({ training_id: trainingId, member_id: memberId })
-    .select()
-    .single()
-
-  if (error) {
-    console.error('[trainingService] enrollInTraining error:', error.message)
-    return null
-  }
-  return data
-}
-
-export async function getMemberEnrollments(memberId: string): Promise<TrainingEnrollment[]> {
-  const supabase = await createClient()
-  const { data, error } = await supabase
-    .from('training_enrollments')
-    .select('*')
-    .eq('member_id', memberId)
-
-  if (error) return []
-  return data ?? []
 }

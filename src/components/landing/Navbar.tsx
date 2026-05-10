@@ -5,10 +5,9 @@ import Link from 'next/link'
 import Image from 'next/image'
 
 const navLinks = [
-  { label: 'Nosotros', href: '#nosotros' },
-  { label: 'Comisiones', href: '#comisiones' },
-  { label: 'Capacitaciones', href: '#capacitaciones' },
-  { label: 'Ideas', href: '#ideas' },
+  { label: 'Nosotros', href: '/#nosotros' },
+  { label: 'Comisiones', href: '/#comisiones' },
+  { label: 'Acciones', href: '/acciones' },
 ]
 
 export function Navbar() {

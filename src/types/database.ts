@@ -13,6 +13,8 @@ export type MemberStatus = 'activo' | 'inactivo' | 'pendiente'
 export type TrainingStatus = 'planificada' | 'en_curso' | 'finalizada' | 'cancelada'
 export type IdeaStatus = 'nueva' | 'en_revision' | 'aprobada' | 'rechazada' | 'implementada'
 export type SponsorTier = 'platino' | 'oro' | 'plata' | 'bronce'
+export type ActionType = 'capacitacion' | 'evento_social' | 'divulgacion'
+export type ActionStatus = 'planificacion' | 'en_curso' | 'finalizada' | 'cancelada'
 
 // ─────────────────────────────────────────
 // TABLA: members
@@ -60,37 +62,39 @@ export interface CommissionMember {
 }
 
 // ─────────────────────────────────────────
-// TABLA: trainings
+// TABLA: itec_actions
 // ─────────────────────────────────────────
 
-export interface Training {
+export interface ItecAction {
   id: string
   created_at: string
   updated_at: string
   title: string
   description: string | null
-  instructor_name: string | null
-  instructor_id: string | null
-  commission_id: string | null
-  status: TrainingStatus
+  type: ActionType
+  status: ActionStatus
+  target_audience: string | null
+  capacity: number | null
+  cost: number
   start_date: string | null
   end_date: string | null
   location: string | null
-  max_participants: number | null
   thumbnail_url: string | null
   tags: string[]
-  streaming_url: string | null
-  recording_url: string | null
-  is_public: boolean
+  responsible_id: string | null
+  commission_id: string | null
+  materials_urls: string[]
 }
 
-export interface TrainingEnrollment {
+export interface ActionRegistration {
   id: string
-  training_id: string
-  member_id: string
-  enrolled_at: string
+  action_id: string
+  full_name: string
+  email: string
+  phone: string | null
+  registered_at: string
   attended: boolean
-  certificate_url: string | null
+  notes: string | null
 }
 
 // ─────────────────────────────────────────
@@ -179,15 +183,15 @@ export interface Database {
         Insert: Omit<CommissionMember, 'id'>
         Update: Partial<Omit<CommissionMember, 'id'>>
       }
-      trainings: {
-        Row: Training
-        Insert: Omit<Training, 'id' | 'created_at' | 'updated_at'>
-        Update: Partial<Omit<Training, 'id' | 'created_at'>>
+      itec_actions: {
+        Row: ItecAction
+        Insert: Omit<ItecAction, 'id' | 'created_at' | 'updated_at'>
+        Update: Partial<Omit<ItecAction, 'id' | 'created_at'>>
       }
-      training_enrollments: {
-        Row: TrainingEnrollment
-        Insert: Omit<TrainingEnrollment, 'id'>
-        Update: Partial<Omit<TrainingEnrollment, 'id'>>
+      action_registrations: {
+        Row: ActionRegistration
+        Insert: Omit<ActionRegistration, 'id' | 'registered_at'>
+        Update: Partial<Omit<ActionRegistration, 'id'>>
       }
       ideas: {
         Row: Idea

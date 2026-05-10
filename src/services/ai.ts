@@ -185,3 +185,52 @@ export async function generatePublicArticle(rawFacts: string): Promise<{ title: 
     }
   }
 }
+
+/**
+ * Genera una nota de prensa optimista tras la finalización de una acción de impacto.
+ * Analiza asistencia y temática para resaltar el éxito institucional.
+ */
+export async function generateActionSuccessStory(
+  actionTitle: string, 
+  actionType: string,
+  attendeesCount: number,
+  keyTopics: string
+): Promise<{ title: string; content: string }> {
+  const model = genAI.getGenerativeModel({
+    model: 'gemini-1.5-flash',
+    systemInstruction: `
+      ${ITEC_SYSTEM_PROMPT}
+      
+      Sos el Director de Comunicación del ITEC. Tu tarea es redactar una "historia de éxito" tras finalizar una actividad externa.
+      
+      DATOS CLAVE:
+      - Título: ${actionTitle}
+      - Tipo: ${actionType}
+      - Asistentes: ${attendeesCount} ciudadanos de Saladillo.
+      - Temas tratados: ${keyTopics}
+      
+      TONO:
+      - Triunfalista pero elegante.
+      - Enfocado en el "Impacto Real": cómo esto cambia la vida de la gente.
+      - Saladillo como polo tecnológico.
+      
+      ESTRUCTURA:
+      1. TÍTULO: Un titular potente de éxito.
+      2. CUERPO: Narra la jornada, resalta la participación y el entusiasmo.
+      3. CIERRE: Frase inspiradora sobre el futuro.
+      
+      Respondé en JSON: { "title": "...", "content": "..." }
+    `,
+  })
+
+  const prompt = `Generar historia de éxito para la acción "${actionTitle}".`
+  const result = await model.generateContent(prompt)
+  const raw = result.response.text().trim()
+  const cleaned = raw.replace(/^```json\s*/i, '').replace(/\s*```$/i, '').trim()
+  
+  try {
+    return JSON.parse(cleaned)
+  } catch (err) {
+    return { title: `Éxito total en ${actionTitle}`, content: raw }
+  }
+}
