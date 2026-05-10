@@ -14,7 +14,7 @@ export async function ImpactSection() {
   // Combinar y ordenar por fecha de creación/inicio
   const feedItems = [
     ...news.map(n => ({ ...n, feedType: 'news' as const, date: new Date(n.created_at) })),
-    ...actions.map(a => ({ ...a, feedType: 'action' as const, date: new Date(a.start_date) }))
+    ...actions.filter(a => a.start_date).map(a => ({ ...a, feedType: 'action' as const, date: new Date(a.start_date!) }))
   ].sort((a, b) => b.date.getTime() - a.date.getTime())
 
   return (
