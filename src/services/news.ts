@@ -16,6 +16,19 @@ export interface NewsFlash {
   tags: string[]
 }
 
+export interface PublicArticle {
+  id: string
+  created_at: string
+  updated_at: string
+  title: string
+  content: string
+  media_urls: string[]
+  author_id: string
+  is_published: boolean
+  slug: string
+  excerpt: string | null
+}
+
 export async function getNewsFlashes(commissionId?: string): Promise<NewsFlash[]> {
   const supabase = await createClient()
 
@@ -53,4 +66,20 @@ export async function createNewsFlash(
     return null
   }
   return data as NewsFlash
+}
+
+export async function getPublicArticles(): Promise<PublicArticle[]> {
+  const supabase = await createClient()
+  const { data, error } = await supabase
+    .from('public_articles')
+    .select('*')
+    .eq('is_published', true)
+    .order('created_at', { ascending: false })
+    .limit(10)
+
+  if (error) {
+    console.error('[newsService] getPublicArticles error:', error.message)
+    return []
+  }
+  return (data ?? []) as PublicArticle[]
 }

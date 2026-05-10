@@ -1,4 +1,4 @@
-import { getNewsFlashes } from '@/services/news'
+import { getNewsFlashes, getPublicArticles } from '@/services/news'
 import { getPublicActions } from '@/services/actions'
 import { Sparkles, Calendar, Zap, MessageSquare } from 'lucide-react'
 import { format } from 'date-fns'
@@ -6,15 +6,17 @@ import { es } from 'date-fns/locale'
 import Link from 'next/link'
 
 export async function ImpactSection() {
-  const [news, actions] = await Promise.all([
+  const [news, actions, articles] = await Promise.all([
     getNewsFlashes(),
-    getPublicActions()
+    getPublicActions(),
+    getPublicArticles()
   ])
 
   // Combinar y ordenar por fecha de creación/inicio
   const feedItems = [
     ...news.map(n => ({ ...n, feedType: 'news' as const, date: new Date(n.created_at) })),
-    ...actions.filter(a => a.start_date).map(a => ({ ...a, feedType: 'action' as const, date: new Date(a.start_date!) }))
+    ...actions.filter(a => a.start_date).map(a => ({ ...a, feedType: 'action' as const, date: new Date(a.start_date!) })),
+    ...articles.map(art => ({ ...art, feedType: 'article' as const, date: new Date(art.created_at) }))
   ].sort((a, b) => b.date.getTime() - a.date.getTime())
 
   return (
@@ -52,10 +54,13 @@ export async function ImpactSection() {
               <div className="p-6 flex items-center justify-between">
                 <div className={`
                   flex items-center gap-2 px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-tighter
-                  ${item.feedType === 'action' ? 'bg-purple-500/10 text-purple-400' : 'bg-emerald-500/10 text-emerald-400'}
+                  ${item.feedType === 'action' ? 'bg-purple-500/10 text-purple-400' : 
+                    item.feedType === 'article' ? 'bg-blue-500/10 text-blue-400' : 'bg-emerald-500/10 text-emerald-400'}
                 `}>
-                  {item.feedType === 'action' ? <Calendar size={12} /> : <MessageSquare size={12} />}
-                  {item.feedType === 'action' ? 'Evento/Capacitación' : 'Novedad'}
+                  {item.feedType === 'action' ? <Calendar size={12} /> : 
+                   item.feedType === 'article' ? <Sparkles size={12} /> : <MessageSquare size={12} />}
+                  {item.feedType === 'action' ? 'Evento/Capacitación' : 
+                   item.feedType === 'article' ? 'Artículo Especial' : 'Novedad'}
                 </div>
                 <span className="text-[10px] text-[var(--text-muted)] font-medium uppercase">
                   {format(item.date, "d 'de' MMMM", { locale: es })}
@@ -68,7 +73,8 @@ export async function ImpactSection() {
                   {item.title}
                 </h3>
                 <p className="text-sm text-[var(--text-muted)] leading-relaxed line-clamp-3 font-medium">
-                  {item.feedType === 'news' ? item.flash_text : item.description}
+                  {item.feedType === 'news' ? item.flash_text : 
+                   item.feedType === 'article' ? item.content : item.description}
                 </p>
               </div>
 
