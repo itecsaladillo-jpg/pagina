@@ -15,14 +15,22 @@ export async function saveNotesAction(commissionId: string, content: string) {
   const supabase = await createClient()
   const today = new Date().toISOString().split('T')[0]
 
+  const id = commissionId === 'general' ? null : commissionId
+
   // Buscar si ya existe una nota activa de este día para esta comisión
-  const { data: existing } = await supabase
+  const query = supabase
     .from('meeting_notes')
     .select('id')
-    .eq('commission_id', commissionId)
     .eq('session_date', today)
     .eq('is_active', true)
-    .single()
+  
+  if (id) {
+    query.eq('commission_id', id)
+  } else {
+    query.is('commission_id', null)
+  }
+
+  const { data: existing } = await query.single()
 
   if (existing) {
     await supabase
@@ -34,7 +42,12 @@ export async function saveNotesAction(commissionId: string, content: string) {
 
   await supabase
     .from('meeting_notes')
-    .insert([{ commission_id: commissionId, content, updated_by: member.id, session_date: today }])
+    .insert([{ 
+      commission_id: id, 
+      content, 
+      updated_by: member.id, 
+      session_date: today 
+    }])
 
   return { success: true }
 }
@@ -68,28 +81,20 @@ export async function finalizeAndPublishAction(commissionId: string, content: st
       .eq('id', commissionId)
       .single()
 
-    const commissionName = commission?.name || 'Comisión'
+    const commissionName = commissionId === 'general' ? 'General' : (commission?.name || 'Comisión')
     const sessionDate = new Date().toLocaleDateString('es-AR', { day: 'numeric', month: 'long', year: 'numeric' })
 
-    // 3. Construir el Flash Informativo
-    const flashContent = `**📋 Resumen de Reunión — ${commissionName}**
-*Sesión del ${sessionDate}*
-
-${summary}
-
----
-
-**✅ Action Items:**
-${actionItems}`
-
-    // 4. Publicar en el Muro de Noticias
+    // 4. Publicar en el Muro de Noticias (alineado con tabla news_flashes)
     const { error: flashError } = await supabase
       .from('news_flashes')
       .insert([{
         title: `Resumen de Reunión — ${commissionName}`,
-        content: flashContent,
-        category: 'reunion',
-        commission_id: commissionId,
+        original_text: content,
+        summary: summary,
+        action_items: actionItems.split('\n').filter(Boolean),
+        flash_text: `📋 Se ha publicado la minuta de la Reunión ${commissionName} del ${sessionDate}.`,
+        source_type: 'reunion',
+        commission_id: commissionId === 'general' ? null : commissionId,
         author_id: member.id,
         is_published: true,
       }])
@@ -101,11 +106,18 @@ ${actionItems}`
 
     // 5. Marcar la nota como inactiva (sesión cerrada)
     const today = new Date().toISOString().split('T')[0]
-    await supabase
+    const closeQuery = supabase
       .from('meeting_notes')
       .update({ is_active: false })
-      .eq('commission_id', commissionId)
       .eq('session_date', today)
+    
+    if (commissionId === 'general') {
+      closeQuery.is('commission_id', null)
+    } else {
+      closeQuery.eq('commission_id', commissionId)
+    }
+    
+    await closeQuery
 
     revalidatePath('/dashboard/muro')
     revalidatePath('/dashboard/reuniones')

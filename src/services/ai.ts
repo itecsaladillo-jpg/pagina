@@ -122,3 +122,22 @@ ${text}
   const result = await model.generateContent(prompt)
   return result.response.text().trim()
 }
+
+/**
+ * Genera un Resumen Ejecutivo a partir de las notas de reunión.
+ * Wrapper conveniente sobre processWithAI.
+ */
+export async function generateExecutiveSummary(notes: string): Promise<string> {
+  const result = await processWithAI(notes, 'reunion')
+  return result.summary
+}
+
+/**
+ * Genera los Action Items formateados como lista de texto.
+ * Wrapper conveniente sobre processWithAI.
+ */
+export async function generateActionItems(notes: string): Promise<string> {
+  const result = await processWithAI(notes, 'reunion')
+  return result.action_items.map((item, i) => `${i + 1}. ${item}`).join('\n')
+}
+

@@ -48,6 +48,7 @@ export interface Commission {
   color: string | null
   is_active: boolean
   coordinator_id: string | null
+  meet_link: string | null
 }
 
 export interface CommissionMember {
