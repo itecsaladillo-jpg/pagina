@@ -14,6 +14,7 @@ export interface NewsFlash {
   title: string
   is_published: boolean
   tags: string[]
+  media_urls: string[]
 }
 
 export interface PublicArticle {

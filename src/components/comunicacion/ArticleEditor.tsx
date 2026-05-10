@@ -42,18 +42,41 @@ export function ArticleEditor({ member }: { member: any }) {
   const supabase = createClient()
 
   // ─── Manejo de archivos ───
-  const handleFiles = (files: FileList | null) => {
+  const handleFiles = async (files: FileList | null) => {
     if (!files) return
     
-    // Simulación de carga (en un entorno real subiríamos a Supabase Storage)
-    Array.from(files).forEach(file => {
-      const url = URL.createObjectURL(file)
-      setMedia(prev => [...prev, { 
-        url, 
-        type: file.type.startsWith('video') ? 'video' : 'image',
-        name: file.name
-      }])
-    })
+    setIsGenerating(true) // Usamos el loader general para indicar actividad
+    const newMedia = []
+
+    for (const file of Array.from(files)) {
+      try {
+        const fileExt = file.name.split('.').pop()
+        const fileName = `${Math.random()}-${Date.now()}.${fileExt}`
+        const filePath = `${member.id}/${fileName}`
+
+        const { data, error } = await supabase.storage
+          .from('article-media')
+          .upload(filePath, file)
+
+        if (error) throw error
+
+        const { data: { publicUrl } } = supabase.storage
+          .from('article-media')
+          .getPublicUrl(filePath)
+
+        newMedia.push({
+          url: publicUrl,
+          type: file.type.startsWith('video') ? 'video' : 'image',
+          name: file.name
+        })
+      } catch (err: any) {
+        console.error('Error subiendo archivo:', err.message)
+        alert('Error subiendo: ' + file.name)
+      }
+    }
+
+    setMedia(prev => [...prev, ...newMedia])
+    setIsGenerating(false)
   }
 
   const removeMedia = (index: number) => {

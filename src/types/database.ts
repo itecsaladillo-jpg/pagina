@@ -84,6 +84,7 @@ export interface ItecAction {
   responsible_id: string | null
   commission_id: string | null
   materials_urls: string[]
+  media_urls: string[]
 }
 
 export interface ActionRegistration {
