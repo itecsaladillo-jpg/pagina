@@ -76,3 +76,27 @@ export async function getActionAttendees(actionId: string) {
   }
   return data
 }
+
+/**
+ * Registra a un ciudadano externo en una acción (Server Action).
+ */
+export async function registerToActionAction(registration: {
+  action_id: string
+  full_name: string
+  email: string
+  phone: string
+  notes?: string
+}) {
+  const supabase = await createClient()
+  const { data, error } = await supabase
+    .from('action_registrations')
+    .insert([registration])
+    .select()
+    .single()
+
+  if (error) {
+    console.error('[registerToActionAction] error:', error.message)
+    return { success: false, error: error.message }
+  }
+  return { success: true, data }
+}

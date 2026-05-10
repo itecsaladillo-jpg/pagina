@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { registerToAction } from '@/services/actions'
+import { registerToActionAction } from '@/app/dashboard/acciones/actions'
 import { Loader2, CheckCircle2, AlertCircle, Send } from 'lucide-react'
 
 interface Props {
@@ -28,7 +28,7 @@ export function ActionRegistrationForm({ actionId, capacity }: Props) {
       notes: ''
     }
 
-    const res = await registerToAction(payload)
+    const res = await registerToActionAction(payload)
 
     if (res.success) {
       setIsSuccess(true)
