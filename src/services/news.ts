@@ -84,3 +84,17 @@ export async function getPublicArticles(): Promise<PublicArticle[]> {
   }
   return (data ?? []) as PublicArticle[]
 }
+
+export async function getAllArticles(): Promise<PublicArticle[]> {
+  const supabase = await createClient()
+  const { data, error } = await supabase
+    .from('public_articles')
+    .select('*')
+    .order('created_at', { ascending: false })
+
+  if (error) {
+    console.error('[newsService] getAllArticles error:', error.message)
+    return []
+  }
+  return (data ?? []) as PublicArticle[]
+}

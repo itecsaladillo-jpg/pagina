@@ -66,3 +66,23 @@ export async function publishArticleAction(formData: {
   revalidatePath('/') // Para que se vea en la home pública si existe
   return { success: true, data }
 }
+
+export async function deleteArticleAction(id: string) {
+  const member = await getCurrentMember()
+  if (!member || member.role !== 'admin') throw new Error('No autorizado')
+
+  const supabase = await createClient()
+  const { error } = await supabase
+    .from('public_articles')
+    .delete()
+    .eq('id', id)
+
+  if (error) {
+    console.error('[deleteArticleAction] Error:', error.message)
+    return { success: false, error: error.message }
+  }
+
+  revalidatePath('/dashboard/comunicacion')
+  revalidatePath('/')
+  return { success: true }
+}

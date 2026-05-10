@@ -2,6 +2,8 @@ import type { Metadata } from 'next'
 import { getCurrentMember } from '@/services/auth'
 import { redirect } from 'next/navigation'
 import { ArticleEditor } from '@/components/comunicacion/ArticleEditor'
+import { ArticleManagementList } from '@/components/comunicacion/ArticleManagementList'
+import { getAllArticles } from '@/services/news'
 
 export const metadata: Metadata = {
   title: 'Generador de Artículos — ITEC',
@@ -11,6 +13,8 @@ export default async function ComunicacionPage() {
   const member = await getCurrentMember()
   if (!member || member.role !== 'admin') redirect('/dashboard')
 
+  const articles = await getAllArticles()
+
   return (
     <div className="space-y-6">
       <div>
@@ -19,6 +23,8 @@ export default async function ComunicacionPage() {
       </div>
 
       <ArticleEditor member={member} />
+
+      <ArticleManagementList articles={articles} />
     </div>
   )
 }
