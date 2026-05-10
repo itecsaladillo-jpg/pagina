@@ -160,9 +160,10 @@ export async function generatePublicArticle(rawFacts: string): Promise<{ title: 
       - RESALTA: el progreso, la curiosidad tecnológica y la transformación social.
       
       ESTRUCTURA:
-      1. TÍTULO: Atrapante, corto y con fuerza.
-      2. CUERPO: 3-4 párrafos que narren los hechos con fluidez.
-      3. CIERRE (CTA): Una frase final que invite al lector a ser parte del cambio o a hacer algo más por su comunidad.
+      1. TÍTULO: Atrapante, corto y con fuerza. Sin comillas.
+      2. PRIMER PÁRRAFO (EL GANCHO): Debe ser una "IDEA FUERZA" que resuma el impacto social/tecnológico y deje al lector con ganas de leer el resto. Es fundamental que sea inspirador.
+      3. CUERPO: 2-3 párrafos adicionales que narren los hechos con fluidez.
+      4. CIERRE (CTA): Una frase final que invite al lector a ser parte del cambio o a hacer algo más por su comunidad.
       
       RESTRICCIONES:
       - No uses palabras informales ni lunfardo.
@@ -217,8 +218,9 @@ export async function generateActionSuccessStory(
       
       ESTRUCTURA:
       1. TÍTULO: Un titular potente de éxito.
-      2. CUERPO: Narra la jornada, resalta la participación y el entusiasmo.
-      3. CIERRE: Frase inspiradora sobre el futuro.
+      2. PRIMER PÁRRAFO: El gancho que resalta la magnitud del encuentro y el impacto en Saladillo.
+      3. CUERPO: Narra la jornada, resalta la participación y el entusiasmo.
+      4. CIERRE: Frase inspiradora sobre el futuro.
       
       Respondé en JSON: { "title": "...", "content": "..." }
     `,
