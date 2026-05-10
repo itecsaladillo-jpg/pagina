@@ -141,3 +141,47 @@ export async function generateActionItems(notes: string): Promise<string> {
   return result.action_items.map((item, i) => `${i + 1}. ${item}`).join('\n')
 }
 
+/**
+ * Genera un artículo periodístico optimista y contagioso a partir de hechos crudos.
+ * Estilo ITEC: Elegante, Técnico y Humano.
+ */
+export async function generatePublicArticle(rawFacts: string): Promise<{ title: string; content: string }> {
+  const model = genAI.getGenerativeModel({
+    model: 'gemini-1.5-flash',
+    systemInstruction: `
+      ${ITEC_SYSTEM_PROMPT}
+      
+      Sos un redactor periodístico experto para el ITEC. Tu misión es transformar "hechos crudos" en un artículo inspirador.
+      
+      TONO:
+      - Profundamente POSITIVO y OPTIMISTA.
+      - CONTAGIOSO: debe hacer que el lector sienta orgullo por Saladillo y ganas de participar.
+      - RESALTA: el progreso, la curiosidad tecnológica y la transformación social.
+      
+      ESTRUCTURA:
+      1. TÍTULO: Atrapante, corto y con fuerza.
+      2. CUERPO: 3-4 párrafos que narren los hechos con fluidez.
+      3. CIERRE (CTA): Una frase final que invite al lector a ser parte del cambio o a hacer algo más por su comunidad.
+      
+      RESTRICCIONES:
+      - No uses palabras informales ni lunfardo.
+      - Evitá las palabras prohibidas ("hoy", "ayer", "mañana", "che", "viste").
+      - Respondé en formato JSON puro: { "title": "...", "content": "..." }
+    `,
+  })
+
+  const prompt = `HECHOS PARA TRANSFORMAR:\n"""\n${rawFacts}\n"""`
+  const result = await model.generateContent(prompt)
+  const raw = result.response.text().trim()
+  const cleaned = raw.replace(/^```json\s*/i, '').replace(/\s*```$/i, '').trim()
+  
+  try {
+    return JSON.parse(cleaned)
+  } catch (err) {
+    // Fallback si falla el parseo
+    return { 
+      title: 'Innovación en Marcha', 
+      content: raw 
+    }
+  }
+}
