@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { CreateCommissionForm } from './CreateCommissionForm'
 import { toggleCommissionStatusAction } from './actions'
+import { MeetLinkEditor } from './MeetLinkEditor'
 
 export default async function ComisionesAdminPage() {
   const admin = await getCurrentMember()
@@ -82,6 +83,13 @@ export default async function ComisionesAdminPage() {
                 </button>
               </form>
             </div>
+
+            {/* Editor de Link de Meet — solo visible para admin */}
+            <MeetLinkEditor
+              commissionId={c.id}
+              commissionName={c.name}
+              currentLink={c.meet_link || null}
+            />
           </div>
         ))}
       </div>

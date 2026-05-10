@@ -13,6 +13,7 @@ export async function createCommissionAction(formData: FormData) {
   const description = formData.get('description') as string
   const icon = formData.get('icon') as string
   const color = formData.get('color') as string
+  const meet_link = formData.get('meet_link') as string
 
   const res = await createCommission({
     name,
@@ -20,10 +21,20 @@ export async function createCommissionAction(formData: FormData) {
     description,
     icon,
     color,
+    meet_link: meet_link || null,
     is_active: true,
     coordinator_id: null
   })
 
+  if (res.success) revalidatePath('/dashboard/comisiones')
+  return res
+}
+
+export async function updateMeetLinkAction(commissionId: string, meetLink: string) {
+  const admin = await getCurrentMember()
+  if (admin?.role !== 'admin') throw new Error('No autorizado')
+
+  const res = await updateCommission(commissionId, { meet_link: meetLink || null })
   if (res.success) revalidatePath('/dashboard/comisiones')
   return res
 }

@@ -74,6 +74,16 @@ export function CreateCommissionForm() {
             className="w-full bg-white/5 border border-[var(--border-subtle)] h-10 rounded-lg px-1 py-1 cursor-pointer"
           />
         </div>
+        <div className="md:col-span-2">
+          <label className="block text-[var(--text-muted)] text-xs mb-1">Link de Google Meet</label>
+          <input 
+            name="meet_link" 
+            type="url"
+            placeholder="https://meet.google.com/xxx-yyy-zzz"
+            className="w-full bg-white/5 border border-[var(--border-subtle)] rounded-lg px-3 py-2 text-white text-sm outline-none focus:border-[var(--accent-primary)]"
+          />
+          <p className="text-[10px] text-[var(--text-muted)] mt-1">Podés actualizarlo en cualquier momento desde Gestionar Comisiones.</p>
+        </div>
         <div className="md:col-span-2 flex justify-end gap-3 mt-2">
           <button 
             type="button"

@@ -8,11 +8,7 @@ export const metadata: Metadata = {
   title: 'Sala de Reuniones — ITEC',
 }
 
-// ─── Link fijo de Google Meet por comisión (configurar según corresponda) ───
-const MEET_LINKS: Record<string, string> = {
-  default: 'https://meet.google.com/itec-reunion',
-  // 'uuid-de-comision': 'https://meet.google.com/xxx-yyy-zzz',
-}
+const DEFAULT_MEET_LINK = 'https://meet.google.com/itec-reunion'
 
 export default async function ReunionesPage() {
   const member = await getCurrentMember()
@@ -57,7 +53,7 @@ export default async function ReunionesPage() {
     .eq('is_active', true)
     .single()
 
-  const meetLink = MEET_LINKS[commissionId] || MEET_LINKS.default
+  const meetLink = commission?.meet_link || commission?.[0]?.meet_link || DEFAULT_MEET_LINK
   const canFinalize = ['admin', 'coordinador'].includes(member.role)
 
   return (
