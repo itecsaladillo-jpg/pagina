@@ -1,8 +1,7 @@
 import type { Metadata } from 'next'
 import { getCurrentMember } from '@/services/auth'
 import { redirect } from 'next/navigation'
-import { ArticleEditor } from '@/components/comunicacion/ArticleEditor'
-import { ArticleManagementList } from '@/components/comunicacion/ArticleManagementList'
+import { ComunicacionTabs } from '@/components/comunicacion/ComunicacionTabs'
 import { getAllArticles } from '@/services/news'
 
 export const metadata: Metadata = {
@@ -16,15 +15,13 @@ export default async function ComunicacionPage() {
   const articles = await getAllArticles()
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold text-white tracking-tight">Comunicación Estratégica</h1>
-        <p className="text-[var(--text-muted)] text-sm">Transformá hechos en historias inspiradoras para la comunidad</p>
+        <h1 className="text-4xl font-black text-white tracking-tight">Comunicación Estratégica</h1>
+        <p className="text-[var(--text-muted)] text-lg mt-2">Gestioná la voz y el impacto institucional de ITEC</p>
       </div>
 
-      <ArticleEditor member={member} />
-
-      <ArticleManagementList articles={articles} />
+      <ComunicacionTabs member={member} articles={articles} />
     </div>
   )
 }
