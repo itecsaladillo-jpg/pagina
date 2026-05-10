@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { getCurrentMember } from '@/services/auth'
 import { redirect } from 'next/navigation'
 import { ComunicacionTabs } from '@/components/comunicacion/ComunicacionTabs'
-import { getAllArticles } from '@/services/news'
+import { getAllArticles, getNewsFlashes } from '@/services/news'
 
 export const metadata: Metadata = {
   title: 'Generador de Artículos — ITEC',
@@ -13,6 +13,7 @@ export default async function ComunicacionPage() {
   if (!member || member.role !== 'admin') redirect('/dashboard')
 
   const articles = await getAllArticles()
+  const flashes = await getNewsFlashes() // Obtener todos los publicados
 
   return (
     <div className="space-y-8">
@@ -21,7 +22,7 @@ export default async function ComunicacionPage() {
         <p className="text-[var(--text-muted)] text-lg mt-2">Gestioná la voz y el impacto institucional de ITEC</p>
       </div>
 
-      <ComunicacionTabs member={member} articles={articles} />
+      <ComunicacionTabs member={member} articles={articles} flashes={flashes} />
     </div>
   )
 }
