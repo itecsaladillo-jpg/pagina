@@ -5,6 +5,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 
 const navLinks = [
+  { label: 'Impacto', href: '/#impacto' },
   { label: 'Nosotros', href: '/#nosotros' },
   { label: 'Comisiones', href: '/#comisiones' },
   { label: 'Acciones', href: '/acciones' },

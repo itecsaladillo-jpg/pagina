@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { 
   Sparkles, 
@@ -27,6 +27,16 @@ export function ArticleEditor({ member }: { member: any }) {
   const [isPublishing, setIsPublishing] = useState(false)
   const [dragActive, setDragActive] = useState(false)
   const [step, setStep] = useState(1) // 1: Input, 2: Preview & Edit
+  const [currentMediaIdx, setCurrentMediaIdx] = useState(0)
+
+  useEffect(() => {
+    if (step === 2 && media.length > 1) {
+      const interval = setInterval(() => {
+        setCurrentMediaIdx(prev => (prev + 1) % media.length)
+      }, 4000)
+      return () => clearInterval(interval)
+    }
+  }, [step, media.length])
 
   const fileInputRef = useRef<HTMLInputElement>(null)
   const supabase = createClient()
@@ -224,34 +234,68 @@ export function ArticleEditor({ member }: { member: any }) {
                 className="space-y-6"
               >
                 {/* Title Editor */}
-                <input 
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  className="text-3xl font-black text-white bg-transparent border-b border-white/5 w-full focus:outline-none focus:border-blue-500/40 pb-2 tracking-tight"
-                />
+                <div className="group relative">
+                  <span className="absolute -top-6 left-0 text-[10px] uppercase font-bold text-blue-400 opacity-0 group-hover:opacity-100 transition-opacity">Título del Artículo (Editable)</span>
+                  <input 
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    className="text-3xl font-black text-white bg-white/[0.03] border-b-2 border-white/5 w-full focus:outline-none focus:border-blue-500/60 focus:bg-white/[0.05] p-2 rounded-t-xl transition-all tracking-tight"
+                  />
+                </div>
 
-                {/* Multimedia Slider/Grid */}
+                {/* Multimedia Slider */}
                 {media.length > 0 && (
                   <div className="relative rounded-2xl overflow-hidden border border-white/5 aspect-video bg-black/40">
-                    <img 
-                      src={media[0].url} 
-                      className="w-full h-full object-cover" 
-                      alt="Hero"
-                    />
+                    <AnimatePresence mode="wait">
+                      <motion.div
+                        key={currentMediaIdx}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 1 }}
+                        className="absolute inset-0"
+                      >
+                        {media[currentMediaIdx].type === 'image' ? (
+                          <img 
+                            src={media[currentMediaIdx].url} 
+                            className="w-full h-full object-cover" 
+                            alt={`Preview ${currentMediaIdx}`}
+                          />
+                        ) : (
+                          <video 
+                            src={media[currentMediaIdx].url} 
+                            className="w-full h-full object-cover"
+                            autoPlay 
+                            muted 
+                            loop 
+                          />
+                        )}
+                      </motion.div>
+                    </AnimatePresence>
+                    
+                    {/* Dots indicator */}
                     {media.length > 1 && (
-                      <div className="absolute bottom-4 right-4 bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-full text-[10px] font-bold text-white border border-white/10 uppercase tracking-widest">
-                        +{media.length - 1} imágenes
+                      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-1.5 z-10 bg-black/20 backdrop-blur-sm p-2 rounded-full border border-white/5">
+                        {media.map((_, i) => (
+                          <div 
+                            key={i}
+                            className={`w-1.5 h-1.5 rounded-full transition-all duration-500 ${i === currentMediaIdx ? 'bg-blue-400 w-4' : 'bg-white/20'}`}
+                          />
+                        ))}
                       </div>
                     )}
                   </div>
                 )}
 
                 {/* Content Editor */}
-                <textarea
-                  value={content}
-                  onChange={(e) => setContent(e.target.value)}
-                  className="w-full min-h-[300px] bg-transparent text-[var(--text-secondary)] text-sm leading-relaxed focus:outline-none resize-none font-serif"
-                />
+                <div className="group relative flex-1">
+                  <span className="absolute -top-6 left-0 text-[10px] uppercase font-bold text-blue-400 opacity-0 group-hover:opacity-100 transition-opacity">Contenido del Artículo (Editable)</span>
+                  <textarea
+                    value={content}
+                    onChange={(e) => setContent(e.target.value)}
+                    className="w-full min-h-[400px] bg-white/[0.02] border border-white/5 rounded-2xl p-6 text-[var(--text-secondary)] text-sm leading-relaxed focus:outline-none focus:border-blue-500/40 focus:bg-white/[0.04] transition-all font-serif"
+                  />
+                </div>
 
                 <div className="pt-8 flex gap-4">
                   <button 

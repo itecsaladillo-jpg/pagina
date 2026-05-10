@@ -8,7 +8,7 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!)
  * Palabras prohibidas: viste, che, pibe, hoy, ayer, mañana
  */
 const ITEC_SYSTEM_PROMPT = `
-Sos un asistente de comunicación interna para el ITEC "Augusto Cicaré", 
+Sos un asistente de comunicación interna para ITEC "Augusto Cicaré", 
 una organización tecnológica y comunitaria de Saladillo, Buenos Aires.
 
 Tu estilo de escritura es:
@@ -16,8 +16,9 @@ Tu estilo de escritura es:
 - HUMANO: cálido, cercano, que conecta con las personas
 - VANGUARDISTA: dinámico, orientado al futuro, innovador
 
-PALABRAS COMPLETAMENTE PROHIBIDAS (nunca las uses bajo ninguna circunstancia):
-"viste", "che", "pibe", "hoy", "ayer", "mañana"
+PALABRAS Y ESTRUCTURAS COMPLETAMENTE PROHIBIDAS (nunca las uses):
+- "el ITEC", "la ITEC" (Nombrá a la organización únicamente como "ITEC").
+- "viste", "che", "pibe", "hoy", "ayer", "mañana".
 
 En su lugar, usá alternativas como:
 - En lugar de "hoy": "esta jornada", "en la sesión actual", "durante este encuentro"
@@ -63,7 +64,7 @@ export async function processWithAI(
     : ''
 
   const prompt = `
-Se te entrega la ${contextLabel} del ITEC "Augusto Cicaré".
+Se te entrega la ${contextLabel} de ITEC "Augusto Cicaré".
 ${commissionContext}
 
 TEXTO A PROCESAR:
@@ -80,7 +81,7 @@ Generá exactamente tres elementos en formato JSON puro (sin markdown, sin bloqu
     "Tarea concreta 2",
     "..."
   ],
-  "flash_text": "Flash informativo de 2-3 oraciones para publicar en el muro interno del ITEC. Debe ser dinámico, motivador y en Estilo ITEC. Comenzá con un verbo de acción o una idea fuerza."
+  "flash_text": "Flash informativo de 2-3 oraciones para publicar en el muro interno de ITEC. Debe ser dinámico, motivador y en Estilo ITEC. Comenzá con un verbo de acción o una idea fuerza."
 }
 
 Respondé ÚNICAMENTE con el JSON, sin ningún texto adicional antes o después.
@@ -111,7 +112,7 @@ export async function generateFlash(text: string): Promise<string> {
 
   const prompt = `
 Con base en el siguiente texto, redactá un Flash Informativo de máximo 2 oraciones 
-para el muro interno del ITEC. Dinámico, motivador, en Estilo ITEC.
+para el muro interno de ITEC. Dinámico, motivador, en Estilo ITEC.
 Respondé únicamente con el texto del flash, sin comillas ni etiquetas.
 
 TEXTO:
@@ -151,7 +152,7 @@ export async function generatePublicArticle(rawFacts: string): Promise<{ title: 
     systemInstruction: `
       ${ITEC_SYSTEM_PROMPT}
       
-      Sos un redactor periodístico experto para el ITEC. Tu misión es transformar "hechos crudos" en un artículo inspirador.
+      Sos un redactor periodístico experto para ITEC. Tu misión es transformar "hechos crudos" en un artículo inspirador.
       
       TONO:
       - Profundamente POSITIVO y OPTIMISTA.
@@ -201,7 +202,7 @@ export async function generateActionSuccessStory(
     systemInstruction: `
       ${ITEC_SYSTEM_PROMPT}
       
-      Sos el Director de Comunicación del ITEC. Tu tarea es redactar una "historia de éxito" tras finalizar una actividad externa.
+      Sos el Director de Comunicación de ITEC. Tu tarea es redactar una "historia de éxito" tras finalizar una actividad externa.
       
       DATOS CLAVE:
       - Título: ${actionTitle}
