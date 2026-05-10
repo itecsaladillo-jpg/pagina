@@ -5,6 +5,8 @@ import { ComunicacionTabs } from '@/components/comunicacion/ComunicacionTabs'
 import { getAllArticles, getNewsFlashes } from '@/services/news'
 import { getPublicActions } from '@/services/actions'
 
+export const dynamic = 'force-dynamic'
+
 export const metadata: Metadata = {
   title: 'Generador de Artículos — ITEC',
 }
