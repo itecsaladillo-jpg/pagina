@@ -47,7 +47,7 @@ export async function processWithAI(
   commissionName?: string
 ): Promise<AIProcessResult> {
   const model = genAI.getGenerativeModel({
-    model: 'gemini-2.0-flash',
+    model: 'gemini-flash-lite-latest',
     systemInstruction: ITEC_SYSTEM_PROMPT,
   })
 
@@ -105,7 +105,7 @@ Respondé ÚNICAMENTE con el JSON, sin ningún texto adicional antes o después.
  */
 export async function generateFlash(text: string): Promise<string> {
   const model = genAI.getGenerativeModel({
-    model: 'gemini-2.0-flash',
+    model: 'gemini-flash-lite-latest',
     systemInstruction: ITEC_SYSTEM_PROMPT,
   })
 
@@ -147,7 +147,7 @@ export async function generateActionItems(notes: string): Promise<string> {
  */
 export async function generatePublicArticle(rawFacts: string): Promise<{ title: string; content: string }> {
   const model = genAI.getGenerativeModel({
-    model: 'gemini-2.0-flash',
+    model: 'gemini-flash-lite-latest',
     systemInstruction: `
       ${ITEC_SYSTEM_PROMPT}
       
@@ -197,7 +197,7 @@ export async function generateActionSuccessStory(
   keyTopics: string
 ): Promise<{ title: string; content: string }> {
   const model = genAI.getGenerativeModel({
-    model: 'gemini-2.0-flash',
+    model: 'gemini-flash-lite-latest',
     systemInstruction: `
       ${ITEC_SYSTEM_PROMPT}
       
