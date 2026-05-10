@@ -100,3 +100,24 @@ export async function registerToActionAction(registration: {
   }
   return { success: true, data }
 }
+
+export async function deleteActionAction(id: string) {
+  const member = await getCurrentMember()
+  if (!member || !['admin', 'coordinador'].includes(member.role)) throw new Error('No autorizado')
+
+  const supabase = await createClient()
+  const { error } = await supabase
+    .from('itec_actions')
+    .delete()
+    .eq('id', id)
+
+  if (error) {
+    console.error('[deleteActionAction] Error:', error.message)
+    return { success: false, error: error.message }
+  }
+
+  revalidatePath('/dashboard/acciones')
+  revalidatePath('/acciones')
+  revalidatePath('/')
+  return { success: true }
+}

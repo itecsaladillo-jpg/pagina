@@ -4,10 +4,11 @@ import { useState } from 'react'
 import { ArticleEditor } from './ArticleEditor'
 import { ArticleManagementList } from './ArticleManagementList'
 import { FlashManagementList } from './FlashManagementList'
-import { PenTool, ListOrdered, Zap } from 'lucide-react'
+import { ActionManagementList } from './ActionManagementList'
+import { PenTool, ListOrdered, Zap, Calendar } from 'lucide-react'
 
-export function ComunicacionTabs({ member, articles, flashes }: any) {
-  const [activeTab, setActiveTab] = useState<'redactar' | 'gestionar' | 'flashes'>('gestionar')
+export function ComunicacionTabs({ member, articles, flashes, actions }: any) {
+  const [activeTab, setActiveTab] = useState<'redactar' | 'gestionar' | 'flashes' | 'acciones'>('gestionar')
 
   return (
     <div className="space-y-6">
@@ -21,7 +22,7 @@ export function ComunicacionTabs({ member, articles, flashes }: any) {
           }`}
         >
           <ListOrdered size={18} />
-          Artículos Publicados
+          Artículos ({articles.length})
         </button>
         <button
           onClick={() => setActiveTab('flashes')}
@@ -32,7 +33,18 @@ export function ComunicacionTabs({ member, articles, flashes }: any) {
           }`}
         >
           <Zap size={18} />
-          Flashes (Novedades)
+          Flashes ({flashes.length})
+        </button>
+        <button
+          onClick={() => setActiveTab('acciones')}
+          className={`flex items-center gap-2 px-6 py-3 text-sm font-bold transition-all border-b-2 ${
+            activeTab === 'acciones' 
+              ? 'border-purple-500 text-white' 
+              : 'border-transparent text-white/40 hover:text-white'
+          }`}
+        >
+          <Calendar size={18} />
+          Acciones ({actions.length})
         </button>
         <button
           onClick={() => setActiveTab('redactar')}
@@ -50,6 +62,7 @@ export function ComunicacionTabs({ member, articles, flashes }: any) {
       <div className="mt-8">
         {activeTab === 'gestionar' && <ArticleManagementList articles={articles} />}
         {activeTab === 'flashes' && <FlashManagementList flashes={flashes} />}
+        {activeTab === 'acciones' && <ActionManagementList actions={actions} />}
         {activeTab === 'redactar' && <ArticleEditor member={member} />}
       </div>
     </div>
