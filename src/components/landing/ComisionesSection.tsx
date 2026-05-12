@@ -51,10 +51,10 @@ const comisiones = [
 
 export function ComisionesSection() {
   return (
-    <section id="comisiones" className="py-28 relative">
+    <section id="comisiones" className="py-16 relative">
       <div className="max-w-7xl mx-auto px-6">
         {/* Header */}
-        <div className="text-center mb-16">
+        <div className="text-center mb-10">
           <span className="inline-block text-xs font-bold tracking-[0.2em] text-[var(--accent-cyan-2)] uppercase mb-4 px-4 py-1.5 rounded-full border border-[var(--accent-cyan-2)]/20 bg-[var(--accent-cyan-2)]/5">
             Estructura organizativa
           </span>

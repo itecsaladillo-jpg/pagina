@@ -31,7 +31,7 @@ const valores = [
 
 export function AboutSection() {
   return (
-    <section id="nosotros" className="py-28 relative">
+    <section id="nosotros" className="py-16 relative">
       {/* Orbe decorativo */}
       <div className="absolute right-0 top-1/2 -translate-y-1/2 w-96 h-96 bg-violet-600/10 rounded-full blur-[120px] pointer-events-none" />
 

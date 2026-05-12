@@ -146,11 +146,11 @@ export function ImpactSectionClient({ news, actions, articles }: any) {
   ].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
 
   return (
-    <section id="impacto" className="py-32 relative overflow-hidden bg-black">
+    <section id="impacto" className="py-20 relative overflow-hidden bg-black">
       <div className="container mx-auto px-6 relative z-10">
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-8">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-8">
           <div className="max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-[10px] font-black uppercase tracking-widest mb-6">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-[10px] font-black uppercase tracking-widest mb-4">
               <Zap size={12} className="fill-blue-400" />
               Muro de Impacto
             </div>
@@ -158,7 +158,7 @@ export function ImpactSectionClient({ news, actions, articles }: any) {
               El motor que mueve a <br />
               <span className="text-gradient">Saladillo</span>
             </h2>
-            <p className="text-[var(--text-muted)] mt-8 text-xl leading-relaxed max-w-xl">
+            <p className="text-[var(--text-muted)] mt-4 text-xl leading-relaxed max-w-xl">
               Explorá las últimas novedades, eventos y capacitaciones de ITEC que están transformando nuestra comunidad.
             </p>
           </div>
