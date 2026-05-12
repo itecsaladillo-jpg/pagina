@@ -20,9 +20,10 @@ import { PublicArticle } from '@/services/news'
 
 interface ArticleManagementListProps {
   articles: PublicArticle[]
+  onEdit: (article: PublicArticle) => void
 }
 
-export function ArticleManagementList({ articles: initialArticles }: ArticleManagementListProps) {
+export function ArticleManagementList({ articles: initialArticles, onEdit }: ArticleManagementListProps) {
   const [articles, setArticles] = useState(initialArticles)
   const [isDeleting, setIsDeleting] = useState<string | null>(null)
 
@@ -129,6 +130,7 @@ export function ArticleManagementList({ articles: initialArticles }: ArticleMana
                         <ExternalLink size={16} />
                       </button>
                       <button 
+                        onClick={() => onEdit(article)}
                         title="Editar"
                         className="p-2 rounded-lg bg-white/5 border border-white/5 text-white/40 hover:text-blue-400 hover:bg-blue-500/10 hover:border-blue-500/20 transition-all"
                       >

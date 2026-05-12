@@ -29,6 +29,7 @@ export async function generateArticleDraftAction(rawFacts: string) {
  * Persiste el artículo final en la base de datos.
  */
 export async function publishArticleAction(formData: {
+  id?: string
   title: string
   content: string
   media_urls: string[]
@@ -39,32 +40,55 @@ export async function publishArticleAction(formData: {
 
   const supabase = await createClient()
   
-  // Generar slug simple
-  const slug = formData.title
-    .toLowerCase()
-    .replace(/[^\w\s-]/g, '')
-    .replace(/\s+/g, '-')
-    + '-' + Date.now().toString().slice(-4)
-
-  const { data, error } = await supabase
-    .from('public_articles')
-    .insert([{
-      ...formData,
-      slug,
-      author_id: member.id,
-      updated_at: new Date().toISOString()
-    }])
-    .select()
-    .single()
-
-  if (error) {
-    console.error('[publishArticleAction] Error:', error.message)
-    return { success: false, error: error.message }
+  const payload: any = {
+    title: formData.title,
+    content: formData.content,
+    media_urls: formData.media_urls,
+    is_published: formData.is_published,
+    author_id: member.id,
+    updated_at: new Date().toISOString()
   }
 
-  revalidatePath('/dashboard/comunicacion')
-  revalidatePath('/') // Para que se vea en la home pública si existe
-  return { success: true, data }
+  // Generar slug solo si es nuevo
+  if (!formData.id) {
+    const slug = formData.title
+      .toLowerCase()
+      .replace(/[^\w\s-]/g, '')
+      .replace(/\s+/g, '-')
+      + '-' + Date.now().toString().slice(-4)
+    payload.slug = slug
+  }
+
+  let query = supabase.from('public_articles')
+  
+  if (formData.id) {
+    const { data, error } = await query
+      .update(payload)
+      .eq('id', formData.id)
+      .select()
+      .single()
+    
+    if (error) {
+      console.error('[publishArticleAction] Update Error:', error.message)
+      return { success: false, error: error.message }
+    }
+    revalidatePath('/dashboard/comunicacion')
+    revalidatePath('/')
+    return { success: true, data }
+  } else {
+    const { data, error } = await query
+      .insert([payload])
+      .select()
+      .single()
+
+    if (error) {
+      console.error('[publishArticleAction] Insert Error:', error.message)
+      return { success: false, error: error.message }
+    }
+    revalidatePath('/dashboard/comunicacion')
+    revalidatePath('/')
+    return { success: true, data }
+  }
 }
 
 export async function deleteArticleAction(id: string) {

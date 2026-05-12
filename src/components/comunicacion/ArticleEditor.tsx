@@ -18,15 +18,21 @@ import {
 import { createClient } from '@/lib/supabase/client'
 import { generateArticleDraftAction, publishArticleAction } from '@/app/dashboard/comunicacion/actions'
 
-export function ArticleEditor({ member }: { member: any }) {
+export function ArticleEditor({ member, initialArticle, onCancel }: { member: any; initialArticle?: any; onCancel?: () => void }) {
   const [rawFacts, setRawFacts] = useState('')
-  const [title, setTitle] = useState('')
-  const [content, setContent] = useState('')
-  const [media, setMedia] = useState<{ url: string; type: string; name: string }[]>([])
+  const [title, setTitle] = useState(initialArticle?.title || '')
+  const [content, setContent] = useState(initialArticle?.content || '')
+  const [media, setMedia] = useState<{ url: string; type: string; name: string }[]>(
+    initialArticle?.media_urls?.map((url: string) => ({ 
+      url, 
+      type: url.match(/\.(mp4|webm|ogg)$/i) ? 'video' : 'image', 
+      name: 'Archivo' 
+    })) || []
+  )
   const [isGenerating, setIsGenerating] = useState(false)
   const [isPublishing, setIsPublishing] = useState(false)
   const [dragActive, setDragActive] = useState(false)
-  const [step, setStep] = useState(1) // 1: Input, 2: Preview & Edit
+  const [step, setStep] = useState(initialArticle ? 2 : 1) // Si hay artículo inicial, vamos directo al editor
   const [currentMediaIdx, setCurrentMediaIdx] = useState(0)
 
   useEffect(() => {
@@ -107,13 +113,15 @@ export function ArticleEditor({ member }: { member: any }) {
     setIsPublishing(true)
     try {
       const res = await publishArticleAction({
+        id: initialArticle?.id,
         title,
         content,
-        media_urls: media.map(m => m.url), // En real usaríamos las URLs de storage
+        media_urls: media.map(m => m.url),
         is_published: true
       })
       if (res.success) {
-        alert('Artículo publicado con éxito!')
+        alert(initialArticle ? 'Artículo actualizado con éxito!' : 'Artículo publicado con éxito!')
+        if (onCancel) onCancel() // Volver a la lista
         setStep(1)
         setRawFacts('')
         setMedia([])
@@ -322,10 +330,16 @@ export function ArticleEditor({ member }: { member: any }) {
 
                 <div className="pt-8 flex gap-4">
                   <button 
-                    onClick={() => setStep(1)}
+                    onClick={() => {
+                      if (initialArticle && onCancel) {
+                        onCancel()
+                      } else {
+                        setStep(1)
+                      }
+                    }}
                     className="flex-1 py-3 rounded-xl border border-white/5 text-white/60 text-xs font-bold uppercase tracking-widest hover:bg-white/5 transition-all"
                   >
-                    Descartar
+                    {initialArticle ? 'Cancelar' : 'Descartar'}
                   </button>
                   <button 
                     onClick={handlePublish}

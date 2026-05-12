@@ -9,12 +9,23 @@ import { PenTool, ListOrdered, Zap, Calendar } from 'lucide-react'
 
 export function ComunicacionTabs({ member, articles, flashes, actions }: any) {
   const [activeTab, setActiveTab] = useState<'redactar' | 'gestionar' | 'flashes' | 'acciones'>('gestionar')
+  const [editingArticle, setEditingArticle] = useState<any>(null)
+
+  const handleEditArticle = (article: any) => {
+    setEditingArticle(article)
+    setActiveTab('redactar')
+  }
+
+  const handleCancelEdit = () => {
+    setEditingArticle(null)
+    setActiveTab('gestionar')
+  }
 
   return (
     <div className="space-y-6">
       <div className="flex flex-wrap gap-4 border-b border-white/5 pb-1">
         <button
-          onClick={() => setActiveTab('gestionar')}
+          onClick={() => { setActiveTab('gestionar'); setEditingArticle(null); }}
           className={`flex items-center gap-2 px-6 py-3 text-sm font-bold transition-all border-b-2 ${
             activeTab === 'gestionar' 
               ? 'border-blue-500 text-white' 
@@ -24,6 +35,7 @@ export function ComunicacionTabs({ member, articles, flashes, actions }: any) {
           <ListOrdered size={18} />
           Artículos ({articles.length})
         </button>
+        {/* ... (rest of buttons) */}
         <button
           onClick={() => setActiveTab('flashes')}
           className={`flex items-center gap-2 px-6 py-3 text-sm font-bold transition-all border-b-2 ${
@@ -47,7 +59,7 @@ export function ComunicacionTabs({ member, articles, flashes, actions }: any) {
           Acciones ({actions.length})
         </button>
         <button
-          onClick={() => setActiveTab('redactar')}
+          onClick={() => { setActiveTab('redactar'); setEditingArticle(null); }}
           className={`flex items-center gap-2 px-6 py-3 text-sm font-bold transition-all border-b-2 ${
             activeTab === 'redactar' 
               ? 'border-emerald-500 text-white' 
@@ -55,15 +67,23 @@ export function ComunicacionTabs({ member, articles, flashes, actions }: any) {
           }`}
         >
           <PenTool size={18} />
-          Redactar Nuevo
+          {editingArticle ? 'Editando Artículo' : 'Redactar Nuevo'}
         </button>
       </div>
 
       <div className="mt-8">
-        {activeTab === 'gestionar' && <ArticleManagementList articles={articles} />}
+        {activeTab === 'gestionar' && (
+          <ArticleManagementList articles={articles} onEdit={handleEditArticle} />
+        )}
         {activeTab === 'flashes' && <FlashManagementList flashes={flashes} />}
         {activeTab === 'acciones' && <ActionManagementList actions={actions} />}
-        {activeTab === 'redactar' && <ArticleEditor member={member} />}
+        {activeTab === 'redactar' && (
+          <ArticleEditor 
+            member={member} 
+            initialArticle={editingArticle} 
+            onCancel={handleCancelEdit}
+          />
+        )}
       </div>
     </div>
   )
