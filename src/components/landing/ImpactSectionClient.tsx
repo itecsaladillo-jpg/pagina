@@ -17,8 +17,9 @@ function ImpactCard({ item, idx }: ImpactCardProps) {
   
   const getFirstParagraph = (text: string) => {
     if (!text) return ''
-    const lines = text.split('\n').filter(p => p.trim().length > 0)
-    return lines[0] || text
+    // Dividir por saltos de línea y tomar el primero que tenga contenido
+    const paragraphs = text.split(/\n+/).filter(p => p.trim().length > 0)
+    return paragraphs[0] || text
   }
 
   const media = item.media_urls || []
@@ -27,7 +28,7 @@ function ImpactCard({ item, idx }: ImpactCardProps) {
     if (media.length > 1) {
       const interval = setInterval(() => {
         setCurrentMediaIdx(prev => (prev + 1) % media.length)
-      }, 4000)
+      }, 5000) // Un poco más lento para permitir ver bien las fotos
       return () => clearInterval(interval)
     }
   }, [media.length])
@@ -42,55 +43,53 @@ function ImpactCard({ item, idx }: ImpactCardProps) {
     >
       {/* Slider Section */}
       <div className="relative aspect-[16/10] overflow-hidden bg-black/40">
-        {media.length > 0 ? (
-          <AnimatePresence mode="wait">
+        <AnimatePresence mode="wait">
+          {media.length > 0 ? (
             <motion.div
               key={currentMediaIdx}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
+              initial={{ opacity: 0, scale: 1.1 }}
+              animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 1 }}
+              transition={{ duration: 0.8 }}
               className="absolute inset-0"
             >
               <img 
                 src={media[currentMediaIdx]} 
-                className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" 
-                alt="" 
+                className="w-full h-full object-cover" 
+                alt={item.title} 
               />
             </motion.div>
-          </AnimatePresence>
-        ) : (
-          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-500/10 to-purple-500/10">
-            {item.feedType === 'action' ? <Calendar size={40} className="text-white/10" /> : <Sparkles size={40} className="text-white/10" />}
-          </div>
-        )}
+          ) : (
+            <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-500/10 to-purple-500/10">
+              {item.feedType === 'action' ? <Calendar size={40} className="text-white/10" /> : <Sparkles size={40} className="text-white/10" />}
+            </div>
+          )}
+        </AnimatePresence>
         
         {/* Overlays */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-80" />
 
+        {/* Badge */}
         <div className="absolute top-4 left-4 z-20">
           <div className={`
             flex items-center gap-2 px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest backdrop-blur-md border border-white/10
             ${item.feedType === 'action' ? 'bg-purple-500/30 text-purple-200' : 
-              item.feedType === 'article' ? 'bg-blue-500/30 text-blue-200' : 'bg-emerald-500/30 text-emerald-200'}
+              item.feedType === 'article' ? 'bg-blue-600/40 text-blue-100 border-blue-400/30' : 'bg-emerald-500/30 text-emerald-200'}
           `}>
             {item.feedType === 'action' ? <Calendar size={12} /> : 
-             item.feedType === 'article' ? <Sparkles size={12} /> : <MessageSquare size={12} />}
+             item.feedType === 'article' ? <Zap size={12} className="fill-blue-400" /> : <MessageSquare size={12} />}
             {item.feedType === 'action' ? 'Evento' : 
-             item.feedType === 'article' ? 'Artículo' : 'Novedad'}
+             item.feedType === 'article' ? 'Impacto Regional' : 'Novedad'}
           </div>
         </div>
 
-        <div className="absolute bottom-4 left-4 z-20 text-[10px] text-white/80 font-bold uppercase tracking-widest px-2 py-1">
-          {format(new Date(item.date), "d 'de' MMMM", { locale: es })}
-        </div>
-
+        {/* Indicators */}
         {media.length > 1 && (
-          <div className="absolute bottom-4 right-4 flex gap-1.5 z-20">
+          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-1.5 z-20 bg-black/20 backdrop-blur-sm p-1.5 rounded-full border border-white/5">
             {media.map((_: any, i: number) => (
               <div 
                 key={i}
-                className={`w-1.5 h-1.5 rounded-full transition-all duration-700 ${i === currentMediaIdx ? 'bg-white w-4' : 'bg-white/20'}`}
+                className={`w-1.5 h-1.5 rounded-full transition-all duration-500 ${i === currentMediaIdx ? 'bg-blue-400 w-4' : 'bg-white/20'}`}
               />
             ))}
           </div>
@@ -99,14 +98,19 @@ function ImpactCard({ item, idx }: ImpactCardProps) {
 
       {/* Text Content */}
       <div className="p-8 flex-1 flex flex-col">
-        <h3 className="text-xl font-bold text-white group-hover:text-blue-400 transition-colors leading-snug mb-4">
+        <div className="text-[10px] text-[var(--text-muted)] font-black uppercase tracking-[0.2em] mb-3">
+          {format(new Date(item.date), "d 'de' MMMM, yyyy", { locale: es })}
+        </div>
+        
+        <h3 className="text-xl font-bold text-white group-hover:text-blue-400 transition-colors leading-tight mb-4 line-clamp-2">
           {item.title}
         </h3>
-        <p className="text-sm text-[var(--text-muted)] leading-relaxed line-clamp-3 font-medium mb-8">
+        
+        <p className="text-sm text-[var(--text-secondary)] leading-relaxed line-clamp-4 font-medium mb-8 italic">
           {item.feedType === 'news' ? item.flash_text : getFirstParagraph(item.feedType === 'article' ? item.content : item.description)}
         </p>
 
-        <div className="mt-auto">
+        <div className="mt-auto pt-4 border-t border-white/5">
           {item.feedType === 'action' ? (
             <Link 
               href={`/acciones/${item.id}`}
@@ -120,12 +124,12 @@ function ImpactCard({ item, idx }: ImpactCardProps) {
               href={`/articulo/${item.slug || item.id}`}
               className="inline-flex items-center gap-2 text-xs font-bold text-blue-400 hover:text-blue-300 transition-colors group/link"
             >
-              Leer artículo completo
+              Leer historia completa
               <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" />
             </Link>
           ) : (
-            <div className="text-[10px] text-white/20 font-black uppercase tracking-[0.2em]">
-              Impacto Institucional
+            <div className="text-[10px] text-blue-400/50 font-black uppercase tracking-[0.2em]">
+              Noticia Institucional
             </div>
           )}
         </div>
