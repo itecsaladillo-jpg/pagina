@@ -161,7 +161,7 @@ export async function generatePublicArticle(rawFacts: string): Promise<{ title: 
       
       ESTRUCTURA:
       1. TÍTULO: Atrapante, corto y con fuerza. Sin comillas.
-      2. PRIMER PÁRRAFO (EL GANCHO): Debe ser una "IDEA FUERZA" que resuma el impacto social/tecnológico y deje al lector con ganas de leer el resto. Es fundamental que sea inspirador.
+      2. PRIMER PÁRRAFO (EL GANCHO): Debe ser una "IDEA FUERZA" extremadamente contundente y positiva que resuma el impacto social/tecnológico. Su objetivo es tentar al lector a abrir el artículo completo. RESTRICCIÓN CRÍTICA: Este párrafo DEBE tener un máximo de 25 palabras.
       3. CUERPO: 2-3 párrafos adicionales que narren los hechos con fluidez.
       4. CIERRE (CTA): Una frase final que invite al lector a ser parte del cambio o a hacer algo más por su comunidad.
       
@@ -218,7 +218,7 @@ export async function generateActionSuccessStory(
       
       ESTRUCTURA:
       1. TÍTULO: Un titular potente de éxito.
-      2. PRIMER PÁRRAFO: El gancho que resalta la magnitud del encuentro y el impacto en Saladillo.
+      2. PRIMER PÁRRAFO: El gancho que resalta la magnitud del encuentro y el impacto en Saladillo. Debe ser contundente y positivo para tentar al lector a leer más. RESTRICCIÓN CRÍTICA: Máximo 25 palabras.
       3. CUERPO: Narra la jornada, resalta la participación y el entusiasmo.
       4. CIERRE: Frase inspiradora sobre el futuro.
       
