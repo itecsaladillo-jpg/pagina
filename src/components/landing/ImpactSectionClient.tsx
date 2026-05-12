@@ -97,20 +97,20 @@ function ImpactCard({ item, idx }: ImpactCardProps) {
       </div>
 
       {/* Text Content */}
-      <div className="p-8 flex-1 flex flex-col">
-        <div className="text-[10px] text-[var(--text-muted)] font-black uppercase tracking-[0.2em] mb-3">
+      <div className="p-6 flex-1 flex flex-col">
+        <div className="text-[10px] text-[var(--text-muted)] font-black uppercase tracking-[0.2em] mb-1">
           {format(new Date(item.date), "d 'de' MMMM, yyyy", { locale: es })}
         </div>
         
-        <h3 className="text-xl font-bold text-white group-hover:text-blue-400 transition-colors leading-tight mb-4 line-clamp-2">
+        <h3 className="text-lg font-bold text-white group-hover:text-blue-400 transition-colors leading-tight mb-2 line-clamp-2">
           {item.title}
         </h3>
         
-        <p className="text-sm text-[var(--text-secondary)] leading-relaxed line-clamp-4 font-medium mb-8 italic">
+        <p className="text-sm text-[var(--text-secondary)] leading-relaxed line-clamp-3 font-medium mb-4 italic">
           {item.feedType === 'news' ? item.flash_text : getFirstParagraph(item.feedType === 'article' ? item.content : item.description)}
         </p>
 
-        <div className="mt-auto pt-4 border-t border-white/5">
+        <div className="mt-auto pt-3 border-t border-white/5">
           {item.feedType === 'action' ? (
             <Link 
               href={`/acciones/${item.id}`}
