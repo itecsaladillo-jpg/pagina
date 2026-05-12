@@ -58,6 +58,7 @@ export async function processTextAction(
     author_id: member.id,
     is_published: true,
     tags: [],
+    media_urls: [],
   })
 
   if (!saved) {
