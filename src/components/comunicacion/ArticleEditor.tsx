@@ -46,7 +46,7 @@ export function ArticleEditor({ member }: { member: any }) {
     if (!files) return
     
     setIsGenerating(true) // Usamos el loader general para indicar actividad
-    const newMedia = []
+    const newMedia: { url: string; type: string; name: string }[] = []
 
     for (const file of Array.from(files)) {
       try {
