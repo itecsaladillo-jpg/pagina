@@ -37,7 +37,7 @@ export function Navbar() {
           <div className="absolute left-1/2 -translate-x-1/2 -bottom-2 w-24 h-10 bg-[#3b82f6] blur-[40px] opacity-50 -z-10 rounded-full" />
           
           <Image
-            src="/logoitectrans.png"
+            src="/logoitectrans_v2.png"
             alt="ITEC Augusto Cicaré"
             width={140}
             height={52}

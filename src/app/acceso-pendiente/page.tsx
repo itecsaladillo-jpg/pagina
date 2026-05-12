@@ -15,7 +15,7 @@ export default function AccesoPendientePage() {
         {/* Logo */}
         <div className="flex justify-center mb-8">
           <Image
-            src="/logoitectrans.png"
+            src="/logoitectrans_v2.png"
             alt="ITEC Augusto Cicaré"
             width={180}
             height={68}

@@ -9,7 +9,7 @@ export function Footer() {
           {/* Logo */}
           <div className="flex items-center">
             <Image
-              src="/logoitectrans.png"
+              src="/logoitectrans_v2.png"
               alt="ITEC Augusto Cicaré"
               width={160}
               height={60}

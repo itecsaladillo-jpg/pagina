@@ -51,7 +51,7 @@ export function HeroSection() {
             />
 
             <Image
-              src="/logoitectrans.png"
+              src="/logoitectrans_v2.png"
               alt="ITEC Augusto Cicaré"
               width={400}
               height={150}

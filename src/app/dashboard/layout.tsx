@@ -81,7 +81,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         <div className="p-5 border-b border-[var(--border-subtle)]">
           <Link href="/" className="block">
             <Image
-              src="/logoitectrans.png"
+              src="/logoitectrans_v2.png"
               alt="ITEC Augusto Cicaré"
               width={140}
               height={52}
