@@ -85,16 +85,16 @@ body {
 }
 
 @keyframes fade-in-out {
-  0% { opacity: 0; }
-  2.38% { opacity: 1; }
+  0% { opacity: 1; }
   4.76% { opacity: 1; }
   7.14% { opacity: 0; }
-  100% { opacity: 0; }
+  97% { opacity: 0; }
+  100% { opacity: 1; }
 }
 
 .animate-fade-cycle {
   animation: fade-in-out 210s infinite both;
-  opacity: 0;
+  opacity: 1;
 }
 
 @keyframes spotlight-ltr {
@@ -221,7 +221,7 @@ body {
   font-weight: 900;
   line-height: 1;
   display: block;
-  font-size: clamp(1.44rem, 3.9vw, 3.3rem);
+  font-size: clamp(1.66rem, 4.5vw, 3.8rem);
   letter-spacing: -0.02em;
 }
 .spotlight-i {
@@ -229,7 +229,7 @@ body {
     transparent 0%, transparent 28%,
     #facc15aa 42%, #facc15 50%, #facc15aa 58%,
     transparent 72%, transparent 100%);
-  animation: spotlight-ltr 6.3s ease-in-out infinite alternate;
+  animation: spotlight-ltr 5.3s ease-in-out infinite alternate;
   animation-delay: 0s;
 }
 .spotlight-t {
@@ -237,7 +237,7 @@ body {
     transparent 0%, transparent 28%,
     #3b82f6aa 42%, #3b82f6 50%, #3b82f6aa 58%,
     transparent 72%, transparent 100%);
-  animation: spotlight-ltr 9.3s ease-in-out infinite alternate;
+  animation: spotlight-ltr 12.7s ease-in-out infinite alternate;
   animation-delay: 0.5s;
 }
 .spotlight-e {
@@ -245,7 +245,7 @@ body {
     transparent 0%, transparent 28%,
     #ef4444aa 42%, #ef4444 50%, #ef4444aa 58%,
     transparent 72%, transparent 100%);
-  animation: spotlight-ltr 7.7s ease-in-out infinite alternate;
+  animation: spotlight-ltr 8.1s ease-in-out infinite alternate;
   animation-delay: 1.0s;
 }
 .spotlight-c {
@@ -253,6 +253,6 @@ body {
     transparent 0%, transparent 28%,
     #22c55eaa 42%, #22c55e 50%, #22c55eaa 58%,
     transparent 72%, transparent 100%);
-  animation: spotlight-ltr 11.7s ease-in-out infinite alternate;
+  animation: spotlight-ltr 15.4s ease-in-out infinite alternate;
   animation-delay: 1.5s;
 }

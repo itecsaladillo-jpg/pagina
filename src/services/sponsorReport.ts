@@ -90,7 +90,7 @@ PALABRAS Y CONSTRUCCIONES PROHIBIDAS:
 // ─────────────────────────────────────────
 
 export async function generateSponsorReport(data: SponsorReportInput): Promise<SponsorReportOutput> {
-  const apiKey = process.env.GEMINI_API_KEY
+  const apiKey = process.env.GEMINI_API_KEY_2 || process.env.GEMINI_API_KEY
 
   // Fallback elegante si no hay clave
   if (!apiKey) {
