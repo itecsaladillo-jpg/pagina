@@ -8,7 +8,10 @@ export function VideotecaSection() {
   const [activeVideo, setActiveVideo] = useState<Video | null>(null)
   const [loading, setLoading] = useState(true)
 
+  const [mounted, setMounted] = useState(false)
+
   useEffect(() => {
+    setMounted(true)
     const loadVideos = async () => {
       try {
         const data = await videoService.getPublicVideos()
@@ -25,8 +28,7 @@ export function VideotecaSection() {
     loadVideos()
   }, [])
 
-  if (loading) return null
-  if (videos.length === 0) return null
+  if (!mounted || loading || videos.length === 0) return null
 
   const activeVideoId = activeVideo ? getYouTubeID(activeVideo.youtube_url) : null
 
@@ -54,7 +56,7 @@ export function VideotecaSection() {
               {activeVideoId ? (
                 <iframe
                   src={`https://www.youtube.com/embed/${activeVideoId}?autoplay=1`}
-                  title={activeVideo?.title}
+                  title={activeVideo?.title || 'Reproductor de video'}
                   className="absolute inset-0 w-full h-full"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
@@ -72,7 +74,7 @@ export function VideotecaSection() {
           </div>
 
           {/* Galería Lateral / Lista */}
-          <div className="lg:col-span-4 h-fit max-h-[600px] overflow-y-auto pr-2 custom-scrollbar">
+          <div className="lg:col-span-4 h-fit max-h-[600px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
             <div className="flex flex-col gap-4">
               {videos.map((video) => (
                 <button
@@ -111,22 +113,6 @@ export function VideotecaSection() {
           </div>
         </div>
       </div>
-
-      <style jsx>{`
-        .custom-scrollbar::-webkit-scrollbar {
-          width: 4px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-          background: transparent;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-          background: rgba(255, 255, 255, 0.1);
-          border-radius: 10px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-          background: rgba(255, 255, 255, 0.2);
-        }
-      `}</style>
     </section>
   )
 }
