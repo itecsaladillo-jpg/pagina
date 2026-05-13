@@ -1,5 +1,5 @@
 /**
- * Tipos de base de datos para la plataforma ITEC Augusto Cicaré
+ * Tipos de base de datos para la plataforma ITEC Saladillo
  * Estructura sincronizada con el schema de Supabase
  * v2 — agrega Sponsors y Reportes
  */

@@ -15,7 +15,7 @@ export default async function DashboardPage() {
           Hola, {member.full_name.split(' ')[0]} 👋
         </h1>
         <p className="text-[var(--text-secondary)] text-sm">
-          Bienvenido al panel de control del ITEC "Augusto Cicaré"
+          Bienvenido al panel de control del ITEC Saladillo
         </p>
       </div>
 

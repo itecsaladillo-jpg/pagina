@@ -231,7 +231,7 @@ export function MeetingLobby(props: Props) {
           {/* Título */}
           <div className="space-y-2">
             <p className="text-[10px] uppercase tracking-widest text-[var(--text-muted)]">
-              Reunión interna · ITEC Augusto Cicaré
+              Reunión interna · ITEC Saladillo
             </p>
             <h2 className="text-2xl md:text-3xl font-black text-white leading-tight">
               Reunión de Comisión<br />

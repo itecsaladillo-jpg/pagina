@@ -8,7 +8,7 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!)
  * Palabras prohibidas: viste, che, pibe, hoy, ayer, mañana
  */
 const ITEC_SYSTEM_PROMPT = `
-Sos un asistente de comunicación interna para ITEC "Augusto Cicaré", 
+Sos un asistente de comunicación interna para ITEC Saladillo, 
 una organización tecnológica y comunitaria de Saladillo, Buenos Aires.
 
 Tu estilo de escritura es:
@@ -48,7 +48,7 @@ export async function processWithAI(
   commissionName?: string
 ): Promise<AIProcessResult> {
   const model = genAI.getGenerativeModel({
-    model: 'gemini-flash-lite-latest',
+    model: 'gemini-flash-latest',
     systemInstruction: ITEC_SYSTEM_PROMPT,
   })
 
@@ -64,7 +64,7 @@ export async function processWithAI(
     : ''
 
   const prompt = `
-Se te entrega la ${contextLabel} de ITEC "Augusto Cicaré".
+Se te entrega la ${contextLabel} de ITEC Saladillo.
 ${commissionContext}
 
 TEXTO A PROCESAR:
@@ -106,7 +106,7 @@ Respondé ÚNICAMENTE con el JSON, sin ningún texto adicional antes o después.
  */
 export async function generateFlash(text: string): Promise<string> {
   const model = genAI.getGenerativeModel({
-    model: 'gemini-flash-lite-latest',
+    model: 'gemini-flash-latest',
     systemInstruction: ITEC_SYSTEM_PROMPT,
   })
 
@@ -148,7 +148,7 @@ export async function generateActionItems(notes: string): Promise<string> {
  */
 export async function generatePublicArticle(rawFacts: string): Promise<{ title: string; content: string }> {
   const model = genAI.getGenerativeModel({
-    model: 'gemini-flash-lite-latest',
+    model: 'gemini-flash-latest',
     systemInstruction: `
       ${ITEC_SYSTEM_PROMPT}
       
@@ -199,7 +199,7 @@ export async function generateActionSuccessStory(
   keyTopics: string
 ): Promise<{ title: string; content: string }> {
   const model = genAI.getGenerativeModel({
-    model: 'gemini-flash-lite-latest',
+    model: 'gemini-flash-latest',
     systemInstruction: `
       ${ITEC_SYSTEM_PROMPT}
       

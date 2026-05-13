@@ -52,7 +52,7 @@ export function HeroSection() {
 
             <Image
               src="/logoitectrans_v2.png"
-              alt="ITEC Augusto Cicaré"
+              alt="ITEC Saladillo"
               width={400}
               height={150}
               className="w-64 sm:w-80 md:w-96 h-auto object-contain drop-shadow-2xl relative z-10"
@@ -70,26 +70,20 @@ export function HeroSection() {
             {/* CTAs */}
             <div className="flex flex-col sm:flex-row items-center md:items-start gap-3 mt-2 animate-fade-up delay-300 relative z-10" style={{ animationFillMode: 'both' }}>
               <a href="#nosotros" className="btn-primary text-sm px-6 py-3">
-                <span>Conocé el ITEC</span>
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                </svg>
+                <span>Conocé ITEC</span>
               </a>
               <Link href="/login" className="btn-outline text-sm px-6 py-3">
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
-                </svg>
                 <span>Acceso Miembros</span>
               </Link>
             </div>
 
             {/* Botones de Secciones Adicionales */}
             <div className="flex flex-wrap items-center justify-center md:justify-start gap-2 mt-4 animate-fade-up delay-400 relative z-10" style={{ animationFillMode: 'both' }}>
-              <a href="#comisiones" className="btn-outline text-xs px-4 py-2 border-dashed opacity-80 hover:opacity-100">
-                <span>Comisiones</span>
+              <a href="#acciones" className="btn-outline text-xs px-4 py-2 border-dashed opacity-80 hover:opacity-100">
+                <span>Acciones</span>
               </a>
-              <a href="#capacitaciones" className="btn-outline text-xs px-4 py-2 border-dashed opacity-80 hover:opacity-100">
-                <span>Capacitaciones</span>
+              <a href="#sponsors" className="btn-outline text-xs px-4 py-2 border-dashed opacity-80 hover:opacity-100">
+                <span>Sponsors</span>
               </a>
               <a href="#ideas" className="btn-outline text-xs px-4 py-2 border-dashed opacity-80 hover:opacity-100">
                 <span>Buzón de Ideas</span>

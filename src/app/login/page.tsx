@@ -23,7 +23,7 @@ export default async function LoginPage({
         <div className="flex justify-center mb-6">
           <Image
             src="/logoitectrans_v2.png"
-            alt="ITEC Augusto Cicaré"
+            alt="ITEC Saladillo"
             width={220}
             height={82}
             className="h-20 w-auto object-contain"

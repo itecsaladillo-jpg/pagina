@@ -47,12 +47,12 @@ export function AboutSection() {
               <span className="text-gradient">ciencia cobra vida</span>
             </h2>
             <p className="text-[var(--text-secondary)] text-lg leading-relaxed mb-6">
-              El ITEC Augusto Cicaré nació con una misión clara: democratizar el acceso al
+              El ITEC Saladillo nació con una misión clara: democratizar el acceso al
               conocimiento científico y tecnológico en Saladillo. Somos una ONG formada por
               personas apasionadas que creen en el poder transformador de la ciencia.
             </p>
             <p className="text-[var(--text-secondary)] leading-relaxed mb-8">
-              Nuestro nombre rinde homenaje a{' '}
+              Nuestra esencia rinde homenaje a{' '}
               <strong className="text-white">Augusto Cicaré</strong>, el inventor argentino
               de Saladillo reconocido mundialmente por sus innovaciones en helicópteros —
               un símbolo de que la creatividad y la perseverancia no tienen límites geográficos.

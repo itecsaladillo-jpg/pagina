@@ -79,6 +79,7 @@ export function ComunicacionTabs({ member, articles, flashes, actions }: any) {
         {activeTab === 'acciones' && <ActionManagementList actions={actions} />}
         {activeTab === 'redactar' && (
           <ArticleEditor 
+            key={editingArticle?.id || 'new'}
             member={member} 
             initialArticle={editingArticle} 
             onCancel={handleCancelEdit}

@@ -25,13 +25,28 @@ function ImpactCard({ item, idx }: ImpactCardProps) {
   const media = item.media_urls || []
   
   useEffect(() => {
+    let intervalId: NodeJS.Timeout;
+    let timeoutId: NodeJS.Timeout;
+
     if (media.length > 1) {
-      const interval = setInterval(() => {
-        setCurrentMediaIdx(prev => (prev + 1) % media.length)
-      }, 5000) // Un poco más lento para permitir ver bien las fotos
-      return () => clearInterval(interval)
+      // Retraso inicial aleatorio (0 a 4s) para que no arranquen todos juntos
+      const initialDelay = Math.random() * 4000;
+      // Intervalo de ciclo variado (5s a 7s)
+      const intervalTime = 5000 + (Math.random() * 2000);
+
+      timeoutId = setTimeout(() => {
+        setCurrentMediaIdx(prev => (prev + 1) % media.length);
+        intervalId = setInterval(() => {
+          setCurrentMediaIdx(prev => (prev + 1) % media.length);
+        }, intervalTime);
+      }, initialDelay);
     }
-  }, [media.length])
+
+    return () => {
+      clearTimeout(timeoutId);
+      clearInterval(intervalId);
+    };
+  }, [media.length, idx]) // Incluimos idx por seguridad although random es suficiente
 
   return (
     <motion.div 
@@ -79,7 +94,7 @@ function ImpactCard({ item, idx }: ImpactCardProps) {
             {item.feedType === 'action' ? <Calendar size={12} /> : 
              item.feedType === 'article' ? <Zap size={12} className="fill-blue-400" /> : <MessageSquare size={12} />}
             {item.feedType === 'action' ? 'Evento' : 
-             item.feedType === 'article' ? 'Impacto Regional' : 'Novedad'}
+             item.feedType === 'article' ? (item.excerpt || 'Impacto Regional') : 'Novedad'}
           </div>
         </div>
 
@@ -102,11 +117,11 @@ function ImpactCard({ item, idx }: ImpactCardProps) {
           {format(new Date(item.date), "d 'de' MMMM, yyyy", { locale: es })}
         </div>
         
-        <h3 className="text-lg font-bold text-white group-hover:text-blue-400 transition-colors leading-tight mb-2 line-clamp-2">
+        <h3 className="text-lg font-bold text-white group-hover:text-blue-400 transition-colors leading-tight mb-2">
           {item.title}
         </h3>
         
-        <p className="text-sm text-[var(--text-secondary)] leading-relaxed line-clamp-3 font-medium mb-4 italic">
+        <p className="text-sm text-[var(--text-secondary)] leading-relaxed font-medium mb-4 italic">
           {item.feedType === 'news' ? item.flash_text : getFirstParagraph(item.feedType === 'article' ? item.content : item.description)}
         </p>
 
@@ -146,32 +161,43 @@ export function ImpactSectionClient({ news, actions, articles }: any) {
   ].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
 
   return (
-    <section id="impacto" className="pt-10 pb-20 relative overflow-hidden bg-black">
-      <div className="container mx-auto px-6 relative z-10">
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-8">
-          <div className="max-w-4xl">
-            <h2 className="text-4xl md:text-6xl font-black text-white leading-[1.1] tracking-tighter">
-              El motor que mueve a <span className="text-gradient">Saladillo</span>
+    <section id="acciones" className="pt-7 pb-14 relative overflow-hidden bg-black scroll-mt-16">
+      <div className="max-w-7xl mx-auto w-full px-6 relative z-10">
+        
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 items-start">
+          {/* Primera fila: Título + 2 Cards */}
+          <div className="lg:col-span-1 space-y-6 lg:pt-0">
+            <span className="inline-block text-xs font-bold tracking-[0.2em] text-[var(--accent-warm)] uppercase px-4 py-1.5 rounded-full border border-[var(--accent-warm)]/20 bg-[var(--accent-warm)]/5 mb-4">
+              ITEC EN MOVIMIENTO
+            </span>
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-white leading-[1.1] tracking-tighter">
+              Un motor <br />
+              que mueve <br />
+              a <span className="text-gradient">Saladillo</span>
             </h2>
-            <p className="text-[var(--text-muted)] mt-2 text-xl leading-relaxed max-w-xl">
-              Explorá las últimas novedades, eventos y capacitaciones de ITEC que están transformando nuestra comunidad.
+            <p className="text-[var(--text-muted)] text-lg md:text-xl leading-relaxed max-w-none">
+              Explorá las últimas novedades, <br />
+              eventos y capacitaciones de ITEC <br />
+              que están transformando <br />
+              nuestra comunidad.
             </p>
           </div>
-          
-          <Link 
-            href="/acciones"
-            className="px-10 py-5 rounded-2xl bg-white/5 border border-white/10 text-white font-bold text-sm hover:bg-white/10 transition-all backdrop-blur-md group"
-          >
-            Ver catálogo completo
-            <ChevronRight className="inline ml-2 group-hover:translate-x-1 transition-transform" size={16} />
-          </Link>
+
+          <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-10">
+            {feedItems.slice(0, 2).map((item: any, idx: number) => (
+              <ImpactCard key={idx} item={item} idx={idx} />
+            ))}
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-          {feedItems.slice(0, 6).map((item, idx) => (
-            <ImpactCard key={idx} item={item} idx={idx} />
-          ))}
-        </div>
+        {/* Filas siguientes: 3 Cards por fila */}
+        {feedItems.length > 2 && (
+          <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+            {feedItems.slice(2, 8).map((item: any, idx: number) => (
+              <ImpactCard key={idx + 2} item={item} idx={idx + 2} />
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Decorative Orbs */}

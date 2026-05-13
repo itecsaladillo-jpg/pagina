@@ -10,7 +10,7 @@ export function Footer() {
           <div className="flex items-center">
             <Image
               src="/logoitectrans_v2.png"
-              alt="ITEC Augusto Cicaré"
+              alt="ITEC Saladillo"
               width={160}
               height={60}
               className="h-12 w-auto object-contain"
@@ -21,7 +21,7 @@ export function Footer() {
           <div className="flex items-center gap-6 text-sm text-[var(--text-muted)]">
             <a href="#nosotros" className="hover:text-[var(--accent-cyan-2)] transition-colors">Nosotros</a>
             <a href="#comisiones" className="hover:text-[var(--accent-cyan-2)] transition-colors">Comisiones</a>
-            <a href="#capacitaciones" className="hover:text-[var(--accent-cyan-2)] transition-colors">Capacitaciones</a>
+            <a href="#acciones" className="hover:text-[var(--accent-cyan-2)] transition-colors">Acciones</a>
             <a href="#ideas" className="hover:text-[var(--accent-cyan-2)] transition-colors">Ideas</a>
           </div>
 
@@ -34,7 +34,7 @@ export function Footer() {
         <div className="section-divider my-8" />
 
         <p className="text-center text-xs text-[var(--text-muted)]">
-          © {new Date().getFullYear()} ITEC Augusto Cicaré — Todos los derechos reservados
+          © {new Date().getFullYear()} ITEC Saladillo — Todos los derechos reservados
         </p>
       </div>
     </footer>

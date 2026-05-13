@@ -13,7 +13,10 @@ import {
   Type, 
   Eye,
   Send,
-  Trash2
+  Trash2,
+  Calendar,
+  Zap,
+  Star
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { generateArticleDraftAction, publishArticleAction } from '@/app/dashboard/comunicacion/actions'
@@ -29,6 +32,12 @@ export function ArticleEditor({ member, initialArticle, onCancel }: { member: an
       name: 'Archivo' 
     })) || []
   )
+  const [date, setDate] = useState(
+    initialArticle?.created_at 
+      ? new Date(initialArticle.created_at).toISOString().split('T')[0] 
+      : new Date().toISOString().split('T')[0]
+  )
+  const [badgeText, setBadgeText] = useState(initialArticle?.excerpt || 'Impacto Regional')
   const [isGenerating, setIsGenerating] = useState(false)
   const [isPublishing, setIsPublishing] = useState(false)
   const [dragActive, setDragActive] = useState(false)
@@ -108,6 +117,13 @@ export function ArticleEditor({ member, initialArticle, onCancel }: { member: an
     }
   }
 
+  const setAsMain = (index: number) => {
+    const newMedia = [...media]
+    const item = newMedia.splice(index, 1)[0]
+    newMedia.unshift(item)
+    setMedia(newMedia)
+  }
+
   // ─── Publicación ───
   const handlePublish = async () => {
     setIsPublishing(true)
@@ -117,7 +133,9 @@ export function ArticleEditor({ member, initialArticle, onCancel }: { member: an
         title,
         content,
         media_urls: media.map(m => m.url),
-        is_published: true
+        is_published: true,
+        created_at: date,
+        badge_text: badgeText
       })
       if (res.success) {
         alert(initialArticle ? 'Artículo actualizado con éxito!' : 'Artículo publicado con éxito!')
@@ -204,10 +222,23 @@ export function ArticleEditor({ member, initialArticle, onCancel }: { member: an
                     )}
                     <button 
                       onClick={(e) => { e.stopPropagation(); removeMedia(idx) }}
-                      className="absolute top-1 right-1 p-1 bg-black/60 rounded-full text-white hover:bg-red-500 transition-colors"
+                      className="absolute top-1 right-1 p-1 bg-black/60 rounded-full text-white hover:bg-red-500 transition-colors z-30"
                     >
                       <X size={12} />
                     </button>
+                    {idx === 0 ? (
+                      <div className="absolute bottom-0 left-0 right-0 bg-blue-600/90 text-white text-[8px] font-black py-1 text-center tracking-widest">
+                        PRINCIPAL
+                      </div>
+                    ) : (
+                      <button 
+                        onClick={() => setAsMain(idx)}
+                        className="absolute bottom-1 right-1 p-1 bg-black/60 rounded-full text-white/40 hover:text-yellow-400 hover:bg-black/80 transition-all z-30"
+                        title="Marcar como principal"
+                      >
+                        <Star size={12} />
+                      </button>
+                    )}
                   </motion.div>
                 ))}
               </AnimatePresence>
@@ -244,9 +275,20 @@ export function ArticleEditor({ member, initialArticle, onCancel }: { member: an
               </div>
               <h2 className="text-xl font-bold text-white">Vista Previa</h2>
             </div>
-            {step === 2 && (
-              <span className="text-[10px] uppercase font-bold text-amber-500 bg-amber-500/10 px-2 py-1 rounded">Borrador IA</span>
-            )}
+            <div className="flex items-center gap-3">
+              <div className="group relative flex items-center gap-2 bg-white/5 px-3 py-1.5 rounded-full border border-white/5 hover:border-blue-500/30 transition-all">
+                <Calendar size={14} className="text-blue-400" />
+                <input 
+                  type="date"
+                  value={date}
+                  onChange={(e) => setDate(e.target.value)}
+                  className="bg-transparent text-white text-[10px] font-black uppercase tracking-widest focus:outline-none cursor-pointer w-24"
+                />
+              </div>
+              {step === 2 && (
+                <span className="text-[10px] uppercase font-bold text-amber-500 bg-amber-500/10 px-2 py-1 rounded">Borrador IA</span>
+              )}
+            </div>
           </div>
 
           <div className="flex-1 space-y-6">
@@ -273,6 +315,7 @@ export function ArticleEditor({ member, initialArticle, onCancel }: { member: an
                     className="text-3xl font-black text-white bg-white/[0.03] border-b-2 border-white/5 w-full focus:outline-none focus:border-blue-500/60 focus:bg-white/[0.05] p-2 rounded-t-xl transition-all tracking-tight"
                   />
                 </div>
+
 
                 {/* Multimedia Slider */}
                 {media.length > 0 && (
@@ -303,6 +346,22 @@ export function ArticleEditor({ member, initialArticle, onCancel }: { member: an
                         )}
                       </motion.div>
                     </AnimatePresence>
+
+                    {/* Editable Badge Overlay */}
+                    <div className="absolute top-4 left-4 z-20">
+                      <div className="flex items-center gap-2 px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest backdrop-blur-md border border-blue-400/30 bg-blue-600/40 text-blue-100 group/badge">
+                        <Zap size={12} className="fill-blue-400" />
+                        <div className="relative flex items-center">
+                          <span className="invisible whitespace-pre px-0 min-w-[20px]">{badgeText || 'Leyenda...'}</span>
+                          <input 
+                            value={badgeText}
+                            onChange={(e) => setBadgeText(e.target.value)}
+                            className="bg-transparent focus:outline-none absolute inset-0 w-full cursor-text"
+                            placeholder="Leyenda..."
+                          />
+                        </div>
+                      </div>
+                    </div>
                     
                     {/* Dots indicator */}
                     {media.length > 1 && (

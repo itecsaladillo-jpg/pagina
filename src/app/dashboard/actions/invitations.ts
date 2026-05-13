@@ -20,7 +20,7 @@ export async function generateInvitationAction(data: {
   let message = ''
 
   if (data.type === 'sponsor') {
-    message = `Estimado/a ${data.recipientName}, es un placer saludarte. Adjuntamos el Reporte de Impacto Estratégico de ITEC "Augusto Cicaré" correspondiente a vuestra alianza: ${fullLink}. Gracias por vuestra apuesta por la excelencia técnica.`
+    message = `Estimado/a ${data.recipientName}, es un placer saludarte. Adjuntamos el Reporte de Impacto Estratégico de ITEC Saladillo correspondiente a vuestra alianza: ${fullLink}. Gracias por vuestra apuesta por la excelencia técnica.`
   } else {
     message = `Hola ${data.recipientName}, te invitamos a sumarte a nuestra próxima capacitación en vivo: "${data.title}". Podés participar y votar en tiempo real ingresando aquí: ${fullLink}. ¡Te esperamos!`
   }

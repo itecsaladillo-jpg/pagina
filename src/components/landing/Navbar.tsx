@@ -5,10 +5,11 @@ import Link from 'next/link'
 import Image from 'next/image'
 
 const navLinks = [
-  { label: 'Impacto', href: '/#impacto' },
+  { label: 'Acciones', href: '/#acciones' },
   { label: 'Nosotros', href: '/#nosotros' },
-  { label: 'Comisiones', href: '/#comisiones' },
-  { label: 'Acciones', href: '/acciones' },
+  { label: 'Sponsors', href: '/#sponsors' },
+  { label: 'Buzón de Ideas', href: '/#ideas' },
+  { label: 'Acceso Miembros', href: '/login' },
 ]
 
 export function Navbar() {
@@ -23,50 +24,55 @@ export function Navbar() {
 
   return (
     <nav
-      className={`sticky top-0 z-50 transition-all duration-300 border-b border-[var(--border-subtle)] ${
-        scrolled ? 'py-[7px]' : 'py-[15px]'
+      className={`sticky top-0 z-50 w-full transition-all duration-300 border-b border-[var(--border-subtle)] flex items-center ${
+        scrolled ? 'h-16' : 'h-20'
       }`}
       style={{
-        background: 'radial-gradient(circle at 100px 100%, #17338c 0%, #000000 100%)'
+        background: scrolled 
+          ? 'radial-gradient(circle at 100px 100%, #17338c 0%, #000000 100%)' 
+          : 'transparent',
+        backdropFilter: scrolled ? 'blur(10px)' : 'none'
       }}
     >
-      <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
-        {/* Logo */}
-        <Link href="/" className="group relative">
-          {/* Iluminación puntual debajo del logo */}
-          <div className="absolute left-1/2 -translate-x-1/2 -bottom-2 w-24 h-10 bg-[#3b82f6] blur-[40px] opacity-50 -z-10 rounded-full" />
-          
-          <Image
-            src="/logoitectrans_v2.png"
-            alt="ITEC Augusto Cicaré"
-            width={140}
-            height={52}
-            className="h-10 w-auto object-contain group-hover:opacity-90 transition-opacity relative z-10"
-            priority
-          />
-        </Link>
+      <div className="max-w-7xl mx-auto w-full px-6 flex items-center justify-between">
+        <div className="flex items-center gap-12">
+          {/* Logo */}
+          <Link href="/" className="group relative">
+            {/* Iluminación puntual debajo del logo */}
+            <div className="absolute left-1/2 -translate-x-1/2 -bottom-2 w-24 h-10 bg-[#3b82f6] blur-[40px] opacity-50 -z-10 rounded-full" />
+            
+            <Image
+              src="/logoitectrans_v2.png"
+              alt="ITEC Saladillo"
+              width={140}
+              height={52}
+              className="h-10 w-auto object-contain group-hover:opacity-90 transition-opacity relative z-10"
+              priority
+            />
+          </Link>
 
-        {/* Desktop nav */}
-        <div className="hidden md:flex items-center gap-2">
-          {navLinks.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              className="btn-outline text-[10px] uppercase tracking-wider py-1.5 px-4 border-dashed opacity-70 hover:opacity-100 transition-all"
-            >
-              {link.label}
-            </a>
-          ))}
+          {/* Desktop nav — Izquierda (Primeros 4) */}
+          <div className="hidden md:flex items-center gap-2 ml-[200px]">
+            {navLinks.slice(0, 4).map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                className="btn-outline text-[10px] uppercase tracking-wider py-1.5 px-4 border-dashed opacity-70 hover:opacity-100 transition-all"
+              >
+                {link.label}
+              </a>
+            ))}
+          </div>
         </div>
 
-        {/* CTA */}
-        <div className="hidden md:flex items-center gap-3">
-          <Link href="/login" className="btn-outline text-xs py-2 px-5 group/btn">
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
-            </svg>
-            <span>Acceso Miembros</span>
-          </Link>
+        {/* Desktop nav — Derecha (Acceso Miembros) */}
+        <div className="hidden md:flex items-center">
+          <a
+            href={navLinks[4].href}
+            className="btn-outline text-[10px] uppercase tracking-wider py-1.5 px-4 border-dashed opacity-70 hover:opacity-100 transition-all"
+          >
+            {navLinks[4].label}
+          </a>
         </div>
 
         {/* Mobile hamburger */}
@@ -96,12 +102,6 @@ export function Navbar() {
               {link.label}
             </a>
           ))}
-          <Link href="/login" className="btn-outline text-xs py-2 px-5 w-fit">
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
-            </svg>
-            <span>Acceso Miembros</span>
-          </Link>
         </div>
       )}
     </nav>

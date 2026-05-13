@@ -17,6 +17,7 @@ import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
 import { deleteArticleAction } from '@/app/dashboard/comunicacion/actions'
 import { PublicArticle } from '@/services/news'
+import Link from 'next/link'
 
 interface ArticleManagementListProps {
   articles: PublicArticle[]
@@ -123,12 +124,14 @@ export function ArticleManagementList({ articles: initialArticles, onEdit }: Art
                   </td>
                   <td className="px-8 py-6 text-right">
                     <div className="flex items-center justify-end gap-2">
-                      <button 
+                      <Link 
+                        href={`/articulo/${article.slug || article.id}`}
+                        target="_blank"
                         title="Ver en vivo"
                         className="p-2 rounded-lg bg-white/5 border border-white/5 text-white/40 hover:text-white hover:bg-white/10 transition-all"
                       >
                         <ExternalLink size={16} />
-                      </button>
+                      </Link>
                       <button 
                         onClick={() => onEdit(article)}
                         title="Editar"

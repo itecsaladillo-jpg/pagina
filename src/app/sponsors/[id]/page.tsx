@@ -296,7 +296,7 @@ export default async function SponsorPortalPage({ params }: { params: { id: stri
             <blockquote className="text-xl md:text-2xl text-gray-300 font-light leading-relaxed italic">
               "{reporte.ai_reporte}"
             </blockquote>
-            <p className="text-[10px] uppercase tracking-widest text-gray-600">Análisis de impacto — ITEC Augusto Cicaré</p>
+            <p className="text-[10px] uppercase tracking-widest text-gray-600">Análisis de impacto — ITEC Saladillo</p>
           </section>
         )}
 
@@ -304,7 +304,7 @@ export default async function SponsorPortalPage({ params }: { params: { id: stri
         <footer className="border-t border-white/5 pt-12 flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-4">
             <Image src="/logoitectrans_v2.png" alt="ITEC" width={80} height={30} className="opacity-30 h-7 w-auto object-contain" />
-            <p className="text-gray-600 text-xs">ITEC Augusto Cicaré · Saladillo, Buenos Aires</p>
+            <p className="text-gray-600 text-xs">ITEC Saladillo · Saladillo, Buenos Aires</p>
           </div>
           <p className="text-gray-700 text-[10px] uppercase tracking-wider">Reporte confidencial · No indexado</p>
         </footer>

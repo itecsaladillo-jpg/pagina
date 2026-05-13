@@ -15,14 +15,14 @@ export async function sendApprovalEmail(toEmail: string, fullName: string) {
     const resend = new Resend(apiKey)
     
     const { data, error } = await resend.emails.send({
-      from: 'ITEC Augusto Cicaré <onboarding@resend.dev>', // Usar dominio de prueba de Resend por defecto
+      from: 'ITEC Saladillo <onboarding@resend.dev>', // Usar dominio de prueba de Resend por defecto
       to: [toEmail],
       subject: '¡Bienvenido/a al ITEC! - Acceso Aprobado',
       html: `
         <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 40px; border: 1px solid #e5e7eb; border-radius: 10px;">
           <h1 style="color: #1e40af; font-size: 24px;">¡Hola, ${fullName}!</h1>
           <p style="color: #374151; font-size: 16px; line-height: 1.5;">
-            Tu solicitud de acceso como miembro del <b>ITEC "Augusto Cicaré"</b> ha sido aprobada.
+            Tu solicitud de acceso como miembro del <b>ITEC Saladillo</b> ha sido aprobada.
           </p>
           <div style="text-align: center; margin: 40px 0;">
             <a href="${process.env.NEXT_PUBLIC_SITE_URL || 'https://pagina-eight-alpha.vercel.app'}/dashboard" 
@@ -32,7 +32,7 @@ export async function sendApprovalEmail(toEmail: string, fullName: string) {
           </div>
           <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 30px 0;">
           <p style="color: #9ca3af; font-size: 12px; text-align: center;">
-            ITEC Augusto Cicaré - Saladillo, Buenos Aires.
+            ITEC Saladillo - Saladillo, Buenos Aires.
           </p>
         </div>
       `,
@@ -60,14 +60,14 @@ export async function sendReactivationEmail(toEmail: string, fullName: string) {
   try {
     const resend = new Resend(apiKey)
     const { data, error } = await resend.emails.send({
-      from: 'ITEC Augusto Cicaré <onboarding@resend.dev>',
+      from: 'ITEC Saladillo <onboarding@resend.dev>',
       to: [toEmail],
       subject: 'Tu acceso al ITEC ha sido reactivado',
       html: `
         <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 40px; border: 1px solid #e5e7eb; border-radius: 10px;">
           <h1 style="color: #1e40af; font-size: 24px;">¡Hola de nuevo, ${fullName}!</h1>
           <p style="color: #374151; font-size: 16px; line-height: 1.5;">
-            Te informamos que tu acceso al panel de miembros del <b>ITEC "Augusto Cicaré"</b> ha sido reactivado por la administración.
+            Te informamos que tu acceso al panel de miembros del <b>ITEC Saladillo</b> ha sido reactivado por la administración.
           </p>
           <p style="color: #374151; font-size: 16px; line-height: 1.5;">
             Ya podés volver a ingresar y participar de todas las actividades.
@@ -80,7 +80,7 @@ export async function sendReactivationEmail(toEmail: string, fullName: string) {
           </div>
           <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 30px 0;">
           <p style="color: #9ca3af; font-size: 12px; text-align: center;">
-            ITEC Augusto Cicaré - Saladillo, Buenos Aires.
+            ITEC Saladillo - Saladillo, Buenos Aires.
           </p>
         </div>
       `,

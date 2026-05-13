@@ -98,3 +98,26 @@ export async function getAllArticles(): Promise<PublicArticle[]> {
   }
   return (data ?? []) as PublicArticle[]
 }
+
+export async function getArticleBySlug(slug: string): Promise<PublicArticle | null> {
+  const supabase = await createClient()
+  
+  // Validar si el slug es un UUID para evitar errores de sintaxis en Supabase
+  const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(slug)
+  
+  let query = supabase.from('public_articles').select('*')
+  
+  if (isUUID) {
+    query = query.or(`slug.eq.${slug},id.eq.${slug}`)
+  } else {
+    query = query.eq('slug', slug)
+  }
+
+  const { data, error } = await query.maybeSingle()
+
+  if (error) {
+    console.error('[newsService] getArticleBySlug error:', error.message)
+    return null
+  }
+  return data as PublicArticle
+}

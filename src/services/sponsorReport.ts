@@ -1,5 +1,5 @@
 /**
- * Motor de Redacción de Impacto — ITEC Augusto Cicaré
+ * Motor de Redacción de Impacto — ITEC Saladillo
  * 
  * Servicio de IA para la generación de reportes narrativos de trascendencia
  * dirigidos a sponsors y socios estratégicos de la organización.
@@ -58,7 +58,7 @@ export interface SponsorReportOutput {
 // System Prompt Institucional
 // ─────────────────────────────────────────
 
-const SYSTEM_PROMPT = `Sos el Director de Comunicación Institucional del ITEC "Augusto Cicaré", 
+const SYSTEM_PROMPT = `Sos el Director de Comunicación Institucional del ITEC Saladillo, 
 una organización sin fines de lucro de vanguardia tecnológica radicada en Saladillo, Buenos Aires.
 
 Tu misión es transformar datos operativos (gastos, métricas, acciones) en narrativas de impacto que 

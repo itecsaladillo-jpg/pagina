@@ -34,6 +34,8 @@ export async function publishArticleAction(formData: {
   content: string
   media_urls: string[]
   is_published: boolean
+  created_at?: string
+  badge_text?: string
 }) {
   const member = await getCurrentMember()
   if (!member || member.role !== 'admin') throw new Error('No autorizado')
@@ -45,8 +47,13 @@ export async function publishArticleAction(formData: {
     content: formData.content,
     media_urls: formData.media_urls,
     is_published: formData.is_published,
+    excerpt: formData.badge_text, // Usamos excerpt como almacenamiento para badge_text
     author_id: member.id,
     updated_at: new Date().toISOString()
+  }
+
+  if (formData.created_at) {
+    payload.created_at = formData.created_at
   }
 
   // Generar slug solo si es nuevo

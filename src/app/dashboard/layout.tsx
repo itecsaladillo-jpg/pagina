@@ -3,7 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 export const metadata: Metadata = {
-  title: 'Panel de Control — ITEC Augusto Cicaré',
+  title: 'Panel de Control — ITEC Saladillo',
 }
 
 const navItems = [
@@ -82,7 +82,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           <Link href="/" className="block">
             <Image
               src="/logoitectrans_v2.png"
-              alt="ITEC Augusto Cicaré"
+              alt="ITEC Saladillo"
               width={140}
               height={52}
               className="h-9 w-auto object-contain"

@@ -3,7 +3,7 @@ import Link from 'next/link'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Acceso Pendiente — ITEC Augusto Cicaré',
+  title: 'Acceso Pendiente — ITEC Saladillo',
 }
 
 export default function AccesoPendientePage() {
@@ -16,7 +16,7 @@ export default function AccesoPendientePage() {
         <div className="flex justify-center mb-8">
           <Image
             src="/logoitectrans_v2.png"
-            alt="ITEC Augusto Cicaré"
+            alt="ITEC Saladillo"
             width={180}
             height={68}
             className="h-16 w-auto object-contain"
