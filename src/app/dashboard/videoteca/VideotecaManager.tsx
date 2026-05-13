@@ -120,11 +120,13 @@ export default function VideotecaManager({ initialVideos }: VideotecaManagerProp
             >
               {/* Miniatura */}
               <div className="relative w-40 h-24 flex-shrink-0 rounded-lg overflow-hidden bg-black/40">
-                <img 
-                  src={video.thumbnail_url || getYouTubeThumbnail(video.youtube_url)} 
-                  alt={video.title}
-                  className="w-full h-full object-cover opacity-80"
-                />
+                {(video.thumbnail_url || getYouTubeThumbnail(video.youtube_url)) && (
+                  <img 
+                    src={video.thumbnail_url || getYouTubeThumbnail(video.youtube_url)} 
+                    alt={video.title}
+                    className="w-full h-full object-cover opacity-80"
+                  />
+                )}
                 <div className="absolute inset-0 flex items-center justify-center">
                    <div className="w-8 h-8 rounded-full bg-black/60 flex items-center justify-center border border-white/20">
                      <svg className="w-4 h-4 text-white ml-0.5" fill="currentColor" viewBox="0 0 20 20">

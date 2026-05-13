@@ -85,11 +85,13 @@ export function VideotecaSection() {
                   }`}
                 >
                   <div className="relative w-32 aspect-video rounded-xl overflow-hidden flex-shrink-0 bg-black/40">
-                    <img
-                      src={video.thumbnail_url || ''}
-                      alt={video.title}
-                      className="w-full h-full object-cover transition-transform group-hover:scale-110"
-                    />
+                    {video.thumbnail_url && (
+                      <img
+                        src={video.thumbnail_url}
+                        alt={video.title}
+                        className="w-full h-full object-cover transition-transform group-hover:scale-110"
+                      />
+                    )}
                     <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/40">
                        <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
                           <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.333-5.89a1.5 1.5 0 000-2.538L6.3 2.841z" />

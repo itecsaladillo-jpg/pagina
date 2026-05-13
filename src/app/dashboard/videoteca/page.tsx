@@ -14,7 +14,12 @@ export default async function VideotecaAdminPage() {
     redirect('/dashboard')
   }
 
-  const initialVideos = await videoService.getAllVideos()
+  let initialVideos = []
+  try {
+    initialVideos = await videoService.getAllVideos()
+  } catch (error) {
+    console.error('Error al cargar videos:', error)
+  }
 
   return (
     <div className="space-y-8">
