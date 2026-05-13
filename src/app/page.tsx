@@ -4,6 +4,7 @@ import { AboutSection } from '@/components/landing/AboutSection'
 import { ComisionesSection } from '@/components/landing/ComisionesSection'
 import { IdeasSection } from '@/components/landing/IdeasSection'
 import { ImpactSection } from '@/components/landing/ImpactSection'
+import { VideotecaSection } from '@/components/landing/VideotecaSection'
 import { Footer } from '@/components/landing/Footer'
 
 export default function HomePage() {
@@ -14,6 +15,9 @@ export default function HomePage() {
 
       <div className="section-divider" />
       <ImpactSection />
+
+      <div className="section-divider" />
+      <VideotecaSection />
 
       <div className="section-divider" />
       <AboutSection />

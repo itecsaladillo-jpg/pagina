@@ -6,6 +6,7 @@ import Image from 'next/image'
 
 const navLinks = [
   { label: 'Acciones', href: '/#acciones' },
+  { label: 'Videoteca', href: '/#videoteca' },
   { label: 'Nosotros', href: '/#nosotros' },
   { label: 'Sponsors', href: '/#sponsors' },
   { label: 'Buzón de Ideas', href: '/#ideas' },
@@ -51,9 +52,9 @@ export function Navbar() {
             />
           </Link>
 
-          {/* Desktop nav — Izquierda (Primeros 4) */}
+          {/* Desktop nav — Izquierda (Primeros 5) */}
           <div className="hidden md:flex items-center gap-2 ml-[200px]">
-            {navLinks.slice(0, 4).map((link) => (
+            {navLinks.slice(0, 5).map((link) => (
               <a
                 key={link.href}
                 href={link.href}
@@ -68,10 +69,10 @@ export function Navbar() {
         {/* Desktop nav — Derecha (Acceso Miembros) */}
         <div className="hidden md:flex items-center">
           <a
-            href={navLinks[4].href}
+            href={navLinks[5].href}
             className="btn-outline text-[10px] uppercase tracking-wider py-1.5 px-4 border-dashed opacity-70 hover:opacity-100 transition-all"
           >
-            {navLinks[4].label}
+            {navLinks[5].label}
           </a>
         </div>
 
