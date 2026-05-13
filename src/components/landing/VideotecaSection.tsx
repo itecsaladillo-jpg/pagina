@@ -87,9 +87,9 @@ export function VideotecaSection() {
                   }`}
                 >
                   <div className="relative w-32 aspect-video rounded-xl overflow-hidden flex-shrink-0 bg-black/40">
-                    {video.thumbnail_url && (
+                    {(video.thumbnail_url || getYouTubeThumbnail(video.youtube_url)) && (
                       <img
-                        src={video.thumbnail_url}
+                        src={getYouTubeThumbnail(video.youtube_url) || video.thumbnail_url || ''}
                         alt={video.title}
                         className="w-full h-full object-cover transition-transform group-hover:scale-110"
                       />

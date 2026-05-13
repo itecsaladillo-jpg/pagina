@@ -32,7 +32,7 @@ export function getYouTubeID(url: string): string | null {
  */
 export function getYouTubeThumbnail(url: string): string {
   const id = getYouTubeID(url)
-  return id ? `https://img.youtube.com/vi/${id}/maxresdefault.jpg` : ''
+  return id ? `https://img.youtube.com/vi/${id}/mqdefault.jpg` : ''
 }
 
 export const videoService = {

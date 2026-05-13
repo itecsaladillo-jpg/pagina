@@ -122,7 +122,7 @@ export default function VideotecaManager({ initialVideos }: VideotecaManagerProp
               <div className="relative w-40 h-24 flex-shrink-0 rounded-lg overflow-hidden bg-black/40">
                 {(video.thumbnail_url || getYouTubeThumbnail(video.youtube_url)) && (
                   <img 
-                    src={video.thumbnail_url || getYouTubeThumbnail(video.youtube_url)} 
+                    src={getYouTubeThumbnail(video.youtube_url) || video.thumbnail_url || ''} 
                     alt={video.title}
                     className="w-full h-full object-cover opacity-80"
                   />
