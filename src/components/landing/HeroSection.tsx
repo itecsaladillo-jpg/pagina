@@ -12,23 +12,26 @@ export function HeroSection() {
         <div className="absolute inset-0 z-20 bg-gradient-to-br from-black/20 via-transparent to-black/80" />
         <div className="absolute inset-0 z-20 bg-gradient-to-r from-black via-transparent to-transparent" />
         
-        {/* Contenedor de imágenes apiladas (14 imágenes) */}
+        {/* Contenedor de imágenes apiladas (imágenes disponibles) */}
         <div className="relative w-full h-full flex items-center justify-center">
-          {Array.from({ length: 14 }).map((_, i) => (
+          {[2, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15].map((num, i) => (
             <div 
-              key={i} 
+              key={num} 
               className="absolute inset-0 animate-fade-cycle"
               style={{ animationDelay: `-${i * 15}s` }}
             >
               <Image
-                src={`/cicare/cicare-${i + 1}.jpg`}
-                alt={`Augusto Cicaré ${i + 1}`}
+                src={`/cicare/cicare-${num}.jpg`}
+                alt={`Augusto Cicaré ${num}`}
                 fill
+                sizes="(max-width: 768px) 100vw, 50vw"
                 className="object-cover grayscale brightness-50 contrast-125"
+                priority={i === 0}
               />
             </div>
           ))}
         </div>
+
       </div>
 
       {/* Línea de escáner decorativa */}

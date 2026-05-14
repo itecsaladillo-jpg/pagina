@@ -5,6 +5,7 @@ export interface Video {
   created_at: string
   title: string
   description: string | null
+  ai_summary: string | null
   youtube_url: string
   thumbnail_url: string | null
   display_order: number
@@ -14,18 +15,32 @@ export interface Video {
 export interface CreateVideoData {
   title: string
   description?: string
+  ai_summary?: string
   youtube_url: string
   display_order?: number
 }
 
+
 /**
- * Extrae el ID de un video de YouTube a partir de su URL
+ * Extrae el ID de un video de YouTube a partir de su URL (soporta shorts, mobile, watch, etc)
  */
 export function getYouTubeID(url: string): string | null {
-  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/
-  const match = url.match(regExp)
-  return match && match[2].length === 11 ? match[2] : null
+  if (!url) return null
+  
+  // Patrón más robusto para capturar IDs de 11 caracteres en diversos formatos
+  const patterns = [
+    /(?:v=|\/)([0-9A-Za-z_-]{11}).*/,
+    /(?:embed\/|v\/|shorts\/|watch\?v=|youtu\.be\/)([0-9A-Za-z_-]{11})/
+  ]
+
+  for (const pattern of patterns) {
+    const match = url.match(pattern)
+    if (match && match[1]) return match[1]
+  }
+
+  return null
 }
+
 
 /**
  * Genera la URL de la miniatura de YouTube
@@ -39,8 +54,8 @@ export const videoService = {
   /**
    * Obtiene todos los videos activos para la sección pública
    */
-  async getPublicVideos(): Promise<Video[]> {
-    const supabase = createClient()
+  async getPublicVideos(supabaseClient?: any): Promise<Video[]> {
+    const supabase = supabaseClient || createClient()
     const { data, error } = await supabase
       .from('videos')
       .select('*')
@@ -55,8 +70,8 @@ export const videoService = {
   /**
    * Obtiene todos los videos para el panel de administración
    */
-  async getAllVideos(): Promise<Video[]> {
-    const supabase = createClient()
+  async getAllVideos(supabaseClient?: any): Promise<Video[]> {
+    const supabase = supabaseClient || createClient()
     const { data, error } = await supabase
       .from('videos')
       .select('*')
@@ -70,8 +85,8 @@ export const videoService = {
   /**
    * Crea un nuevo video
    */
-  async createVideo(video: CreateVideoData): Promise<Video> {
-    const supabase = createClient()
+  async createVideo(video: CreateVideoData, supabaseClient?: any): Promise<Video> {
+    const supabase = supabaseClient || createClient()
     const thumbnail_url = getYouTubeThumbnail(video.youtube_url)
     
     const { data, error } = await supabase
@@ -87,8 +102,8 @@ export const videoService = {
   /**
    * Actualiza un video existente
    */
-  async updateVideo(id: string, updates: Partial<CreateVideoData & { is_active: boolean }>): Promise<Video> {
-    const supabase = createClient()
+  async updateVideo(id: string, updates: Partial<CreateVideoData & { is_active: boolean }>, supabaseClient?: any): Promise<Video> {
+    const supabase = supabaseClient || createClient()
     
     const payload: any = { ...updates }
     if (updates.youtube_url) {
@@ -109,8 +124,8 @@ export const videoService = {
   /**
    * Elimina un video
    */
-  async deleteVideo(id: string): Promise<void> {
-    const supabase = createClient()
+  async deleteVideo(id: string, supabaseClient?: any): Promise<void> {
+    const supabase = supabaseClient || createClient()
     const { error } = await supabase
       .from('videos')
       .delete()
@@ -119,3 +134,6 @@ export const videoService = {
     if (error) throw error
   }
 }
+
+
+

@@ -3,6 +3,7 @@ import { getCurrentMember } from '@/services/auth'
 import { redirect } from 'next/navigation'
 import VideotecaManager from './VideotecaManager'
 import { videoService } from '@/services/videos'
+import { createClient } from '@/lib/supabase/server'
 
 export const metadata: Metadata = {
   title: 'Gestión de Videoteca — ITEC',
@@ -16,10 +17,12 @@ export default async function VideotecaAdminPage() {
 
   let initialVideos = []
   try {
-    initialVideos = await videoService.getAllVideos()
+    const supabase = await createClient()
+    initialVideos = await videoService.getAllVideos(supabase)
   } catch (error) {
     console.error('Error al cargar videos:', error)
   }
+
 
   return (
     <div className="space-y-8">

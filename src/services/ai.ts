@@ -237,3 +237,35 @@ export async function generateActionSuccessStory(
     return { title: `Éxito total en ${actionTitle}`, content: raw }
   }
 }
+
+/**
+ * Genera un resumen profesional de hasta 150 palabras para un video.
+ */
+export async function generateVideoSummary(title: string, description: string): Promise<string> {
+  const model = genAI.getGenerativeModel({
+    model: 'gemini-flash-latest',
+    systemInstruction: ITEC_SYSTEM_PROMPT,
+  })
+
+  const prompt = `
+    Generá un resumen profesional y atractivo para un video de ITEC Saladillo.
+    
+    TÍTULO DEL VIDEO: ${title}
+    DESCRIPCIÓN ORIGINAL: ${description}
+    
+    REQUISITOS:
+    - IDENTIFICACIÓN DE PROTAGONISTAS: Debés actuar como un detective. Identificá y mencioná explícitamente quién es el entrevistado, orador o responsable. Prestá especial atención a las menciones al comienzo del texto, presentaciones de "quién nos acompaña hoy" o nombres que aparezcan en lo que parece ser la gráfica o placa de presentación del video.
+
+    - Longitud: Máximo 150 palabras.
+    - Estilo: ITEC (Técnico, Humano, Vanguardista).
+    - Objetivo: Captar el interés del público y resumir los puntos clave.
+    - Idioma: Español rioplatense formal (usando "vos").
+    
+    Respondé únicamente con el texto del resumen, sin títulos adicionales ni comillas.
+
+  `
+
+  const result = await model.generateContent(prompt)
+  return result.response.text().trim()
+}
+
