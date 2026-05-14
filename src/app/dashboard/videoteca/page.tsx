@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { getCurrentMember } from '@/services/auth'
 import { redirect } from 'next/navigation'
 import VideotecaManager from './VideotecaManager'
-import { videoService } from '@/services/videos'
+import { videoService, Video } from '@/services/videos'
 import { createClient } from '@/lib/supabase/server'
 
 export const metadata: Metadata = {
@@ -15,7 +15,7 @@ export default async function VideotecaAdminPage() {
     redirect('/dashboard')
   }
 
-  let initialVideos = []
+  let initialVideos: Video[] = []
   try {
     const supabase = await createClient()
     initialVideos = await videoService.getAllVideos(supabase)
