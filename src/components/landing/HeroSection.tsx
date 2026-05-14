@@ -70,27 +70,26 @@ export function HeroSection() {
               </span>
             </div>
 
-            {/* CTAs */}
-            <div className="flex flex-col sm:flex-row items-center md:items-start gap-3 mt-2 animate-fade-up delay-300 relative z-10" style={{ animationFillMode: 'both' }}>
-              <a href="#nosotros" className="btn-primary text-sm px-6 py-3">
-                <span>Conocé ITEC</span>
+            {/* Botones de Secciones (Mismos que el Header) */}
+            <div className="flex flex-wrap items-center justify-center gap-2 mt-6 animate-fade-up delay-300 relative z-10" style={{ animationFillMode: 'both' }}>
+              <a href="#acciones" className="btn-outline text-[10px] uppercase tracking-wider py-1.5 px-4 border-dashed opacity-70 hover:opacity-100 transition-all">
+                Acciones
               </a>
-              <Link href="/login" className="btn-outline text-sm px-6 py-3">
-                <span>Acceso Miembros</span>
+              <a href="#videoteca" className="btn-outline text-[10px] uppercase tracking-wider py-1.5 px-4 border-dashed opacity-70 hover:opacity-100 transition-all">
+                Videoteca
+              </a>
+              <a href="#nosotros" className="btn-outline text-[10px] uppercase tracking-wider py-1.5 px-4 border-dashed opacity-70 hover:opacity-100 transition-all">
+                Nosotros
+              </a>
+              <a href="#sponsors" className="btn-outline text-[10px] uppercase tracking-wider py-1.5 px-4 border-dashed opacity-70 hover:opacity-100 transition-all">
+                Sponsors
+              </a>
+              <a href="#ideas" className="btn-outline text-[10px] uppercase tracking-wider py-1.5 px-4 border-dashed opacity-70 hover:opacity-100 transition-all">
+                Buzón de Ideas
+              </a>
+              <Link href="/login" className="btn-outline text-[10px] uppercase tracking-wider py-1.5 px-4 border-dashed opacity-70 hover:opacity-100 transition-all">
+                Acceso Miembros
               </Link>
-            </div>
-
-            {/* Botones de Secciones Adicionales */}
-            <div className="flex flex-wrap items-center justify-center md:justify-start gap-2 mt-4 animate-fade-up delay-400 relative z-10" style={{ animationFillMode: 'both' }}>
-              <a href="#acciones" className="btn-outline text-xs px-4 py-2 border-dashed opacity-80 hover:opacity-100">
-                <span>Acciones</span>
-              </a>
-              <a href="#sponsors" className="btn-outline text-xs px-4 py-2 border-dashed opacity-80 hover:opacity-100">
-                <span>Sponsors</span>
-              </a>
-              <a href="#ideas" className="btn-outline text-xs px-4 py-2 border-dashed opacity-80 hover:opacity-100">
-                <span>Buzón de Ideas</span>
-              </a>
             </div>
           </div>
 
