@@ -184,11 +184,10 @@ export function MemberManagementTable({ members, commissions }: Props) {
                     </td>
                     <td className="py-4 px-4">
                       <span className={`px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider ${
-                        m.status === 'activo' ? 'bg-green-500/10 text-green-400 border border-green-500/20' : 
-                        m.status === 'pre-aprobado' ? 'bg-blue-500/10 text-blue-400 border border-blue-500/20' :
+                        m.status === 'activo' || m.status === 'pre-aprobado' ? 'bg-green-500/10 text-green-400 border border-green-500/20' : 
                         'bg-amber-500/10 text-amber-400 border border-amber-500/20'
                       }`}>
-                        {m.status}
+                        {m.status === 'pre-aprobado' ? 'activo' : m.status}
                       </span>
                     </td>
                     <td className="py-4 px-4">
