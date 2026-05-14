@@ -173,10 +173,14 @@ export async function getAllMembersWithCommissions() {
     preApproved.forEach(pa => {
       const alreadyExists = results.find(m => m.email.toLowerCase() === pa.email.toLowerCase())
       if (!alreadyExists) {
+        // Extraer nombre del email (antes del @) y capitalizar
+        const emailName = pa.email.split('@')[0]
+        const formattedName = emailName.charAt(0).toUpperCase() + emailName.slice(1)
+
         results.push({
-          id: pa.email, // Usamos el mail como ID temporal
+          id: pa.email,
           email: pa.email,
-          full_name: 'Invitado (Pendiente de registro)',
+          full_name: `${formattedName} (Pre-aprobado)`,
           status: 'pre-aprobado',
           role: 'miembro',
           created_at: pa.created_at
