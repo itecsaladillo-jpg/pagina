@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
+import { getCurrentMember, isAdmin } from '@/services/auth'
 
 export const metadata: Metadata = {
   title: 'Panel de Control — ITEC Saladillo',
@@ -37,21 +38,21 @@ const navItems = [
     href: '/dashboard/ideas',
     icon: 'M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z',
   },
+]
+
+const adminNavItems = [
   {
     label: 'Gestión de Miembros',
     href: '/dashboard/miembros',
     icon: 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z',
   },
-]
-
-const adminNavItems = [
   {
     label: 'Procesador IA',
     href: '/dashboard/ai',
     icon: 'M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09Z',
   },
   {
-    label: 'Gestionar Comisiones',
+    label: 'Gestor de Comisiones',
     href: '/dashboard/comisiones',
     icon: 'M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z',
   },
@@ -61,7 +62,7 @@ const adminNavItems = [
     icon: 'M12 7.5h1.5m-1.5 3h1.5m-7.5 3h7.5m-7.5 3h7.5m3-9h3.375c.621 0 1.125.504 1.125 1.125V18a2.25 2.25 0 0 1-2.25 2.25M16.5 7.5V18a2.25 2.25 0 0 0 2.25 2.25M16.5 7.5V4.875c0-.621-.504-1.125-1.125-1.125H4.125C3.504 3.75 3 4.254 3 4.875V18a2.25 2.25 0 0 0 2.25 2.25h13.5M6 7.5h3v3H6v-3Z',
   },
   {
-    label: 'Sponsors & Impacto',
+    label: 'Sponsors',
     href: '/dashboard/sponsors',
     icon: 'M2.25 18.75a60.07 60.07 0 0 1 15.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 0 1 3 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 0 0-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 0 1-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 0 0 3 15h-.75M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm3 0h.008v.008H18V10.5Zm-12 0h.008v.008H6V10.5Z',
   },
@@ -75,9 +76,17 @@ const adminNavItems = [
     href: '/dashboard/videoteca',
     icon: 'M15.75 10.5l4.72-4.72a.75.75 0 011.28.53v11.38a.75.75 0 01-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25h-9A2.25 2.25 0 002.25 7.5v9a2.25 2.25 0 002.25 2.25z',
   },
+  {
+    label: 'Streaming',
+    href: '/dashboard/streaming',
+    icon: 'M9.348 14.651a3.75 3.75 0 010-5.303m5.304 0a3.75 3.75 0 010 5.303m-7.425 2.122a6.75 6.75 0 010-9.546m9.546 0a6.75 6.75 0 010 9.546M10.5 12a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0z',
+  },
 ]
 
-export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
+  const member = await getCurrentMember()
+  const isUserAdmin = isAdmin(member)
+
   return (
     <div className="min-h-screen bg-black flex">
       {/* Sidebar */}
@@ -116,28 +125,32 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             </Link>
           ))}
 
-          {/* Separador Herramientas IA */}
-          <div className="pt-3 pb-1 px-3">
-            <span className="text-[10px] text-[var(--text-muted)] uppercase tracking-widest">
-              Herramientas
-            </span>
-          </div>
+          {/* Sección HERRAMIENTAS (Solo Admins) */}
+          {isUserAdmin && (
+            <>
+              <div className="pt-6 pb-2 px-3">
+                <span className="text-[10px] text-[var(--text-muted)] uppercase tracking-[0.2em] font-bold">
+                  HERRAMIENTAS
+                </span>
+              </div>
 
-          {adminNavItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-purple-400/70 hover:text-purple-300 hover:bg-purple-500/5 transition-all text-sm font-medium group"
-            >
-              <svg
-                className="w-4 h-4 flex-shrink-0 transition-colors"
-                fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" d={item.icon} />
-              </svg>
-              {item.label}
-            </Link>
-          ))}
+              {adminNavItems.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-purple-400/70 hover:text-purple-300 hover:bg-purple-500/5 transition-all text-sm font-medium group border border-transparent hover:border-purple-500/10"
+                >
+                  <svg
+                    className="w-4 h-4 flex-shrink-0 transition-colors"
+                    fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" d={item.icon} />
+                  </svg>
+                  {item.label}
+                </Link>
+              ))}
+            </>
+          )}
         </nav>
 
         {/* Signout */}
