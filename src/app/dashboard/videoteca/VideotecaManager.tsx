@@ -13,6 +13,8 @@ export default function VideotecaManager({ initialVideos }: VideotecaManagerProp
   const [videos, setVideos] = useState<Video[]>(initialVideos)
   const [loading, setLoading] = useState(false)
   const [newVideo, setNewVideo] = useState({ title: '', youtube_url: '' })
+  const [editingSummaryId, setEditingSummaryId] = useState<string | null>(null)
+  const [tempSummary, setTempSummary] = useState('')
 
   const handleAddVideo = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -82,6 +84,24 @@ export default function VideotecaManager({ initialVideos }: VideotecaManagerProp
     } catch (error) {
       console.error('Error IA:', error)
       alert('Error de conexión con el servicio de IA.')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleUpdateSummary = async (id: string) => {
+    setLoading(true)
+    try {
+      const res = await updateVideoAction(id, { ai_summary: tempSummary })
+      if (res.success && res.data) {
+        setVideos(videos.map(v => v.id === id ? res.data! : v))
+        setEditingSummaryId(null)
+      } else {
+        alert('Error al actualizar el resumen: ' + (res.error || 'Desconocido'))
+      }
+    } catch (error) {
+      console.error('Error al actualizar resumen:', error)
+      alert('Error de conexión.')
     } finally {
       setLoading(false)
     }
@@ -202,14 +222,54 @@ export default function VideotecaManager({ initialVideos }: VideotecaManagerProp
                   {video.youtube_url}
                 </p>
 
-                {video.ai_summary && (
+                {(video.ai_summary || editingSummaryId === video.id) && (
                   <div className="mb-4 bg-amber-500/5 border border-amber-500/10 rounded-xl p-3">
-                    <p className="text-[10px] text-amber-500 font-bold uppercase tracking-widest mb-1.5 flex items-center gap-1.5">
-                      <Sparkles size={12} className="animate-pulse" /> Resumen de Video
-                    </p>
-                    <p className="text-[11px] text-[var(--text-secondary)] line-clamp-3 leading-relaxed italic">
-                      "{video.ai_summary}"
-                    </p>
+                    <div className="flex items-center justify-between mb-2">
+                      <p className="text-[10px] text-amber-500 font-bold uppercase tracking-widest flex items-center gap-1.5">
+                        <Sparkles size={12} className="animate-pulse" /> Resumen de Video
+                      </p>
+                      {editingSummaryId !== video.id && (
+                        <button 
+                          onClick={() => {
+                            setEditingSummaryId(video.id)
+                            setTempSummary(video.ai_summary || '')
+                          }}
+                          className="text-[10px] text-white/40 hover:text-white transition-colors"
+                        >
+                          Editar
+                        </button>
+                      )}
+                    </div>
+                    
+                    {editingSummaryId === video.id ? (
+                      <div className="space-y-2">
+                        <textarea
+                          value={tempSummary}
+                          onChange={(e) => setTempSummary(e.target.value)}
+                          className="w-full bg-black/40 border border-amber-500/20 rounded-lg p-2 text-xs text-white placeholder:text-white/20 focus:outline-none focus:border-amber-500/50 min-h-[100px] resize-y"
+                          placeholder="Escribí el resumen aquí..."
+                        />
+                        <div className="flex justify-end gap-2">
+                          <button
+                            onClick={() => setEditingSummaryId(null)}
+                            className="text-[10px] text-white/60 hover:text-white px-2 py-1"
+                          >
+                            Cancelar
+                          </button>
+                          <button
+                            onClick={() => handleUpdateSummary(video.id)}
+                            disabled={loading}
+                            className="text-[10px] bg-amber-500 text-black font-bold px-3 py-1 rounded-md hover:bg-amber-600 disabled:opacity-50"
+                          >
+                            Guardar
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <p className="text-[11px] text-[var(--text-secondary)] line-clamp-3 leading-relaxed italic">
+                        "{video.ai_summary}"
+                      </p>
+                    )}
                   </div>
                 )}
 
