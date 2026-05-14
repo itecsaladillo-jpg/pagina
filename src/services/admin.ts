@@ -21,37 +21,54 @@ export async function approveMember(memberId: string) {
 }
 
 /**
- * Aprueba a un miembro pendiente buscándolo por su correo electrónico.
+ * Aprueba a un miembro buscando por email. 
+ * Si el usuario ya existe, lo activa. 
+ * Si no existe, lo agrega a la lista de pre-aprobados (allowed_emails).
  */
 export async function approveMemberByEmail(email: string) {
   const supabase = await createClient()
   
-  // Primero buscamos si existe
-  const { data: member, error: searchError } = await supabase
+  // 1. Intentar buscar si el usuario ya se registró
+  const { data: member } = await supabase
     .from('members')
     .select('id, status')
     .eq('email', email)
-    .single()
+    .maybeSingle()
 
-  if (searchError || !member) {
-    return { success: false, error: 'No se encontró ningún usuario registrado con ese correo electrónico.' }
+  if (member) {
+    if (member.status === 'activo') {
+      return { success: false, error: 'El usuario ya se encuentra activo.' }
+    }
+    // Si existe y está pendiente, lo aprobamos
+    const { data, error } = await supabase
+      .from('members')
+      .update({ status: 'activo' })
+      .eq('id', member.id)
+      .select()
+
+    if (error) return { success: false, error: error.message }
+    return { success: true, message: 'Usuario existente aprobado con éxito.', data: data?.[0] }
   }
 
-  if (member.status === 'activo') {
-    return { success: false, error: 'El usuario ya se encuentra activo.' }
+  // 2. Si no existe, lo agregamos a la lista de pre-aprobados
+  const { error: preError } = await supabase
+    .from('allowed_emails')
+    .upsert({ email: email.toLowerCase().trim() })
+
+  if (preError) {
+    console.error('[adminService] pre-approval error:', preError.message)
+    // Si falla porque no existe la tabla (migración no corrida), informamos
+    if (preError.message.includes('relation "public.allowed_emails" does not exist')) {
+      return { success: false, error: 'Error técnico: Se requiere ejecutar la migración 011 en Supabase.' }
+    }
+    return { success: false, error: 'No se pudo pre-aprobar el correo.' }
   }
 
-  const { data, error } = await supabase
-    .from('members')
-    .update({ status: 'activo' })
-    .eq('id', member.id)
-    .select()
-
-  if (error) {
-    return { success: false, error: error.message }
+  return { 
+    success: true, 
+    message: 'Correo pre-aprobado. El usuario será "activo" automáticamente cuando se registre.',
+    isPreApproved: true 
   }
-  
-  return { success: true, data: data?.[0] || null }
 }
 
 /**

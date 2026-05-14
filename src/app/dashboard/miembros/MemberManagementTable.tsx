@@ -27,7 +27,7 @@ export function MemberManagementTable({ members, commissions }: Props) {
     try {
       const res = await approveMemberByEmailAction(manualEmail.trim())
       if (res.success) {
-        alert('¡Usuario aprobado con éxito!')
+        alert(res.message || '¡Usuario aprobado con éxito!')
         setManualEmail('')
       } else {
         alert(res.error || 'No se pudo aprobar el usuario.')

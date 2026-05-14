@@ -13,7 +13,7 @@ export async function approveMemberByEmailAction(email: string) {
     
     const res = await approveMemberByEmail(email)
     if (res.success) revalidatePath('/dashboard/miembros')
-    return res
+    return { success: res.success, message: (res as any).message, error: res.error }
   } catch (err: any) {
     console.error('[approveMemberByEmailAction] Error:', err)
     return { success: false, error: 'Error al procesar la aprobación.' }
