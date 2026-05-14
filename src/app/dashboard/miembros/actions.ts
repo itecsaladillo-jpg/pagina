@@ -1,6 +1,6 @@
 'use server'
 
-import { approveMember, approveMemberByEmail, updateMemberRole, assignToCommission, deactivateMember } from '@/services/admin'
+import { approveMember, approveMemberByEmail, updateMemberRole, updatePreApprovedRole, assignToCommission, deactivateMember } from '@/services/admin'
 import { getCurrentMember } from '@/services/auth'
 import { revalidatePath } from 'next/cache'
 
@@ -49,12 +49,19 @@ export async function deactivateMemberAction(memberId: string) {
   }
 }
 
-export async function updateRoleAction(memberId: string, role: any) {
+export async function updateRoleAction(idOrEmail: string, role: any) {
   try {
     const admin = await getCurrentMember()
     if (!admin || admin.role !== 'admin') return { success: false, error: 'No autorizado' }
     
-    const res = await updateMemberRole(memberId, role)
+    // Si contiene un @, es una pre-aprobación en la tabla allowed_emails
+    if (idOrEmail.includes('@')) {
+      const res = await updatePreApprovedRole(idOrEmail, role)
+      if (res.success) revalidatePath('/dashboard/miembros')
+      return res
+    }
+
+    const res = await updateMemberRole(idOrEmail, role)
     if (res.success) revalidatePath('/dashboard/miembros')
     return res
   } catch (err) {

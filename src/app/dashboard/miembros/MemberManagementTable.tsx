@@ -195,7 +195,7 @@ export function MemberManagementTable({ members, commissions }: Props) {
                       <select 
                         value={m.role}
                         onChange={(e) => handleRoleChange(m.id, e.target.value)}
-                        disabled={loadingId === m.id || m.status === 'pre-aprobado'}
+                        disabled={loadingId === m.id}
                         className="bg-transparent text-[var(--text-secondary)] text-xs focus:text-white outline-none cursor-pointer hover:underline disabled:opacity-30"
                       >
                         <option value="miembro">Miembro</option>

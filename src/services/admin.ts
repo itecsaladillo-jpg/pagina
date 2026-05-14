@@ -90,7 +90,7 @@ export async function deactivateMember(memberId: string) {
 }
 
 /**
- * Cambia el rol de un miembro.
+ * Cambia el rol de un miembro registrado.
  */
 export async function updateMemberRole(memberId: string, role: Member['role']) {
   const supabase = await createClient()
@@ -101,6 +101,23 @@ export async function updateMemberRole(memberId: string, role: Member['role']) {
 
   if (error) {
     console.error('[adminService] updateMemberRole error:', error.message)
+    return { success: false, error: error.message }
+  }
+  return { success: true }
+}
+
+/**
+ * Cambia el rol de un correo pre-aprobado (que aún no se registró).
+ */
+export async function updatePreApprovedRole(email: string, role: Member['role']) {
+  const supabase = await createClient()
+  const { error } = await supabase
+    .from('allowed_emails')
+    .update({ role })
+    .eq('email', email)
+
+  if (error) {
+    console.error('[adminService] updatePreApprovedRole error:', error.message)
     return { success: false, error: error.message }
   }
   return { success: true }
