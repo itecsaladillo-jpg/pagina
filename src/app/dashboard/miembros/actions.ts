@@ -1,6 +1,6 @@
 'use server'
 
-import { approveMember, approveMemberByEmail, updateMemberRole, updatePreApprovedRole, assignToCommission, deactivateMember } from '@/services/admin'
+import { approveMember, approveMemberByEmail, updateMemberRole, updatePreApprovedRole, updatePreApprovedCommission, assignToCommission, deactivateMember } from '@/services/admin'
 import { getCurrentMember } from '@/services/auth'
 import { revalidatePath } from 'next/cache'
 
@@ -69,12 +69,19 @@ export async function updateRoleAction(idOrEmail: string, role: any) {
   }
 }
 
-export async function assignCommissionAction(memberId: string, commissionId: string, isCoordinator: boolean) {
+export async function assignCommissionAction(idOrEmail: string, commissionId: string, isCoordinator: boolean) {
   try {
     const admin = await getCurrentMember()
     if (!admin || admin.role !== 'admin') return { success: false, error: 'No autorizado' }
     
-    const res = await assignToCommission(memberId, commissionId, isCoordinator)
+    // Si contiene un @, es una pre-aprobación
+    if (idOrEmail.includes('@')) {
+      const res = await updatePreApprovedCommission(idOrEmail, commissionId)
+      if (res.success) revalidatePath('/dashboard/miembros')
+      return res
+    }
+
+    const res = await assignToCommission(idOrEmail, commissionId, isCoordinator)
     if (res.success) revalidatePath('/dashboard/miembros')
     return res
   } catch (err) {

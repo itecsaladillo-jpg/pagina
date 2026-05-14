@@ -207,7 +207,7 @@ export function MemberManagementTable({ members, commissions }: Props) {
                       <select 
                         value={currentCommission}
                         onChange={(e) => handleCommissionChange(m.id, e.target.value)}
-                        disabled={loadingId === m.id || m.status === 'pre-aprobado'}
+                        disabled={loadingId === m.id}
                         className="bg-transparent text-[var(--text-secondary)] text-xs focus:text-white outline-none cursor-pointer max-w-[140px] truncate hover:underline disabled:opacity-30"
                       >
                         <option value="">Sin asignar</option>

@@ -124,6 +124,40 @@ export async function updatePreApprovedRole(email: string, role: Member['role'])
 }
 
 /**
+ * Cambia la comisión de un correo pre-aprobado.
+ */
+export async function updatePreApprovedCommission(email: string, commissionId: string) {
+  const supabase = await createClient()
+  const { error } = await supabase
+    .from('allowed_emails')
+    .update({ commission_id: commissionId || null })
+    .eq('email', email)
+
+  if (error) {
+    console.error('[adminService] updatePreApprovedCommission error:', error.message)
+    return { success: false, error: error.message }
+  }
+  return { success: true }
+}
+
+/**
+ * Cambia el nombre de un correo pre-aprobado.
+ */
+export async function updatePreApprovedName(email: string, fullName: string) {
+  const supabase = await createClient()
+  const { error } = await supabase
+    .from('allowed_emails')
+    .update({ full_name: fullName })
+    .eq('email', email)
+
+  if (error) {
+    console.error('[adminService] updatePreApprovedName error:', error.message)
+    return { success: false, error: error.message }
+  }
+  return { success: true }
+}
+
+/**
  * Asigna un miembro a una comisión.
  * Si ya estaba en una, se puede manejar como upsert o eliminar previas.
  */
@@ -197,10 +231,14 @@ export async function getAllMembersWithCommissions() {
         results.push({
           id: pa.email,
           email: pa.email,
-          full_name: `${formattedName} (Pre-aprobado)`,
+          full_name: pa.full_name || `${formattedName} (Pre-aprobado)`,
           status: 'pre-aprobado',
-          role: 'miembro',
-          created_at: pa.created_at
+          role: pa.role || 'miembro',
+          created_at: pa.created_at,
+          commission_members: pa.commission_id ? [{
+            commission_id: pa.commission_id,
+            commissions: { id: pa.commission_id, name: 'Cargando...' } // El frontend buscará el nombre en la lista de comisiones
+          }] : []
         })
       }
     })
