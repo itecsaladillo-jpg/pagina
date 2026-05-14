@@ -239,7 +239,7 @@ export async function generateActionSuccessStory(
 }
 
 /**
- * Genera un resumen profesional de hasta 150 palabras para un video.
+ * Genera un resumen profesional de hasta 200 palabras para un video.
  */
 export async function generateVideoSummary(title: string, description: string): Promise<string> {
   const model = genAI.getGenerativeModel({
@@ -253,13 +253,12 @@ export async function generateVideoSummary(title: string, description: string): 
     TÍTULO DEL VIDEO: ${title}
     DESCRIPCIÓN ORIGINAL: ${description}
     
-    REQUISITOS:
-    - IDENTIFICACIÓN DE PROTAGONISTAS: Debés actuar como un detective. Identificá y mencioná explícitamente quién es el entrevistado, orador o responsable. Prestá especial atención a las menciones al comienzo del texto, presentaciones de "quién nos acompaña hoy" o nombres que aparezcan en lo que parece ser la gráfica o placa de presentación del video.
-
-    - Longitud: Máximo 150 palabras.
-    - Estilo: ITEC (Técnico, Humano, Vanguardista).
-    - Objetivo: Captar el interés del público y resumir los puntos clave.
-    - Idioma: Español rioplatense formal (usando "vos").
+    REQUISITOS CRÍTICOS:
+    - PRECISIÓN Y CONTENIDO REAL: Debés ser lo más certero posible sobre lo que realmente se trata en el video. Evitá generalidades vacías; buscá la idea general y los puntos clave de lo que efectivamente se dice o se muestra en el contenido.
+    - IDENTIFICACIÓN DE PROTAGONISTAS: Identificá y mencioná explícitamente quién es el entrevistado, orador o responsable. Prestá especial atención a presentaciones de nombres o cargos al inicio del texto.
+    - LONGITUD: Máximo 200 palabras.
+    - ESTILO ITEC: Técnico, Humano y Vanguardista.
+    - IDIOMA: Español rioplatense formal (usando "vos").
     
     Respondé únicamente con el texto del resumen, sin títulos adicionales ni comillas.
 
