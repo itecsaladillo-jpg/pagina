@@ -205,7 +205,7 @@ export default function VideotecaManager({ initialVideos }: VideotecaManagerProp
                 {video.ai_summary && (
                   <div className="mb-4 bg-amber-500/5 border border-amber-500/10 rounded-xl p-3">
                     <p className="text-[10px] text-amber-500 font-bold uppercase tracking-widest mb-1.5 flex items-center gap-1.5">
-                      <Sparkles size={12} className="animate-pulse" /> Resumen IA (Estilo ITEC)
+                      <Sparkles size={12} className="animate-pulse" /> Resumen de Video
                     </p>
                     <p className="text-[11px] text-[var(--text-secondary)] line-clamp-3 leading-relaxed italic">
                       "{video.ai_summary}"
