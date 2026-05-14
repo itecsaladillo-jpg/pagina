@@ -57,20 +57,16 @@ export function VideotecaSection() {
           {/* Reproductor Principal (Izquierda) */}
           <div className="lg:col-span-7 pt-[10px]">
 
-            <div className="relative aspect-video rounded-3xl overflow-hidden glass border border-white/10 shadow-2xl">
+            <div className="relative aspect-video rounded-3xl overflow-hidden glass border border-white/10 shadow-2xl bg-black">
               {activeVideoId ? (
-                <>
-                  <iframe
-                    src={`https://www.youtube.com/embed/${activeVideoId}?autoplay=${hasInteracted ? 1 : 0}&modestbranding=1&rel=0&iv_load_policy=3&showinfo=0&controls=1&disablekb=0&color=white`}
-                    title={activeVideo?.title || 'Reproductor de video'}
-                    className="absolute inset-0 w-full h-full"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                  />
-
-
-                </>
-
+                <iframe
+                  key={activeVideoId}
+                  src={`https://www.youtube.com/embed/${activeVideoId}?autoplay=${hasInteracted ? 1 : 0}&modestbranding=1&rel=0&iv_load_policy=3&showinfo=0&controls=1&disablekb=0&color=white`}
+                  title={activeVideo?.title || 'Reproductor de video'}
+                  className="absolute inset-0 w-full h-full"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
               ) : activeVideo ? (
                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/60 p-8 text-center">
                   <div className="w-16 h-16 rounded-full bg-red-500/10 flex items-center justify-center mb-4">
@@ -78,10 +74,10 @@ export function VideotecaSection() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                     </svg>
                   </div>
-                  <h4 className="text-white font-bold mb-2">Enlace de video no válido</h4>
+                  <h4 className="text-white font-bold mb-2">Video no disponible</h4>
                   <p className="text-[var(--text-secondary)] text-sm max-w-xs">
-                    No pudimos obtener el video de la dirección: <br/>
-                    <code className="text-amber-500/80 break-all">{activeVideo.youtube_url}</code>
+                    No pudimos procesar el enlace: <br/>
+                    <code className="text-amber-500/80 break-all text-[10px]">{activeVideo.youtube_url}</code>
                   </p>
                 </div>
               ) : (
@@ -140,14 +136,16 @@ export function VideotecaSection() {
                     }`}
                   >
 
-                    <div className="relative w-32 aspect-video rounded-xl overflow-hidden flex-shrink-0 bg-black/40">
-                      {(video.thumbnail_url || getYouTubeThumbnail(video.youtube_url)) && (
-                        <img
-                          src={getYouTubeThumbnail(video.youtube_url) || video.thumbnail_url || ''}
-                          alt={video.title}
-                          className="w-full h-full object-cover transition-transform group-hover:scale-110"
-                        />
-                      )}
+                    <div className="relative w-32 aspect-video rounded-xl overflow-hidden flex-shrink-0 bg-black/60 border border-white/5">
+                      <img
+                        src={getYouTubeThumbnail(video.youtube_url) || video.thumbnail_url || 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?q=80&w=320&auto=format&fit=crop'}
+                        alt={video.title}
+                        className="w-full h-full object-cover transition-transform group-hover:scale-110"
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          target.src = 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?q=80&w=320&auto=format&fit=crop';
+                        }}
+                      />
                       <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/40">
                          <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
                             <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.333-5.89a1.5 1.5 0 000-2.538L6.3 2.841z" />

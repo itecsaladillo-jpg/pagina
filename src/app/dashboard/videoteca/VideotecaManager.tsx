@@ -176,13 +176,15 @@ export default function VideotecaManager({ initialVideos }: VideotecaManagerProp
                 rel="noopener noreferrer"
                 className="relative w-40 h-24 flex-shrink-0 rounded-lg overflow-hidden bg-black/40 group/thumb hover:ring-2 hover:ring-amber-500/50 transition-all"
               >
-                {(video.thumbnail_url || getYouTubeThumbnail(video.youtube_url)) && (
-                  <img 
-                    src={getYouTubeThumbnail(video.youtube_url) || video.thumbnail_url || ''} 
-                    alt={video.title}
-                    className="w-full h-full object-cover opacity-80 group-hover/thumb:scale-110 group-hover/thumb:opacity-100 transition-all"
-                  />
-                )}
+                <img 
+                  src={getYouTubeThumbnail(video.youtube_url) || video.thumbnail_url || 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?q=80&w=320&auto=format&fit=crop'} 
+                  alt={video.title}
+                  className="w-full h-full object-cover opacity-80 group-hover/thumb:scale-110 group-hover/thumb:opacity-100 transition-all"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.src = 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?q=80&w=320&auto=format&fit=crop';
+                  }}
+                />
                 <div className="absolute inset-0 flex items-center justify-center">
                    <div className="w-10 h-10 rounded-full bg-black/60 flex items-center justify-center border border-white/20 group-hover/thumb:bg-amber-500 group-hover/thumb:border-amber-500 transition-colors shadow-xl">
                      <svg className="w-5 h-5 text-white ml-0.5" fill="currentColor" viewBox="0 0 20 20">

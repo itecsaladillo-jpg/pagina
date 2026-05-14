@@ -27,10 +27,14 @@ export interface CreateVideoData {
 export function getYouTubeID(url: string): string | null {
   if (!url) return null
   
-  // Patrón más robusto para capturar IDs de 11 caracteres en diversos formatos
+  // Patrones para capturar IDs de YouTube en diversos formatos
   const patterns = [
-    /(?:v=|\/)([0-9A-Za-z_-]{11}).*/,
-    /(?:embed\/|v\/|shorts\/|watch\?v=|youtu\.be\/)([0-9A-Za-z_-]{11})/
+    // Formatos estándar: watch?v=ID, embed/ID, v/ID, shorts/ID, live/ID
+    /(?:v=|embed\/|v\/|shorts\/|live\/|watch\?v=|youtu\.be\/)([0-9A-Za-z_-]{11})/,
+    // Caso especial: youtu.be/ID (sin parámetros extra pegados al ID)
+    /youtu\.be\/([0-9A-Za-z_-]{11})/,
+    // Caso genérico al final de la URL
+    /([0-9A-Za-z_-]{11})$/
   ]
 
   for (const pattern of patterns) {
