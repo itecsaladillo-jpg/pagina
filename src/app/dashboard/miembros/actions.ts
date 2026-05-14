@@ -1,8 +1,24 @@
 'use server'
 
-import { approveMember, updateMemberRole, assignToCommission, deactivateMember } from '@/services/admin'
+import { approveMember, approveMemberByEmail, updateMemberRole, assignToCommission, deactivateMember } from '@/services/admin'
 import { getCurrentMember } from '@/services/auth'
 import { revalidatePath } from 'next/cache'
+
+export async function approveMemberByEmailAction(email: string) {
+  try {
+    const admin = await getCurrentMember()
+    if (!admin || admin.role !== 'admin') {
+      return { success: false, error: 'No tenés permisos de administrador.' }
+    }
+    
+    const res = await approveMemberByEmail(email)
+    if (res.success) revalidatePath('/dashboard/miembros')
+    return res
+  } catch (err: any) {
+    console.error('[approveMemberByEmailAction] Error:', err)
+    return { success: false, error: 'Error al procesar la aprobación.' }
+  }
+}
 
 export async function approveMemberAction(memberId: string) {
   try {

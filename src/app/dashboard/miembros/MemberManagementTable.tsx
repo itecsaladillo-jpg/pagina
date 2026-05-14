@@ -1,8 +1,9 @@
 'use client'
 
 import { useState } from 'react'
-import { approveMemberAction, updateRoleAction, assignCommissionAction, deactivateMemberAction } from './actions'
+import { approveMemberAction, approveMemberByEmailAction, updateRoleAction, assignCommissionAction, deactivateMemberAction } from './actions'
 import type { Member, Commission } from '@/types/database'
+import { UserPlus, Search, Mail } from 'lucide-react'
 
 interface Props {
   members: any[]
@@ -12,6 +13,31 @@ interface Props {
 export function MemberManagementTable({ members, commissions }: Props) {
   const [loadingId, setLoadingId] = useState<string | null>(null)
   const [activeTab, setActiveTab] = useState<'pending' | 'active' | 'all'>('pending')
+  const [manualEmail, setManualEmail] = useState('')
+  const [isProcessingManual, setIsProcessingManual] = useState(false)
+
+  const handleManualApprove = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!manualEmail.trim() || !manualEmail.includes('@')) {
+      alert('Ingresá un Gmail válido.')
+      return
+    }
+
+    setIsProcessingManual(true)
+    try {
+      const res = await approveMemberByEmailAction(manualEmail.trim())
+      if (res.success) {
+        alert('¡Usuario aprobado con éxito!')
+        setManualEmail('')
+      } else {
+        alert(res.error || 'No se pudo aprobar el usuario.')
+      }
+    } catch (err) {
+      alert('Error de conexión.')
+    } finally {
+      setIsProcessingManual(false)
+    }
+  }
 
   const handleApprove = async (id: string, isNew: boolean = true) => {
     setLoadingId(id)
@@ -57,7 +83,42 @@ export function MemberManagementTable({ members, commissions }: Props) {
   })
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
+      {/* Aprobación Manual por Email */}
+      <div className="glass border border-amber-500/20 rounded-2xl p-6 bg-amber-500/[0.02]">
+        <div className="flex items-center gap-3 mb-4">
+          <div className="p-2 bg-amber-500/10 rounded-lg text-amber-500">
+            <UserPlus size={20} />
+          </div>
+          <div>
+            <h3 className="text-white font-semibold text-sm">Aprobación Directa</h3>
+            <p className="text-[var(--text-muted)] text-[11px]">Aprobá a un nuevo usuario ingresando su Gmail manualmente.</p>
+          </div>
+        </div>
+
+        <form onSubmit={handleManualApprove} className="flex gap-3">
+          <div className="relative flex-grow max-w-md">
+            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-white/20" size={16} />
+            <input
+              type="email"
+              value={manualEmail}
+              onChange={(e) => setManualEmail(e.target.value)}
+              placeholder="nombre@gmail.com"
+              className="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-sm text-white focus:outline-none focus:border-amber-500/50 transition-all"
+              required
+            />
+          </div>
+          <button
+            type="submit"
+            disabled={isProcessingManual}
+            className="bg-amber-500 hover:bg-amber-600 disabled:opacity-50 text-black text-xs font-bold px-6 py-2.5 rounded-xl transition-all shadow-lg shadow-amber-500/10 flex items-center gap-2"
+          >
+            {isProcessingManual ? 'Procesando...' : 'Aprobar Usuario'}
+          </button>
+        </form>
+      </div>
+
+      <div className="space-y-6">
       {/* Selector de Pestañas */}
       <div className="flex gap-4 border-b border-[var(--border-subtle)] pb-px">
         {[

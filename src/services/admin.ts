@@ -21,6 +21,40 @@ export async function approveMember(memberId: string) {
 }
 
 /**
+ * Aprueba a un miembro pendiente buscándolo por su correo electrónico.
+ */
+export async function approveMemberByEmail(email: string) {
+  const supabase = await createClient()
+  
+  // Primero buscamos si existe
+  const { data: member, error: searchError } = await supabase
+    .from('members')
+    .select('id, status')
+    .eq('email', email)
+    .single()
+
+  if (searchError || !member) {
+    return { success: false, error: 'No se encontró ningún usuario registrado con ese correo electrónico.' }
+  }
+
+  if (member.status === 'activo') {
+    return { success: false, error: 'El usuario ya se encuentra activo.' }
+  }
+
+  const { data, error } = await supabase
+    .from('members')
+    .update({ status: 'activo' })
+    .eq('id', member.id)
+    .select()
+
+  if (error) {
+    return { success: false, error: error.message }
+  }
+  
+  return { success: true, data: data?.[0] || null }
+}
+
+/**
  * Deshabilita a un miembro (estado inactivo).
  */
 export async function deactivateMember(memberId: string) {
