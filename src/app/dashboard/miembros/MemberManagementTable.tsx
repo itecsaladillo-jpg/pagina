@@ -77,8 +77,8 @@ export function MemberManagementTable({ members, commissions }: Props) {
   }
 
   const filteredMembers = members.filter(m => {
-    if (activeTab === 'pending') return m.status === 'pendiente' || m.status === 'pre-aprobado'
-    if (activeTab === 'active') return m.status === 'activo'
+    if (activeTab === 'pending') return m.status === 'pendiente'
+    if (activeTab === 'active') return m.status === 'activo' || m.status === 'pre-aprobado'
     return true
   })
 
@@ -122,8 +122,8 @@ export function MemberManagementTable({ members, commissions }: Props) {
       {/* Selector de Pestañas */}
       <div className="flex gap-4 border-b border-[var(--border-subtle)] pb-px">
         {[
-          { id: 'pending', label: 'Pendientes', count: members.filter(m => m.status === 'pendiente' || m.status === 'pre-aprobado').length },
-          { id: 'active', label: 'Aprobados', count: members.filter(m => m.status === 'activo').length },
+          { id: 'pending', label: 'Pendientes', count: members.filter(m => m.status === 'pendiente').length },
+          { id: 'active', label: 'Aprobados', count: members.filter(m => m.status === 'activo' || m.status === 'pre-aprobado').length },
           { id: 'all', label: 'Todos', count: members.length },
         ].map((tab) => (
           <button
