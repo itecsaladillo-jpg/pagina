@@ -45,11 +45,11 @@ export function HeroSection() {
         <div className="flex flex-col md:flex-row items-center justify-between gap-12 md:gap-8">
 
           {/* IZQUIERDA — Logo */}
-          <div className="flex flex-col items-center gap-6 animate-fade-up translate-x-[70px] -translate-y-[50px] relative">
+          <div className="flex flex-col items-start gap-6 animate-fade-up -translate-y-[30px] relative">
             
             {/* Gradiente de fondo específico para el logo (Glow) */}
             <div 
-              className="absolute inset-0 bg-[#3b82f6] blur-[100px] opacity-60 -z-10 scale-[1.8]"
+              className="absolute -left-20 top-0 bg-[#3b82f6] blur-[100px] opacity-40 -z-10 scale-[1.8] w-[400px] h-[300px]"
               style={{ borderRadius: '50%' }}
             />
 
@@ -71,7 +71,7 @@ export function HeroSection() {
             </div>
 
             {/* Botones de Secciones (Mismos que el Header) */}
-            <div className="flex flex-wrap items-center justify-center gap-2 mt-6 animate-fade-up delay-300 relative z-10" style={{ animationFillMode: 'both' }}>
+            <div className="flex flex-wrap items-center justify-start gap-2 mt-6 animate-fade-up delay-300 relative z-10" style={{ animationFillMode: 'both' }}>
               <a href="#acciones" className="btn-outline text-[10px] uppercase tracking-wider py-1.5 px-4 border-dashed opacity-70 hover:opacity-100 transition-all">
                 Acciones
               </a>
@@ -94,7 +94,7 @@ export function HeroSection() {
           </div>
 
           {/* DERECHA — Palabras iluminadas */}
-          <div className="relative flex flex-col items-start animate-fade-up delay-200 translate-x-[-10px]" style={{ animationFillMode: 'both' }}>
+          <div className="relative flex flex-col items-start animate-fade-up delay-200" style={{ animationFillMode: 'both' }}>
             
             <div className="relative py-8">
               {/* Palabras (Capa superior) */}
