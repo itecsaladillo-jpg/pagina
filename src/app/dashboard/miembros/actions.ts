@@ -1,8 +1,35 @@
-'use server'
-
-import { approveMember, approveMemberByEmail, updateMemberRole, updatePreApprovedRole, updatePreApprovedCommission, assignToCommission, deactivateMember } from '@/services/admin'
+import { 
+  approveMember, 
+  approveMemberByEmail, 
+  updateMemberRole, 
+  updatePreApprovedRole, 
+  updatePreApprovedCommission, 
+  updateMemberPhone,
+  updatePreApprovedPhone,
+  assignToCommission, 
+  deactivateMember 
+} from '@/services/admin'
 import { getCurrentMember } from '@/services/auth'
 import { revalidatePath } from 'next/cache'
+
+export async function updatePhoneAction(idOrEmail: string, phone: string) {
+  try {
+    const admin = await getCurrentMember()
+    if (!admin || admin.role !== 'admin') return { success: false, error: 'No autorizado' }
+    
+    if (idOrEmail.includes('@')) {
+      const res = await updatePreApprovedPhone(idOrEmail, phone)
+      if (res.success) revalidatePath('/dashboard/miembros')
+      return res
+    }
+
+    const res = await updateMemberPhone(idOrEmail, phone)
+    if (res.success) revalidatePath('/dashboard/miembros')
+    return res
+  } catch (err) {
+    return { success: false, error: 'Error al actualizar teléfono.' }
+  }
+}
 
 export async function approveMemberByEmailAction(email: string) {
   try {

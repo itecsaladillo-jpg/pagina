@@ -1,9 +1,9 @@
 'use client'
 
 import { useState } from 'react'
-import { approveMemberAction, approveMemberByEmailAction, updateRoleAction, assignCommissionAction, deactivateMemberAction } from './actions'
+import { approveMemberAction, approveMemberByEmailAction, updateRoleAction, assignCommissionAction, deactivateMemberAction, updatePhoneAction } from './actions'
 import type { Member, Commission } from '@/types/database'
-import { UserPlus, Search, Mail } from 'lucide-react'
+import { UserPlus, Search, Mail, Phone, Edit2 } from 'lucide-react'
 
 interface Props {
   members: any[]
@@ -15,6 +15,19 @@ export function MemberManagementTable({ members, commissions }: Props) {
   const [activeTab, setActiveTab] = useState<'pending' | 'active' | 'all'>('pending')
   const [manualEmail, setManualEmail] = useState('')
   const [isProcessingManual, setIsProcessingManual] = useState(false)
+  const [editingPhone, setEditingPhone] = useState<string | null>(null)
+  const [tempPhone, setTempPhone] = useState('')
+
+  const handlePhoneUpdate = async (id: string) => {
+    setLoadingId(id)
+    const res = await updatePhoneAction(id, tempPhone)
+    if (res.success) {
+      setEditingPhone(null)
+    } else {
+      alert('Error: ' + (res.error || 'No se pudo actualizar el teléfono'))
+    }
+    setLoadingId(null)
+  }
 
   const handleManualApprove = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -162,6 +175,7 @@ export function MemberManagementTable({ members, commissions }: Props) {
                 <th className="py-4 px-4 font-medium">Estado</th>
                 <th className="py-4 px-4 font-medium">Rol</th>
                 <th className="py-4 px-4 font-medium">Comisión</th>
+                <th className="py-4 px-4 font-medium">Teléfono</th>
                 <th className="py-4 px-4 font-medium text-right">Acción</th>
               </tr>
             </thead>
@@ -215,6 +229,32 @@ export function MemberManagementTable({ members, commissions }: Props) {
                           <option key={c.id} value={c.id}>{c.name}</option>
                         ))}
                       </select>
+                    </td>
+                    <td className="py-4 px-4">
+                      {editingPhone === m.id ? (
+                        <div className="flex items-center gap-2">
+                          <input
+                            type="text"
+                            value={tempPhone}
+                            onChange={(e) => setTempPhone(e.target.value)}
+                            onBlur={() => handlePhoneUpdate(m.id)}
+                            onKeyDown={(e) => e.key === 'Enter' && handlePhoneUpdate(m.id)}
+                            autoFocus
+                            className="bg-white/5 border border-white/20 rounded px-2 py-1 text-[11px] w-28 outline-none focus:border-amber-500/50"
+                          />
+                        </div>
+                      ) : (
+                        <div 
+                          className="flex items-center gap-2 cursor-pointer hover:text-white group/phone text-[11px] text-[var(--text-muted)]"
+                          onClick={() => {
+                            setEditingPhone(m.id)
+                            setTempPhone(m.phone || '')
+                          }}
+                        >
+                          <span>{m.phone || 'Agregar...'}</span>
+                          <Edit2 size={10} className="opacity-0 group-hover/phone:opacity-50" />
+                        </div>
+                      )}
                     </td>
                     <td className="py-4 px-4 text-right">
                       {m.status === 'pre-aprobado' ? (

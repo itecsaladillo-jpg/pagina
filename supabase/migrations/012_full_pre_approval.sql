@@ -5,6 +5,7 @@
 -- Agregar columnas a allowed_emails para capturar datos adicionales
 alter table public.allowed_emails 
 add column if not exists full_name text,
+add column if not exists phone text,
 add column if not exists commission_id uuid references public.commissions(id) on delete set null;
 
 -- Actualizar el trigger handle_new_user para migrar TODO al momento del registro real
@@ -16,15 +17,16 @@ as $$
 declare
   pre_role text;
   pre_name text;
+  pre_phone text;
   pre_comm uuid;
 begin
   -- Obtener todos los datos de la pre-aprobación
-  select role, full_name, commission_id 
+  select role, full_name, phone, commission_id 
   from public.allowed_emails 
   where email = new.email 
-  into pre_role, pre_name, pre_comm;
+  into pre_role, pre_name, pre_phone, pre_comm;
 
-  insert into public.members (id, email, full_name, avatar_url, status, role)
+  insert into public.members (id, email, full_name, avatar_url, status, role, phone)
   values (
     new.id,
     new.email,
@@ -36,7 +38,8 @@ begin
     ),
     new.raw_user_meta_data->>'avatar_url',
     case when pre_role is not null then 'activo' else 'pendiente' end,
-    coalesce(pre_role, 'miembro')
+    coalesce(pre_role, 'miembro'),
+    pre_phone
   );
 
   -- Si tenía comisión pre-asignada, la vinculamos
