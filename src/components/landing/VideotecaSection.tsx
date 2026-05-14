@@ -18,10 +18,9 @@ export function VideotecaSection() {
     const loadVideos = async () => {
       try {
         const data = await videoService.getPublicVideos()
-        const limitedVideos = data.slice(0, 6)
-        setVideos(limitedVideos)
-        if (limitedVideos.length > 0) {
-          setActiveVideo(limitedVideos[0])
+        setVideos(data)
+        if (data.length > 0) {
+          setActiveVideo(data[0])
         }
 
       } catch (error) {
