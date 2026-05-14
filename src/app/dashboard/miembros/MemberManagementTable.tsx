@@ -250,6 +250,7 @@ export function MemberManagementTable({ members, commissions }: Props) {
           </table>
         )}
       </div>
+      </div>
     </div>
   )
 }
