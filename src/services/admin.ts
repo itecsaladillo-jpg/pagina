@@ -137,10 +137,13 @@ export async function assignToCommission(memberId: string, commissionId: string,
 
 /**
  * Obtiene todos los miembros con su información de comisión (si tienen).
+ * También incluye los correos de la tabla allowed_emails como 'pre-aprobado'.
  */
 export async function getAllMembersWithCommissions() {
   const supabase = await createClient()
-  const { data, error } = await supabase
+  
+  // 1. Obtener miembros registrados
+  const { data: members, error: membersError } = await supabase
     .from('members')
     .select(`
       *,
@@ -150,14 +153,39 @@ export async function getAllMembersWithCommissions() {
         commissions ( id, name )
       )
     `)
-    .order('status', { ascending: false }) // Primero pendientes/activos
+    .order('status', { ascending: false }) 
     .order('full_name')
 
-  if (error) {
-    console.error('[adminService] getAllMembers error:', error.message)
+  // 2. Obtener correos pre-aprobados (pueden fallar si la tabla no existe aún)
+  const { data: preApproved, error: preError } = await supabase
+    .from('allowed_emails')
+    .select('*')
+
+  if (membersError) {
+    console.error('[adminService] getAllMembers error:', membersError.message)
     return []
   }
-  return data ?? []
+
+  const results = [...(members ?? [])]
+
+  // Integrar pre-aprobados que no estén ya en la tabla de miembros
+  if (preApproved && !preError) {
+    preApproved.forEach(pa => {
+      const alreadyExists = results.find(m => m.email.toLowerCase() === pa.email.toLowerCase())
+      if (!alreadyExists) {
+        results.push({
+          id: pa.email, // Usamos el mail como ID temporal
+          email: pa.email,
+          full_name: 'Invitado (Pendiente de registro)',
+          status: 'pre-aprobado',
+          role: 'miembro',
+          created_at: pa.created_at
+        })
+      }
+    })
+  }
+
+  return results
 }
 
 /**

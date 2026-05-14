@@ -77,7 +77,7 @@ export function MemberManagementTable({ members, commissions }: Props) {
   }
 
   const filteredMembers = members.filter(m => {
-    if (activeTab === 'pending') return m.status === 'pendiente'
+    if (activeTab === 'pending') return m.status === 'pendiente' || m.status === 'pre-aprobado'
     if (activeTab === 'active') return m.status === 'activo'
     return true
   })
@@ -122,7 +122,7 @@ export function MemberManagementTable({ members, commissions }: Props) {
       {/* Selector de Pestañas */}
       <div className="flex gap-4 border-b border-[var(--border-subtle)] pb-px">
         {[
-          { id: 'pending', label: 'Pendientes', count: members.filter(m => m.status === 'pendiente').length },
+          { id: 'pending', label: 'Pendientes', count: members.filter(m => m.status === 'pendiente' || m.status === 'pre-aprobado').length },
           { id: 'active', label: 'Aprobados', count: members.filter(m => m.status === 'activo').length },
           { id: 'all', label: 'Todos', count: members.length },
         ].map((tab) => (
@@ -185,6 +185,7 @@ export function MemberManagementTable({ members, commissions }: Props) {
                     <td className="py-4 px-4">
                       <span className={`px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider ${
                         m.status === 'activo' ? 'bg-green-500/10 text-green-400 border border-green-500/20' : 
+                        m.status === 'pre-aprobado' ? 'bg-blue-500/10 text-blue-400 border border-blue-500/20' :
                         'bg-amber-500/10 text-amber-400 border border-amber-500/20'
                       }`}>
                         {m.status}
@@ -194,8 +195,8 @@ export function MemberManagementTable({ members, commissions }: Props) {
                       <select 
                         value={m.role}
                         onChange={(e) => handleRoleChange(m.id, e.target.value)}
-                        disabled={loadingId === m.id}
-                        className="bg-transparent text-[var(--text-secondary)] text-xs focus:text-white outline-none cursor-pointer hover:underline"
+                        disabled={loadingId === m.id || m.status === 'pre-aprobado'}
+                        className="bg-transparent text-[var(--text-secondary)] text-xs focus:text-white outline-none cursor-pointer hover:underline disabled:opacity-30"
                       >
                         <option value="miembro">Miembro</option>
                         <option value="coordinador">Coordinador</option>
@@ -207,8 +208,8 @@ export function MemberManagementTable({ members, commissions }: Props) {
                       <select 
                         value={currentCommission}
                         onChange={(e) => handleCommissionChange(m.id, e.target.value)}
-                        disabled={loadingId === m.id}
-                        className="bg-transparent text-[var(--text-secondary)] text-xs focus:text-white outline-none cursor-pointer max-w-[140px] truncate hover:underline"
+                        disabled={loadingId === m.id || m.status === 'pre-aprobado'}
+                        className="bg-transparent text-[var(--text-secondary)] text-xs focus:text-white outline-none cursor-pointer max-w-[140px] truncate hover:underline disabled:opacity-30"
                       >
                         <option value="">Sin asignar</option>
                         {commissions.map(c => (
@@ -217,7 +218,9 @@ export function MemberManagementTable({ members, commissions }: Props) {
                       </select>
                     </td>
                     <td className="py-4 px-4 text-right">
-                      {m.status === 'pendiente' ? (
+                      {m.status === 'pre-aprobado' ? (
+                        <span className="text-[10px] text-[var(--text-muted)] italic">Esperando registro</span>
+                      ) : m.status === 'pendiente' ? (
                         <button
                           onClick={() => handleApprove(m.id)}
                           disabled={loadingId === m.id}
