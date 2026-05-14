@@ -1,5 +1,5 @@
 -- ============================================================
--- Pre-aprobación de miembros por Email
+-- Pre-aprobación de miembros por Email (IDEMPOTENTE)
 -- ============================================================
 
 create table if not exists public.allowed_emails (
@@ -10,6 +10,9 @@ create table if not exists public.allowed_emails (
 
 -- RLS para allowed_emails
 alter table public.allowed_emails enable row level security;
+
+-- Borrar política si ya existe para evitar errores al re-ejecutar
+drop policy if exists "Admins pueden gestionar correos permitidos" on public.allowed_emails;
 
 create policy "Admins pueden gestionar correos permitidos"
   on public.allowed_emails for all
@@ -36,13 +39,14 @@ begin
   values (
     new.id,
     new.email,
-    coalesce(new.raw_user_meta_data->>'full_name', split_part(new.email, '@', 1)),
+    coalesce(
+      new.raw_user_meta_data->>'full_name', 
+      new.raw_user_meta_data->>'name', 
+      split_part(new.email, '@', 1)
+    ),
     new.raw_user_meta_data->>'avatar_url',
     case when is_allowed then 'activo' else 'pendiente' end
   );
-
-  -- Si estaba en allowed_emails, lo borramos (opcional, para limpiar)
-  -- delete from public.allowed_emails where email = new.email;
 
   return new;
 end;
