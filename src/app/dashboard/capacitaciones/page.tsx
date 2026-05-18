@@ -110,12 +110,27 @@ export default async function AccionesDashboardPage() {
                     </div>
                   </td>
                   <td className="px-8 py-6 text-right">
-                    <Link 
-                      href={`/dashboard/acciones/${action.id}`}
-                      className="text-xs font-bold text-blue-400 hover:text-blue-300 transition-colors uppercase tracking-widest"
-                    >
-                      Gestionar
-                    </Link>
+                    <div className="flex items-center justify-end gap-4">
+                      <Link 
+                        href={`/dashboard/acciones/${action.id}`}
+                        className="text-xs font-bold text-blue-400 hover:text-blue-300 transition-colors uppercase tracking-widest"
+                      >
+                        Gestionar
+                      </Link>
+                      <Link 
+                        href={`/dashboard/eventos/${action.id}/moderacion`}
+                        className="text-xs font-bold text-indigo-400 hover:text-indigo-300 transition-colors uppercase tracking-widest"
+                      >
+                        Moderar Q&A
+                      </Link>
+                      <Link 
+                        href={`/eventos/${action.id}/pantalla-preguntas`}
+                        target="_blank"
+                        className="text-xs font-bold text-emerald-400 hover:text-emerald-300 transition-colors uppercase tracking-widest"
+                      >
+                        Proyector
+                      </Link>
+                    </div>
                   </td>
                 </tr>
               ))}
