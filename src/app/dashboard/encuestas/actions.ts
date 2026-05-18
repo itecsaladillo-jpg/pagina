@@ -99,27 +99,28 @@ export async function deletePollAction(pollId: string) {
   }
 }
 
-export async function submitVoteAction(optionIds: string[], pollId: string) {
+export async function submitSingleVoteAction(optionId: string, questionId: string, pollId: string) {
   try {
     const { cookies } = await import('next/headers')
     const cookieStore = await cookies()
-    const hasVoted = cookieStore.get(`voted_${pollId}`)
+    
+    // Verificamos si ya votó en esta pregunta específica
+    const hasVotedQuestion = cookieStore.get(`voted_q_${questionId}`)
 
-    if (hasVoted) {
-      return { success: false, error: 'Ya has votado en esta encuesta con este dispositivo.' }
+    if (hasVotedQuestion) {
+      return { success: false, error: 'Ya has respondido esta pregunta.' }
     }
 
     const supabase = await createClient()
 
-    const votesData = optionIds.map(id => ({ option_id: id }))
-
     const { error } = await supabase
       .from('poll_votes')
-      .insert(votesData)
+      .insert({ option_id: optionId })
 
     if (error) throw error
 
-    cookieStore.set(`voted_${pollId}`, 'true', {
+    // Marcamos esta pregunta como votada
+    cookieStore.set(`voted_q_${questionId}`, 'true', {
       maxAge: 60 * 60 * 24 * 30, // 30 días
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
@@ -128,7 +129,26 @@ export async function submitVoteAction(optionIds: string[], pollId: string) {
 
     return { success: true }
   } catch (err: any) {
-    console.error('[submitVote]', err)
+    console.error('[submitSingleVote]', err)
     return { success: false, error: 'Error al registrar el voto' }
+  }
+}
+
+export async function markPollAsCompletedAction(pollId: string) {
+  try {
+    const { cookies } = await import('next/headers')
+    const cookieStore = await cookies()
+    
+    // Marcamos la encuesta entera como completada
+    cookieStore.set(`voted_${pollId}`, 'true', {
+      maxAge: 60 * 60 * 24 * 30, // 30 días
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict'
+    })
+    
+    return { success: true }
+  } catch (err: any) {
+    return { success: false }
   }
 }

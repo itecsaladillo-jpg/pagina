@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { submitVoteAction } from '@/app/dashboard/encuestas/actions'
+import { submitSingleVoteAction, markPollAsCompletedAction } from '@/app/dashboard/encuestas/actions'
 import { Loader2, CheckCircle2, ChevronRight } from 'lucide-react'
 import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -67,8 +67,21 @@ export function VotingClient({ poll }: { poll: Poll | null }) {
   const handleVoteClick = async (optionId: string) => {
     if (isVoting) return
 
+    setIsVoting(true)
+    
+    // 1. Enviar el voto inmediatamente a la base de datos
+    const res = await submitSingleVoteAction(optionId, currentQuestion.id, poll.id)
+    
+    if (!res.success && res.error !== 'Ya has respondido esta pregunta.') {
+      alert(res.error || 'Error al registrar el voto')
+      setIsVoting(false)
+      return
+    }
+
+    // 2. Actualizar selecciones locales
     const newSelections = { ...selections, [currentQuestion.id]: optionId }
     setSelections(newSelections)
+    setIsVoting(false)
 
     if (!isLastQuestion) {
       // Mostrar pantalla intermedia
@@ -78,20 +91,12 @@ export function VotingClient({ poll }: { poll: Poll | null }) {
         setCurrentQuestionIndex(prev => prev + 1)
       }, 1500) // 1.5 segundos de mensaje "Voto computado"
     } else {
-      // Última pregunta: enviar a la base de datos
+      // Última pregunta: marcar la encuesta entera como completada
       setIsVoting(true)
-      const selectedOptions = Object.values(newSelections)
-      
-      const res = await submitVoteAction(selectedOptions, poll.id)
-      if (res.success || res.error === 'Ya has votado en esta encuesta con este dispositivo.') {
-        localStorage.setItem(`voted_${poll.id}`, 'true')
-        setHasVoted(true)
-        if (res.success) {
-          setJustVoted(true)
-        }
-      } else {
-        alert(res.error || 'Error al registrar el voto')
-      }
+      await markPollAsCompletedAction(poll.id)
+      localStorage.setItem(`voted_${poll.id}`, 'true')
+      setHasVoted(true)
+      setJustVoted(true)
       setIsVoting(false)
     }
   }
