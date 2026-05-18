@@ -108,10 +108,20 @@ export default async function SistemaPreguntasDashboard() {
             </div>
           ))
         ) : (
-          <div className="col-span-full py-16 text-center border border-dashed border-zinc-800 rounded-3xl bg-zinc-950/20">
-            <MessageSquare className="w-12 h-12 text-zinc-600 mx-auto mb-4" />
+          <div className="col-span-full py-16 text-center border border-dashed border-zinc-800 rounded-3xl bg-zinc-950/20 space-y-4">
+            <MessageSquare className="w-12 h-12 text-zinc-600 mx-auto mb-2" />
             <h3 className="text-lg font-bold text-white">No hay acciones registradas</h3>
-            <p className="text-zinc-500 text-sm mt-1">Cargá un evento en tu panel de ITEC antes de configurar el Q&A.</p>
+            <p className="text-zinc-500 text-sm max-w-md mx-auto leading-relaxed">
+              Cargá un evento o capacitación en tu panel de ITEC para habilitar el Q&A y la proyección en vivo.
+            </p>
+            <div className="pt-2">
+              <Link 
+                href="/dashboard/acciones/nueva"
+                className="inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-bold py-2.5 px-6 rounded-xl transition-all shadow-md text-xs uppercase tracking-wider"
+              >
+                Crear Primer Evento
+              </Link>
+            </div>
           </div>
         )}
       </div>
