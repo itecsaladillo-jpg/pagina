@@ -26,8 +26,11 @@ const supabase = createClient(
 );
 
 async function test() {
-  const { data: members, error } = await supabase.from('members').select('id, email, role, status');
-  console.log('Members:', members, error);
+  const { data: members, error: mErr } = await supabase.from('members').select('id, email, role, status');
+  console.log('Members:', members, mErr);
+
+  const { data: allowed, error: aErr } = await supabase.from('allowed_emails').select('*');
+  console.log('Allowed Emails:', allowed, aErr);
 }
 
 test();
