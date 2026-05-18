@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from 'react'
 import { submitVoteAction } from '@/app/dashboard/encuestas/actions'
-import { Loader2, CheckCircle2, ArrowRight, Send } from 'lucide-react'
+import { Loader2, CheckCircle2, ChevronRight } from 'lucide-react'
 import Image from 'next/image'
+import { motion, AnimatePresence } from 'framer-motion'
 
 interface Option {
   id: string
@@ -27,10 +28,9 @@ export function VotingClient({ poll }: { poll: Poll | null }) {
   const [justVoted, setJustVoted] = useState(false)
   const [isVoting, setIsVoting] = useState(false)
   
-  // Guardamos las selecciones como { [questionId]: optionId }
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
   const [selections, setSelections] = useState<Record<string, string>>({})
-  // Controlamos en qué pregunta estamos si queremos hacerlo paso a paso, 
-  // pero para encuestas rápidas, mostrarlas todas en una lista vertical es mejor.
+  const [showIntermediate, setShowIntermediate] = useState(false)
 
   useEffect(() => {
     if (poll) {
@@ -61,32 +61,39 @@ export function VotingClient({ poll }: { poll: Poll | null }) {
     )
   }
 
-  const handleSelect = (questionId: string, optionId: string) => {
-    setSelections(prev => ({
-      ...prev,
-      [questionId]: optionId
-    }))
-  }
+  const currentQuestion = poll.poll_questions?.[currentQuestionIndex]
+  const isLastQuestion = currentQuestionIndex === (poll.poll_questions?.length || 0) - 1
 
-  const handleSubmit = async () => {
-    const selectedOptions = Object.values(selections)
-    if (selectedOptions.length !== poll.poll_questions.length) {
-      alert('Por favor responde a todas las preguntas antes de enviar.')
-      return
-    }
+  const handleVoteClick = async (optionId: string) => {
+    if (isVoting) return
 
-    setIsVoting(true)
-    const res = await submitVoteAction(selectedOptions, poll.id)
-    if (res.success || res.error === 'Ya has votado en esta encuesta con este dispositivo.') {
-      localStorage.setItem(`voted_${poll.id}`, 'true')
-      setHasVoted(true)
-      if (res.success) {
-        setJustVoted(true)
-      }
+    const newSelections = { ...selections, [currentQuestion.id]: optionId }
+    setSelections(newSelections)
+
+    if (!isLastQuestion) {
+      // Mostrar pantalla intermedia
+      setShowIntermediate(true)
+      setTimeout(() => {
+        setShowIntermediate(false)
+        setCurrentQuestionIndex(prev => prev + 1)
+      }, 1500) // 1.5 segundos de mensaje "Voto computado"
     } else {
-      alert(res.error || 'Error al registrar el voto')
+      // Última pregunta: enviar a la base de datos
+      setIsVoting(true)
+      const selectedOptions = Object.values(newSelections)
+      
+      const res = await submitVoteAction(selectedOptions, poll.id)
+      if (res.success || res.error === 'Ya has votado en esta encuesta con este dispositivo.') {
+        localStorage.setItem(`voted_${poll.id}`, 'true')
+        setHasVoted(true)
+        if (res.success) {
+          setJustVoted(true)
+        }
+      } else {
+        alert(res.error || 'Error al registrar el voto')
+      }
+      setIsVoting(false)
     }
-    setIsVoting(false)
   }
 
   if (hasVoted) {
@@ -102,9 +109,9 @@ export function VotingClient({ poll }: { poll: Poll | null }) {
           
           {justVoted ? (
             <>
-              <h1 className="text-3xl font-bold text-white mb-4">¡Voto Registrado!</h1>
+              <h1 className="text-3xl font-bold text-white mb-4">¡Encuesta Completada!</h1>
               <p className="text-gray-400 text-base mb-12 max-w-[280px] mx-auto leading-relaxed">
-                Tu voto ha sido contabilizado con éxito. Mirá la pantalla principal para ver los resultados en vivo.
+                Tus respuestas han sido registradas con éxito. Mirá la pantalla principal para ver los resultados en vivo.
               </p>
             </>
           ) : (
@@ -124,94 +131,94 @@ export function VotingClient({ poll }: { poll: Poll | null }) {
     )
   }
 
-  const isComplete = Object.keys(selections).length === poll.poll_questions?.length
-
   return (
     <div className="min-h-screen bg-gray-950 flex flex-col p-6 relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-br from-[#17338c]/20 via-gray-950 to-gray-950 pointer-events-none fixed" />
 
-      <div className="relative z-10 w-full max-w-lg mx-auto flex flex-col h-full pt-8 pb-20 animate-fade-in">
-        <div className="text-center mb-8">
-          <Image src="/logoitectrans_v2.png" alt="ITEC" width={140} height={45} className="mx-auto mb-8 opacity-90 drop-shadow-xl" />
+      <div className="relative z-10 w-full max-w-md mx-auto flex flex-col h-full pt-8 pb-10">
+        <div className="text-center mb-6">
+          <Image src="/logoitectrans_v2.png" alt="ITEC" width={140} height={45} className="mx-auto mb-8 opacity-90 drop-shadow-xl" priority />
           
-          <div className="bg-gray-900/60 backdrop-blur-xl border border-gray-800/80 rounded-3xl p-6 shadow-2xl shadow-black/50 mb-8">
-            <h1 className="text-2xl font-bold text-white leading-snug uppercase tracking-wide">
-              {poll.name}
-            </h1>
-            <p className="text-gray-400 text-sm mt-2 font-medium">Por favor respondé todas las preguntas</p>
+          <div className="flex items-center justify-between px-2 mb-4">
+            <span className="text-xs font-bold text-[var(--accent-primary)] uppercase tracking-widest">
+              Pregunta {currentQuestionIndex + 1} de {poll.poll_questions?.length}
+            </span>
+            <div className="flex gap-1">
+              {poll.poll_questions?.map((_, i) => (
+                <div 
+                  key={i} 
+                  className={`h-1.5 rounded-full transition-all duration-500 ${
+                    i === currentQuestionIndex ? 'w-6 bg-[var(--accent-primary)]' : 
+                    i < currentQuestionIndex ? 'w-2 bg-[var(--accent-primary)]/50' : 'w-2 bg-gray-800'
+                  }`}
+                />
+              ))}
+            </div>
           </div>
         </div>
 
-        <div className="space-y-12 flex-1">
-          {poll.poll_questions?.map((q, index) => (
-            <div key={q.id} className="space-y-4">
-              <h2 className="text-xl font-bold text-white mb-4 flex gap-3 items-start">
-                <span className="flex items-center justify-center bg-[var(--accent-primary)]/20 text-[var(--accent-primary)] w-8 h-8 rounded-full text-sm font-black shrink-0">
-                  {index + 1}
-                </span>
-                <span className="mt-0.5">{q.text}</span>
-              </h2>
+        <div className="flex-1 relative flex flex-col justify-center">
+          <AnimatePresence mode="wait">
+            {showIntermediate ? (
+              <motion.div
+                key="intermediate"
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, y: -20 }}
+                className="flex flex-col items-center justify-center text-center py-12"
+              >
+                <div className="w-16 h-16 rounded-full bg-green-500/20 flex items-center justify-center mb-6">
+                  <CheckCircle2 size={32} className="text-green-400" />
+                </div>
+                <h2 className="text-2xl font-bold text-white mb-2">Voto computado</h2>
+                <p className="text-gray-400">Preparando siguiente pregunta...</p>
+              </motion.div>
+            ) : isVoting ? (
+              <motion.div
+                key="loading"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="flex flex-col items-center justify-center text-center py-12"
+              >
+                <Loader2 size={48} className="text-[var(--accent-primary)] animate-spin mb-6" />
+                <h2 className="text-xl font-bold text-white">Enviando respuestas...</h2>
+              </motion.div>
+            ) : (
+              <motion.div
+                key={currentQuestion.id}
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.3 }}
+                className="w-full"
+              >
+                <div className="bg-gray-900/60 backdrop-blur-xl border border-gray-800/80 rounded-3xl p-6 shadow-2xl shadow-black/50 mb-8">
+                  <h1 className="text-2xl md:text-3xl font-bold text-white leading-snug">
+                    {currentQuestion.text}
+                  </h1>
+                </div>
 
-              <div className="space-y-3">
-                {q.poll_options.map(opt => {
-                  const isSelected = selections[q.id] === opt.id
-                  return (
+                <div className="space-y-4">
+                  {currentQuestion.poll_options.map(opt => (
                     <button
                       key={opt.id}
-                      onClick={() => handleSelect(q.id, opt.id)}
-                      disabled={isVoting}
-                      className={`w-full relative group overflow-hidden rounded-[1.25rem] p-[2px] transition-all duration-300 ${
-                        isSelected ? 'scale-[1.02]' : 'hover:scale-[1.02] active:scale-[0.98]'
-                      } ${isVoting ? 'opacity-50 grayscale' : ''}`}
+                      onClick={() => handleVoteClick(opt.id)}
+                      className="w-full relative group overflow-hidden rounded-[1.25rem] p-[2px] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
                     >
                       <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#17338c]/80 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 ease-in-out" />
                       
-                      <div className={`relative bg-gray-900 backdrop-blur-xl border ${
-                        isSelected ? 'border-[var(--accent-primary)] bg-[#17338c]/20' : 'border-gray-800/80'
-                      } rounded-[1.2rem] py-4 px-5 flex items-center justify-between z-10 transition-colors shadow-lg`}>
-                        <span className="text-white font-medium text-lg text-left pr-4">
+                      <div className="relative bg-gray-900 backdrop-blur-xl border border-gray-800/80 rounded-[1.2rem] py-5 px-6 flex items-center justify-between z-10 transition-colors shadow-lg group-hover:bg-gray-800/80">
+                        <span className="text-white font-medium text-lg md:text-xl text-left pr-4">
                           {opt.text}
                         </span>
-                        
-                        <div className={`w-5 h-5 rounded-full border-2 transition-colors shrink-0 flex items-center justify-center ${
-                          isSelected ? 'border-[var(--accent-primary)] bg-[var(--accent-primary)]' : 'border-gray-600 group-hover:border-[#17338c]'
-                        }`}>
-                          {isSelected && <div className="w-2 h-2 rounded-full bg-white" />}
-                        </div>
+                        <ChevronRight className="text-gray-600 group-hover:text-[var(--accent-primary)] transition-colors" size={24} />
                       </div>
                     </button>
-                  )
-                })}
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Floating Action Button */}
-        <div className="fixed bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-gray-950 via-gray-950/80 to-transparent z-20 pointer-events-none">
-          <div className="max-w-lg mx-auto pointer-events-auto">
-            <button
-              onClick={handleSubmit}
-              disabled={!isComplete || isVoting}
-              className={`w-full py-4 rounded-2xl flex items-center justify-center gap-3 font-bold text-lg shadow-xl transition-all ${
-                isComplete && !isVoting
-                  ? 'bg-[var(--accent-primary)] hover:bg-[var(--accent-primary)]/80 text-white translate-y-0 opacity-100'
-                  : 'bg-gray-800 text-gray-500 translate-y-2 opacity-50 cursor-not-allowed'
-              }`}
-            >
-              {isVoting ? (
-                <>
-                  <Loader2 className="animate-spin" size={24} />
-                  Enviando...
-                </>
-              ) : (
-                <>
-                  <Send size={24} />
-                  Enviar Respuestas
-                </>
-              )}
-            </button>
-          </div>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
     </div>
