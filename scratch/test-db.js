@@ -20,17 +20,11 @@ envContent.split('\n').forEach(line => {
   }
 });
 
-const supabase = createClient(
-  env.NEXT_PUBLIC_SUPABASE_URL,
-  env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-);
-
 async function test() {
-  const { data: members, error: mErr } = await supabase.from('members').select('id, email, role, status');
-  console.log('Members:', members, mErr);
-
-  const { data: allowed, error: aErr } = await supabase.from('allowed_emails').select('*');
-  console.log('Allowed Emails:', allowed, aErr);
+  const url = `${env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/?apikey=${env.NEXT_PUBLIC_SUPABASE_ANON_KEY}`;
+  const response = await fetch(url);
+  const schema = await response.json();
+  console.log('PostgREST response:', schema);
 }
 
 test();
