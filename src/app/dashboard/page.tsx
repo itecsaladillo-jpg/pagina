@@ -7,6 +7,11 @@ export default async function DashboardPage() {
   if (!member) redirect('/login')
   if (member.status !== 'activo') redirect('/acceso-pendiente')
 
+  // Redirigir a los miembros activos directamente a la sección de miembros (Directorio de Miembros)
+  if (member.status === 'activo') {
+    redirect('/dashboard/miembros')
+  }
+
   return (
     <div>
       {/* Header de bienvenida */}

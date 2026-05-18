@@ -62,6 +62,13 @@ export async function proxy(request: NextRequest) {
       pendingUrl.pathname = '/acceso-pendiente'
       return NextResponse.redirect(pendingUrl)
     }
+
+    // Redirigir a los miembros activos directamente a la sección de miembros (Directorio de Miembros)
+    if (pathname === '/dashboard' && member.status === 'activo') {
+      const miembrosUrl = request.nextUrl.clone()
+      miembrosUrl.pathname = '/dashboard/miembros'
+      return NextResponse.redirect(miembrosUrl)
+    }
   }
 
   // Rutas de auth
