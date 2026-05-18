@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { CheckCircle2, XCircle, Clock } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -12,10 +12,11 @@ interface PreguntaModeracion {
   created_at: string;
 }
 
-export default function ModeracionPage({ params }: { params: { id: string } }) {
+export default function ModeracionPage({ params }: { params: Promise<{ id: string }> }) {
+  const resolvedParams = use(params);
+  const eventoId = resolvedParams.id;
   const [preguntas, setPreguntas] = useState<PreguntaModeracion[]>([]);
   const supabase = createClient();
-  const eventoId = params.id;
 
   useEffect(() => {
     const fetchPreguntas = async () => {

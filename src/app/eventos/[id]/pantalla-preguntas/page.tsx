@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { ThumbsUp, MessageCircle, QrCode, Sparkles, Smartphone, Award } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -14,11 +14,12 @@ interface Pregunta {
   created_at: string;
 }
 
-export default function PantallaPreguntasPage({ params }: { params: { id: string } }) {
+export default function PantallaPreguntasPage({ params }: { params: Promise<{ id: string }> }) {
+  const resolvedParams = use(params);
+  const eventoId = resolvedParams.id;
   const [preguntas, setPreguntas] = useState<Pregunta[]>([]);
   const [qrUrl, setQrUrl] = useState("");
   const supabase = createClient();
-  const eventoId = params.id;
 
   useEffect(() => {
     if (typeof window !== "undefined") {

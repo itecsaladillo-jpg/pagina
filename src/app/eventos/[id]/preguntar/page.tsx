@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { ThumbsUp, Send, HelpCircle, User, Sparkles, CheckCircle2, MessageSquare, Award } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -13,7 +13,9 @@ interface Pregunta {
   created_at: string;
 }
 
-export default function PreguntarPage({ params }: { params: { id: string } }) {
+export default function PreguntarPage({ params }: { params: Promise<{ id: string }> }) {
+  const resolvedParams = use(params);
+  const eventoId = resolvedParams.id;
   const [nombre, setNombre] = useState("");
   const [pregunta, setPregunta] = useState("");
   const [preguntas, setPreguntas] = useState<Pregunta[]>([]);
@@ -23,7 +25,6 @@ export default function PreguntarPage({ params }: { params: { id: string } }) {
   const [showInstructions, setShowInstructions] = useState(true);
   
   const supabase = createClient();
-  const eventoId = params.id;
 
   useEffect(() => {
     // Cargar likes locales
