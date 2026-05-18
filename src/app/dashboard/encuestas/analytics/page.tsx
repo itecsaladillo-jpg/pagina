@@ -18,12 +18,16 @@ export default async function EncuestasAnalyticsPage() {
     .from('polls')
     .select(`
       id,
-      question,
+      name,
       created_at,
-      poll_options ( 
+      poll_questions ( 
         id, 
         text,
-        poll_votes ( id )
+        poll_options ( 
+          id, 
+          text,
+          poll_votes ( id )
+        )
       )
     `)
     .order('created_at', { ascending: false })
