@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { ThumbsUp, MessageCircle } from "lucide-react";
+import { ThumbsUp, MessageCircle, QrCode, Sparkles, Smartphone, Award } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import QRCode from "react-qr-code";
 
 interface Pregunta {
   id: string;
@@ -15,10 +16,15 @@ interface Pregunta {
 
 export default function PantallaPreguntasPage({ params }: { params: { id: string } }) {
   const [preguntas, setPreguntas] = useState<Pregunta[]>([]);
+  const [qrUrl, setQrUrl] = useState("");
   const supabase = createClient();
   const eventoId = params.id;
 
   useEffect(() => {
+    if (typeof window !== "undefined") {
+      setQrUrl(`${window.location.origin}/eventos/${eventoId}/preguntar`);
+    }
+
     const fetchPreguntas = async () => {
       const { data, error } = await supabase
         .from("evento_preguntas")
@@ -115,103 +121,210 @@ export default function PantallaPreguntasPage({ params }: { params: { id: string
   }, [eventoId, supabase]);
 
   return (
-    <div className="min-h-screen bg-[#0f172a] text-slate-100 overflow-hidden font-sans flex flex-col">
-      <div className="max-w-[90rem] mx-auto w-full px-8 py-10 flex flex-col h-screen">
+    <div className="min-h-screen bg-[#070b15] text-slate-100 overflow-hidden font-sans flex flex-col relative">
+      {/* Background neon glows */}
+      <div className="absolute top-[-20%] left-[-10%] w-[60%] h-[60%] rounded-full bg-indigo-500/10 blur-[150px] pointer-events-none" />
+      <div className="absolute bottom-[-20%] right-[-10%] w-[60%] h-[60%] rounded-full bg-purple-500/10 blur-[150px] pointer-events-none" />
+
+      <div className="max-w-[95rem] mx-auto w-full px-8 py-8 flex flex-col h-screen relative z-10">
+        
         {/* Header - Auditorio */}
-        <div className="flex items-center justify-between mb-10 shrink-0">
-          <div className="flex items-center gap-6">
-            <div className="bg-indigo-500 p-4 rounded-3xl shadow-[0_0_40px_rgba(99,102,241,0.4)]">
-              <MessageCircle className="w-12 h-12 text-white" />
+        <header className="flex items-center justify-between mb-8 shrink-0 border-b border-white/[0.05] pb-6">
+          <div className="flex items-center gap-5">
+            <div className="bg-indigo-600 p-3.5 rounded-[2rem] shadow-[0_0_50px_rgba(99,102,241,0.3)]">
+              <MessageCircle className="w-10 h-10 text-white animate-pulse" />
             </div>
             <div>
-              <h1 className="text-5xl lg:text-6xl font-extrabold tracking-tight text-white mb-2">
-                Preguntas en Vivo
+              <h1 className="text-4xl lg:text-5xl font-black tracking-tight text-white mb-1.5">
+                Preguntas al Orador
               </h1>
-              <p className="text-2xl text-indigo-300 font-medium">
-                Participá desde tu celular
+              <p className="text-lg text-indigo-300 font-bold tracking-wide">
+                ¡Tu opinión importa! Hacé tus consultas en vivo
               </p>
             </div>
           </div>
-          <div className="text-right flex flex-col items-end">
-             <div className="text-slate-400 font-bold tracking-widest uppercase text-sm mb-3">Evento Activo</div>
-             <div className="flex items-center gap-4 bg-slate-800/50 px-6 py-3 rounded-2xl border border-slate-700/50">
-               <span className="relative flex h-5 w-5">
-                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                 <span className="relative inline-flex rounded-full h-5 w-5 bg-emerald-500"></span>
-               </span>
-               <span className="text-emerald-400 font-bold text-2xl tracking-wide">Transmitiendo</span>
-             </div>
+          <div className="flex items-center gap-5">
+            <div className="flex items-center gap-3 bg-zinc-900/40 border border-zinc-800 px-5 py-2.5 rounded-2xl">
+              <span className="relative flex h-3.5 w-3.5">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-emerald-500"></span>
+              </span>
+              <span className="text-emerald-400 font-extrabold text-sm tracking-wider uppercase">Moderación Activa</span>
+            </div>
           </div>
-        </div>
+        </header>
 
-        {/* Listado de Preguntas */}
-        <div className="flex-1 overflow-y-auto pr-6 space-y-6 pb-12 custom-scrollbar">
-          <AnimatePresence>
-            {preguntas.length === 0 ? (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="h-full flex flex-col items-center justify-center text-center opacity-40 mt-20"
-              >
-                <MessageCircle className="w-32 h-32 mb-8 text-slate-500" />
-                <h2 className="text-4xl font-semibold text-slate-300">Esperando preguntas de la audiencia...</h2>
-              </motion.div>
-            ) : (
-              preguntas.map((q, idx) => (
-                <motion.div
-                  key={q.id}
-                  layout
-                  initial={{ opacity: 0, scale: 0.9, y: 40 }}
-                  animate={{ opacity: 1, scale: 1, y: 0 }}
-                  transition={{ duration: 0.5, type: "spring", bounce: 0.3 }}
-                  className="bg-slate-800/40 backdrop-blur-md border border-slate-700/50 rounded-[2rem] p-8 shadow-2xl flex gap-8 items-center relative overflow-hidden group"
-                >
-                  {/* Highlight para el top 1 */}
-                  {idx === 0 && (
-                    <div className="absolute top-0 left-0 w-2 h-full bg-gradient-to-b from-indigo-400 to-purple-500 rounded-l-full"></div>
-                  )}
+        {/* Main Workspace Layout */}
+        <div className="flex-1 grid grid-cols-1 lg:grid-cols-3 gap-8 min-h-0">
+          
+          {/* Left Column: Questions List (takes 2 cols) */}
+          <div className="lg:col-span-2 flex flex-col min-h-0 bg-zinc-900/10 border border-white/[0.03] rounded-[2.5rem] p-6 backdrop-blur-md">
+            <div className="flex items-center justify-between mb-6 shrink-0 px-2">
+              <h2 className="text-xl font-extrabold text-zinc-300 tracking-wider flex items-center gap-2">
+                <Sparkles className="text-indigo-400" size={20} /> Ranking de Preguntas
+              </h2>
+              <span className="text-xs text-zinc-500 font-bold uppercase tracking-widest bg-white/[0.03] px-3 py-1 rounded-full border border-white/[0.05]">
+                {preguntas.length} {preguntas.length === 1 ? 'Pregunta' : 'Preguntas'}
+              </span>
+            </div>
 
-                  <div className="flex flex-col items-center justify-center shrink-0 w-32">
-                     <div className={`text-6xl font-black tracking-tighter mb-3 ${idx === 0 ? 'text-transparent bg-clip-text bg-gradient-to-br from-indigo-300 to-purple-400' : 'text-slate-500'}`}>
-                        #{idx + 1}
-                     </div>
-                     <div className={`flex items-center gap-3 px-5 py-2.5 rounded-2xl font-bold ${idx === 0 ? 'bg-indigo-500/20 text-indigo-300 border border-indigo-500/30' : 'bg-slate-900/50 text-slate-400'}`}>
-                        <ThumbsUp className={`w-7 h-7 ${idx === 0 ? 'fill-indigo-400' : 'fill-slate-500'}`} />
-                        <span className="text-3xl">{q.likes}</span>
-                     </div>
-                  </div>
-                  
-                  <div className="flex-1">
-                    <p className={`text-4xl lg:text-5xl font-medium leading-tight mb-6 ${idx === 0 ? 'text-white' : 'text-slate-200'}`}>
-                      "{q.pregunta}"
-                    </p>
-                    <div className="flex items-center gap-5">
-                      <div className="bg-slate-700/50 text-slate-300 font-semibold px-5 py-2 rounded-full text-xl">
-                        {q.nombre}
+            {/* List */}
+            <div className="flex-1 overflow-y-auto pr-2 space-y-5 custom-scrollbar pb-6">
+              <AnimatePresence mode="popLayout">
+                {preguntas.length === 0 ? (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 0.5 }}
+                    className="h-full flex flex-col items-center justify-center text-center py-20"
+                  >
+                    <MessageCircle className="w-24 h-24 mb-6 text-slate-600 animate-bounce" />
+                    <h2 className="text-2xl font-bold text-slate-400">Esperando las primeras preguntas...</h2>
+                    <p className="text-sm text-slate-500 mt-2 max-w-md">¡Escaneá el código QR de la derecha para inaugurar el muro!</p>
+                  </motion.div>
+                ) : (
+                  preguntas.map((q, idx) => (
+                    <motion.div
+                      key={q.id}
+                      layout
+                      initial={{ opacity: 0, scale: 0.9, y: 30 }}
+                      animate={{ opacity: 1, scale: 1, y: 0 }}
+                      exit={{ opacity: 0, scale: 0.9, y: -20 }}
+                      transition={{ duration: 0.4, type: "spring", stiffness: 100, damping: 15 }}
+                      className={`relative border rounded-3xl p-6 shadow-xl flex gap-6 items-center overflow-hidden transition-all ${
+                        idx === 0
+                          ? "bg-gradient-to-r from-indigo-950/40 to-slate-900/40 border-indigo-500/40 shadow-indigo-950/20"
+                          : "bg-zinc-900/40 border-zinc-800/80 hover:border-zinc-700/50"
+                      }`}
+                    >
+                      {/* Top 1 Indicator badge decoration */}
+                      {idx === 0 && (
+                        <div className="absolute top-0 left-0 w-2 h-full bg-gradient-to-b from-indigo-400 via-indigo-600 to-purple-600" />
+                      )}
+
+                      {/* Rank Position */}
+                      <div className="flex flex-col items-center justify-center shrink-0 w-20">
+                        <div className={`text-4xl lg:text-5xl font-black tracking-tighter mb-2 ${
+                          idx === 0 
+                            ? 'text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-amber-500' 
+                            : 'text-slate-500'
+                        }`}>
+                          #{idx + 1}
+                        </div>
+                        <div className={`flex items-center gap-2 px-3 py-1.5 rounded-xl font-extrabold text-sm ${
+                          idx === 0 
+                            ? 'bg-indigo-500/20 text-indigo-300 border border-indigo-500/30' 
+                            : 'bg-zinc-950/60 text-slate-400'
+                        }`}>
+                          <ThumbsUp className={`w-4 h-4 ${idx === 0 ? 'fill-indigo-400' : 'fill-slate-500'}`} />
+                          <span className="text-lg">{q.likes}</span>
+                        </div>
                       </div>
-                    </div>
+                      
+                      {/* Question Content */}
+                      <div className="flex-1 space-y-4">
+                        <p className={`text-2xl lg:text-3xl font-extrabold leading-snug tracking-wide ${
+                          idx === 0 ? 'text-white' : 'text-slate-200'
+                        }`}>
+                          "{q.pregunta}"
+                        </p>
+                        <div className="flex items-center gap-3">
+                          <span className="bg-zinc-950/60 text-zinc-400 border border-zinc-800 font-extrabold px-4 py-1 rounded-full text-xs uppercase tracking-widest flex items-center gap-1.5">
+                            <span className="h-1.5 w-1.5 rounded-full bg-indigo-500"></span>
+                            {q.nombre}
+                          </span>
+                          {idx === 0 && (
+                            <span className="text-[10px] font-black uppercase tracking-wider text-yellow-400 bg-yellow-400/10 px-2.5 py-1 rounded-full border border-yellow-400/20 flex items-center gap-1">
+                              <Award size={12} /> Pregunta Destacada
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </motion.div>
+                  ))
+                )}
+              </AnimatePresence>
+            </div>
+          </div>
+
+          {/* Right Column: Dynamic Instruction & QR Scanner Sidebar (1 col) */}
+          <div className="flex flex-col items-center justify-between bg-zinc-900/30 border border-white/[0.04] rounded-[2.5rem] p-8 backdrop-blur-xl relative overflow-hidden shadow-2xl shrink-0">
+            <div className="absolute top-0 right-0 w-48 h-48 bg-indigo-500/5 blur-[80px] pointer-events-none" />
+            
+            <div className="w-full text-center space-y-2">
+              <h3 className="text-lg font-black uppercase tracking-widest text-indigo-300 flex items-center justify-center gap-2">
+                <Smartphone size={18} /> Participá Ahora
+              </h3>
+              <p className="text-xs text-zinc-400 leading-relaxed px-4">
+                Escaneá el código QR con la cámara de tu celular para formular preguntas o valorar las existentes.
+              </p>
+            </div>
+
+            {/* QR Card Container */}
+            <div className="my-6 flex flex-col items-center justify-center">
+              {qrUrl ? (
+                <div className="relative group">
+                  <div className="absolute -inset-2 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-[2rem] blur opacity-40 group-hover:opacity-75 transition duration-1000 group-hover:duration-200 animate-tilt"></div>
+                  <div className="relative bg-white p-5 rounded-[2rem] shadow-[0_0_50px_rgba(99,102,241,0.25)] border-4 border-slate-950 inline-block">
+                    <QRCode
+                      value={qrUrl}
+                      size={200}
+                      style={{ height: "auto", maxWidth: "100%", width: "100%" }}
+                      viewBox={`0 0 256 256`}
+                      fgColor="#0f172a"
+                      bgColor="#ffffff"
+                    />
                   </div>
-                </motion.div>
-              ))
-            )}
-          </AnimatePresence>
+                </div>
+              ) : (
+                <div className="w-48 h-48 rounded-[2rem] bg-zinc-850 animate-pulse border border-zinc-800 flex items-center justify-center">
+                  <QrCode className="w-10 h-10 text-zinc-600 animate-spin" />
+                </div>
+              )}
+
+              {/* Bulletproof direct link view */}
+              <div className="mt-5 bg-zinc-950/60 border border-zinc-800 px-4 py-2 rounded-2xl text-center max-w-xs">
+                <span className="text-[10px] uppercase font-bold tracking-wider text-zinc-500 block">Link de Acceso directo</span>
+                <span className="text-xs font-mono text-zinc-300 font-bold select-all break-all">{qrUrl || 'Cargando link...'}</span>
+              </div>
+            </div>
+
+            {/* Micro instructions */}
+            <div className="w-full space-y-4 pt-6 border-t border-zinc-800">
+              <h4 className="text-[10px] uppercase font-black tracking-widest text-zinc-400 text-center">Instrucciones de Uso</h4>
+              <div className="grid grid-cols-3 gap-3 text-center">
+                <div className="space-y-1">
+                  <span className="mx-auto w-6 h-6 rounded-full bg-indigo-500/10 text-indigo-300 font-extrabold flex items-center justify-center text-xs">1</span>
+                  <p className="text-[9px] text-zinc-400 font-medium">Escaneás</p>
+                </div>
+                <div className="space-y-1">
+                  <span className="mx-auto w-6 h-6 rounded-full bg-indigo-500/10 text-indigo-300 font-extrabold flex items-center justify-center text-xs">2</span>
+                  <p className="text-[9px] text-zinc-400 font-medium">Preguntás</p>
+                </div>
+                <div className="space-y-1">
+                  <span className="mx-auto w-6 h-6 rounded-full bg-indigo-500/10 text-indigo-300 font-extrabold flex items-center justify-center text-xs">3</span>
+                  <p className="text-[9px] text-zinc-400 font-medium">Votás 👍</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
 
       <style jsx global>{`
         .custom-scrollbar::-webkit-scrollbar {
-          width: 10px;
+          width: 8px;
         }
         .custom-scrollbar::-webkit-scrollbar-track {
-          background: rgba(30, 41, 59, 0.3);
+          background: rgba(255, 255, 255, 0.02);
           border-radius: 10px;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb {
-          background: rgba(99, 102, 241, 0.4);
+          background: rgba(99, 102, 241, 0.2);
           border-radius: 10px;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-          background: rgba(99, 102, 241, 0.8);
+          background: rgba(99, 102, 241, 0.6);
         }
       `}</style>
     </div>
