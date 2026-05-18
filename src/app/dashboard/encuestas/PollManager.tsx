@@ -409,6 +409,8 @@ export function PollManager({ initialPolls }: { initialPolls: Poll[] }) {
 
                       <Link 
                         href={`/dashboard/encuestas/${poll.id}/pantalla`}
+                        target="_blank"
+                        rel="noopener noreferrer"
                         className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider bg-white/5 text-white hover:bg-white/10 transition-all"
                       >
                         <BarChart2 size={14} /> Pantalla
