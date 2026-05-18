@@ -74,10 +74,10 @@ export function ProfileForm({ member }: Props) {
           Teléfono
         </label>
         <input
-          type="text"
+          type="tel"
           value={formData.phone}
           onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-          placeholder="+54 9 11 ..."
+          placeholder="Ej: +54 9 2344 123456"
           className="w-full bg-white/5 border border-[var(--border-subtle)] rounded-xl px-4 py-3 text-white text-sm focus:border-[var(--accent-primary)] outline-none transition-all"
         />
       </div>

@@ -79,7 +79,7 @@ export function ActionRegistrationForm({ actionId, capacity }: Props) {
             required
             name="phone"
             type="tel" 
-            placeholder="+54 2344 000000"
+            placeholder="Ej: +54 9 2344 123456"
             className="w-full bg-white/[0.05] border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500/40 transition-all"
           />
         </div>

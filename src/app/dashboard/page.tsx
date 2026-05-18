@@ -67,6 +67,7 @@ export default async function DashboardPage() {
             { label: 'Mis capacitaciones', href: '/dashboard/capacitaciones', color: 'blue' },
             { label: 'Mis comisiones', href: '/dashboard/comisiones', color: 'cyan' },
             { label: 'Buzón de ideas', href: '/dashboard/ideas', color: 'green' },
+            { label: 'Nube de Archivos', href: '/dashboard/drive', color: 'blue' },
             { label: 'Directorio', href: '/dashboard/miembros', color: 'amber' },
           ].map((item) => (
             <a
