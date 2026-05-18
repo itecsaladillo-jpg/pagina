@@ -126,7 +126,7 @@ export function PresentationClient({ initialPoll }: { initialPoll: Poll }) {
                 dataKey="votes"
                 stroke="rgba(0,0,0,0.5)"
                 strokeWidth={2}
-                label={({ name, percentage }) => `${name} (${percentage}%)`}
+                label={({ name, percent }: any) => `${name} (${percent ? (percent * 100).toFixed(0) : 0}%)`}
                 labelLine={false}
               >
                 {results.map((entry, index) => (

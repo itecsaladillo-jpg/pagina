@@ -26,6 +26,7 @@ export default async function EncuestasPage() {
       poll_questions (
         id,
         text,
+        chart_type,
         poll_options ( 
           id, 
           text,

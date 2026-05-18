@@ -1,8 +1,8 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { createPollAction, togglePollStatusAction, deletePollAction } from './actions'
-import { Plus, Trash2, Power, Play, BarChart2, Loader2, AlertCircle, Download, QrCode } from 'lucide-react'
+import { createPollAction, togglePollStatusAction, deletePollAction, updatePollAction } from './actions'
+import { Plus, Trash2, Power, Play, BarChart2, Loader2, AlertCircle, Download, QrCode, Pencil, X } from 'lucide-react'
 import Link from 'next/link'
 import QRCode from 'react-qr-code'
 
@@ -15,6 +15,7 @@ interface PollOption {
 interface PollQuestion {
   id: string
   text: string
+  chart_type: 'bar' | 'pie' | 'doughnut' | 'radar' | 'area'
   poll_options: PollOption[]
 }
 
@@ -27,8 +28,9 @@ interface Poll {
 
 export function PollManager({ initialPolls }: { initialPolls: Poll[] }) {
   const [polls, setPolls] = useState<Poll[]>(initialPolls || [])
+  const [editingPollId, setEditingPollId] = useState<string | null>(null)
   const [name, setName] = useState('')
-  const [questions, setQuestions] = useState<{ text: string, options: string[], chart_type: 'bar' | 'pie' | 'doughnut' | 'radar' | 'area' }>([{ text: '', options: ['', ''], chart_type: 'bar' }])
+  const [questions, setQuestions] = useState<{ id?: string, text: string, options: { id?: string, text: string }[], chart_type: 'bar' | 'pie' | 'doughnut' | 'radar' | 'area' }[]>([{ text: '', options: [{ text: '' }, { text: '' }], chart_type: 'bar' }])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [origin, setOrigin] = useState('')
@@ -68,7 +70,7 @@ export function PollManager({ initialPolls }: { initialPolls: Poll[] }) {
   }
 
   const handleAddQuestion = () => {
-    setQuestions([...questions, { text: '', options: ['', ''], chart_type: 'bar' }])
+    setQuestions([...questions, { text: '', options: [{ text: '' }, { text: '' }], chart_type: 'bar' }])
   }
 
   const handleRemoveQuestion = (index: number) => {
@@ -90,13 +92,13 @@ export function PollManager({ initialPolls }: { initialPolls: Poll[] }) {
 
   const handleAddOption = (qIndex: number) => {
     const newQ = [...questions]
-    newQ[qIndex].options.push('')
+    newQ[qIndex].options.push({ text: '' })
     setQuestions(newQ)
   }
 
   const handleOptionChange = (qIndex: number, optIndex: number, val: string) => {
     const newQ = [...questions]
-    newQ[qIndex].options[optIndex] = val
+    newQ[qIndex].options[optIndex].text = val
     setQuestions(newQ)
   }
 
@@ -107,35 +109,80 @@ export function PollManager({ initialPolls }: { initialPolls: Poll[] }) {
     setQuestions(newQ)
   }
 
-  const handleCreate = async (e: React.FormEvent) => {
+  const startEdit = (poll: Poll) => {
+    setEditingPollId(poll.id)
+    setName(poll.name)
+    setQuestions(poll.poll_questions.map(q => ({
+      id: q.id,
+      text: q.text,
+      chart_type: q.chart_type || 'bar',
+      options: q.poll_options.map(o => ({ id: o.id, text: o.text }))
+    })))
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  const cancelEdit = () => {
+    setEditingPollId(null)
+    setName('')
+    setQuestions([{ text: '', options: [{ text: '' }, { text: '' }], chart_type: 'bar' }])
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!name.trim()) {
       setError('El nombre de la encuesta es obligatorio.')
       return
     }
 
-    const validQuestions = questions.map(q => ({
-      text: q.text.trim(),
-      options: q.options.filter(o => o.trim() !== ''),
-      chart_type: q.chart_type
-    })).filter(q => q.text !== '' && q.options.length >= 2)
+    if (editingPollId) {
+      const validQuestions = questions.map(q => ({
+        id: q.id,
+        text: q.text.trim(),
+        chart_type: q.chart_type,
+        options: q.options.filter(o => o.text.trim() !== '').map(o => ({ id: o.id, text: o.text.trim() }))
+      })).filter(q => q.text !== '' && q.options.length >= 2)
 
-    if (validQuestions.length === 0) {
-      setError('Debes agregar al menos una pregunta válida con al menos 2 opciones.')
-      return
-    }
+      if (validQuestions.length === 0) {
+        setError('Debes agregar al menos una pregunta válida con al menos 2 opciones.')
+        return
+      }
 
-    setLoading(true)
-    setError(null)
-    const res = await createPollAction(name, validQuestions)
-    if (res.success) {
-      setName('')
-      setQuestions([{ text: '', options: ['', ''], chart_type: 'bar' }])
-      window.location.reload()
+      setLoading(true)
+      setError(null)
+      const res = await updatePollAction(editingPollId, name, validQuestions)
+      if (res.success) {
+        setEditingPollId(null)
+        setName('')
+        setQuestions([{ text: '', options: [{ text: '' }, { text: '' }], chart_type: 'bar' }])
+        window.location.reload()
+      } else {
+        setError(res.error || 'Error desconocido')
+      }
+      setLoading(false)
     } else {
-      setError(res.error || 'Error desconocido')
+      const validQuestions = questions.map(q => ({
+        text: q.text.trim(),
+        chart_type: q.chart_type,
+        options: q.options.filter(o => o.text.trim() !== '').map(o => o.text.trim())
+      })).filter(q => q.text !== '' && q.options.length >= 2)
+
+      if (validQuestions.length === 0) {
+        setError('Debes agregar al menos una pregunta válida con al menos 2 opciones.')
+        return
+      }
+
+      setLoading(true)
+      setError(null)
+      const res = await createPollAction(name, validQuestions)
+      if (res.success) {
+        setName('')
+        setQuestions([{ text: '', options: [{ text: '' }, { text: '' }], chart_type: 'bar' }])
+        window.location.reload()
+      } else {
+        setError(res.error || 'Error desconocido')
+      }
+      setLoading(false)
     }
-    setLoading(false)
   }
 
   const handleToggle = async (id: string, currentStatus: boolean) => {
@@ -158,7 +205,19 @@ export function PollManager({ initialPolls }: { initialPolls: Poll[] }) {
     <div className="space-y-8">
       {/* Creador */}
       <div className="glass border border-[var(--border-subtle)] rounded-2xl p-6 md:p-8">
-        <h2 className="text-xl font-bold text-white mb-6">Crear Nueva Encuesta</h2>
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-xl font-bold text-white">
+            {editingPollId ? 'Editar Encuesta' : 'Crear Nueva Encuesta'}
+          </h2>
+          {editingPollId && (
+            <button
+              onClick={cancelEdit}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider bg-white/5 hover:bg-white/10 text-white transition-all"
+            >
+              <X size={14} /> Cancelar Edición
+            </button>
+          )}
+        </div>
         
         {error && (
           <div className="mb-4 p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 flex items-center gap-3">
@@ -167,7 +226,7 @@ export function PollManager({ initialPolls }: { initialPolls: Poll[] }) {
           </div>
         )}
 
-        <form onSubmit={handleCreate} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <label className="text-[10px] uppercase font-bold tracking-widest text-[var(--text-secondary)] ml-1 mb-2 block">
               Nombre de la Encuesta
@@ -231,7 +290,7 @@ export function PollManager({ initialPolls }: { initialPolls: Poll[] }) {
                     <div key={optIndex} className="flex items-center gap-2">
                       <input
                         type="text"
-                        value={opt}
+                        value={opt.text}
                         onChange={(e) => handleOptionChange(qIndex, optIndex, e.target.value)}
                         placeholder={`Opción ${optIndex + 1}`}
                         className="flex-1 bg-white/5 border border-[var(--border-subtle)] rounded-lg px-3 py-1.5 text-sm text-white focus:border-[var(--accent-primary)] outline-none"
@@ -273,7 +332,7 @@ export function PollManager({ initialPolls }: { initialPolls: Poll[] }) {
             className="btn-primary w-full py-3 rounded-xl flex items-center justify-center gap-2 disabled:opacity-50"
           >
             {loading ? <Loader2 size={18} className="animate-spin" /> : <Play size={18} />}
-            Crear Encuesta
+            {editingPollId ? 'Guardar Cambios' : 'Crear Encuesta'}
           </button>
         </form>
       </div>
@@ -356,12 +415,22 @@ export function PollManager({ initialPolls }: { initialPolls: Poll[] }) {
                       </Link>
                     </div>
 
-                    <button
-                      onClick={() => handleDelete(poll.id)}
-                      className="p-2 text-[var(--text-muted)] hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
-                    >
-                      <Trash2 size={16} />
-                    </button>
+                    <div className="flex items-center gap-1">
+                      <button
+                        onClick={() => startEdit(poll)}
+                        className="p-2 text-[var(--text-muted)] hover:text-[var(--accent-primary)] hover:bg-[var(--accent-primary)]/10 rounded-lg transition-colors"
+                        title="Editar Encuesta"
+                      >
+                        <Pencil size={16} />
+                      </button>
+                      <button
+                        onClick={() => handleDelete(poll.id)}
+                        className="p-2 text-[var(--text-muted)] hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
+                        title="Borrar Encuesta"
+                      >
+                        <Trash2 size={16} />
+                      </button>
+                    </div>
                   </div>
                 </div>
               )
