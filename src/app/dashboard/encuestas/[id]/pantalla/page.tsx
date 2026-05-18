@@ -15,12 +15,16 @@ export default async function PresentationPage({ params }: { params: Promise<{ i
     .from('polls')
     .select(`
       id,
-      question,
+      name,
       is_active,
-      poll_options ( 
+      poll_questions ( 
         id, 
         text,
-        poll_votes ( id, option_id )
+        poll_options ( 
+          id, 
+          text,
+          poll_votes ( id, option_id )
+        )
       )
     `)
     .eq('id', id)
@@ -30,11 +34,5 @@ export default async function PresentationPage({ params }: { params: Promise<{ i
     redirect('/dashboard/encuestas')
   }
 
-  const allVotes = poll.poll_options.flatMap((opt: any) => opt.poll_votes || [])
-  const formattedPoll = {
-    ...poll,
-    poll_votes: allVotes
-  }
-
-  return <PresentationClient initialPoll={formattedPoll as any} />
+  return <PresentationClient initialPoll={poll as any} />
 }

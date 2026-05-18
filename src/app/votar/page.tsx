@@ -15,8 +15,12 @@ export default async function VotarPage() {
     .from('polls')
     .select(`
       id,
-      question,
-      poll_options ( id, text )
+      name,
+      poll_questions ( 
+        id, 
+        text,
+        poll_options ( id, text )
+      )
     `)
     .eq('is_active', true)
     .single()

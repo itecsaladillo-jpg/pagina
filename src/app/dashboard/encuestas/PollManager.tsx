@@ -1,24 +1,34 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { createPollAction, togglePollStatusAction, deletePollAction } from './actions'
 import { Plus, Trash2, Power, Play, BarChart2, Loader2, AlertCircle, Download, QrCode } from 'lucide-react'
 import Link from 'next/link'
 import QRCode from 'react-qr-code'
-import { useEffect } from 'react'
 
-interface Poll {
+interface PollOption {
   id: string
-  question: string
-  is_active: boolean
-  poll_options: { id: string, text: string }[]
+  text: string
   poll_votes: { id: string }[]
 }
 
+interface PollQuestion {
+  id: string
+  text: string
+  poll_options: PollOption[]
+}
+
+interface Poll {
+  id: string
+  name: string
+  is_active: boolean
+  poll_questions: PollQuestion[]
+}
+
 export function PollManager({ initialPolls }: { initialPolls: Poll[] }) {
-  const [polls, setPolls] = useState(initialPolls)
-  const [question, setQuestion] = useState('')
-  const [options, setOptions] = useState(['', ''])
+  const [polls, setPolls] = useState<Poll[]>(initialPolls || [])
+  const [name, setName] = useState('')
+  const [questions, setQuestions] = useState([{ text: '', options: ['', ''] }])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [origin, setOrigin] = useState('')
@@ -27,54 +37,93 @@ export function PollManager({ initialPolls }: { initialPolls: Poll[] }) {
     setOrigin(window.location.origin)
   }, [])
 
-  const downloadQR = (pollId: string, question: string) => {
+  const downloadQR = (pollId: string, pollName: string) => {
     const svg = document.getElementById(`qr-${pollId}`)
     if (!svg) return
-    const svgData = new XMLSerializer().serializeToString(svg)
-    const blob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' })
+
+    const innerSvg = svg.cloneNode(true) as SVGElement
+    innerSvg.removeAttribute('style')
+    innerSvg.removeAttribute('id')
+    innerSvg.setAttribute('width', '100%')
+    innerSvg.setAttribute('height', '100%')
+
+    const innerSvgData = new XMLSerializer().serializeToString(innerSvg)
+
+    const wrapperSvgData = `
+      <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" style="background-color: white;">
+        <svg x="33.33%" y="33.33%" width="33.33%" height="33.33%">
+          ${innerSvgData}
+        </svg>
+      </svg>
+    `.trim()
+
+    const blob = new Blob([wrapperSvgData], { type: 'image/svg+xml;charset=utf-8' })
     const url = URL.createObjectURL(blob)
     const link = document.createElement('a')
     link.href = url
-    // Nombre amigable para el archivo
-    link.download = `QR_ITEC_${question.substring(0, 15).replace(/[^a-z0-9]/gi, '_')}.svg`
+    link.download = `QR_ITEC_${pollName.substring(0, 15).replace(/[^a-z0-9]/gi, '_')}.svg`
     document.body.appendChild(link)
     link.click()
     document.body.removeChild(link)
   }
 
-  const handleAddOption = () => {
-    setOptions([...options, ''])
+  const handleAddQuestion = () => {
+    setQuestions([...questions, { text: '', options: ['', ''] }])
   }
 
-  const handleOptionChange = (index: number, val: string) => {
-    const newOptions = [...options]
-    newOptions[index] = val
-    setOptions(newOptions)
+  const handleRemoveQuestion = (index: number) => {
+    if (questions.length <= 1) return
+    setQuestions(questions.filter((_, i) => i !== index))
   }
 
-  const handleRemoveOption = (index: number) => {
-    if (options.length <= 2) return
-    setOptions(options.filter((_, i) => i !== index))
+  const handleQuestionChange = (index: number, val: string) => {
+    const newQ = [...questions]
+    newQ[index].text = val
+    setQuestions(newQ)
+  }
+
+  const handleAddOption = (qIndex: number) => {
+    const newQ = [...questions]
+    newQ[qIndex].options.push('')
+    setQuestions(newQ)
+  }
+
+  const handleOptionChange = (qIndex: number, optIndex: number, val: string) => {
+    const newQ = [...questions]
+    newQ[qIndex].options[optIndex] = val
+    setQuestions(newQ)
+  }
+
+  const handleRemoveOption = (qIndex: number, optIndex: number) => {
+    const newQ = [...questions]
+    if (newQ[qIndex].options.length <= 2) return
+    newQ[qIndex].options = newQ[qIndex].options.filter((_, i) => i !== optIndex)
+    setQuestions(newQ)
   }
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!question.trim()) {
-      setError('La pregunta es obligatoria.')
+    if (!name.trim()) {
+      setError('El nombre de la encuesta es obligatorio.')
       return
     }
-    const validOptions = options.filter(o => o.trim() !== '')
-    if (validOptions.length < 2) {
-      setError('Se necesitan al menos 2 opciones.')
+
+    const validQuestions = questions.map(q => ({
+      text: q.text.trim(),
+      options: q.options.filter(o => o.trim() !== '')
+    })).filter(q => q.text !== '' && q.options.length >= 2)
+
+    if (validQuestions.length === 0) {
+      setError('Debes agregar al menos una pregunta válida con al menos 2 opciones.')
       return
     }
 
     setLoading(true)
     setError(null)
-    const res = await createPollAction(question, validOptions)
+    const res = await createPollAction(name, validQuestions)
     if (res.success) {
-      setQuestion('')
-      setOptions(['', ''])
+      setName('')
+      setQuestions([{ text: '', options: ['', ''] }])
       window.location.reload()
     } else {
       setError(res.error || 'Error desconocido')
@@ -114,47 +163,80 @@ export function PollManager({ initialPolls }: { initialPolls: Poll[] }) {
         <form onSubmit={handleCreate} className="space-y-6">
           <div>
             <label className="text-[10px] uppercase font-bold tracking-widest text-[var(--text-secondary)] ml-1 mb-2 block">
-              Pregunta
+              Nombre de la Encuesta
             </label>
             <input
               type="text"
-              value={question}
-              onChange={(e) => setQuestion(e.target.value)}
-              placeholder="Ej: ¿Qué tecnología prefieren para el próximo taller?"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Ej: Encuesta de Satisfacción General"
               className="w-full bg-white/5 border border-[var(--border-subtle)] rounded-xl px-4 py-3 text-white focus:border-[var(--accent-primary)] outline-none"
             />
           </div>
 
-          <div className="space-y-3">
+          <div className="space-y-6 border-t border-[var(--border-subtle)] pt-6">
             <label className="text-[10px] uppercase font-bold tracking-widest text-[var(--text-secondary)] ml-1 block">
-              Opciones
+              Preguntas
             </label>
-            {options.map((opt, i) => (
-              <div key={i} className="flex items-center gap-3">
+            
+            {questions.map((q, qIndex) => (
+              <div key={qIndex} className="p-4 bg-black/20 border border-[var(--border-subtle)] rounded-xl space-y-4 relative">
+                {questions.length > 1 && (
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveQuestion(qIndex)}
+                    className="absolute top-4 right-4 text-[var(--text-muted)] hover:text-red-400 transition-colors"
+                  >
+                    <Trash2 size={16} />
+                  </button>
+                )}
+                
                 <input
                   type="text"
-                  value={opt}
-                  onChange={(e) => handleOptionChange(i, e.target.value)}
-                  placeholder={`Opción ${i + 1}`}
-                  className="flex-1 bg-white/5 border border-[var(--border-subtle)] rounded-xl px-4 py-2.5 text-sm text-white focus:border-[var(--accent-primary)] outline-none"
+                  value={q.text}
+                  onChange={(e) => handleQuestionChange(qIndex, e.target.value)}
+                  placeholder={`Pregunta ${qIndex + 1}`}
+                  className="w-full bg-white/5 border border-[var(--border-subtle)] rounded-lg px-4 py-2 text-white focus:border-[var(--accent-primary)] outline-none"
                 />
-                <button
-                  type="button"
-                  onClick={() => handleRemoveOption(i)}
-                  disabled={options.length <= 2}
-                  className="p-2.5 rounded-xl text-[var(--text-muted)] hover:text-red-400 hover:bg-red-500/10 disabled:opacity-30 transition-all"
-                >
-                  <Trash2 size={16} />
-                </button>
+
+                <div className="pl-4 border-l-2 border-[var(--border-subtle)] space-y-2">
+                  {q.options.map((opt, optIndex) => (
+                    <div key={optIndex} className="flex items-center gap-2">
+                      <input
+                        type="text"
+                        value={opt}
+                        onChange={(e) => handleOptionChange(qIndex, optIndex, e.target.value)}
+                        placeholder={`Opción ${optIndex + 1}`}
+                        className="flex-1 bg-white/5 border border-[var(--border-subtle)] rounded-lg px-3 py-1.5 text-sm text-white focus:border-[var(--accent-primary)] outline-none"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveOption(qIndex, optIndex)}
+                        disabled={q.options.length <= 2}
+                        className="p-1.5 rounded-lg text-[var(--text-muted)] hover:text-red-400 hover:bg-red-500/10 disabled:opacity-30 transition-all"
+                      >
+                        <Trash2 size={14} />
+                      </button>
+                    </div>
+                  ))}
+                  
+                  <button
+                    type="button"
+                    onClick={() => handleAddOption(qIndex)}
+                    className="text-[var(--accent-primary)] hover:text-white text-xs font-medium py-1 transition-colors flex items-center gap-1 mt-2"
+                  >
+                    <Plus size={12} /> Añadir opción a esta pregunta
+                  </button>
+                </div>
               </div>
             ))}
-            
+
             <button
               type="button"
-              onClick={handleAddOption}
-              className="flex items-center gap-2 text-[var(--accent-primary)] hover:text-white text-xs font-medium px-2 py-1 transition-colors"
+              onClick={handleAddQuestion}
+              className="btn-outline w-full py-3 rounded-xl flex items-center justify-center gap-2 border-dashed text-[var(--text-secondary)] hover:text-white"
             >
-              <Plus size={14} /> Añadir opción
+              <Plus size={16} /> Añadir Nueva Pregunta
             </button>
           </div>
 
@@ -180,25 +262,23 @@ export function PollManager({ initialPolls }: { initialPolls: Poll[] }) {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {polls.map(poll => {
-              const totalVotes = poll.poll_votes.length
+              const totalVotes = poll.poll_questions?.reduce((acc, q) => 
+                acc + q.poll_options.reduce((sum, opt) => sum + (opt.poll_votes?.length || 0), 0)
+              , 0) || 0;
+
               return (
                 <div key={poll.id} className={`glass border rounded-2xl p-6 transition-all ${
                   poll.is_active ? 'border-[var(--accent-primary)] shadow-[0_0_20px_rgba(var(--accent-primary-rgb),0.15)]' : 'border-[var(--border-subtle)]'
                 }`}>
                   <div className="flex justify-between items-start mb-4">
-                    <h4 className="text-white font-bold leading-tight pr-4">{poll.question}</h4>
-                    <span className="text-[10px] uppercase tracking-widest px-2 py-1 rounded-full bg-white/5 text-[var(--text-muted)] flex items-center gap-1">
+                    <h4 className="text-white font-bold leading-tight pr-4">{poll.name}</h4>
+                    <span className="text-[10px] uppercase tracking-widest px-2 py-1 rounded-full bg-white/5 text-[var(--text-muted)] flex items-center gap-1 shrink-0">
                       <BarChart2 size={12} /> {totalVotes}
                     </span>
                   </div>
                   
                   <div className="space-y-2 mb-6">
-                    {poll.poll_options.map(opt => (
-                      <div key={opt.id} className="text-xs text-[var(--text-secondary)] flex items-center gap-2">
-                        <div className="w-1.5 h-1.5 rounded-full bg-[var(--border-subtle)]"></div>
-                        {opt.text}
-                      </div>
-                    ))}
+                    <p className="text-xs text-[var(--text-secondary)]">{poll.poll_questions?.length || 0} Preguntas incluidas.</p>
                   </div>
 
                   {/* QR Code Section */}
@@ -218,7 +298,7 @@ export function PollManager({ initialPolls }: { initialPolls: Poll[] }) {
                         <p className="text-xs text-white truncate opacity-80">{origin}/votar</p>
                       </div>
                       <button
-                        onClick={() => downloadQR(poll.id, poll.question)}
+                        onClick={() => downloadQR(poll.id, poll.name)}
                         className="p-2.5 rounded-xl bg-[var(--accent-primary)]/10 text-[var(--accent-primary)] hover:bg-[var(--accent-primary)]/20 transition-all flex items-center gap-2"
                         title="Descargar QR"
                       >
@@ -265,3 +345,4 @@ export function PollManager({ initialPolls }: { initialPolls: Poll[] }) {
     </div>
   )
 }
+

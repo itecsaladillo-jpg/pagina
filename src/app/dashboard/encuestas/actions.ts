@@ -4,7 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 import { getCurrentMember } from '@/services/auth'
 import { revalidatePath } from 'next/cache'
 
-export async function createPollAction(question: string, options: string[]) {
+export async function createPollAction(name: string, questions: { text: string, options: string[] }[]) {
   try {
     const member = await getCurrentMember()
     if (!member) return { success: false, error: 'No autorizado' }
@@ -14,23 +14,33 @@ export async function createPollAction(question: string, options: string[]) {
     // Insert poll
     const { data: poll, error: pollError } = await supabase
       .from('polls')
-      .insert({ question, is_active: false })
+      .insert({ name, is_active: false })
       .select('id')
       .single()
 
     if (pollError) throw pollError
 
-    // Insert options
-    const optionsData = options.map(opt => ({
-      poll_id: poll.id,
-      text: opt
-    }))
+    // Insert questions and options
+    for (const q of questions) {
+      const { data: questionData, error: qError } = await supabase
+        .from('poll_questions')
+        .insert({ poll_id: poll.id, text: q.text })
+        .select('id')
+        .single()
 
-    const { error: optionsError } = await supabase
-      .from('poll_options')
-      .insert(optionsData)
+      if (qError) throw qError
 
-    if (optionsError) throw optionsError
+      const optionsData = q.options.map(opt => ({
+        question_id: questionData.id,
+        text: opt
+      }))
+
+      const { error: optionsError } = await supabase
+        .from('poll_options')
+        .insert(optionsData)
+
+      if (optionsError) throw optionsError
+    }
 
     revalidatePath('/dashboard/encuestas')
     return { success: true }
@@ -89,15 +99,32 @@ export async function deletePollAction(pollId: string) {
   }
 }
 
-export async function submitVoteAction(optionId: string) {
+export async function submitVoteAction(optionIds: string[], pollId: string) {
   try {
+    const { cookies } = await import('next/headers')
+    const cookieStore = await cookies()
+    const hasVoted = cookieStore.get(`voted_${pollId}`)
+
+    if (hasVoted) {
+      return { success: false, error: 'Ya has votado en esta encuesta con este dispositivo.' }
+    }
+
     const supabase = await createClient()
+
+    const votesData = optionIds.map(id => ({ option_id: id }))
 
     const { error } = await supabase
       .from('poll_votes')
-      .insert({ option_id: optionId })
+      .insert(votesData)
 
     if (error) throw error
+
+    cookieStore.set(`voted_${pollId}`, 'true', {
+      maxAge: 60 * 60 * 24 * 30, // 30 días
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict'
+    })
 
     return { success: true }
   } catch (err: any) {
