@@ -120,7 +120,7 @@ export function NewsFeed({ initialFlashes, commissions, memberCommissionId }: Pr
                   </span>
                 )}
               </div>
-              <span className="text-[var(--text-muted)] text-xs flex-shrink-0">{formatDate(flash.created_at)}</span>
+              <span className="text-[var(--text-muted)] text-xs flex-shrink-0" suppressHydrationWarning>{formatDate(flash.created_at)}</span>
             </div>
 
             {/* Título */}

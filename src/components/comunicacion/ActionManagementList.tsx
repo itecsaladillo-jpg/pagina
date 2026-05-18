@@ -114,7 +114,7 @@ export function ActionManagementList({ actions: initialActions }: ActionManageme
                     </div>
                   </td>
                   <td className="px-8 py-6">
-                    <div className="text-xs text-white/60 font-medium">
+                    <div className="text-xs text-white/60 font-medium" suppressHydrationWarning>
                       {action.start_date ? format(new Date(action.start_date), "d MMM, HH:mm", { locale: es }) : 'Sin fecha'}
                     </div>
                   </td>
