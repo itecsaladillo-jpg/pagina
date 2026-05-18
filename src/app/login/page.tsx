@@ -26,7 +26,7 @@ export default async function LoginPage({
   // 2. Si no es un flujo de logout explícito, redirección automática a Google
   if (params.logout !== 'true') {
     const supabase = await createClient()
-    const headersList = headers()
+    const headersList = await headers()
     const host = headersList.get('host')
     const proto = headersList.get('x-forwarded-proto') ?? 'http'
     const origin = `${proto}://${host}`
