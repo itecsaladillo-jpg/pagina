@@ -6,7 +6,12 @@ import { motion, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
 import QRCode from 'react-qr-code'
 import { ChevronLeft, ChevronRight, Layers, BarChart2 as BarChartIcon } from 'lucide-react'
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
+import { 
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
+  PieChart, Pie, Cell,
+  RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis,
+  AreaChart, Area
+} from 'recharts'
 
 interface Option {
   id: string
@@ -16,6 +21,7 @@ interface Option {
 interface Question {
   id: string
   text: string
+  chart_type: 'bar' | 'pie' | 'doughnut' | 'radar' | 'area'
   poll_options: Option[]
   poll_votes: { id: string, option_id: string }[]
 }
@@ -82,7 +88,7 @@ export function PresentationClient({ initialPoll }: { initialPoll: Poll }) {
     const optionVotes = votes.filter(v => v.option_id === opt.id).length
     const qTotalVotes = votes.filter(v => v.question_id === currentQuestion.id).length
     const percentage = qTotalVotes === 0 ? 0 : Math.round((optionVotes / qTotalVotes) * 100)
-    return { ...opt, votes: optionVotes, percentage }
+    return { ...opt, name: opt.text, votes: optionVotes, percentage }
   }).sort((a, b) => b.votes - a.votes) || []
 
   // Datos para la vista superpuesta (Overlay)
@@ -101,6 +107,104 @@ export function PresentationClient({ initialPoll }: { initialPoll: Poll }) {
     
     return Array.from(optionMap.values())
   }, [initialPoll, votes])
+
+  const renderIndividualChart = () => {
+    const type = currentQuestion?.chart_type || 'bar'
+
+    if (type === 'pie' || type === 'doughnut') {
+      return (
+        <div className="h-[400px] w-full flex justify-center mt-10">
+          <ResponsiveContainer width="100%" height="100%">
+            <PieChart>
+              <Pie
+                data={results}
+                cx="50%"
+                cy="50%"
+                innerRadius={type === 'doughnut' ? 100 : 0}
+                outerRadius={180}
+                paddingAngle={type === 'doughnut' ? 5 : 0}
+                dataKey="votes"
+                stroke="rgba(0,0,0,0.5)"
+                strokeWidth={2}
+                label={({ name, percentage }) => `${name} (${percentage}%)`}
+                labelLine={false}
+              >
+                {results.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                ))}
+              </Pie>
+              <Tooltip contentStyle={{backgroundColor: '#111827', borderColor: '#374151', borderRadius: '0.75rem', color: '#fff'}} itemStyle={{color: '#fff'}} />
+              <Legend wrapperStyle={{paddingTop: '20px'}} />
+            </PieChart>
+          </ResponsiveContainer>
+        </div>
+      )
+    }
+
+    if (type === 'radar') {
+      return (
+        <div className="h-[400px] w-full flex justify-center mt-10">
+          <ResponsiveContainer width="100%" height="100%">
+            <RadarChart cx="50%" cy="50%" outerRadius={150} data={results}>
+              <PolarGrid stroke="rgba(255,255,255,0.2)" />
+              <PolarAngleAxis dataKey="name" tick={{fill: 'rgba(255,255,255,0.8)', fontSize: 14}} />
+              <PolarRadiusAxis tick={{fill: 'rgba(255,255,255,0.5)'}} />
+              <Radar name="Votos" dataKey="votes" stroke="#3b82f6" fill="#3b82f6" fillOpacity={0.6} />
+              <Tooltip contentStyle={{backgroundColor: '#111827', borderColor: '#374151', borderRadius: '0.75rem', color: '#fff'}} />
+            </RadarChart>
+          </ResponsiveContainer>
+        </div>
+      )
+    }
+
+    if (type === 'area') {
+      return (
+        <div className="h-[400px] w-full mt-10">
+          <ResponsiveContainer width="100%" height="100%">
+            <AreaChart data={results} margin={{ top: 20, right: 30, left: 20, bottom: 50 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
+              <XAxis dataKey="name" stroke="rgba(255,255,255,0.5)" tick={{fill: 'rgba(255,255,255,0.8)', fontSize: 14}} angle={-45} textAnchor="end" />
+              <YAxis stroke="rgba(255,255,255,0.5)" tick={{fill: 'rgba(255,255,255,0.5)'}} />
+              <Tooltip contentStyle={{backgroundColor: '#111827', borderColor: '#374151', borderRadius: '0.75rem', color: '#fff'}} />
+              <Area type="monotone" dataKey="votes" stroke="#3b82f6" fill="#3b82f6" fillOpacity={0.3} strokeWidth={2} />
+            </AreaChart>
+          </ResponsiveContainer>
+        </div>
+      )
+    }
+
+    // Default: 'bar' (Progress Bars)
+    return (
+      <div className="space-y-6 mt-4">
+        {results.map((result, index) => (
+          <div key={result.id} className="relative">
+            <div className="flex justify-between items-end mb-2 px-1">
+              <h3 className="text-2xl font-bold text-white truncate pr-4">
+                {result.text}
+              </h3>
+              <div className="text-right shrink-0">
+                <span className="text-3xl font-black text-white tabular-nums">
+                  {result.percentage}%
+                </span>
+                <span className="text-[var(--text-muted)] text-sm ml-2 font-medium">
+                  ({result.votes} votos)
+                </span>
+              </div>
+            </div>
+
+            <div className="h-8 md:h-10 w-full bg-white/5 rounded-full overflow-hidden border border-white/10 p-1">
+              <motion.div 
+                initial={{ width: 0 }}
+                animate={{ width: `${Math.max(result.percentage, 1)}%` }}
+                transition={{ type: 'spring', stiffness: 50, damping: 15 }}
+                className={`h-full rounded-full ${index === 0 ? 'bg-gradient-to-r from-[var(--accent-primary)] to-blue-500 shadow-[0_0_20px_rgba(var(--accent-primary-rgb),0.5)]' : 'bg-white/20'}`}
+              />
+            </div>
+          </div>
+        ))}
+      </div>
+    )
+  }
 
   return (
     <div className="fixed inset-0 z-50 min-h-screen bg-black flex flex-col p-8 overflow-hidden font-sans">
@@ -204,45 +308,18 @@ export function PresentationClient({ initialPoll }: { initialPoll: Poll }) {
             </ResponsiveContainer>
           </div>
         ) : (
-          <div className="space-y-6 mt-4">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={currentQuestionIndex}
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                transition={{ duration: 0.3 }}
-                className="space-y-6"
-              >
-                {results.map((result, index) => (
-                  <div key={result.id} className="relative">
-                    <div className="flex justify-between items-end mb-2 px-1">
-                      <h3 className="text-2xl font-bold text-white truncate pr-4">
-                        {result.text}
-                      </h3>
-                      <div className="text-right shrink-0">
-                        <span className="text-3xl font-black text-white tabular-nums">
-                          {result.percentage}%
-                        </span>
-                        <span className="text-[var(--text-muted)] text-sm ml-2 font-medium">
-                          ({result.votes} votos)
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="h-8 md:h-10 w-full bg-white/5 rounded-full overflow-hidden border border-white/10 p-1">
-                      <motion.div 
-                        initial={{ width: 0 }}
-                        animate={{ width: `${Math.max(result.percentage, 1)}%` }}
-                        transition={{ type: 'spring', stiffness: 50, damping: 15 }}
-                        className={`h-full rounded-full ${index === 0 ? 'bg-gradient-to-r from-[var(--accent-primary)] to-blue-500 shadow-[0_0_20px_rgba(var(--accent-primary-rgb),0.5)]' : 'bg-white/20'}`}
-                      />
-                    </div>
-                  </div>
-                ))}
-              </motion.div>
-            </AnimatePresence>
-          </div>
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentQuestionIndex}
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.3 }}
+              className="flex-1 w-full"
+            >
+              {renderIndividualChart()}
+            </motion.div>
+          </AnimatePresence>
         )}
       </main>
 

@@ -4,7 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 import { getCurrentMember } from '@/services/auth'
 import { revalidatePath } from 'next/cache'
 
-export async function createPollAction(name: string, questions: { text: string, options: string[] }[]) {
+export async function createPollAction(name: string, questions: { text: string, options: string[], chart_type: string }[]) {
   try {
     const member = await getCurrentMember()
     if (!member) return { success: false, error: 'No autorizado' }
@@ -24,7 +24,7 @@ export async function createPollAction(name: string, questions: { text: string, 
     for (const q of questions) {
       const { data: questionData, error: qError } = await supabase
         .from('poll_questions')
-        .insert({ poll_id: poll.id, text: q.text })
+        .insert({ poll_id: poll.id, text: q.text, chart_type: q.chart_type })
         .select('id')
         .single()
 

@@ -28,7 +28,7 @@ interface Poll {
 export function PollManager({ initialPolls }: { initialPolls: Poll[] }) {
   const [polls, setPolls] = useState<Poll[]>(initialPolls || [])
   const [name, setName] = useState('')
-  const [questions, setQuestions] = useState([{ text: '', options: ['', ''] }])
+  const [questions, setQuestions] = useState<{ text: string, options: string[], chart_type: 'bar' | 'pie' | 'doughnut' | 'radar' | 'area' }>([{ text: '', options: ['', ''], chart_type: 'bar' }])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [origin, setOrigin] = useState('')
@@ -68,7 +68,7 @@ export function PollManager({ initialPolls }: { initialPolls: Poll[] }) {
   }
 
   const handleAddQuestion = () => {
-    setQuestions([...questions, { text: '', options: ['', ''] }])
+    setQuestions([...questions, { text: '', options: ['', ''], chart_type: 'bar' }])
   }
 
   const handleRemoveQuestion = (index: number) => {
@@ -79,6 +79,12 @@ export function PollManager({ initialPolls }: { initialPolls: Poll[] }) {
   const handleQuestionChange = (index: number, val: string) => {
     const newQ = [...questions]
     newQ[index].text = val
+    setQuestions(newQ)
+  }
+
+  const handleChartTypeChange = (index: number, val: 'bar' | 'pie' | 'doughnut' | 'radar' | 'area') => {
+    const newQ = [...questions]
+    newQ[index].chart_type = val
     setQuestions(newQ)
   }
 
@@ -110,7 +116,8 @@ export function PollManager({ initialPolls }: { initialPolls: Poll[] }) {
 
     const validQuestions = questions.map(q => ({
       text: q.text.trim(),
-      options: q.options.filter(o => o.trim() !== '')
+      options: q.options.filter(o => o.trim() !== ''),
+      chart_type: q.chart_type
     })).filter(q => q.text !== '' && q.options.length >= 2)
 
     if (validQuestions.length === 0) {
@@ -123,7 +130,7 @@ export function PollManager({ initialPolls }: { initialPolls: Poll[] }) {
     const res = await createPollAction(name, validQuestions)
     if (res.success) {
       setName('')
-      setQuestions([{ text: '', options: ['', ''] }])
+      setQuestions([{ text: '', options: ['', ''], chart_type: 'bar' }])
       window.location.reload()
     } else {
       setError(res.error || 'Error desconocido')
@@ -191,15 +198,35 @@ export function PollManager({ initialPolls }: { initialPolls: Poll[] }) {
                   </button>
                 )}
                 
-                <input
-                  type="text"
-                  value={q.text}
-                  onChange={(e) => handleQuestionChange(qIndex, e.target.value)}
-                  placeholder={`Pregunta ${qIndex + 1}`}
-                  className="w-full bg-white/5 border border-[var(--border-subtle)] rounded-lg px-4 py-2 text-white focus:border-[var(--accent-primary)] outline-none"
-                />
+                <div className="flex flex-col md:flex-row gap-4">
+                  <div className="flex-1">
+                    <label className="text-[10px] uppercase font-bold tracking-widest text-[var(--text-secondary)] ml-1 mb-1 block">Enunciado</label>
+                    <input
+                      type="text"
+                      value={q.text}
+                      onChange={(e) => handleQuestionChange(qIndex, e.target.value)}
+                      placeholder={`Pregunta ${qIndex + 1}`}
+                      className="w-full bg-white/5 border border-[var(--border-subtle)] rounded-lg px-4 py-2 text-white focus:border-[var(--accent-primary)] outline-none"
+                    />
+                  </div>
+                  <div className="md:w-48">
+                    <label className="text-[10px] uppercase font-bold tracking-widest text-[var(--text-secondary)] ml-1 mb-1 block">Tipo de Gráfico</label>
+                    <select
+                      value={q.chart_type}
+                      onChange={(e) => handleChartTypeChange(qIndex, e.target.value as any)}
+                      className="w-full bg-white/5 border border-[var(--border-subtle)] rounded-lg px-4 py-2 text-white focus:border-[var(--accent-primary)] outline-none appearance-none"
+                    >
+                      <option value="bar" className="bg-gray-900 text-white">Barras</option>
+                      <option value="pie" className="bg-gray-900 text-white">Torta</option>
+                      <option value="doughnut" className="bg-gray-900 text-white">Anillo</option>
+                      <option value="radar" className="bg-gray-900 text-white">Radar</option>
+                      <option value="area" className="bg-gray-900 text-white">Área</option>
+                    </select>
+                  </div>
+                </div>
 
-                <div className="pl-4 border-l-2 border-[var(--border-subtle)] space-y-2">
+                <div className="pl-4 border-l-2 border-[var(--border-subtle)] space-y-2 pt-2">
+                  <label className="text-[10px] uppercase font-bold tracking-widest text-[var(--text-secondary)] ml-1 block">Opciones</label>
                   {q.options.map((opt, optIndex) => (
                     <div key={optIndex} className="flex items-center gap-2">
                       <input

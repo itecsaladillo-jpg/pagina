@@ -20,6 +20,7 @@ export default async function PresentationPage({ params }: { params: Promise<{ i
       poll_questions ( 
         id, 
         text,
+        chart_type,
         poll_options ( 
           id, 
           text,
