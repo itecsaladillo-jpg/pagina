@@ -16,6 +16,19 @@ alter table public.evento_preguntas add column if not exists nombre text not nul
 alter table public.evento_preguntas add column if not exists pregunta text not null default '';
 alter table public.evento_preguntas add column if not exists aprobada boolean not null default false;
 
+-- Si existe la columna texto_pregunta (residuo histórico), le quitamos la restricción not null
+do $$
+begin
+  if exists (
+    select 1 from information_schema.columns
+    where table_schema = 'public'
+      and table_name = 'evento_preguntas'
+      and column_name = 'texto_pregunta'
+  ) then
+    alter table public.evento_preguntas alter column texto_pregunta drop not null;
+  end if;
+end $$;
+
 -- 2. Crear la tabla de likes de preguntas en vivo
 create table if not exists public.evento_preguntas_likes (
   id           uuid primary key default uuid_generate_v4(),
