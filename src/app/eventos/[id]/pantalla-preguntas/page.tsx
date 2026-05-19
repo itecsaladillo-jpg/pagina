@@ -248,27 +248,24 @@ export default function PantallaPreguntasPage({ params }: { params: Promise<{ id
           </div>
 
           {/* Right Column: Dynamic Instruction & QR Scanner Sidebar (1 col) */}
-          <div className="flex flex-col items-center justify-between bg-zinc-900/30 border border-white/[0.04] rounded-[2.5rem] p-8 backdrop-blur-xl relative overflow-hidden shadow-2xl shrink-0">
+          <div className="flex flex-col items-center justify-center bg-zinc-900/30 border border-white/[0.04] rounded-[2.5rem] p-8 backdrop-blur-xl relative overflow-hidden shadow-2xl shrink-0 gap-10">
             <div className="absolute top-0 right-0 w-48 h-48 bg-indigo-500/5 blur-[80px] pointer-events-none" />
             
-            <div className="w-full text-center space-y-2">
-              <h3 className="text-lg font-black uppercase tracking-widest text-indigo-300 flex items-center justify-center gap-2">
-                <Smartphone size={18} /> Participá Ahora
+            <div className="w-full text-center">
+              <h3 className="text-2xl font-black uppercase tracking-widest text-indigo-300 flex items-center justify-center gap-3">
+                <Smartphone size={24} className="animate-pulse" /> Participá Ahora
               </h3>
-              <p className="text-xs text-zinc-400 leading-relaxed px-4">
-                Escaneá el código QR con la cámara de tu celular para formular preguntas o valorar las existentes.
-              </p>
             </div>
 
             {/* QR Card Container */}
-            <div className="my-auto flex flex-col items-center justify-center">
+            <div className="flex flex-col items-center justify-center">
               {qrUrl ? (
                 <div className="relative group">
-                  <div className="absolute -inset-3 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-600 rounded-[2.5rem] blur opacity-45 group-hover:opacity-75 transition duration-1000 group-hover:duration-200 animate-tilt"></div>
-                  <div className="relative bg-white p-6 rounded-[2.5rem] shadow-[0_0_60px_rgba(99,102,241,0.3)] border-4 border-slate-950 inline-block">
+                  <div className="absolute -inset-4 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-600 rounded-[2.5rem] blur opacity-45 group-hover:opacity-75 transition duration-1000 group-hover:duration-200 animate-tilt animate-pulse"></div>
+                  <div className="relative bg-white p-6 rounded-[2.5rem] shadow-[0_0_60px_rgba(99,102,241,0.35)] border-4 border-slate-950 inline-block">
                     <QRCode
                       value={qrUrl}
-                      size={260}
+                      size={265}
                       style={{ height: "auto", maxWidth: "100%", width: "100%" }}
                       viewBox={`0 0 256 256`}
                       fgColor="#0f172a"
@@ -281,25 +278,6 @@ export default function PantallaPreguntasPage({ params }: { params: Promise<{ id
                   <QrCode className="w-12 h-12 text-zinc-600 animate-spin" />
                 </div>
               )}
-            </div>
-
-            {/* Micro instructions */}
-            <div className="w-full space-y-4 pt-6 border-t border-zinc-800">
-              <h4 className="text-[10px] uppercase font-black tracking-widest text-zinc-400 text-center">Instrucciones de Uso</h4>
-              <div className="grid grid-cols-3 gap-3 text-center">
-                <div className="space-y-1">
-                  <span className="mx-auto w-6 h-6 rounded-full bg-indigo-500/10 text-indigo-300 font-extrabold flex items-center justify-center text-xs">1</span>
-                  <p className="text-[9px] text-zinc-400 font-medium">Escaneás</p>
-                </div>
-                <div className="space-y-1">
-                  <span className="mx-auto w-6 h-6 rounded-full bg-indigo-500/10 text-indigo-300 font-extrabold flex items-center justify-center text-xs">2</span>
-                  <p className="text-[9px] text-zinc-400 font-medium">Preguntás</p>
-                </div>
-                <div className="space-y-1">
-                  <span className="mx-auto w-6 h-6 rounded-full bg-indigo-500/10 text-indigo-300 font-extrabold flex items-center justify-center text-xs">3</span>
-                  <p className="text-[9px] text-zinc-400 font-medium">Votás 👍</p>
-                </div>
-              </div>
             </div>
           </div>
 
