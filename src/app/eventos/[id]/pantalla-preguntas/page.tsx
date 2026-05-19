@@ -261,14 +261,14 @@ export default function PantallaPreguntasPage({ params }: { params: Promise<{ id
             </div>
 
             {/* QR Card Container */}
-            <div className="my-6 flex flex-col items-center justify-center">
+            <div className="my-auto flex flex-col items-center justify-center">
               {qrUrl ? (
                 <div className="relative group">
-                  <div className="absolute -inset-2 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-[2rem] blur opacity-40 group-hover:opacity-75 transition duration-1000 group-hover:duration-200 animate-tilt"></div>
-                  <div className="relative bg-white p-5 rounded-[2rem] shadow-[0_0_50px_rgba(99,102,241,0.25)] border-4 border-slate-950 inline-block">
+                  <div className="absolute -inset-3 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-600 rounded-[2.5rem] blur opacity-45 group-hover:opacity-75 transition duration-1000 group-hover:duration-200 animate-tilt"></div>
+                  <div className="relative bg-white p-6 rounded-[2.5rem] shadow-[0_0_60px_rgba(99,102,241,0.3)] border-4 border-slate-950 inline-block">
                     <QRCode
                       value={qrUrl}
-                      size={200}
+                      size={260}
                       style={{ height: "auto", maxWidth: "100%", width: "100%" }}
                       viewBox={`0 0 256 256`}
                       fgColor="#0f172a"
@@ -277,16 +277,10 @@ export default function PantallaPreguntasPage({ params }: { params: Promise<{ id
                   </div>
                 </div>
               ) : (
-                <div className="w-48 h-48 rounded-[2rem] bg-zinc-850 animate-pulse border border-zinc-800 flex items-center justify-center">
-                  <QrCode className="w-10 h-10 text-zinc-600 animate-spin" />
+                <div className="w-64 h-64 rounded-[2.5rem] bg-zinc-850 animate-pulse border border-zinc-800 flex items-center justify-center">
+                  <QrCode className="w-12 h-12 text-zinc-600 animate-spin" />
                 </div>
               )}
-
-              {/* Bulletproof direct link view */}
-              <div className="mt-5 bg-zinc-950/60 border border-zinc-800 px-4 py-2 rounded-2xl text-center max-w-xs">
-                <span className="text-[10px] uppercase font-bold tracking-wider text-zinc-500 block">Link de Acceso directo</span>
-                <span className="text-xs font-mono text-zinc-300 font-bold select-all break-all">{qrUrl || 'Cargando link...'}</span>
-              </div>
             </div>
 
             {/* Micro instructions */}
