@@ -10,7 +10,13 @@ export default function NubeParticipantePage({ params }: { params: Promise<{ id:
   const resolvedParams = use(params);
   const eventoId = resolvedParams.id;
   
-  const [nubeId, setNubeId] = useState<string | null>(null);
+  // Leer nubeId del URL en la inicialización del estado para evitar flash de pantalla de selección
+  const [nubeId, setNubeId] = useState<string | null>(() => {
+    if (typeof window !== "undefined") {
+      return new URLSearchParams(window.location.search).get("nubeId");
+    }
+    return null;
+  });
   const [nubeNombre, setNubeNombre] = useState<string | null>(null);
   const [loadingNube, setLoadingNube] = useState(true);
   const [eventNubesList, setEventNubesList] = useState<any[]>([]);
@@ -25,13 +31,9 @@ export default function NubeParticipantePage({ params }: { params: Promise<{ id:
   const supabase = createClient();
   const MAX_CARACTERES = 20;
 
-  // 1. Leer el nubeId de los parámetros de búsqueda e inicializar dispositivoId
+  // 1. Inicializar dispositivoId (el nubeId ya se lee en la init del estado arriba)
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const queryParams = new URLSearchParams(window.location.search);
-      const id = queryParams.get("nubeId");
-      setNubeId(id);
-
       // Generar o recuperar identificador único de dispositivo
       let depId = localStorage.getItem("itec_dispositivo_id");
       if (!depId) {
