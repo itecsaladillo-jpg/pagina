@@ -2,24 +2,109 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { MessageSquare, Tv, UserPlus, ShieldAlert, QrCode, Copy, Check, Printer, X, Sparkles } from "lucide-react";
+import { MessageSquare, Tv, UserPlus, ShieldAlert, QrCode, Copy, Check, Printer, X, Sparkles, Trash2, Plus, Loader2, ExternalLink } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import QRCode from "react-qr-code";
 import type { ItecAction } from "@/types/database";
+import { createClient } from "@/lib/supabase/client";
 
 export default function EventListClient({ initialActions }: { initialActions: ItecAction[] }) {
   const [actions] = useState<ItecAction[]>(initialActions);
   const [activeQrEvent, setActiveQrEvent] = useState<ItecAction | null>(null);
+  const [activeQrCloud, setActiveQrCloud] = useState<{ id: string, name: string, eventoId: string, eventTitle: string } | null>(null);
   const [copied, setCopied] = useState(false);
   const [qrUrl, setQrUrl] = useState("");
+
+  // Estados para la gestión de nubes múltiples por evento
+  const [managingNubeEvent, setManagingNubeEvent] = useState<ItecAction | null>(null);
+  const [nubes, setNubes] = useState<any[]>([]);
+  const [newNubeName, setNewNubeName] = useState("");
+  const [isCreatingNube, setIsCreatingNube] = useState(false);
+  const [isLoadingNubes, setIsLoadingNubes] = useState(false);
 
   useEffect(() => {
     if (activeQrEvent && typeof window !== "undefined") {
       setQrUrl(`${window.location.origin}/eventos/${activeQrEvent.id}/preguntar`);
+    } else if (activeQrCloud && typeof window !== "undefined") {
+      setQrUrl(`${window.location.origin}/eventos/${activeQrCloud.eventoId}/nube?nubeId=${activeQrCloud.id}`);
     } else {
       setQrUrl("");
     }
-  }, [activeQrEvent]);
+  }, [activeQrEvent, activeQrCloud]);
+
+  // Cargar las nubes cuando se selecciona un evento para gestionar
+  useEffect(() => {
+    if (managingNubeEvent) {
+      const fetchNubes = async () => {
+        setIsLoadingNubes(true);
+        try {
+          const supabase = createClient();
+          const { data, error } = await supabase
+            .from("evento_nubes")
+            .select("*")
+            .eq("evento_id", managingNubeEvent.id)
+            .order("created_at", { ascending: false });
+          if (data && !error) {
+            setNubes(data);
+          }
+        } catch (err) {
+          console.error("Error al cargar nubes:", err);
+        } finally {
+          setIsLoadingNubes(false);
+        }
+      };
+      fetchNubes();
+    } else {
+      setNubes([]);
+    }
+  }, [managingNubeEvent]);
+
+  const handleCreateNube = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newNubeName.trim() || !managingNubeEvent) return;
+    setIsCreatingNube(true);
+    try {
+      const supabase = createClient();
+      const { data, error } = await supabase
+        .from("evento_nubes")
+        .insert({
+          evento_id: managingNubeEvent.id,
+          nombre: newNubeName.trim()
+        })
+        .select()
+        .single();
+
+      if (data && !error) {
+        setNubes(prev => [data, ...prev]);
+        setNewNubeName("");
+      } else {
+        console.error("Error al crear la nube:", error);
+      }
+    } catch (err) {
+      console.error("Error al crear la nube:", err);
+    } finally {
+      setIsCreatingNube(false);
+    }
+  };
+
+  const handleDeleteNube = async (nubeId: string) => {
+    if (!confirm("¿Estás seguro de que deseas eliminar esta nube de ideas? Se borrarán de forma permanente todas las palabras asociadas a ella.")) return;
+    try {
+      const supabase = createClient();
+      const { error } = await supabase
+        .from("evento_nubes")
+        .delete()
+        .eq("id", nubeId);
+
+      if (!error) {
+        setNubes(prev => prev.filter(n => n.id !== nubeId));
+      } else {
+        console.error("Error al eliminar la nube:", error);
+      }
+    } catch (err) {
+      console.error("Error al eliminar la nube:", err);
+    }
+  };
 
   const handleCopyLink = async () => {
     if (!qrUrl) return;
@@ -35,10 +120,16 @@ export default function EventListClient({ initialActions }: { initialActions: It
   const handlePrint = () => {
     const printWindow = window.open("", "_blank");
     if (!printWindow) return;
+    const title = activeQrEvent ? "Preguntas en Vivo" : `Nube de Ideas: ${activeQrCloud?.name}`;
+    const desc = activeQrEvent 
+      ? "Escaneá con tu celular para enviar preguntas y votar otras consultas del evento"
+      : "Escaneá con tu celular para enviar tu palabra y sumarte a la nube de ideas en vivo";
+    const footerText = activeQrEvent ? activeQrEvent.title : `${activeQrCloud?.eventTitle} - ${activeQrCloud?.name}`;
+
     printWindow.document.write(`
       <html>
         <head>
-          <title>ITEC Saladillo Q&A - Código QR</title>
+          <title>${title} - Código QR</title>
           <style>
             body {
               font-family: system-ui, -apple-system, sans-serif;
@@ -87,14 +178,14 @@ export default function EventListClient({ initialActions }: { initialActions: It
         </head>
         <body>
           <div class="container">
-            <h1>Preguntas en Vivo</h1>
-            <p>Escaneá con tu celular para enviar preguntas y votar otras consultas del evento</p>
+            <h1>${title}</h1>
+            <p>${desc}</p>
             <div class="qr-wrapper">
               <svg width="250" height="250" viewBox="0 0 256 256">
                 ${document.getElementById("qr-code-svg")?.innerHTML || ""}
               </svg>
             </div>
-            <div class="footer">${activeQrEvent?.title} - ITEC</div>
+            <div class="footer">${footerText} - ITEC</div>
           </div>
           <script>
             window.onload = function() {
@@ -194,27 +285,16 @@ export default function EventListClient({ initialActions }: { initialActions: It
                 <div className="space-y-2 pt-2.5 border-t border-zinc-800/40">
                   <div className="flex items-center justify-between px-1">
                     <span className="text-[9px] uppercase font-black tracking-widest text-purple-400 flex items-center gap-1">
-                      <Sparkles size={9} /> Nube de Ideas
+                      <Sparkles size={9} /> Nube de Ideas (Multi)
                     </span>
                   </div>
-                  <div className="grid grid-cols-2 gap-2">
-                    <Link
-                      href={`/eventos/${action.id}/nube`}
-                      target="_blank"
-                      className="flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl bg-zinc-950/40 hover:bg-zinc-900 text-white text-xs font-bold transition-all border border-zinc-800 hover:border-zinc-700"
-                    >
-                      <UserPlus size={13} className="text-purple-400" />
-                      📱 Celular
-                    </Link>
-                    <Link
-                      href={`/eventos/${action.id}/pantalla-nube`}
-                      target="_blank"
-                      className="flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl bg-zinc-950/40 hover:bg-zinc-900 text-white text-xs font-bold transition-all border border-zinc-800 hover:border-zinc-700"
-                    >
-                      <Tv size={13} className="text-purple-400" />
-                      🖥️ Proyector
-                    </Link>
-                  </div>
+                  <button
+                    onClick={() => setManagingNubeEvent(action)}
+                    className="flex items-center justify-center gap-2 w-full px-4 py-2.5 rounded-xl bg-purple-900/30 hover:bg-purple-900/50 border border-purple-500/20 hover:border-purple-500/40 text-purple-300 hover:text-white text-[11px] font-extrabold tracking-wider uppercase transition-all shadow-md active:scale-[0.98] cursor-pointer h-[40px]"
+                  >
+                    <Sparkles size={12} className="animate-pulse text-purple-400" />
+                    Gestionar Nubes
+                  </button>
                 </div>
               </div>
             </motion.div>
@@ -240,14 +320,14 @@ export default function EventListClient({ initialActions }: { initialActions: It
 
       {/* QR Modal overlay */}
       <AnimatePresence>
-        {activeQrEvent && (
+        {(activeQrEvent || activeQrCloud) && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
             {/* Backdrop */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              onClick={() => setActiveQrEvent(null)}
+              onClick={() => { setActiveQrEvent(null); setActiveQrCloud(null); }}
               className="absolute inset-0 bg-black/60 backdrop-blur-md"
             />
 
@@ -262,8 +342,8 @@ export default function EventListClient({ initialActions }: { initialActions: It
               
               {/* Close Button */}
               <button
-                onClick={() => setActiveQrEvent(null)}
-                className="absolute top-4 right-4 p-2 rounded-xl bg-white/[0.03] border border-white/[0.05] text-zinc-400 hover:text-white transition-all hover:bg-white/[0.06]"
+                onClick={() => { setActiveQrEvent(null); setActiveQrCloud(null); }}
+                className="absolute top-4 right-4 p-2 rounded-xl bg-white/[0.03] border border-white/[0.05] text-zinc-400 hover:text-white transition-all hover:bg-white/[0.06] cursor-pointer"
               >
                 <X size={16} />
               </button>
@@ -274,9 +354,14 @@ export default function EventListClient({ initialActions }: { initialActions: It
                 </div>
                 
                 <div>
-                  <h3 className="text-xl font-bold text-white mb-1">Código QR del Asistente</h3>
+                  <h3 className="text-xl font-bold text-white mb-1">
+                    {activeQrEvent ? "Código QR del Asistente" : `QR de la Nube: ${activeQrCloud?.name}`}
+                  </h3>
                   <p className="text-xs text-zinc-400 px-4 leading-relaxed">
-                    Mostrá o imprimí este código QR para que la audiencia pueda escanearlo y enviar preguntas desde sus teléfonos.
+                    {activeQrEvent 
+                      ? "Mostrá o imprimí este código QR para que la audiencia pueda escanearlo y enviar preguntas desde sus teléfonos."
+                      : "Mostrá o imprimí este código QR para que la audiencia pueda escanearlo y enviar palabras a esta nube en tiempo real."
+                    }
                   </p>
                 </div>
 
@@ -298,7 +383,9 @@ export default function EventListClient({ initialActions }: { initialActions: It
                 {/* Event Name */}
                 <div className="bg-zinc-950 border border-zinc-800/80 px-4 py-2 rounded-2xl inline-flex items-center gap-1.5 text-xs text-zinc-400 font-bold uppercase tracking-widest max-w-[90%] mx-auto">
                   <Sparkles size={12} className="text-indigo-400" />
-                  <span className="truncate">{activeQrEvent.title}</span>
+                  <span className="truncate">
+                    {activeQrEvent ? activeQrEvent.title : `${activeQrCloud?.eventTitle} — ${activeQrCloud?.name}`}
+                  </span>
                 </div>
 
                 {/* Control Actions */}
@@ -329,6 +416,155 @@ export default function EventListClient({ initialActions }: { initialActions: It
                     <Printer size={14} />
                     Imprimir QR
                   </button>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* Modal de Gestión de Nubes (Multi-nube) */}
+      <AnimatePresence>
+        {managingNubeEvent && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setManagingNubeEvent(null)}
+              className="absolute inset-0 bg-black/70 backdrop-blur-md"
+            />
+
+            {/* Modal Card */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="relative bg-zinc-900 border border-zinc-800 rounded-[2rem] p-6 max-w-2xl w-full shadow-2xl overflow-hidden backdrop-blur-xl max-h-[85vh] flex flex-col"
+            >
+              <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-purple-500/30 to-transparent" />
+              
+              {/* Close Button */}
+              <button
+                onClick={() => setManagingNubeEvent(null)}
+                className="absolute top-4 right-4 p-2 rounded-xl bg-white/[0.03] border border-white/[0.05] text-zinc-400 hover:text-white transition-all hover:bg-white/[0.06] cursor-pointer"
+              >
+                <X size={16} />
+              </button>
+
+              <div className="flex flex-col h-full space-y-4">
+                {/* Header */}
+                <div className="space-y-1">
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-xs text-purple-400 font-extrabold uppercase tracking-wider mb-2">
+                    <Sparkles size={11} className="animate-pulse" /> Nube de Ideas
+                  </div>
+                  <h3 className="text-xl font-bold text-white leading-tight">
+                    Gestionar Nubes de Ideas
+                  </h3>
+                  <p className="text-xs text-zinc-400 font-medium">
+                    Evento: <span className="text-purple-300 font-semibold">{managingNubeEvent.title}</span>
+                  </p>
+                </div>
+
+                {/* Formulario de creación */}
+                <form onSubmit={handleCreateNube} className="flex gap-2 pt-2 border-t border-zinc-800/80">
+                  <input
+                    type="text"
+                    required
+                    placeholder="Ej. Expectativas, Feedback del Taller, Futuro..."
+                    value={newNubeName}
+                    onChange={(e) => setNewNubeName(e.target.value)}
+                    className="flex-1 px-4 py-2.5 bg-zinc-950/60 border border-zinc-800 hover:border-zinc-750 focus:border-purple-500/50 rounded-xl text-white placeholder-zinc-700 focus:outline-none transition-colors text-sm font-semibold h-[42px]"
+                  />
+                  <button
+                    type="submit"
+                    disabled={isCreatingNube || !newNubeName.trim()}
+                    className="flex items-center justify-center gap-1.5 px-5 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 disabled:bg-zinc-850 disabled:text-zinc-600 text-white text-xs font-extrabold uppercase tracking-wider transition-all cursor-pointer h-[42px] shrink-0"
+                  >
+                    {isCreatingNube ? (
+                      <Loader2 size={14} className="animate-spin" />
+                    ) : (
+                      <Plus size={14} />
+                    )}
+                    Generar Nube
+                  </button>
+                </form>
+
+                {/* Lista de Nubes */}
+                <div className="flex-1 overflow-y-auto space-y-3 pr-1 pt-2 min-h-[250px]">
+                  {isLoadingNubes ? (
+                    <div className="flex flex-col items-center justify-center py-12 space-y-2">
+                      <Loader2 size={24} className="text-purple-400 animate-spin" />
+                      <p className="text-xs text-zinc-500 font-bold uppercase tracking-widest">Cargando Nubes...</p>
+                    </div>
+                  ) : nubes.length === 0 ? (
+                    <div className="flex flex-col items-center justify-center py-12 text-center border border-dashed border-zinc-800 rounded-2xl bg-zinc-950/20 px-4">
+                      <Sparkles size={24} className="text-zinc-700 mb-2" />
+                      <h4 className="text-sm font-bold text-zinc-400">No hay nubes creadas</h4>
+                      <p className="text-xs text-zinc-500 mt-1 max-w-xs leading-relaxed">
+                        Ingresá un nombre arriba y hacé clic en "Generar Nube" para crear tu primera nube de ideas dinámica.
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="space-y-2.5">
+                      {nubes.map((nube) => (
+                        <div
+                          key={nube.id}
+                          className="flex items-center justify-between p-4 bg-zinc-950/40 hover:bg-zinc-950/80 border border-zinc-800/80 hover:border-zinc-800 rounded-2xl transition-all gap-4"
+                        >
+                          {/* Info de la Nube */}
+                          <div className="min-w-0 flex-1">
+                            <h4 className="text-sm font-bold text-white truncate">{nube.nombre}</h4>
+                            <p className="text-[10px] text-zinc-500 font-medium mt-0.5">
+                              Creado: {new Date(nube.created_at).toLocaleDateString('es-AR')} {new Date(nube.created_at).toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' })}
+                            </p>
+                          </div>
+
+                          {/* Acciones */}
+                          <div className="flex items-center gap-1.5 shrink-0">
+                            {/* QR Code button */}
+                            <button
+                              onClick={() => {
+                                setActiveQrCloud({
+                                  id: nube.id,
+                                  name: nube.nombre,
+                                  eventoId: managingNubeEvent.id,
+                                  eventTitle: managingNubeEvent.title
+                                });
+                              }}
+                              className="flex items-center justify-center gap-1 p-2 px-3 rounded-xl bg-zinc-900 border border-zinc-800 hover:border-zinc-700 text-[11px] font-bold text-blue-400 hover:text-blue-300 transition-all cursor-pointer"
+                              title="Mostrar código QR de participación"
+                            >
+                              <QrCode size={13} />
+                              <span>QR</span>
+                            </button>
+
+                            {/* Proyector button (en nueva pestaña) */}
+                            <a
+                              href={`/eventos/${managingNubeEvent.id}/pantalla-nube?nubeId=${nube.id}`}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="flex items-center justify-center gap-1 p-2 px-3 rounded-xl bg-zinc-900 border border-zinc-800 hover:border-zinc-700 text-[11px] font-bold text-emerald-400 hover:text-emerald-300 transition-all cursor-pointer"
+                              title="Ver pantalla de la nube (nueva pestaña)"
+                            >
+                              <Tv size={13} />
+                              <span>Proyector</span>
+                            </a>
+
+                            {/* Eliminar button */}
+                            <button
+                              onClick={() => handleDeleteNube(nube.id)}
+                              className="p-2 rounded-xl bg-zinc-900 border border-zinc-800 hover:border-rose-950 text-rose-500 hover:text-rose-400 transition-all cursor-pointer"
+                              title="Eliminar esta nube"
+                            >
+                              <Trash2 size={13} />
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
             </motion.div>
