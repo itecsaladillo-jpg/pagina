@@ -52,10 +52,18 @@ export function PollManager({ initialPolls }: { initialPolls: Poll[] }) {
     const innerSvgData = new XMLSerializer().serializeToString(innerSvg)
 
     const wrapperSvgData = `
-      <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" style="background-color: white;">
-        <svg x="33.33%" y="33.33%" width="33.33%" height="33.33%">
-          ${innerSvgData}
-        </svg>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 500" width="400" height="500" style="background-color: #ffffff; font-family: system-ui, -apple-system, sans-serif;">
+        <rect width="400" height="500" fill="#ffffff" />
+        <text x="200" y="45" text-anchor="middle" font-size="20" font-weight="bold" fill="#0f172a">Votación en Vivo</text>
+        <text x="200" y="70" text-anchor="middle" font-size="12" font-weight="600" fill="#64748b">${pollName}</text>
+        <g transform="translate(75, 110)">
+          <svg width="250" height="250" viewBox="0 0 256 256">
+            ${innerSvgData}
+          </svg>
+        </g>
+        <rect x="0" y="440" width="400" height="60" fill="#f8fafc" />
+        <line x1="0" y1="440" x2="400" y2="440" stroke="#e2e8f0" stroke-width="1" />
+        <text x="200" y="475" text-anchor="middle" font-size="12" font-weight="bold" fill="#17338c" letter-spacing="1">ITEC EVENTOS</text>
       </svg>
     `.trim()
 
@@ -63,7 +71,7 @@ export function PollManager({ initialPolls }: { initialPolls: Poll[] }) {
     const url = URL.createObjectURL(blob)
     const link = document.createElement('a')
     link.href = url
-    link.download = `QR_ITEC_${pollName.substring(0, 15).replace(/[^a-z0-9]/gi, '_')}.svg`
+    link.download = `QR_ITEC_Encuesta_${pollName.substring(0, 15).replace(/[^a-z0-9]/gi, '_')}.svg`
     document.body.appendChild(link)
     link.click()
     document.body.removeChild(link)
@@ -385,10 +393,11 @@ export function PollManager({ initialPolls }: { initialPolls: Poll[] }) {
                       </div>
                       <button
                         onClick={() => downloadQR(poll.id, poll.name)}
-                        className="p-2.5 rounded-xl bg-[var(--accent-primary)]/10 text-[var(--accent-primary)] hover:bg-[var(--accent-primary)]/20 transition-all flex items-center gap-2"
+                        className="p-2.5 rounded-xl bg-[var(--accent-primary)]/10 text-[var(--accent-primary)] hover:bg-[var(--accent-primary)]/20 transition-all flex items-center gap-2 cursor-pointer h-[42px] shrink-0"
                         title="Descargar QR"
                       >
                         <Download size={16} />
+                        <span className="text-[10px] font-extrabold uppercase tracking-wider">Descargar</span>
                       </button>
                     </div>
                   )}

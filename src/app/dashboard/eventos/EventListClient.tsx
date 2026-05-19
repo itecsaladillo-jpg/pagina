@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { MessageSquare, Tv, UserPlus, ShieldAlert, QrCode, Copy, Check, Printer, X, Sparkles, Trash2, Plus, Loader2, ExternalLink } from "lucide-react";
+import { MessageSquare, Tv, UserPlus, ShieldAlert, QrCode, Copy, Check, Printer, X, Sparkles, Trash2, Plus, Loader2, ExternalLink, Download } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import QRCode from "react-qr-code";
 import type { ItecAction } from "@/types/database";
@@ -197,6 +197,52 @@ export default function EventListClient({ initialActions, mode = 'preguntas' }: 
       </html>
     `);
     printWindow.document.close();
+  };
+
+  const handleDownloadQR = () => {
+    const svg = document.getElementById("qr-code-svg");
+    if (!svg) return;
+
+    const innerSvg = svg.cloneNode(true) as SVGElement;
+    innerSvg.removeAttribute("style");
+    innerSvg.removeAttribute("id");
+    innerSvg.setAttribute("width", "100%");
+    innerSvg.setAttribute("height", "100%");
+
+    const innerSvgData = new XMLSerializer().serializeToString(innerSvg);
+
+    const title = activeQrEvent ? "Preguntas al Orador" : `Nube de Ideas: ${activeQrCloud?.name}`;
+    const subtitle = activeQrEvent ? activeQrEvent.title : `${activeQrCloud?.eventTitle}`;
+
+    const wrapperSvgData = `
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 500" width="400" height="500" style="background-color: #ffffff; font-family: system-ui, -apple-system, sans-serif;">
+        <rect width="400" height="500" fill="#ffffff" />
+        <text x="200" y="45" text-anchor="middle" font-size="20" font-weight="bold" fill="#0f172a">${title}</text>
+        <text x="200" y="70" text-anchor="middle" font-size="12" font-weight="600" fill="#64748b">${subtitle}</text>
+        <g transform="translate(75, 110)">
+          <svg width="250" height="250" viewBox="0 0 256 256">
+            ${innerSvgData}
+          </svg>
+        </g>
+        <rect x="0" y="440" width="400" height="60" fill="#f8fafc" />
+        <line x1="0" y1="440" x2="400" y2="440" stroke="#e2e8f0" stroke-width="1" />
+        <text x="200" y="475" text-anchor="middle" font-size="12" font-weight="bold" fill="#17338c" letter-spacing="1">ITEC EVENTOS</text>
+      </svg>
+    `.trim();
+
+    const blob = new Blob([wrapperSvgData], { type: "image/svg+xml;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    
+    const downloadLink = document.createElement("a");
+    const filename = activeQrEvent 
+      ? `QR_Preguntas_${activeQrEvent.title.substring(0, 15).replace(/[^a-z0-9]/gi, '_')}`
+      : `QR_Nube_${activeQrCloud?.name.substring(0, 15).replace(/[^a-z0-9]/gi, '_')}`;
+    
+    downloadLink.href = url;
+    downloadLink.download = `${filename}.svg`;
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
   };
 
   return (
@@ -395,21 +441,21 @@ export default function EventListClient({ initialActions, mode = 'preguntas' }: 
                 </div>
 
                 {/* Control Actions */}
-                <div className="grid grid-cols-2 gap-3 pt-4 border-t border-zinc-800/80">
+                <div className="grid grid-cols-3 gap-2.5 pt-4 border-t border-zinc-800/80">
                   {/* Copy Link Button */}
                   <button
                     onClick={handleCopyLink}
-                    className="flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-zinc-950 hover:bg-zinc-900 border border-zinc-800 hover:border-zinc-700 text-white text-xs font-extrabold uppercase tracking-wider transition-all cursor-pointer"
+                    className="flex items-center justify-center gap-1.5 py-2.5 px-2 rounded-xl bg-zinc-950 hover:bg-zinc-900 border border-zinc-800 hover:border-zinc-700 text-white text-[11px] font-extrabold uppercase tracking-wide transition-all cursor-pointer"
                   >
                     {copied ? (
                       <>
-                        <Check size={14} className="text-emerald-400" />
-                        Copiado
+                        <Check size={13} className="text-emerald-400 shrink-0" />
+                        <span>Copiado</span>
                       </>
                     ) : (
                       <>
-                        <Copy size={14} className="text-indigo-400" />
-                        Copiar Link
+                        <Copy size={13} className="text-indigo-400 shrink-0" />
+                        <span>Copiar</span>
                       </>
                     )}
                   </button>
@@ -417,10 +463,19 @@ export default function EventListClient({ initialActions, mode = 'preguntas' }: 
                   {/* Print Button */}
                   <button
                     onClick={handlePrint}
-                    className="flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-extrabold uppercase tracking-wider transition-all cursor-pointer shadow-lg shadow-indigo-950/30"
+                    className="flex items-center justify-center gap-1.5 py-2.5 px-2 rounded-xl bg-zinc-950 hover:bg-zinc-900 border border-zinc-800 hover:border-zinc-700 text-white text-[11px] font-extrabold uppercase tracking-wide transition-all cursor-pointer"
                   >
-                    <Printer size={14} />
-                    Imprimir QR
+                    <Printer size={13} className="text-blue-400 shrink-0" />
+                    <span>Imprimir</span>
+                  </button>
+
+                  {/* Download Button */}
+                  <button
+                    onClick={handleDownloadQR}
+                    className="flex items-center justify-center gap-1.5 py-2.5 px-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-[11px] font-extrabold uppercase tracking-wide transition-all cursor-pointer shadow-lg shadow-indigo-950/30"
+                  >
+                    <Download size={13} className="shrink-0" />
+                    <span>Descargar</span>
                   </button>
                 </div>
               </div>
