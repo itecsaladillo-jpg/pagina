@@ -126,23 +126,43 @@ export default async function AccionDetailPage({ params }: Props) {
               </div>
             </div>
 
-            {/* Q&A Section if Live */}
+            {/* Live Tools Sections if Event is Active */}
             {action.status === 'en_curso' && (
-              <div className="glass border border-indigo-500/20 bg-indigo-500/5 rounded-3xl p-8 space-y-4 shadow-2xl">
-                <h3 className="text-xl font-bold text-white flex items-center gap-2">
-                  <Sparkles className="text-indigo-400 animate-pulse" size={20} />
-                  Preguntas al Expositor
-                </h3>
-                <p className="text-[var(--text-secondary)] text-sm leading-relaxed">
-                  El evento está en curso. Enviá tus preguntas al expositor en tiempo real o votá las de otros asistentes.
-                </p>
-                <Link
-                  href={`/eventos/${action.id}/preguntar`}
-                  className="w-full flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3.5 px-6 rounded-xl transition-all shadow-md active:scale-[0.98] text-sm uppercase tracking-wider"
-                >
-                  Participar del Q&A
-                </Link>
-              </div>
+              <>
+                {/* Q&A Section */}
+                <div className="glass border border-indigo-500/20 bg-indigo-500/5 rounded-3xl p-8 space-y-4 shadow-2xl">
+                  <h3 className="text-xl font-bold text-white flex items-center gap-2">
+                    <Sparkles className="text-indigo-400 animate-pulse" size={20} />
+                    Preguntas al Expositor
+                  </h3>
+                  <p className="text-[var(--text-secondary)] text-sm leading-relaxed">
+                    El evento está en curso. Enviá tus preguntas al expositor en tiempo real o votá las de otros asistentes.
+                  </p>
+                  <Link
+                    href={`/eventos/${action.id}/preguntar`}
+                    className="w-full flex items-center justify-center gap-2 bg-indigo-650 hover:bg-indigo-600 text-white font-bold py-3.5 px-6 rounded-xl transition-all shadow-md active:scale-[0.98] text-sm uppercase tracking-wider"
+                  >
+                    Participar del Q&A
+                  </Link>
+                </div>
+
+                {/* Nube de Ideas Section */}
+                <div className="glass border border-purple-500/20 bg-purple-500/5 rounded-3xl p-8 space-y-4 shadow-2xl">
+                  <h3 className="text-xl font-bold text-white flex items-center gap-2">
+                    <Sparkles className="text-purple-400 animate-pulse" size={20} />
+                    Nube de Ideas en Vivo
+                  </h3>
+                  <p className="text-[var(--text-secondary)] text-sm leading-relaxed">
+                    El evento está en curso. Compartí tus conceptos o palabras clave en tiempo real y sumate a la nube colectiva.
+                  </p>
+                  <Link
+                    href={`/eventos/${action.id}/nube`}
+                    className="w-full flex items-center justify-center gap-2 bg-purple-650 hover:bg-purple-600 text-white font-bold py-3.5 px-6 rounded-xl transition-all shadow-md active:scale-[0.98] text-sm uppercase tracking-wider"
+                  >
+                    Participar de la Nube
+                  </Link>
+                </div>
+              </>
             )}
           </div>
 
