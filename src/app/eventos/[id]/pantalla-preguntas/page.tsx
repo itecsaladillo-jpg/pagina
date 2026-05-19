@@ -131,28 +131,31 @@ export default function PantallaPreguntasPage({ params }: { params: Promise<{ id
       <div className="max-w-[95rem] mx-auto w-full px-8 py-8 flex flex-col h-screen relative z-10">
         
         {/* Header - Auditorio */}
-        <header className="flex items-center justify-between mb-8 shrink-0 border-b border-white/[0.05] pb-6">
-          <div className="flex items-center gap-6">
-            <div className="relative flex items-center justify-center shrink-0 bg-zinc-900/30 border border-white/[0.05] px-5 py-3 rounded-2xl shadow-[0_0_50px_rgba(99,102,241,0.15)]">
-              <Image 
-                src="/logoitectrans_v2.png" 
-                alt="Logo ITEC" 
-                width={130} 
-                height={40} 
-                className="h-9 w-auto object-contain drop-shadow-[0_0_15px_rgba(99,102,241,0.25)]"
-                priority
-              />
-            </div>
-            <div>
-              <h1 className="text-4xl lg:text-5xl font-black tracking-tight text-white mb-1.5">
-                Preguntas al Orador
-              </h1>
-              <p className="text-lg text-indigo-300 font-bold tracking-wide">
-                ¡Tu opinión importa! Hacé tus consultas en vivo
-              </p>
-            </div>
+        <header className="flex items-center justify-between mb-8 shrink-0 border-b border-white/[0.05] pb-6 gap-6">
+          {/* Logo ITEC a la izquierda de todo */}
+          <div className="relative flex items-center justify-center shrink-0 bg-zinc-900/30 border border-white/[0.05] px-5 py-3 rounded-2xl shadow-[0_0_50px_rgba(99,102,241,0.15)]">
+            <Image 
+              src="/logoitectrans_v2.png" 
+              alt="Logo ITEC" 
+              width={120} 
+              height={36} 
+              className="h-8.5 w-auto object-contain drop-shadow-[0_0_15px_rgba(99,102,241,0.25)]"
+              priority
+            />
           </div>
-          <div className="flex items-center gap-5">
+
+          {/* Título y descripción central/izquierda */}
+          <div className="flex-1 min-w-0">
+            <h1 className="text-3xl lg:text-4xl font-black tracking-tight text-white mb-1">
+              Preguntas al Orador
+            </h1>
+            <p className="text-base text-indigo-300 font-bold tracking-wide">
+              ¡Tu opinión importa! Hacé tus consultas en vivo
+            </p>
+          </div>
+
+          {/* Zona de botones a la derecha (fácilmente expandible) */}
+          <div className="flex items-center gap-4 shrink-0">
             <div className="flex items-center gap-3 bg-zinc-900/40 border border-zinc-800 px-5 py-2.5 rounded-2xl">
               <span className="relative flex h-3.5 w-3.5">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>

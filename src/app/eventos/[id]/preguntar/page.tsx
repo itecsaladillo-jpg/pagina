@@ -192,27 +192,31 @@ export default function PreguntarPage({ params }: { params: Promise<{ id: string
             <Image 
               src="/logoitectrans_v2.png" 
               alt="Logo ITEC" 
-              width={75} 
-              height={25} 
-              className="h-6 w-auto object-contain"
+              width={65} 
+              height={22} 
+              className="h-5.5 w-auto object-contain"
               priority
             />
-            <div className="w-[1px] h-4 bg-zinc-800" />
-            <h1 className="text-xs font-black text-zinc-100 tracking-wide">
-              ITEC - Preguntas y Respuestas
-            </h1>
+            <div className="w-[1px] h-3 bg-zinc-800" />
+            <span className="text-[10px] font-black text-indigo-400 tracking-widest uppercase">
+              Q&A
+            </span>
           </div>
-          <button
-            onClick={() => setShowInstructions(!showInstructions)}
-            className={`flex items-center justify-center p-2.5 rounded-xl border transition-all active:scale-95 cursor-pointer ${
-              showInstructions 
-                ? "bg-indigo-500/10 border-indigo-500/30 text-indigo-400" 
-                : "bg-white/[0.03] border-white/[0.06] text-zinc-400 hover:text-white"
-            }`}
-            title="Cómo funciona"
-          >
-            <HelpCircle size={18} />
-          </button>
+          
+          {/* Zona de botones a la derecha (fácilmente expandible) */}
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setShowInstructions(!showInstructions)}
+              className={`flex items-center justify-center p-2.5 rounded-xl border transition-all active:scale-95 cursor-pointer ${
+                showInstructions 
+                  ? "bg-indigo-500/10 border-indigo-500/30 text-indigo-400" 
+                  : "bg-white/[0.03] border-white/[0.06] text-zinc-400 hover:text-white"
+              }`}
+              title="Cómo funciona"
+            >
+              <HelpCircle size={18} />
+            </button>
+          </div>
         </div>
       </header>
 
