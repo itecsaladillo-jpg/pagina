@@ -2,9 +2,10 @@
 
 import { useState, useEffect, use } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { ThumbsUp, MessageCircle, QrCode, Sparkles, Smartphone, Award } from "lucide-react";
+import { ThumbsUp, QrCode, Sparkles, Smartphone, Award, MessageCircle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import QRCode from "react-qr-code";
+import Image from "next/image";
 
 interface Pregunta {
   id: string;
@@ -131,9 +132,16 @@ export default function PantallaPreguntasPage({ params }: { params: Promise<{ id
         
         {/* Header - Auditorio */}
         <header className="flex items-center justify-between mb-8 shrink-0 border-b border-white/[0.05] pb-6">
-          <div className="flex items-center gap-5">
-            <div className="bg-indigo-600 p-3.5 rounded-[2rem] shadow-[0_0_50px_rgba(99,102,241,0.3)]">
-              <MessageCircle className="w-10 h-10 text-white animate-pulse" />
+          <div className="flex items-center gap-6">
+            <div className="relative flex items-center justify-center shrink-0 bg-zinc-900/30 border border-white/[0.05] px-5 py-3 rounded-2xl shadow-[0_0_50px_rgba(99,102,241,0.15)]">
+              <Image 
+                src="/logoitectrans_v2.png" 
+                alt="Logo ITEC" 
+                width={130} 
+                height={40} 
+                className="h-9 w-auto object-contain drop-shadow-[0_0_15px_rgba(99,102,241,0.25)]"
+                priority
+              />
             </div>
             <div>
               <h1 className="text-4xl lg:text-5xl font-black tracking-tight text-white mb-1.5">
