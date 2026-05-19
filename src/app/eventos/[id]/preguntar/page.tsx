@@ -188,21 +188,19 @@ export default function PreguntarPage({ params }: { params: Promise<{ id: string
       {/* Premium Header */}
       <header className="relative border-b border-white/[0.05] bg-slate-950/80 backdrop-blur-xl px-4 py-4 sticky top-0 z-50">
         <div className="max-w-md mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2.5">
             <Image 
               src="/logoitectrans_v2.png" 
               alt="Logo ITEC" 
-              width={85} 
-              height={28} 
-              className="h-7 w-auto object-contain drop-shadow-[0_0_10px_rgba(99,102,241,0.2)]"
+              width={75} 
+              height={25} 
+              className="h-6 w-auto object-contain"
               priority
             />
-            <div className="w-[1px] h-6 bg-zinc-800" />
-            <div>
-              <h1 className="text-xs font-black tracking-widest text-indigo-400 uppercase">
-                Q&A EN VIVO
-              </h1>
-            </div>
+            <div className="w-[1px] h-4 bg-zinc-800" />
+            <h1 className="text-xs font-black text-zinc-100 tracking-wide">
+              ITEC - Preguntas y Respuestas
+            </h1>
           </div>
           <button
             onClick={() => setShowInstructions(!showInstructions)}
@@ -240,18 +238,24 @@ export default function PreguntarPage({ params }: { params: Promise<{ id: string
               <h2 className="text-xs font-extrabold text-indigo-300 uppercase tracking-widest mb-3 flex items-center gap-1.5">
                 <Sparkles size={14} className="text-indigo-400 animate-pulse" /> ¿Cómo funciona?
               </h2>
-              <ul className="space-y-3 text-xs text-zinc-300 leading-relaxed">
+              <ul className="space-y-3.5 text-xs text-zinc-200">
                 <li className="flex gap-2.5">
-                  <span className="flex items-center justify-center shrink-0 w-5 h-5 rounded-full bg-indigo-500/20 text-indigo-300 font-bold text-[10px]">1</span>
-                  <span><strong>Formulá tu consulta:</strong> Podés ingresar tu nombre o enviarla de forma 100% anónima si lo preferís.</span>
+                  <span className="flex items-center justify-center shrink-0 w-5 h-5 rounded-full bg-indigo-500/20 text-indigo-300 font-black text-[10px]">1</span>
+                  <span className="font-medium leading-relaxed">
+                    <strong className="text-white font-black">Escribí tu pregunta:</strong> Podés identificarte o enviarla de forma <strong className="text-indigo-400 font-bold">100% anónima</strong>.
+                  </span>
                 </li>
                 <li className="flex gap-2.5">
-                  <span className="flex items-center justify-center shrink-0 w-5 h-5 rounded-full bg-indigo-500/20 text-indigo-300 font-bold text-[10px]">2</span>
-                  <span><strong>Filtro de moderación:</strong> Pasa a revisión del coordinador del evento antes de proyectarse en el proyector central.</span>
+                  <span className="flex items-center justify-center shrink-0 w-5 h-5 rounded-full bg-indigo-500/20 text-indigo-300 font-black text-[10px]">2</span>
+                  <span className="font-medium leading-relaxed">
+                    <strong className="text-white font-black">Aprobación en vivo:</strong> Pasa por moderación antes de mostrarse en la <strong className="text-indigo-400 font-bold">pantalla principal</strong>.
+                  </span>
                 </li>
                 <li className="flex gap-2.5">
-                  <span className="flex items-center justify-center shrink-0 w-5 h-5 rounded-full bg-indigo-500/20 text-indigo-300 font-bold text-[10px]">3</span>
-                  <span><strong>Votá las mejores (Evitá duplicar) 👍:</strong> Si tu duda ya fue consultada por otro participante en la lista en vivo de abajo, <strong>dale un voto 👍</strong> para que suba de posición y el expositor la responda primero.</span>
+                  <span className="flex items-center justify-center shrink-0 w-5 h-5 rounded-full bg-indigo-500/20 text-indigo-300 font-black text-[10px]">3</span>
+                  <span className="font-medium leading-relaxed">
+                    <strong className="text-white font-black">Votá y apoyá 👍:</strong> Si ves tu misma duda abajo, <strong className="text-indigo-400 font-bold">dale un voto 👍</strong> para evitar repetirla y destacarla.
+                  </span>
                 </li>
               </ul>
             </motion.div>
