@@ -8,7 +8,7 @@ import QRCode from "react-qr-code";
 import type { ItecAction } from "@/types/database";
 import { createClient } from "@/lib/supabase/client";
 
-export default function EventListClient({ initialActions }: { initialActions: ItecAction[] }) {
+export default function EventListClient({ initialActions, mode = 'preguntas' }: { initialActions: ItecAction[], mode?: 'preguntas' | 'nubes' }) {
   const [actions] = useState<ItecAction[]>(initialActions);
   const [activeQrEvent, setActiveQrEvent] = useState<ItecAction | null>(null);
   const [activeQrCloud, setActiveQrCloud] = useState<{ id: string, name: string, eventoId: string, eventTitle: string } | null>(null);
@@ -213,7 +213,9 @@ export default function EventListClient({ initialActions }: { initialActions: It
               transition={{ duration: 0.3 }}
               className={`rounded-3xl border p-6 bg-zinc-900/40 backdrop-blur-sm shadow-xl flex flex-col justify-between transition-all ${
                 action.status === 'en_curso' 
-                  ? 'border-indigo-500/30 bg-gradient-to-br from-zinc-900/60 via-zinc-900/40 to-indigo-950/20' 
+                  ? mode === 'nubes'
+                    ? 'border-purple-500/30 bg-gradient-to-br from-zinc-900/60 via-zinc-900/40 to-purple-950/20'
+                    : 'border-indigo-500/30 bg-gradient-to-br from-zinc-900/60 via-zinc-900/40 to-indigo-950/20'
                   : 'border-zinc-800 hover:border-zinc-700'
               }`}
             >
@@ -242,60 +244,64 @@ export default function EventListClient({ initialActions }: { initialActions: It
 
               {/* Controles de Herramientas de Evento */}
               <div className="space-y-4 pt-4 border-t border-zinc-800/80">
-                {/* Sección 1: Preguntas en Vivo (Q&A) */}
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between px-1">
-                    <span className="text-[9px] uppercase font-black tracking-widest text-indigo-400">Preguntas al Orador (Q&A)</span>
-                  </div>
-                  <div className="grid grid-cols-3 gap-2">
+                {/* Sección: Preguntas en Vivo (Q&A) - solo en modo preguntas */}
+                {mode === 'preguntas' && (
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between px-1">
+                      <span className="text-[9px] uppercase font-black tracking-widest text-indigo-400">Preguntas al Orador (Q&A)</span>
+                    </div>
+                    <div className="grid grid-cols-3 gap-2">
+                      <Link
+                        href={`/eventos/${action.id}/preguntar`}
+                        target="_blank"
+                        className="flex items-center justify-center gap-1.5 px-2 py-2 rounded-xl bg-zinc-950/40 hover:bg-zinc-900 text-white text-[11px] font-bold transition-all border border-zinc-800 hover:border-zinc-700"
+                      >
+                        <UserPlus size={12} className="text-indigo-400" />
+                        📱 Celular
+                      </Link>
+                      <button
+                        onClick={() => setActiveQrEvent(action)}
+                        className="flex items-center justify-center gap-1.5 px-2 py-2 rounded-xl bg-zinc-950/40 hover:bg-zinc-900 text-white text-[11px] font-bold transition-all border border-zinc-800 hover:border-zinc-700 cursor-pointer"
+                      >
+                        <QrCode size={12} className="text-blue-400" />
+                        QR Code
+                      </button>
+                      <Link
+                        href={`/eventos/${action.id}/pantalla-preguntas`}
+                        target="_blank"
+                        className="flex items-center justify-center gap-1.5 px-2 py-2 rounded-xl bg-zinc-950/40 hover:bg-zinc-900 text-white text-[11px] font-bold transition-all border border-zinc-800 hover:border-zinc-700"
+                      >
+                        <Tv size={12} className="text-emerald-400" />
+                        🖥️ Proyector
+                      </Link>
+                    </div>
                     <Link
-                      href={`/eventos/${action.id}/preguntar`}
-                      target="_blank"
-                      className="flex items-center justify-center gap-1.5 px-2 py-2 rounded-xl bg-zinc-950/40 hover:bg-zinc-900 text-white text-[11px] font-bold transition-all border border-zinc-800 hover:border-zinc-700"
+                      href={`/dashboard/eventos/${action.id}/moderacion`}
+                      className="flex items-center justify-center gap-2 w-full px-4 py-2.5 rounded-xl bg-indigo-650 hover:bg-indigo-600 text-white text-[11px] font-extrabold tracking-wider uppercase transition-all shadow-md active:scale-[0.98]"
                     >
-                      <UserPlus size={12} className="text-indigo-400" />
-                      📱 Celular
-                    </Link>
-                    <button
-                      onClick={() => setActiveQrEvent(action)}
-                      className="flex items-center justify-center gap-1.5 px-2 py-2 rounded-xl bg-zinc-950/40 hover:bg-zinc-900 text-white text-[11px] font-bold transition-all border border-zinc-800 hover:border-zinc-700 cursor-pointer"
-                    >
-                      <QrCode size={12} className="text-blue-400" />
-                      QR Code
-                    </button>
-                    <Link
-                      href={`/eventos/${action.id}/pantalla-preguntas`}
-                      target="_blank"
-                      className="flex items-center justify-center gap-1.5 px-2 py-2 rounded-xl bg-zinc-950/40 hover:bg-zinc-900 text-white text-[11px] font-bold transition-all border border-zinc-800 hover:border-zinc-700"
-                    >
-                      <Tv size={12} className="text-emerald-400" />
-                      🖥️ Proyector
+                      <ShieldAlert size={13} />
+                      Moderar Preguntas
                     </Link>
                   </div>
-                  <Link
-                    href={`/dashboard/eventos/${action.id}/moderacion`}
-                    className="flex items-center justify-center gap-2 w-full px-4 py-2.5 rounded-xl bg-indigo-650 hover:bg-indigo-600 text-white text-[11px] font-extrabold tracking-wider uppercase transition-all shadow-md active:scale-[0.98]"
-                  >
-                    <ShieldAlert size={13} />
-                    Moderar Preguntas
-                  </Link>
-                </div>
+                )}
 
-                {/* Sección 2: Nube de Ideas */}
-                <div className="space-y-2 pt-2.5 border-t border-zinc-800/40">
-                  <div className="flex items-center justify-between px-1">
-                    <span className="text-[9px] uppercase font-black tracking-widest text-purple-400 flex items-center gap-1">
-                      <Sparkles size={9} /> Nube de Ideas (Multi)
-                    </span>
+                {/* Sección: Nube de Ideas - solo en modo nubes */}
+                {mode === 'nubes' && (
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between px-1">
+                      <span className="text-[9px] uppercase font-black tracking-widest text-purple-400 flex items-center gap-1">
+                        <Sparkles size={9} /> Nube de Ideas
+                      </span>
+                    </div>
+                    <button
+                      onClick={() => setManagingNubeEvent(action)}
+                      className="flex items-center justify-center gap-2 w-full px-4 py-2.5 rounded-xl bg-purple-900/30 hover:bg-purple-900/50 border border-purple-500/20 hover:border-purple-500/40 text-purple-300 hover:text-white text-[11px] font-extrabold tracking-wider uppercase transition-all shadow-md active:scale-[0.98] cursor-pointer h-[40px]"
+                    >
+                      <Sparkles size={12} className="animate-pulse text-purple-400" />
+                      Gestionar Nubes
+                    </button>
                   </div>
-                  <button
-                    onClick={() => setManagingNubeEvent(action)}
-                    className="flex items-center justify-center gap-2 w-full px-4 py-2.5 rounded-xl bg-purple-900/30 hover:bg-purple-900/50 border border-purple-500/20 hover:border-purple-500/40 text-purple-300 hover:text-white text-[11px] font-extrabold tracking-wider uppercase transition-all shadow-md active:scale-[0.98] cursor-pointer h-[40px]"
-                  >
-                    <Sparkles size={12} className="animate-pulse text-purple-400" />
-                    Gestionar Nubes
-                  </button>
-                </div>
+                )}
               </div>
             </motion.div>
           ))

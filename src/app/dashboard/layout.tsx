@@ -73,7 +73,7 @@ const adminNavItems = [
   },
   {
     label: 'Nube de Ideas',
-    href: '/dashboard/eventos',
+    href: '/dashboard/nubes',
     icon: 'M2.25 15a4.5 4.5 0 0 0 4.5 4.5H18a3.75 3.75 0 0 0 .496-7.467 5.25 5.25 0 0 0-10.433-1.425 4.5 4.5 0 0 0-5.813 4.392Z',
   },
   {
