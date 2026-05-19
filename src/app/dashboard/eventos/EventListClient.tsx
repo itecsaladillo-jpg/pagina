@@ -149,47 +149,73 @@ export default function EventListClient({ initialActions }: { initialActions: It
                 </p>
               </div>
 
-              {/* Controles de Q&A */}
-              <div className="space-y-3 pt-4 border-t border-zinc-800/80">
-                <div className="grid grid-cols-3 gap-2">
-                  {/* Botón Asistente */}
+              {/* Controles de Herramientas de Evento */}
+              <div className="space-y-4 pt-4 border-t border-zinc-800/80">
+                {/* Sección 1: Preguntas en Vivo (Q&A) */}
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between px-1">
+                    <span className="text-[9px] uppercase font-black tracking-widest text-indigo-400">Preguntas al Orador (Q&A)</span>
+                  </div>
+                  <div className="grid grid-cols-3 gap-2">
+                    <Link
+                      href={`/eventos/${action.id}/preguntar`}
+                      target="_blank"
+                      className="flex items-center justify-center gap-1.5 px-2 py-2 rounded-xl bg-zinc-950/40 hover:bg-zinc-900 text-white text-[11px] font-bold transition-all border border-zinc-800 hover:border-zinc-700"
+                    >
+                      <UserPlus size={12} className="text-indigo-400" />
+                      📱 Celular
+                    </Link>
+                    <button
+                      onClick={() => setActiveQrEvent(action)}
+                      className="flex items-center justify-center gap-1.5 px-2 py-2 rounded-xl bg-zinc-950/40 hover:bg-zinc-900 text-white text-[11px] font-bold transition-all border border-zinc-800 hover:border-zinc-700 cursor-pointer"
+                    >
+                      <QrCode size={12} className="text-blue-400" />
+                      QR Code
+                    </button>
+                    <Link
+                      href={`/eventos/${action.id}/pantalla-preguntas`}
+                      target="_blank"
+                      className="flex items-center justify-center gap-1.5 px-2 py-2 rounded-xl bg-zinc-950/40 hover:bg-zinc-900 text-white text-[11px] font-bold transition-all border border-zinc-800 hover:border-zinc-700"
+                    >
+                      <Tv size={12} className="text-emerald-400" />
+                      🖥️ Proyector
+                    </Link>
+                  </div>
                   <Link
-                    href={`/eventos/${action.id}/preguntar`}
-                    target="_blank"
-                    className="flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl bg-zinc-950/40 hover:bg-zinc-900 text-white text-xs font-bold transition-all border border-zinc-800 hover:border-zinc-700"
+                    href={`/dashboard/eventos/${action.id}/moderacion`}
+                    className="flex items-center justify-center gap-2 w-full px-4 py-2.5 rounded-xl bg-indigo-650 hover:bg-indigo-600 text-white text-[11px] font-extrabold tracking-wider uppercase transition-all shadow-md active:scale-[0.98]"
                   >
-                    <UserPlus size={13} className="text-indigo-400" />
-                    📱 Asistente
-                  </Link>
-
-                  {/* Botón QR */}
-                  <button
-                    onClick={() => setActiveQrEvent(action)}
-                    className="flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl bg-zinc-950/40 hover:bg-zinc-900 text-white text-xs font-bold transition-all border border-zinc-800 hover:border-zinc-700 cursor-pointer"
-                  >
-                    <QrCode size={13} className="text-blue-400" />
-                    QR Code
-                  </button>
-
-                  {/* Botón Proyector */}
-                  <Link
-                    href={`/eventos/${action.id}/pantalla-preguntas`}
-                    target="_blank"
-                    className="flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl bg-zinc-950/40 hover:bg-zinc-900 text-white text-xs font-bold transition-all border border-zinc-800 hover:border-zinc-700"
-                  >
-                    <Tv size={13} className="text-emerald-400" />
-                    🖥️ Proyector
+                    <ShieldAlert size={13} />
+                    Moderar Preguntas
                   </Link>
                 </div>
 
-                {/* Botón Moderador Principal */}
-                <Link
-                  href={`/dashboard/eventos/${action.id}/moderacion`}
-                  className="flex items-center justify-center gap-2 w-full px-4 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-extrabold tracking-wider uppercase transition-all shadow-lg shadow-indigo-950/50"
-                >
-                  <ShieldAlert size={14} />
-                  Moderar Preguntas
-                </Link>
+                {/* Sección 2: Nube de Ideas */}
+                <div className="space-y-2 pt-2.5 border-t border-zinc-800/40">
+                  <div className="flex items-center justify-between px-1">
+                    <span className="text-[9px] uppercase font-black tracking-widest text-purple-400 flex items-center gap-1">
+                      <Sparkles size={9} /> Nube de Ideas
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    <Link
+                      href={`/eventos/${action.id}/nube`}
+                      target="_blank"
+                      className="flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl bg-zinc-950/40 hover:bg-zinc-900 text-white text-xs font-bold transition-all border border-zinc-800 hover:border-zinc-700"
+                    >
+                      <UserPlus size={13} className="text-purple-400" />
+                      📱 Celular
+                    </Link>
+                    <Link
+                      href={`/eventos/${action.id}/pantalla-nube`}
+                      target="_blank"
+                      className="flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl bg-zinc-950/40 hover:bg-zinc-900 text-white text-xs font-bold transition-all border border-zinc-800 hover:border-zinc-700"
+                    >
+                      <Tv size={13} className="text-purple-400" />
+                      🖥️ Proyector
+                    </Link>
+                  </div>
+                </div>
               </div>
             </motion.div>
           ))
