@@ -2,7 +2,7 @@
 
 import { useState, useEffect, use } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { CheckCircle2, XCircle, Clock, ShieldAlert, Lock, ArrowLeft, Users, Sparkles } from "lucide-react";
+import { CheckCircle2, XCircle, Clock, ShieldAlert, Lock, ArrowLeft, Users, Sparkles, Tv } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 
@@ -251,13 +251,26 @@ export default function ModeracionPage({ params }: { params: Promise<{ id: strin
           )}
         </div>
 
-        <div className="bg-zinc-900/60 border border-zinc-800 px-4 py-3 rounded-2xl flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center border border-indigo-500/20">
-            <Clock className="w-5 h-5 animate-pulse" />
-          </div>
-          <div>
-            <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">En espera</p>
-            <p className="text-lg font-black text-white">{preguntas.length} consultas</p>
+        <div className="flex flex-wrap items-center gap-4 shrink-0">
+          {/* Botón Abrir Pantalla Orador / Proyector (Apertura en Pestaña Independiente) */}
+          <Link
+            href={`/eventos/${eventoId}/pantalla-preguntas`}
+            target="_blank"
+            className="flex items-center gap-2 px-5 py-3 rounded-2xl bg-zinc-900 hover:bg-zinc-850 text-emerald-400 hover:text-emerald-300 font-extrabold text-xs uppercase tracking-wider transition-all border border-emerald-500/10 hover:border-emerald-500/30 shadow-lg shadow-emerald-950/20 cursor-pointer"
+          >
+            <Tv size={15} />
+            <span>Pantalla Orador (Proyector)</span>
+          </Link>
+
+          {/* Contador de consultas */}
+          <div className="bg-zinc-900/60 border border-zinc-800 px-4 py-3 rounded-2xl flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center border border-indigo-500/20">
+              <Clock className="w-5 h-5 animate-pulse" />
+            </div>
+            <div>
+              <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">En espera</p>
+              <p className="text-lg font-black text-white">{preguntas.length} consultas</p>
+            </div>
           </div>
         </div>
       </div>
