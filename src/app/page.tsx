@@ -6,6 +6,7 @@ import { IdeasSection } from '@/components/landing/IdeasSection'
 import { ImpactSection } from '@/components/landing/ImpactSection'
 import { VideotecaSection } from '@/components/landing/VideotecaSection'
 import { Footer } from '@/components/landing/Footer'
+import { AsistenteChat } from '@/components/AsistenteChat'
 
 export default function HomePage() {
   return (
@@ -29,6 +30,9 @@ export default function HomePage() {
       <IdeasSection />
 
       <Footer />
+
+      {/* Asistente ITEC — overlay flotante global */}
+      <AsistenteChat />
     </main>
   )
 }
