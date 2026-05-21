@@ -15,11 +15,11 @@ interface Mensaje {
 // ─────────────────────────────────────────────
 const MENSAJE_BIENVENIDA: Mensaje = {
   role: 'model',
-  text: '¡Hola! Qué bueno encontrarte por acá. Soy el Asistente virtual de ITEC. ¿Te interesa conocer nuestros talleres para chicos, sumarte al Mapa Productivo de Saladillo o potenciar tu perfil laboral?',
+  text: '¡Hola! Qué bueno encontrarte por acá. Soy el Asistente virtual de ITEC. ¿Te interesa conocer la historia de Augusto Cicaré, sumarte al Mapa Productivo de Saladillo o potenciar tu perfil laboral?',
 };
 
 const SUGERENCIAS = [
-  '¿Qué es Peques ITEC?',
+  '¿Quién fue Augusto Cicaré?',
   'Quiero ser micro-sponsor',
   'Sumar mi PyME al Mapa',
   'Cargar mi perfil laboral',
@@ -209,8 +209,8 @@ export function AsistenteChat() {
           to   { opacity: 1; transform: translateY(0); }
         }
         @keyframes itec-btn-in {
-          from { opacity: 0; transform: scale(0.8) translateY(10px); }
-          to   { opacity: 1; transform: scale(1) translateY(0); }
+          from { opacity: 0; transform: scale(0.8) translateX(-10px); }
+          to   { opacity: 1; transform: scale(1) translateX(0); }
         }
         @keyframes itec-window-in {
           from { opacity: 0; transform: scale(0.95) translateY(12px); }
@@ -238,7 +238,7 @@ export function AsistenteChat() {
           id="asistente-itec-fab"
           aria-label="Abrir Asistente ITEC"
           onClick={() => setAbierto(true)}
-          className="itec-fab fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full flex items-center justify-center transition-transform duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
+          className="itec-fab fixed bottom-6 left-6 z-50 w-14 h-14 rounded-full flex items-center justify-center transition-transform duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
           style={{
             background: 'linear-gradient(135deg, #3b82f6, #06b6d4)',
             animation: 'itec-btn-in 0.4s cubic-bezier(0.34,1.56,0.64,1) both, itec-glow-pulse 3s ease-in-out 1.5s infinite',
@@ -260,7 +260,7 @@ export function AsistenteChat() {
         <div
           id="asistente-itec-ventana"
           ref={windowRef}
-          className="itec-chat-window fixed bottom-6 right-6 z-50 flex flex-col rounded-2xl overflow-hidden"
+          className="itec-chat-window fixed bottom-6 left-6 z-50 flex flex-col rounded-2xl overflow-hidden"
           style={{
             width: 'min(380px, calc(100vw - 2rem))',
             height: 'min(560px, calc(100vh - 6rem))',

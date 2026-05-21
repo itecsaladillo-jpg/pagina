@@ -17,6 +17,12 @@ export interface NewsFlash {
   media_urls: string[]
 }
 
+export interface RelatedVideo {
+  id: string
+  title: string
+  youtube_url: string
+}
+
 export interface PublicArticle {
   id: string
   created_at: string
@@ -28,6 +34,8 @@ export interface PublicArticle {
   is_published: boolean
   slug: string
   excerpt: string | null
+  related_video_id: string | null
+  related_video?: RelatedVideo | null
 }
 
 export async function getNewsFlashes(commissionId?: string): Promise<NewsFlash[]> {
@@ -73,7 +81,7 @@ export async function getPublicArticles(): Promise<PublicArticle[]> {
   const supabase = await createClient()
   const { data, error } = await supabase
     .from('public_articles')
-    .select('*')
+    .select('*, related_video:related_video_id(id, title, youtube_url)')
     .eq('is_published', true)
     .order('created_at', { ascending: false })
     .limit(10)
@@ -105,7 +113,9 @@ export async function getArticleBySlug(slug: string): Promise<PublicArticle | nu
   // Validar si el slug es un UUID para evitar errores de sintaxis en Supabase
   const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(slug)
   
-  let query = supabase.from('public_articles').select('*')
+  let query = supabase
+    .from('public_articles')
+    .select('*, related_video:related_video_id(id, title, youtube_url)')
   
   if (isUUID) {
     query = query.or(`slug.eq.${slug},id.eq.${slug}`)

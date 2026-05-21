@@ -1,7 +1,8 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { getArticleBySlug } from '@/services/news'
-import { Calendar, ChevronLeft, Zap, MessageSquare } from 'lucide-react'
+import { getYouTubeID, getYouTubeThumbnail } from '@/services/videos'
+import { Calendar, ChevronLeft, Zap, MessageSquare, PlayCircle, ExternalLink } from 'lucide-react'
 import Link from 'next/link'
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
@@ -88,6 +89,37 @@ export default async function ArticlePage({ params }: Props) {
             </div>
           </div>
         </article>
+
+        {/* Video relacionado */}
+        {article.related_video && (
+          <div className="pt-8">
+            <div className="flex items-start gap-6 p-6 rounded-3xl bg-amber-500/5 border border-amber-500/20 hover:border-amber-500/40 transition-all group">
+              {/* Miniatura YouTube */}
+              <div className="relative w-36 aspect-video rounded-xl overflow-hidden flex-shrink-0 bg-black border border-white/5">
+                <img
+                  src={getYouTubeThumbnail(article.related_video.youtube_url)}
+                  alt={article.related_video.title}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+                <div className="absolute inset-0 flex items-center justify-center bg-black/40 group-hover:bg-black/20 transition-colors">
+                  <PlayCircle size={28} className="text-amber-400" />
+                </div>
+              </div>
+              {/* Texto */}
+              <div className="flex flex-col justify-center gap-2 min-w-0">
+                <span className="text-[10px] text-amber-500 font-black uppercase tracking-[0.2em]">Video relacionado · Videoteca ITEC</span>
+                <p className="text-white font-bold text-sm leading-tight line-clamp-2">{article.related_video.title}</p>
+                <Link
+                  href={`/#videoteca`}
+                  className="inline-flex items-center gap-1.5 text-xs text-amber-400 hover:text-amber-300 font-bold transition-colors mt-1"
+                >
+                  <ExternalLink size={12} />
+                  Ver en la Videoteca
+                </Link>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Footer of article */}
         <div className="pt-12 border-t border-white/5">

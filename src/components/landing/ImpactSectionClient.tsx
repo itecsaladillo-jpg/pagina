@@ -2,10 +2,11 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Sparkles, Calendar, Zap, MessageSquare, ChevronRight } from 'lucide-react'
+import { Sparkles, Calendar, Zap, MessageSquare, ChevronRight, PlayCircle } from 'lucide-react'
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
 import Link from 'next/link'
+import { getYouTubeID } from '@/services/videos'
 
 interface ImpactCardProps {
   item: any
@@ -125,14 +126,14 @@ function ImpactCard({ item, idx }: ImpactCardProps) {
           {item.feedType === 'news' ? item.flash_text : getFirstParagraph(item.feedType === 'article' ? item.content : item.description)}
         </p>
 
-        <div className="mt-auto pt-3 border-t border-white/5">
+        <div className="mt-auto pt-3 border-t border-white/5 flex flex-col gap-2">
           {item.feedType === 'action' ? (
             <Link 
               href={`/acciones/${item.id}`}
               className="inline-flex items-center gap-2 text-xs font-bold text-blue-400 hover:text-blue-300 transition-colors group/link"
             >
               Saber más e inscribirme
-              <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" />
+              <ChevronRight size={14} className="group-hover/link:translate-x-1 transition-transform" />
             </Link>
           ) : item.feedType === 'article' ? (
              <Link 
@@ -140,12 +141,29 @@ function ImpactCard({ item, idx }: ImpactCardProps) {
               className="inline-flex items-center gap-2 text-xs font-bold text-blue-400 hover:text-blue-300 transition-colors group/link"
             >
               Leer historia completa
-              <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" />
+              <ChevronRight size={14} className="group-hover/link:translate-x-1 transition-transform" />
             </Link>
           ) : (
             <div className="text-[10px] text-blue-400/50 font-black uppercase tracking-[0.2em]">
               Noticia Institucional
             </div>
+          )}
+
+          {/* Link al video relacionado */}
+          {item.feedType === 'article' && item.related_video && (
+            <a
+              href={`/#videoteca`}
+              onClick={(e) => {
+                e.preventDefault()
+                const videoId = getYouTubeID(item.related_video.youtube_url)
+                window.location.href = `/#videoteca?video=${item.related_video.id}`
+              }}
+              className="inline-flex items-center gap-1.5 text-[10px] font-bold text-amber-400/80 hover:text-amber-300 transition-colors group/vlink"
+            >
+              <PlayCircle size={12} className="flex-shrink-0" />
+              Ver en Videoteca: <span className="truncate max-w-[140px]">{item.related_video.title}</span>
+              <ChevronRight size={10} className="group-hover/vlink:translate-x-0.5 transition-transform flex-shrink-0" />
+            </a>
           )}
         </div>
       </div>
