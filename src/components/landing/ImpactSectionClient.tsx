@@ -208,10 +208,10 @@ export function ImpactSectionClient({ news, actions, articles }: any) {
           </div>
         </div>
 
-        {/* Filas siguientes: 3 Cards por fila */}
+        {/* Filas siguientes: 3 Cards por fila — sin límite */}
         {feedItems.length > 2 && (
           <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-            {feedItems.slice(2, 8).map((item: any, idx: number) => (
+            {feedItems.slice(2).map((item: any, idx: number) => (
               <ImpactCard key={idx + 2} item={item} idx={idx + 2} />
             ))}
           </div>

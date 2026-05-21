@@ -46,7 +46,7 @@ export async function getNewsFlashes(commissionId?: string): Promise<NewsFlash[]
     .select('*')
     .eq('is_published', true)
     .order('created_at', { ascending: false })
-    .limit(20)
+    .limit(50)
 
   if (commissionId) {
     query = query.or(`commission_id.eq.${commissionId},commission_id.is.null`)
@@ -84,7 +84,7 @@ export async function getPublicArticles(): Promise<PublicArticle[]> {
     .select('*, related_video:related_video_id(id, title, youtube_url)')
     .eq('is_published', true)
     .order('created_at', { ascending: false })
-    .limit(10)
+    .limit(50)
 
   if (error) {
     console.error('[newsService] getPublicArticles error:', error.message)
