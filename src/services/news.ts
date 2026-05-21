@@ -80,7 +80,7 @@ export async function getPublicArticles(): Promise<PublicArticle[]> {
   const supabase = await createClient()
   const { data, error } = await supabase
     .from('public_articles')
-    .select('*, related_video:related_video_id(id, title, youtube_url)')
+    .select('*')
     .eq('is_published', true)
     .order('created_at', { ascending: false })
 
@@ -88,7 +88,33 @@ export async function getPublicArticles(): Promise<PublicArticle[]> {
     console.error('[newsService] getPublicArticles error:', error.message)
     return []
   }
-  return (data ?? []) as PublicArticle[]
+
+  const articles = (data ?? []) as any[]
+
+  // Intentar cargar la información del video de forma segura y tolerante a fallos
+  try {
+    const articlesWithVideoId = articles.filter(art => 'related_video_id' in art && art.related_video_id)
+    if (articlesWithVideoId.length > 0) {
+      const videoIds = articlesWithVideoId.map(art => art.related_video_id)
+      const { data: videosData, error: videoError } = await supabase
+        .from('videos')
+        .select('id, title, youtube_url')
+        .in('id', videoIds)
+      
+      if (!videoError && videosData && videosData.length > 0) {
+        const videoMap = new Map(videosData.map(v => [v.id, v]))
+        for (const art of articles) {
+          if (art.related_video_id && videoMap.has(art.related_video_id)) {
+            art.related_video = videoMap.get(art.related_video_id)
+          }
+        }
+      }
+    }
+  } catch (e) {
+    console.warn('[newsService] Fallback reading related videos failed (this is expected if migration 022 has not run yet):', e)
+  }
+
+  return articles as PublicArticle[]
 }
 
 export async function getAllArticles(): Promise<PublicArticle[]> {
@@ -113,7 +139,7 @@ export async function getArticleBySlug(slug: string): Promise<PublicArticle | nu
   
   let query = supabase
     .from('public_articles')
-    .select('*, related_video:related_video_id(id, title, youtube_url)')
+    .select('*')
   
   if (isUUID) {
     query = query.or(`slug.eq.${slug},id.eq.${slug}`)
@@ -127,5 +153,26 @@ export async function getArticleBySlug(slug: string): Promise<PublicArticle | nu
     console.error('[newsService] getArticleBySlug error:', error.message)
     return null
   }
-  return data as PublicArticle
+
+  if (!data) return null
+  const article = data as any
+
+  // Intentar cargar la información del video de forma segura y tolerante a fallos
+  try {
+    if ('related_video_id' in article && article.related_video_id) {
+      const { data: videoData, error: videoError } = await supabase
+        .from('videos')
+        .select('id, title, youtube_url')
+        .eq('id', article.related_video_id)
+        .maybeSingle()
+      
+      if (!videoError && videoData) {
+        article.related_video = videoData
+      }
+    }
+  } catch (e) {
+    console.warn('[newsService] Fallback reading related video failed (this is expected if migration 022 has not run yet):', e)
+  }
+
+  return article as PublicArticle
 }
