@@ -1,7 +1,56 @@
+'use client'
+
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
+import { createClient } from '@/lib/supabase/client'
 
 export function HeroSection() {
+  const [claseEnVivo, setClaseEnVivo] = useState(false)
+
+  useEffect(() => {
+    const supabase = createClient()
+
+    const checkClaseEnVivo = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('clases_virtuales')
+          .select('id')
+          .eq('en_vivo', true)
+          .limit(1)
+
+        if (!error && data && data.length > 0) {
+          setClaseEnVivo(true)
+        } else {
+          setClaseEnVivo(false)
+        }
+      } catch (err) {
+        console.error('Error al comprobar clase en vivo:', err)
+      }
+    }
+
+    checkClaseEnVivo()
+
+    const channel = supabase
+      .channel('clases_en_vivo_hero')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'clases_virtuales'
+        },
+        () => {
+          checkClaseEnVivo()
+        }
+      )
+      .subscribe()
+
+    return () => {
+      supabase.removeChannel(channel)
+    }
+  }, [])
+
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden bg-black grid-bg">
       
@@ -97,16 +146,25 @@ export function HeroSection() {
                 <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />
                 Mapa Productivo
               </Link>
-              <Link
-                href="/clases/demostracion"
-                className="text-[10px] uppercase tracking-wider py-1.5 px-4 rounded-full font-bold
-                  bg-gradient-to-r from-emerald-600/30 to-teal-600/20 border border-emerald-500/40
-                  text-emerald-300 hover:text-white hover:border-emerald-400 hover:from-emerald-600/50 hover:to-teal-600/30
-                  transition-all duration-200 flex items-center gap-1.5"
-              >
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                Aula Virtual (En Vivo)
-              </Link>
+              {claseEnVivo ? (
+                <Link
+                  href="/clases/demostracion"
+                  className="text-[10px] uppercase tracking-wider py-1.5 px-4 rounded-full font-bold
+                    bg-gradient-to-r from-red-600/30 to-rose-600/20 border border-red-500/40
+                    text-red-300 hover:text-white hover:border-red-400 hover:from-red-600/50 hover:to-rose-600/30
+                    transition-all duration-200 flex items-center gap-1.5 animate-pulse"
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-red-400 animate-pulse" />
+                  Aula Virtual (En Vivo)
+                </Link>
+              ) : (
+                <Link
+                  href="/clases/demostracion"
+                  className="btn-outline text-[10px] uppercase tracking-wider py-1.5 px-4 border-dashed opacity-70 hover:opacity-100 transition-all"
+                >
+                  Aula Virtual
+                </Link>
+              )}
               <Link href="/login" className="btn-outline text-[10px] uppercase tracking-wider py-1.5 px-4 border-dashed opacity-70 hover:opacity-100 transition-all">
                 Acceso Miembros
               </Link>

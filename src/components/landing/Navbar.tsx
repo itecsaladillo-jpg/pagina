@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
+import { createClient } from '@/lib/supabase/client'
 
 const navLinks = [
   { label: 'Acciones', href: '/#acciones' },
@@ -18,6 +19,7 @@ const navLinks = [
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
+  const [claseEnVivo, setClaseEnVivo] = useState(false)
   const pathname = usePathname()
 
   useEffect(() => {
@@ -25,6 +27,50 @@ export function Navbar() {
     window.addEventListener('scroll', onScroll)
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
+
+  useEffect(() => {
+    const supabase = createClient()
+
+    const checkClaseEnVivo = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('clases_virtuales')
+          .select('id')
+          .eq('en_vivo', true)
+          .limit(1)
+
+        if (!error && data && data.length > 0) {
+          setClaseEnVivo(true)
+        } else {
+          setClaseEnVivo(false)
+        }
+      } catch (err) {
+        console.error('Error al comprobar clase en vivo:', err)
+      }
+    }
+
+    checkClaseEnVivo()
+
+    const channel = supabase
+      .channel('clases_en_vivo_navbar')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'clases_virtuales'
+        },
+        () => {
+          checkClaseEnVivo()
+        }
+      )
+      .subscribe()
+
+    return () => {
+      supabase.removeChannel(channel)
+    }
+  }, [])
+
 
   const isHome = pathname === '/'
   const showSolidNavbar = !isHome || scrolled
@@ -98,16 +144,25 @@ export function Navbar() {
 
         {/* Desktop nav — Derecha (Acceso Miembros y Aula Virtual) */}
         <div className="hidden md:flex items-center gap-3">
-          <Link
-            href="/clases/demostracion"
-            className="text-[10px] uppercase tracking-wider py-1 px-4 rounded-full font-bold
-              bg-gradient-to-r from-emerald-600/30 to-teal-600/20 border border-emerald-500/40
-              text-emerald-300 hover:text-white hover:border-emerald-400 hover:from-emerald-600/50 hover:to-teal-600/30
-              transition-all duration-200 flex items-center justify-center gap-1.5 min-h-[44px] text-center w-[130px] whitespace-normal leading-tight animate-pulse"
-          >
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse flex-shrink-0" />
-            <span className="leading-tight">Aula Virtual</span>
-          </Link>
+          {claseEnVivo ? (
+            <Link
+              href="/clases/demostracion"
+              className="text-[10px] uppercase tracking-wider py-1 px-4 rounded-full font-bold
+                bg-gradient-to-r from-red-600/30 to-rose-600/20 border border-red-500/40
+                text-red-300 hover:text-white hover:border-red-400 hover:from-red-600/50 hover:to-rose-600/30
+                transition-all duration-200 flex items-center justify-center gap-1.5 min-h-[44px] text-center w-[130px] whitespace-normal leading-tight animate-pulse"
+            >
+              <span className="w-1.5 h-1.5 rounded-full bg-red-400 animate-pulse flex-shrink-0" />
+              <span className="leading-tight">Aula Virtual</span>
+            </Link>
+          ) : (
+            <Link
+              href="/clases/demostracion"
+              className="btn-outline text-[10px] uppercase tracking-wider py-1 px-4 border-dashed opacity-70 hover:opacity-100 transition-all flex items-center justify-center text-center min-h-[44px] w-[130px] whitespace-normal leading-tight"
+            >
+              <span className="leading-tight">Aula Virtual</span>
+            </Link>
+          )}
           <a
             href={navLinks[6].href}
             className="btn-outline text-[10px] uppercase tracking-wider py-1 px-4 border-dashed opacity-70 hover:opacity-100 transition-all flex items-center justify-center text-center min-h-[44px] w-[130px] whitespace-normal leading-tight"
@@ -152,15 +207,25 @@ export function Navbar() {
           >
             🗺️ Mapa Productivo
           </a>
-          <Link
-            href="/clases/demostracion"
-            onClick={() => setMenuOpen(false)}
-            className="text-xs py-2 px-4 w-full text-center rounded-full font-bold
-              bg-gradient-to-r from-emerald-600/30 to-teal-600/20 border border-emerald-500/40
-              text-emerald-300 hover:text-white transition-all"
-          >
-            🟢 Aula Virtual (En Vivo)
-          </Link>
+          {claseEnVivo ? (
+            <Link
+              href="/clases/demostracion"
+              onClick={() => setMenuOpen(false)}
+              className="text-xs py-2 px-4 w-full text-center rounded-full font-bold
+                bg-gradient-to-r from-red-600/30 to-rose-600/20 border border-red-500/40
+                text-red-300 hover:text-white transition-all"
+            >
+              🔴 Aula Virtual (En Vivo)
+            </Link>
+          ) : (
+            <Link
+              href="/clases/demostracion"
+              onClick={() => setMenuOpen(false)}
+              className="btn-outline text-xs py-2 px-4 w-full justify-center"
+            >
+              Aula Virtual
+            </Link>
+          )}
         </div>
       )}
     </nav>

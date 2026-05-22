@@ -32,6 +32,7 @@ interface ClaseVirtual {
   titulo: string
   url_stream: string
   estado_sidebar: 'chat' | 'modometro'
+  en_vivo?: boolean
 }
 
 interface AlumnoVoto {
@@ -129,7 +130,8 @@ export default function AulaVirtualPage() {
             id: claseId,
             titulo: 'Seminario Avanzado de Inteligencia Artificial y Machine Learning',
             url_stream: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
-            estado_sidebar: 'chat'
+            estado_sidebar: 'chat',
+            en_vivo: false
           }
           
           const { error: insertError } = await supabase
