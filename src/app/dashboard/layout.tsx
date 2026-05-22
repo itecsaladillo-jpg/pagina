@@ -48,6 +48,11 @@ const navItems = [
     href: '/dashboard/drive',
     icon: 'M2.25 15a4.5 4.5 0 0 0 4.5 4.5H18a3.75 3.75 0 0 0 .496-7.467 5.25 5.25 0 0 0-10.433-1.425 4.5 4.5 0 0 0-5.813 4.392Z',
   },
+  {
+    label: 'Mapa Productivo',
+    href: '/mapa-productivo',
+    icon: 'M9 6.75V15m6-6v8.25m.503 3.498 4.875-2.437c.381-.19.622-.58.622-1.006V4.82c0-.836-.88-1.38-1.628-1.006l-3.869 1.934c-.317.159-.69.159-1.006 0L9.503 3.252a1.125 1.125 0 0 0-1.006 0L3.622 5.689C3.24 5.88 3 6.27 3 6.695V19.18c0 .836.88 1.38 1.628 1.006l3.869-1.934c.317-.159.69-.159 1.006 0l4.994 2.497c.317.158.69.158 1.006 0Z',
+  },
 ]
 
 const adminNavItems = [
@@ -214,6 +219,26 @@ export default async function DashboardLayout({ children }: { children: React.Re
             </>
           )}
         </nav>
+
+        {/* Mapa Productivo — acceso rápido destacado */}
+        <div className="mx-3 mb-3">
+          <Link
+            href="/mapa-productivo"
+            className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl
+              bg-gradient-to-r from-blue-600/15 to-cyan-600/10
+              border border-blue-500/20 hover:border-blue-500/40
+              text-blue-300 hover:text-white transition-all duration-200 text-sm font-semibold"
+          >
+            <svg className="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 6.75V15m6-6v8.25m.503 3.498 4.875-2.437c.381-.19.622-.58.622-1.006V4.82c0-.836-.88-1.38-1.628-1.006l-3.869 1.934c-.317.159-.69.159-1.006 0L9.503 3.252a1.125 1.125 0 0 0-1.006 0L3.622 5.689C3.24 5.88 3 6.27 3 6.695V19.18c0 .836.88 1.38 1.628 1.006l3.869-1.934c.317-.159.69-.159 1.006 0l4.994 2.497c.317.158.69.158 1.006 0Z" />
+            </svg>
+            <div className="flex-1 min-w-0">
+              <p className="text-xs font-bold leading-none">Mapa Productivo</p>
+              <p className="text-[10px] text-blue-400/60 mt-0.5">Sector privado + escuelas</p>
+            </div>
+            <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse flex-shrink-0" />
+          </Link>
+        </div>
 
         {/* Signout */}
         <div className="p-3 border-t border-[var(--border-subtle)]">
