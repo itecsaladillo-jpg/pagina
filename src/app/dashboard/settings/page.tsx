@@ -22,7 +22,7 @@ export default async function SettingsPage() {
           Ajustes del Sitio
         </h1>
         <p className="text-[var(--text-secondary)] text-sm">
-          Administrá la identidad visual y las credenciales de integración del ITEC.
+          Administrá la identidad visual y las credenciales de integración de ITEC.
         </p>
       </div>
 

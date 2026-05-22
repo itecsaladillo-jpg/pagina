@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     template: '%s | ITEC Saladillo',
   },
   description:
-    'El ITEC Saladillo es una ONG de ciencia y tecnología de Saladillo, Buenos Aires. Capacitaciones, proyectos de innovación y vinculación comunitaria.',
+    'ITEC Saladillo es una ONG de ciencia y tecnología de Saladillo, Buenos Aires. Capacitaciones, proyectos de innovación y vinculación comunitaria.',
   keywords: ['ITEC', 'ITEC Saladillo', 'ciencia', 'tecnología', 'ONG', 'Saladillo', 'innovación', 'capacitación'],
   openGraph: {
     type: 'website',

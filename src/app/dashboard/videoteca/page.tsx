@@ -29,7 +29,7 @@ export default async function VideotecaAdminPage() {
       <div>
         <h1 className="text-3xl font-bold text-white mb-2">Gestión de Videoteca</h1>
         <p className="text-[var(--text-secondary)] text-sm">
-          Añadí y administrá los videos que se muestran en la sección pública del ITEC.
+          Añadí y administrá los videos que se muestran en la sección pública de ITEC.
         </p>
       </div>
 

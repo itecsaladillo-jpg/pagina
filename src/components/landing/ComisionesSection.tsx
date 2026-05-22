@@ -32,7 +32,7 @@ const comisiones = [
     color: 'from-emerald-500 to-teal-500',
     glow: 'rgba(16,185,129,0.3)',
     title: 'Vinculación Comunitaria',
-    description: 'Conectamos el ITEC con instituciones, empresas y organizaciones para generar impacto real en Saladillo y la región.',
+    description: 'Conectamos a ITEC con instituciones, empresas y organizaciones para generar impacto real en Saladillo y la región.',
     tags: ['Alianzas', 'Comunidad', 'Impacto', 'Redes'],
   },
   {
@@ -44,7 +44,7 @@ const comisiones = [
     color: 'from-amber-500 to-orange-500',
     glow: 'rgba(245,158,11,0.3)',
     title: 'Comunicación & Difusión',
-    description: 'Contamos la historia del ITEC al mundo: redes sociales, prensa, eventos y contenido que inspira vocaciones científicas.',
+    description: 'Contamos la historia de ITEC al mundo: redes sociales, prensa, eventos y contenido que inspira vocaciones científicas.',
     tags: ['Redes', 'Prensa', 'Eventos', 'Contenido'],
   },
 ]
@@ -62,7 +62,7 @@ export function ComisionesSection() {
             Nuestras <span className="text-gradient">Comisiones</span>
           </h2>
           <p className="text-[var(--text-secondary)] text-lg max-w-2xl mx-auto">
-            Cuatro ejes de trabajo colaborativo que articulan toda la actividad del ITEC
+            Cuatro ejes de trabajo colaborativo que articulan toda la actividad de ITEC
           </p>
         </div>
 

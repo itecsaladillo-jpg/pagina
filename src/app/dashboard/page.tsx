@@ -20,7 +20,7 @@ export default async function DashboardPage() {
           Hola, {member.full_name.split(' ')[0]} 👋
         </h1>
         <p className="text-[var(--text-secondary)] text-sm">
-          Bienvenido al panel de control del ITEC Saladillo
+          Bienvenido al panel de control de ITEC Saladillo
         </p>
       </div>
 
@@ -70,6 +70,8 @@ export default async function DashboardPage() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           {[
             { label: 'Mis capacitaciones', href: '/dashboard/capacitaciones', color: 'blue' },
+            { label: 'Aula Virtual', href: '/clases/demostracion', color: 'emerald' },
+            { label: 'Pasaporte Digital', href: '/dashboard/certificados', color: 'indigo' },
             { label: 'Mis comisiones', href: '/dashboard/comisiones', color: 'cyan' },
             { label: 'Buzón de ideas', href: '/dashboard/ideas', color: 'green' },
             { label: 'Nube de Archivos', href: '/dashboard/drive', color: 'blue' },

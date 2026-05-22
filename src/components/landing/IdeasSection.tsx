@@ -17,7 +17,7 @@ export function IdeasSection() {
         <h2 className="text-4xl md:text-6xl font-black text-white mb-6 leading-tight">
           Tu idea puede ser{' '}
           <span className="text-gradient">el próximo proyecto</span>{' '}
-          del ITEC
+          de ITEC
         </h2>
 
         <p className="text-[var(--text-secondary)] text-lg leading-relaxed mb-10 max-w-2xl mx-auto">

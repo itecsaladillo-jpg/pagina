@@ -60,6 +60,30 @@ function TypingIndicator() {
 }
 
 // ─────────────────────────────────────────────
+// Función para parsear texto básico de Markdown (negritas y saltos de línea)
+// ─────────────────────────────────────────────
+function renderizarContenidoChat(texto: string) {
+  const lineas = texto.split('\n');
+  return lineas.map((linea, indexLinea) => {
+    // Buscar patrones de negrita **texto**
+    const partes = linea.split(/\*\*([\s\S]*?)\*\*/g);
+    const elementosLinea = partes.map((parte, indexParte) => {
+      // Las partes impares son el contenido dentro de **
+      if (indexParte % 2 === 1) {
+        return <strong key={indexParte} className="font-extrabold text-white">{parte}</strong>;
+      }
+      return parte;
+    });
+
+    return (
+      <span key={indexLinea} className="block min-h-[1.2em]">
+        {elementosLinea}
+      </span>
+    );
+  });
+}
+
+// ─────────────────────────────────────────────
 // Sub-componente: Burbuja de mensaje
 // ─────────────────────────────────────────────
 function BurbujaMensaje({ msg, index }: { msg: Mensaje; index: number }) {
@@ -67,7 +91,8 @@ function BurbujaMensaje({ msg, index }: { msg: Mensaje; index: number }) {
 
   return (
     <div
-      className={`flex items-end gap-2 mb-3 ${esAsistente ? '' : 'flex-row-reverse'}`}
+      data-role={msg.role}
+      className={`mensaje-bubble flex items-end gap-2 mb-3 ${esAsistente ? '' : 'flex-row-reverse'}`}
       style={{
         animation: 'itec-msg-in 0.3s ease-out both',
         animationDelay: `${Math.min(index * 0.05, 0.3)}s`,
@@ -101,20 +126,23 @@ function BurbujaMensaje({ msg, index }: { msg: Mensaje; index: number }) {
               border: '1px solid rgba(59,130,246,0.2)',
               borderRadius: '1rem 1rem 1rem 0.25rem',
               color: '#e2e8f0',
+              whiteSpace: 'pre-wrap',
             }
             : {
               background: 'rgba(100,116,139,0.2)',
               border: '1px solid rgba(100,116,139,0.25)',
               borderRadius: '1rem 1rem 0.25rem 1rem',
               color: '#cbd5e1',
+              whiteSpace: 'pre-wrap',
             }
         }
       >
-        {msg.text}
+        {renderizarContenidoChat(msg.text)}
       </div>
     </div>
   );
 }
+
 
 // ─────────────────────────────────────────────
 // Componente principal
@@ -126,18 +154,119 @@ export function AsistenteChat() {
   const [isPending, setIsPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Estados de feedback y auto-aprendizaje
+  const [pantalla, setPantalla] = useState<'chat' | 'feedback'>('chat');
+  const [calificacion, setCalificacion] = useState<string | null>(null);
+  const [feedbackComentario, setFeedbackComentario] = useState('');
+  const [enviandoFeedback, setEnviandoFeedback] = useState(false);
+  const [feedbackEnviado, setFeedbackEnviado] = useState(false);
+
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const windowRef = useRef<HTMLDivElement>(null);
 
+  // Función para resetear completamente el chat
+  const resetearChat = useCallback(() => {
+    setPantalla('chat');
+    setMensajes([MENSAJE_BIENVENIDA]);
+    setInputValor('');
+    setCalificacion(null);
+    setFeedbackComentario('');
+    setFeedbackEnviado(false);
+    setError(null);
+  }, []);
+
+  // Enviar feedback brindado activamente
+  const enviarFeedback = async () => {
+    if (!calificacion || enviandoFeedback) return;
+
+    setEnviandoFeedback(true);
+    setError(null);
+
+    try {
+      const res = await fetch('/api/asistente/feedback', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          historial: mensajes.filter((m) => m !== MENSAJE_BIENVENIDA),
+          calificacion,
+          comentario: feedbackComentario,
+        }),
+      });
+
+      if (!res.ok) {
+        throw new Error('Error al enviar el feedback al servidor.');
+      }
+
+      setFeedbackEnviado(true);
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'Ocurrió un error inesperado.';
+      setError(msg);
+    } finally {
+      setEnviandoFeedback(false);
+    }
+  };
+
+  // Guardar que el usuario cerró el chat sin feedback explícito
+  const enviarFeedbackSilencioso = async () => {
+    setAbierto(false);
+    resetearChat();
+
+    // Enviamos el feedback silencioso en segundo plano sin interrumpir al usuario
+    try {
+      await fetch('/api/asistente/feedback', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          historial: mensajes.filter((m) => m !== MENSAJE_BIENVENIDA),
+          calificacion: 'cerrado_sin_feedback',
+        }),
+      });
+    } catch {
+      // Ignorar errores silenciosos en llamadas de fondo
+    }
+  };
+
   // Auto-scroll al último mensaje
   useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollTo({
-        top: scrollRef.current.scrollHeight,
-        behavior: 'smooth',
-      });
-    }
+    if (!scrollRef.current) return;
+    
+    const container = scrollRef.current;
+    
+    // Usamos un pequeño temporizador para esperar a que el DOM se actualice por completo
+    const timer = setTimeout(() => {
+      const bubbleElements = container.querySelectorAll('.mensaje-bubble');
+      if (bubbleElements.length > 0) {
+        const lastBubble = bubbleElements[bubbleElements.length - 1] as HTMLElement;
+        const lastRole = lastBubble.getAttribute('data-role');
+
+        if (lastRole === 'model') {
+          // Si el último mensaje es del asistente, hacemos scroll hasta el inicio de esa burbuja
+          // en lugar del final absoluto del scroll.
+          const containerTop = container.getBoundingClientRect().top;
+          const bubbleTop = lastBubble.getBoundingClientRect().top;
+          const targetScrollTop = container.scrollTop + (bubbleTop - containerTop) - 12; // 12px de margen superior
+
+          container.scrollTo({
+            top: Math.max(0, targetScrollTop),
+            behavior: 'smooth',
+          });
+        } else {
+          // Si es del usuario, scrolleamos hasta el fondo para ver su mensaje e indicador
+          container.scrollTo({
+            top: container.scrollHeight,
+            behavior: 'smooth',
+          });
+        }
+      } else {
+        container.scrollTo({
+          top: container.scrollHeight,
+          behavior: 'smooth',
+        });
+      }
+    }, 100);
+
+    return () => clearTimeout(timer);
   }, [mensajes, isPending]);
 
   // Focus en el input al abrir
@@ -312,152 +441,338 @@ export function AsistenteChat() {
               </div>
             </div>
 
-            {/* Botón cerrar */}
-            <button
-              id="asistente-itec-cerrar"
-              aria-label="Cerrar chat"
-              onClick={() => setAbierto(false)}
-              className="w-7 h-7 rounded-full flex items-center justify-center transition-colors duration-150 hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
-              style={{ color: '#64748b' }}
-            >
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-          </div>
-
-          {/* ── Área de mensajes ── */}
-          <div
-            ref={scrollRef}
-            className="flex-1 overflow-y-auto px-4 py-4 custom-scrollbar"
-            style={{ overscrollBehavior: 'contain' }}
-          >
-            {mensajes.map((msg, i) => (
-              <BurbujaMensaje key={i} msg={msg} index={i} />
-            ))}
-            {isPending && <TypingIndicator />}
-
-            {/* Error inline */}
-            {error && (
-              <div
-                className="text-xs px-3 py-2 rounded-lg mb-3 flex items-start gap-2"
-                style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.25)', color: '#fca5a5' }}
-              >
-                <svg className="w-3.5 h-3.5 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
-                </svg>
-                <span>{error}</span>
-              </div>
-            )}
-          </div>
-
-          {/* ── Sugerencias rápidas (solo si no hay historial extenso) ── */}
-          {mensajes.length <= 1 && !isPending && (
-            <div
-              className="flex gap-1.5 px-4 pb-2 flex-wrap flex-shrink-0"
-              style={{ borderTop: '1px solid rgba(59,130,246,0.08)' }}
-            >
-              {SUGERENCIAS.map((s) => (
+            <div className="flex items-center gap-1.5">
+              {/* Botón Finalizar Consulta (visible si hay intercambio y estamos en pantalla chat) */}
+              {pantalla === 'chat' && mensajes.length > 1 && (
                 <button
-                  key={s}
-                  onClick={() => enviarMensaje(s)}
-                  className="text-[10px] px-2.5 py-1 rounded-full transition-all duration-150 whitespace-nowrap mt-2"
+                  id="asistente-itec-finalizar"
+                  onClick={() => setPantalla('feedback')}
+                  className="px-2.5 py-1 rounded-lg text-[10px] font-semibold flex items-center gap-1 transition-all duration-150 hover:bg-blue-500/20 active:scale-95 cursor-pointer"
                   style={{
-                    background: 'rgba(59,130,246,0.08)',
-                    border: '1px solid rgba(59,130,246,0.2)',
                     color: '#60a5fa',
+                    border: '1px solid rgba(59,130,246,0.3)',
+                    background: 'rgba(59,130,246,0.06)'
                   }}
-                  onMouseEnter={(e) => {
-                    (e.currentTarget as HTMLButtonElement).style.background = 'rgba(59,130,246,0.18)';
+                  title="Finalizar consulta y dar feedback"
+                >
+                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                  </svg>
+                  <span>Finalizar</span>
+                </button>
+              )}
+
+              {/* Botón cerrar */}
+              <button
+                id="asistente-itec-cerrar"
+                aria-label="Cerrar chat"
+                onClick={() => {
+                  if (pantalla === 'chat' && mensajes.length > 1) {
+                    setPantalla('feedback');
+                  } else {
+                    setAbierto(false);
+                    resetearChat();
+                  }
+                }}
+                className="w-7 h-7 rounded-full flex items-center justify-center transition-colors duration-150 hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 cursor-pointer"
+                style={{ color: '#64748b' }}
+              >
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          {pantalla === 'chat' ? (
+            <>
+              {/* ── Área de mensajes ── */}
+              <div
+                ref={scrollRef}
+                className="flex-1 overflow-y-auto px-4 py-4 custom-scrollbar"
+                style={{ overscrollBehavior: 'contain' }}
+              >
+                {mensajes.map((msg, i) => (
+                  <BurbujaMensaje key={i} msg={msg} index={i} />
+                ))}
+                {isPending && <TypingIndicator />}
+
+                {/* Error inline */}
+                {error && (
+                  <div
+                    className="text-xs px-3 py-2 rounded-lg mb-3 flex items-start gap-2"
+                    style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.25)', color: '#fca5a5' }}
+                  >
+                    <svg className="w-3.5 h-3.5 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+                    </svg>
+                    <span>{error}</span>
+                  </div>
+                )}
+              </div>
+
+              {/* ── Sugerencias rápidas (solo si no hay historial extenso) ── */}
+              {mensajes.length <= 1 && !isPending && (
+                <div
+                  className="flex gap-1.5 px-4 pb-2 flex-wrap flex-shrink-0"
+                  style={{ borderTop: '1px solid rgba(59,130,246,0.08)' }}
+                >
+                  {SUGERENCIAS.map((s) => (
+                    <button
+                      key={s}
+                      onClick={() => enviarMensaje(s)}
+                      className="text-[10px] px-2.5 py-1 rounded-full transition-all duration-150 whitespace-nowrap mt-2 cursor-pointer"
+                      style={{
+                        background: 'rgba(59,130,246,0.08)',
+                        border: '1px solid rgba(59,130,246,0.2)',
+                        color: '#60a5fa',
+                      }}
+                      onMouseEnter={(e) => {
+                        (e.currentTarget as HTMLButtonElement).style.background = 'rgba(59,130,246,0.18)';
+                      }}
+                      onMouseLeave={(e) => {
+                        (e.currentTarget as HTMLButtonElement).style.background = 'rgba(59,130,246,0.08)';
+                      }}
+                    >
+                      {s}
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              {/* ── Input ── */}
+              <div
+                className="flex items-end gap-2 px-3 pb-3 pt-2 flex-shrink-0"
+                style={{ borderTop: '1px solid rgba(59,130,246,0.12)' }}
+              >
+                <textarea
+                  id="asistente-itec-input"
+                  ref={inputRef}
+                  rows={1}
+                  value={inputValor}
+                  onChange={(e) => setInputValor(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  placeholder="Escribí tu consulta..."
+                  disabled={isPending}
+                  className="flex-1 resize-none text-sm py-2.5 px-3 rounded-xl outline-none transition-colors duration-150 leading-relaxed"
+                  style={{
+                    background: 'rgba(15,23,41,0.8)',
+                    border: '1px solid rgba(59,130,246,0.18)',
+                    color: '#e2e8f0',
+                    minHeight: '42px',
+                    maxHeight: '96px',
+                    caretColor: '#60a5fa',
+                    scrollbarWidth: 'none',
                   }}
-                  onMouseLeave={(e) => {
-                    (e.currentTarget as HTMLButtonElement).style.background = 'rgba(59,130,246,0.08)';
+                  onInput={(e) => {
+                    const t = e.currentTarget;
+                    t.style.height = 'auto';
+                    t.style.height = `${Math.min(t.scrollHeight, 96)}px`;
+                  }}
+                  onFocus={(e) => {
+                    e.currentTarget.style.borderColor = 'rgba(59,130,246,0.5)';
+                  }}
+                  onBlur={(e) => {
+                    e.currentTarget.style.borderColor = 'rgba(59,130,246,0.18)';
+                  }}
+                />
+
+                {/* Botón enviar */}
+                <button
+                  id="asistente-itec-enviar"
+                  aria-label="Enviar mensaje"
+                  onClick={() => enviarMensaje()}
+                  disabled={isPending || !inputValor.trim()}
+                  className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 transition-all duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
+                  style={{
+                    background:
+                      isPending || !inputValor.trim()
+                        ? 'rgba(59,130,246,0.15)'
+                        : 'linear-gradient(135deg, #3b82f6, #06b6d4)',
+                    cursor: isPending || !inputValor.trim() ? 'not-allowed' : 'pointer',
+                    boxShadow:
+                      !isPending && inputValor.trim()
+                        ? '0 4px 15px rgba(59,130,246,0.35)'
+                        : 'none',
                   }}
                 >
-                  {s}
+                  {isPending ? (
+                    <svg className="w-4 h-4 animate-spin" style={{ color: '#60a5fa' }} fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path className="opacity-75" fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                    </svg>
+                  ) : (
+                    <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round"
+                        d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
+                    </svg>
+                  )}
                 </button>
-              ))}
+              </div>
+
+              {/* ── Footer con branding ── */}
+              <div className="text-center pb-2 flex-shrink-0">
+                <span className="text-[9px]" style={{ color: '#334155' }}>
+                  Powered by{' '}
+                  <span style={{ color: '#475569' }}>Gemini · ITEC Saladillo</span>
+                </span>
+              </div>
+            </>
+          ) : (
+            /* ── Pantalla de Feedback Interactiva ── */
+            <div 
+              className="flex-1 flex flex-col justify-between p-5 overflow-y-auto"
+              style={{ animation: 'itec-window-in 0.2s ease-out both' }}
+            >
+              <div className="flex-1 flex flex-col justify-center">
+                {/* Cabecera de feedback */}
+                <div className="text-center mb-6">
+                  <div className="w-11 h-11 rounded-full flex items-center justify-center mx-auto mb-3"
+                    style={{ background: 'rgba(59,130,246,0.1)', border: '1px solid rgba(59,130,246,0.2)' }}>
+                    <svg className="w-5 h-5 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" 
+                        d="M11.48 3.499c-.196-.399-.778-.399-.974 0L7.93 7.848l-4.81.362c-.452.034-.633.597-.291.905l3.58 3.238-1.012 4.73c-.095.447.382.793.766.556L10 15.234l4.135 2.148c.384.237.86-.109.767-.556l-1.012-4.73 3.58-3.238c.34-.308.16-.871-.291-.905l-4.81-.362-2.58-4.349z" />
+                    </svg>
+                  </div>
+                  <h3 className="text-sm font-semibold text-slate-200">¿Te resultó útil la conversación?</h3>
+                  <p className="text-[10px] text-slate-400 mt-1">Ayudanos a mejorar la atención del Asistente ITEC</p>
+                </div>
+
+                {/* Calificaciones */}
+                {!feedbackEnviado ? (
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-2 gap-2">
+                      {[
+                        { id: 'muy_util', label: 'Muy útil', emoji: '😄', color: 'rgba(34,197,94,0.12)', borderColor: 'rgba(34,197,94,0.3)', textColor: '#4ade80' },
+                        { id: 'util', label: 'Útil', emoji: '🙂', color: 'rgba(59,130,246,0.12)', borderColor: 'rgba(59,130,246,0.3)', textColor: '#60a5fa' },
+                        { id: 'neutral', label: 'Neutral', emoji: '😐', color: 'rgba(100,116,139,0.12)', borderColor: 'rgba(100,116,139,0.3)', textColor: '#94a3b8' },
+                        { id: 'poco_util', label: 'Poco útil', emoji: '🙁', color: 'rgba(239,68,68,0.12)', borderColor: 'rgba(239,68,68,0.3)', textColor: '#fca5a5' }
+                      ].map((item) => {
+                        const seleccionado = calificacion === item.id;
+                        return (
+                          <button
+                            key={item.id}
+                            onClick={() => setCalificacion(item.id)}
+                            className="flex items-center gap-2 p-2.5 rounded-xl text-xs transition-all duration-200 text-left cursor-pointer border hover:scale-[1.02] active:scale-95"
+                            style={{
+                              background: seleccionado ? item.color : 'rgba(15,23,41,0.5)',
+                              borderColor: seleccionado ? item.textColor : 'rgba(59,130,246,0.1)',
+                              color: seleccionado ? item.textColor : '#94a3b8',
+                              boxShadow: seleccionado ? `0 0 10px ${item.color}` : 'none'
+                            }}
+                          >
+                            <span className="text-base">{item.emoji}</span>
+                            <span className="font-semibold text-[11px]">{item.label}</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+
+                    {/* Comentarios */}
+                    {calificacion && (
+                      <div style={{ animation: 'itec-msg-in 0.2s ease-out both' }}>
+                        <label htmlFor="feedback-textarea" className="block text-[10px] text-slate-400 mb-1 font-medium">
+                          Comentario opcional:
+                        </label>
+                        <textarea
+                          id="feedback-textarea"
+                          rows={2}
+                          value={feedbackComentario}
+                          onChange={(e) => setFeedbackComentario(e.target.value)}
+                          placeholder="¿Qué te sirvió más o qué podríamos mejorar?"
+                          className="w-full text-xs py-2 px-3 rounded-xl outline-none transition-colors duration-150 leading-relaxed resize-none"
+                          style={{
+                            background: 'rgba(15,23,41,0.8)',
+                            border: '1px solid rgba(59,130,246,0.18)',
+                            color: '#e2e8f0',
+                            caretColor: '#60a5fa',
+                          }}
+                          onFocus={(e) => {
+                            e.currentTarget.style.borderColor = 'rgba(59,130,246,0.5)';
+                          }}
+                          onBlur={(e) => {
+                            e.currentTarget.style.borderColor = 'rgba(59,130,246,0.18)';
+                          }}
+                        />
+                      </div>
+                    )}
+
+                    {/* Error de envío */}
+                    {error && (
+                      <div className="text-[10px] px-2.5 py-1.5 rounded-lg flex items-center gap-1.5"
+                        style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.2)', color: '#fca5a5' }}>
+                        <span>⚠️ {error}</span>
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  /* Éxito */
+                  <div className="text-center py-6" style={{ animation: 'itec-msg-in 0.25s ease-out both' }}>
+                    <div className="w-10 h-10 rounded-full bg-green-500/10 border border-green-500/30 flex items-center justify-center mx-auto mb-3">
+                      <svg className="w-5 h-5 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                      </svg>
+                    </div>
+                    <h4 className="text-xs font-bold text-green-400">¡Muchas gracias!</h4>
+                    <p className="text-[10px] text-slate-400 mt-1 px-4 leading-relaxed">
+                      Tu valoración ayuda a que el Asistente ITEC aprenda y asista mejor a toda la comunidad.
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              {/* Botones de acción de feedback */}
+              <div className="flex gap-2 mt-6 flex-shrink-0" style={{ borderTop: '1px solid rgba(59,130,246,0.1)', paddingTop: '14px' }}>
+                {!feedbackEnviado ? (
+                  <>
+                    <button
+                      onClick={() => enviarFeedback()}
+                      disabled={enviandoFeedback || !calificacion}
+                      className="flex-1 h-9 rounded-xl font-bold text-xs text-white flex items-center justify-center transition-all duration-150 cursor-pointer"
+                      style={{
+                        background: !calificacion || enviandoFeedback 
+                          ? 'rgba(59,130,246,0.1)' 
+                          : 'linear-gradient(135deg, #3b82f6, #06b6d4)',
+                        cursor: !calificacion || enviandoFeedback ? 'not-allowed' : 'pointer',
+                        boxShadow: calificacion && !enviandoFeedback ? '0 4px 12px rgba(59,130,246,0.3)' : 'none',
+                        color: !calificacion || enviandoFeedback ? '#475569' : 'white'
+                      }}
+                    >
+                      {enviandoFeedback ? (
+                        <svg className="w-3.5 h-3.5 animate-spin" style={{ color: '#60a5fa' }} fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                          <path className="opacity-75" fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                        </svg>
+                      ) : (
+                        'Enviar y cerrar'
+                      )}
+                    </button>
+                    <button
+                      onClick={() => enviarFeedbackSilencioso()}
+                      disabled={enviandoFeedback}
+                      className="px-3 h-9 rounded-xl text-xs font-semibold transition-colors duration-150 hover:bg-white/5 cursor-pointer text-slate-400"
+                      style={{ border: '1px solid rgba(100,116,139,0.2)' }}
+                    >
+                      Solo cerrar
+                    </button>
+                  </>
+                ) : (
+                  <button
+                    onClick={() => {
+                      setAbierto(false);
+                      resetearChat();
+                    }}
+                    className="flex-1 h-9 rounded-xl font-bold text-xs text-white flex items-center justify-center cursor-pointer"
+                    style={{ background: 'linear-gradient(135deg, #3b82f6, #06b6d4)' }}
+                  >
+                    Cerrar ventana
+                  </button>
+                )}
+              </div>
             </div>
           )}
-
-          {/* ── Input ── */}
-          <div
-            className="flex items-end gap-2 px-3 pb-3 pt-2 flex-shrink-0"
-            style={{ borderTop: '1px solid rgba(59,130,246,0.12)' }}
-          >
-            <textarea
-              id="asistente-itec-input"
-              ref={inputRef}
-              rows={1}
-              value={inputValor}
-              onChange={(e) => setInputValor(e.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder="Escribí tu consulta..."
-              disabled={isPending}
-              className="flex-1 resize-none text-sm py-2.5 px-3 rounded-xl outline-none transition-colors duration-150 leading-relaxed"
-              style={{
-                background: 'rgba(15,23,41,0.8)',
-                border: '1px solid rgba(59,130,246,0.18)',
-                color: '#e2e8f0',
-                minHeight: '42px',
-                maxHeight: '96px',
-                caretColor: '#60a5fa',
-                scrollbarWidth: 'none',
-              }}
-              onInput={(e) => {
-                const t = e.currentTarget;
-                t.style.height = 'auto';
-                t.style.height = `${Math.min(t.scrollHeight, 96)}px`;
-              }}
-              onFocus={(e) => {
-                e.currentTarget.style.borderColor = 'rgba(59,130,246,0.5)';
-              }}
-              onBlur={(e) => {
-                e.currentTarget.style.borderColor = 'rgba(59,130,246,0.18)';
-              }}
-            />
-
-            {/* Botón enviar */}
-            <button
-              id="asistente-itec-enviar"
-              aria-label="Enviar mensaje"
-              onClick={() => enviarMensaje()}
-              disabled={isPending || !inputValor.trim()}
-              className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 transition-all duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
-              style={{
-                background:
-                  isPending || !inputValor.trim()
-                    ? 'rgba(59,130,246,0.15)'
-                    : 'linear-gradient(135deg, #3b82f6, #06b6d4)',
-                cursor: isPending || !inputValor.trim() ? 'not-allowed' : 'pointer',
-                boxShadow:
-                  !isPending && inputValor.trim()
-                    ? '0 4px 15px rgba(59,130,246,0.35)'
-                    : 'none',
-              }}
-            >
-              {isPending ? (
-                <svg className="w-4 h-4 animate-spin" style={{ color: '#60a5fa' }} fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                  <path className="opacity-75" fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                </svg>
-              ) : (
-                <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round"
-                    d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
-                </svg>
-              )}
-            </button>
-          </div>
-
-          {/* ── Footer con branding ── */}
-          <div className="text-center pb-2 flex-shrink-0">
-            <span className="text-[9px]" style={{ color: '#334155' }}>
-              Powered by{' '}
-              <span style={{ color: '#475569' }}>Gemini · ITEC Saladillo</span>
-            </span>
-          </div>
         </div>
       )}
     </>

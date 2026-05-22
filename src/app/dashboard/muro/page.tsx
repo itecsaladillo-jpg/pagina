@@ -48,7 +48,7 @@ export default async function MuroPage() {
             <h1 className="text-2xl font-bold text-white">Muro de Noticias</h1>
           </div>
           <p className="text-[var(--text-secondary)] text-sm">
-            Resúmenes e información generada por IA sobre las actividades del ITEC
+            Resúmenes e información generada por IA sobre las actividades de ITEC
           </p>
         </div>
 

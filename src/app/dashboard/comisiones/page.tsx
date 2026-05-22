@@ -27,7 +27,7 @@ export default async function ComisionesAdminPage() {
         <div>
           <h1 className="text-3xl font-bold text-white mb-2">Comisiones</h1>
           <p className="text-[var(--text-secondary)] text-sm">
-            Gestioná los grupos de trabajo y áreas operativas del ITEC.
+            Gestioná los grupos de trabajo y áreas operativas de ITEC.
           </p>
         </div>
         <CreateCommissionForm />

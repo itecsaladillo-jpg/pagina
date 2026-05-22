@@ -1,5 +1,5 @@
 /**
- * Configuración de carpetas de Google Drive por comisión del ITEC.
+ * Configuración de carpetas de Google Drive por comisión de ITEC.
  * Reemplazar los IDs con los reales de tu Google Drive.
  */
 

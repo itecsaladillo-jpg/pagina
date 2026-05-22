@@ -12,7 +12,7 @@ export default async function PerfilPage() {
       <div className="border-b border-[var(--border-subtle)] pb-6">
         <h1 className="text-3xl font-bold text-white mb-2">Mi Perfil</h1>
         <p className="text-[var(--text-secondary)] text-sm">
-          Gestiona tus datos personales y de contacto en el ITEC Saladillo.
+          Gestiona tus datos personales y de contacto en ITEC Saladillo.
         </p>
       </div>
 

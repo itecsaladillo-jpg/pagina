@@ -44,7 +44,7 @@ export function ActionRegistrationForm({ actionId, capacity }: Props) {
         <CheckCircle2 size={48} className="mx-auto text-green-400" />
         <h3 className="text-xl font-bold text-white">¡Inscripción Exitosa!</h3>
         <p className="text-[var(--text-muted)] text-sm">
-          Te enviamos un correo con los detalles. ¡Nos vemos en el ITEC!
+          Te enviamos un correo con los detalles. ¡Nos vemos en ITEC!
         </p>
       </div>
     )

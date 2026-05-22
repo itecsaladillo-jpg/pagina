@@ -87,7 +87,7 @@ export function SponsorsAdmin({ initialSponsors, initialAcciones }: Props) {
 
   const TABS = [
     { id: 'sponsors', label: 'Socios Estratégicos', count: sponsors.length },
-    { id: 'acciones', label: 'Acciones del ITEC', count: acciones.length },
+    { id: 'acciones', label: 'Acciones de ITEC', count: acciones.length },
     { id: 'reportes', label: 'Generar Reporte', count: null },
   ]
 

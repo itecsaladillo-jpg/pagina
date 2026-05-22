@@ -49,7 +49,7 @@ export function ActionManagementList({ actions: initialActions }: ActionManageme
             <Calendar className="text-purple-400" size={24} />
             Gestión de Acciones (Capacitaciones/Eventos)
           </h2>
-          <p className="text-[var(--text-muted)] text-sm mt-1">Administrá las actividades públicas del ITEC</p>
+          <p className="text-[var(--text-muted)] text-sm mt-1">Administrá las actividades públicas de ITEC</p>
         </div>
         <div className="px-4 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-400 text-[10px] font-black uppercase tracking-widest">
           {actions.length} Acciones

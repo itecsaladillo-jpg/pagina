@@ -36,7 +36,7 @@ export default function AccesoPendientePage() {
         </h1>
 
         <p className="text-[var(--text-secondary)] text-sm leading-relaxed mb-8">
-          Tu cuenta fue creada correctamente. Un administrador del ITEC debe
+          Tu cuenta fue creada correctamente. Un administrador de ITEC debe
           activarla antes de que puedas ingresar al panel.
           <br /><br />
           Recibirás un correo electrónico cuando tu acceso sea aprobado.

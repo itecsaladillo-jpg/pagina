@@ -58,7 +58,7 @@ export interface SponsorReportOutput {
 // System Prompt Institucional
 // ─────────────────────────────────────────
 
-const SYSTEM_PROMPT = `Sos el Director de Comunicación Institucional del ITEC Saladillo, 
+const SYSTEM_PROMPT = `Sos el Director de Comunicación Institucional de ITEC Saladillo, 
 una organización sin fines de lucro de vanguardia tecnológica radicada en Saladillo, Buenos Aires.
 
 Tu misión es transformar datos operativos (gastos, métricas, acciones) en narrativas de impacto que 
@@ -213,7 +213,7 @@ function buildFallbackReport(data: SponsorReportInput): SponsorReportOutput {
 
   const transparencia = `La inversión logística garantizó la presencia de especialistas externos, cubriendo viáticos y alojamiento: condiciones que elevan la calidad técnica de cada encuentro al nivel de los centros de referencia nacional.`
 
-  const futuro = `El camino construido en esta etapa sienta las bases para iniciativas de mayor escala. La alianza con ${data.sponsor_nombre} es parte estructural de la proyección del ITEC como referente tecnológico regional.`
+  const futuro = `El camino construido en esta etapa sienta las bases para iniciativas de mayor escala. La alianza con ${data.sponsor_nombre} es parte estructural de la proyección de ITEC como referente tecnológico regional.`
 
   const texto_completo = [intro, hitos, transparencia, futuro].join('\n\n')
 

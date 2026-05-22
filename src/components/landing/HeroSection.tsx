@@ -97,6 +97,16 @@ export function HeroSection() {
                 <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />
                 Mapa Productivo
               </Link>
+              <Link
+                href="/clases/demostracion"
+                className="text-[10px] uppercase tracking-wider py-1.5 px-4 rounded-full font-bold
+                  bg-gradient-to-r from-emerald-600/30 to-teal-600/20 border border-emerald-500/40
+                  text-emerald-300 hover:text-white hover:border-emerald-400 hover:from-emerald-600/50 hover:to-teal-600/30
+                  transition-all duration-200 flex items-center gap-1.5"
+              >
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                Aula Virtual (En Vivo)
+              </Link>
               <Link href="/login" className="btn-outline text-[10px] uppercase tracking-wider py-1.5 px-4 border-dashed opacity-70 hover:opacity-100 transition-all">
                 Acceso Miembros
               </Link>

@@ -96,8 +96,18 @@ export function Navbar() {
           </div>
         </div>
 
-        {/* Desktop nav — Derecha (Acceso Miembros) */}
-        <div className="hidden md:flex items-center">
+        {/* Desktop nav — Derecha (Acceso Miembros y Aula Virtual) */}
+        <div className="hidden md:flex items-center gap-3">
+          <Link
+            href="/clases/demostracion"
+            className="text-[10px] uppercase tracking-wider py-1 px-4 rounded-full font-bold
+              bg-gradient-to-r from-emerald-600/30 to-teal-600/20 border border-emerald-500/40
+              text-emerald-300 hover:text-white hover:border-emerald-400 hover:from-emerald-600/50 hover:to-teal-600/30
+              transition-all duration-200 flex items-center justify-center gap-1.5 min-h-[44px] text-center w-[130px] whitespace-normal leading-tight animate-pulse"
+          >
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse flex-shrink-0" />
+            <span className="leading-tight">Aula Virtual</span>
+          </Link>
           <a
             href={navLinks[6].href}
             className="btn-outline text-[10px] uppercase tracking-wider py-1 px-4 border-dashed opacity-70 hover:opacity-100 transition-all flex items-center justify-center text-center min-h-[44px] w-[130px] whitespace-normal leading-tight"
@@ -142,6 +152,15 @@ export function Navbar() {
           >
             🗺️ Mapa Productivo
           </a>
+          <Link
+            href="/clases/demostracion"
+            onClick={() => setMenuOpen(false)}
+            className="text-xs py-2 px-4 w-full text-center rounded-full font-bold
+              bg-gradient-to-r from-emerald-600/30 to-teal-600/20 border border-emerald-500/40
+              text-emerald-300 hover:text-white transition-all"
+          >
+            🟢 Aula Virtual (En Vivo)
+          </Link>
         </div>
       )}
     </nav>

@@ -76,7 +76,7 @@ export default async function LoginPage({
         <GoogleSignInButton />
 
         <p className="mt-6 text-xs text-gray-600">
-          Al continuar aceptás los términos de uso del ITEC.
+          Al continuar aceptás los términos de uso de ITEC.
         </p>
       </div>
     </div>

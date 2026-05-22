@@ -6,7 +6,7 @@ import { Sparkles } from 'lucide-react'
 
 export const metadata: Metadata = {
   title: 'Acciones de Impacto — ITEC Saladillo',
-  description: 'Descubrí las capacitaciones, eventos e historias de impacto que el ITEC organiza para potenciar a Saladillo.',
+  description: 'Descubrí las capacitaciones, eventos e historias de impacto que ITEC organiza para potenciar a Saladillo.',
 }
 
 export default async function AccionesPublicasPage() {

@@ -15,7 +15,7 @@ export default async function IdeasPage() {
       <div>
         <h1 className="text-3xl font-bold text-white mb-2">Buzón de Ideas</h1>
         <p className="text-[var(--text-secondary)] text-sm">
-          Propuestas para mejorar el ITEC. Tu opinión nos ayuda a crecer.
+          Propuestas para mejorar ITEC. Tu opinión nos ayuda a crecer.
         </p>
       </div>
 

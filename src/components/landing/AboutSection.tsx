@@ -47,7 +47,7 @@ export function AboutSection() {
               <span className="text-gradient">ciencia cobra vida</span>
             </h2>
             <p className="text-[var(--text-secondary)] text-lg leading-relaxed mb-6">
-              El ITEC Saladillo nació con una misión clara: democratizar el acceso al
+              ITEC Saladillo nació con una misión clara: democratizar el acceso al
               conocimiento científico y tecnológico en Saladillo. Somos una ONG formada por
               personas apasionadas que creen en el poder transformador de la ciencia.
             </p>

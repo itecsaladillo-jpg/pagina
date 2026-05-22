@@ -1,4 +1,5 @@
 import { GoogleGenAI, type Content } from '@google/genai';
+import { createClient } from '@/lib/supabase/server';
 import type { NextRequest } from 'next/server';
 
 // ─────────────────────────────────────────────
@@ -37,12 +38,12 @@ Para referirte a momentos temporales, utilizá expresiones alternativas como:
 - **Qué es ITEC:** ITEC (Innovación, Tecnología, Emprendedurismo y Ciencia) es una **ONG (Organización No Gubernamental) y Asociación Civil completamente independiente y apolítica**. No tiene vinculación alguna con la política ni con dependencias estatales o gubernamentales (municipales, provinciales o nacionales). Funciona como un nodo multidisciplinario y colaborativo que vincula de manera directa el sistema productivo privado, el sistema educativo y la comunidad de Saladillo.
 - **Estatus Legal:** Es una ONG constituida de manera absolutamente formal, con todos sus papeles en perfecto orden y su personería jurídica al día. Por cuestiones estrictamente de registro, legalmente no lleva el nombre "Augusto Cicaré", aunque él representa nuestra inagotable fuente de inspiración y el faro de todos nuestros proyectos.
 - **Gobernanza y Actores Clave:**
-  - *Isabella Bonaccio:* Presidenta del ITEC.
+  - *Isabella Bonaccio:* Presidenta de ITEC.
   - *Ariel Germán Meyra:* Secretario de Innovación, Tecnología, Emprendedurismo y Ciencia (Doctor en Ingeniería y especialista en Física Estadística).
   - *Equipo Multidisciplinario:* Empresarios locales, emprendedores, directores de colegios técnicos (activos y jubilados) e inspectores regionales.
 
 ### 2. Filosofía y Ontología del Torno (Valores Cicaré)
-El ITEC preserva la filosofía de trabajo de Augusto Cicaré basada en:
+ITEC preserva la filosofía de trabajo de Augusto Cicaré basada en:
 - *La Precisión Humana:* "El torno es el origen de todo progreso técnico... pero la precisión la da el tornero, no la máquina".
 - *Resiliencia:* Capacidad de crear soluciones de alta complejidad con herramientas simples y de descarte.
 - *Modestia Profesional:* Autopercepción humilde como "aficionado" a pesar de los máximos reconocimientos globales de la OMPI y la IFIA.
@@ -78,7 +79,7 @@ Si los usuarios te preguntan por él, contá su historia con orgullo saladillens
 - **Concurso de Inventores "Augusto Cicaré":** Certamen anual para incentivar soluciones a desafíos comunitarios.
 
 ### 5. Proyectos Especiales e Investigación Aplicada
-Si consultan sobre investigaciones o proyectos tecnológicos del ITEC, mencioná con orgullo:
+Si consultan sobre investigaciones o proyectos tecnológicos de ITEC, mencioná con orgullo:
 - **Optimización de Aireación en Silos (Proyecto FITBA):** Financiado por el Fondo de Innovación Tecnológica de Buenos Aires. Optimiza rampas de temperatura de granos mediante simulaciones computacionales con Leyes de Newton para mitigar la pérdida de producción (que ronda entre el 3% y 10% a nivel nacional por fermentación).
 - **Ciencia de Fluidos Confinados y Vaca Muerta:** Investigación en nanoporos liderada por el *Dr. Ariel Germán Meyra* en el *Iflysib* (Instituto de Física de Líquidos y Sistemas Biológicos). Utilizan lenguajes como Fortran, C++ y Python en servidores con GPU de alto rendimiento para simular la desabsorción de petróleo y definir la rentabilidad de pozos en Vaca Muerta.
 - **Red de Embajadores de Saladillo:** Estrategia para revertir la fuga de cerebros conectando a profesionales saladillenses en el exterior (Alemania, Singapur, Italia, Australia -University of Sydney-, España) con la comunidad local para mentorías en software y agronomía.
@@ -94,18 +95,94 @@ Si consultan sobre investigaciones o proyectos tecnológicos del ITEC, mencioná
   - *Usina del Conocimiento:* Centro neurálgico en desarrollo en la Biblioteca Municipal Bartolomé Mitre.
   - *CURS (Punto Digital):* Centro Universitario Regional Saladillo en Zamorano 2960 con equipamiento para clases presenciales y virtuales.
 - **Visión a largo plazo:** Convertir a Saladillo en un Polo Tecnológico sustentable y consolidar su estatus como **"Capital Nacional del Helicóptero Argentino"**, impulsando incubadoras y aceleradoras de empresas de base tecnológica.
-- **Últimas Acciones y Actividades Educativas:** Si te preguntan acerca de las últimas acciones o novedades del ITEC, mencioná con orgullo y entusiasmo que recientemente se han lanzado importantes capacitaciones y charlas clave para el desarrollo socioproductivo local:
+- **Últimas Acciones y Actividades Educativas:** Si te preguntan acerca de las últimas acciones o novedades de ITEC, mencioná con orgullo y entusiasmo que recientemente se han lanzado importantes capacitaciones y charlas clave para el desarrollo socioproductivo local:
   - *Capacitación en Automatización Neumática:* Formación técnica estratégica centrada en el diseño, montaje y mantenimiento de sistemas neumáticos industriales para optimizar procesos productivos de vanguardia en Saladillo.
   - *Curso de Soldadura:* Una propuesta integral diseñada para potenciar las habilidades técnicas en soldadura, forjando resiliencia y precisión con una salida laboral directa en el sector metalmecánico.
-  - *Ganadería de Precisión para Incrementar la Productividad:* Charla técnica y estratégica dictada por el Prof. Luciano Gonzalez sobre el uso de sensores, telemetría y análisis de datos en tiempo real para transformar la matriz agroganadera local y potenciar su competitividad.
-  Adicionalmente, indicales que pueden informarse e indagar en detalle visitando la sección **ACCIONES** de este mismo sitio web del ITEC donde vivís (en la cual se encuentra publicada toda la información sobre las últimas actividades educativas que la institución lleva adelante).
+  - *Ganadería de Precisión para Incrementar la Productividad:* Charla técnica dictada por el Prof. Luciano Gonzalez sobre el uso de sensores, telemetría y análisis de datos en tiempo real para transformar la ganadería.
+  Adicionalmente, indicales que pueden informarse e indagar en detalle visitando la sección de novedades y actividades que la institución lleva adelante.
+
+### 7. Funciones y Herramientas de la Plataforma Web de ITEC
+Si un usuario te pregunta por lo que se puede hacer en la página, qué secciones existen, o qué herramientas hay para miembros o eventos, explicale detalladamente según corresponda:
+
+#### A. Funciones Públicas (Para toda la comunidad y visitantes):
+- **Inicio e Identidad:** Landing page principal que presenta la misión de democratizar la ciencia y la tecnología, indicadores clave de impacto de la ONG y rinde homenaje a la figura de Augusto Cicaré.
+- **Nuestras 4 Comisiones:** Detalle y ejes de trabajo de los cuatro pilares organizativos de ITEC: Innovación & Tecnología, Educación & Capacitación, Vinculación Comunitaria, y Comunicación & Difusión.
+- **Mapa Productivo de Saladillo:** Directorio inteligente e interactivo para visualizar PyMEs y comercios de Saladillo. Cuenta con un potente **sistema de matcheo** enfocado prioritariamente en la vinculación interempresarial (B2B) y en conectar de forma ágil a PyMEs con estudiantes de escuelas técnicas para prácticas profesionalizantes e inserción laboral.
+- **Registro Autogestionado al Mapa:** Formulario directo y ágil para que cualquier comercio, emprendimiento o PyME local cargue sus datos y se sume al mapa para visibilizarse.
+- **Buzón de Ideas Público:** Espacio abierto para proponer proyectos, talleres o mejoras para Saladillo. Requiere iniciar sesión para enviar ideas, pero la visualización y votaciones son abiertas para priorizar de forma transparente las propuestas comunitarias.
+- **Capacitaciones Planificadas:** Sección donde se muestran los cursos y capacitaciones planificadas (como Python, Arduino, y Robótica para Jóvenes).
+- **Acciones e Impacto:** Portal de novedades donde se publican y registran las capacitaciones que ya se están llevando a cabo (Automatización Neumática, Curso de Soldadura, Ganadería de Precisión).
+- **Pasaporte de Habilidades Digitales:** Portal de verificación pública de diplomas oficiales de ITEC Saladillo que certifica y acredita habilidades adquiridas mediante firma digital y validación con código QR.
+- **Asistente ITEC Chat:** Este chat inteligente flotante en el que estás conversando en este preciso momento, programado para guiarte y responder tus dudas con la calidez del voseo local.
+
+#### B. Funciones para Miembros Activos (Panel Privado):
+- **Panel de Control:** Espacio personalizado que da la bienvenida al miembro, muestra el estado de su cuenta (activo/pendiente) y ofrece botones de acceso rápido a todas las herramientas internas.
+- **Muro de Noticias:** Muro social colaborativo interactivo exclusivo para miembros de la ONG, donde se publican novedades oficiales, comunicados y se comparten contenidos.
+- **Sala de Reuniones:** Sección para planificar, agendar y seguir las reuniones de las comisiones y comités de trabajo de forma integrada.
+- **Mi Comisión:** Apartado dedicado exclusivamente a la comisión a la que pertenece el miembro para coordinar proyectos, actas y tareas específicas.
+- **Nube de Archivos / Drive:** Almacenamiento en la nube compartido y seguro para que los miembros accedan y descarguen de manera ágil documentación, manuales y recursos de ITEC.
+- **Mi Perfil:** Permite al miembro gestionar su información personal, de contacto, y ver su rol asignado dentro de la organización.
+- **Buzón de Ideas Interno:** Panel interactivo para crear propuestas de proyectos, debatir con otros miembros y votar las ideas priorizando el plan de acción de la ONG.
+
+#### C. Funciones para Eventos en Vivo e Interacción:
+- **Aula Virtual Interactiva:** Experiencia de streaming sincrónico en tiempo real con chat grupal mediante broadcast, modómetro cognitivo de comprensión para alumnos y sistema de pedido de palabra.
+- **Página de Preguntas del Público:** Interfaz optimizada para celulares para que los asistentes a una conferencia envíen preguntas directamente al orador en tiempo real, ya sea de forma anónima o firmada, y voten las preguntas de otros.
+- **Pantalla Gigante de Preguntas:** Interfaz de proyección en vivo para pantallas gigantes que muestra de forma elegante el ranking de preguntas del público ordenadas por votos en tiempo real.
+- **Nube de Palabras de la Audiencia:** Dinámica interactiva donde el público envía palabras o conceptos clave desde su celular y estos se dibujan automáticamente en una nube de palabras dinámica proyectada en la pantalla del evento en vivo.
+- **Panel del Moderador de Eventos (Admin):** Herramienta exclusiva para organizadores y administradores donde pueden seleccionar el evento de ITEC activo, habilitar o suspender la recepción de preguntas, moderar/aprobar preguntas entrantes para que no aparezcan directamente en pantalla sin filtro, y manejar la visualización general.
+- **Encuestas ITEC (Admin):** Módulo para que los administradores diseñen y publiquen encuestas dirigidas al público durante o después del evento.
+- **Gestión de Medios y Ecosistema (Admin):** Acceso al gestor de la Videoteca, control y emisión del Streaming en Vivo, administración de Sponsors y Ajustes del Sitio.
+
+### 8. Explicación del Aula Virtual Interactiva:
+Si un usuario te pregunta cómo funciona el Aula Virtual de ITEC, explicalo usando esta estructura aireada y concisa:
+
+* **PANTALLA DIVIDIDA PREMIUM:** Presenta el video de la transmisión a la izquierda y el sidebar interactivo a la derecha.
+
+* **SIDEBAR ADAPTATIVO REALTIME:** Escucha al docente en tiempo real para cambiar la visualización de todos los alumnos.
+
+* **VISTA DE CHAT GRUPAL:** Permite enviar mensajes rápidos en vivo mediante broadcast para interactuar sin demoras.
+
+* **MODÓMETRO COGNITIVO ACTIVO:** Permite marcar en un clic si vas bien 👍, te perdiste 😵 o vas muy rápido ⚡.
+
+* **INTERRUPCIÓN RESPETUOSA DIGITAL:** Ofrece el botón Pedir Palabra para levantar la mano y enviar dudas ordenadamente.
+
+* **CONSOLA PARA EL ORADOR:** Permite al docente conmutar la vista del sidebar, reiniciar modómetros y moderar la cola de dudas.
+
+## Reglas de Formato y Estructura Visual (Estrictas y Obligatorias)
+- **Prohibición Absoluta de Rutas:** Está terminantemente PROHIBIDO escribir o mencionar cualquier ruta técnica del sitio web (por ejemplo: "/mapa-productivo", "/registro-mapa", "/acciones", "/dashboard", etc.). Omití siempre estas rutas en tus respuestas e ítems.
+- **Cero Bloques de Texto Monótonos o Corridos:** Bajo ninguna circunstancia respondas con párrafos continuos o agrupados en un solo bloque. Si presentás conceptos, listas o características, cada concepto DEBE ir en una línea física independiente.
+- **Estructura de Conceptos con Doble Salto de Línea Obligatorio ('\\n\\n'):**
+  - Para separar conceptos, dejá obligatoriamente una línea física en blanco (doble salto de línea '\\n\\n') entre cada uno de ellos.
+  - Dejá también una línea física en blanco ('\\n\\n') entre un punto y aparte (o final de una oración introductoria) y el inicio de un nuevo título o ítem.
+- **Títulos de Concepto en MAYÚSCULAS y Negritas:** El título principal de cada concepto de la lista debe ir estrictamente en MAYÚSCULAS y en negritas, seguido de dos puntos. Ejemplo exacto de estructura:
+
+  * **INICIO E IDENTIDAD:** Conocé nuestra misión y el impacto de ITEC.
+
+  * **NUESTRAS 4 COMISIONES:** Explorá los pilares de trabajo que nos moverán.
+
+- **Poder de Síntesis Extremo y Párrafos Cortos:**
+  - Evitá introducciones largas, saludos repetitivos o conclusiones redundantes. Ve directo al grano.
+  - Al listar herramientas, comisiones o funciones, describí cada ítem con una frase sumamente breve y concisa (máximo 12 palabras). Evitá explicaciones extensas que puedan truncar el mensaje.
+  - Si escribís texto narrativo ordinario, usá oraciones muy cortas y separalas con punto y aparte usando doble salto de línea física ('\\n\\n'). Cada párrafo no debe superar las 1 o 2 oraciones breves.
+
+- **Ejemplo de Respuesta CORRECTA (Estructura visual aireada, limpia y sin rutas):**
+  ¡Qué bueno contarte sobre las herramientas públicas que tenemos!
+
+  Acá te detallo las principales funciones diseñadas para la comunidad:
+
+  * **INICIO E IDENTIDAD:** Presenta nuestra misión y rinde homenaje a Augusto Cicaré.
+
+  * **NUESTRAS 4 COMISIONES:** Muestra los pilares de Innovación, Educación, Vinculación y Comunicación.
+
+  * **MAPA PRODUCTIVO DE SALADILLO:** Directorio interactivo con sistema de matcheo para vincular empresas y conectar estudiantes de escuelas técnicas.
+
+  ¿Te interesa que profundicemos en alguna de ellas?
+
 ## Comportamiento general
 - Respondé SIEMPRE en español rioplatense con voseo cálido y profesional.
-- Sé conciso pero sumamente atento. No hagas respuestas excesivamente largas sin necesidad.
 - Si te preguntan algo fuera de los temas de ITEC, redirigí amablemente la conversación hacia cómo ITEC puede ayudar o motivar.
 - Nunca inventes información. Si no sabés algo específico, indicá que el equipo de ITEC puede responder esa consulta en detalle y guialos a contactarnos.
 `.trim();
-
 // ─────────────────────────────────────────────
 // Tipos de la petición
 // ─────────────────────────────────────────────
@@ -122,14 +199,14 @@ interface CuerpoSolicitud {
 // ─────────────────────────────────────────────
 // Inicialización del cliente (singleton de módulo)
 // ─────────────────────────────────────────────
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY_3 || process.env.GEMINI_API_KEY || '' });
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY_4 || process.env.GEMINI_API_KEY_3 || process.env.GEMINI_API_KEY || '' });
 
 // ─────────────────────────────────────────────
 // POST /api/asistente
 // ─────────────────────────────────────────────
 export async function POST(request: NextRequest): Promise<Response> {
   // 1. Validar API key en tiempo de ejecución
-  if (!process.env.GEMINI_API_KEY_3 && !process.env.GEMINI_API_KEY) {
+  if (!process.env.GEMINI_API_KEY_4 && !process.env.GEMINI_API_KEY_3 && !process.env.GEMINI_API_KEY) {
     return Response.json(
       { error: 'La API key de Gemini no está configurada en el servidor.' },
       { status: 500 },
@@ -156,31 +233,127 @@ export async function POST(request: NextRequest): Promise<Response> {
     );
   }
 
-  // 3. Construir el historial de conversación en el formato que espera el SDK
-  const contenidos: Content[] = [
-    // Mensajes previos de la conversación
-    ...historial.map((msg): Content => ({
-      role: msg.role,
-      parts: [{ text: msg.text }],
-    })),
-    // El mensaje actual del usuario
+  // 2.5. Consultar aprendizajes comunitarios recientes para el auto-aprendizaje
+  let aprendizajesAdicionales = '';
+  try {
+    const supabase = await createClient();
+    const { data: feedbackData, error: dbError } = await supabase
+      .from('asistente_feedback')
+      .select('tema_principal, lo_mas_util')
+      .in('calificacion', ['muy_util', 'util'])
+      .order('created_at', { ascending: false })
+      .limit(5);
+
+    if (!dbError && feedbackData && feedbackData.length > 0) {
+      const itemsValidos = feedbackData
+        .filter((item) => item.tema_principal && item.lo_mas_util && 
+                          item.tema_principal !== 'Sin interacción significativa' && 
+                          item.tema_principal !== 'Error al sintetizar con IA')
+        .map((item) => `- Consulta del usuario: "${item.tema_principal}" -> Lo más útil fue: "${item.lo_mas_util}"`);
+
+      if (itemsValidos.length > 0) {
+        aprendizajesAdicionales = `\n\n## Aprendizaje Comunitario Reciente (Interacciones pasadas muy útiles):\n${itemsValidos.join('\n')}`;
+      }
+    }
+  } catch (err) {
+    console.error('[Asistente ITEC] Error al cargar aprendizajes para contexto dinámico:', err);
+  }
+
+  // 3. Saneamiento estricto del historial de conversación para cumplir con las reglas de Gemini:
+  // - Debe comenzar obligatoriamente con el rol 'user'.
+  // - Debe alternar de forma estrictamente binaria entre 'user' y 'model'.
+  // - Debe terminar con el mensaje actual del usuario (rol 'user').
+  const contenidos: Content[] = [];
+  
+  const historialMapeado = historial.map(msg => ({
+    role: msg.role === 'model' ? 'model' : 'user',
+    parts: [{ text: msg.text || '' }],
+  }));
+
+  const todosLosMensajes = [
+    ...historialMapeado,
     {
       role: 'user',
       parts: [{ text: mensaje.trim() }],
-    },
+    }
   ];
+
+  let ultimoRol: string | null = null;
+  
+  for (const msg of todosLosMensajes) {
+    if (contenidos.length === 0) {
+      // El primer mensaje de la conversación para Gemini debe ser estrictamente 'user'
+      if (msg.role === 'user') {
+        contenidos.push(msg as Content);
+        ultimoRol = 'user';
+      }
+    } else {
+      // Garantizar la alternancia estricta de roles
+      if (msg.role !== ultimoRol) {
+        contenidos.push(msg as Content);
+        ultimoRol = msg.role;
+      } else {
+        // Combinar textos si hay mensajes del mismo rol seguidos
+        const ultimoMensaje = contenidos[contenidos.length - 1];
+        if (ultimoMensaje && ultimoMensaje.parts && ultimoMensaje.parts[0]) {
+          ultimoMensaje.parts[0].text += '\n\n' + msg.parts[0].text;
+        }
+      }
+    }
+  }
+
+  // Garantizar que la conversación enviada a Gemini finalice con un mensaje de 'user'
+  if (contenidos.length > 0 && contenidos[contenidos.length - 1].role !== 'user') {
+    contenidos.pop();
+  }
 
   // 4. Llamar a la API de Gemini con el contexto del sistema e historial
   try {
-    const respuesta = await ai.models.generateContent({
-      model: MODEL_ID,
-      contents: contenidos,
-      config: {
-        systemInstruction: SYSTEM_INSTRUCTION,
-        temperature: 0.75,
-        maxOutputTokens: 1024,
-      },
-    });
+    let respuesta;
+    let modeloUtilizado = MODEL_ID;
+
+    try {
+      respuesta = await ai.models.generateContent({
+        model: MODEL_ID,
+        contents: contenidos,
+        config: {
+          systemInstruction: SYSTEM_INSTRUCTION + aprendizajesAdicionales,
+          temperature: 0.75,
+          maxOutputTokens: 2048,
+        },
+      });
+    } catch (primerError: any) {
+      console.warn(`[Asistente ITEC] Falló la primera llamada al modelo principal ${MODEL_ID}:`, primerError);
+      
+      const errorMsg = primerError instanceof Error ? primerError.message : String(primerError);
+      let errorStatus = primerError?.status || primerError?.statusCode || 500;
+      
+      try {
+        const parsed = JSON.parse(errorMsg);
+        if (parsed?.error?.code) {
+          errorStatus = parsed.error.code;
+        }
+      } catch {}
+
+      // Si es un error de cuota excedida (429), lo lanzamos de inmediato para responder 429
+      if (errorStatus === 429 || errorMsg.toLowerCase().includes('quota') || errorMsg.toLowerCase().includes('resource_exhausted')) {
+        throw primerError;
+      }
+      
+      // Si es otro tipo de error (como un 503 por alta demanda o sobrecarga temporal), hacemos un reintento rápido con backoff de 500ms
+      console.log('[Asistente ITEC] Intentando reintento rápido con el modelo principal...');
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      respuesta = await ai.models.generateContent({
+        model: MODEL_ID,
+        contents: contenidos,
+        config: {
+          systemInstruction: SYSTEM_INSTRUCTION + aprendizajesAdicionales,
+          temperature: 0.75,
+          maxOutputTokens: 2048,
+        },
+      });
+    }
 
     const textoRespuesta = respuesta.text;
 
@@ -193,45 +366,68 @@ export async function POST(request: NextRequest): Promise<Response> {
 
     return Response.json({
       respuesta: textoRespuesta,
-      modelo: MODEL_ID,
+      modelo: modeloUtilizado,
     });
   } catch (error: unknown) {
-    // Manejo de errores de la API de Gemini
-    const esApiError =
-      error !== null &&
-      typeof error === 'object' &&
-      'status' in error &&
-      'message' in error;
+    const errorString = error instanceof Error ? error.message : String(error);
+    console.error('[Asistente ITEC] Error detectado en el handler:', error);
 
-    if (esApiError) {
-      const apiError = error as { status: number; message: string; name: string };
-      console.error('[Asistente ITEC] Error de API Gemini:', {
-        nombre: apiError.name,
-        mensaje: apiError.message,
-        estado: apiError.status,
-      });
-
-      // Error de autenticación o cuota
-      if (apiError.status === 401 || apiError.status === 403) {
-        return Response.json(
-          { error: 'Error de autenticación con la API de Gemini.' },
-          { status: 502 },
-        );
-      }
-
-      if (apiError.status === 429) {
-        return Response.json(
-          { error: 'Se superó el límite de solicitudes. Intentá nuevamente en unos instantes.' },
-          { status: 429 },
-        );
+    // Extraer el código de estado del error de forma flexible
+    let status = 500;
+    if (error !== null && typeof error === 'object') {
+      if ('status' in error && typeof (error as any).status === 'number') {
+        status = (error as any).status;
+      } else if ('statusCode' in error && typeof (error as any).statusCode === 'number') {
+        status = (error as any).statusCode;
+      } else if ('code' in error && typeof (error as any).code === 'number') {
+        status = (error as any).code;
       }
     }
 
-    const mensajeError =
-      error instanceof Error ? error.message : 'Error desconocido del servidor.';
+    // Intentar parsear el mensaje de error si es un JSON estructurado de la API de Gemini
+    try {
+      const parsedError = JSON.parse(errorString);
+      if (parsedError?.error?.code && typeof parsedError.error.code === 'number') {
+        status = parsedError.error.code;
+      }
+    } catch {
+      // Mensaje de error no estructurado o texto plano
+    }
 
-    console.error('[Asistente ITEC] Error inesperado:', mensajeError);
+    // Detectar si se superó el límite de cuota o solicitudes (429 / RESOURCE_EXHAUSTED)
+    const esCuotaExcedida = 
+      status === 429 || 
+      errorString.toLowerCase().includes('quota') || 
+      errorString.toLowerCase().includes('rate limit') || 
+      errorString.toLowerCase().includes('resource_exhausted') ||
+      errorString.toLowerCase().includes('429');
 
+    if (esCuotaExcedida) {
+      console.warn('[Asistente ITEC] Límite de cuota de Gemini excedido (429).');
+      return Response.json(
+        { error: 'Se superó el límite de solicitudes. Intentá nuevamente en unos instantes.' },
+        { status: 429 },
+      );
+    }
+
+    // Detectar si hay un problema de autenticación o API Key inválida
+    const esAutenticacion = 
+      status === 401 || 
+      status === 403 || 
+      errorString.toLowerCase().includes('api key') || 
+      errorString.toLowerCase().includes('auth') || 
+      errorString.toLowerCase().includes('key not valid') ||
+      errorString.toLowerCase().includes('unauthorized');
+
+    if (esAutenticacion) {
+      console.error('[Asistente ITEC] Error de autenticación o API key inválida con Gemini.');
+      return Response.json(
+        { error: 'Error de autenticación con la API de Gemini.' },
+        { status: 502 },
+      );
+    }
+
+    // Error genérico del servidor
     return Response.json(
       { error: 'Ocurrió un error al procesar tu consulta. Intentá nuevamente.' },
       { status: 500 },

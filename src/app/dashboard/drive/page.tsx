@@ -110,7 +110,7 @@ export default async function DrivePage() {
 
             <h2 className="text-xl font-bold text-white mb-2">Archivo General</h2>
             <p className="text-[var(--text-secondary)] text-sm mb-6 max-w-xs">
-              Documentos institucionales, normativas y recursos abiertos a todo el ITEC.
+              Documentos institucionales, normativas y recursos abiertos a toda la comunidad de ITEC.
             </p>
 
             <div className="space-y-4 mb-8">
@@ -147,7 +147,7 @@ export default async function DrivePage() {
         <div>
           <h4 className="text-white text-sm font-semibold mb-1">Sobre el acceso a Drive</h4>
           <p className="text-[var(--text-muted)] text-xs leading-relaxed">
-            Para acceder a estas carpetas, debés haber iniciado sesión con tu cuenta de Google institucional o personal vinculada al ITEC. Si no tenés permisos, solicitá acceso al coordinador de tu comisión.
+            Para acceder a estas carpetas, debés haber iniciado sesión con tu cuenta de Google institucional o personal vinculada a ITEC. Si no tenés permisos, solicitá acceso al coordinador de tu comisión.
           </p>
         </div>
       </div>

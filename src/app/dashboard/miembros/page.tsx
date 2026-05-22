@@ -35,7 +35,7 @@ export default async function MiembrosAdminPage() {
         <p className="text-[var(--text-secondary)] text-sm">
           {isAdminUser 
             ? 'Aprobá nuevos ingresos, asigná comisiones y gestioná roles de la organización.' 
-            : 'Conocé a los miembros del ITEC Saladillo, sus roles y comisiones.'}
+            : 'Conocé a los miembros de ITEC Saladillo, sus roles y comisiones.'}
         </p>
       </div>
 
