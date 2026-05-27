@@ -4,9 +4,10 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Sparkles, Calendar, Zap, MessageSquare, ChevronRight, PlayCircle } from 'lucide-react'
 import { format } from 'date-fns'
-import { es } from 'date-fns/locale'
+import { es, enUS, pt } from 'date-fns/locale'
 import Link from 'next/link'
 import { getYouTubeID } from '@/services/videos'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 interface ImpactCardProps {
   item: any
@@ -14,6 +15,7 @@ interface ImpactCardProps {
 }
 
 function ImpactCard({ item, idx }: ImpactCardProps) {
+  const { language, dict } = useLanguage()
   const [currentMediaIdx, setCurrentMediaIdx] = useState(0)
   
   const getFirstParagraph = (text: string) => {
@@ -22,6 +24,14 @@ function ImpactCard({ item, idx }: ImpactCardProps) {
     const paragraphs = text.split(/\n+/).filter(p => p.trim().length > 0)
     return paragraphs[0] || text
   }
+
+  // Traducción al vuelo de artículos y acciones desde el diccionario
+  const translation = (dict.impactSection as any).feedData?.[item.id]
+  const displayTitle = translation?.title || item.title
+  const displayExcerpt = translation?.excerpt || item.excerpt
+  const displayContent = translation?.content || item.content
+  const displayDescription = translation?.description || item.description
+  const displayFlashText = translation?.flash_text || item.flash_text
 
   const media = item.media_urls || []
   
@@ -72,7 +82,7 @@ function ImpactCard({ item, idx }: ImpactCardProps) {
               <img 
                 src={media[currentMediaIdx]} 
                 className="w-full h-full object-cover" 
-                alt={item.title} 
+                alt={displayTitle} 
               />
             </motion.div>
           ) : (
@@ -94,8 +104,8 @@ function ImpactCard({ item, idx }: ImpactCardProps) {
           `}>
             {item.feedType === 'action' ? <Calendar size={12} /> : 
              item.feedType === 'article' ? <Zap size={12} className="fill-blue-400" /> : <MessageSquare size={12} />}
-            {item.feedType === 'action' ? 'Evento' : 
-             item.feedType === 'article' ? (item.excerpt || 'Impacto Regional') : 'Novedad'}
+            {item.feedType === 'action' ? dict.impactSection.evento : 
+             item.feedType === 'article' ? (displayExcerpt || dict.impactSection.impactoRegional) : dict.impactSection.novedad}
           </div>
         </div>
 
@@ -115,15 +125,17 @@ function ImpactCard({ item, idx }: ImpactCardProps) {
       {/* Text Content */}
       <div className="p-6 flex-1 flex flex-col">
         <div className="text-[10px] text-[var(--text-muted)] font-black uppercase tracking-[0.2em] mb-1">
-          {format(new Date(item.date), "d 'de' MMMM, yyyy", { locale: es })}
+          {format(new Date(item.date), language === 'en' ? "MMMM d, yyyy" : "d 'de' MMMM, yyyy", { 
+            locale: language === 'en' ? enUS : language === 'pt' ? pt : es 
+          })}
         </div>
         
         <h3 className="text-lg font-bold text-white group-hover:text-blue-400 transition-colors leading-tight mb-2">
-          {item.title}
+          {displayTitle}
         </h3>
         
         <p className="text-sm text-[var(--text-secondary)] leading-relaxed font-medium mb-4 italic">
-          {item.feedType === 'news' ? item.flash_text : getFirstParagraph(item.feedType === 'article' ? item.content : item.description)}
+          {item.feedType === 'news' ? displayFlashText : getFirstParagraph(item.feedType === 'article' ? displayContent : displayDescription)}
         </p>
 
         <div className="mt-auto pt-3 border-t border-white/5 flex flex-col gap-2">
@@ -132,7 +144,7 @@ function ImpactCard({ item, idx }: ImpactCardProps) {
               href={`/acciones/${item.id}`}
               className="inline-flex items-center gap-2 text-xs font-bold text-blue-400 hover:text-blue-300 transition-colors group/link"
             >
-              Saber más e inscribirme
+              {dict.impactSection.saberMas}
               <ChevronRight size={14} className="group-hover/link:translate-x-1 transition-transform" />
             </Link>
           ) : item.feedType === 'article' ? (
@@ -140,12 +152,12 @@ function ImpactCard({ item, idx }: ImpactCardProps) {
               href={`/articulo/${item.slug || item.id}`}
               className="inline-flex items-center gap-2 text-xs font-bold text-blue-400 hover:text-blue-300 transition-colors group/link"
             >
-              Leer historia completa
+              {dict.impactSection.leerHistoria}
               <ChevronRight size={14} className="group-hover/link:translate-x-1 transition-transform" />
             </Link>
           ) : (
             <div className="text-[10px] text-blue-400/50 font-black uppercase tracking-[0.2em]">
-              Noticia Institucional
+              {dict.impactSection.noticiaInst}
             </div>
           )}
 
@@ -155,13 +167,12 @@ function ImpactCard({ item, idx }: ImpactCardProps) {
               href={`/#videoteca`}
               onClick={(e) => {
                 e.preventDefault()
-                const videoId = getYouTubeID(item.related_video.youtube_url)
                 window.location.href = `/#videoteca?video=${item.related_video.id}`
               }}
               className="inline-flex items-center gap-1.5 text-[10px] font-bold text-amber-400/80 hover:text-amber-300 transition-colors group/vlink"
             >
               <PlayCircle size={12} className="flex-shrink-0" />
-              Ver en Videoteca: <span className="truncate max-w-[140px]">{item.related_video.title}</span>
+              {dict.impactSection.verVideoteca} <span className="truncate max-w-[140px]">{item.related_video.title}</span>
               <ChevronRight size={10} className="group-hover/vlink:translate-x-0.5 transition-transform flex-shrink-0" />
             </a>
           )}
@@ -172,6 +183,8 @@ function ImpactCard({ item, idx }: ImpactCardProps) {
 }
 
 export function ImpactSectionClient({ news, actions, articles }: any) {
+  const { dict } = useLanguage()
+
   const feedItems = [
     ...news.map((n: any) => ({ ...n, feedType: 'news' as const, date: n.created_at })),
     ...actions.filter((a: any) => a.start_date).map((a: any) => ({ ...a, feedType: 'action' as const, date: a.start_date })),
@@ -186,18 +199,15 @@ export function ImpactSectionClient({ news, actions, articles }: any) {
           {/* Primera fila: Título + 2 Cards */}
           <div className="lg:col-span-1 space-y-6 lg:pt-0">
             <span className="inline-block text-xs font-bold tracking-[0.2em] text-[var(--accent-warm)] uppercase px-4 py-1.5 rounded-full border border-[var(--accent-warm)]/20 bg-[var(--accent-warm)]/5 mb-4">
-              ITEC EN MOVIMIENTO
+              {dict.impactSection.badge}
             </span>
             <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-white leading-[1.1] tracking-tighter">
-              Un motor <br />
-              que mueve <br />
-              a <span className="text-gradient">Saladillo</span>
+              {dict.impactSection.titleStart} <br />
+              {dict.impactSection.titleMid} <br />
+              <span className="text-gradient">{dict.impactSection.titleEnd}</span>
             </h2>
-            <p className="text-[var(--text-muted)] text-lg md:text-xl leading-relaxed max-w-none">
-              Explorá las últimas novedades, <br />
-              eventos y capacitaciones de ITEC <br />
-              que están transformando <br />
-              nuestra comunidad.
+            <p className="text-[var(--text-muted)] text-base md:text-lg leading-relaxed max-w-none whitespace-pre-line">
+              {dict.impactSection.desc}
             </p>
           </div>
 

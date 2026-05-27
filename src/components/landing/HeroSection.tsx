@@ -4,8 +4,10 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { createClient } from '@/lib/supabase/client'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 export function HeroSection() {
+  const { dict } = useLanguage()
   const [claseEnVivo, setClaseEnVivo] = useState(false)
 
   useEffect(() => {
@@ -115,26 +117,26 @@ export function HeroSection() {
             <div className="inline-flex items-center gap-2 glass rounded-full px-4 py-2 border border-[var(--border-glow)] relative z-10">
               <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
               <span className="text-xs font-medium text-[var(--text-secondary)]">
-                ONG · Saladillo, Buenos Aires
+                {dict.hero.badge}
               </span>
             </div>
 
             {/* Botones de Secciones (Mismos que el Header) */}
             <div className="flex flex-wrap items-center justify-start gap-2 mt-6 animate-fade-up delay-300 relative z-10" style={{ animationFillMode: 'both' }}>
               <a href="#acciones" className="btn-outline text-[10px] uppercase tracking-wider py-1.5 px-4 border-dashed opacity-70 hover:opacity-100 transition-all">
-                Acciones
+                {dict.navbar.acciones}
               </a>
               <a href="#videoteca" className="btn-outline text-[10px] uppercase tracking-wider py-1.5 px-4 border-dashed opacity-70 hover:opacity-100 transition-all">
-                Videoteca
+                {dict.navbar.videoteca}
               </a>
               <a href="#nosotros" className="btn-outline text-[10px] uppercase tracking-wider py-1.5 px-4 border-dashed opacity-70 hover:opacity-100 transition-all">
-                Nosotros
+                {dict.navbar.nosotros}
               </a>
               <a href="#sponsors" className="btn-outline text-[10px] uppercase tracking-wider py-1.5 px-4 border-dashed opacity-70 hover:opacity-100 transition-all">
-                Sponsors
+                {dict.navbar.sponsors}
               </a>
               <a href="#ideas" className="btn-outline text-[10px] uppercase tracking-wider py-1.5 px-4 border-dashed opacity-70 hover:opacity-100 transition-all">
-                Buzón de Ideas
+                {dict.navbar.ideas}
               </a>
               <Link
                 href="/mapa-productivo"
@@ -144,7 +146,7 @@ export function HeroSection() {
                   transition-all duration-200 flex items-center gap-1.5"
               >
                 <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />
-                Mapa Productivo
+                {dict.navbar.mapa}
               </Link>
               {claseEnVivo ? (
                 <Link
@@ -155,18 +157,18 @@ export function HeroSection() {
                     transition-all duration-200 flex items-center gap-1.5 animate-pulse"
                 >
                   <span className="w-1.5 h-1.5 rounded-full bg-red-400 animate-pulse" />
-                  Aula Virtual (En Vivo)
+                  {dict.navbar.aulaEnVivo}
                 </Link>
               ) : (
                 <Link
                   href="/clases/demostracion"
                   className="btn-outline text-[10px] uppercase tracking-wider py-1.5 px-4 border-dashed opacity-70 hover:opacity-100 transition-all"
                 >
-                  Aula Virtual
+                  {dict.navbar.aula}
                 </Link>
               )}
               <Link href="/login" className="btn-outline text-[10px] uppercase tracking-wider py-1.5 px-4 border-dashed opacity-70 hover:opacity-100 transition-all">
-                Acceso Miembros
+                {dict.navbar.miembros}
               </Link>
             </div>
           </div>
@@ -177,16 +179,15 @@ export function HeroSection() {
             <div className="relative py-8">
               {/* Palabras (Capa superior) */}
               <h1 className="relative z-10 flex flex-col items-start gap-2">
-                <span className="spotlight-text spotlight-i">Innovación</span>
-                <span className="spotlight-text spotlight-t">Tecnología</span>
-                <span className="spotlight-text spotlight-e">Emprendedurismo</span>
-                <span className="spotlight-text spotlight-c">Ciencia</span>
+                <span className="spotlight-text spotlight-i">{dict.about.pilares.innovacion.title}</span>
+                <span className="spotlight-text spotlight-t">{dict.about.pilares.tecnologia.title}</span>
+                <span className="spotlight-text spotlight-emprendedurismo spotlight-e">{dict.about.pilares.emprendedurismo.title}</span>
+                <span className="spotlight-text spotlight-c">{dict.about.pilares.ciencia.title}</span>
               </h1>
             </div>
 
             <p className="relative z-10 text-[var(--text-secondary)] text-sm md:text-base max-w-sm text-left mt-8 leading-relaxed">
-              El espacio donde la innovación y el trabajo colectivo
-              transforman ideas en soluciones reales para Saladillo.
+              {dict.hero.desc}
             </p>
           </div>
 

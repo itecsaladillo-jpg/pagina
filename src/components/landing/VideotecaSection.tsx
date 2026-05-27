@@ -3,14 +3,14 @@
 import { useState, useEffect } from 'react'
 import { Video, videoService, getYouTubeID, getYouTubeThumbnail } from '@/services/videos'
 import { Sparkles } from 'lucide-react'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 export function VideotecaSection() {
+  const { dict } = useLanguage()
   const [videos, setVideos] = useState<Video[]>([])
   const [activeVideo, setActiveVideo] = useState<Video | null>(null)
   const [loading, setLoading] = useState(true)
   const [hasInteracted, setHasInteracted] = useState(false)
-
-
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
@@ -22,7 +22,6 @@ export function VideotecaSection() {
         if (data.length > 0) {
           setActiveVideo(data[0])
         }
-
       } catch (error) {
         console.error('Error loading videos:', error)
       } finally {
@@ -34,17 +33,32 @@ export function VideotecaSection() {
 
   if (!mounted || loading || videos.length === 0) return null
 
-  const activeVideoId = activeVideo ? getYouTubeID(activeVideo.youtube_url) : null
+  // Traducir los videos dinámicamente según el idioma activo en el render
+  const translatedVideos = videos.map(video => {
+    const translation = (dict.videotecaSection as any).videosData?.[video.id]
+    if (translation) {
+      return {
+        ...video,
+        title: translation.title,
+        ai_summary: translation.ai_summary || video.ai_summary,
+        description: translation.description || video.description
+      }
+    }
+    return video
+  })
+
+  // Obtener el video activo traducido
+  const activeVideoTranslated = translatedVideos.find(v => v.id === activeVideo?.id) || activeVideo
+
+  const activeVideoId = activeVideoTranslated ? getYouTubeID(activeVideoTranslated.youtube_url) : null
 
   const handleSelectVideo = (video: Video) => {
     setActiveVideo(video)
     setHasInteracted(true)
   }
 
-
   return (
     <section id="videoteca" className="pt-[76px] pb-24 relative overflow-hidden bg-[#050505]">
-
 
       {/* Fondo decorativo */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full pointer-events-none opacity-20">
@@ -61,50 +75,50 @@ export function VideotecaSection() {
                 <iframe
                   key={activeVideoId}
                   src={`https://www.youtube.com/embed/${activeVideoId}?autoplay=${hasInteracted ? 1 : 0}&modestbranding=1&rel=0&iv_load_policy=3&showinfo=0&controls=1&disablekb=0&color=white`}
-                  title={activeVideo?.title || 'Reproductor de video'}
+                  title={activeVideoTranslated?.title || dict.videotecaSection.reproductor}
                   className="absolute inset-0 w-full h-full"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
                 />
-              ) : activeVideo ? (
+              ) : activeVideoTranslated ? (
                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/60 p-8 text-center">
                   <div className="w-16 h-16 rounded-full bg-red-500/10 flex items-center justify-center mb-4">
                     <svg className="w-8 h-8 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                     </svg>
                   </div>
-                  <h4 className="text-white font-bold mb-2">Video no disponible</h4>
+                  <h4 className="text-white font-bold mb-2">{dict.videotecaSection.noDisponible}</h4>
                   <p className="text-[var(--text-secondary)] text-sm max-w-xs">
-                    No pudimos procesar el enlace: <br/>
-                    <code className="text-amber-500/80 break-all text-[10px]">{activeVideo.youtube_url}</code>
+                    {dict.videotecaSection.noProcesar} <br/>
+                    <code className="text-amber-500/80 break-all text-[10px]">{activeVideoTranslated.youtube_url}</code>
                   </p>
                 </div>
               ) : (
                 <div className="absolute inset-0 flex items-center justify-center bg-black/40">
-                   <p className="text-white/40">Seleccioná un video para comenzar</p>
+                   <p className="text-white/40">{dict.videotecaSection.selecciona}</p>
                 </div>
               )}
             </div>
 
             <div className="mt-6">
-              <h3 className="text-2xl font-bold text-white mb-2">{activeVideo?.title}</h3>
+              <h3 className="text-2xl font-bold text-white mb-2">{activeVideoTranslated?.title}</h3>
               
-              {activeVideo?.ai_summary && (
+              {activeVideoTranslated?.ai_summary && (
                 <div className="mb-6 bg-amber-500/5 border-l-2 border-amber-500 p-5 rounded-r-2xl animate-fade-in">
                   <div className="flex items-center gap-2 mb-3">
                     <Sparkles size={16} className="text-amber-500 animate-pulse" />
                     <span className="text-[10px] text-amber-500 font-black uppercase tracking-[0.2em]">
-                      Resumen del encuentro
+                      {dict.videotecaSection.resumen}
                     </span>
                   </div>
                   <p className="text-white/90 text-base leading-relaxed italic font-medium">
-                    "{activeVideo.ai_summary}"
+                    "{activeVideoTranslated.ai_summary}"
                   </p>
                 </div>
               )}
 
               <p className="text-[var(--text-secondary)] text-sm md:text-base leading-relaxed">
-                {activeVideo?.description}
+                {activeVideoTranslated?.description}
               </p>
             </div>
 
@@ -114,22 +128,22 @@ export function VideotecaSection() {
           <div className="lg:col-span-5 flex flex-col">
             <div className="mb-8 text-right">
               <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-white leading-[1.1] tracking-tighter mb-3">
-                Videoteca <span className="text-gradient">ITEC</span>
+                {dict.videotecaSection.badge.split(' ')[0]} <span className="text-gradient">{dict.videotecaSection.badge.split(' ').slice(1).join(' ')}</span>
               </h2>
               <p className="text-[var(--text-secondary)] text-base md:text-lg leading-relaxed">
-                Contenidos, charlas, notas y eventos.
+                {dict.videotecaSection.desc}
               </p>
             </div>
 
             <div className="h-fit max-h-[650px] overflow-y-auto pr-2 custom-scrollbar">
 
               <div className="flex flex-col gap-4">
-                {videos.map((video) => (
+                {translatedVideos.map((video) => (
                   <button
                     key={video.id}
                     onClick={() => handleSelectVideo(video)}
                     className={`flex gap-4 p-3 rounded-2xl transition-all border text-left group glass ${
-                      activeVideo?.id === video.id
+                      activeVideoTranslated?.id === video.id
                         ? 'bg-amber-500/10 border-amber-500/30 ring-1 ring-amber-500/20'
                         : 'bg-white/[0.01] border-white/5 hover:border-blue-500/30 hover:bg-white/5'
                     }`}
@@ -153,7 +167,7 @@ export function VideotecaSection() {
                     </div>
                     <div className="flex flex-col justify-center min-w-0">
                       <h4 className={`font-semibold text-sm line-clamp-2 leading-tight transition-colors ${
-                        activeVideo?.id === video.id ? 'text-amber-500' : 'text-white'
+                        activeVideoTranslated?.id === video.id ? 'text-amber-500' : 'text-white'
                       }`}>
                         {video.title}
                       </h4>

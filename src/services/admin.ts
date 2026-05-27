@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import type { Member, Commission } from '@/types/database'
+import { unstable_cache, revalidateTag } from 'next/cache'
 
 /**
  * Aprueba a un miembro pendiente cambiándole el estado a 'activo'.
@@ -84,6 +85,24 @@ export async function deactivateMember(memberId: string) {
 
   if (error) {
     console.error('[adminService] deactivateMember error:', error.message)
+    return { success: false, error: error.message }
+  }
+  return { success: true, data: data?.[0] || null }
+}
+
+/**
+ * Elimina físicamente la petición de miembro (borra el registro de la tabla members).
+ */
+export async function rejectMember(memberId: string) {
+  const supabase = await createClient()
+  const { data, error } = await supabase
+    .from('members')
+    .delete()
+    .eq('id', memberId)
+    .select()
+
+  if (error) {
+    console.error('[adminService] rejectMember error:', error.message)
     return { success: false, error: error.message }
   }
   return { success: true, data: data?.[0] || null }
@@ -316,3 +335,103 @@ export async function updateCommission(id: string, updates: Partial<Commission>)
   }
   return { success: true }
 }
+
+export interface AIPromptSetting {
+  system_prompt: string
+  temperature: number
+  max_tokens: number
+  descripcion?: string | null
+}
+
+/**
+ * Recupera un prompt activo mediante su clave_prompt de forma eficiente
+ * utilizando unstable_cache de Next.js.
+ */
+export const getAIPrompt = unstable_cache(
+  async (clavePrompt: string): Promise<AIPromptSetting | null> => {
+    try {
+      const supabase = await createClient()
+      const { data, error } = await supabase
+        .from('ai_prompt_settings')
+        .select('system_prompt, temperature, max_tokens, descripcion')
+        .eq('clave_prompt', clavePrompt)
+        .maybeSingle()
+
+      if (error) {
+        console.error(`[adminService] Error en Supabase al recuperar prompt "${clavePrompt}":`, error.message)
+        return null
+      }
+
+      return data
+    } catch (err) {
+      console.error(`[adminService] Error inesperado al recuperar prompt "${clavePrompt}":`, err)
+      return null
+    }
+  },
+  ['ai-prompt-settings'],
+  { revalidate: 600, tags: ['ai-prompt-settings'] }
+)
+
+/**
+ * Modifica un prompt del sistema en Supabase.
+ * Solo accesible por miembros autenticados con rol de administrador en la ONG.
+ */
+export async function updateAIPrompt(
+  clavePrompt: string,
+  updates: {
+    system_prompt: string
+    temperature?: number
+    max_tokens?: number
+    descripcion?: string
+  }
+) {
+  try {
+    const supabase = await createClient()
+
+    // 1. Obtener y validar el usuario actualmente autenticado
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    if (authError || !user) {
+      return { success: false, error: 'No autorizado. Debés iniciar sesión.' }
+    }
+
+    // 2. Validar que el usuario es un administrador
+    const { data: member, error: memberError } = await supabase
+      .from('members')
+      .select('role')
+      .eq('id', user.id)
+      .single()
+
+    if (memberError || !member || member.role !== 'admin') {
+      return { success: false, error: 'No autorizado. Se requieren privilegios de administrador.' }
+    }
+
+    // 3. Ejecutar la actualización en base de datos
+    const { data, error } = await supabase
+      .from('ai_prompt_settings')
+      .update({
+        ...updates,
+        updated_by: user.id,
+        updated_at: new Date().toISOString()
+      })
+      .eq('clave_prompt', clavePrompt)
+      .select()
+
+    if (error) {
+      console.error('[adminService] Error al actualizar prompt:', error.message)
+      return { success: false, error: error.message }
+    }
+
+    // 4. Revalidar la caché de etiquetas para propagar el cambio
+    try {
+      revalidateTag('ai-prompt-settings', 'max')
+    } catch (cacheErr) {
+      console.warn('[adminService] No se pudo revalidar la tag de caché:', cacheErr)
+    }
+
+    return { success: true, data: data?.[0] || null }
+  } catch (err: any) {
+    console.error('[adminService] Error inesperado en updateAIPrompt:', err)
+    return { success: false, error: err?.message || 'Error interno del servidor.' }
+  }
+}
+

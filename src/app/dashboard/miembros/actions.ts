@@ -9,7 +9,8 @@ import {
   updateMemberPhone,
   updatePreApprovedPhone,
   assignToCommission, 
-  deactivateMember 
+  deactivateMember,
+  rejectMember
 } from '@/services/admin'
 import { getCurrentMember } from '@/services/auth'
 import { revalidatePath } from 'next/cache'
@@ -75,6 +76,19 @@ export async function deactivateMemberAction(memberId: string) {
     return res
   } catch (err) {
     return { success: false, error: 'Error al deshabilitar miembro.' }
+  }
+}
+
+export async function rejectMemberAction(memberId: string) {
+  try {
+    const admin = await getCurrentMember()
+    if (!admin || admin.role !== 'admin') return { success: false, error: 'No autorizado' }
+    
+    const res = await rejectMember(memberId)
+    if (res.success) revalidatePath('/dashboard/miembros')
+    return res
+  } catch (err) {
+    return { success: false, error: 'Error al rechazar la petición.' }
   }
 }
 

@@ -1,10 +1,12 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Link from 'next/link'
 import { submitSingleVoteAction, markPollAsCompletedAction } from '@/app/dashboard/encuestas/actions'
 import { Loader2, CheckCircle2, ChevronRight } from 'lucide-react'
 import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 interface Option {
   id: string
@@ -24,6 +26,7 @@ interface Poll {
 }
 
 export function VotingClient({ poll }: { poll: Poll | null }) {
+  const { dict } = useLanguage()
   const [hasVoted, setHasVoted] = useState(false)
   const [justVoted, setJustVoted] = useState(false)
   const [isVoting, setIsVoting] = useState(false)
@@ -45,16 +48,18 @@ export function VotingClient({ poll }: { poll: Poll | null }) {
         <div className="absolute inset-0 bg-gradient-to-br from-[#17338c]/20 via-gray-950 to-gray-950 pointer-events-none" />
         
         <div className="relative z-10 w-full max-w-md bg-gray-900/80 backdrop-blur-xl border border-gray-800 rounded-[2rem] p-10 text-center shadow-2xl animate-fade-in">
-          <Image src="/logoitectrans_v2.png" alt="ITEC" width={180} height={60} className="mx-auto mb-10 opacity-70 drop-shadow-md" priority />
+          <Link href="/" className="cursor-pointer inline-block">
+            <Image src="/logoitectrans_v2.png" alt="ITEC" width={180} height={60} className="mx-auto mb-10 opacity-70 drop-shadow-md hover:opacity-100 transition-opacity" priority />
+          </Link>
           
           <div className="w-20 h-20 rounded-full bg-[#17338c]/10 flex items-center justify-center mx-auto mb-8 border border-[#17338c]/30 relative">
             <div className="absolute inset-0 rounded-full border border-[var(--accent-primary)] animate-ping opacity-20" />
             <Loader2 size={36} className="text-[var(--accent-primary)] animate-spin" />
           </div>
           
-          <h1 className="text-2xl font-bold text-white mb-3">Esperando encuesta...</h1>
+          <h1 className="text-2xl font-bold text-white mb-3">{dict.votar.esperando}</h1>
           <p className="text-gray-400 text-sm max-w-[260px] mx-auto leading-relaxed">
-            La votación comenzará automáticamente cuando el presentador la lance en pantalla.
+            {dict.votar.esperandoDesc}
           </p>
         </div>
       </div>
@@ -73,7 +78,7 @@ export function VotingClient({ poll }: { poll: Poll | null }) {
     const res = await submitSingleVoteAction(optionId, currentQuestion.id, poll.id)
     
     if (!res.success && res.error !== 'Ya has respondido esta pregunta.') {
-      alert(res.error || 'Error al registrar el voto')
+      alert(res.error || dict.votar.errorVoto)
       setIsVoting(false)
       return
     }
@@ -114,23 +119,25 @@ export function VotingClient({ poll }: { poll: Poll | null }) {
           
           {justVoted ? (
             <>
-              <h1 className="text-3xl font-bold text-white mb-4">¡Encuesta Completada!</h1>
+              <h1 className="text-3xl font-bold text-white mb-4">{dict.votar.completada}</h1>
               <p className="text-gray-400 text-base mb-12 max-w-[280px] mx-auto leading-relaxed">
-                Tus respuestas han sido registradas con éxito. Mirá la pantalla principal para ver los resultados en vivo.
+                {dict.votar.completadaDesc}
               </p>
             </>
           ) : (
             <>
               <h1 className="text-2xl font-bold text-white mb-4 leading-snug uppercase">
-                YA VOTASTE EN ESTA ENCUESTA
+                {dict.votar.yaVotaste}
               </h1>
               <p className="text-gray-400 text-lg mb-12 max-w-[280px] mx-auto font-medium uppercase tracking-wide">
-                GRACIAS POR PARTICIPAR
+                {dict.votar.gracias}
               </p>
             </>
           )}
           
-          <Image src="/logoitectrans_v2.png" alt="ITEC" width={140} height={45} className="mx-auto opacity-40 grayscale" />
+          <Link href="/" className="cursor-pointer inline-block">
+            <Image src="/logoitectrans_v2.png" alt="ITEC" width={140} height={45} className="mx-auto opacity-40 hover:opacity-80 transition-opacity grayscale" />
+          </Link>
         </div>
       </div>
     )
@@ -142,11 +149,13 @@ export function VotingClient({ poll }: { poll: Poll | null }) {
 
       <div className="relative z-10 w-full max-w-md mx-auto flex flex-col h-full pt-8 pb-10">
         <div className="text-center mb-6">
-          <Image src="/logoitectrans_v2.png" alt="ITEC" width={140} height={45} className="mx-auto mb-8 opacity-90 drop-shadow-xl" priority />
+          <Link href="/" className="cursor-pointer inline-block">
+            <Image src="/logoitectrans_v2.png" alt="ITEC" width={140} height={45} className="mx-auto mb-8 opacity-90 drop-shadow-xl hover:opacity-100 transition-opacity" priority />
+          </Link>
           
           <div className="flex items-center justify-between px-2 mb-4">
             <span className="text-xs font-bold text-[var(--accent-primary)] uppercase tracking-widest">
-              Pregunta {currentQuestionIndex + 1} de {poll.poll_questions?.length}
+              {dict.votar.pregunta} {currentQuestionIndex + 1} {dict.votar.de} {poll.poll_questions?.length}
             </span>
             <div className="flex gap-1">
               {poll.poll_questions?.map((_, i) => (
@@ -175,8 +184,8 @@ export function VotingClient({ poll }: { poll: Poll | null }) {
                 <div className="w-16 h-16 rounded-full bg-green-500/20 flex items-center justify-center mb-6">
                   <CheckCircle2 size={32} className="text-green-400" />
                 </div>
-                <h2 className="text-2xl font-bold text-white mb-2">Voto computado</h2>
-                <p className="text-gray-400">Preparando siguiente pregunta...</p>
+                <h2 className="text-2xl font-bold text-white mb-2">{dict.votar.votoComputado}</h2>
+                <p className="text-gray-400">{dict.votar.preparandoSiguiente}</p>
               </motion.div>
             ) : isVoting ? (
               <motion.div
@@ -186,7 +195,7 @@ export function VotingClient({ poll }: { poll: Poll | null }) {
                 className="flex flex-col items-center justify-center text-center py-12"
               >
                 <Loader2 size={48} className="text-[var(--accent-primary)] animate-spin mb-6" />
-                <h2 className="text-xl font-bold text-white">Enviando respuestas...</h2>
+                <h2 className="text-xl font-bold text-white">{dict.votar.enviando}</h2>
               </motion.div>
             ) : (
               <motion.div

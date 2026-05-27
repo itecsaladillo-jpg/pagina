@@ -1,5 +1,6 @@
 import { GoogleGenAI } from '@google/genai';
 import { createClient } from '@/lib/supabase/server';
+import { generarEmbedding } from '@/services/ai';
 import type { NextRequest } from 'next/server';
 
 // ─────────────────────────────────────────────
@@ -117,6 +118,23 @@ export async function POST(request: NextRequest): Promise<Response> {
       }
     }
 
+    // Generar embedding para posibilitar la búsqueda semántica posterior (RAG)
+    let embeddingVal = null;
+    if (
+      tieneInteraccionUsuario &&
+      temaPrincipal &&
+      temaPrincipal !== 'Sin interacción significativa' &&
+      temaPrincipal !== 'Error al sintetizar con IA' &&
+      (calificacion === 'muy_util' || calificacion === 'util')
+    ) {
+      try {
+        const textoParaEmbedding = `${temaPrincipal} ${loMasUtil}`.trim();
+        embeddingVal = await generarEmbedding(textoParaEmbedding);
+      } catch (embError) {
+        console.error('[Asistente Feedback] Error al generar embedding para aprendizaje:', embError);
+      }
+    }
+
     // 5. Guardar en Supabase
     const supabase = await createClient();
     const { error: dbError } = await supabase
@@ -127,6 +145,7 @@ export async function POST(request: NextRequest): Promise<Response> {
         comentario: comentario.trim() || null,
         tema_principal: temaPrincipal,
         lo_mas_util: loMasUtil,
+        embedding: embeddingVal,
       });
 
     if (dbError) {

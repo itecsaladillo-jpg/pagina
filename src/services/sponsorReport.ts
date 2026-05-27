@@ -9,6 +9,7 @@
  */
 
 import { GoogleGenerativeAI, GenerateContentResult } from '@google/generative-ai'
+import { getAIPrompt } from './admin'
 
 // ─────────────────────────────────────────
 // Tipos
@@ -155,20 +156,35 @@ Invitá implícitamente a renovar el compromiso sin pedirlo directamente.
 
 Respondé SOLO con las 4 secciones separadas por "---SECCION---", sin encabezados ni etiquetas adicionales.`
 
+  let promptSistema = SYSTEM_PROMPT;
+  let promptTemperature = 0.85;
+  let promptMaxTokens = 1200;
+
+  try {
+    const promptConfig = await getAIPrompt('sponsor_report_mensual');
+    if (promptConfig) {
+      promptSistema = promptConfig.system_prompt;
+      promptTemperature = promptConfig.temperature;
+      promptMaxTokens = promptConfig.max_tokens;
+    }
+  } catch (err) {
+    console.warn('[SponsorReport] Error al recuperar prompt dinámico, usando fallback local:', err);
+  }
+
   try {
     const genAI = new GoogleGenerativeAI(apiKey)
     const model = genAI.getGenerativeModel({
       model: 'gemini-1.5-flash',
-      systemInstruction: SYSTEM_PROMPT,
+      systemInstruction: promptSistema,
     })
 
     const result: GenerateContentResult = await model.generateContent({
       contents: [{ role: 'user', parts: [{ text: userPrompt }] }],
       generationConfig: {
-        temperature: 0.85,      // Creatividad controlada
+        temperature: promptTemperature,      // Creatividad controlada
         topK: 40,
         topP: 0.95,
-        maxOutputTokens: 1200,
+        maxOutputTokens: promptMaxTokens,
       }
     })
 

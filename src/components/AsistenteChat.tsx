@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState, useCallback } from 'react';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 // ─────────────────────────────────────────────
 // Tipos
@@ -9,21 +10,6 @@ interface Mensaje {
   role: 'user' | 'model';
   text: string;
 }
-
-// ─────────────────────────────────────────────
-// Constantes
-// ─────────────────────────────────────────────
-const MENSAJE_BIENVENIDA: Mensaje = {
-  role: 'model',
-  text: '¡Hola! Qué bueno encontrarte por acá. Soy el Asistente virtual de ITEC. ¿Te interesa conocer la historia de Augusto Cicaré, sumarte al Mapa Productivo de Saladillo o potenciar tu perfil laboral?',
-};
-
-const SUGERENCIAS = [
-  '¿Quién fue Augusto Cicaré?',
-  'Quiero ser micro-sponsor',
-  'Sumar mi PyME al Mapa',
-  'Cargar mi perfil laboral',
-];
 
 // ─────────────────────────────────────────────
 // Sub-componente: Indicador de escritura (tres puntitos)
@@ -143,13 +129,13 @@ function BurbujaMensaje({ msg, index }: { msg: Mensaje; index: number }) {
   );
 }
 
-
 // ─────────────────────────────────────────────
 // Componente principal
 // ─────────────────────────────────────────────
 export function AsistenteChat() {
+  const { dict, language } = useLanguage();
   const [abierto, setAbierto] = useState(false);
-  const [mensajes, setMensajes] = useState<Mensaje[]>([MENSAJE_BIENVENIDA]);
+  const [mensajes, setMensajes] = useState<Mensaje[]>([]);
   const [inputValor, setInputValor] = useState('');
   const [isPending, setIsPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -165,10 +151,30 @@ export function AsistenteChat() {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const windowRef = useRef<HTMLDivElement>(null);
 
+  // Sincronizar mensaje de bienvenida según idioma de manera reactiva
+  useEffect(() => {
+    if (mensajes.length === 0) {
+      setMensajes([{
+        role: 'model',
+        text: dict.asistente.bienvenida
+      }]);
+    } else {
+      setMensajes(prev => {
+        if (prev.length === 1 && prev[0].role === 'model') {
+          return [{
+            role: 'model',
+            text: dict.asistente.bienvenida
+          }];
+        }
+        return prev;
+      });
+    }
+  }, [dict]);
+
   // Función para resetear completamente el chat
   const resetearChat = useCallback(() => {
     setPantalla('chat');
-    setMensajes([MENSAJE_BIENVENIDA]);
+    setMensajes([]);
     setInputValor('');
     setCalificacion(null);
     setFeedbackComentario('');
@@ -188,14 +194,14 @@ export function AsistenteChat() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          historial: mensajes.filter((m) => m !== MENSAJE_BIENVENIDA),
+          historial: mensajes.filter((_, idx) => idx > 0),
           calificacion,
           comentario: feedbackComentario,
         }),
       });
 
       if (!res.ok) {
-        throw new Error('Error al enviar el feedback al servidor.');
+        throw new Error(dict.asistente.errorFeedback);
       }
 
       setFeedbackEnviado(true);
@@ -218,7 +224,7 @@ export function AsistenteChat() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          historial: mensajes.filter((m) => m !== MENSAJE_BIENVENIDA),
+          historial: mensajes.filter((_, idx) => idx > 0),
           calificacion: 'cerrado_sin_feedback',
         }),
       });
@@ -283,8 +289,8 @@ export function AsistenteChat() {
 
     const nuevoMensajeUsuario: Mensaje = { role: 'user', text: texto };
 
-    // Construimos el historial previo (sin el bienvenida si es el primer turno)
-    const historialParaAPI = mensajes.filter((m) => m !== MENSAJE_BIENVENIDA || mensajes.indexOf(m) > 0);
+    // Construimos el historial previo sin la bienvenida inicial
+    const historialParaAPI = mensajes.filter((_, idx) => idx > 0);
 
     setMensajes((prev) => [...prev, nuevoMensajeUsuario]);
     setInputValor('');
@@ -298,6 +304,7 @@ export function AsistenteChat() {
         body: JSON.stringify({
           mensaje: texto,
           historial: historialParaAPI,
+          idioma: language,
         }),
       });
 
@@ -365,7 +372,7 @@ export function AsistenteChat() {
       {!abierto && (
         <button
           id="asistente-itec-fab"
-          aria-label="Abrir Asistente ITEC"
+          aria-label={dict.asistente.titulo}
           onClick={() => setAbierto(true)}
           className="itec-fab fixed bottom-6 left-6 z-50 h-14 rounded-full flex items-center gap-3 px-5 transition-transform duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
           style={{
@@ -385,7 +392,7 @@ export function AsistenteChat() {
           </div>
           {/* Texto */}
           <span className="text-white font-bold text-sm tracking-wide whitespace-nowrap">
-            Asistente ITEC
+            {dict.asistente.titulo}
           </span>
         </button>
       )}
@@ -433,10 +440,10 @@ export function AsistenteChat() {
 
               <div>
                 <p className="text-sm font-semibold leading-none" style={{ color: '#e2e8f0' }}>
-                  Asistente ITEC
+                  {dict.asistente.titulo}
                 </p>
                 <p className="text-[10px] mt-0.5" style={{ color: '#22d3ee' }}>
-                  {isPending ? 'Escribiendo...' : 'En línea'}
+                  {isPending ? dict.asistente.escribiendo : dict.asistente.online}
                 </p>
               </div>
             </div>
@@ -453,19 +460,19 @@ export function AsistenteChat() {
                     border: '1px solid rgba(59,130,246,0.3)',
                     background: 'rgba(59,130,246,0.06)'
                   }}
-                  title="Finalizar consulta y dar feedback"
+                  title={dict.asistente.finalizar}
                 >
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                   </svg>
-                  <span>Finalizar</span>
+                  <span>{dict.asistente.finalizar}</span>
                 </button>
               )}
 
               {/* Botón cerrar */}
               <button
                 id="asistente-itec-cerrar"
-                aria-label="Cerrar chat"
+                aria-label={dict.asistente.soloCerrar}
                 onClick={() => {
                   if (pantalla === 'chat' && mensajes.length > 1) {
                     setPantalla('feedback');
@@ -506,7 +513,7 @@ export function AsistenteChat() {
                     <svg className="w-3.5 h-3.5 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
                     </svg>
-                    <span>{error}</span>
+                    <span>{error === 'Error al enviar el feedback al servidor.' ? dict.asistente.errorFeedback : error}</span>
                   </div>
                 )}
               </div>
@@ -517,7 +524,7 @@ export function AsistenteChat() {
                   className="flex gap-1.5 px-4 pb-2 flex-wrap flex-shrink-0"
                   style={{ borderTop: '1px solid rgba(59,130,246,0.08)' }}
                 >
-                  {SUGERENCIAS.map((s) => (
+                  {dict.asistente.sugerencias.map((s) => (
                     <button
                       key={s}
                       onClick={() => enviarMensaje(s)}
@@ -552,7 +559,7 @@ export function AsistenteChat() {
                   value={inputValor}
                   onChange={(e) => setInputValor(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  placeholder="Escribí tu consulta..."
+                  placeholder={dict.asistente.placeholder}
                   disabled={isPending}
                   className="flex-1 resize-none text-sm py-2.5 px-3 rounded-xl outline-none transition-colors duration-150 leading-relaxed"
                   style={{
@@ -580,7 +587,7 @@ export function AsistenteChat() {
                 {/* Botón enviar */}
                 <button
                   id="asistente-itec-enviar"
-                  aria-label="Enviar mensaje"
+                  aria-label={dict.asistente.enviarCerrar}
                   onClick={() => enviarMensaje()}
                   disabled={isPending || !inputValor.trim()}
                   className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 transition-all duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
@@ -635,8 +642,8 @@ export function AsistenteChat() {
                         d="M11.48 3.499c-.196-.399-.778-.399-.974 0L7.93 7.848l-4.81.362c-.452.034-.633.597-.291.905l3.58 3.238-1.012 4.73c-.095.447.382.793.766.556L10 15.234l4.135 2.148c.384.237.86-.109.767-.556l-1.012-4.73 3.58-3.238c.34-.308.16-.871-.291-.905l-4.81-.362-2.58-4.349z" />
                     </svg>
                   </div>
-                  <h3 className="text-sm font-semibold text-slate-200">¿Te resultó útil la conversación?</h3>
-                  <p className="text-[10px] text-slate-400 mt-1">Ayudanos a mejorar la atención del Asistente ITEC</p>
+                  <h3 className="text-sm font-semibold text-slate-200">{dict.asistente.preguntaFeedback}</h3>
+                  <p className="text-[10px] text-slate-400 mt-1">{dict.asistente.descFeedback}</p>
                 </div>
 
                 {/* Calificaciones */}
@@ -644,10 +651,10 @@ export function AsistenteChat() {
                   <div className="space-y-4">
                     <div className="grid grid-cols-2 gap-2">
                       {[
-                        { id: 'muy_util', label: 'Muy útil', emoji: '😄', color: 'rgba(34,197,94,0.12)', borderColor: 'rgba(34,197,94,0.3)', textColor: '#4ade80' },
-                        { id: 'util', label: 'Útil', emoji: '🙂', color: 'rgba(59,130,246,0.12)', borderColor: 'rgba(59,130,246,0.3)', textColor: '#60a5fa' },
-                        { id: 'neutral', label: 'Neutral', emoji: '😐', color: 'rgba(100,116,139,0.12)', borderColor: 'rgba(100,116,139,0.3)', textColor: '#94a3b8' },
-                        { id: 'poco_util', label: 'Poco útil', emoji: '🙁', color: 'rgba(239,68,68,0.12)', borderColor: 'rgba(239,68,68,0.3)', textColor: '#fca5a5' }
+                        { id: 'muy_util', label: dict.asistente.muyUtil, emoji: '😄', color: 'rgba(34,197,94,0.12)', borderColor: 'rgba(34,197,94,0.3)', textColor: '#4ade80' },
+                        { id: 'util', label: dict.asistente.util, emoji: '🙂', color: 'rgba(59,130,246,0.12)', borderColor: 'rgba(59,130,246,0.3)', textColor: '#60a5fa' },
+                        { id: 'neutral', label: dict.asistente.neutral, emoji: '😐', color: 'rgba(100,116,139,0.12)', borderColor: 'rgba(100,116,139,0.3)', textColor: '#94a3b8' },
+                        { id: 'poco_util', label: dict.asistente.pocoUtil, emoji: '🙁', color: 'rgba(239,68,68,0.12)', borderColor: 'rgba(239,68,68,0.3)', textColor: '#fca5a5' }
                       ].map((item) => {
                         const seleccionado = calificacion === item.id;
                         return (
@@ -673,14 +680,14 @@ export function AsistenteChat() {
                     {calificacion && (
                       <div style={{ animation: 'itec-msg-in 0.2s ease-out both' }}>
                         <label htmlFor="feedback-textarea" className="block text-[10px] text-slate-400 mb-1 font-medium">
-                          Comentario opcional:
+                          {dict.asistente.comentarioFeedback}
                         </label>
                         <textarea
                           id="feedback-textarea"
                           rows={2}
                           value={feedbackComentario}
                           onChange={(e) => setFeedbackComentario(e.target.value)}
-                          placeholder="¿Qué te sirvió más o qué podríamos mejorar?"
+                          placeholder={dict.asistente.placeholderFeedback}
                           className="w-full text-xs py-2 px-3 rounded-xl outline-none transition-colors duration-150 leading-relaxed resize-none"
                           style={{
                             background: 'rgba(15,23,41,0.8)',
@@ -702,7 +709,7 @@ export function AsistenteChat() {
                     {error && (
                       <div className="text-[10px] px-2.5 py-1.5 rounded-lg flex items-center gap-1.5"
                         style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.2)', color: '#fca5a5' }}>
-                        <span>⚠️ {error}</span>
+                        <span>⚠️ {error === 'Error al enviar el feedback al servidor.' ? dict.asistente.errorFeedback : error}</span>
                       </div>
                     )}
                   </div>
@@ -714,9 +721,9 @@ export function AsistenteChat() {
                         <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                       </svg>
                     </div>
-                    <h4 className="text-xs font-bold text-green-400">¡Muchas gracias!</h4>
+                    <h4 className="text-xs font-bold text-green-400">{dict.asistente.exitoFeedback}</h4>
                     <p className="text-[10px] text-slate-400 mt-1 px-4 leading-relaxed">
-                      Tu valoración ayuda a que el Asistente ITEC aprenda y asista mejor a toda la comunidad.
+                      {dict.asistente.descExitoFeedback}
                     </p>
                   </div>
                 )}
@@ -741,12 +748,12 @@ export function AsistenteChat() {
                     >
                       {enviandoFeedback ? (
                         <svg className="w-3.5 h-3.5 animate-spin" style={{ color: '#60a5fa' }} fill="none" viewBox="0 0 24 24">
-                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth={4} />
                           <path className="opacity-75" fill="currentColor"
                             d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                         </svg>
                       ) : (
-                        'Enviar y cerrar'
+                        dict.asistente.enviarCerrar
                       )}
                     </button>
                     <button
@@ -755,7 +762,7 @@ export function AsistenteChat() {
                       className="px-3 h-9 rounded-xl text-xs font-semibold transition-colors duration-150 hover:bg-white/5 cursor-pointer text-slate-400"
                       style={{ border: '1px solid rgba(100,116,139,0.2)' }}
                     >
-                      Solo cerrar
+                      {dict.asistente.soloCerrar}
                     </button>
                   </>
                 ) : (
@@ -767,7 +774,7 @@ export function AsistenteChat() {
                     className="flex-1 h-9 rounded-xl font-bold text-xs text-white flex items-center justify-center cursor-pointer"
                     style={{ background: 'linear-gradient(135deg, #3b82f6, #06b6d4)' }}
                   >
-                    Cerrar ventana
+                    {dict.asistente.cerrarVentana}
                   </button>
                 )}
               </div>

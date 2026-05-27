@@ -5,6 +5,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 const navLinks = [
   { label: 'Acciones', href: '/#acciones' },
@@ -17,10 +18,21 @@ const navLinks = [
 ]
 
 export function Navbar() {
+  const { language, dict } = useLanguage()
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const [claseEnVivo, setClaseEnVivo] = useState(false)
   const pathname = usePathname()
+
+  const dynamicLinks = [
+    { label: dict.navbar.acciones, href: '/#acciones' },
+    { label: dict.navbar.videoteca, href: '/#videoteca' },
+    { label: dict.navbar.nosotros, href: '/#nosotros' },
+    { label: dict.navbar.sponsors, href: '/#sponsors' },
+    { label: dict.navbar.ideas, href: '/#ideas' },
+    { label: dict.navbar.mapa, href: '/mapa-productivo', highlight: true },
+    { label: dict.navbar.miembros, href: '/login' },
+  ]
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 100)
@@ -88,93 +100,94 @@ export function Navbar() {
       }}
     >
       <div className="max-w-7xl mx-auto w-full px-6 flex items-center justify-between">
-        <div className="flex items-center gap-12">
-          {/* Logo */}
-          <Link href="/" className="group relative">
-            {/* Iluminación puntual debajo del logo */}
-            <div className="absolute left-1/2 -translate-x-1/2 -bottom-2 w-24 h-10 bg-[#3b82f6] blur-[40px] opacity-50 -z-10 rounded-full" />
-            
-            <Image
-              src="/logoitectrans_v2.png"
-              alt="ITEC Saladillo"
-              width={248}
-              height={95}
-              className={`w-auto object-contain group-hover:opacity-90 transition-all duration-300 relative z-10 ${
-                showSolidNavbar ? 'h-14' : 'h-18'
-              }`}
-              priority
-            />
-          </Link>
+        {/* Logo */}
+        <Link href="/" className="group relative shrink-0 block">
+          {/* Iluminación puntual debajo del logo */}
+          <div className="absolute left-1/2 -translate-x-1/2 -bottom-2 w-20 h-8 bg-[#3b82f6] blur-[30px] opacity-40 -z-10 rounded-full" />
+          
+          <Image
+            src="/logoitectrans_v2.png"
+            alt="ITEC Saladillo"
+            width={200}
+            height={76}
+            className={`w-auto object-contain group-hover:opacity-90 transition-all duration-300 relative z-10 shrink-0 ${
+              showSolidNavbar ? 'h-[42px]' : 'h-[54px]'
+            }`}
+            priority
+            loading="eager"
+          />
+        </Link>
 
-          {/* Desktop nav — Izquierda (Primeros 5 + Mapa Productivo) */}
-          <div className="hidden md:flex items-center gap-2 ml-[80px]">
-            {navLinks.slice(0, 5).map((link) => {
-              const isIdeas = link.label === 'Buzón de Ideas'
-              return (
-                <a
-                  key={link.href}
-                  href={link.href}
-                  className={`btn-outline text-[10px] uppercase tracking-wider py-1 px-3 border-dashed opacity-70 hover:opacity-100 transition-all flex items-center justify-center text-center leading-tight min-h-[44px] whitespace-normal gap-0 ${
-                    isIdeas ? 'w-[120px]' : 'w-[105px]'
-                  }`}
-                >
-                  {isIdeas ? (
-                    <span className="block leading-tight">
-                      Buzón<br /><span className="whitespace-nowrap">de Ideas</span>
+        {/* Desktop nav — Unificado y alineado a la derecha */}
+        <div className="hidden lg:flex items-center gap-1.5 ml-auto shrink-0">
+          {/* Primeros 5 enlaces */}
+          {dynamicLinks.slice(0, 5).map((link) => {
+            const hasSpace = link.label.includes(' ') || link.label.includes('\n')
+            return (
+              <a
+                key={link.href}
+                href={link.href}
+                className={`btn-outline text-[9px] uppercase tracking-wider py-1 px-1 border-dashed opacity-75 hover:opacity-100 transition-all flex items-center justify-center text-center leading-[1.15] min-h-[42px] whitespace-normal shrink-0 ${
+                  hasSpace ? 'w-[82px]' : 'w-[72px]'
+                }`}
+              >
+                <span>
+                  {link.label.split('\n').map((line, i) => (
+                    <span key={i} className="block whitespace-nowrap">
+                      {line}
                     </span>
-                  ) : (
-                    <span>{link.label}</span>
-                  )}
-                </a>
-              )
-            })}
-            {/* Mapa Productivo — destacado */}
-            <a
-              href="/mapa-productivo"
-              className="text-[10px] uppercase tracking-wider py-1 px-4 rounded-full font-bold
-                bg-gradient-to-r from-blue-600/30 to-cyan-600/20 border border-blue-500/40
-                text-blue-300 hover:text-white hover:border-blue-400 hover:from-blue-600/50 hover:to-cyan-600/30
-                transition-all duration-200 flex items-center justify-center gap-1.5 min-h-[44px] text-center w-[130px] whitespace-normal leading-tight"
-            >
-              <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse flex-shrink-0" />
-              <span className="leading-tight">Mapa Productivo</span>
-            </a>
-          </div>
-        </div>
+                  ))}
+                </span>
+              </a>
+            )
+          })}
+          
+          {/* Mapa Productivo — destacado */}
+          <a
+            href="/mapa-productivo"
+            className="text-[9px] uppercase tracking-wider py-1 px-2 rounded-2xl font-extrabold
+              bg-gradient-to-r from-blue-600/30 to-cyan-600/20 border border-blue-500/40
+              text-blue-300 hover:text-white hover:border-blue-400 hover:from-blue-600/50 hover:to-cyan-600/30
+              transition-all duration-200 flex items-center justify-center gap-1 min-h-[42px] text-center w-[90px] whitespace-normal leading-[1.15] shrink-0"
+          >
+            <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse flex-shrink-0" />
+            <span>{dict.navbar.mapa}</span>
+          </a>
 
-        {/* Desktop nav — Derecha (Acceso Miembros y Aula Virtual) */}
-        <div className="hidden md:flex items-center gap-3">
+          {/* Aula Virtual */}
           {claseEnVivo ? (
             <Link
               href="/clases/demostracion"
-              className="text-[10px] uppercase tracking-wider py-1 px-4 rounded-full font-bold
+              className="text-[9px] uppercase tracking-wider py-1 px-2 rounded-2xl font-extrabold
                 bg-gradient-to-r from-red-600/30 to-rose-600/20 border border-red-500/40
                 text-red-300 hover:text-white hover:border-red-400 hover:from-red-600/50 hover:to-rose-600/30
-                transition-all duration-200 flex items-center justify-center gap-1.5 min-h-[44px] text-center w-[130px] whitespace-normal leading-tight animate-pulse"
+                transition-all duration-200 flex items-center justify-center gap-1 min-h-[42px] text-center w-[90px] whitespace-normal leading-[1.15] shrink-0 animate-pulse"
             >
               <span className="w-1.5 h-1.5 rounded-full bg-red-400 animate-pulse flex-shrink-0" />
-              <span className="leading-tight">Aula Virtual</span>
+              <span>{dict.navbar.aula}</span>
             </Link>
           ) : (
             <Link
               href="/clases/demostracion"
-              className="btn-outline text-[10px] uppercase tracking-wider py-1 px-4 border-dashed opacity-70 hover:opacity-100 transition-all flex items-center justify-center text-center min-h-[44px] w-[130px] whitespace-normal leading-tight"
+              className="btn-outline text-[9px] uppercase tracking-wider py-1 px-2 border-dashed opacity-75 hover:opacity-100 transition-all flex items-center justify-center text-center min-h-[42px] w-[90px] whitespace-normal leading-[1.15] shrink-0"
             >
-              <span className="leading-tight">Aula Virtual</span>
+              <span>{dict.navbar.aula}</span>
             </Link>
           )}
+
+          {/* Acceso Miembros */}
           <a
-            href={navLinks[6].href}
-            className="btn-outline text-[10px] uppercase tracking-wider py-1 px-4 border-dashed opacity-70 hover:opacity-100 transition-all flex items-center justify-center text-center min-h-[44px] w-[130px] whitespace-normal leading-tight"
+            href={dynamicLinks[6].href}
+            className="btn-outline text-[9px] uppercase tracking-wider py-1 px-2 border-dashed opacity-75 hover:opacity-100 transition-all flex items-center justify-center text-center min-h-[42px] w-[90px] whitespace-normal leading-[1.15] shrink-0"
           >
-            <span className="leading-tight">{navLinks[6].label}</span>
+            <span>{dynamicLinks[6].label}</span>
           </a>
         </div>
 
         {/* Mobile hamburger */}
         <button
           onClick={() => setMenuOpen(!menuOpen)}
-          className="md:hidden text-[var(--text-secondary)] hover:text-white transition-colors"
+          className="lg:hidden text-[var(--text-secondary)] hover:text-white transition-colors"
           aria-label="Menú"
         >
           {menuOpen ? (
@@ -187,43 +200,51 @@ export function Navbar() {
 
       {/* Mobile menu */}
       {menuOpen && (
-        <div className="md:hidden glass border-t border-[var(--border-subtle)] mt-3 px-6 py-4 flex flex-col gap-4">
-          {navLinks.filter(l => !l.highlight).map((link) => (
+        <div className="absolute top-full left-0 w-full lg:hidden glass border-t border-[var(--border-subtle)] px-6 py-4 flex flex-col items-end gap-3 z-50">
+          {dynamicLinks.filter(l => !l.highlight).map((link) => (
             <a
               key={link.href}
               href={link.href}
               onClick={() => setMenuOpen(false)}
-              className="btn-outline text-xs py-2 px-4 w-full justify-center"
+              className="btn-outline text-xs py-2 px-4 w-fit justify-end text-right leading-tight"
             >
-              {link.label}
+              <span>
+                {link.label.split('\n').map((line, i) => (
+                  <span key={i} className="block whitespace-nowrap">
+                    {line}
+                  </span>
+                ))}
+              </span>
             </a>
           ))}
           <a
             href="/mapa-productivo"
             onClick={() => setMenuOpen(false)}
-            className="text-xs py-2 px-4 w-full text-center rounded-full font-bold
+            className="text-xs py-2 px-4 w-fit text-right rounded-full font-bold
               bg-gradient-to-r from-blue-600/30 to-cyan-600/20 border border-blue-500/40
-              text-blue-300 hover:text-white transition-all"
+              text-blue-300 hover:text-white transition-all flex items-center justify-end gap-1.5"
           >
-            🗺️ Mapa Productivo
+            <span>{dict.navbar.mapa}</span>
+            <span>🗺️</span>
           </a>
           {claseEnVivo ? (
             <Link
               href="/clases/demostracion"
               onClick={() => setMenuOpen(false)}
-              className="text-xs py-2 px-4 w-full text-center rounded-full font-bold
+              className="text-xs py-2 px-4 w-fit text-right rounded-full font-bold
                 bg-gradient-to-r from-red-600/30 to-rose-600/20 border border-red-500/40
-                text-red-300 hover:text-white transition-all"
+                text-red-300 hover:text-white transition-all animate-pulse flex items-center justify-end gap-1.5"
             >
-              🔴 Aula Virtual (En Vivo)
+              <span>{dict.navbar.aulaEnVivo}</span>
+              <span>🔴</span>
             </Link>
           ) : (
             <Link
               href="/clases/demostracion"
               onClick={() => setMenuOpen(false)}
-              className="btn-outline text-xs py-2 px-4 w-full justify-center"
+              className="btn-outline text-xs py-2 px-4 w-fit justify-end text-right"
             >
-              Aula Virtual
+              {dict.navbar.aula}
             </Link>
           )}
         </div>

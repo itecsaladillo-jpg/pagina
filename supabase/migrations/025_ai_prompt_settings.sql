@@ -1,15 +1,44 @@
-import { GoogleGenAI, type Content } from '@google/genai';
-import { createClient } from '@/lib/supabase/server';
-import { buscarFeedbacksSimilares, auditarRespuestaIA } from '@/services/ai';
-import { getAIPrompt } from '@/services/admin';
-import type { NextRequest } from 'next/server';
+-- Crear la tabla ai_prompt_settings para desacoplar prompts de sistema de IA
+create table public.ai_prompt_settings (
+  id uuid primary key default gen_random_uuid(),
+  clave_prompt text not null unique,
+  descripcion text,
+  system_prompt text not null,
+  temperature double precision not null default 0.7,
+  max_tokens integer not null default 2048,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  updated_by uuid references public.members(id) on delete set null
+);
 
-// ─────────────────────────────────────────────
-// Constantes de configuración
-const MODEL_ID = 'gemini-2.5-flash';
+-- Habilitar RLS (Row Level Security)
+alter table public.ai_prompt_settings enable row level security;
 
-const SYSTEM_INSTRUCTION = `
-Sos el Asistente ITEC, el anfitrión virtual de la web de ITEC en Saladillo, Buenos Aires, Argentina.
+-- Política de lectura: pública para posibilitar el chat del asistente
+create policy "Cualquiera puede leer la configuración de prompts"
+  on public.ai_prompt_settings for select
+  using (true);
+
+-- Política de escritura/modificación: restringida a miembros con rol admin
+create policy "Solo administradores pueden insertar o modificar prompts"
+  on public.ai_prompt_settings for all
+  using (
+    exists (
+      select 1 from public.members
+      where id = auth.uid() and role = 'admin'
+    )
+  );
+
+-- Trigger para automatizar la fecha de actualización updated_at
+create trigger set_updated_at before update on public.ai_prompt_settings
+  for each row execute function public.handle_updated_at();
+
+-- Insertar configuraciones iniciales con los prompts que estaban hardcodeados
+insert into public.ai_prompt_settings (clave_prompt, descripcion, system_prompt, temperature, max_tokens)
+values (
+  'asistente_global',
+  'Instrucción de sistema para el Asistente ITEC (chatbot flotante con voseo rioplatense)',
+  $$Sos el Asistente ITEC, el anfitrión virtual de la web de ITEC en Saladillo, Buenos Aires, Argentina.
 
 ## Tu personalidad
 Tu nombre es "Asistente ITEC". Tenés un tono inspirador, optimista, comunitario, cercano y sumamente profesional.
@@ -153,19 +182,19 @@ Si un usuario te pregunta cómo funciona el Aula Virtual de ITEC, explicalo usan
 ## Reglas de Formato y Estructura Visual (Estrictas y Obligatorias)
 - **Prohibición Absoluta de Rutas:** Está terminantemente PROHIBIDO escribir o mencionar cualquier ruta técnica del sitio web (por ejemplo: "/mapa-productivo", "/registro-mapa", "/acciones", "/dashboard", etc.). Omití siempre estas rutas en tus respuestas e ítems.
 - **Cero Bloques de Texto Monótonos o Corridos:** Bajo ninguna circunstancia respondas con párrafos continuos o agrupados en un solo bloque. Si presentás conceptos, listas o características, cada concepto DEBE ir en una línea física independiente.
-- **Estructura de Conceptos con Doble Salto de Línea Obligatorio ('\\n\\n'):**
-  - Para separar conceptos, dejá obligatoriamente una línea física en blanco (doble salto de línea '\\n\\n') entre cada uno de ellos.
-  - Dejá también una línea física en blanco ('\\n\\n') entre un punto y aparte (o final de una oración introductoria) y el inicio de un nuevo título o ítem.
+- **Estructura de Conceptos con Doble Salto de Línea Obligatorio ('\n\n'):**
+  - Para separar conceptos, dejá obligatoriamente una línea física en blanco (doble salto de línea '\n\n') entre cada uno de ellos.
+  - Dejá también una línea física en blanco ('\n\n') entre un punto y aparte (o final de una oración introductoria) y el inicio de un nuevo título o ítem.
 - **Títulos de Concepto en MAYÚSCULAS y Negritas:** El título principal de cada concepto de la lista debe ir estrictamente en MAYÚSCULAS y en negritas, seguido de dos puntos. Ejemplo exacto de estructura:
 
   * **INICIO E IDENTIDAD:** Conocé nuestra misión y el impacto de ITEC.
 
-  * **NUESTRAS 4 COMISIONES:** Explorá los pilares de trabajo que nos moverán.
+  * **NUESTRAS 4 COMISIONES:** Muestra los pilares de Innovación, Educación, Vinculación y Comunicación.
 
 - **Poder de Síntesis Extremo y Párrafos Cortos:**
   - Evitá introducciones largas, saludos repetitivos o conclusiones redundantes. Ve directo al grano.
   - Al listar herramientas, comisiones o funciones, describí cada ítem con una frase sumamente breve y concisa (máximo 12 palabras). Evitá explicaciones extensas que puedan truncar el mensaje.
-  - Si escribís texto narrativo ordinario, usá oraciones muy cortas y separalas con punto y aparte usando doble salto de línea física ('\\n\\n'). Cada párrafo no debe superar las 1 o 2 oraciones breves.
+  - Si escribís texto narrativo ordinario, usá oraciones muy cortas y separalas con punto y aparte usando doble salto de línea física ('\n\n'). Cada párrafo no debe superar las 1 o 2 oraciones breves.
 
 - **Ejemplo de Respuesta CORRECTA (Estructura visual aireada, limpia y sin rutas):**
   ¡Qué bueno contarte sobre las herramientas públicas que tenemos!
@@ -183,328 +212,38 @@ Si un usuario te pregunta cómo funciona el Aula Virtual de ITEC, explicalo usan
 ## Comportamiento general
 - Respondé SIEMPRE en español rioplatense con voseo cálido y profesional.
 - Si te preguntan algo fuera de los temas de ITEC, redirigí amablemente la conversación hacia cómo ITEC puede ayudar o motivar.
-- Nunca inventes información. Si no sabés algo específico, indicá que el equipo de ITEC puede responder esa consulta en detalle y guialos a contactarnos.
-`.trim();
-// ─────────────────────────────────────────────
-// Tipos de la petición
-// ─────────────────────────────────────────────
-interface MensajeChat {
-  role: 'user' | 'model';
-  text: string;
-}
+- Nunca inventes información. Si no sabés algo específico, indicá que el equipo de ITEC puede responder esa consulta en detalle y guialos a contactarnos.$$,
+  0.75,
+  2048
+), (
+  'sponsor_report_mensual',
+  'Director de Comunicación de ITEC para generar reportes mensuales a patrocinadores y socios estratégicos',
+  $$Sos el Director de Comunicación Institucional de ITEC Saladillo, 
+una organización sin fines de lucro de vanguardia tecnológica radicada en Saladillo, Buenos Aires.
 
-interface CuerpoSolicitud {
-  mensaje: string;
-  historial?: MensajeChat[];
-  idioma?: string;
-}
+Tu misión es transformar datos operativos (gastos, métricas, acciones) en narrativas de impacto que 
+comuniquen el verdadero valor de las alianzas estratégicas: no el dinero en sí, sino lo que ese dinero 
+construye en el tejido productivo y humano de la región.
 
-// ─────────────────────────────────────────────
-// Inicialización del cliente (singleton de módulo)
-// ─────────────────────────────────────────────
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY_4 || process.env.GEMINI_API_KEY_3 || process.env.GEMINI_API_KEY || '' });
+PRINCIPIOS DE COMUNICACIÓN:
+- El sponsor es un Socio Estratégico, no un donante. Su aporte es una inversión en el futuro colectivo.
+- Nunca sonés como un recibo de pago ni un informe contable. Sonás como un balance de logros compartidos.
+- La excelencia técnica de ITEC existe GRACIAS a la infraestructura que el sponsor financia (viáticos, hotelería de disertantes, materiales). Reconocé esto con precisión y orgullo institucional.
+- El impacto en niños y jóvenes no es accesorio: es la semilla del capital humano que evita la fuga de talentos de ciudades intermedias como Saladillo.
+- Cuando una capacitación es relevante para el rubro del sponsor, presentá la invitación como una oportunidad de actualizar el capital humano de su organización, no como un regalo o beneficio genérico.
 
-// ─────────────────────────────────────────────
-// POST /api/asistente
-// ─────────────────────────────────────────────
-export async function POST(request: NextRequest): Promise<Response> {
-  // 1. Validar API key en tiempo de ejecución
-  if (!process.env.GEMINI_API_KEY_4 && !process.env.GEMINI_API_KEY_3 && !process.env.GEMINI_API_KEY) {
-    return Response.json(
-      { error: 'La API key de Gemini no está configurada en el servidor.' },
-      { status: 500 },
-    );
-  }
+TONO Y ESTILO:
+- Vanguardista, sólido, inspirador, con profundidad conceptual.
+- Primera persona plural ("construimos", "logramos", "proyectamos").
+- Frases contundentes y precisas. Sin rodeos ni relleno.
 
-  // 2. Parsear y validar el cuerpo de la solicitud
-  let cuerpo: CuerpoSolicitud;
-  try {
-    cuerpo = await request.json();
-  } catch {
-    return Response.json(
-      { error: 'El cuerpo de la solicitud no es un JSON válido.' },
-      { status: 400 },
-    );
-  }
-
-  const { mensaje, historial = [], idioma } = cuerpo;
-
-  if (!mensaje || typeof mensaje !== 'string' || mensaje.trim() === '') {
-    return Response.json(
-      { error: 'El campo "mensaje" es requerido y no puede estar vacío.' },
-      { status: 400 },
-    );
-  }
-
-  // 2.5. Consultar aprendizajes comunitarios semánticamente similares para el auto-aprendizaje (RAG)
-  let aprendizajesAdicionales = '';
-  try {
-    const feedbacksSimilares = await buscarFeedbacksSimilares(mensaje, 5, 0.35);
-
-    if (feedbacksSimilares && feedbacksSimilares.length > 0) {
-      const itemsValidos = feedbacksSimilares
-        .filter((item) => item.tema_principal && item.lo_mas_util && 
-                          item.tema_principal !== 'Sin interacción significativa' && 
-                          item.tema_principal !== 'Error al sintetizar con IA')
-        .map((item) => `- Consulta del usuario: "${item.tema_principal}" -> Lo más útil fue: "${item.lo_mas_util}"`);
-
-      if (itemsValidos.length > 0) {
-        aprendizajesAdicionales = `\n\n## Aprendizaje Comunitario Reciente (Interacciones pasadas muy útiles):\n${itemsValidos.join('\n')}`;
-      }
-    }
-  } catch (err) {
-    console.error('[Asistente ITEC] Error al cargar aprendizajes semánticos para contexto dinámico:', err);
-  }
-
-  // 2.7. Consultar el directorio público de miembros de ITEC para darle contexto del staff al Asistente
-  let miembrosContext = '';
-  try {
-    const supabase = await createClient();
-    const { data: miembros, error: miembrosError } = await supabase.rpc('obtener_miembros_publicos');
-
-    if (miembrosError) {
-      console.error('[Asistente ITEC] Error al recuperar directorio de miembros mediante RPC:', miembrosError);
-    } else if (miembros && miembros.length > 0) {
-      const listaMiembros = miembros
-        .filter((m: any) => m.full_name)
-        .map((m: any) => 
-          `- **${m.full_name}**: Rol: ${m.role || 'Miembro'}. ${m.frase_itec ? `Frase: "${m.frase_itec}". ` : ''}${m.tareas_itec ? `Tareas: ${m.tareas_itec}. ` : ''}${m.bio ? `Habilidades/Bio: ${m.bio}.` : ''}`
-        );
-      
-      if (listaMiembros.length > 0) {
-        miembrosContext = `\n\n## Miembros Oficiales de ITEC Saladillo (Staff):\n${listaMiembros.join('\n')}`;
-      }
-    }
-  } catch (err) {
-    console.error('[Asistente ITEC] Error al obtener directorio de miembros:', err);
-  }
-
-  // 3. Saneamiento estricto del historial de conversación para cumplir con las reglas de Gemini:
-  // - Debe comenzar obligatoriamente con el rol 'user'.
-  // - Debe alternar de forma estrictamente binaria entre 'user' y 'model'.
-  // - Debe terminar con el mensaje actual del usuario (rol 'user').
-  const contenidos: Content[] = [];
-  
-  const historialMapeado = historial.map(msg => ({
-    role: msg.role === 'model' ? 'model' : 'user',
-    parts: [{ text: msg.text || '' }],
-  }));
-
-  const todosLosMensajes = [
-    ...historialMapeado,
-    {
-      role: 'user',
-      parts: [{ text: mensaje.trim() }],
-    }
-  ];
-
-  let ultimoRol: string | null = null;
-  
-  for (const msg of todosLosMensajes) {
-    if (contenidos.length === 0) {
-      // El primer mensaje de la conversación para Gemini debe ser estrictamente 'user'
-      if (msg.role === 'user') {
-        contenidos.push(msg as Content);
-        ultimoRol = 'user';
-      }
-    } else {
-      // Garantizar la alternancia estricta de roles
-      if (msg.role !== ultimoRol) {
-        contenidos.push(msg as Content);
-        ultimoRol = msg.role;
-      } else {
-        // Combinar textos si hay mensajes del mismo rol seguidos
-        const ultimoMensaje = contenidos[contenidos.length - 1];
-        if (ultimoMensaje && ultimoMensaje.parts && ultimoMensaje.parts[0]) {
-          ultimoMensaje.parts[0].text += '\n\n' + msg.parts[0].text;
-        }
-      }
-    }
-  }
-
-  // Garantizar que la conversación enviada a Gemini finalice con un mensaje de 'user'
-  if (contenidos.length > 0 && contenidos[contenidos.length - 1].role !== 'user') {
-    contenidos.pop();
-  }
-
-  // 3.5. Recuperar el prompt dinámico de sistema desde Supabase (con caché de Next.js)
-  let promptSistema = SYSTEM_INSTRUCTION;
-  let promptTemperature = 0.75;
-  let promptMaxTokens = 2048;
-
-  try {
-    const promptConfig = await getAIPrompt('asistente_global');
-    if (promptConfig) {
-      promptSistema = promptConfig.system_prompt;
-      promptTemperature = promptConfig.temperature;
-      promptMaxTokens = promptConfig.max_tokens;
-    }
-  } catch (err) {
-    console.warn('[Asistente ITEC] Error al recuperar prompt dinámico, usando fallback local:', err);
-  }
-
-  // 3.7. Detectar idioma y ajustar instrucción de idioma en base a la preferencia pasada o al análisis de la consulta
-  let instruccionesIdioma = '';
-  if (idioma === 'en') {
-    instruccionesIdioma = `
-## IMPORTANT: LANGUAGE RULES
-- The user has selected English. You MUST respond strictly in English.
-- Adapt the warm, friendly, and professional tone of ITEC to natural English expressions.
-- Sound extremely engaging, local to Saladillo, and inspiring in English. Do not write in Spanish under any circumstances.
-`;
-  } else if (idioma === 'pt') {
-    instruccionesIdioma = `
-## IMPORTANT: LANGUAGE RULES
-- O usuário selecionou o idioma Português. Você DEVE responder estritamente em português.
-- Adapte o tom caloroso, amigável e profissional do ITEC para expressões naturais em português.
-- Soe extremamente inspirador, acolhedor e profissional em português. Não escreva em espanhol sob nenhuma circunstância.
-`;
-  } else if (idioma === 'es') {
-    instruccionesIdioma = `
-## IMPORTANT: LANGUAGE RULES
-- El usuario seleccionó el idioma Español. Debes responder estrictamente en español utilizando el voseo rioplatense cálido, natural y cercano.
-`;
-  } else {
-    // Si no se proporcionó idioma (o se evalúa la primera consulta)
-    instruccionesIdioma = `
-## IMPORTANT: LANGUAGE RULES
-- Detect the language of the user's first query (or ongoing queries).
-- If the user writes in English, reply strictly in English with a warm, inspiring, and professional tone.
-- If the user writes in Portuguese, reply strictly in Portuguese.
-- If the user writes in Spanish (or by default), reply strictly in Spanish using natural rioplatense voseo.
-- Always maintain the exact same language in which the user starts the conversation.
-`;
-  }
-
-  promptSistema = instruccionesIdioma + "\n\n" + promptSistema;
-
-  // 4. Llamar a la API de Gemini con el contexto del sistema e historial
-  try {
-    let respuesta;
-    let modeloUtilizado = MODEL_ID;
-
-    try {
-      respuesta = await ai.models.generateContent({
-        model: MODEL_ID,
-        contents: contenidos,
-        config: {
-          systemInstruction: promptSistema + aprendizajesAdicionales + miembrosContext,
-          temperature: promptTemperature,
-          maxOutputTokens: promptMaxTokens,
-        },
-      });
-    } catch (primerError: any) {
-      console.warn(`[Asistente ITEC] Falló la primera llamada al modelo principal ${MODEL_ID}:`, primerError);
-      
-      const errorMsg = primerError instanceof Error ? primerError.message : String(primerError);
-      let errorStatus = primerError?.status || primerError?.statusCode || 500;
-      
-      try {
-        const parsed = JSON.parse(errorMsg);
-        if (parsed?.error?.code) {
-          errorStatus = parsed.error.code;
-        }
-      } catch {}
-
-      // Si es un error de cuota excedida (429), lo lanzamos de inmediato para responder 429
-      if (errorStatus === 429 || errorMsg.toLowerCase().includes('quota') || errorMsg.toLowerCase().includes('resource_exhausted')) {
-        throw primerError;
-      }
-      
-      // Si es otro tipo de error (como un 503 por alta demanda o sobrecarga temporal), hacemos un reintento rápido con backoff de 500ms
-      console.log('[Asistente ITEC] Intentando reintento rápido con el modelo principal...');
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
-      respuesta = await ai.models.generateContent({
-        model: MODEL_ID,
-        contents: contenidos,
-        config: {
-          systemInstruction: promptSistema + aprendizajesAdicionales + miembrosContext,
-          temperature: promptTemperature,
-          maxOutputTokens: promptMaxTokens,
-        },
-      });
-    }
-
-    const textoRespuesta = respuesta.text;
-
-    if (!textoRespuesta) {
-      return Response.json(
-        { error: 'El modelo no devolvió una respuesta con texto.' },
-        { status: 502 },
-      );
-    }
-
-    // Ejecutar el Pipeline de Auditoría y Monitoreo de Respuestas de IA en tiempo real
-    const resultadoAuditoria = await auditarRespuestaIA(mensaje, textoRespuesta);
-
-    return Response.json({
-      respuesta: resultadoAuditoria.respuestaFinal,
-      modelo: modeloUtilizado,
-    });
-  } catch (error: unknown) {
-    const errorString = error instanceof Error ? error.message : String(error);
-    console.error('[Asistente ITEC] Error detectado en el handler:', error);
-
-    // Extraer el código de estado del error de forma flexible
-    let status = 500;
-    if (error !== null && typeof error === 'object') {
-      if ('status' in error && typeof (error as any).status === 'number') {
-        status = (error as any).status;
-      } else if ('statusCode' in error && typeof (error as any).statusCode === 'number') {
-        status = (error as any).statusCode;
-      } else if ('code' in error && typeof (error as any).code === 'number') {
-        status = (error as any).code;
-      }
-    }
-
-    // Intentar parsear el mensaje de error si es un JSON estructurado de la API de Gemini
-    try {
-      const parsedError = JSON.parse(errorString);
-      if (parsedError?.error?.code && typeof parsedError.error.code === 'number') {
-        status = parsedError.error.code;
-      }
-    } catch {
-      // Mensaje de error no estructurado o texto plano
-    }
-
-    // Detectar si se superó el límite de cuota o solicitudes (429 / RESOURCE_EXHAUSTED)
-    const esCuotaExcedida = 
-      status === 429 || 
-      errorString.toLowerCase().includes('quota') || 
-      errorString.toLowerCase().includes('rate limit') || 
-      errorString.toLowerCase().includes('resource_exhausted') ||
-      errorString.toLowerCase().includes('429');
-
-    if (esCuotaExcedida) {
-      console.warn('[Asistente ITEC] Límite de cuota de Gemini excedido (429).');
-      return Response.json(
-        { error: 'Se superó el límite de solicitudes. Intentá nuevamente en unos instantes.' },
-        { status: 429 },
-      );
-    }
-
-    // Detectar si hay un problema de autenticación o API Key inválida
-    const esAutenticacion = 
-      status === 401 || 
-      status === 403 || 
-      errorString.toLowerCase().includes('api key') || 
-      errorString.toLowerCase().includes('auth') || 
-      errorString.toLowerCase().includes('key not valid') ||
-      errorString.toLowerCase().includes('unauthorized');
-
-    if (esAutenticacion) {
-      console.error('[Asistente ITEC] Error de autenticación o API key inválida con Gemini.');
-      return Response.json(
-        { error: 'Error de autenticación con la API de Gemini.' },
-        { status: 502 },
-      );
-    }
-
-    // Error genérico del servidor
-    return Response.json(
-      { error: 'Ocurrió un error al procesar tu consulta. Intentá nuevamente.' },
-      { status: 500 },
-    );
-  }
-}
+PALABRAS Y CONSTRUCCIONES PROHIBIDAS:
+- "viste", "che", "pibe"
+- "hoy", "ayer", "mañana" (usá referencias temporales específicas: "durante el período", "en esta etapa", "en el ciclo vigente")
+- "gracias" como primera palabra de cualquier párrafo
+- "básicamente", "obviamente", "claramente" 
+- Frases genéricas como "trabajamos duro" o "nos esforzamos"
+- Nunca usés "donación" o "donante": el sponsor es un socio estratégico$$,
+  0.85,
+  1200
+);

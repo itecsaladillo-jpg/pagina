@@ -1,10 +1,12 @@
 "use client";
 
 import { useState, useEffect, use } from "react";
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { ThumbsUp, Send, HelpCircle, User, Sparkles, CheckCircle2, MessageSquare, Award } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface Pregunta {
   id: string;
@@ -15,6 +17,7 @@ interface Pregunta {
 }
 
 export default function PreguntarPage({ params }: { params: Promise<{ id: string }> }) {
+  const { dict } = useLanguage();
   const resolvedParams = use(params);
   const eventoId = resolvedParams.id;
   const [nombre, setNombre] = useState("");
@@ -152,10 +155,10 @@ export default function PreguntarPage({ params }: { params: Promise<{ id: string
 
     if (!error) {
       setPregunta("");
-      setSuccessMsg("¡Pregunta enviada con éxito! Queda sujeta a la aprobación de moderación.");
+      setSuccessMsg(dict.preguntar.exito);
       setTimeout(() => setSuccessMsg(""), 6000);
     } else {
-      alert("Hubo un error al enviar tu pregunta.");
+      alert(dict.preguntar.error);
     }
     setIsSubmitting(false);
   };
@@ -189,17 +192,19 @@ export default function PreguntarPage({ params }: { params: Promise<{ id: string
       <header className="relative border-b border-white/[0.05] bg-slate-950/80 backdrop-blur-xl px-4 py-4 sticky top-0 z-50">
         <div className="max-w-md mx-auto flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <Image 
-              src="/logoitectrans_v2.png" 
-              alt="Logo ITEC" 
-              width={65} 
-              height={22} 
-              className="h-5.5 w-auto object-contain"
-              priority
-            />
+            <Link href="/">
+              <Image 
+                src="/logoitectrans_v2.png" 
+                alt="Logo ITEC" 
+                width={65} 
+                height={22} 
+                className="h-5.5 w-auto object-contain cursor-pointer hover:opacity-80 transition-opacity"
+                priority
+              />
+            </Link>
             <div className="w-[1px] h-3 bg-zinc-800" />
             <span className="text-[10px] font-black text-indigo-400 tracking-widest uppercase">
-              Q&A
+              {dict.preguntar.titulo}
             </span>
           </div>
           
@@ -236,29 +241,29 @@ export default function PreguntarPage({ params }: { params: Promise<{ id: string
                   onClick={() => setShowInstructions(false)}
                   className="text-[10px] text-zinc-400 hover:text-zinc-200 font-extrabold uppercase tracking-wider px-2.5 py-1 rounded-xl bg-white/[0.04] border border-white/[0.05] cursor-pointer"
                 >
-                  Ocultar
+                  {dict.preguntar.ocultar}
                 </button>
               </div>
               <h2 className="text-xs font-extrabold text-indigo-300 uppercase tracking-widest mb-3 flex items-center gap-1.5">
-                <Sparkles size={14} className="text-indigo-400 animate-pulse" /> ¿Cómo funciona?
+                <Sparkles size={14} className="text-indigo-400 animate-pulse" /> {dict.preguntar.comoFunciona}
               </h2>
               <ul className="space-y-3.5 text-xs text-zinc-200">
                 <li className="flex gap-2.5">
                   <span className="flex items-center justify-center shrink-0 w-5 h-5 rounded-full bg-indigo-500/20 text-indigo-300 font-black text-[10px]">1</span>
                   <span className="font-medium leading-relaxed">
-                    <strong className="text-white font-black">Escribí tu pregunta:</strong> Podés identificarte o enviarla de forma <strong className="text-indigo-400 font-bold">100% anónima</strong>.
+                    <strong className="text-white font-black">{dict.preguntar.paso1Titulo}</strong> {dict.preguntar.paso1Desc}
                   </span>
                 </li>
                 <li className="flex gap-2.5">
                   <span className="flex items-center justify-center shrink-0 w-5 h-5 rounded-full bg-indigo-500/20 text-indigo-300 font-black text-[10px]">2</span>
                   <span className="font-medium leading-relaxed">
-                    <strong className="text-white font-black">Aprobación en vivo:</strong> Pasa por moderación antes de mostrarse en la <strong className="text-indigo-400 font-bold">pantalla principal</strong>.
+                    <strong className="text-white font-black">{dict.preguntar.paso2Titulo}</strong> {dict.preguntar.paso2Desc}
                   </span>
                 </li>
                 <li className="flex gap-2.5">
                   <span className="flex items-center justify-center shrink-0 w-5 h-5 rounded-full bg-indigo-500/20 text-indigo-300 font-black text-[10px]">3</span>
                   <span className="font-medium leading-relaxed">
-                    <strong className="text-white font-black">Votá y apoyá 👍:</strong> Si ves tu misma duda abajo, <strong className="text-indigo-400 font-bold">dale un voto 👍</strong> para evitar repetirla y destacarla.
+                    <strong className="text-white font-black">{dict.preguntar.paso3Titulo}</strong> {dict.preguntar.paso3Desc}
                   </span>
                 </li>
               </ul>
@@ -272,12 +277,12 @@ export default function PreguntarPage({ params }: { params: Promise<{ id: string
           
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-1.5">
-              <label className="text-[10px] uppercase font-bold tracking-wider text-zinc-400 block px-1">Tu Nombre (Opcional)</label>
+              <label className="text-[10px] uppercase font-bold tracking-wider text-zinc-400 block px-1">{dict.preguntar.tuNombre}</label>
               <div className="relative flex items-center">
                 <User size={18} className="absolute left-3.5 text-zinc-500" />
                 <input
                   type="text"
-                  placeholder="Ej. Juan de Saladillo (o dejar vacío)"
+                  placeholder={dict.preguntar.tuNombrePlaceholder}
                   value={nombre}
                   onChange={(e) => setNombre(e.target.value)}
                   autoCapitalize="words"
@@ -289,13 +294,13 @@ export default function PreguntarPage({ params }: { params: Promise<{ id: string
 
             <div className="space-y-1.5">
               <div className="flex justify-between items-center px-1">
-                <label className="text-[10px] uppercase font-bold tracking-wider text-zinc-400 block">Tu Pregunta / Consulta</label>
+                <label className="text-[10px] uppercase font-bold tracking-wider text-zinc-400 block">{dict.preguntar.tuPregunta}</label>
                 <span className={`text-[10px] font-extrabold ${pregunta.length >= MAX_CARACTERES * 0.9 ? 'text-rose-400 animate-pulse' : 'text-zinc-500'}`}>
                   {pregunta.length} / {MAX_CARACTERES}
                 </span>
               </div>
               <textarea
-                placeholder="Escribí de forma clara y directa tu duda para el orador..."
+                placeholder={dict.preguntar.tuPreguntaPlaceholder}
                 required
                 maxLength={MAX_CARACTERES}
                 value={pregunta}
@@ -313,11 +318,11 @@ export default function PreguntarPage({ params }: { params: Promise<{ id: string
               className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 disabled:from-zinc-850 disabled:to-zinc-850 disabled:text-zinc-600 text-white font-extrabold text-xs uppercase tracking-wider py-4 px-6 rounded-2xl transition-all shadow-lg active:scale-[0.97] cursor-pointer h-[50px]"
             >
               {isSubmitting ? (
-                <span className="animate-pulse">Enviando consulta...</span>
+                <span className="animate-pulse">{dict.preguntar.enviando}</span>
               ) : (
                 <>
                   <Send className="w-4 h-4" />
-                  Enviar Pregunta en Vivo
+                  {dict.preguntar.enviarBoton}
                 </>
               )}
             </button>
@@ -343,10 +348,10 @@ export default function PreguntarPage({ params }: { params: Promise<{ id: string
         <div className="space-y-4">
           <div className="flex items-center justify-between px-1">
             <h2 className="text-sm font-bold text-zinc-300 uppercase tracking-widest flex items-center gap-2">
-              <MessageSquare size={16} className="text-indigo-400" /> Preguntas Aprobadas
+              <MessageSquare size={16} className="text-indigo-400" /> {dict.preguntar.preguntasAprobadas}
             </h2>
             <span className="text-[10px] bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 px-2.5 py-0.5 rounded-full font-extrabold uppercase tracking-widest animate-pulse">
-              En Vivo
+              {dict.preguntar.enVivo}
             </span>
           </div>
 
@@ -374,8 +379,7 @@ export default function PreguntarPage({ params }: { params: Promise<{ id: string
                   >
                     <MessageSquare size={28} className="mx-auto text-zinc-700" />
                     <p className="text-xs font-medium leading-relaxed">
-                      Aún no hay preguntas aprobadas en este panel.<br />
-                      ¡Sé el primero en formular una consulta!
+                      {dict.preguntar.preguntasVacias}
                     </p>
                   </motion.div>
                 ) : (
@@ -397,11 +401,11 @@ export default function PreguntarPage({ params }: { params: Promise<{ id: string
                       <div className="flex-1 space-y-2">
                         <div className="flex items-center gap-2">
                           <span className="text-[10px] font-extrabold uppercase tracking-widest text-indigo-400 bg-indigo-950/50 px-2 py-0.5 rounded border border-indigo-900/50">
-                            {q.nombre}
+                            {q.nombre === "Anónimo" ? dict.preguntar.anonimo : q.nombre}
                           </span>
                           {idx === 0 && (
                             <span className="text-[9px] font-black uppercase tracking-wider text-yellow-400 bg-yellow-400/10 px-1.5 py-0.5 rounded border border-yellow-400/20 flex items-center gap-1">
-                              <Award size={10} /> Top
+                              <Award size={10} /> {dict.preguntar.top}
                             </span>
                           )}
                         </div>

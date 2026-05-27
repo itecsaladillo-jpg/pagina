@@ -14,14 +14,16 @@ export default function AccesoPendientePage() {
       <div className="relative z-10 glass border border-[var(--border-glow)] rounded-2xl p-10 w-full max-w-md text-center shadow-2xl">
         {/* Logo */}
         <div className="flex justify-center mb-8">
-          <Image
-            src="/logoitectrans_v2.png"
-            alt="ITEC Saladillo"
-            width={180}
-            height={68}
-            className="h-16 w-auto object-contain"
-            priority
-          />
+          <Link href="/" className="cursor-pointer">
+            <Image
+              src="/logoitectrans_v2.png"
+              alt="ITEC Saladillo"
+              width={180}
+              height={68}
+              className="h-16 w-auto object-contain"
+              priority
+            />
+          </Link>
         </div>
 
         {/* Icono de reloj */}

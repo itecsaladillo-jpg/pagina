@@ -4,9 +4,10 @@ import { useState, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Calendar, Zap, Sparkles, ChevronRight, Search, SlidersHorizontal, BookOpen, Film } from 'lucide-react'
 import { format } from 'date-fns'
-import { es } from 'date-fns/locale'
+import { es, enUS, pt } from 'date-fns/locale'
 import Link from 'next/link'
 import { getYouTubeID } from '@/services/videos'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 interface AccionesClientProps {
   actions: any[]
@@ -14,41 +15,66 @@ interface AccionesClientProps {
 }
 
 export function AccionesClient({ actions, articles }: AccionesClientProps) {
+  const { language, dict } = useLanguage()
   const [activeTab, setActiveTab] = useState<'all' | 'actions' | 'articles'>('all')
   const [searchQuery, setSearchQuery] = useState('')
 
   // 1. Unificar y estructurar items
   const allItems = useMemo(() => {
-    const actItems = actions.map((a) => ({
-      ...a,
-      feedType: 'action' as const,
-      date: a.start_date || a.created_at,
-      badgeText: a.type === 'capacitacion' ? 'Capacitación' : a.type === 'evento_social' ? 'Evento Social' : 'Divulgación',
-      badgeColor: 'bg-purple-500/20 text-purple-200 border-purple-400/20',
-      descriptionText: a.description || '',
-      linkUrl: `/acciones/${a.id}`,
-      linkText: 'Saber más e inscribirme',
-      imageUrl: a.thumbnail_url,
-      tagsList: a.tags || []
-    }))
+    const actItems = actions.map((a) => {
+      const translation = (dict.impactSection as any).feedData?.[a.id]
+      const displayTitle = translation?.title || a.title
+      const displayDescription = translation?.description || a.description || ''
+      const displayExcerpt = translation?.excerpt || a.excerpt
 
-    const artItems = articles.map((art) => ({
-      ...art,
-      feedType: 'article' as const,
-      date: art.created_at,
-      badgeText: art.excerpt || 'Comunicación',
-      badgeColor: 'bg-blue-600/30 text-blue-100 border-blue-400/20',
-      descriptionText: art.content || '',
-      linkUrl: `/articulo/${art.slug || art.id}`,
-      linkText: 'Leer historia completa',
-      imageUrl: art.media_urls?.[0] || null,
-      tagsList: ['Comunicación', 'Impacto', art.excerpt || 'Estratégica'].filter(Boolean)
-    }))
+      return {
+        ...a,
+        feedType: 'action' as const,
+        date: a.start_date || a.created_at,
+        badgeText: a.type === 'capacitacion' 
+          ? (language === 'en' ? 'Training' : language === 'pt' ? 'Capacitação' : 'Capacitación') 
+          : a.type === 'evento_social' 
+            ? (language === 'en' ? 'Social Event' : language === 'pt' ? 'Evento Social' : 'Evento Social') 
+            : (language === 'en' ? 'Outreach' : language === 'pt' ? 'Divulgação' : 'Divulgación'),
+        badgeColor: 'bg-purple-500/20 text-purple-200 border-purple-400/20',
+        title: displayTitle,
+        descriptionText: displayDescription,
+        linkUrl: `/acciones/${a.id}`,
+        linkText: dict.impactSection.saberMas || 'Saber más e inscribirme',
+        imageUrl: a.thumbnail_url,
+        tagsList: a.tags || []
+      }
+    })
+
+    const artItems = articles.map((art) => {
+      const translation = (dict.impactSection as any).feedData?.[art.id]
+      const displayTitle = translation?.title || art.title
+      const displayContent = translation?.content || art.content || ''
+      const displayExcerpt = translation?.excerpt || art.excerpt
+
+      return {
+        ...art,
+        feedType: 'article' as const,
+        date: art.created_at,
+        badgeText: displayExcerpt || (language === 'en' ? 'Communication' : language === 'pt' ? 'Comunicação' : 'Comunicación'),
+        badgeColor: 'bg-blue-600/30 text-blue-100 border-blue-400/20',
+        title: displayTitle,
+        descriptionText: displayContent,
+        linkUrl: `/articulo/${art.slug || art.id}`,
+        linkText: dict.impactSection.leerHistoria || 'Leer historia completa',
+        imageUrl: art.media_urls?.[0] || null,
+        tagsList: [
+          language === 'en' ? 'Communication' : language === 'pt' ? 'Comunicação' : 'Comunicación',
+          language === 'en' ? 'Impact' : language === 'pt' ? 'Impacto' : 'Impacto',
+          displayExcerpt || (language === 'en' ? 'Strategic' : language === 'pt' ? 'Estratégica' : 'Estratégica')
+        ].filter(Boolean)
+      }
+    })
 
     return [...actItems, ...artItems].sort(
       (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
     )
-  }, [actions, articles])
+  }, [actions, articles, dict, language])
 
   // 2. Filtrar items por tab y búsqueda
   const filteredItems = useMemo(() => {
@@ -92,7 +118,7 @@ export function AccionesClient({ actions, articles }: AccionesClientProps) {
                 : 'text-[var(--text-muted)] hover:text-white border border-transparent'
             }`}
           >
-            Todo
+            {language === 'en' ? 'All' : language === 'pt' ? 'Tudo' : 'Todo'}
           </button>
           <button
             id="tab-actions"
@@ -103,7 +129,7 @@ export function AccionesClient({ actions, articles }: AccionesClientProps) {
                 : 'text-[var(--text-muted)] hover:text-white border border-transparent'
             }`}
           >
-            Capacitaciones y Eventos
+            {language === 'en' ? 'Trainings & Events' : language === 'pt' ? 'Capacitações e Eventos' : 'Capacitaciones y Eventos'}
           </button>
           <button
             id="tab-articles"
@@ -114,7 +140,7 @@ export function AccionesClient({ actions, articles }: AccionesClientProps) {
                 : 'text-[var(--text-muted)] hover:text-white border border-transparent'
             }`}
           >
-            Comunicación Estratégica
+            {language === 'en' ? 'Strategic Communication' : language === 'pt' ? 'Comunicação Estratégica' : 'Comunicación Estratégica'}
           </button>
         </div>
 
@@ -124,7 +150,7 @@ export function AccionesClient({ actions, articles }: AccionesClientProps) {
           <input
             id="search-input"
             type="text"
-            placeholder="Buscar por título, tema..."
+            placeholder={language === 'en' ? 'Search by title, topic...' : language === 'pt' ? 'Buscar por título, tema...' : 'Buscar por título, tema...'}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full pl-12 pr-4 py-3 bg-black/40 border border-white/5 rounded-2xl text-sm text-white placeholder-white/30 focus:outline-none focus:border-blue-500/50 transition-all font-medium"
@@ -183,7 +209,9 @@ export function AccionesClient({ actions, articles }: AccionesClientProps) {
                 <div className="p-6 flex flex-col flex-1 space-y-4">
                   {/* Fecha */}
                   <span className="text-[10px] text-[var(--text-muted)] font-black uppercase tracking-[0.2em]">
-                    {format(new Date(item.date), "d 'de' MMMM, yyyy", { locale: es })}
+                    {format(new Date(item.date), language === 'en' ? "MMMM d, yyyy" : "d 'de' MMMM, yyyy", { 
+                      locale: language === 'en' ? enUS : language === 'pt' ? pt : es 
+                    })}
                   </span>
 
                   {/* Título */}
@@ -227,7 +255,7 @@ export function AccionesClient({ actions, articles }: AccionesClientProps) {
                         className="inline-flex items-center gap-1.5 text-[10px] font-bold text-amber-400/80 hover:text-amber-300 transition-colors"
                       >
                         <Film size={12} className="flex-shrink-0" />
-                        Ver video: <span className="truncate max-w-[140px] font-semibold">{item.related_video.title}</span>
+                        {dict.impactSection.verVideoteca || 'Ver video:'} <span className="truncate max-w-[140px] font-semibold">{item.related_video.title}</span>
                       </Link>
                     )}
                   </div>

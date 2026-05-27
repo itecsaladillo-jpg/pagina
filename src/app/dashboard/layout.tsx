@@ -121,6 +121,11 @@ const adminNavItems = [
     href: '/dashboard/streaming',
     icon: 'M9.348 14.651a3.75 3.75 0 010-5.303m5.304 0a3.75 3.75 0 010 5.303m-7.425 2.122a6.75 6.75 0 010-9.546m9.546 0a6.75 6.75 0 010 9.546M10.5 12a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0z',
   },
+  {
+    label: 'Crear Evento',
+    href: '/dashboard/eventos-presenciales',
+    icon: 'M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z',
+  },
 ]
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -176,7 +181,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
               {/* Render items that are not Event-related */}
               {adminNavItems
-                .filter((item) => item.label !== 'Encuestas ITEC' && item.label !== 'Sistema de Preguntas' && item.label !== 'Nube de Ideas')
+                .filter((item) => item.label !== 'Encuestas ITEC' && item.label !== 'Sistema de Preguntas' && item.label !== 'Nube de Ideas' && item.label !== 'Crear Evento')
                 .map((item) => (
                   <Link
                     key={item.href}
@@ -208,7 +213,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
                 </summary>
                 <div className="pl-4 pt-1 space-y-1">
                   {adminNavItems
-                    .filter((item) => item.label === 'Encuestas ITEC' || item.label === 'Sistema de Preguntas' || item.label === 'Nube de Ideas')
+                    .filter((item) => item.label === 'Encuestas ITEC' || item.label === 'Sistema de Preguntas' || item.label === 'Nube de Ideas' || item.label === 'Crear Evento')
                     .map((item) => (
                       <Link
                         key={item.href}

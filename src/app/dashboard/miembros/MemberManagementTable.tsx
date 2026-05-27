@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { approveMemberAction, approveMemberByEmailAction, updateRoleAction, assignCommissionAction, deactivateMemberAction, updatePhoneAction } from './actions'
+import { approveMemberAction, approveMemberByEmailAction, updateRoleAction, assignCommissionAction, deactivateMemberAction, updatePhoneAction, rejectMemberAction } from './actions'
 import type { Commission } from '@/types/database'
 import { UserPlus, Mail, Edit2 } from 'lucide-react'
 
@@ -64,6 +64,22 @@ export function MemberManagementTable({ members, commissions, currentUserRole = 
         alert(isNew ? '¡Miembro aprobado con éxito!' : '¡Miembro re-habilitado con éxito!')
       } else {
         alert('Error: ' + (res.error || 'No se pudo procesar la solicitud'))
+      }
+    } catch (err) {
+      alert('Error crítico de conexión')
+    }
+    setLoadingId(null)
+  }
+
+  const handleReject = async (id: string) => {
+    if (!confirm('¿Estás seguro de que querés rechazar y eliminar esta petición de ingreso? Se borrará permanentemente.')) return
+    setLoadingId(id)
+    try {
+      const res = await rejectMemberAction(id)
+      if (res.success) {
+        alert('¡Petición rechazada y eliminada con éxito!')
+      } else {
+        alert('Error: ' + (res.error || 'No se pudo rechazar la petición'))
       }
     } catch (err) {
       alert('Error crítico de conexión')
@@ -286,13 +302,25 @@ export function MemberManagementTable({ members, commissions, currentUserRole = 
                           {m.status === 'pre-aprobado' ? (
                             <span className="text-[10px] text-[var(--text-muted)] italic">Esperando registro</span>
                           ) : m.status === 'pendiente' ? (
-                            <button
-                              onClick={() => handleApprove(m.id)}
-                              disabled={loadingId === m.id}
-                              className="btn-primary text-[10px] py-1.5 px-4 rounded-lg shadow-[0_0_15px_rgba(59,130,246,0.3)]"
-                            >
-                              {loadingId === m.id ? '...' : 'Aprobar e informar'}
-                            </button>
+                            <div className="flex items-center justify-end gap-2">
+                              <button
+                                onClick={() => handleApprove(m.id)}
+                                disabled={loadingId === m.id}
+                                className="btn-primary text-[10px] py-1.5 px-4 rounded-lg shadow-[0_0_15px_rgba(59,130,246,0.3)]"
+                              >
+                                {loadingId === m.id ? '...' : 'Aprobar e informar'}
+                              </button>
+                              <button
+                                onClick={() => handleReject(m.id)}
+                                disabled={loadingId === m.id}
+                                title="Rechazar petición"
+                                className="bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 text-red-400 p-1.5 rounded-lg transition-all flex items-center justify-center cursor-pointer"
+                              >
+                                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                              </button>
+                            </div>
                           ) : m.status === 'activo' ? (
                             <button
                               onClick={() => handleDeactivate(m.id)}

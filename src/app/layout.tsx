@@ -1,11 +1,12 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
+import { LanguageProvider } from '@/contexts/LanguageContext'
 import './globals.css'
 
 const inter = Inter({
   subsets: ['latin'],
   variable: '--font-inter',
-  display: 'swap',
+  display: 'swap', // previene flash
 })
 
 export const metadata: Metadata = {
@@ -32,7 +33,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="es" className={inter.variable} data-scroll-behavior="smooth">
-      <body className="font-[var(--font-inter)]">{children}</body>
+      <body className="font-[var(--font-inter)]">
+        <LanguageProvider>
+          {children}
+        </LanguageProvider>
+      </body>
     </html>
   )
 }

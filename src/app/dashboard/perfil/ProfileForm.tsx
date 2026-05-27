@@ -9,10 +9,249 @@ interface Props {
   member: any
 }
 
+interface CropperModalProps {
+  imageSrc: string
+  onCrop: (blob: Blob) => void
+  onCancel: () => void
+}
+
+function ImageCropperModal({ imageSrc, onCrop, onCancel }: CropperModalProps) {
+  const [zoom, setZoom] = useState(1)
+  const [position, setPosition] = useState({ x: 0, y: 0 })
+  const [isDragging, setIsDragging] = useState(false)
+  const [imgDimensions, setImgDimensions] = useState({ width: 0, height: 0 })
+  const [baseSize, setBaseSize] = useState({ width: 0, height: 0 })
+  const [processing, setProcessing] = useState(false)
+  
+  const dragStart = useRef({ x: 0, y: 0 })
+  const containerRef = useRef<HTMLDivElement>(null)
+
+  const handleImageLoad = (e: React.SyntheticEvent<HTMLImageElement>) => {
+    const img = e.currentTarget
+    const wNat = img.naturalWidth
+    const hNat = img.naturalHeight
+    setImgDimensions({ width: wNat, height: hNat })
+    
+    const CONTAINER_SIZE = 280
+    let wBase = CONTAINER_SIZE
+    let hBase = CONTAINER_SIZE
+    
+    if (wNat > hNat) {
+      hBase = CONTAINER_SIZE
+      wBase = CONTAINER_SIZE * (wNat / hNat)
+    } else {
+      wBase = CONTAINER_SIZE
+      hBase = CONTAINER_SIZE * (hNat / wNat)
+    }
+    
+    setBaseSize({ width: wBase, height: hBase })
+    setPosition({ x: 0, y: 0 })
+    setZoom(1)
+  }
+
+  const handleStart = (clientX: number, clientY: number) => {
+    setIsDragging(true)
+    dragStart.current = {
+      x: clientX - position.x,
+      y: clientY - position.y
+    }
+  }
+
+  const handleMove = (clientX: number, clientY: number) => {
+    if (!isDragging || baseSize.width === 0) return
+    
+    const CONTAINER_SIZE = 280
+    const wRender = baseSize.width * zoom
+    const hRender = baseSize.height * zoom
+    
+    let newX = clientX - dragStart.current.x
+    let newY = clientY - dragStart.current.y
+    
+    const minX = (CONTAINER_SIZE - wRender) / 2
+    const maxX = (wRender - CONTAINER_SIZE) / 2
+    const minY = (CONTAINER_SIZE - hRender) / 2
+    const maxY = (hRender - CONTAINER_SIZE) / 2
+    
+    newX = Math.max(minX, Math.min(maxX, newX))
+    newY = Math.max(minY, Math.min(maxY, newY))
+    
+    setPosition({ x: newX, y: newY })
+  }
+
+  const handleEnd = () => {
+    setIsDragging(false)
+  }
+
+  const handleZoomChange = (newZoom: number) => {
+    setZoom(newZoom)
+    
+    if (baseSize.width === 0) return
+    const CONTAINER_SIZE = 280
+    const wRender = baseSize.width * newZoom
+    const hRender = baseSize.height * newZoom
+    
+    const minX = (CONTAINER_SIZE - wRender) / 2
+    const maxX = (wRender - CONTAINER_SIZE) / 2
+    const minY = (CONTAINER_SIZE - hRender) / 2
+    const maxY = (hRender - CONTAINER_SIZE) / 2
+    
+    setPosition(prev => ({
+      x: Math.max(minX, Math.min(maxX, prev.x)),
+      y: Math.max(minY, Math.min(maxY, prev.y))
+    }))
+  }
+
+  const handleSave = () => {
+    setProcessing(true)
+    setTimeout(() => {
+      const img = new Image()
+      img.src = imageSrc
+      img.onload = () => {
+        const CONTAINER_SIZE = 280
+        const wRender = baseSize.width * zoom
+        
+        const xRel = position.x + (CONTAINER_SIZE - wRender) / 2
+        const yRel = position.y + (CONTAINER_SIZE - baseSize.height * zoom) / 2
+        
+        const ratio = imgDimensions.width / wRender
+        
+        const xCropNat = -xRel * ratio
+        const yCropNat = -yRel * ratio
+        const wCropNat = CONTAINER_SIZE * ratio
+        const hCropNat = CONTAINER_SIZE * ratio
+        
+        const canvas = document.createElement('canvas')
+        canvas.width = 500
+        canvas.height = 500
+        const ctx = canvas.getContext('2d')
+        
+        if (ctx) {
+          ctx.imageSmoothingEnabled = true
+          ctx.imageSmoothingQuality = 'high'
+          
+          ctx.drawImage(
+            img,
+            xCropNat, yCropNat, wCropNat, hCropNat,
+            0, 0, 500, 500
+          )
+          
+          canvas.toBlob((blob) => {
+            if (blob) {
+              onCrop(blob)
+            } else {
+              setProcessing(false)
+            }
+          }, 'image/jpeg', 0.9)
+        } else {
+          setProcessing(false)
+        }
+      }
+      img.onerror = () => {
+        setProcessing(false)
+      }
+    }, 100)
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md transition-opacity">
+      <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-6 shadow-2xl max-w-sm w-full flex flex-col items-center space-y-6">
+        
+        <div className="text-center space-y-1 w-full">
+          <h3 className="text-lg font-bold text-white">Encuadrar Foto de Perfil</h3>
+          <p className="text-xs text-zinc-400">Arrastrá para acomodar y deslizá para el zoom</p>
+        </div>
+
+        <div 
+          ref={containerRef}
+          className="relative w-[280px] h-[280px] rounded-full overflow-hidden bg-zinc-950 border-2 border-indigo-500/60 shadow-[0_0_25px_rgba(99,102,241,0.2)] touch-none select-none flex items-center justify-center cursor-grab active:cursor-grabbing"
+          onMouseDown={(e) => handleStart(e.clientX, e.clientY)}
+          onMouseMove={(e) => handleMove(e.clientX, e.clientY)}
+          onMouseUp={handleEnd}
+          onMouseLeave={handleEnd}
+          onTouchStart={(e) => {
+            if (e.touches.length === 1) {
+              handleStart(e.touches[0].clientX, e.touches[0].clientY)
+            }
+          }}
+          onTouchMove={(e) => {
+            if (e.touches.length === 1) {
+              handleMove(e.touches[0].clientX, e.touches[0].clientY)
+            }
+          }}
+          onTouchEnd={handleEnd}
+        >
+          <div className="absolute inset-0 rounded-full border border-black/10 pointer-events-none z-10 shadow-[inset_0_2px_8px_rgba(0,0,0,0.8)]" />
+
+          <img
+            src={imageSrc}
+            alt="Preview"
+            onLoad={handleImageLoad}
+            className="max-w-none pointer-events-none select-none"
+            style={{
+              width: baseSize.width ? `${baseSize.width * zoom}px` : 'auto',
+              height: baseSize.height ? `${baseSize.height * zoom}px` : 'auto',
+              transform: `translate(${position.x}px, ${position.y}px)`,
+              transition: isDragging ? 'none' : 'transform 0.05s ease-out'
+            }}
+          />
+        </div>
+
+        <div className="w-full space-y-2 px-2">
+          <div className="flex justify-between text-xs text-zinc-400 font-medium">
+            <span>Zoom</span>
+            <span>{Math.round(zoom * 100)}%</span>
+          </div>
+          <div className="flex items-center gap-3">
+            <span className="text-zinc-500 text-xs font-semibold">1x</span>
+            <input
+              type="range"
+              min="1"
+              max="3"
+              step="0.01"
+              value={zoom}
+              onChange={(e) => handleZoomChange(parseFloat(e.target.value))}
+              className="w-full h-1.5 bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-indigo-500 focus:outline-none"
+            />
+            <span className="text-zinc-500 text-xs font-semibold">3x</span>
+          </div>
+        </div>
+
+        <div className="flex items-center justify-end w-full gap-3 pt-2">
+          <button
+            type="button"
+            onClick={onCancel}
+            disabled={processing}
+            className="px-4 py-2.5 rounded-xl text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors text-xs font-bold uppercase tracking-wider cursor-pointer"
+          >
+            Cancelar
+          </button>
+          <button
+            type="button"
+            onClick={handleSave}
+            disabled={processing || baseSize.width === 0}
+            className="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white font-bold text-xs uppercase tracking-wider shadow-[0_0_15px_rgba(99,102,241,0.3)] transition-all cursor-pointer flex items-center gap-1.5"
+          >
+            {processing ? (
+              <>
+                <Loader2 className="animate-spin" size={14} />
+                <span>Procesando...</span>
+              </>
+            ) : (
+              <span>Aplicar Encuadre</span>
+            )}
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export function ProfileForm({ member }: Props) {
   const [loading, setLoading] = useState(false)
   const [uploading, setUploading] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const [cropSrc, setCropSrc] = useState<string | null>(null)
+  const [originalFileName, setOriginalFileName] = useState<string>('')
   
   const [formData, setFormData] = useState({
     full_name: member.full_name || '',
@@ -27,23 +266,34 @@ export function ProfileForm({ member }: Props) {
   
   const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null)
 
-  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files || e.target.files.length === 0) return
-    
     const file = e.target.files[0]
+    setOriginalFileName(file.name)
+    
+    const reader = new FileReader()
+    reader.onload = () => {
+      setCropSrc(reader.result as string)
+    }
+    reader.readAsDataURL(file)
+  }
+
+  const handleCroppedUpload = async (blob: Blob) => {
     setUploading(true)
     setMessage(null)
 
     try {
       const supabase = createClient()
-      const fileExt = file.name.split('.').pop()
+      const fileExt = originalFileName.split('.').pop() || 'jpg'
       const fileName = `${member.id}-${Date.now()}.${fileExt}`
-      const filePath = `avatars/${fileName}`
 
-      // Subir archivo al bucket de Supabase Storage 'avatars'
+      // Subir el blob recortado al bucket 'avatars'
       const { data, error: uploadError } = await supabase.storage
         .from('avatars')
-        .upload(filePath, file, { upsert: true })
+        .upload(fileName, blob, { 
+          contentType: `image/${fileExt === 'jpg' ? 'jpeg' : fileExt}`,
+          upsert: true 
+        })
 
       if (uploadError) {
         throw new Error(uploadError.message)
@@ -52,10 +302,10 @@ export function ProfileForm({ member }: Props) {
       // Obtener URL pública
       const { data: { publicUrl } } = supabase.storage
         .from('avatars')
-        .getPublicUrl(filePath)
+        .getPublicUrl(fileName)
 
       setFormData(prev => ({ ...prev, avatar_url: publicUrl }))
-      setMessage({ type: 'success', text: 'Foto de perfil subida con éxito (recordá guardar los cambios).' })
+      setMessage({ type: 'success', text: 'Foto de perfil subida y encuadrada con éxito (recordá guardar los cambios).' })
     } catch (err: any) {
       console.error('Error uploading avatar:', err)
       setMessage({ 
@@ -64,6 +314,7 @@ export function ProfileForm({ member }: Props) {
       })
     } finally {
       setUploading(false)
+      setCropSrc(null)
     }
   }
 
@@ -113,7 +364,7 @@ export function ProfileForm({ member }: Props) {
         <input 
           type="file" 
           ref={fileInputRef} 
-          onChange={handleAvatarUpload} 
+          onChange={handleFileSelect} 
           className="hidden" 
           accept="image/*" 
         />
@@ -293,6 +544,14 @@ export function ProfileForm({ member }: Props) {
           )}
         </button>
       </form>
+
+      {cropSrc && (
+        <ImageCropperModal
+          imageSrc={cropSrc}
+          onCrop={handleCroppedUpload}
+          onCancel={() => setCropSrc(null)}
+        />
+      )}
     </div>
   )
 }

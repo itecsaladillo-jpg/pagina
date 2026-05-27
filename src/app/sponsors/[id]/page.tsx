@@ -303,7 +303,9 @@ export default async function SponsorPortalPage({ params }: { params: { id: stri
         {/* ─── FOOTER ─── */}
         <footer className="border-t border-white/5 pt-12 flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-4">
-            <Image src="/logoitectrans_v2.png" alt="ITEC" width={80} height={30} className="opacity-30 h-7 w-auto object-contain" />
+            <Link href="/" className="cursor-pointer">
+              <Image src="/logoitectrans_v2.png" alt="ITEC" width={80} height={30} className="opacity-30 hover:opacity-100 transition-opacity h-7 w-auto object-contain" />
+            </Link>
             <p className="text-gray-600 text-xs">ITEC Saladillo · Saladillo, Buenos Aires</p>
           </div>
           <p className="text-gray-700 text-[10px] uppercase tracking-wider">Reporte confidencial · No indexado</p>

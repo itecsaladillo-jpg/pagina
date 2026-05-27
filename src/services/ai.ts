@@ -1,6 +1,12 @@
 import { GoogleGenerativeAI } from '@google/generative-ai'
+import { GoogleGenAI } from '@google/genai'
+import { createClient } from '@/lib/supabase/server'
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY_2 || process.env.GEMINI_API_KEY!)
+
+const googleAI = new GoogleGenAI({
+  apiKey: process.env.GEMINI_API_KEY_4 || process.env.GEMINI_API_KEY_3 || process.env.GEMINI_API_KEY_2 || process.env.GEMINI_API_KEY || ''
+})
 
 /**
  * Prompt de sistema — Estilo ITEC
@@ -267,4 +273,167 @@ export async function generateVideoSummary(title: string, description: string): 
   const result = await model.generateContent(prompt)
   return result.response.text().trim()
 }
+
+/**
+ * Genera el embedding de un texto usando el modelo text-embedding-004 de Google.
+ */
+export async function generarEmbedding(texto: string): Promise<number[]> {
+  try {
+    const response = await googleAI.models.embedContent({
+      model: 'text-embedding-004',
+      contents: texto,
+    });
+
+    if (!response.embeddings || response.embeddings.length === 0 || !response.embeddings[0].values) {
+      throw new Error('No se devolvieron valores de embedding en la respuesta.');
+    }
+
+    return response.embeddings[0].values;
+  } catch (error) {
+    console.error('[AI Service] Error al generar embedding con text-embedding-004:', error);
+    throw error;
+  }
+}
+
+export interface FeedbackSimilar {
+  id: string;
+  created_at: string;
+  historial: any;
+  calificacion: string;
+  comentario: string | null;
+  tema_principal: string;
+  lo_mas_util: string;
+  similarity: number;
+}
+
+/**
+ * Busca feedbacks similares utilizando embeddings y la función RPC buscar_feedbacks_similares.
+ */
+export async function buscarFeedbacksSimilares(
+  mensaje: string,
+  limit = 5,
+  threshold = 0.3
+): Promise<FeedbackSimilar[]> {
+  try {
+    // 1. Generar el embedding de la pregunta del usuario
+    const embedding = await generarEmbedding(mensaje);
+
+    // 2. Obtener el cliente de Supabase
+    const supabase = await createClient();
+
+    // 3. Ejecutar la RPC para obtener registros similares
+    const { data, error } = await supabase.rpc('buscar_feedbacks_similares', {
+      query_embedding: embedding,
+      similarity_threshold: threshold,
+      match_count: limit,
+    });
+
+    if (error) {
+      console.error('[AI Service] Error al invocar la RPC buscar_feedbacks_similares:', error);
+      return [];
+    }
+
+    return (data as FeedbackSimilar[]) || [];
+  } catch (error) {
+    console.error('[AI Service] Error en buscarFeedbacksSimilares:', error);
+    return [];
+  }
+}
+
+export interface ResultadoAuditoria {
+  tieneViolacion: boolean
+  respuestaFinal: string
+}
+
+/**
+ * Analiza en tiempo real la respuesta de la IA para prevenir violaciones a las reglas críticas.
+ * Registra de forma asíncrona las violaciones en Supabase para no penalizar el tiempo de respuesta.
+ * Si la gravedad es alta, sustituye el contenido en caliente con un fallback seguro.
+ */
+export async function auditarRespuestaIA(
+  mensajeUsuario: string,
+  respuestaIA: string,
+  sessionId?: string
+): Promise<ResultadoAuditoria> {
+  try {
+    let tieneViolacion = false
+    let respuestaFinal = respuestaIA
+    let reglaViolada: string | null = null
+    let nivelGravedad: 'bajo' | 'medio' | 'alto' = 'bajo'
+
+    // Definición de las reglas críticas y sus regex
+    const reglas = [
+      {
+        nombre: 'Mención prohibida a Peques ITEC',
+        regex: /peques\s+itec/i,
+        gravedad: 'alto' as const,
+        fallback: 'Disculpame, pero no cuento con información sobre ese tema en particular en este momento. ¿Hay algún otro proyecto o actividad de ITEC sobre el que te gustaría conversar?'
+      },
+      {
+        nombre: 'Exposición de rutas internas del código',
+        regex: /\B\/[a-zA-Z0-9_-]+(?:\/[a-zA-Z0-9_-]+)*/,
+        gravedad: 'alto' as const,
+        fallback: 'Disculpame, pero no puedo revelar enlaces o rutas técnicas de la plataforma. Podés recorrer las secciones principales del sitio desde el menú de navegación.'
+      },
+      {
+        nombre: 'Uso de regionalismos informales',
+        regex: /\b(viste|che|pibe)\b/i,
+        gravedad: 'bajo' as const,
+        fallback: null
+      },
+      {
+        nombre: 'Uso de palabras temporales genéricas',
+        regex: /\b(hoy|ayer|mañana)\b/i,
+        gravedad: 'bajo' as const,
+        fallback: null
+      }
+    ]
+
+    // Evaluar cada una de las reglas de forma secuencial
+    for (const regla of reglas) {
+      if (regla.regex.test(respuestaIA)) {
+        tieneViolacion = true
+        reglaViolada = regla.nombre
+        nivelGravedad = regla.gravedad
+
+        // Si la regla tiene un nivel de gravedad alto, reescribimos la respuesta en caliente
+        if (regla.gravedad === 'alto' && regla.fallback) {
+          respuestaFinal = regla.fallback
+          break // Priorizamos detenernos en la primera violación grave
+        }
+      }
+    }
+
+    // Registrar en Supabase de forma totalmente asíncrona si hay violación
+    if (tieneViolacion && reglaViolada) {
+      const registroViolacion = {
+        session_id: sessionId || null,
+        mensaje_usuario: mensajeUsuario,
+        respuesta_ia: respuestaIA,
+        regla_violada: reglaViolada,
+        nivel_gravedad: nivelGravedad
+      }
+
+      // Iniciamos la promesa pero NO usamos await, permitiendo que se ejecute en segundo plano
+      createClient().then(async (supabase) => {
+        const { error } = await supabase
+          .from('ai_auditoria_violaciones')
+          .insert(registroViolacion)
+        
+        if (error) {
+          console.error('[AI Audit] Error al persistir la violación de seguridad:', error.message)
+        }
+      }).catch(err => {
+        console.error('[AI Audit] Error al crear el cliente de Supabase para auditoría:', err)
+      })
+    }
+
+    return { tieneViolacion, respuestaFinal }
+  } catch (error) {
+    console.error('[AI Audit] Error inesperado en auditarRespuestaIA:', error)
+    return { tieneViolacion: false, respuestaFinal: respuestaIA }
+  }
+}
+
+
 
