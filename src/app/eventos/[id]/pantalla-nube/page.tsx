@@ -2,7 +2,7 @@
 
 import { useState, useEffect, use } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { Sparkles, CloudLightning, Activity, Award, QrCode } from "lucide-react";
+import { Sparkles, CloudLightning, Activity, Award, QrCode, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import QRCode from "react-qr-code";
@@ -22,6 +22,7 @@ export default function PantallaNubePage({ params }: { params: Promise<{ id: str
   const [lastAddedWord, setLastAddedWord] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [qrUrl, setQrUrl] = useState("");
+  const [showQrLateral, setShowQrLateral] = useState(true);
 
   const supabase = createClient();
 
@@ -201,6 +202,16 @@ export default function PantallaNubePage({ params }: { params: Promise<{ id: str
 
           {/* Estado de Realtime a la derecha */}
           <div className="flex items-center gap-4 shrink-0">
+            {!showQrLateral && palabrasOrdenadas.length > 0 && (
+              <button
+                onClick={() => setShowQrLateral(true)}
+                className="flex items-center gap-2 bg-indigo-500/10 hover:bg-indigo-500/20 border border-indigo-500/20 hover:border-indigo-500/30 px-4 py-2 rounded-2xl text-xs font-bold text-indigo-400 transition-all cursor-pointer shadow-lg shadow-indigo-950/20"
+                title="Mostrar código QR de participación"
+              >
+                <QrCode size={14} className="animate-pulse" />
+                <span>Mostrar QR</span>
+              </button>
+            )}
             <div className="flex items-center gap-3 bg-zinc-900/40 border border-zinc-800 px-5 py-2.5 rounded-2xl">
               <span className="relative flex h-3.5 w-3.5">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
@@ -295,12 +306,21 @@ export default function PantallaNubePage({ params }: { params: Promise<{ id: str
           </div>
 
           {/* Panel Lateral del Código QR (Solo si no está vacío y no está cargando) */}
-          {!isLoading && palabrasOrdenadas.length > 0 && (
+          {!isLoading && palabrasOrdenadas.length > 0 && showQrLateral && (
             <motion.div 
               initial={{ opacity: 0, x: 30 }}
               animate={{ opacity: 1, x: 0 }}
               className="w-full lg:w-80 bg-zinc-900/20 border border-white/[0.03] rounded-[3rem] p-6 backdrop-blur-xl flex flex-col justify-center items-center text-center shrink-0 relative overflow-hidden shadow-2xl"
             >
+              {/* Botón Cerrar (X) */}
+              <button
+                onClick={() => setShowQrLateral(false)}
+                className="absolute top-4 right-4 p-1.5 rounded-xl bg-white/[0.03] border border-white/[0.05] text-zinc-400 hover:text-white transition-all hover:bg-white/[0.06] cursor-pointer"
+                title="Ocultar código QR"
+              >
+                <X size={14} />
+              </button>
+
               <div className="absolute inset-0 bg-gradient-to-b from-indigo-500/[0.02] via-transparent to-transparent pointer-events-none" />
               <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-indigo-500/20 to-transparent" />
               
