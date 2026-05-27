@@ -4,7 +4,16 @@ import { createClient } from '@/lib/supabase/server'
 import { getCurrentMember } from '@/services/auth'
 import { revalidatePath } from 'next/cache'
 
-export async function updateProfileAction(data: { full_name: string, email: string, phone: string }) {
+export async function updateProfileAction(data: { 
+  full_name: string, 
+  email: string, 
+  phone: string,
+  bio: string,
+  avatar_url: string,
+  linkedin_url: string,
+  frase_itec: string,
+  tareas_itec: string
+}) {
   try {
     const member = await getCurrentMember()
     if (!member) return { success: false, error: 'No autenticado' }
@@ -16,6 +25,11 @@ export async function updateProfileAction(data: { full_name: string, email: stri
         full_name: data.full_name,
         email: data.email,
         phone: data.phone,
+        bio: data.bio || null,
+        avatar_url: data.avatar_url || null,
+        linkedin_url: data.linkedin_url || null,
+        frase_itec: data.frase_itec || null,
+        tareas_itec: data.tareas_itec || null,
         updated_at: new Date().toISOString()
       })
       .eq('id', member.id)

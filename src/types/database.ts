@@ -33,6 +33,8 @@ export interface Member {
   linkedin_url: string | null
   phone: string | null
   join_date: string
+  frase_itec: string | null
+  tareas_itec: string | null
 }
 
 // ─────────────────────────────────────────
