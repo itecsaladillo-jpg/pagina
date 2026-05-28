@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react'
 import { useParams, useRouter } from 'next/navigation'
+import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
 import { 
   createClient 
@@ -23,7 +24,8 @@ import {
   X,
   VolumeX,
   Sparkles,
-  Info
+  Info,
+  ArrowLeft
 } from 'lucide-react'
 
 // Interfaces de la aplicación
@@ -517,11 +519,19 @@ export default function AulaVirtualPage() {
           BARRA FLOTANTE DE SIMULACIÓN DE ROL (DESARROLLO)
           ───────────────────────────────────────────────────────────── */}
       <div className="bg-[#0b0e17]/95 border-b border-slate-800/80 px-4 py-2 flex flex-wrap justify-between items-center z-50 text-xs shadow-md backdrop-blur-md relative gap-3">
-        <div className="flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-          <span className="text-slate-300 font-bold uppercase tracking-wider text-[10px]">Consola de Testeo Dual</span>
-          <span className="text-slate-600">|</span>
-          <p className="text-slate-400 hidden sm:inline">
+        <div className="flex items-center gap-3">
+          <button 
+            onClick={() => router.back()}
+            className="flex items-center gap-1.5 text-slate-400 hover:text-white transition-colors bg-slate-900/50 hover:bg-slate-800 py-1 px-2.5 rounded-lg border border-slate-800 shrink-0"
+          >
+            <ArrowLeft className="w-3.5 h-3.5" />
+            <span className="font-bold">Volver</span>
+          </button>
+          <span className="text-slate-700 hidden sm:inline">|</span>
+          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0" />
+          <span className="text-slate-300 font-bold uppercase tracking-wider text-[10px] hidden sm:inline shrink-0">Consola de Testeo Dual</span>
+          <span className="text-slate-700 hidden lg:inline">|</span>
+          <p className="text-slate-400 hidden lg:inline truncate">
             Probá el comportamiento en tiempo real interactuando con dos pestañas.
           </p>
         </div>
@@ -1042,9 +1052,24 @@ export default function AulaVirtualPage() {
               {/* Filigrana superior esmeralda */}
               <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-emerald-600 to-amber-500" />
               
-              <div className="text-center space-y-2 mb-6">
-                <div className="w-12 h-12 bg-emerald-950/60 border border-emerald-500/20 rounded-full flex items-center justify-center text-emerald-400 mx-auto mb-2">
-                  <UserIcon className="w-6 h-6" />
+              <button 
+                onClick={() => router.back()}
+                className="absolute top-4 right-4 text-slate-500 hover:text-slate-300 transition-colors z-10 bg-slate-900/50 hover:bg-slate-800 p-1.5 rounded-lg border border-slate-800"
+                title="Volver"
+              >
+                <X className="w-5 h-5" />
+              </button>
+
+              <div className="text-center space-y-2 mb-6 mt-2">
+                <div className="flex justify-center mb-4 mt-2">
+                  <Image
+                    src="/logoitectrans_v2.png"
+                    alt="ITEC Saladillo"
+                    width={180}
+                    height={68}
+                    className="h-12 w-auto object-contain drop-shadow-[0_0_15px_rgba(255,255,255,0.1)]"
+                    priority
+                  />
                 </div>
                 <h3 className="text-lg font-bold text-slate-100">Ingreso al Aula Virtual</h3>
                 <p className="text-xs text-slate-400 leading-relaxed px-4">

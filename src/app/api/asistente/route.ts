@@ -183,7 +183,13 @@ Si un usuario te pregunta cómo funciona el Aula Virtual de ITEC, explicalo usan
 ## Comportamiento general
 - Respondé SIEMPRE en español rioplatense con voseo cálido y profesional.
 - Si te preguntan algo fuera de los temas de ITEC, redirigí amablemente la conversación hacia cómo ITEC puede ayudar o motivar.
-- Nunca inventes información. Si no sabés algo específico, indicá que el equipo de ITEC puede responder esa consulta en detalle y guialos a contactarnos.
+## Integración de Conocimientos y Búsqueda Web
+Ante CUALQUIER consulta, DEBÉS enriquecer tus respuestas utilizando las siguientes fuentes de información obligatoriamente:
+1. Base de datos de Supabase (contexto dinámico proporcionado sobre la comunidad y miembros de ITEC).
+2. Los documentos y PDFs institucionales provistos (Perfil Institucional de ITEC y Base de Conocimiento de Augusto Cicaré).
+3. Búsqueda web en vivo. CUANDO busques información en la web usando la herramienta de Google Search, SIEMPRE tenés que relacionar o cruzar tu búsqueda con todas o algunas de las siguientes palabras clave obligatorias: "itec", "saladillo", "Cicaré", "itec saladillo", "itec augusto cicare", "expo itec". No hagas búsquedas genéricas sueltas sin atarlas al contexto de ITEC Saladillo.
+
+Nunca inventes información. Si no sabés algo específico, indicá que el equipo de ITEC puede responder esa consulta en detalle y guialos a contactarnos.
 `.trim();
 // ─────────────────────────────────────────────
 // Tipos de la petición
@@ -268,7 +274,7 @@ export async function POST(request: NextRequest): Promise<Response> {
       const listaMiembros = miembros
         .filter((m: any) => m.full_name)
         .map((m: any) => 
-          `- **${m.full_name}**: Rol: ${m.role || 'Miembro'}. ${m.frase_itec ? `Frase: "${m.frase_itec}". ` : ''}${m.tareas_itec ? `Tareas: ${m.tareas_itec}. ` : ''}${m.bio ? `Habilidades/Bio: ${m.bio}.` : ''}`
+          `- **${m.full_name}**: Rol: ${m.role || 'Miembro'}. ${m.email ? `Email: ${m.email}. ` : ''}${m.phone ? `Teléfono: ${m.phone}. ` : ''}${m.frase_itec ? `Frase: "${m.frase_itec}". ` : ''}${m.tareas_itec ? `Tareas: ${m.tareas_itec}. ` : ''}${m.bio ? `Habilidades/Bio: ${m.bio}.` : ''}`
         );
       
       if (listaMiembros.length > 0) {
@@ -391,6 +397,7 @@ export async function POST(request: NextRequest): Promise<Response> {
           systemInstruction: promptSistema + aprendizajesAdicionales + miembrosContext,
           temperature: promptTemperature,
           maxOutputTokens: promptMaxTokens,
+          tools: [{ googleSearch: {} }],
         },
       });
     } catch (primerError: any) {
@@ -422,11 +429,12 @@ export async function POST(request: NextRequest): Promise<Response> {
           systemInstruction: promptSistema + aprendizajesAdicionales + miembrosContext,
           temperature: promptTemperature,
           maxOutputTokens: promptMaxTokens,
+          tools: [{ googleSearch: {} }],
         },
       });
     }
 
-    const textoRespuesta = respuesta.text;
+    const textoRespuesta = respuesta.text || respuesta.candidates?.[0]?.content?.parts?.[0]?.text;
 
     if (!textoRespuesta) {
       return Response.json(
@@ -503,8 +511,8 @@ export async function POST(request: NextRequest): Promise<Response> {
 
     // Error genérico del servidor
     return Response.json(
-      { error: 'Ocurrió un error al procesar tu consulta. Intentá nuevamente.' },
-      { status: 500 },
+      { error: status === 503 ? 'Gemini está experimentando alta demanda (503). Intentá nuevamente.' : 'Ocurrió un error al procesar tu consulta. Intentá nuevamente.', detalle: errorString },
+      { status: status === 503 ? 503 : 500 },
     );
   }
 }

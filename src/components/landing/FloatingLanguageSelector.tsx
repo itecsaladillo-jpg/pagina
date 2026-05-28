@@ -81,7 +81,7 @@ export function FloatingLanguageSelector() {
           <Globe size={14} />
         </div>
         <span className="text-[11px] font-black tracking-wider text-slate-200 uppercase flex items-center gap-1.5">
-          {currentLang.flag} {currentLang.code}
+          {currentLang.flag}
         </span>
       </button>
     </div>

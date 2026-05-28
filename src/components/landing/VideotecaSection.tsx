@@ -74,7 +74,7 @@ export function VideotecaSection() {
               {activeVideoId ? (
                 <iframe
                   key={activeVideoId}
-                  src={`https://www.youtube.com/embed/${activeVideoId}?autoplay=${hasInteracted ? 1 : 0}&modestbranding=1&rel=0&iv_load_policy=3&showinfo=0&controls=1&disablekb=0&color=white`}
+                  src={`https://www.youtube.com/embed/${activeVideoId}?autoplay=${hasInteracted ? 1 : 0}&modestbranding=1&rel=0&iv_load_policy=3&showinfo=0&controls=0&disablekb=1&fs=0&playsinline=1`}
                   title={activeVideoTranslated?.title || dict.videotecaSection.reproductor}
                   className="absolute inset-0 w-full h-full"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"

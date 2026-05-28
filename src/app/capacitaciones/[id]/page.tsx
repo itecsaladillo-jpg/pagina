@@ -41,7 +41,7 @@ export default async function TrainingDetailPage({ params }: { params: { id: str
         <div className="aspect-video bg-zinc-900 sticky top-0 z-20 shadow-2xl">
           {videoId ? (
             <iframe
-              src={`https://www.youtube.com/embed/${videoId}?autoplay=1&modestbranding=1&rel=0`}
+              src={`https://www.youtube.com/embed/${videoId}?autoplay=1&modestbranding=1&rel=0&showinfo=0&controls=0&disablekb=1&fs=0&playsinline=1`}
               className="w-full h-full"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen

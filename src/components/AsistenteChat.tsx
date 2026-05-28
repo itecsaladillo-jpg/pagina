@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { createClient } from '@/lib/supabase/client';
 
 // ─────────────────────────────────────────────
 // Tipos
@@ -14,16 +15,20 @@ interface Mensaje {
 // ─────────────────────────────────────────────
 // Sub-componente: Indicador de escritura (tres puntitos)
 // ─────────────────────────────────────────────
-function TypingIndicator() {
+function TypingIndicator({ avatar }: { avatar: string | null }) {
   return (
     <div className="flex items-end gap-2 mb-3">
       {/* Avatar del asistente */}
-      <div className="w-7 h-7 rounded-full flex-shrink-0 flex items-center justify-center"
+      <div className="w-7 h-7 rounded-full flex-shrink-0 flex items-center justify-center overflow-hidden"
         style={{ background: 'linear-gradient(135deg, #3b82f6, #06b6d4)' }}>
-        <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-          <path strokeLinecap="round" strokeLinejoin="round"
-            d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
-        </svg>
+        {avatar ? (
+          <img src={avatar} alt="Asistente" className="w-full h-full object-cover" />
+        ) : (
+          <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round"
+              d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
+          </svg>
+        )}
       </div>
 
       {/* Burbuja con puntitos */}
@@ -72,7 +77,7 @@ function renderizarContenidoChat(texto: string) {
 // ─────────────────────────────────────────────
 // Sub-componente: Burbuja de mensaje
 // ─────────────────────────────────────────────
-function BurbujaMensaje({ msg, index }: { msg: Mensaje; index: number }) {
+function BurbujaMensaje({ msg, index, avatar }: { msg: Mensaje; index: number; avatar: string | null }) {
   const esAsistente = msg.role === 'model';
 
   return (
@@ -86,12 +91,16 @@ function BurbujaMensaje({ msg, index }: { msg: Mensaje; index: number }) {
     >
       {/* Avatar */}
       {esAsistente ? (
-        <div className="w-7 h-7 rounded-full flex-shrink-0 flex items-center justify-center"
+        <div className="w-7 h-7 rounded-full flex-shrink-0 flex items-center justify-center overflow-hidden"
           style={{ background: 'linear-gradient(135deg, #3b82f6, #06b6d4)' }}>
-          <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round"
-              d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
-          </svg>
+          {avatar ? (
+            <img src={avatar} alt="Asistente" className="w-full h-full object-cover" />
+          ) : (
+            <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round"
+                d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
+            </svg>
+          )}
         </div>
       ) : (
         <div className="w-7 h-7 rounded-full flex-shrink-0 flex items-center justify-center"
@@ -139,6 +148,27 @@ export function AsistenteChat() {
   const [inputValor, setInputValor] = useState('');
   const [isPending, setIsPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [avatarAsistente, setAvatarAsistente] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchAvatar = async () => {
+      try {
+        const supabase = createClient();
+        const { data } = await supabase.rpc('obtener_miembros_publicos');
+        if (data) {
+          const asistente = data.find((m: any) => 
+            m.full_name?.toLowerCase().includes('asistente')
+          );
+          if (asistente?.avatar_url) {
+            setAvatarAsistente(asistente.avatar_url);
+          }
+        }
+      } catch (err) {
+        console.error('Error fetching assistant avatar:', err);
+      }
+    };
+    fetchAvatar();
+  }, []);
 
   // Estados de feedback y auto-aprendizaje
   const [pantalla, setPantalla] = useState<'chat' | 'feedback'>('chat');
@@ -424,13 +454,17 @@ export function AsistenteChat() {
               {/* Avatar animado */}
               <div className="relative">
                 <div
-                  className="w-8 h-8 rounded-full flex items-center justify-center"
+                  className="w-8 h-8 rounded-full flex items-center justify-center overflow-hidden"
                   style={{ background: 'linear-gradient(135deg, #3b82f6, #06b6d4)' }}
                 >
-                  <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round"
-                      d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
-                  </svg>
+                  {avatarAsistente ? (
+                    <img src={avatarAsistente} alt="Asistente" className="w-full h-full object-cover" />
+                  ) : (
+                    <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round"
+                        d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
+                    </svg>
+                  )}
                 </div>
                 <span
                   className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-green-400"
@@ -500,9 +534,9 @@ export function AsistenteChat() {
                 style={{ overscrollBehavior: 'contain' }}
               >
                 {mensajes.map((msg, i) => (
-                  <BurbujaMensaje key={i} msg={msg} index={i} />
+                  <BurbujaMensaje key={i} msg={msg} index={i} avatar={avatarAsistente} />
                 ))}
-                {isPending && <TypingIndicator />}
+                {isPending && <TypingIndicator avatar={avatarAsistente} />}
 
                 {/* Error inline */}
                 {error && (
