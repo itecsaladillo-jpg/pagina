@@ -122,14 +122,11 @@ export function Navbar() {
         <div className="hidden lg:flex items-center gap-1.5 ml-auto shrink-0">
           {/* Primeros 5 enlaces */}
           {dynamicLinks.slice(0, 5).map((link) => {
-            const hasSpace = link.label.includes(' ') || link.label.includes('\n')
             return (
               <a
                 key={link.href}
                 href={link.href}
-                className={`btn-outline text-[9px] uppercase tracking-wider py-1 px-1 border-dashed opacity-75 hover:opacity-100 transition-all flex items-center justify-center text-center leading-[1.15] min-h-[42px] whitespace-normal shrink-0 ${
-                  hasSpace ? 'w-[82px]' : 'w-[72px]'
-                }`}
+                className="btn-outline text-[9px] uppercase tracking-wider py-1 px-3 border-dashed opacity-75 hover:opacity-100 transition-all flex items-center justify-center text-center leading-[1.15] min-h-[42px] whitespace-normal shrink-0 w-auto"
               >
                 <span>
                   {link.label.split('\n').map((line, i) => (
@@ -145,23 +142,23 @@ export function Navbar() {
           {/* Mapa Productivo — destacado */}
           <a
             href="/mapa-productivo"
-            className="text-[9px] uppercase tracking-wider py-1 px-2 rounded-2xl font-extrabold
+            className="text-[9px] uppercase tracking-wider py-1 px-3 rounded-2xl font-extrabold
               bg-gradient-to-r from-blue-600/30 to-cyan-600/20 border border-blue-500/40
               text-blue-300 hover:text-white hover:border-blue-400 hover:from-blue-600/50 hover:to-cyan-600/30
-              transition-all duration-200 flex items-center justify-center gap-1 min-h-[42px] text-center w-[90px] whitespace-normal leading-[1.15] shrink-0"
+              transition-all duration-200 flex items-center justify-center gap-1.5 min-h-[42px] text-center w-auto whitespace-normal leading-[1.15] shrink-0"
           >
             <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse flex-shrink-0" />
             <span>{dict.navbar.mapa}</span>
           </a>
-
+ 
           {/* Aula Virtual */}
           {claseEnVivo ? (
             <Link
               href="/clases/demostracion"
-              className="text-[9px] uppercase tracking-wider py-1 px-2 rounded-2xl font-extrabold
+              className="text-[9px] uppercase tracking-wider py-1 px-3 rounded-2xl font-extrabold
                 bg-gradient-to-r from-red-600/30 to-rose-600/20 border border-red-500/40
                 text-red-300 hover:text-white hover:border-red-400 hover:from-red-600/50 hover:to-rose-600/30
-                transition-all duration-200 flex items-center justify-center gap-1 min-h-[42px] text-center w-[90px] whitespace-normal leading-[1.15] shrink-0 animate-pulse"
+                transition-all duration-200 flex items-center justify-center gap-1.5 min-h-[42px] text-center w-auto whitespace-normal leading-[1.15] shrink-0 animate-pulse"
             >
               <span className="w-1.5 h-1.5 rounded-full bg-red-400 animate-pulse flex-shrink-0" />
               <span>{dict.navbar.aula}</span>
@@ -169,16 +166,16 @@ export function Navbar() {
           ) : (
             <Link
               href="/clases/demostracion"
-              className="btn-outline text-[9px] uppercase tracking-wider py-1 px-2 border-dashed opacity-75 hover:opacity-100 transition-all flex items-center justify-center text-center min-h-[42px] w-[90px] whitespace-normal leading-[1.15] shrink-0"
+              className="btn-outline text-[9px] uppercase tracking-wider py-1 px-3 border-dashed opacity-75 hover:opacity-100 transition-all flex items-center justify-center text-center min-h-[42px] w-auto whitespace-normal leading-[1.15] shrink-0"
             >
               <span>{dict.navbar.aula}</span>
             </Link>
           )}
-
+ 
           {/* Acceso Miembros */}
           <a
             href={dynamicLinks[6].href}
-            className="btn-outline text-[9px] uppercase tracking-wider py-1 px-2 border-dashed opacity-75 hover:opacity-100 transition-all flex items-center justify-center text-center min-h-[42px] w-[90px] whitespace-normal leading-[1.15] shrink-0"
+            className="btn-outline text-[9px] uppercase tracking-wider py-1 px-3 border-dashed opacity-75 hover:opacity-100 transition-all flex items-center justify-center text-center min-h-[42px] w-auto whitespace-normal leading-[1.15] shrink-0"
           >
             <span>{dynamicLinks[6].label}</span>
           </a>
