@@ -126,9 +126,8 @@ export default function MapaProductivoPage() {
 
           {/* Título principal */}
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black leading-[1.1] tracking-tight mb-6">
-            El mapa de la{' '}
-            <span className="text-gradient">innovación</span> y el{' '}
-            <span className="text-gradient">talento</span> de Saladillo.
+            El mapa de{' '}
+            <span className="text-gradient">la innovación y el talento</span> de Saladillo
           </h1>
 
           {/* Subtítulo */}
