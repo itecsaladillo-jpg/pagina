@@ -129,9 +129,10 @@ async function testPregunta(pregunta) {
         systemInstruction: SYSTEM_INSTRUCTION,
         temperature: 0.7,
         maxOutputTokens: 500,
+        tools: [{ googleSearch: {} }]
       },
     });
-    console.log(`Respuesta:\n${respuesta.text}`);
+    console.log(`Respuesta:\n${JSON.stringify(respuesta, null, 2)}`);
   } catch (error) {
     console.error('Error al generar contenido:', error);
   }
