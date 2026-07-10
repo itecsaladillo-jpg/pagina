@@ -42,3 +42,8 @@ next-env.d.ts
 
 .vercel
 .env*.local
+
+# Archivos comprimidos grandes
+*.rar
+*.zip
+*.tar.gz
