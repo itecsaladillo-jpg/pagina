@@ -4,8 +4,8 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { createClient } from '@/lib/supabase/client';
 import { GoogleSignInButton } from './GoogleSignInButton';
-import { signInWithGoogle } from '@/services/auth';
 
 export function LoginClientContent({ error }: { error?: string }) {
   const { dict } = useLanguage();
@@ -15,8 +15,16 @@ export function LoginClientContent({ error }: { error?: string }) {
     // Si no hay error, auto-redirigir a Google usando el cliente para que las cookies PKCE se guarden bien
     if (!error) {
       let isMounted = true;
-      signInWithGoogle().then(() => {
-        // Redirigiendo...
+      const supabase = createClient();
+      supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`,
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'consent',
+          },
+        },
       }).catch((err) => {
         console.error('Auto-redirect failed', err);
         if (isMounted) setIsRedirecting(false);
