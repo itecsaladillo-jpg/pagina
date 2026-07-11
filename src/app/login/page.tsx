@@ -30,24 +30,8 @@ export default async function LoginPage({
     return <LoginClientContent error="Tu cuenta está autorizada pero hubo un error al crear tu perfil. Por favor, cerrá sesión e intentá de nuevo, o contactá a soporte." />
   }
 
-  // 2. Si no es un flujo de logout explícito, redirección automática a Google
-  if (params.logout !== 'true') {
-    const headersList = await headers()
-    const host = headersList.get('host')
-    const proto = headersList.get('x-forwarded-proto') ?? 'http'
-    const origin = `${proto}://${host}`
-
-    const { data } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        redirectTo: `${origin}/auth/callback`,
-      },
-    })
-
-    if (data?.url) {
-      redirect(data.url)
-    }
-  }
+  // 2. Deshabilitamos redirección automática en el servidor para evitar fallos de cookies PKCE
+  // El usuario deberá hacer clic en el botón de Google en la página de login.
 
   return <LoginClientContent error={params.error} />
 }
