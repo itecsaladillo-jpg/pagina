@@ -1,37 +1,28 @@
 import type { Metadata } from 'next'
 import { LoginClientContent } from '@/components/auth/LoginClientContent'
-import { createClient } from '@/lib/supabase/server'
-import { redirect } from 'next/navigation'
 import { getCurrentMember } from '@/services/auth'
-import { headers } from 'next/headers'
+import { redirect } from 'next/navigation'
 
 export const metadata: Metadata = {
-  title: 'Iniciar sesión',
+  title: 'Iniciar sesión — ITEC Saladillo',
 }
 
+/**
+ * Página /login — Solo se muestra cuando hay un error en el proceso OAuth.
+ * El inicio de sesión se dispara directamente desde el botón en el Navbar.
+ */
 export default async function LoginPage({
   searchParams,
 }: {
-  searchParams: Promise<{ redirect?: string; error?: string; logout?: string }>
+  searchParams: Promise<{ error?: string; desc?: string; logout?: string }>
 }) {
   const params = await searchParams
 
-  // 1. Si ya está autenticado y tiene perfil, va al dashboard de una
+  // Si ya está autenticado y tiene perfil, va al dashboard
   const member = await getCurrentMember()
   if (member) {
     redirect('/dashboard')
   }
 
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-
-  // 1.5 Si el usuario está autenticado pero no tiene perfil en members (fallo del trigger)
-  if (user && !member && params.logout !== 'true') {
-    return <LoginClientContent error="Tu cuenta está autorizada pero hubo un error al crear tu perfil. Por favor, cerrá sesión e intentá de nuevo, o contactá a soporte." />
-  }
-
-  // 2. Deshabilitamos redirección automática en el servidor para evitar fallos de cookies PKCE
-  // El usuario deberá hacer clic en el botón de Google en la página de login.
-
-  return <LoginClientContent error={params.error} />
+  return <LoginClientContent error={params.error} errorDesc={params.desc} />
 }

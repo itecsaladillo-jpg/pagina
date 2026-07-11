@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { useLanguage } from '@/contexts/LanguageContext'
+import { MembersAccessButton } from '@/components/auth/MembersAccessButton'
 
 export function Footer() {
   const { dict } = useLanguage()
@@ -33,9 +34,9 @@ export function Footer() {
           </div>
 
           {/* Login */}
-          <Link href="/login" className="btn-outline text-sm py-2 px-5">
+          <MembersAccessButton className="btn-outline text-sm py-2 px-5 cursor-pointer">
             {dict.navbar.miembros}
-          </Link>
+          </MembersAccessButton>
         </div>
 
         {/* Card Mapa Productivo */}

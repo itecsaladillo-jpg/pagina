@@ -6,6 +6,7 @@ import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { useLanguage } from '@/contexts/LanguageContext'
+import { MembersAccessButton } from '@/components/auth/MembersAccessButton'
 
 const navLinks = [
   { label: 'Acciones', href: '/#acciones' },
@@ -172,13 +173,12 @@ export function Navbar() {
             </Link>
           )}
  
-          {/* Acceso Miembros */}
-          <a
-            href={dynamicLinks[6].href}
-            className="text-[9px] uppercase tracking-wider px-1.5 opacity-75 hover:opacity-100 hover:text-blue-400 transition-all flex items-center justify-center text-center w-auto whitespace-normal leading-[1.15] shrink-0"
+          {/* Acceso Miembros — dispara OAuth directo sin pasar por /login */}
+          <MembersAccessButton
+            className="text-[9px] uppercase tracking-wider px-1.5 opacity-75 hover:opacity-100 hover:text-blue-400 transition-all flex items-center justify-center text-center w-auto whitespace-normal leading-[1.15] shrink-0 bg-transparent border-none cursor-pointer"
           >
             <span>{dynamicLinks[6].label}</span>
-          </a>
+          </MembersAccessButton>
         </div>
 
         {/* Mobile hamburger */}
@@ -198,7 +198,7 @@ export function Navbar() {
       {/* Mobile menu */}
       {menuOpen && (
         <div className="absolute top-full left-0 w-full lg:hidden glass border-t border-[var(--border-subtle)] px-6 py-4 flex flex-col items-end gap-3 z-50">
-          {dynamicLinks.filter(l => !l.highlight).map((link) => (
+          {dynamicLinks.filter(l => !l.highlight && l.href !== '/login').map((link) => (
             <a
               key={link.href}
               href={link.href}
@@ -244,6 +244,12 @@ export function Navbar() {
               {dict.navbar.aula}
             </Link>
           )}
+          {/* Acceso Miembros mobile — dispara OAuth directo */}
+          <MembersAccessButton
+            className="btn-outline text-xs py-2 px-4 w-fit justify-end text-right leading-tight bg-transparent cursor-pointer"
+          >
+            <span>{dynamicLinks[6].label}</span>
+          </MembersAccessButton>
         </div>
       )}
     </nav>
