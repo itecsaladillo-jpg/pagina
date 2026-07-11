@@ -1,12 +1,29 @@
 "use client";
 
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { GoogleSignInButton } from './GoogleSignInButton';
+import { signInWithGoogle } from '@/services/auth';
 
 export function LoginClientContent({ error }: { error?: string }) {
   const { dict } = useLanguage();
+  const [isRedirecting, setIsRedirecting] = useState(!error);
+
+  useEffect(() => {
+    // Si no hay error, auto-redirigir a Google usando el cliente para que las cookies PKCE se guarden bien
+    if (!error) {
+      let isMounted = true;
+      signInWithGoogle().then(() => {
+        // Redirigiendo...
+      }).catch((err) => {
+        console.error('Auto-redirect failed', err);
+        if (isMounted) setIsRedirecting(false);
+      });
+      return () => { isMounted = false; };
+    }
+  }, [error]);
 
   return (
     <div className="min-h-screen bg-gray-950 flex items-center justify-center p-4">
@@ -28,23 +45,32 @@ export function LoginClientContent({ error }: { error?: string }) {
           </Link>
         </div>
 
-        <p className="text-gray-400 mb-8 text-sm">
-          {dict.login.exclusivoMiembros}
-        </p>
-
-        {/* Error de auth */}
-        {error && (
-          <div className="mb-6 p-3 bg-red-900/30 border border-red-700 rounded-lg text-red-300 text-sm">
-            {dict.login.errorAuth}
+        {isRedirecting ? (
+          <div className="flex flex-col items-center justify-center py-8">
+            <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mb-4"></div>
+            <p className="text-gray-400 text-sm">Redirigiendo de forma segura...</p>
           </div>
+        ) : (
+          <>
+            <p className="text-gray-400 mb-8 text-sm">
+              {dict.login.exclusivoMiembros}
+            </p>
+
+            {/* Error de auth */}
+            {error && (
+              <div className="mb-6 p-3 bg-red-900/30 border border-red-700 rounded-lg text-red-300 text-sm">
+                {dict.login.errorAuth}
+              </div>
+            )}
+
+            {/* Botón Google conectado */}
+            <GoogleSignInButton />
+
+            <p className="mt-6 text-xs text-gray-600">
+              {dict.login.aceptasTerminos}
+            </p>
+          </>
         )}
-
-        {/* Botón Google conectado */}
-        <GoogleSignInButton />
-
-        <p className="mt-6 text-xs text-gray-600">
-          {dict.login.aceptasTerminos}
-        </p>
       </div>
     </div>
   );
