@@ -16,7 +16,6 @@ export async function GET(request: Request) {
   }
 
   const code = searchParams.get('code')
-  const next = searchParams.get('next') ?? '/dashboard'
 
   if (code) {
     const supabase = await createClient()
@@ -29,8 +28,27 @@ export async function GET(request: Request) {
       )
     }
 
-    // Éxito: redirigir al dashboard
-    return NextResponse.redirect(`${origin}${next}`)
+    // Verificar si el usuario tiene acceso activo
+    const { data: { user } } = await supabase.auth.getUser()
+
+    if (!user) {
+      return NextResponse.redirect(`${origin}/login?error=no_user`)
+    }
+
+    const { data: member } = await supabase
+      .from('members')
+      .select('status')
+      .eq('id', user.id)
+      .single()
+
+    if (!member || member.status === 'pendiente') {
+      // Usuario autenticado pero no autorizado → cerrar sesión y volver a la home con mensaje
+      await supabase.auth.signOut()
+      return NextResponse.redirect(`${origin}/?acceso=no-autorizado`)
+    }
+
+    // Usuario activo → redirigir al dashboard
+    return NextResponse.redirect(`${origin}/dashboard/miembros`)
   }
 
   // Sin code ni error — algo raro pasó

@@ -5,6 +5,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { createClient } from '@/lib/supabase/client'
 import { useLanguage } from '@/contexts/LanguageContext'
+import { MembersAccessButton } from '@/components/auth/MembersAccessButton'
 
 export function HeroSection() {
   const { dict } = useLanguage()
@@ -167,9 +168,9 @@ export function HeroSection() {
                   {dict.navbar.aula}
                 </Link>
               )}
-              <Link href="/login" className="btn-outline text-[10px] uppercase tracking-wider py-1.5 px-4 border-dashed opacity-70 hover:opacity-100 transition-all">
+              <MembersAccessButton className="btn-outline text-[10px] uppercase tracking-wider py-1.5 px-4 border-dashed opacity-70 hover:opacity-100 transition-all cursor-pointer bg-transparent">
                 {dict.navbar.miembros}
-              </Link>
+              </MembersAccessButton>
             </div>
           </div>
 
