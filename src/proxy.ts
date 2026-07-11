@@ -9,6 +9,25 @@ const PROTECTED_ROUTES = ['/dashboard']
 const AUTH_ONLY_ROUTES = ['/login', '/register']
 
 export async function proxy(request: NextRequest) {
+  const { pathname, searchParams } = request.nextUrl
+
+  // ──────────────────────────────────────────────────────────────
+  // INTERCEPTOR DE OAUTH CODE
+  // Si Supabase redirige a cualquier URL con ?code= (por tener el
+  // Site URL mal configurado), lo capturamos aquí y lo enviamos
+  // al handler correcto /auth/callback antes de cualquier otra lógica.
+  // ──────────────────────────────────────────────────────────────
+  const code = searchParams.get('code')
+  if (code && pathname !== '/auth/callback') {
+    const callbackUrl = request.nextUrl.clone()
+    callbackUrl.pathname = '/auth/callback'
+    callbackUrl.search = ''
+    callbackUrl.searchParams.set('code', code)
+    const state = searchParams.get('state')
+    if (state) callbackUrl.searchParams.set('state', state)
+    return NextResponse.redirect(callbackUrl)
+  }
+
   let supabaseResponse = NextResponse.next({ request })
 
   const supabase = createServerClient(
@@ -34,8 +53,6 @@ export async function proxy(request: NextRequest) {
 
   // Refrescar sesión
   const { data: { user } } = await supabase.auth.getUser()
-
-  const { pathname } = request.nextUrl
 
   // Rutas protegidas
   const isProtectedRoute = PROTECTED_ROUTES.some(
@@ -63,7 +80,7 @@ export async function proxy(request: NextRequest) {
       return NextResponse.redirect(pendingUrl)
     }
 
-    // Redirigir a los miembros activos directamente a la sección de miembros (Directorio de Miembros)
+    // Redirigir a los miembros activos directamente a la sección de miembros
     if (pathname === '/dashboard' && member.status === 'activo') {
       const miembrosUrl = request.nextUrl.clone()
       miembrosUrl.pathname = '/dashboard/miembros'
@@ -71,7 +88,7 @@ export async function proxy(request: NextRequest) {
     }
   }
 
-  // Rutas de auth
+  // Rutas de auth — si ya está logueado, no mostrar login
   const isAuthRoute = AUTH_ONLY_ROUTES.some(
     (route) => pathname === route || pathname.startsWith(`${route}/`)
   )
