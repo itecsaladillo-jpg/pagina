@@ -60,10 +60,11 @@ export function NewsFlashMulticanalEditor({ onSave, onCancel }: NewsFlashMultica
 
     setIsProcessing(true)
     try {
+      const title = rawFacts.slice(0, 100).replace(/\n/g, ' ') + (rawFacts.length > 100 ? '...' : '')
       const res = await fetch('/api/news/process', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ titulo, datos_crudos: rawFacts })
+        body: JSON.stringify({ titulo: title, datos_crudos: rawFacts })
       })
 
       const data = await res.json()
