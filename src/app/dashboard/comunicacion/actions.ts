@@ -47,7 +47,7 @@ export async function publishArticleAction(formData: {
     content: formData.content,
     media_urls: formData.media_urls,
     is_published: formData.is_published,
-    excerpt: formData.badge_text, // Usamos excerpt como almacenamiento para badge_text
+    excerpt: formData.badge_text,
     author_id: member.id,
     updated_at: new Date().toISOString()
   }
@@ -56,7 +56,6 @@ export async function publishArticleAction(formData: {
     payload.created_at = formData.created_at
   }
 
-  // Generar slug solo si es nuevo
   if (!formData.id) {
     const slug = formData.title
       .toLowerCase()
@@ -116,4 +115,48 @@ export async function deleteArticleAction(id: string) {
   revalidatePath('/dashboard/comunicacion')
   revalidatePath('/')
   return { success: true }
+}
+
+export async function createMulticanalNewsAction(data: {
+  title: string
+  datos_crudos: string
+  texto_publico: string
+  texto_miembros: string
+  texto_sponsors: string
+  texto_medios: string
+  para_publico: boolean
+  para_miembros: boolean
+  para_sponsors: boolean
+  para_medios: boolean
+}) {
+  const member = await getCurrentMember()
+  if (!member || member.role !== 'admin') throw new Error('No autorizado')
+
+  const supabase = await createClient()
+  const { data: news, error } = await supabase
+    .from('news_flashes')
+    .insert({
+      title: data.title,
+      datos_crudos: data.datos_crudos,
+      texto_publico: data.texto_publico,
+      texto_miembros: data.texto_miembros,
+      texto_sponsors: data.texto_sponsors,
+      texto_medios: data.texto_medios,
+      para_publico: data.para_publico,
+      para_miembros: data.para_miembros,
+      para_sponsors: data.para_sponsors,
+      para_medios: data.para_medios,
+      author_id: member.id,
+      is_published: true
+    })
+    .select()
+    .single()
+
+  if (error) {
+    console.error('[createMulticanalNewsAction] Error:', error.message)
+    return { success: false, error: error.message }
+  }
+
+  revalidatePath('/dashboard/comunicacion')
+  return { success: true, data: news }
 }

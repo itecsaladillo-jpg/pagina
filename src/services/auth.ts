@@ -43,7 +43,6 @@ export async function signInWithGoogle(redirectTo?: string) {
       redirectTo: callbackUrl,
       queryParams: {
         access_type: 'offline',
-        prompt: 'consent',
       },
     },
   })

@@ -65,18 +65,18 @@ export async function createReporteAction(data: {
     .select('titulo, categoria, descripcion, impacto_social, trascendencia_regional, presupuesto_total, rubros_relacionados')
     .in('id', data.acciones_ids)
 
-  // 2. Obtener datos del sponsor (nombre, rubro, métricas)
+  // 2. Obtener datos del sponsor (nombre, actividad, métricas)
   const { data: sponsor } = await supabase
     .from('sponsors')
-    .select('name, rubro, impact_data')
+    .select('name, actividad, impact_data')
     .eq('id', data.sponsor_id)
     .single()
 
   // 3. Identificar acciones que coinciden con el rubro del sponsor
-  const accionesDestacadas = (sponsor?.rubro && acciones)
+  const accionesDestacadas = (sponsor?.actividad && acciones)
     ? acciones.filter((a: any) =>
         a.rubros_relacionados?.some((r: string) =>
-          r.toLowerCase().includes(sponsor.rubro.toLowerCase())
+          r.toLowerCase().includes((sponsor.actividad || '').toLowerCase())
         )
       )
     : []
@@ -90,7 +90,7 @@ export async function createReporteAction(data: {
   if (acciones?.length && sponsor) {
     const reporteOutput = await generateSponsorReport({
       sponsor_nombre: sponsor.name,
-      sponsor_rubro: sponsor.rubro || '',
+      sponsor_rubro: sponsor.actividad || '',
       periodo: data.periodo,
       acciones: acciones.map((a: any) => ({
         titulo: a.titulo,

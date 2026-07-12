@@ -59,6 +59,15 @@ export async function processTextAction(
     is_published: true,
     tags: [],
     media_urls: [],
+    datos_crudos: null,
+    texto_publico: null,
+    texto_miembros: null,
+    texto_sponsors: null,
+    texto_medios: null,
+    para_publico: null,
+    para_miembros: null,
+    para_sponsors: null,
+    para_medios: null,
   })
 
   if (!saved) {

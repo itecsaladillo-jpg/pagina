@@ -15,6 +15,15 @@ export interface NewsFlash {
   is_published: boolean
   tags: string[]
   media_urls: string[]
+  datos_crudos: string | null
+  texto_publico: string | null
+  texto_miembros: string | null
+  texto_sponsors: string | null
+  texto_medios: string | null
+  para_publico: boolean | null
+  para_miembros: boolean | null
+  para_sponsors: boolean | null
+  para_medios: boolean | null
 }
 
 export interface RelatedVideo {
@@ -71,6 +80,30 @@ export async function createNewsFlash(
 
   if (error) {
     console.error('[newsService] createNewsFlash error:', error.message)
+    return null
+  }
+  return data as NewsFlash
+}
+
+export async function createMulticanalNewsFlash(
+  flash: Omit<NewsFlash, 'id' | 'created_at' | 'updated_at' | 'original_text' | 'summary' | 'action_items' | 'flash_text' | 'source_type'>
+): Promise<NewsFlash | null> {
+  const supabase = await createClient()
+  const { data, error } = await supabase
+    .from('news_flashes')
+    .insert({
+      ...flash,
+      original_text: '',
+      summary: '',
+      action_items: [],
+      flash_text: '',
+      source_type: 'manual'
+    })
+    .select()
+    .single()
+
+  if (error) {
+    console.error('[newsService] createMulticanalNewsFlash error:', error.message)
     return null
   }
   return data as NewsFlash
@@ -175,4 +208,50 @@ export async function getArticleBySlug(slug: string): Promise<PublicArticle | nu
   }
 
   return article as PublicArticle
+}
+
+export async function getPublicNewsFlashes(): Promise<NewsFlash[]> {
+  const supabase = await createClient()
+  const { data, error } = await supabase
+    .from('news_flashes')
+    .select('*')
+    .eq('para_publico', true)
+    .eq('is_published', true)
+    .order('created_at', { ascending: false })
+
+  if (error) {
+    console.error('[newsService] getPublicNewsFlashes error:', error.message)
+    return []
+  }
+  return (data ?? []) as NewsFlash[]
+}
+
+export async function getMemberNewsFlashes(): Promise<NewsFlash[]> {
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
+  if (!user) return []
+
+  const { data: member } = await supabase
+    .from('members')
+    .select('id')
+    .eq('id', user.id)
+    .single()
+
+  if (!member) return []
+
+  const { data, error } = await supabase
+    .from('news_flashes')
+    .select('*')
+    .eq('para_miembros', true)
+    .eq('is_published', true)
+    .order('created_at', { ascending: false })
+
+  if (error) {
+    console.error('[newsService] getMemberNewsFlashes error:', error.message)
+    return []
+  }
+  return (data ?? []) as NewsFlash[]
 }

@@ -9,10 +9,13 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@ai-sdk/google": "^4.0.12",
     "@google/genai": "^2.5.0",
     "@google/generative-ai": "^0.24.1",
+    "@hookform/resolvers": "^5.4.0",
     "@supabase/ssr": "^0.10.3",
     "@supabase/supabase-js": "^2.105.4",
+    "ai": "^7.0.22",
     "date-fns": "^4.1.0",
     "framer-motion": "^12.38.0",
     "googleapis": "^171.4.0",
@@ -20,6 +23,7 @@
     "next": "16.2.6",
     "react": "19.2.4",
     "react-dom": "19.2.4",
+    "react-hook-form": "^7.81.0",
     "react-qr-code": "^2.0.21",
     "recharts": "^3.8.1",
     "resend": "^6.12.3"

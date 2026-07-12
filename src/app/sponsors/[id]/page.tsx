@@ -67,8 +67,8 @@ export default async function SponsorPortalPage({ params }: { params: { id: stri
   }
 
   // Acciones que coinciden con el rubro del sponsor (invitaciones especiales)
-  const accionesDestacadas = sponsor.rubro
-    ? acciones.filter(a => a.rubros_relacionados?.includes(sponsor.rubro.toLowerCase()))
+  const accionesDestacadas = sponsor.actividad
+    ? acciones.filter(a => a.rubros_relacionados?.some((r: string) => r.toLowerCase().includes((sponsor.actividad || '').toLowerCase())))
     : []
 
   // Totales
