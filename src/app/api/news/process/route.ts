@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import OpenAI from 'openai'
 
 const grok = new OpenAI({
-  apiKey: process.env.GROK_API_KEY,
+  apiKey: process.env.OPENAI_API_KEY,
   baseURL: 'https://api.x.ai/v1'
 })
 
@@ -26,7 +26,7 @@ Datos: ${datos_crudos}`
   try {
     console.log('[IA] Llamando a Grok...')
     const result = await grok.chat.completions.create({
-      model: 'grok-beta',
+      model: 'gpt-4o-mini',
       messages: [{ role: 'user', content: prompt }],
       temperature: 0.7
     })
