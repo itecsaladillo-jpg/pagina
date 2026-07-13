@@ -14,26 +14,19 @@ async function generarTextosIA(datos_crudos: string) {
   
   console.log('[IA] Generando contenido multicanal...')
   
-  const prompt = `Generá ÚNICAMENTE un JSON válido con estas llaves: "titulo", "texto_publico", "texto_miembros", "texto_sponsors", "texto_medios".
+  const prompt = `Generá ÚNICAMENTE un JSON válido: {"titulo": "...", "texto_publico": "...", "texto_miembros": "...", "texto_sponsors": "...", "texto_medios": "..."}
 
-EJEMPLOS DE FORMATO:
+VIAJE DEL HÉROE:
+- Desafío: [qué problema resolviste]
+- Acción: [qué hizo ITEC]
+- Transformación: [cambio positivo]
+- Cita: "Como dijo [rol]: \"frase impactante\""
 
-PARA texto_publico:
-{
-  "titulo": "Innovación tecnológica llega a Saladillo",
-  "texto_publico": "Desafío: Las escuelas rurales carecían de conectividad.\nAcción: ITEC implementó laboratorios móviles de robótica.\nTransformación: 300 estudiantes ahora dominan la programación.\nComo dijo una docente: \"Esto abre puertas que creíamos cerradas\".\nITEC sigue construyendo el futuro tecnológico de la región."
-}
+TEXTO PÚBLICO (3-6 párrafos):
+Desafío inicial → Acción de ITEC → Transformación → Cierre reflexivo. Lenguaje accesible, sin tecnicismos.
 
-PARA texto_miembros:
-{
-  "texto_publico": "Desafío superado con excelencia.\nNuestro equipo técnico integró sensores avanzados.\nEl área de robótica entregó los kits a tiempo.\nGracias al staff de medios por la cobertura.\nNosotros transformamos realidades. Próximo reto: IA agrícola."
-}
-
-INSTRINCCIONES EXTRAS:
-- Viaje del Héroe: Desafío → Acción ITEC → Transformación
-- Cita natural: "Como dijo [rol]: \"frase impactante\""
-- Párrafos cortos, 3-6 por texto
-- Sin tecnicismos para público, lenguaje cálido para miembros ("nosotros", "nuestro")
+TEXTO MIEMBROS (3-6 párrafos):
+Desafío superado → Nuestro equipo [área] → Resultado logrado → Gracias a todos → Visión futura. Usá "nosotros", "nuestro esfuerzo".
 
 DATOS: "${datos_crudos}"
 
@@ -44,6 +37,7 @@ JSON:`
     const result = await model.generateContent(prompt)
     let raw = result.response.text().trim()
     console.log('[IA] Respuesta cruda recibida, longitud:', raw.length)
+    console.log('[IA] Respuesta cruda:', raw.substring(0, 500))
     
     // Limpieza de bloques de código markdown
     raw = raw
@@ -55,6 +49,8 @@ JSON:`
     // Parsear JSON
     const parsed = JSON.parse(raw)
     console.log('[IA] JSON parseado exitosamente, llaves:', Object.keys(parsed))
+    console.log('[IA] texto_publico longitud:', parsed.texto_publico?.length || 0)
+    console.log('[IA] texto_miembros longitud:', parsed.texto_miembros?.length || 0)
     
     return {
       titulo: parsed.titulo || '',
