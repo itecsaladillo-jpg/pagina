@@ -14,23 +14,21 @@ async function generarTextosIA(datos_crudos: string) {
   
   console.log('[IA] Generando contenido multicanal...')
   
-  const prompt = `Generá ÚNICAMENTE un JSON válido: {"titulo": "...", "texto_publico": "...", "texto_miembros": "...", "texto_sponsors": "...", "texto_medios": "..."}
+  const prompt = `Generá ÚNICAMENTE este JSON (sin markdown, sin explicaciones):
 
-VIAJE DEL HÉROE:
-- Desafío: [qué problema resolviste]
-- Acción: [qué hizo ITEC]
-- Transformación: [cambio positivo]
-- Cita: "Como dijo [rol]: \"frase impactante\""
+{"titulo": "string de máximo 10 palabras", "texto_publico": "3-6 párrafos cortos", "texto_miembros": "3-6 párrafos con nosotros", "texto_sponsors": "3-6 párrafos", "texto_medios": "gacetilla"}
 
-TEXTO PÚBLICO (3-6 párrafos):
-Desafío inicial → Acción de ITEC → Transformación → Cierre reflexivo. Lenguaje accesible, sin tecnicismos.
+EJEMPLO COMPLETO:
+{
+  "titulo": "Robótica transforma educación rural",
+  "texto_publico": "Desafío: Escuelas rurales sin conectividad tecnológica.\nAcción: ITEC implementó laboratorios móviles con sensores.\nTransformación: 200 estudiantes ahora programan robots autónomos.\nCita: \"Como dijo una docente: Esto abre puertas que creíamos cerradas\".\nITEC sigue construyendo el futuro tecnológico de la región.",
+  "texto_miembros": "¡Desafío superado con excelencia!\nNuestro equipo de robótica integró sensores avanzados en tiempo récord.\nEl área de capacitación adaptó el currículo para 200 estudiantes.\nGracias al staff de medios por la cobertura profesional.\nNosotros transformamos realidades con nuestro esfuerzo colectivo. Próximo reto: IA agrícola.",
+  "texto_sponsors": "Inversión en robótica educativa generó ROI social del 300%.\nNuestro programa alcanzó 200 beneficiarios directos.\nImpacto en formación STEM: 15 nuevas competencias desarrolladas.\nProyección regional: replicaremos el modelo en 5 localidades.\nLas alianzas estratégicas son clave para escalar el impacto.",
+  "texto_medios": "TÍTULO: Robótica revoluciona educación en Saladillo\nCOPETE: 200 estudiantes acceden por primera vez a la programación.\nCUERPO: ITEC implementó laboratorios móviles tecnológicos. La iniciativa responde a la carencia de conectividad rural. Los kits incluyen sensores de última generación. Una docente destacó el cambio en la motivación estudiantil. El programa se expandirá a 5 localidades."
+}
 
-TEXTO MIEMBROS (3-6 párrafos):
-Desafío superado → Nuestro equipo [área] → Resultado logrado → Gracias a todos → Visión futura. Usá "nosotros", "nuestro esfuerzo".
-
-DATOS: "${datos_crudos}"
-
-JSON:`
+APLICÁ este formato a ESTOS DATOS:
+${datos_crudos}`
   
   try {
     console.log('[IA] Llamando a Gemini...')
