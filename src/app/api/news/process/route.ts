@@ -4,7 +4,7 @@ import OpenAI from 'openai'
 
 const grok = new OpenAI({
   apiKey: process.env.GROK_API_KEY,
-  baseURL: 'https://api.grok.com/v1'
+  baseURL: 'https://api.x.ai/v1'
 })
 
 function limpiarJSON(texto: string): string {
