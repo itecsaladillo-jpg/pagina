@@ -76,9 +76,11 @@ interface NewsFlashMulticanalEditorProps {
 
        const data = await res.json()
        console.log('[UI] Respuesta recibida:', data)
+       console.log('[UI] Campos disponibles:', data.result ? Object.keys(data.result) : 'sin result')
        
        if (data.success) {
          setResult(data.result)
+         console.log('[UI] Estado result actualizado:', data.result)
          setActiveTab('preview')
        } else {
          setErrorBanner(data.error || 'Error desconocido al procesar con IA')

@@ -16,10 +16,10 @@ async function generarTextosIA(datos_crudos: string) {
   const tituloPrompt = `Actuarás como editor de titulares periodísticos. Generá un TÍTULO IMPACTANTE y llamativo (máximo 10 palabras) para esta noticia del agro/instituto. Debe ser corto, potente y transmitir la esencia del evento. Devolvé SOLO el título, sin markdown ni comillas. DATOS: ${datos_crudos}`
   
   const prompts = {
-    publico: `Actuarás como editor de prensa regional. Redactá un texto para el público con tono inspirador. NO mencionés biografía de Cicaré. Máximo 200 palabras. Devolvé SOLO el texto.`,
-    miembros: `Actuarás como community manager. Redactá un texto para miembros internos con tono de logro superador y motivación. Máximo 150 palabras. Devolvé SOLO el texto.`,
-    medios: `Actuarás como redactor de gacetillas. Generá un formato periodístico con: TÍTULO (máx 10 palabras), COPETE (1 línea), CUERPO (máx 200 palabras, párrafos cortos). Devolvé SOLO el texto con formato: "Título: ...\nCopete: ...\nCuerpo: ..."`,
-    sponsors: `Actuarás como analista de relaciones institucionales. Generá un reporte ejecutivo con enfoque en costo/beneficio y visión de alianza. Máximo 250 palabras. Devolvé SOLO el texto.`
+    texto_publico: `Actuarás como editor de prensa regional. Redactá un texto para el público con tono inspirador. NO mencionés biografía de Cicaré. Máximo 200 palabras. Devolvé SOLO el texto.`,
+    texto_miembros: `Actuarás como community manager. Redactá un texto para miembros internos con tono de logro superador y motivación. Máximo 150 palabras. Devolvé SOLO el texto.`,
+    texto_medios: `Actuarás como redactor de gacetillas. Generá un formato periodístico con: TÍTULO (máx 10 palabras), COPETE (1 línea), CUERPO (máx 200 palabras, párrafos cortos). Devolvé SOLO el texto con formato: "Título: ...\nCopete: ...\nCuerpo: ..."`,
+    texto_sponsors: `Actuarás como analista de relaciones institucionales. Generá un reporte ejecutivo con enfoque en costo/beneficio y visión de alianza. Máximo 250 palabras. Devolvé SOLO el texto.`
   }
 
   const resultados: any = {}
@@ -43,7 +43,7 @@ async function generarTextosIA(datos_crudos: string) {
       const result = await model.generateContent(prompt + '\n\nDatos: ' + datos_crudos)
       const text = result.response.text()
       console.log(`[IA] Respuesta ${canal} recibida, longitud:`, text.length)
-      resultados[canal] = text
+      resultados[canal] = text && text.length > 0 ? text : `Pendiente de generación - ${canal}`
     } catch (err: any) {
       console.error(`[IA] Error generando ${canal}:`, err?.message || err)
       resultados[canal] = `Error generando texto para ${canal}`
