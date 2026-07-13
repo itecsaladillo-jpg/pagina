@@ -1,13 +1,15 @@
-import { generateText } from 'ai'
-import { google } from '@ai-sdk/google'
 import { createClient } from '@/lib/supabase/server'
 import { getCurrentMember } from '@/services/auth'
 import { NextRequest, NextResponse } from 'next/server'
 import { Resend } from 'resend'
+import { GoogleGenerativeAI } from '@google/generative-ai'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
+const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GENERATIVE_AI_API_KEY!)
 
 async function generarTextosIA(datos_crudos: string) {
+  const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' })
+  
   const prompts = {
     publico: `Actuarás como editor de prensa regional. Redactá un texto para el público con tono inspirador. NO mencionés biografía de Cicaré. Máximo 200 palabras. Devolvé SOLO el texto.`,
     miembros: `Actuarás como community manager. Redactá un texto para miembros internos con tono de logro superador y motivación. Máximo 150 palabras. Devolvé SOLO el texto.`,
@@ -18,11 +20,14 @@ async function generarTextosIA(datos_crudos: string) {
   const resultados: any = {}
   
   for (const [canal, prompt] of Object.entries(prompts)) {
-    const { text } = await generateText({
-      model: google('gemini-1.5-flash'),
-      prompt: prompt + '\n\nDatos: ' + datos_crudos,
-    })
-    resultados[canal] = text
+    try {
+      const result = await model.generateContent(prompt + '\n\nDatos: ' + datos_crudos)
+      const text = result.response.text()
+      resultados[canal] = text
+    } catch (err) {
+      console.error(`Error generando ${canal}:`, err)
+      resultados[canal] = `Error generando texto para ${canal}`
+    }
   }
 
   return resultados
@@ -31,7 +36,6 @@ async function generarTextosIA(datos_crudos: string) {
 async function enviarEmailsAsincronos(newsFlashId: string, textos: any) {
   const supabase = await createClient()
 
-  // Enviar a medios de prensa
   const { data: medios } = await supabase.from('medios_prensa').select('email, nombre_medio')
   if (medios?.length) {
     for (const medio of medios) {
@@ -44,7 +48,6 @@ async function enviarEmailsAsincronos(newsFlashId: string, textos: any) {
     }
   }
 
-  // Enviar a sponsors
   const { data: sponsors } = await supabase.from('sponsors').select('id, nombre_empresa, email')
   if (sponsors?.length) {
     for (const sponsor of sponsors) {
@@ -90,7 +93,6 @@ export async function POST(request: NextRequest) {
 
     if (error) throw error
 
-    // Envío de emails asíncrono
     enviarEmailsAsincronos(data.id, textos)
 
     return NextResponse.json({ success: true, result: textos, data })
