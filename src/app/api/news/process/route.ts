@@ -7,47 +7,35 @@ const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GENERATIVE_AI_API_KEY!)
 async function generarTextosIA(datos_crudos: string) {
   const model = genAI.getGenerativeModel({ 
     model: 'gemini-flash-latest',
-    systemInstruction: `Sos el Jefe de Prensa y Comunicaciones de ITEC. Transformás información cruda en textos de alta calidad.
-    RESTRICCIONES: No cites a Augusto Cicaré salvo que sea necesario para contexto histórico. Priorizá el "para qué" sobre el "cómo".`
+    systemInstruction: `Sos el Jefe de Prensa de ITEC. Generás notas profesionales. 
+    FORMATO ESTRICTO: ÚNICAMENTE JSON con llaves "titulo", "texto_publico", "texto_miembros", "texto_sponsors", "texto_medios". 
+    SIN markdown, SIN explicaciones, SIN texto extra.`
   })
   
   console.log('[IA] Generando contenido multicanal...')
   
-  const prompt = `Sos el Jefe de Prensa y Comunicaciones de ITEC. Transformás información cruda en textos de alta calidad.
+  const prompt = `Generá ÚNICAMENTE un JSON válido con estas llaves: "titulo", "texto_publico", "texto_miembros", "texto_sponsors", "texto_medios".
 
-FORMATO DE SALIDA REQUERIDO:
-{"titulo": "string", "texto_publico": "string", "texto_miembros": "string", "texto_sponsors": "string", "texto_medios": "string"}
+EJEMPLOS DE FORMATO:
 
-INSTRUCCIONES GENERALES:
-1. Identificá el "Viaje del Héroe": desafío inicial, acción de ITEC, transformación positiva lograda
-2. Incluye una cita breve y natural (real o simulada) de un beneficiario o miembro
-3. Usá subtítulos claros en negrita (**Subtítulo**) y párrafos cortos (máximo 4 líneas)
-4. Evitá frases burocráticas ("La organización informa que...")
+PARA texto_publico:
+{
+  "titulo": "Innovación tecnológica llega a Saladillo",
+  "texto_publico": "Desafío: Las escuelas rurales carecían de conectividad.\nAcción: ITEC implementó laboratorios móviles de robótica.\nTransformación: 300 estudiantes ahora dominan la programación.\nComo dijo una docente: \"Esto abre puertas que creíamos cerradas\".\nITEC sigue construyendo el futuro tecnológico de la región."
+}
 
-TEXTO PÚBLICO (AUDIENCIA: PÚBLICO EXTERNO):
-- Viaje del Héroe con gancho impactante al inicio (pirámide invertida)
-- Lenguaje accesible, sin tecnicismos
-- Enfócate en el propósito: inspirar y generar confianza
-- Cierre con frase reflexiva que invite a conocer más sobre ITEC
-- 3-6 párrafos separados por saltos de línea
+PARA texto_miembros:
+{
+  "texto_publico": "Desafío superado con excelencia.\nNuestro equipo técnico integró sensores avanzados.\nEl área de robótica entregó los kits a tiempo.\nGracias al staff de medios por la cobertura.\nNosotros transformamos realidades. Próximo reto: IA agrícola."
+}
 
-TEXTO MIEMBROS (AUDIENCIA: EQUIPO INTERNO):
-- Viaje del Héroe celebrando el esfuerzo colectivo
-- Lenguaje cálido, entusiasta, usando "nosotros", "nuestro esfuerzo"
-- Resaltá el valor de cada área en el éxito
-- Cierre: agradecimiento + visión a futuro
-- 3-6 párrafos separados por saltos de línea
+INSTRINCCIONES EXTRAS:
+- Viaje del Héroe: Desafío → Acción ITEC → Transformación
+- Cita natural: "Como dijo [rol]: \"frase impactante\""
+- Párrafos cortos, 3-6 por texto
+- Sin tecnicismos para público, lenguaje cálido para miembros ("nosotros", "nuestro")
 
-TEXTO SPONSORS:
-- Enfoque ROI y visión estratégica
-- 3-6 párrafos
-
-TEXTO MEDIOS:
-- Formato gacetilla: "TÍTULO: ...\nCOPETE: ...\nCUERPO: ..."
-- 3-6 párrafos
-
-DATOS CRUDOS DEL EVENTO:
-"""${datos_crudos}"""
+DATOS: "${datos_crudos}"
 
 JSON:`
   
