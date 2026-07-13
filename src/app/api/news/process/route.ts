@@ -1,8 +1,11 @@
 import { getCurrentMember } from '@/services/auth'
 import { NextRequest, NextResponse } from 'next/server'
-import { GoogleGenerativeAI } from '@google/generative-ai'
+import OpenAI from 'openai'
 
-const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GENERATIVE_AI_API_KEY!)
+const grok = new OpenAI({
+  apiKey: process.env.GROK_API_KEY,
+  baseURL: 'https://api.grok.com/v1'
+})
 
 function limpiarJSON(texto: string): string {
   const jsonMatch = texto.match(/\{[\s\S]*"[\s\S]*\}/)
@@ -15,26 +18,24 @@ function limpiarJSON(texto: string): string {
 }
 
 async function generarTextosIA(datos_crudos: string) {
-  const model = genAI.getGenerativeModel({ 
-    model: 'gemini-1.5-flash',
-    systemInstruction: `Sos el Jefe de Prensa de ITEC. Generás notas profesionales. 
-    Lenguaje rioplatense, sin "hoy/ayer/mañana/che/viste/pibe".`,
-  })
-  
-  const prompt = `Generá UNICAMENTE JSON válido:
-{"titulo": "título", "texto_publico": "3-6 oraciones", "texto_miembros": "3-6 oraciones", "texto_sponsors": "3-6 oraciones", "texto_medios": "gacetilla"}
-Datos: ${datos_crudos}
-JSON:`
+  const prompt = `Generá UNICAMENTE JSON válido SIN markdown:
+{"titulo": "título (máx 10 palabras)", "texto_publico": "3-6 oraciones con cita incluida", "texto_miembros": "3-6 oraciones tono interno con 'nosotros'", "texto_sponsors": "3-6 oraciones foco ROI e impacto", "texto_medios": "gacetilla periodística con título/copete/cuerpo"}
+
+Datos: ${datos_crudos}`
 
   try {
-    console.log('[IA] Llamando a Gemini...')
-    const result = await model.generateContent(prompt)
-    const raw = limpiarJSON(result.response.text().trim())
+    console.log('[IA] Llamando a Grok...')
+    const result = await grok.chat.completions.create({
+      model: 'grok-beta',
+      messages: [{ role: 'user', content: prompt }],
+      temperature: 0.7
+    })
+    
+    const raw = limpiarJSON(result.choices[0]?.message?.content?.trim() || '{}')
     console.log('[IA] Respuesta cruda, longitud:', raw.length)
-    console.log('[IA] Texto:', raw.substring(0, 400))
     
     const parsed = JSON.parse(raw)
-    console.log('[IA] JSON parseado, texto_publico length:', parsed.texto_publico?.length || 0)
+    console.log('[IA] JSON parseado')
     
     return {
       titulo: parsed.titulo || '',
@@ -56,8 +57,6 @@ JSON:`
 }
 
 export async function POST(request: NextRequest) {
-  console.log('[API] Procesar noticias - inicio')
-  
   const member = await getCurrentMember()
   if (!member || member.role !== 'admin') {
     return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
@@ -74,6 +73,6 @@ export async function POST(request: NextRequest) {
     const textos = await generarTextosIA(datos_crudos)
     return NextResponse.json({ success: true, result: textos })
   } catch (err: any) {
-    return NextResponse.json({ error: 'Error de conexión con Gemini: ' + (err.message || 'Error desconocido') }, { status: 500 })
+    return NextResponse.json({ error: 'Error de conexión: ' + (err.message || 'Error desconocido') }, { status: 500 })
   }
 }
