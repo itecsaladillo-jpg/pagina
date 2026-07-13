@@ -2,9 +2,8 @@ import { getCurrentMember } from '@/services/auth'
 import { NextRequest, NextResponse } from 'next/server'
 import OpenAI from 'openai'
 
-const grok = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-  baseURL: 'https://api.x.ai/v1'
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY
 })
 
 function limpiarJSON(texto: string): string {
@@ -18,14 +17,14 @@ function limpiarJSON(texto: string): string {
 }
 
 async function generarTextosIA(datos_crudos: string) {
-  const prompt = `Generá UNICAMENTE JSON válido SIN markdown:
-{"titulo": "título (máx 10 palabras)", "texto_publico": "3-6 oraciones con cita incluida", "texto_miembros": "3-6 oraciones tono interno con 'nosotros'", "texto_sponsors": "3-6 oraciones foco ROI e impacto", "texto_medios": "gacetilla periodística con título/copete/cuerpo"}
+  const prompt = `Generá ÚNICAMENTE un JSON válido SIN markdown ni explicaciones:
+{"titulo": "título (máx 10 palabras)", "texto_publico": "3-6 oraciones con cita incluida", "texto_miembros": "3-6 oraciones tono interno con 'nosotros'", "texto_sponsors": "3-6 oraciones foco ROI e impacto", "texto_medios": "gacetilla periodística"}
 
 Datos: ${datos_crudos}`
 
   try {
-    console.log('[IA] Llamando a Grok...')
-    const result = await grok.chat.completions.create({
+    console.log('[IA] Llamando a OpenAI...')
+    const result = await openai.chat.completions.create({
       model: 'gpt-4o-mini',
       messages: [{ role: 'user', content: prompt }],
       temperature: 0.7
@@ -45,7 +44,7 @@ Datos: ${datos_crudos}`
       texto_medios: parsed.texto_medios || ''
     }
   } catch (err: any) {
-    console.error('[IA] Error:', err)
+    console.error('[IA] Error:', err.message)
     return {
       titulo: 'Novedad ITEC',
       texto_publico: datos_crudos.slice(0, 200),
