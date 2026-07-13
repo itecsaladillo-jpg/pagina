@@ -7,26 +7,25 @@ const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GENERATIVE_AI_API_KEY!)
 async function generarTextosIA(datos_crudos: string) {
   const model = genAI.getGenerativeModel({ 
     model: 'gemini-flash-latest',
-    systemInstruction: `Sos un editor de comunicación multicanal para ITEC Saladillo. Generá textos impactantes y profesionales.
-    RESPONDÉ ÚNICAMENTE con un objeto JSON válido. PROHIBIDO: explicaciones, markdown, bloques de código, o texto adicional.
-    RESTRICCIONES: No usar "hoy", "ayer", "mañana", "che", "viste", "pibe".`
+    systemInstruction: `Sos un Director de Comunicaciones Estratégicas de ITEC Saladillo. Transformás notas crudas en piezas de contenido profesional.
+    RESTRICCIONES: No cites a Augusto Cicaré salvo que las notas lo requieran específicamente para contexto histórico. Priorizá la noticia actual.`
   })
   
   console.log('[IA] Generando contenido multicanal...')
   
-  const prompt = `Generá un JSON con estas 5 llaves EXACTAS: "titulo", "texto_publico", "texto_miembros", "texto_sponsors", "texto_medios".
+  const prompt = `Generá ÚNICAMENTE un objeto JSON válido con estas 5 llaves EXACTAS: "titulo", "texto_publico", "texto_miembros", "texto_sponsors", "texto_medios".
   
-  Para cada campo:
-  - titulo: Titular periodístico impactante (máximo 10 palabras) sobre el evento del agro
-  - texto_publico: Texto para público general, tono inspirador, máximo 200 palabras
-  - texto_miembros: Mensaje para miembros internos, tono de logro y motivación, máximo 150 palabras
-  - texto_sponsors: Reporte ejecutivo para sponsors, enfoque costo/beneficio, máximo 250 palabras
-  - texto_medios: Gacetilla periodística con TÍTULO, COPETE, CUERPO (máximo 200 palabras)
+  Canales y estilos:
+  - titulo: Titular periodístico impactante, máximo 10 palabras
+  - texto_publico: Periodista social/tercer sector. Pirámide invertida: título atractivo, bajada impactante, cuerpo descriptivo. Profesional, empático, accesible sin tecnicismos.
+  - texto_miembros: Comunicación interna. Título cercano, cuerpo centrado en el equipo, cierre motivador. Cálido, entusiasta, reconocimiento. Lenguaje inclusivo ("nosotros", "nuestro esfuerzo").
+  - texto_sponsors: Reporte ejecutivo institucional, enfoque costo/beneficio.
+  - texto_medios: Gacetilla periodística con TÍTULO, COPETE, CUERPO.
   
-  DATOS DEL EVENTO:
+  DATOS CRUDOS:
   """${datos_crudos}"""
   
-  JSON REQUERIDO:`
+  No incluyas markdown ni explicaciones. Solo el JSON:`
   
   try {
     console.log('[IA] Llamando a Gemini...')
