@@ -19,7 +19,7 @@ async function generarTextosIA(datos_crudos: string) {
   
   for (const [canal, prompt] of Object.entries(prompts)) {
     const { text } = await generateText({
-      model: google('gemini-1.0-pro'),
+      model: google('gemini-1.5-pro'),
       prompt: prompt + '\n\nDatos: ' + datos_crudos,
     })
     resultados[canal] = text
