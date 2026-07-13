@@ -2,7 +2,7 @@ import { getCurrentMember } from '@/services/auth'
 import { NextRequest, NextResponse } from 'next/server'
 import { GoogleGenerativeAI } from '@google/generative-ai'
 
-const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GENERATIVE_AI_API_KEY!)
+const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY_2 || process.env.GOOGLE_GENERATIVE_AI_API_KEY || '')
 
 function limpiarJSON(texto: string): string {
   const jsonMatch = texto.match(/\{[\s\S]*"[\s\S]*\}/)
