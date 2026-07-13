@@ -255,33 +255,33 @@ return (
              <p className="text-sm font-bold text-white mt-1">{result.titulo || 'Sin título'}</p>
            </div>
            
-           {result.texto_publico && (
-             <div>
-               <span className="text-[10px] text-blue-400 uppercase">Texto Público</span>
-               <p className="text-xs text-white/80 mt-1 line-clamp-3">{result.texto_publico}</p>
-             </div>
-           )}
-           
-           {result.texto_miembros && (
-             <div>
-               <span className="text-[10px] text-emerald-400 uppercase">Texto Miembros</span>
-               <p className="text-xs text-white/80 mt-1 line-clamp-3">{result.texto_miembros}</p>
-             </div>
-           )}
-           
-           {result.texto_sponsors && (
-             <div>
-               <span className="text-[10px] text-amber-400 uppercase">Texto Sponsors</span>
-               <p className="text-xs text-white/80 mt-1 line-clamp-3">{result.texto_sponsors}</p>
-             </div>
-           )}
-           
-           {result.texto_medios && (
-             <div>
-               <span className="text-[10px] text-purple-400 uppercase">Texto Medios</span>
-               <p className="text-xs text-white/80 mt-1 line-clamp-3">{result.texto_medios}</p>
-             </div>
-           )}
+{result.texto_publico && (
+              <div>
+                <span className="text-[10px] text-blue-400 uppercase">Texto Público</span>
+                <p className="text-xs text-white/80 mt-1">{result.texto_publico}</p>
+              </div>
+            )}
+            
+            {result.texto_miembros && (
+              <div>
+                <span className="text-[10px] text-emerald-400 uppercase">Texto Miembros</span>
+                <p className="text-xs text-white/80 mt-1">{result.texto_miembros}</p>
+              </div>
+            )}
+            
+            {result.texto_sponsors && (
+              <div>
+                <span className="text-[10px] text-amber-400 uppercase">Texto Sponsors</span>
+                <p className="text-xs text-white/80 mt-1">{result.texto_sponsors}</p>
+              </div>
+            )}
+            
+            {result.texto_medios && (
+              <div>
+                <span className="text-[10px] text-purple-400 uppercase">Texto Medios</span>
+                <p className="text-xs text-white/80 mt-1">{result.texto_medios}</p>
+              </div>
+            )}
          </div>
        )}
 
@@ -326,33 +326,33 @@ return (
                      <p className="text-lg font-bold text-white mb-4">{result.titulo}</p>
                    </div>
                    
-                   {paraPublico && (
+{paraPublico && (
+                      <div>
+                        <h4 className="text-xs font-bold text-blue-400 uppercase mb-2">Público</h4>
+                        <p className="text-sm text-white/80">{result.texto_publico}</p>
+                      </div>
+                    )}
+                    
+                    {paraMiembros && (
+                      <div>
+                        <h4 className="text-xs font-bold text-emerald-400 uppercase mb-2">Miembros</h4>
+                        <p className="text-sm text-white/80">{result.texto_miembros}</p>
+                      </div>
+                    )}
+                    
+                    {paraSponsors && (
+                      <div>
+                        <h4 className="text-xs font-bold text-amber-400 uppercase mb-2">Sponsors</h4>
+                        <p className="text-sm text-white/80">{result.texto_sponsors}</p>
+                      </div>
+                    )}
+                    
+                    {paraMedios && (
                      <div>
-                       <h4 className="text-xs font-bold text-blue-400 uppercase mb-2">Público</h4>
-                       <p className="text-sm text-white/80 line-clamp-3">{result.texto_publico}</p>
+                       <h4 className="text-xs font-bold text-purple-400 uppercase mb-2">Medios</h4>
+                       <p className="text-sm text-white/80">{result.texto_medios}</p>
                      </div>
                    )}
-                   
-                   {paraMiembros && (
-                     <div>
-                       <h4 className="text-xs font-bold text-emerald-400 uppercase mb-2">Miembros</h4>
-                       <p className="text-sm text-white/80 line-clamp-3">{result.texto_miembros}</p>
-                     </div>
-                   )}
-                   
-                   {paraSponsors && (
-                     <div>
-                       <h4 className="text-xs font-bold text-amber-400 uppercase mb-2">Sponsors</h4>
-                       <p className="text-sm text-white/80 line-clamp-3">{result.texto_sponsors}</p>
-                     </div>
-                   )}
-                   
-                   {paraMedios && (
-                    <div>
-                      <h4 className="text-xs font-bold text-purple-400 uppercase mb-2">Medios</h4>
-                      <p className="text-sm text-white/80 line-clamp-3">{result.texto_medios}</p>
-                    </div>
-                  )}
                 </div>
               )}
 
