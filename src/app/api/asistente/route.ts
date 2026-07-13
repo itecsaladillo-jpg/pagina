@@ -6,7 +6,7 @@ import type { NextRequest } from 'next/server';
 
 // ─────────────────────────────────────────────
 // Constantes de configuración
-const MODEL_ID = 'gemini-2.5-flash';
+const MODEL_ID = 'gemini-flash-latest';
 
 const SYSTEM_INSTRUCTION = `
 Sos el Asistente ITEC, el anfitrión virtual de la web de ITEC en Saladillo, Buenos Aires, Argentina.

@@ -23,15 +23,15 @@ export function ComunicacionTabs({ member, articles, flashes, actions }: { membe
     setActiveTab('gestionar')
   }
 
-  const handleSaveMulticanal = async (data: any) => {
-    const res = await createMulticanalNewsAction(data)
-    if (res.success) {
-      alert('Noticia multicanal creada exitosamente')
-      setActiveTab('flashes')
-    } else {
-      alert('Error: ' + res.error)
-    }
-  }
+const handleSaveMulticanal = async (data: any) => {
+     const res = await createMulticanalNewsAction(data)
+     if (res.success) {
+       setActiveTab('flashes')
+       return { success: true }
+     } else {
+       return { success: false, error: res.error }
+     }
+   }
 
   return (
     <div className="space-y-6">

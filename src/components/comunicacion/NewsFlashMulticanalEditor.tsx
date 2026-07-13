@@ -13,7 +13,9 @@ import {
   Newspaper,
   Globe,
   CheckSquare,
-  Square
+  Square,
+  X,
+  CheckCircle
 } from 'lucide-react'
 
 interface MulticanalResult {
@@ -37,69 +39,98 @@ interface NewsFlashMulticanalEditorProps {
      para_sponsors: boolean
      para_medios: boolean
      commission_id?: string | null
-   }) => void
+   }) => Promise<{ success?: boolean; error?: string | null }>
    onCancel?: () => void
  }
 
-export function NewsFlashMulticanalEditor({ onSave, onCancel }: NewsFlashMulticanalEditorProps) {
-  const [rawFacts, setRawFacts] = useState('')
-  const [result, setResult] = useState<MulticanalResult | null>(null)
-  const [isProcessing, setIsProcessing] = useState(false)
-  const [activeTab, setActiveTab] = useState<'preview' | 'publico' | 'miembros' | 'sponsors' | 'medios'>('preview')
-  
-  // Checkboxes de destinatarios
-  const [paraPublico, setParaPublico] = useState(true)
-  const [paraMiembros, setParaMiembros] = useState(true)
-  const [paraSponsors, setParaSponsors] = useState(false)
-  const [paraMedios, setParaMedios] = useState(true)
+ export function NewsFlashMulticanalEditor({ onSave, onCancel }: NewsFlashMulticanalEditorProps) {
+   const [rawFacts, setRawFacts] = useState('')
+   const [result, setResult] = useState<MulticanalResult | null>(null)
+   const [isProcessing, setIsProcessing] = useState(false)
+   const [isSaving, setIsSaving] = useState(false)
+   const [activeTab, setActiveTab] = useState<'preview' | 'publico' | 'miembros' | 'sponsors' | 'medios'>('preview')
+   const [errorBanner, setErrorBanner] = useState<string | null>(null)
+   const [successBanner, setSuccessBanner] = useState<string | null>(null)
+   
+   // Checkboxes de destinatarios
+   const [paraPublico, setParaPublico] = useState(true)
+   const [paraMiembros, setParaMiembros] = useState(true)
+   const [paraSponsors, setParaSponsors] = useState(false)
+   const [paraMedios, setParaMedios] = useState(true)
 
-  const handleProcess = async () => {
-    if (!rawFacts.trim() || rawFacts.length < 20) {
-      alert('Ingresá al menos 20 caracteres en las notas crudas')
-      return
-    }
+   const handleProcess = async () => {
+     setErrorBanner(null)
+     if (!rawFacts.trim() || rawFacts.length < 20) {
+       alert('Ingresá al menos 20 caracteres en las notas crudas')
+       return
+     }
 
-    setIsProcessing(true)
-    try {
-      const res = await fetch('/api/news/process', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ datos_crudos: rawFacts })
-      })
+     setIsProcessing(true)
+     try {
+       console.log('[UI] Procesando notas crudas...')
+       const res = await fetch('/api/news/process', {
+         method: 'POST',
+         headers: { 'Content-Type': 'application/json' },
+         body: JSON.stringify({ datos_crudos: rawFacts })
+       })
 
-      const data = await res.json()
-      if (data.success) {
-        setResult(data.result)
-        setActiveTab('preview')
-      } else {
-        alert('Error: ' + data.error)
-      }
-    } catch (err) {
-      alert('Error procesando con IA')
-    } finally {
-      setIsProcessing(false)
-    }
-  }
+       const data = await res.json()
+       console.log('[UI] Respuesta recibida:', data)
+       
+       if (data.success) {
+         setResult(data.result)
+         setActiveTab('preview')
+       } else {
+         setErrorBanner(data.error || 'Error desconocido al procesar con IA')
+       }
+     } catch (err: any) {
+       console.error('[UI] Error de conexión:', err)
+       setErrorBanner('Error de conexión con Gemini: ' + (err.message || 'Verifique su conexión'))
+     } finally {
+       setIsProcessing(false)
+     }
+   }
 
-  const handleSave = () => {
-    if (!result) {
-      alert('Procesá las notas con IA antes de guardar')
-      return
-    }
+const handleSave = async () => {
+     console.log('[UI] Guardando noticia multicanal...')
+     
+     if (!result) {
+       setErrorBanner('Procesá las notas con IA antes de guardar')
+       return
+     }
 
-    onSave({
-      titulo: result.titulo,
-      datos_crudos: rawFacts,
-      texto_publico: result.texto_publico,
-      texto_miembros: result.texto_miembros,
-      texto_sponsors: result.texto_sponsors,
-      texto_medios: result.texto_medios,
-      para_publico: paraPublico,
-      para_miembros: paraMiembros,
-      para_sponsors: paraSponsors,
-      para_medios: paraMedios
-    })
-  }
+     setIsSaving(true)
+     setErrorBanner(null)
+     
+     try {
+       const res = await onSave({
+         titulo: result.titulo,
+         datos_crudos: rawFacts,
+         texto_publico: result.texto_publico,
+         texto_miembros: result.texto_miembros,
+         texto_sponsors: result.texto_sponsors,
+         texto_medios: result.texto_medios,
+         para_publico: paraPublico,
+         para_miembros: paraMiembros,
+         para_sponsors: paraSponsors,
+         para_medios: paraMedios
+       })
+
+       if (res?.error) {
+         console.error('[UI] Error del servidor:', res.error)
+         setErrorBanner(res.error)
+       } else {
+         console.log('[UI] Noticia guardada exitosamente')
+         setSuccessBanner('Noticia publicada exitosamente en los muros')
+         setTimeout(() => setSuccessBanner(null), 5000)
+       }
+     } catch (err: any) {
+       console.error('[UI] Error guardando:', err)
+       setErrorBanner('Error al guardar en base de datos: ' + (err.message || 'Error desconocido'))
+     } finally {
+       setIsSaving(false)
+     }
+   }
 
   const tabs = [
     { id: 'preview', label: 'Previsualización', icon: Eye, disabled: !result },
@@ -109,9 +140,45 @@ export function NewsFlashMulticanalEditor({ onSave, onCancel }: NewsFlashMultica
     { id: 'medios', label: 'Medios', icon: Newspaper },
   ]
 
-  return (
-    <div className="space-y-6">
-      <div className="glass border border-white/5 rounded-3xl p-6 space-y-4">
+return (
+     <div className="space-y-6">
+       {/* Banner de Error */}
+       <AnimatePresence>
+         {errorBanner && (
+           <motion.div
+             initial={{ opacity: 0, y: -10 }}
+             animate={{ opacity: 1, y: 0 }}
+             exit={{ opacity: 0, y: -10 }}
+             className="flex items-center gap-3 p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400"
+           >
+             <X size={18} className="flex-shrink-0" />
+             <span className="text-sm font-medium">{errorBanner}</span>
+             <button
+               onClick={() => setErrorBanner(null)}
+               className="ml-auto text-red-400 hover:text-red-300"
+             >
+               <X size={14} />
+             </button>
+           </motion.div>
+         )}
+       </AnimatePresence>
+
+       {/* Banner de Éxito */}
+       <AnimatePresence>
+         {successBanner && (
+           <motion.div
+             initial={{ opacity: 0, y: -10 }}
+             animate={{ opacity: 1, y: 0 }}
+             exit={{ opacity: 0, y: -10 }}
+             className="flex items-center gap-3 p-4 rounded-xl bg-green-500/10 border border-green-500/20 text-green-400"
+           >
+             <CheckCircle size={18} className="flex-shrink-0" />
+             <span className="text-sm font-medium">{successBanner}</span>
+           </motion.div>
+         )}
+       </AnimatePresence>
+
+       <div className="glass border border-white/5 rounded-3xl p-6 space-y-4">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center">
             <Type className="text-blue-400" size={20} />
@@ -208,32 +275,37 @@ export function NewsFlashMulticanalEditor({ onSave, onCancel }: NewsFlashMultica
 
             {/* Tab Content */}
             <div className="p-6 max-h-[500px] overflow-y-auto">
-              {activeTab === 'preview' && (
-                <div className="space-y-6">
-                  <p className="text-xs text-white/40">Previsualización - Editá abajo antes de guardar</p>
-                  
-                  {paraPublico && (
-                    <div>
-                      <h4 className="text-xs font-bold text-blue-400 uppercase mb-2">Público</h4>
-                      <p className="text-sm text-white/80 line-clamp-3">{result.texto_publico}</p>
-                    </div>
-                  )}
-                  
-                  {paraMiembros && (
-                    <div>
-                      <h4 className="text-xs font-bold text-emerald-400 uppercase mb-2">Miembros</h4>
-                      <p className="text-sm text-white/80 line-clamp-3">{result.texto_miembros}</p>
-                    </div>
-                  )}
-                  
-                  {paraSponsors && (
-                    <div>
-                      <h4 className="text-xs font-bold text-amber-400 uppercase mb-2">Sponsors</h4>
-                      <p className="text-sm text-white/80 line-clamp-3">{result.texto_sponsors}</p>
-                    </div>
-                  )}
-                  
-                  {paraMedios && (
+{activeTab === 'preview' && (
+                 <div className="space-y-6">
+                   <p className="text-xs text-white/40">Previsualización - Editá abajo antes de guardar</p>
+                   
+                   <div>
+                     <h4 className="text-xs font-bold text-indigo-400 uppercase mb-2">Título Generado por IA</h4>
+                     <p className="text-lg font-bold text-white mb-4">{result.titulo}</p>
+                   </div>
+                   
+                   {paraPublico && (
+                     <div>
+                       <h4 className="text-xs font-bold text-blue-400 uppercase mb-2">Público</h4>
+                       <p className="text-sm text-white/80 line-clamp-3">{result.texto_publico}</p>
+                     </div>
+                   )}
+                   
+                   {paraMiembros && (
+                     <div>
+                       <h4 className="text-xs font-bold text-emerald-400 uppercase mb-2">Miembros</h4>
+                       <p className="text-sm text-white/80 line-clamp-3">{result.texto_miembros}</p>
+                     </div>
+                   )}
+                   
+                   {paraSponsors && (
+                     <div>
+                       <h4 className="text-xs font-bold text-amber-400 uppercase mb-2">Sponsors</h4>
+                       <p className="text-sm text-white/80 line-clamp-3">{result.texto_sponsors}</p>
+                     </div>
+                   )}
+                   
+                   {paraMedios && (
                     <div>
                       <h4 className="text-xs font-bold text-purple-400 uppercase mb-2">Medios</h4>
                       <p className="text-sm text-white/80 line-clamp-3">{result.texto_medios}</p>
@@ -279,27 +351,38 @@ export function NewsFlashMulticanalEditor({ onSave, onCancel }: NewsFlashMultica
               )}
             </div>
 
-            {/* Acciones */}
-            <div className="p-6 border-t border-white/5 flex gap-3">
-              {onCancel && (
-                <button
-                  onClick={onCancel}
-                  className="flex-1 py-3 rounded-xl border border-white/5 text-white/60 text-xs font-bold uppercase tracking-widest hover:bg-white/5 transition-all"
-                >
-                  Cancelar
-                </button>
-              )}
-              <button
-                onClick={handleSave}
-                className="flex-[2] py-3 rounded-xl bg-green-600 hover:bg-green-500 text-white text-xs font-bold uppercase tracking-widest flex items-center justify-center gap-2 transition-all shadow-lg"
-              >
-                <Send size={14} />
-                Guardar Noticia Multicanal
-              </button>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
-  )
-}
+{/* Acciones */}
+             <div className="p-6 border-t border-white/5 flex gap-3">
+               {onCancel && (
+                 <button
+                   onClick={onCancel}
+                   disabled={isSaving}
+                   className="flex-1 py-3 rounded-xl border border-white/5 text-white/60 text-xs font-bold uppercase tracking-widest hover:bg-white/5 transition-all disabled:opacity-30"
+                 >
+                   Cancelar
+                 </button>
+               )}
+               <button
+                 onClick={handleSave}
+                 disabled={isSaving || !result}
+                 className="flex-[2] py-3 rounded-xl bg-green-600 hover:bg-green-500 text-white text-xs font-bold uppercase tracking-widest flex items-center justify-center gap-2 transition-all shadow-lg disabled:opacity-30"
+               >
+                 {isSaving ? (
+                   <>
+                     <Loader2 size={14} className="animate-spin" />
+                     Publicando...
+                   </>
+                 ) : (
+                   <>
+                     <Send size={14} />
+                     Confirmar y Publicar
+                   </>
+                 )}
+               </button>
+             </div>
+           </motion.div>
+         )}
+       </AnimatePresence>
+     </div>
+   )
+ }

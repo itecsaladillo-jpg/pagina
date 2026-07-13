@@ -174,7 +174,7 @@ Respondé SOLO con las 4 secciones separadas por "---SECCION---", sin encabezado
   try {
     const genAI = new GoogleGenerativeAI(apiKey)
     const model = genAI.getGenerativeModel({
-      model: 'gemini-1.5-flash',
+      model: 'gemini-flash-latest',
       systemInstruction: promptSistema,
     })
 

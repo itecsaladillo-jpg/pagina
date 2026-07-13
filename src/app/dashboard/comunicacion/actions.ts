@@ -135,6 +135,8 @@ export async function createMulticanalNewsAction(data: {
    const member = await getCurrentMember()
    if (!member || member.role !== 'admin') throw new Error('No autorizado')
 
+   console.log('[ServerAction] Creando noticia multicanal - título:', data.titulo)
+
    const supabase = await createClient()
    const { data: news, error } = await supabase
      .from('news_flashes')
@@ -156,9 +158,11 @@ export async function createMulticanalNewsAction(data: {
      .single()
 
    if (error) {
-     console.error('[createMulticanalNewsAction] Error:', error.message)
-     return { success: false, error: error.message }
+     console.error('[createMulticanalNewsAction] Error en Supabase:', error.message)
+     return { success: false, error: 'Fallo en base de datos: ' + error.message }
    }
+
+   console.log('[ServerAction] Noticia creada - ID:', news.id)
 
    // Envío asincrónico de emails
    enviarEmailsAsincronos(news.id, data).catch(console.error)

@@ -84,15 +84,15 @@ export async function POST(request: NextRequest): Promise<Response> {
           .join('\n')}
         `.trim();
 
-        const respuestaIa = await ai.models.generateContent({
-          model: 'gemini-1.5-flash',
-          contents: promptConsolidacion,
-          config: {
-            responseMimeType: 'application/json',
-            temperature: 0.1, // Baja temperatura para análisis consistentes
-            maxOutputTokens: 512,
-          },
-        });
+const respuestaIa = await ai.models.generateContent({
+           model: 'gemini-flash-latest',
+           contents: promptConsolidacion,
+           config: {
+             responseMimeType: 'application/json',
+             temperature: 0.1,
+             maxOutputTokens: 512,
+           },
+         });
 
         const textoIa = respuestaIa.text;
         if (textoIa) {
