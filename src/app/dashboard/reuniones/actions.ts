@@ -88,14 +88,14 @@ export async function finalizeAndPublishAction(commissionId: string, content: st
     const { error: flashError } = await supabase
       .from('news_flashes')
       .insert([{
-        title: `Resumen de Reunión — ${commissionName}`,
+        titulo: `Resumen de Reunión — ${commissionName}`,
         original_text: content,
         summary: summary,
         action_items: actionItems.split('\n').filter(Boolean),
         flash_text: `📋 Se ha publicado la minuta de la Reunión ${commissionName} del ${sessionDate}.`,
         source_type: 'reunion',
         commission_id: commissionId === 'general' ? null : commissionId,
-        author_id: member.id,
+        autor_id: member.id,
         is_published: true,
       }])
 

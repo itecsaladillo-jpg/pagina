@@ -48,14 +48,14 @@ export async function processTextAction(
   }
 
   const saved = await createNewsFlash({
-    title,
+    titulo: title,
     original_text: text,
     summary: aiResult.summary,
     action_items: aiResult.action_items,
     flash_text: aiResult.flash_text,
     source_type: sourceType ?? 'manual',
     commission_id: commissionId || null,
-    author_id: member.id,
+    autor_id: member.id,
     is_published: true,
     tags: [],
     media_urls: [],

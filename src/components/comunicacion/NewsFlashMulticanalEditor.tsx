@@ -17,6 +17,7 @@ import {
 } from 'lucide-react'
 
 interface MulticanalResult {
+  titulo: string
   texto_publico: string
   texto_miembros: string
   texto_sponsors: string
@@ -24,21 +25,21 @@ interface MulticanalResult {
 }
 
 interface NewsFlashMulticanalEditorProps {
-  onSave: (data: {
-    title: string
-    datos_crudos: string
-    texto_publico: string
-    texto_miembros: string
-    texto_sponsors: string
-    texto_medios: string
-    para_publico: boolean
-    para_miembros: boolean
-    para_sponsors: boolean
-    para_medios: boolean
-    commission_id?: string | null
-  }) => void
-  onCancel?: () => void
-}
+   onSave: (data: {
+     titulo: string
+     datos_crudos: string
+     texto_publico: string
+     texto_miembros: string
+     texto_sponsors: string
+     texto_medios: string
+     para_publico: boolean
+     para_miembros: boolean
+     para_sponsors: boolean
+     para_medios: boolean
+     commission_id?: string | null
+   }) => void
+   onCancel?: () => void
+ }
 
 export function NewsFlashMulticanalEditor({ onSave, onCancel }: NewsFlashMulticanalEditorProps) {
   const [rawFacts, setRawFacts] = useState('')
@@ -60,11 +61,10 @@ export function NewsFlashMulticanalEditor({ onSave, onCancel }: NewsFlashMultica
 
     setIsProcessing(true)
     try {
-      const title = rawFacts.slice(0, 100).replace(/\n/g, ' ') + (rawFacts.length > 100 ? '...' : '')
       const res = await fetch('/api/news/process', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ titulo: title, datos_crudos: rawFacts })
+        body: JSON.stringify({ datos_crudos: rawFacts })
       })
 
       const data = await res.json()
@@ -87,10 +87,8 @@ export function NewsFlashMulticanalEditor({ onSave, onCancel }: NewsFlashMultica
       return
     }
 
-    const title = rawFacts.slice(0, 100).replace(/\n/g, ' ') + (rawFacts.length > 100 ? '...' : '')
-    
     onSave({
-      title,
+      titulo: result.titulo,
       datos_crudos: rawFacts,
       texto_publico: result.texto_publico,
       texto_miembros: result.texto_miembros,

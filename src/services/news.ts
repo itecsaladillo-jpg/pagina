@@ -5,13 +5,13 @@ export interface NewsFlash {
   created_at: string
   updated_at: string
   commission_id: string | null
-  author_id: string | null
+  autor_id: string | null
   original_text: string
   summary: string
   action_items: string[]
   flash_text: string
   source_type: 'meet' | 'capacitacion' | 'reunion' | 'manual'
-  title: string
+  titulo: string
   is_published: boolean
   tags: string[]
   media_urls: string[]

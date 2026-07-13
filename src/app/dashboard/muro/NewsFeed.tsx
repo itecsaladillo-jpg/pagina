@@ -123,8 +123,8 @@ export function NewsFeed({ initialFlashes, commissions, memberCommissionId }: Pr
               <span className="text-[var(--text-muted)] text-xs flex-shrink-0" suppressHydrationWarning>{formatDate(flash.created_at)}</span>
             </div>
 
-            {/* Título */}
-            <h2 className="text-white font-semibold mb-2">{flash.title}</h2>
+{/* Título */}
+             <h2 className="text-white font-semibold mb-2">{flash.titulo}</h2>
 
             {/* Flash text */}
             <p className="text-[var(--text-secondary)] text-sm leading-relaxed border-l-2 border-[var(--accent-primary)]/40 pl-3 mb-3">

@@ -116,7 +116,7 @@ export function NewsWallMulticanal({
               >
                 <div className='flex items-start justify-between mb-4'>
                   <div className='flex-1'>
-                    <h2 className='text-xl font-bold text-white mb-2'>{flash.title}</h2>
+                    <h2 className='text-xl font-bold text-white mb-2'>{flash.titulo}</h2>
                     <span className='text-xs text-white/40'>
                       {formatDate(flash.created_at)}
                     </span>

@@ -81,9 +81,9 @@ export function FlashManagementList({ flashes: initialFlashes }: FlashManagement
                         <MessageSquare size={18} className="text-amber-400" />
                       </div>
                       <div>
-                        <div className="text-sm font-bold text-white group-hover:text-amber-400 transition-colors line-clamp-1">
-                          {flash.title}
-                        </div>
+<div className="text-sm font-bold text-white group-hover:text-amber-400 transition-colors line-clamp-1">
+                           {flash.titulo}
+                         </div>
                         <div className="text-xs text-[var(--text-muted)] mt-1 line-clamp-2 leading-relaxed">
                           {flash.flash_text}
                         </div>

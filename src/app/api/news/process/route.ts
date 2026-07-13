@@ -1,14 +1,13 @@
-import { createClient } from '@/lib/supabase/server'
 import { getCurrentMember } from '@/services/auth'
 import { NextRequest, NextResponse } from 'next/server'
-import { Resend } from 'resend'
 import { GoogleGenerativeAI } from '@google/generative-ai'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GENERATIVE_AI_API_KEY!)
 
 async function generarTextosIA(datos_crudos: string) {
   const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' })
+  
+  const tituloPrompt = `Actuarás como editor de titulares periodísticos. Generá un TÍTULO IMPACTANTE y llamativo (máximo 10 palabras) para esta noticia del agro/instituto. Debe ser corto, potente y transmitir la esencia del evento. Devolvé SOLO el título. DATOS: ${datos_crudos}`
   
   const prompts = {
     publico: `Actuarás como editor de prensa regional. Redactá un texto para el público con tono inspirador. NO mencionés biografía de Cicaré. Máximo 200 palabras. Devolvé SOLO el texto.`,
@@ -18,6 +17,14 @@ async function generarTextosIA(datos_crudos: string) {
   }
 
   const resultados: any = {}
+  
+  try {
+    const tituloResult = await model.generateContent(tituloPrompt)
+    resultados.titulo = tituloResult.response.text().trim().replace(/^["']|["']$/g, '')
+  } catch (err) {
+    console.error('Error generando titulo:', err)
+    resultados.titulo = datos_crudos.slice(0, 100).replace(/\n/g, ' ') + (datos_crudos.length > 100 ? '...' : '')
+  }
   
   for (const [canal, prompt] of Object.entries(prompts)) {
     try {
@@ -33,69 +40,18 @@ async function generarTextosIA(datos_crudos: string) {
   return resultados
 }
 
-async function enviarEmailsAsincronos(newsFlashId: string, textos: any) {
-  const supabase = await createClient()
-
-  const { data: medios } = await supabase.from('medios_prensa').select('email, nombre_medio')
-  if (medios?.length) {
-    for (const medio of medios) {
-      resend.emails.send({
-        from: 'ITEC Saladillo <notificaciones@itec-saladillo.app>',
-        to: medio.email,
-        subject: `Gacetilla ITEC - ${medio.nombre_medio}`,
-        html: `<pre style="font-family: monospace; white-space: pre-wrap;">${textos.medios}</pre>`
-      }).catch(console.error)
-    }
-  }
-
-  const { data: sponsors } = await supabase.from('sponsors').select('id, nombre_empresa, email')
-  if (sponsors?.length) {
-    for (const sponsor of sponsors) {
-      const link = `https://itec-saladillo.app/sponsors/${newsFlashId}?auth=${sponsor.id}`
-      resend.emails.send({
-        from: 'ITEC Saladillo <notificaciones@itec-saladillo.app>',
-        to: sponsor.email,
-        subject: `Reporte de Impacto - ${sponsor.nombre_empresa}`,
-        html: `<p>Hola ${sponsor.nombre_empresa},</p><p>${textos.sponsors}</p><p><a href="${link}">Ver reporte completo</a></p>`
-      }).catch(console.error)
-    }
-  }
-}
-
 export async function POST(request: NextRequest) {
   const member = await getCurrentMember()
   if (!member || member.role !== 'admin') {
     return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
   }
 
-  const { titulo, datos_crudos } = await request.json()
+  const { datos_crudos } = await request.json()
 
   try {
     const textos = await generarTextosIA(datos_crudos)
 
-    const supabase = await createClient()
-    const { data, error } = await supabase
-      .from('news_flashes')
-      .insert([{
-        titulo,
-        datos_crudos,
-        texto_publico: textos.publico,
-        texto_miembros: textos.miembros,
-        texto_medios: textos.medios,
-        texto_sponsors: textos.sponsors,
-        para_publico: true,
-        para_miembros: true,
-        autor_id: member.id,
-        is_published: true,
-      }])
-      .select()
-      .single()
-
-    if (error) throw error
-
-    enviarEmailsAsincronos(data.id, textos)
-
-    return NextResponse.json({ success: true, result: textos, data })
+    return NextResponse.json({ success: true, result: textos })
   } catch (err: any) {
     console.error('API Error:', err)
     return NextResponse.json({ error: err.message }, { status: 500 })
