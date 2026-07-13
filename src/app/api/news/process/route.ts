@@ -2,8 +2,9 @@ import { getCurrentMember } from '@/services/auth'
 import { NextRequest, NextResponse } from 'next/server'
 import OpenAI from 'openai'
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY
+const groq = new OpenAI({
+  apiKey: process.env.GROQ_API_KEY,
+  baseURL: 'https://api.groq.com/openai/v1'
 })
 
 function limpiarJSON(texto: string): string {
@@ -23,9 +24,9 @@ async function generarTextosIA(datos_crudos: string) {
 Datos: ${datos_crudos}`
 
   try {
-    console.log('[IA] Llamando a OpenAI...')
-    const result = await openai.chat.completions.create({
-      model: 'gpt-4o-mini',
+    console.log('[IA] Llamando a Groq...')
+    const result = await groq.chat.completions.create({
+      model: 'llama-4-scout',
       messages: [{ role: 'user', content: prompt }],
       temperature: 0.7
     })
