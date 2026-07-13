@@ -138,6 +138,10 @@ export async function createMulticanalNewsAction(data: {
    console.log('[ServerAction] Creando noticia multicanal - título:', data.titulo)
 
    const supabase = await createClient()
+   
+   // Derivar flash_text del texto_publico para la vista de gestión
+   const flashText = `📋 ${data.titulo}. ${data.texto_publico?.slice(0, 100) || ''}...`
+   
    const { data: news, error } = await supabase
      .from('news_flashes')
      .insert({
@@ -147,6 +151,7 @@ export async function createMulticanalNewsAction(data: {
        texto_miembros: data.texto_miembros,
        texto_sponsors: data.texto_sponsors,
        texto_medios: data.texto_medios,
+       flash_text: flashText,
        para_publico: data.para_publico,
        para_miembros: data.para_miembros,
        para_sponsors: data.para_sponsors,

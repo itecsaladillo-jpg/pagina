@@ -12,14 +12,14 @@ export interface NewsFlash {
   flash_text: string
   source_type: 'meet' | 'capacitacion' | 'reunion' | 'manual'
   titulo: string
-  is_published: boolean
-  tags: string[]
-  media_urls: string[]
-  datos_crudos: string | null
   texto_publico: string | null
   texto_miembros: string | null
   texto_sponsors: string | null
   texto_medios: string | null
+  is_published: boolean
+  tags: string[]
+  media_urls: string[]
+  datos_crudos: string | null
   para_publico: boolean | null
   para_miembros: boolean | null
   para_sponsors: boolean | null

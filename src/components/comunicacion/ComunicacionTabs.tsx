@@ -9,9 +9,10 @@ import { NewsFlashMulticanalEditor } from './NewsFlashMulticanalEditor'
 import { PenTool, ListOrdered, Zap, Calendar, Radio } from 'lucide-react'
 import { createMulticanalNewsAction } from '@/app/dashboard/comunicacion/actions'
 
-export function ComunicacionTabs({ member, articles, flashes, actions }: { member: any; articles: any[]; flashes: any[]; actions: any[] }) {
+export function ComunicacionTabs({ member, articles, flashes: initialFlashes, actions }: { member: any; articles: any[]; flashes: any[]; actions: any[] }) {
   const [activeTab, setActiveTab] = useState<'redactar' | 'multicanal' | 'gestionar' | 'flashes' | 'acciones'>('gestionar')
   const [editingArticle, setEditingArticle] = useState<any>(null)
+  const [flashes, setFlashes] = useState<any[]>(initialFlashes)
 
   const handleEditArticle = (article: any) => {
     setEditingArticle(article)
@@ -23,10 +24,11 @@ export function ComunicacionTabs({ member, articles, flashes, actions }: { membe
     setActiveTab('gestionar')
   }
 
-const handleSaveMulticanal = async (data: any) => {
+  const handleSaveMulticanal = async (data: any) => {
      const res = await createMulticanalNewsAction(data)
      if (res.success) {
-       setActiveTab('flashes')
+       // Forzar refresco de la página para mostrar nuevos flashes
+       window.location.reload()
        return { success: true }
      } else {
        return { success: false, error: res.error }
