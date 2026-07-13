@@ -7,50 +7,62 @@ const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GENERATIVE_AI_API_KEY!)
 async function generarTextosIA(datos_crudos: string) {
   const model = genAI.getGenerativeModel({ 
     model: 'gemini-flash-latest',
-    systemInstruction: `Actuarás como editor de titulares periodísticos e información multicanal para ITEC Saladillo. 
-    Generá contenidos en español rioplatense, profesionales, impactantes y positivos.
+    systemInstruction: `Sos un editor de comunicación multicanal para ITEC Saladillo. Generá textos impactantes y profesionales.
+    RESPONDÉ ÚNICAMENTE con un objeto JSON válido. PROHIBIDO: explicaciones, markdown, bloques de código, o texto adicional.
     RESTRICCIONES: No usar "hoy", "ayer", "mañana", "che", "viste", "pibe".`
   })
   
-  console.log('[IA] Generando título para:', datos_crudos.slice(0, 100))
-  const tituloPrompt = `Actuarás como editor de titulares periodísticos. Generá un TÍTULO IMPACTANTE y llamativo (máximo 10 palabras) para esta noticia del agro/instituto. Debe ser corto, potente y transmitir la esencia del evento. Devolvé SOLO el título, sin markdown ni comillas. DATOS: ${datos_crudos}`
+  console.log('[IA] Generando contenido multicanal...')
   
-  const prompts = {
-    texto_publico: `Actuarás como editor de prensa regional. Redactá un texto para el público con tono inspirador. NO mencionés biografía de Cicaré. Máximo 200 palabras. Devolvé SOLO el texto.`,
-    texto_miembros: `Actuarás como community manager. Redactá un texto para miembros internos con tono de logro superador y motivación. Máximo 150 palabras. Devolvé SOLO el texto.`,
-    texto_medios: `Actuarás como redactor de gacetillas. Generá un formato periodístico con: TÍTULO (máx 10 palabras), COPETE (1 línea), CUERPO (máx 200 palabras, párrafos cortos). Devolvé SOLO el texto con formato: "Título: ...\nCopete: ...\nCuerpo: ..."`,
-    texto_sponsors: `Actuarás como analista de relaciones institucionales. Generá un reporte ejecutivo con enfoque en costo/beneficio y visión de alianza. Máximo 250 palabras. Devolvé SOLO el texto.`
-  }
-
-  const resultados: any = {}
+  const prompt = `Generá un JSON con estas 5 llaves EXACTAS: "titulo", "texto_publico", "texto_miembros", "texto_sponsors", "texto_medios".
   
-  // Generar título
+  Para cada campo:
+  - titulo: Titular periodístico impactante (máximo 10 palabras) sobre el evento del agro
+  - texto_publico: Texto para público general, tono inspirador, máximo 200 palabras
+  - texto_miembros: Mensaje para miembros internos, tono de logro y motivación, máximo 150 palabras
+  - texto_sponsors: Reporte ejecutivo para sponsors, enfoque costo/beneficio, máximo 250 palabras
+  - texto_medios: Gacetilla periodística con TÍTULO, COPETE, CUERPO (máximo 200 palabras)
+  
+  DATOS DEL EVENTO:
+  """${datos_crudos}"""
+  
+  JSON REQUERIDO:`
+  
   try {
-    console.log('[IA] Llamando a Gemini para título...')
-    const tituloResult = await model.generateContent(tituloPrompt)
-    const tituloRaw = tituloResult.response.text().trim()
-    console.log('[IA] Respuesta título recibida:', tituloRaw)
-    resultados.titulo = tituloRaw.replace(/^["']|["']$/g, '').replace(/^\*+|\*+$/g, '')
+    console.log('[IA] Llamando a Gemini...')
+    const result = await model.generateContent(prompt)
+    let raw = result.response.text().trim()
+    console.log('[IA] Respuesta cruda recibida, longitud:', raw.length)
+    
+    // Limpieza de bloques de código markdown
+    raw = raw
+      .replace(/^```json\s*/i, '')
+      .replace(/^```\s*/i, '')
+      .replace(/\s*```$/i, '')
+      .trim()
+    
+    // Parsear JSON
+    const parsed = JSON.parse(raw)
+    console.log('[IA] JSON parseado exitosamente, llaves:', Object.keys(parsed))
+    
+    return {
+      titulo: parsed.titulo || '',
+      texto_publico: parsed.texto_publico || '',
+      texto_miembros: parsed.texto_miembros || '',
+      texto_sponsors: parsed.texto_sponsors || '',
+      texto_medios: parsed.texto_medios || ''
+    }
   } catch (err: any) {
-    console.error('[IA] Error generando título:', err)
-    resultados.titulo = datos_crudos.slice(0, 100).replace(/\n/g, ' ') + (datos_crudos.length > 100 ? '...' : '')
-  }
-  
-  // Generar textos por canal
-  for (const [canal, prompt] of Object.entries(prompts)) {
-    try {
-      console.log(`[IA] Llamando a Gemini para ${canal}...`)
-      const result = await model.generateContent(prompt + '\n\nDatos: ' + datos_crudos)
-      const text = result.response.text()
-      console.log(`[IA] Respuesta ${canal} recibida, longitud:`, text.length)
-      resultados[canal] = text && text.length > 0 ? text : `Pendiente de generación - ${canal}`
-    } catch (err: any) {
-      console.error(`[IA] Error generando ${canal}:`, err?.message || err)
-      resultados[canal] = `Error generando texto para ${canal}`
+    console.error('[IA] Error:', err)
+    // Fallback sin IA
+    return {
+      titulo: 'Novedad ITEC',
+      texto_publico: datos_crudos.slice(0, 200),
+      texto_miembros: datos_crudos.slice(0, 150),
+      texto_sponsors: 'Reporte pendiente.',
+      texto_medios: 'Gacetilla pendiente.'
     }
   }
-
-  return resultados
 }
 
 export async function POST(request: NextRequest) {
