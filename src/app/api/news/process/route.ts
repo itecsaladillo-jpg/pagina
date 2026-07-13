@@ -6,7 +6,7 @@ const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GENERATIVE_AI_API_KEY!)
 
 async function generarTextosIA(datos_crudos: string) {
   const model = genAI.getGenerativeModel({ 
-    model: 'gemini-flash-latest',
+    model: 'gemini-2.0-flash',
     systemInstruction: `Sos el Jefe de Prensa de ITEC. Generás notas profesionales. 
     FORMATO ESTRICTO: ÚNICAMENTE JSON con llaves "titulo", "texto_publico", "texto_miembros", "texto_sponsors", "texto_medios". 
     SIN markdown, SIN explicaciones, SIN texto extra.`
