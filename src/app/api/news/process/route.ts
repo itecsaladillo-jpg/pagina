@@ -7,52 +7,46 @@ const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GENERATIVE_AI_API_KEY!)
 async function generarTextosIA(datos_crudos: string) {
   const model = genAI.getGenerativeModel({ 
     model: 'gemini-flash-latest',
-    systemInstruction: `Sos un Director de Comunicaciones Estratégicas de ITEC Saladillo. Transformás notas crudas en piezas de contenido profesional.
-    RESTRICCIONES: No cites a Augusto Cicaré salvo que las notas lo requieran específicamente para contexto histórico. Priorizá la noticia actual.`
+    systemInstruction: `Sos el Jefe de Prensa y Comunicaciones de ITEC. Transformás información cruda en textos de alta calidad.
+    RESTRICCIONES: No cites a Augusto Cicaré salvo que sea necesario para contexto histórico. Priorizá el "para qué" sobre el "cómo".`
   })
   
   console.log('[IA] Generando contenido multicanal...')
   
-  const prompt = `Sos un Director de Comunicaciones Estratégicas de ITEC Saladillo. Generá textos de alta calidad profesional.
+  const prompt = `Sos el Jefe de Prensa y Comunicaciones de ITEC. Transformás información cruda en textos de alta calidad.
 
-RESTRICCIONES CRÍTICAS:
-- No menciones a Augusto Cicaré salvo que las notas lo requieran específicamente para contexto histórico
-- Usá lenguaje rioplatense formal, SIN "hoy", "ayer", "mañana", "che", "viste", "pibe"
-- Devolvé SOLO el JSON, sin explicaciones ni markdown
-
-Generá SOLO este JSON con las 5 llaves exactas:
+FORMATO DE SALIDA REQUERIDO:
 {"titulo": "string", "texto_publico": "string", "texto_miembros": "string", "texto_sponsors": "string", "texto_medios": "string"}
 
-ESPECÍFICAS POR CANAL:
+INSTRUCCIONES GENERALES:
+1. Identificá el "Viaje del Héroe": desafío inicial, acción de ITEC, transformación positiva lograda
+2. Incluye una cita breve y natural (real o simulada) de un beneficiario o miembro
+3. Usá subtítulos claros en negrita (**Subtítulo**) y párrafos cortos (máximo 4 líneas)
+4. Evitá frases burocráticas ("La organización informa que...")
 
-TÍTULO: Titular periodístico impactante (máximo 10 palabras) sobre la acción/evento
+TEXTO PÚBLICO (AUDIENCIA: PÚBLICO EXTERNO):
+- Viaje del Héroe con gancho impactante al inicio (pirámide invertida)
+- Lenguaje accesible, sin tecnicismos
+- Enfócate en el propósito: inspirar y generar confianza
+- Cierre con frase reflexiva que invite a conocer más sobre ITEC
+- 3-6 párrafos separados por saltos de línea
 
-TEXTO PÚBLICO: 
-- Rol: Periodista del tercer sector
-- Estructura: Pirámide invertida con título atractivo, bajada impactante, cuerpo descriptivo
-- Tono: Profesional, empático, transparente, accesible
-- Enfoque: Conectá la acción con el impacto social y beneficio para Saladillo
-- Límite: 200 palabras exactas
-
-TEXTO MIEMBROS:
-- Rol: Comunicación interna
-- Estructura: Título cercano, cuerpo centrado en el equipo, cierre motivador
-- Tono: Cálido, entusiasta, de reconocimiento
-- Lenguaje: Inclusivo ("nosotros", "nuestro esfuerzo")
-- Enfoque: Resaltá el "quiénes" del logro, desafíos superados, victoria compartida
-- Límite: 150 palabras exactas
+TEXTO MIEMBROS (AUDIENCIA: EQUIPO INTERNO):
+- Viaje del Héroe celebrando el esfuerzo colectivo
+- Lenguaje cálido, entusiasta, usando "nosotros", "nuestro esfuerzo"
+- Resaltá el valor de cada área en el éxito
+- Cierre: agradecimiento + visión a futuro
+- 3-6 párrafos separados por saltos de línea
 
 TEXTO SPONSORS:
-- Rol: Analista de relaciones institucionales
-- Tono: Ejecutivo, enfoque ROI y visión estratégica
-- Límite: 250 palabras exactas
+- Enfoque ROI y visión estratégica
+- 3-6 párrafos
 
 TEXTO MEDIOS:
-- Rol: Redactor de gacetilla
-- Formato: "TÍTULO: ...\nCOPETE: ...\nCUERPO: ..." (párrafos cortos)
-- Límite: 200 palabras exactas
+- Formato gacetilla: "TÍTULO: ...\nCOPETE: ...\nCUERPO: ..."
+- 3-6 párrafos
 
-DATOS DEL EVENTO:
+DATOS CRUDOS DEL EVENTO:
 """${datos_crudos}"""
 
 JSON:`

@@ -226,33 +226,73 @@ return (
           </div>
         </div>
 
-        <button
-          onClick={handleProcess}
-          disabled={isProcessing || rawFacts.length < 20}
-          className="w-full py-4 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold text-sm flex items-center justify-center gap-3 hover:scale-[1.02] transition-all disabled:opacity-30 shadow-xl"
-        >
-          {isProcessing ? (
-            <>
-              <Loader2 size={18} className="animate-spin" />
-              Procesando con IA...
-            </>
-          ) : (
-            <>
-              <Sparkles size={18} />
-              Procesar con IA
-            </>
-          )}
-        </button>
-      </div>
+<button
+           onClick={handleProcess}
+           disabled={isProcessing || rawFacts.length < 20}
+           className="w-full py-4 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold text-sm flex items-center justify-center gap-3 hover:scale-[1.02] transition-all disabled:opacity-30 shadow-xl"
+         >
+           {isProcessing ? (
+             <>
+               <Loader2 size={18} className="animate-spin" />
+               Procesando con IA...
+             </>
+           ) : (
+             <>
+               <Sparkles size={18} />
+               Procesar con IA
+             </>
+           )}
+         </button>
+       </div>
 
-      {/* Resultado en Tabs */}
-      <AnimatePresence>
-        {result && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="glass border border-white/5 rounded-3xl overflow-hidden"
-          >
+       {/* Preview rápido debajo del botón */}
+       {result && (
+         <div className="glass border border-white/5 rounded-2xl p-5 space-y-4">
+           <h3 className="text-xs font-bold uppercase tracking-widest text-white/60">Preview Generado</h3>
+           
+           <div>
+             <span className="text-[10px] text-indigo-400 uppercase">Título</span>
+             <p className="text-sm font-bold text-white mt-1">{result.titulo || 'Sin título'}</p>
+           </div>
+           
+           {result.texto_publico && (
+             <div>
+               <span className="text-[10px] text-blue-400 uppercase">Texto Público</span>
+               <p className="text-xs text-white/80 mt-1 line-clamp-3">{result.texto_publico}</p>
+             </div>
+           )}
+           
+           {result.texto_miembros && (
+             <div>
+               <span className="text-[10px] text-emerald-400 uppercase">Texto Miembros</span>
+               <p className="text-xs text-white/80 mt-1 line-clamp-3">{result.texto_miembros}</p>
+             </div>
+           )}
+           
+           {result.texto_sponsors && (
+             <div>
+               <span className="text-[10px] text-amber-400 uppercase">Texto Sponsors</span>
+               <p className="text-xs text-white/80 mt-1 line-clamp-3">{result.texto_sponsors}</p>
+             </div>
+           )}
+           
+           {result.texto_medios && (
+             <div>
+               <span className="text-[10px] text-purple-400 uppercase">Texto Medios</span>
+               <p className="text-xs text-white/80 mt-1 line-clamp-3">{result.texto_medios}</p>
+             </div>
+           )}
+         </div>
+       )}
+
+       {/* Resultado en Tabs */}
+       <AnimatePresence>
+         {result && (
+           <motion.div
+             initial={{ opacity: 0, y: 20 }}
+             animate={{ opacity: 1, y: 0 }}
+             className="glass border border-white/5 rounded-3xl overflow-hidden"
+           >
             {/* Tab Navigation */}
             <div className="flex flex-wrap gap-1 p-2 bg-white/[0.02] border-b border-white/5">
               {tabs.map((tab) => {
