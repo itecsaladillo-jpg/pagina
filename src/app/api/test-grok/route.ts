@@ -16,7 +16,7 @@ Datos: ${datos_crudos}`
 
   try {
     const result = await grok.chat.completions.create({
-      model: 'grok-preview',
+      model: 'grok',
       messages: [{ role: 'user', content: prompt }],
       temperature: 0.7
     })
