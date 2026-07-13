@@ -1,11 +1,5 @@
 import { getCurrentMember } from '@/services/auth'
 import { NextRequest, NextResponse } from 'next/server'
-import OpenAI from 'openai'
-
-const groq = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-  baseURL: 'https://api.groq.com/openai/v1'
-})
 
 function limpiarJSON(texto: string): string {
   const jsonMatch = texto.match(/\{[\s\S]*"[\s\S]*\}/)
@@ -25,12 +19,24 @@ Datos: ${datos_crudos}`
 
   try {
     console.log('[IA] Llamando a Groq...')
-    const result = await groq.chat.completions.create({
-      model: 'llama-4-scout',
-      messages: [{ role: 'user', content: prompt }],
-      temperature: 0.7
+    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        model: 'llama-4-scout',
+        messages: [{ role: 'user', content: prompt }],
+        temperature: 0.7
+      })
     })
     
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: ${await response.text()}`)
+    }
+    
+    const result = await response.json()
     const raw = limpiarJSON(result.choices[0]?.message?.content?.trim() || '{}')
     console.log('[IA] Respuesta cruda, longitud:', raw.length)
     
