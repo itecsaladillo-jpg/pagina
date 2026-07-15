@@ -12,14 +12,14 @@ function limpiarJSON(texto: string): string {
 }
 
 async function generarTextosIA(datos_crudos: string) {
-  const prompt = `Actuá como Director de Comunicaciones Estratégicas para ITEC Saladillo. Generá EXACTAMENTE un JSON SIN markdown ni explicaciones adicionales:
+  const prompt = `Actuá como Director de Comunicaciones Estratégicas para ITEC Saladillo. Responde SOLO con un JSON válido, sin markdown:
 
 {
   "titulo": "título atractivo máximo 10 palabras",
-  "texto_publico": "3-6 ORACIONES. TONO: aspiracional para vecinos de Saladillo. Enfocá en cómo democratizan la tecnología. CERRAR con frase reflexiva sobre la misión ITEC. NO mencionar a Augusto Cicaré a menos que esté explícito en los datos.",
-  "texto_miembros": "3-6 ORACIONES. TONO: interno, cálido, entre compañeros. Usar 'nosotros', 'nuestro equipo', agradecer voluntarios. Destacar el 'quiénes' que hizo posible. Cerrar como victoria compartida.",
-  "texto_sponsors": "3-6 ORACIONES. TONO: ejecutivo, pragmático. Si hay datos numéricos, incluirlos. Mostrar ROI e impacto económico concretos. Vinculación con ecosistema productivo local.",
-  "texto_medios": "GACETILLA PERIODÍSTICA. Titular + bajada con: quién, qué, cuándo, dónde. Incluir cita simulada de directivo ITEC. Texto breve listo para publicación."
+  "texto_publico": "3-6 oraciones. TONO ASPIRACIONAL para vecinos de Saladillo. Ej: '¡Vieron lo que pasó! Más de X vecinos se dieron cita en ITEC...' Destacar impacto comunitario.",
+  "texto_miembros": "3-6 oraciones. TONO INTERNO cálido. Ej: '¡Equipo, qué semana! Gracias a la movida de ayer...' Usar 'nosotros', agradecer voluntarios.",
+  "texto_sponsors": "3-6 oraciones. TONO EJECUTIVO pragmático. Ej: 'El taller movilizó X nuevos contactos...' Mostrar métricas y ROI.",
+  "texto_medios": "GACETILLA: Titular + bajada (quién, qué, cuándo, dónde) + cita. Texto breve listo para publicar."
 }
 
 EVENTO: ${datos_crudos}`
