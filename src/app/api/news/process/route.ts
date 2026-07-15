@@ -2,7 +2,7 @@ import { getCurrentMember } from '@/services/auth'
 import { NextRequest, NextResponse } from 'next/server'
 
 function limpiarJSON(texto: string): string {
-  const jsonMatch = texto.match(/\{[\s\S]*"[\s\S]*\}/)
+  const jsonMatch = texto.match(/\{[\s\S]*\}/)
   if (jsonMatch) return jsonMatch[0]
   return texto
     .replace(/^```json\s*/i, '')
@@ -22,7 +22,7 @@ Datos: ${datos_crudos}`
     const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
+        'Authorization': `Bearer ${process.env.GROQ_API_KEY || ''}`,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
@@ -54,10 +54,10 @@ Datos: ${datos_crudos}`
     console.error('[IA] Error:', err.message)
     return {
       titulo: 'Novedad ITEC',
-      texto_publico: datos_crudos.slice(0, 200),
-      texto_miembros: datos_crudos.slice(0, 150),
-      texto_sponsors: 'Reporte pendiente.',
-      texto_medios: 'Gacetilla pendiente.'
+      texto_publico: datos_crudos,
+      texto_miembros: datos_crudos,
+      texto_sponsors: datos_crudos,
+      texto_medios: datos_crudos
     }
   }
 }

@@ -258,28 +258,28 @@ return (
 {result.texto_publico && (
               <div>
                 <span className="text-[10px] text-blue-400 uppercase">Texto Público</span>
-                <p className="text-xs text-white/80 mt-1">{result.texto_publico}</p>
+                <p className="text-xs text-white/80 mt-1 whitespace-pre-wrap">{result.texto_publico}</p>
               </div>
             )}
             
             {result.texto_miembros && (
               <div>
                 <span className="text-[10px] text-emerald-400 uppercase">Texto Miembros</span>
-                <p className="text-xs text-white/80 mt-1">{result.texto_miembros}</p>
+                <p className="text-xs text-white/80 mt-1 whitespace-pre-wrap">{result.texto_miembros}</p>
               </div>
             )}
             
             {result.texto_sponsors && (
               <div>
                 <span className="text-[10px] text-amber-400 uppercase">Texto Sponsors</span>
-                <p className="text-xs text-white/80 mt-1">{result.texto_sponsors}</p>
+                <p className="text-xs text-white/80 mt-1 whitespace-pre-wrap">{result.texto_sponsors}</p>
               </div>
             )}
             
             {result.texto_medios && (
               <div>
                 <span className="text-[10px] text-purple-400 uppercase">Texto Medios</span>
-                <p className="text-xs text-white/80 mt-1">{result.texto_medios}</p>
+                <p className="text-xs text-white/80 mt-1 whitespace-pre-wrap">{result.texto_medios}</p>
               </div>
             )}
          </div>
@@ -318,8 +318,8 @@ return (
             {/* Tab Content */}
             <div className="p-6 max-h-[500px] overflow-y-auto">
 {activeTab === 'preview' && (
-                 <div className="space-y-6">
-                   <p className="text-xs text-white/40">Previsualización - Editá abajo antes de guardar</p>
+                  <div className="space-y-6 min-h-[200px]">
+                    <p className="text-xs text-white/40">Previsualización - Editá abajo antes de guardar</p>
                    
                    <div>
                      <h4 className="text-xs font-bold text-indigo-400 uppercase mb-2">Título Generado por IA</h4>
@@ -329,28 +329,28 @@ return (
 {paraPublico && (
                       <div>
                         <h4 className="text-xs font-bold text-blue-400 uppercase mb-2">Público</h4>
-                        <p className="text-sm text-white/80">{result.texto_publico}</p>
+                        <p className="text-sm text-white/80 whitespace-pre-wrap">{result.texto_publico}</p>
                       </div>
                     )}
                     
                     {paraMiembros && (
                       <div>
                         <h4 className="text-xs font-bold text-emerald-400 uppercase mb-2">Miembros</h4>
-                        <p className="text-sm text-white/80">{result.texto_miembros}</p>
+                        <p className="text-sm text-white/80 whitespace-pre-wrap">{result.texto_miembros}</p>
                       </div>
                     )}
                     
                     {paraSponsors && (
                       <div>
                         <h4 className="text-xs font-bold text-amber-400 uppercase mb-2">Sponsors</h4>
-                        <p className="text-sm text-white/80">{result.texto_sponsors}</p>
+                        <p className="text-sm text-white/80 whitespace-pre-wrap">{result.texto_sponsors}</p>
                       </div>
                     )}
                     
                     {paraMedios && (
                      <div>
                        <h4 className="text-xs font-bold text-purple-400 uppercase mb-2">Medios</h4>
-                       <p className="text-sm text-white/80">{result.texto_medios}</p>
+                       <p className="text-sm text-white/80 whitespace-pre-wrap">{result.texto_medios}</p>
                      </div>
                    )}
                 </div>
