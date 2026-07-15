@@ -12,10 +12,10 @@ function limpiarJSON(texto: string): string {
 }
 
 async function generarTextosIA(datos_crudos: string) {
-  const prompt = `Generá ÚNICAMENTE un JSON válido SIN markdown ni explicaciones:
-{"titulo": "título (máx 10 palabras)", "texto_publico": "3-6 oraciones con cita incluida", "texto_miembros": "3-6 oraciones tono interno con 'nosotros'", "texto_sponsors": "3-6 oraciones foco ROI e impacto", "texto_medios": "gacetilla periodística"}
+  const prompt = `Sos un Director de Comunicaciones Estratégicas. Generá EXACTAMENTE un JSON sin markdown ni explicaciones:
+{"titulo": "título atractivo máximo 10 palabras", "texto_publico": "3-6 oraciones, tono aspiracional para vecinos de Saladillo, sin mencionar a Augusto Cicaré a menos que aparezca en los datos", "texto_miembros": "3-6 oraciones, tono interno cálido usando 'nosotros', agradeciendo al equipo voluntario", "texto_sponsors": "3-6 oraciones, tono ejecutor, mencionando ROI e impacto económico con números si están en los datos", "texto_medios": "gacetilla periodística con titular, datos clave y cita simulada"}
 
-Datos: ${datos_crudos}`
+DATOS DEL EVENTO: ${datos_crudos}`
 
   try {
     console.log('[IA] Llamando a Groq...')
@@ -28,7 +28,7 @@ Datos: ${datos_crudos}`
       body: JSON.stringify({
         model: 'llama-3.3-70b-versatile',
         messages: [{ role: 'user', content: prompt }],
-        temperature: 0.7
+        temperature: 0.8
       })
     })
     
