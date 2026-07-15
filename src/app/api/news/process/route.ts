@@ -12,13 +12,20 @@ function limpiarJSON(texto: string): string {
 }
 
 async function generarTextosIA(datos_crudos: string) {
-  const prompt = `Sos un Director de Comunicaciones Estratégicas. Generá EXACTAMENTE un JSON sin markdown ni explicaciones:
-{"titulo": "título atractivo máximo 10 palabras", "texto_publico": "3-6 oraciones, tono aspiracional para vecinos de Saladillo, sin mencionar a Augusto Cicaré a menos que aparezca en los datos", "texto_miembros": "3-6 oraciones, tono interno cálido usando 'nosotros', agradeciendo al equipo voluntario", "texto_sponsors": "3-6 oraciones, tono ejecutor, mencionando ROI e impacto económico con números si están en los datos", "texto_medios": "gacetilla periodística con titular, datos clave y cita simulada"}
+  const prompt = `Actuá como Director de Comunicaciones Estratégicas para ITEC Saladillo. Generá EXACTAMENTE un JSON SIN markdown ni explicaciones adicionales:
 
-DATOS DEL EVENTO: ${datos_crudos}`
+{
+  "titulo": "título atractivo máximo 10 palabras",
+  "texto_publico": "3-6 ORACIONES. TONO: aspiracional para vecinos de Saladillo. Enfocá en cómo democratizan la tecnología. CERRAR con frase reflexiva sobre la misión ITEC. NO mencionar a Augusto Cicaré a menos que esté explícito en los datos.",
+  "texto_miembros": "3-6 ORACIONES. TONO: interno, cálido, entre compañeros. Usar 'nosotros', 'nuestro equipo', agradecer voluntarios. Destacar el 'quiénes' que hizo posible. Cerrar como victoria compartida.",
+  "texto_sponsors": "3-6 ORACIONES. TONO: ejecutivo, pragmático. Si hay datos numéricos, incluirlos. Mostrar ROI e impacto económico concretos. Vinculación con ecosistema productivo local.",
+  "texto_medios": "GACETILLA PERIODÍSTICA. Titular + bajada con: quién, qué, cuándo, dónde. Incluir cita simulada de directivo ITEC. Texto breve listo para publicación."
+}
+
+EVENTO: ${datos_crudos}`
 
   try {
-    console.log('[IA] Llamando a Groq...')
+    console.log('[IA] Llamando a Groq con prompt length:', prompt.length)
     const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -28,7 +35,8 @@ DATOS DEL EVENTO: ${datos_crudos}`
       body: JSON.stringify({
         model: 'llama-3.3-70b-versatile',
         messages: [{ role: 'user', content: prompt }],
-        temperature: 0.8
+        temperature: 0.9,
+        max_tokens: 1500
       })
     })
     
@@ -38,26 +46,34 @@ DATOS DEL EVENTO: ${datos_crudos}`
     
     const result = await response.json()
     const raw = limpiarJSON(result.choices[0]?.message?.content?.trim() || '{}')
-    console.log('[IA] Respuesta cruda, longitud:', raw.length)
+    console.log('[IA] Respuesta cruda:', raw.substring(0, 500))
     
     const parsed = JSON.parse(raw)
-    console.log('[IA] JSON parseado')
     
-    return {
-      titulo: parsed.titulo || '',
+    const textos = {
+      titulo: parsed.titulo || 'Novedad ITEC',
       texto_publico: parsed.texto_publico || '',
       texto_miembros: parsed.texto_miembros || '',
       texto_sponsors: parsed.texto_sponsors || '',
       texto_medios: parsed.texto_medios || ''
     }
+    console.log('[IA] Textos generados:', {
+      titulo_len: textos.titulo.length,
+      publico_len: textos.texto_publico.length,
+      miembros_len: textos.texto_miembros.length,
+      sponsors_len: textos.texto_sponsors.length,
+      medios_len: textos.texto_medios.length
+    })
+    
+    return textos
   } catch (err: any) {
     console.error('[IA] Error:', err.message)
     return {
       titulo: 'Novedad ITEC',
-      texto_publico: datos_crudos,
-      texto_miembros: datos_crudos,
-      texto_sponsors: datos_crudos,
-      texto_medios: datos_crudos
+      texto_publico: datos_crudos + '\n\nEsta iniciativa fortalece el acceso a la tecnología para toda la comunidad saladense.',
+      texto_miembros: '¡Equipo! ' + datos_crudos + '\n\nGracias a quienes hicieron posible este logro. Nuestro trabajo voluntario transforma realidades.',
+      texto_sponsors: 'Evento con impacto en el ecosistema local. Destacan los ' + (datos_crudos.length > 50 ? datos_crudos.substring(0, 50) + '...' : datos_crudos),
+      texto_medios: 'ITEC Saladillo realizó actividad comunitaria. ' + datos_crudos + '. "Un paso más hacia la vinculación tecnológica", comentó la institución.'
     }
   }
 }
