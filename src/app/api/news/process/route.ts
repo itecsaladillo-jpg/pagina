@@ -50,13 +50,30 @@ EVENTO: ${datos_crudos}`
     
     const parsed = JSON.parse(raw)
     
-    const textos = {
+    let textos = {
       titulo: parsed.titulo || 'Novedad ITEC',
       texto_publico: parsed.texto_publico || '',
       texto_miembros: parsed.texto_miembros || '',
       texto_sponsors: parsed.texto_sponsors || '',
       texto_medios: parsed.texto_medios || ''
     }
+    
+    const todosIguales = textos.texto_publico && 
+      textos.texto_publico === textos.texto_miembros && 
+      textos.texto_publico === textos.texto_sponsors && 
+      textos.texto_publico === textos.texto_medios
+    
+    if (todosIguales) {
+      console.log('[IA] Textos idénticos, aplicando variación:', textos.texto_publico.substring(0, 50))
+      textos = {
+        titulo: textos.titulo,
+        texto_publico: textos.texto_publico,
+        texto_miembros: '¡Equipo! ' + textos.texto_miembros + '\n\nGracias a quienes hicieron posible este logro.',
+        texto_sponsors: 'ROI destacado: ' + textos.texto_sponsors + '\n\nImpacto en el ecosistema local.',
+        texto_medios: 'ITEC informa: ' + textos.texto_medios + '. "Un paso más hacia la innovación", comentó la institución.'
+      }
+    }
+    
     console.log('[IA] Textos generados:', {
       titulo_len: textos.titulo.length,
       publico_len: textos.texto_publico.length,
