@@ -12,13 +12,21 @@ function limpiarJSON(texto: string): string {
 }
 
 async function generarTextosIA(datos_crudos: string) {
-  const prompt = `Actuá como un Director de Comunicaciones Estratégicas experto. Tu misión es transformar "datos crudos" en 4 piezas de comunicación con identidades totalmente divergentes.
+  const prompt = `Actuá como un Director de Comunicaciones Estratégicas experto. Tu misión es transformar "datos crudos" en 4 piezas de comunicación con identidades TOTALMENTE divergentes.
 
 RESTRICCIONES CRÍTICAS:
 1. Responde ÚNICAMENTE con un JSON válido.
-2. NO incluyas introducciones, comentarios ni etiquetas markdown (bloques de código).
-3. NO menciones constantemente a Augusto Cicaré; solo si es indispensable para el contexto histórico.
+2. NO incluyas introducciones, comentarios ni etiquetas markdown.
+3. NO menciones a Augusto Cicaré; solo si es estrictamente necesario.
 4. NUNCA inventes datos; si falta información, redacta en torno a los hechos disponibles.
+
+LOS 4 TEXTOS DEBEN SER FUNDAMENTE DIFERENTES EN TONO, ENFOQUE Y PÚBLICO OBJETIVO.
+
+EJEMPLO DE DIFERENCIACIÓN:
+- texto_publico: "¡Vieron lo que pasó! Más de X vecinos se dieron cita en ITEC..."
+- texto_miembros: "¡Equipo! Gracias a la movida de ayer. Como rescataron el servidor caído..."
+- texto_sponsors: "El taller movilizó X nuevos contactos y generó Y leads calificados..."
+- texto_medios: "ITEC Saladillo realizó taller de robótica. 45 vecinos asistieron..."
 
 ESTRUCTURA DE RESPUESTA (JSON):
 {
@@ -30,7 +38,7 @@ ESTRUCTURA DE RESPUESTA (JSON):
   
   "texto_sponsors": "ROL: Analista de Proyectos / Ejecutivo. OBJETIVO: Reportar ROI social y eficiencia. TONO: Pragmático, profesional y de rendición de cuentas. ENFOQUE: Impacto en el mapa productivo local, métricas de asistencia y eficiencia en el uso de los fondos (gastos vs. resultados). Destacá la alianza estratégica.",
   
-  "texto_medios": "ROL: Jefe de Prensa. OBJETIVO: Publicación inmediata (Copy/Paste). TONO: Institucional, seco y fáctico. ESTRUCTURA: Título + Bajada (Qué, Quién, Cuándo, Dónde) + Cuerpo breve + Cita simulada de autoridad de ITEC resaltando el hito."
+  "texto_medios": "ROL: Jefe de Prensa. OBJETIVO: Publicación inmediata. TONO: Institucional, seco y fáctico. ESTRUCTURA: Título + Bajada (Qué, Quién, Cuándo, Dónde) + Cuerpo breve + Cita simulada de autoridad de ITEC resaltando el hito."
 }
 
 DATOS CRUDOS PARA PROCESAR: ${datos_crudos}`
@@ -74,8 +82,9 @@ DATOS CRUDOS PARA PROCESAR: ${datos_crudos}`
       textos.texto_publico === textos.texto_sponsors && 
       textos.texto_publico === textos.texto_medios
     
+    // Si los textos son idénticos o muy similares, forzar variación explícita
     if (todosIguales) {
-      console.log('[IA] Textos idénticos, aplicando variación:', textos.texto_publico.substring(0, 50))
+      console.log('[IA] Textos idénticos, aplicando variación explícita')
       textos = {
         titulo: textos.titulo,
         texto_publico: textos.texto_publico,
