@@ -1,5 +1,23 @@
 import { createClient } from '@/lib/supabase/server'
 
+export interface NewsFlashMulticanal {
+  id: string
+  created_at: string
+  updated_at: string
+  autor_id: string | null
+  titulo: string
+  datos_crudos: string
+  texto_publico: string
+  texto_miembros: string
+  texto_sponsors: string
+  texto_medios: string
+  is_published: boolean
+  para_publico: boolean
+  para_miembros: boolean
+  para_sponsors: boolean
+  para_medios: boolean
+}
+
 export interface RelatedVideo {
   id: string
   title: string
@@ -120,4 +138,28 @@ export async function getArticleBySlug(slug: string): Promise<PublicArticle | nu
   }
 
   return article as PublicArticle
+}
+
+export async function createMulticanalNewsFlash(
+  flash: Omit<NewsFlashMulticanal, 'id' | 'created_at' | 'updated_at'>
+): Promise<NewsFlashMulticanal | null> {
+  const supabase = await createClient()
+  const { data, error } = await supabase
+    .from('news_flashes')
+    .insert({
+      ...flash,
+      original_text: '',
+      summary: '',
+      action_items: [],
+      flash_text: '',
+      source_type: 'manual'
+    })
+    .select()
+    .single()
+
+  if (error) {
+    console.error('[newsService] createMulticanalNewsFlash error:', error.message)
+    return null
+  }
+  return data as NewsFlashMulticanal
 }

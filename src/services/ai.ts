@@ -231,8 +231,58 @@ export async function generateActionSuccessStory(
   try {
     return JSON.parse(cleaned)
   } catch (err) {
-    return { title: `Éxito total en ${actionTitle}`, content: raw }
+return { title: `Éxito total en ${actionTitle}`, content: raw }
+}
+
+/**
+ * Genera noticias multicanal a partir de hechos crudos.
+ * Usa fallback automático entre múltiples API keys.
+ */
+export async function generateMulticanalNews(rawFacts: string): Promise<{
+  titulo: string
+  texto_publico: string
+  texto_miembros: string
+  texto_sponsors: string
+  texto_medios: string
+}> {
+  const systemPrompt = `
+${ITEC_SYSTEM_PROMPT}
+
+Actuá como un Director de Comunicaciones Estratégicas experto. Tu misión es transformar "hechos crudos" en 5 piezas de comunicación con identidades TOTALMENTE divergentes.
+
+RESTRICCIONES CRÍTICAS:
+1. Responde ÚNICAMENTE con un JSON válido.
+2. NO incluyas introducciones, comentarios ni etiquetas markdown.
+3. NO menciones constantemente a Augusto Cicaré; solo si es indispensable para el contexto histórico.
+4. NUNCA inventes datos; si falta información, redacta en torno a los hechos disponibles.
+
+ESTRUCTURA DE RESPUESTA (JSON):
+{
+  "titulo": "Titular periodístico de alto impacto (máx. 10 palabras).",
+  "texto_publico": "ROL: Periodista social. OBJETIVO: Generar orgullo y pertenencia en Saladillo. TONO: Aspiracional, accesible y humano. ENFOQUE: Traducir la técnica a beneficios comunitarios. Estructura de pirámide invertida. Evitá tecnicismos. Cerrá con una frase que invite a sumarse al ecosistema ITEC.",
+  "texto_miembros": "ROL: Líder de equipo / Gestor interno. OBJETIVO: Reconocimiento y motivación. TONO: Cálido, entusiasta y muy cercano. ENFOQUE: Resaltá el 'quiénes' y el esfuerzo voluntario. Usá 'nosotros' y 'nuestro'. Celebrá los desafíos técnicos superados como una victoria colectiva.",
+  "texto_sponsors": "ROL: Analista de Proyectos / Ejecutivo. OBJETIVO: Reportar ROI social y eficiencia. TONO: Pragmático, profesional y de rendición de cuentas. ENFOQUE: Impacto en el mapa productivo local, métricas de asistencia y eficiencia en el uso de los fondos (gastos vs. resultados). Destacá la alianza estratégica.",
+  "texto_medios": "ROL: Jefe de Prensa. OBJETIVO: Publicación inmediata. TONO: Institucional, seco y fáctico. ESTRUCTURA: Título + Bajada (Qué, Quién, Cuándo, Dónde) + Cuerpo breve + Cita simulada de autoridad de ITEC resaltando el hito."
+}`
+
+const prompt = `HECHOS CRUDOS PARA TRANSFORMAR:\n"""\n${rawFacts}\n"""`
+
+const raw = await generateTextWithFallback(prompt, systemPrompt)
+const cleaned = raw.replace(/^```json\s*/i, '').replace(/\s*```$/i, '').trim()
+
+try {
+  return JSON.parse(cleaned)
+} catch (err) {
+  // Fallback si falla el parseo
+  return {
+    titulo: 'Novedad ITEC',
+    texto_publico: rawFacts + '\n\nEsta iniciativa fortalece el acceso a la tecnología para toda la comunidad saladense.',
+    texto_miembros: '¡Equipo! ' + rawFacts + '\n\nGracias a quienes hicieron posible este logro. Nuestro trabajo voluntario transforma realidades.',
+    texto_sponsors: 'Evento con impacto en el ecosistema local. Destacan los contributos recibidos.',
+    texto_medios: 'ITEC Saladillo informa actividad comunitaria. ' + rawFacts + '. "Un paso más hacia la innovación", comentó la institución.'
   }
+}
+}
 }
 
 /**
@@ -289,6 +339,43 @@ export async function generarEmbedding(texto: string): Promise<number[]> {
     console.error('[AI Service] Error al generar embedding con text-embedding-004:', error);
     throw error;
   }
+}
+
+/**
+ * Genera texto con IA usando fallback automático entre múltiples API keys.
+ */
+async function generateTextWithFallback(prompt: string, systemPrompt: string): Promise<string> {
+  const apiKeys = [
+    process.env.GEMINI_API_KEY,
+    process.env.GEMINI_API_KEY_2,
+    process.env.GEMINI_API_KEY_3,
+    process.env.GEMINI_API_KEY_4
+  ].filter(Boolean) as string[]
+
+  let lastError: Error | null = null
+
+  for (const apiKey of apiKeys) {
+    try {
+      const { GoogleGenerativeAI } = await import('@google/generative-ai')
+      const genAI = new GoogleGenerativeAI(apiKey)
+      const model = genAI.getGenerativeModel({
+        model: 'gemini-flash-latest',
+        systemInstruction: systemPrompt,
+      })
+
+      const result = await model.generateContent(prompt)
+      const text = result.response.text().trim()
+      
+      if (text) return text
+      lastError = new Error('Empty response')
+    } catch (err: any) {
+      lastError = err
+      console.warn(`[AI Fallback] Key failed, trying next...`, err.message?.substring(0, 50))
+      continue
+    }
+  }
+
+  throw lastError || new Error('All API keys exhausted')
 }
 
 export interface FeedbackSimilar {
