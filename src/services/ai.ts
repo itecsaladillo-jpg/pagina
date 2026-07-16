@@ -41,7 +41,6 @@ Nunca utilizás lenguaje informal ni regionalismos fuera de los autorizados.
 export interface AIProcessResult {
   summary: string
   action_items: string[]
-  flash_text: string
 }
 
 /**
@@ -78,7 +77,7 @@ TEXTO A PROCESAR:
 ${text}
 """
 
-Generá exactamente tres elementos en formato JSON puro (sin markdown, sin bloques de código):
+Generá exactamente dos elementos en formato JSON puro (sin markdown, sin bloques de código):
 
 {
   "summary": "Resumen ejecutivo de 3-5 oraciones, capturando los puntos principales tratados.",
@@ -86,11 +85,10 @@ Generá exactamente tres elementos en formato JSON puro (sin markdown, sin bloqu
     "Tarea concreta 1 con responsable si se menciona",
     "Tarea concreta 2",
     "..."
-  ],
-  "flash_text": "Flash informativo de 2-3 oraciones para publicar en el muro interno de ITEC. Debe ser dinámico, motivador y en Estilo ITEC. Comenzá con un verbo de acción o una idea fuerza."
+  ]
 }
 
-Respondé ÚNICAMENTE con el JSON, sin ningún texto adicional antes o después.
+Respondés ÚNICAMENTE con el JSON, sin ningún texto adicional antes o después.
 `
 
   const result = await model.generateContent(prompt)
