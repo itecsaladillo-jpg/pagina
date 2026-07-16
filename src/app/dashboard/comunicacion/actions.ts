@@ -2,28 +2,7 @@
 
 import { createClient } from '@/lib/supabase/server'
 import { getCurrentMember } from '@/services/auth'
-import { generatePublicArticle } from '@/services/ai'
 import { revalidatePath } from 'next/cache'
-
-/**
- * Genera el borrador del artículo usando IA.
- */
-export async function generateArticleDraftAction(rawFacts: string) {
-  const member = await getCurrentMember()
-  if (!member || member.role !== 'admin') throw new Error('No autorizado')
-
-  if (!rawFacts.trim() || rawFacts.length < 10) {
-    throw new Error('Por favor, ingresá más detalles sobre los hechos.')
-  }
-
-  try {
-    const draft = await generatePublicArticle(rawFacts)
-    return { success: true, draft }
-  } catch (err: any) {
-    console.error('[generateArticleDraftAction] Error:', err)
-    return { success: false, error: err.message }
-  }
-}
 
 /**
  * Persiste el artículo final en la base de datos.

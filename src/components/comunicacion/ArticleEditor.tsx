@@ -3,14 +3,12 @@
 import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { 
-  Sparkles, 
   Upload, 
   Image as ImageIcon, 
   Video, 
   X, 
   CheckCircle2, 
   Loader2, 
-  Type, 
   Eye,
   Send,
   Trash2,
@@ -19,10 +17,9 @@ import {
   Star
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
-import { generateArticleDraftAction, publishArticleAction } from '@/app/dashboard/comunicacion/actions'
+import { publishArticleAction } from '@/app/dashboard/comunicacion/actions'
 
 export function ArticleEditor({ member, initialArticle, onCancel }: { member: any; initialArticle?: any; onCancel?: () => void }) {
-  const [rawFacts, setRawFacts] = useState('')
   const [title, setTitle] = useState(initialArticle?.title || '')
   const [content, setContent] = useState(initialArticle?.content || '')
   const [media, setMedia] = useState<{ url: string; type: string; name: string }[]>(
@@ -38,20 +35,18 @@ export function ArticleEditor({ member, initialArticle, onCancel }: { member: an
       : new Date().toISOString().split('T')[0]
   )
   const [badgeText, setBadgeText] = useState(initialArticle?.excerpt || 'Impacto Regional')
-  const [isGenerating, setIsGenerating] = useState(false)
   const [isPublishing, setIsPublishing] = useState(false)
   const [dragActive, setDragActive] = useState(false)
-  const [step, setStep] = useState(initialArticle ? 2 : 1) // Si hay artículo inicial, vamos directo al editor
   const [currentMediaIdx, setCurrentMediaIdx] = useState(0)
 
   useEffect(() => {
-    if (step === 2 && media.length > 1) {
+    if (media.length > 1) {
       const interval = setInterval(() => {
         setCurrentMediaIdx(prev => (prev + 1) % media.length)
       }, 4000)
       return () => clearInterval(interval)
     }
-  }, [step, media.length])
+  }, [media.length])
 
   const fileInputRef = useRef<HTMLInputElement>(null)
   const supabase = createClient()
@@ -60,7 +55,6 @@ export function ArticleEditor({ member, initialArticle, onCancel }: { member: an
   const handleFiles = async (files: FileList | null) => {
     if (!files) return
     
-    setIsGenerating(true) // Usamos el loader general para indicar actividad
     const newMedia: { url: string; type: string; name: string }[] = []
 
     for (const file of Array.from(files)) {
@@ -91,30 +85,10 @@ export function ArticleEditor({ member, initialArticle, onCancel }: { member: an
     }
 
     setMedia(prev => [...prev, ...newMedia])
-    setIsGenerating(false)
   }
 
   const removeMedia = (index: number) => {
     setMedia(prev => prev.filter((_, i) => i !== index))
-  }
-
-  // ─── Lógica IA ───
-  const handleGenerate = async () => {
-    setIsGenerating(true)
-    try {
-      const res = await generateArticleDraftAction(rawFacts)
-      if (res.success && res.draft) {
-        setTitle(res.draft.title)
-        setContent(res.draft.content)
-        setStep(2)
-      } else {
-        alert('Error: ' + res.error)
-      }
-    } catch (err) {
-      alert('Error al generar el artículo')
-    } finally {
-      setIsGenerating(false)
-    }
   }
 
   const setAsMain = (index: number) => {
@@ -126,6 +100,11 @@ export function ArticleEditor({ member, initialArticle, onCancel }: { member: an
 
   // ─── Publicación ───
   const handlePublish = async () => {
+    if (!title.trim() || !content.trim()) {
+      alert('Título y contenido son obligatorios')
+      return
+    }
+    
     setIsPublishing(true)
     try {
       const res = await publishArticleAction({
@@ -139,10 +118,7 @@ export function ArticleEditor({ member, initialArticle, onCancel }: { member: an
       })
       if (res.success) {
         alert(initialArticle ? 'Artículo actualizado con éxito!' : 'Artículo publicado con éxito!')
-        if (onCancel) onCancel() // Volver a la lista
-        setStep(1)
-        setRawFacts('')
-        setMedia([])
+        if (onCancel) onCancel()
       } else {
         alert('Error al publicar: ' + res.error)
       }
@@ -161,16 +137,17 @@ export function ArticleEditor({ member, initialArticle, onCancel }: { member: an
         <div className="glass border border-white/5 rounded-3xl p-8 space-y-6">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center">
-              <Type className="text-blue-400" size={20} />
+              <ImageIcon className="text-blue-400" size={20} />
             </div>
-            <h2 className="text-xl font-bold text-white">Entrada de Hechos</h2>
+            <h2 className="text-xl font-bold text-white">Editor de Artículo</h2>
           </div>
 
-          <textarea
-            value={rawFacts}
-            onChange={(e) => setRawFacts(e.target.value)}
-            placeholder="Ej: 'Inauguramos el laboratorio de Robótica. Hubo 50 personas. El intendente cortó la cinta. Los chicos mostraron un brazo mecánico...'"
-            className="w-full min-h-[200px] bg-white/[0.02] border border-white/10 rounded-2xl p-5 text-white text-sm leading-relaxed focus:outline-none focus:border-blue-500/40 transition-all resize-none"
+          {/* Título */}
+          <input
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="Título del artículo..."
+            className="w-full bg-white/[0.02] border border-white/10 rounded-2xl p-5 text-xl font-bold text-white focus:outline-none focus:border-blue-500/40 transition-all"
           />
 
           {/* Drag & Drop Zone */}
@@ -226,11 +203,7 @@ export function ArticleEditor({ member, initialArticle, onCancel }: { member: an
                     >
                       <X size={12} />
                     </button>
-                    {idx === 0 ? (
-                      <div className="absolute bottom-0 left-0 right-0 bg-blue-600/90 text-white text-[8px] font-black py-1 text-center tracking-widest">
-                        PRINCIPAL
-                      </div>
-                    ) : (
+                    {idx === 0 ? null : (
                       <button 
                         onClick={() => setAsMain(idx)}
                         className="absolute bottom-1 right-1 p-1 bg-black/60 rounded-full text-white/40 hover:text-yellow-400 hover:bg-black/80 transition-all z-30"
@@ -245,23 +218,13 @@ export function ArticleEditor({ member, initialArticle, onCancel }: { member: an
             </div>
           )}
 
-          <button
-            onClick={handleGenerate}
-            disabled={isGenerating || rawFacts.length < 10}
-            className="w-full py-4 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold text-sm flex items-center justify-center gap-3 hover:scale-[1.02] transition-all disabled:opacity-30 shadow-xl shadow-blue-900/20"
-          >
-            {isGenerating ? (
-              <>
-                <Loader2 size={18} className="animate-spin" />
-                Redactando con Gemini...
-              </>
-            ) : (
-              <>
-                <Sparkles size={18} />
-                Generar Artículo de Impacto
-              </>
-            )}
-          </button>
+          {/* Content */}
+          <textarea
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+            placeholder="Contenido del artículo..."
+            className="w-full min-h-[200px] bg-white/[0.02] border border-white/10 rounded-2xl p-5 text-white text-sm leading-relaxed focus:outline-none focus:border-blue-500/40 transition-all resize-none"
+          />
         </div>
       </div>
 
@@ -275,142 +238,45 @@ export function ArticleEditor({ member, initialArticle, onCancel }: { member: an
               </div>
               <h2 className="text-xl font-bold text-white">Vista Previa</h2>
             </div>
-            <div className="flex items-center gap-3">
-              <div className="group relative flex items-center gap-2 bg-white/5 px-3 py-1.5 rounded-full border border-white/5 hover:border-blue-500/30 transition-all">
-                <Calendar size={14} className="text-blue-400" />
-                <input 
-                  type="date"
-                  value={date}
-                  onChange={(e) => setDate(e.target.value)}
-                  className="bg-transparent text-white text-[10px] font-black uppercase tracking-widest focus:outline-none cursor-pointer w-24"
-                />
-              </div>
-              {step === 2 && (
-                <span className="text-[10px] uppercase font-bold text-amber-500 bg-amber-500/10 px-2 py-1 rounded">Borrador IA</span>
-              )}
+            <div className="group relative flex items-center gap-2 bg-white/5 px-3 py-1.5 rounded-full border border-white/5 hover:border-blue-500/30 transition-all">
+              <Calendar size={14} className="text-blue-400" />
+              <input 
+                type="date"
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+                className="bg-transparent text-white text-[10px] font-black uppercase tracking-widest focus:outline-none cursor-pointer w-24"
+              />
             </div>
           </div>
 
           <div className="flex-1 space-y-6">
-            {step === 1 ? (
-              <div className="h-full flex flex-col items-center justify-center text-center opacity-30 grayscale p-10 space-y-4">
-                <Sparkles size={48} className="text-white/10" />
-                <p className="text-sm text-white/40 italic">
-                  Ingresá los hechos a la izquierda para que la IA <br />
-                  pueda redactar tu próxima historia.
-                </p>
-              </div>
-            ) : (
-              <motion.div 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="space-y-6"
+            <div>
+              <span className="text-sm font-black text-white">{title || 'Sin título'}</span>
+              <p className="text-[var(--text-secondary)] text-sm mt-2 leading-relaxed font-serif">
+                {content || 'Sin contenido'}
+              </p>
+            </div>
+
+            <div className="pt-8 flex gap-4">
+              <button 
+                onClick={() => {
+                  if (initialArticle && onCancel) {
+                    onCancel()
+                  }
+                }}
+                className="flex-1 py-3 rounded-xl border border-white/5 text-white/60 text-xs font-bold uppercase tracking-widest hover:bg-white/5 transition-all"
               >
-                {/* Title Editor */}
-                <div className="group relative">
-                  <span className="absolute -top-6 left-0 text-[10px] uppercase font-bold text-blue-400 opacity-0 group-hover:opacity-100 transition-opacity">Título del Artículo (Editable)</span>
-                  <input 
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                    className="text-3xl font-black text-white bg-white/[0.03] border-b-2 border-white/5 w-full focus:outline-none focus:border-blue-500/60 focus:bg-white/[0.05] p-2 rounded-t-xl transition-all tracking-tight"
-                  />
-                </div>
-
-
-                {/* Multimedia Slider */}
-                {media.length > 0 && (
-                  <div className="relative rounded-2xl overflow-hidden border border-white/5 aspect-video bg-black/40">
-                    <AnimatePresence mode="wait">
-                      <motion.div
-                        key={currentMediaIdx}
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 1 }}
-                        className="absolute inset-0"
-                      >
-                        {media[currentMediaIdx].type === 'image' ? (
-                          <img 
-                            src={media[currentMediaIdx].url} 
-                            className="w-full h-full object-cover" 
-                            alt={`Preview ${currentMediaIdx}`}
-                          />
-                        ) : (
-                          <video 
-                            src={media[currentMediaIdx].url} 
-                            className="w-full h-full object-cover"
-                            autoPlay 
-                            muted 
-                            loop 
-                          />
-                        )}
-                      </motion.div>
-                    </AnimatePresence>
-
-                    {/* Editable Badge Overlay */}
-                    <div className="absolute top-4 left-4 z-20">
-                      <div className="flex items-center gap-2 px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest backdrop-blur-md border border-blue-400/30 bg-blue-600/40 text-blue-100 group/badge">
-                        <Zap size={12} className="fill-blue-400" />
-                        <div className="relative flex items-center">
-                          <span className="invisible whitespace-pre px-0 min-w-[20px]">{badgeText || 'Leyenda...'}</span>
-                          <input 
-                            value={badgeText}
-                            onChange={(e) => setBadgeText(e.target.value)}
-                            className="bg-transparent focus:outline-none absolute inset-0 w-full cursor-text"
-                            placeholder="Leyenda..."
-                          />
-                        </div>
-                      </div>
-                    </div>
-                    
-                    {/* Dots indicator */}
-                    {media.length > 1 && (
-                      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-1.5 z-10 bg-black/20 backdrop-blur-sm p-2 rounded-full border border-white/5">
-                        {media.map((_, i) => (
-                          <div 
-                            key={i}
-                            className={`w-1.5 h-1.5 rounded-full transition-all duration-500 ${i === currentMediaIdx ? 'bg-blue-400 w-4' : 'bg-white/20'}`}
-                          />
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                )}
-
-                {/* Content Editor */}
-                <div className="group relative flex-1">
-                  <span className="absolute -top-6 left-0 text-[10px] uppercase font-bold text-blue-400 opacity-0 group-hover:opacity-100 transition-opacity">Contenido del Artículo (Editable)</span>
-                  <textarea
-                    value={content}
-                    onChange={(e) => setContent(e.target.value)}
-                    className="w-full min-h-[400px] bg-white/[0.02] border border-white/5 rounded-2xl p-6 text-[var(--text-secondary)] text-sm leading-relaxed focus:outline-none focus:border-blue-500/40 focus:bg-white/[0.04] transition-all font-serif"
-                  />
-                </div>
-
-                <div className="pt-8 flex gap-4">
-                  <button 
-                    onClick={() => {
-                      if (initialArticle && onCancel) {
-                        onCancel()
-                      } else {
-                        setStep(1)
-                      }
-                    }}
-                    className="flex-1 py-3 rounded-xl border border-white/5 text-white/60 text-xs font-bold uppercase tracking-widest hover:bg-white/5 transition-all"
-                  >
-                    {initialArticle ? 'Cancelar' : 'Descartar'}
-                  </button>
-                  <button 
-                    onClick={handlePublish}
-                    disabled={isPublishing}
-                    className="flex-[2] py-3 rounded-xl bg-green-600 hover:bg-green-500 text-white text-xs font-bold uppercase tracking-widest flex items-center justify-center gap-2 transition-all shadow-lg shadow-green-900/20"
-                  >
-                    {isPublishing ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
-                    Publicar Ahora
-                  </button>
-                </div>
-              </motion.div>
-            )}
+                Cancelar
+              </button>
+              <button 
+                onClick={handlePublish}
+                disabled={isPublishing}
+                className="flex-[2] py-3 rounded-xl bg-green-600 hover:bg-green-500 text-white text-xs font-bold uppercase tracking-widest flex items-center justify-center gap-2 transition-all shadow-lg shadow-green-900/20"
+              >
+                {isPublishing ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
+                Publicar Ahora
+              </button>
+            </div>
           </div>
         </div>
       </div>
