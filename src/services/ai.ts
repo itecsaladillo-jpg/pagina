@@ -231,7 +231,8 @@ export async function generateActionSuccessStory(
   try {
     return JSON.parse(cleaned)
   } catch (err) {
-return { title: `Éxito total en ${actionTitle}`, content: raw }
+    return { title: `Éxito total en ${actionTitle}`, content: raw }
+  }
 }
 
 /**
@@ -276,13 +277,11 @@ try {
   // Fallback si falla el parseo
   return {
     titulo: 'Novedad ITEC',
-    texto_publico: rawFacts + '\n\nEsta iniciativa fortalece el acceso a la tecnología para toda la comunidad saladense.',
+texto_publico: rawFacts + '\n\nEsta iniciativa fortalece el acceso a la tecnología para toda la comunidad saladense.',
     texto_miembros: '¡Equipo! ' + rawFacts + '\n\nGracias a quienes hicieron posible este logro. Nuestro trabajo voluntario transforma realidades.',
     texto_sponsors: 'Evento con impacto en el ecosistema local. Destacan los contributos recibidos.',
     texto_medios: 'ITEC Saladillo informa actividad comunitaria. ' + rawFacts + '. "Un paso más hacia la innovación", comentó la institución.'
   }
-}
-}
 }
 
 /**
