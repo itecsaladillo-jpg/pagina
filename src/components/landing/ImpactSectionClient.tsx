@@ -31,7 +31,6 @@ function ImpactCard({ item, idx }: ImpactCardProps) {
   const displayExcerpt = translation?.excerpt || item.excerpt
   const displayContent = translation?.content || item.content
   const displayDescription = translation?.description || item.description
-  const displayFlashText = translation?.flash_text || item.flash_text
 
   const media = item.media_urls || []
   

@@ -220,7 +220,7 @@ export function GeneralMeetingRoom({ member, initialContent, meetLink, history }
                 </div>
                 <h3 className="text-white font-semibold text-sm mb-2 line-clamp-1">{item.title}</h3>
                 <p className="text-[var(--text-muted)] text-xs line-clamp-2 leading-relaxed">
-                  {item.summary || item.flash_text}
+                  {item.summary || 'Ver contenido completo'}
                 </p>
               </div>
             ))
