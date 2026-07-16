@@ -15,20 +15,26 @@ const ai = new GoogleGenAI({ apiKey });
 const MODEL_ID = 'gemini-2.5-flash';
 
 async function generarContenidoConGemini(tituloVideo) {
-  const prompt = `
+const prompt = `
 Sos un redactor profesional y experto en comunicación institucional para el ITEC (Innovación, Tecnología, Emprendedurismo y Ciencia) de Saladillo, Buenos Aires, Argentina.
+
 Necesito generar una descripción y un resumen de IA para un nuevo video de nuestra videoteca titulado: "${tituloVideo}".
 
 ## Pautas de Redacción:
-1. **Idioma/Tono**: Español rioplatense formal, profesional, inspirador, cercano e industrial. Usar el voseo con elegancia (ej: "te invitamos", "sumate", "descubrí").
+1. **Idioma/Tono**: Español rioplatense formal, inspirador, cercano. Usar el voseo con elegancia.
 2. **Vocabulario prohibido**: NUNCA uses "viste", "che", "pibe", "hoy", "ayer" o "mañana".
 3. **Perspectiva**: ITEC es una ONG y asociación civil independiente y apolítica. Los videos son hitos de capacitación y desarrollo socioproductivo local.
-4. **Augusto Cicaré**: ITEC se inspira en el legado de excelencia, resiliencia y precisión artesanal de Augusto Cicaré.
-5. **Especificaciones**:
-   - **Resumen IA**: Debe ser un bloque de texto inspirador e informativo de entre 80 y 130 palabras. Debe comenzar con gancho y reflejar la visión estratégica del curso o taller.
-   - **Descripción**: Debe ser un texto descriptivo detallado, de unos 2 a 3 párrafos, que explique en qué consiste la formación, el impacto en el ecosistema productivo de Saladillo y la relevancia del conocimiento técnico.
+4. **Augusto Cicaré**: Mencionar únicamente si es indispensable para el contexto histórico.
 
-Generá un objeto JSON con exactamente dos campos: "description" y "ai_summary". Devolvé ÚNICAMENTE el JSON válido, sin rodeos, sin bloques markdown de tipo \`\`\`json, solo el JSON plano.
+RESTRICCIONES CRÍTICAS:
+- No inventes datos; si falta información, redacta en torno a los hechos disponibles.
+- Identificá explícitamente quién es el entrevistado/orador.
+
+ESPECIFICACIONES:
+- **Resumen IA**: Bloque de texto inspirador e informativo (80-130 palabras). Comenzar con gancho. Traducir la técnica a beneficios comunitarios.
+- **Descripción**: Texto descriptivo de 2-3 párrafos, explicando la formación, impacto en el ecosistema productivo local y relevancia del conocimiento técnico.
+
+Generá un objeto JSON con exactamente dos campos: "description" y "ai_summary". Devolvé ÚNICAMENTE el JSON válido, sin markdown.
 `;
 
   try {

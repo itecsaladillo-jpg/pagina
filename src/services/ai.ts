@@ -160,19 +160,15 @@ export async function generatePublicArticle(rawFacts: string): Promise<{ title: 
       
       Sos un redactor periodístico experto para ITEC. Tu misión es transformar "hechos crudos" en un artículo inspirador.
       
-      TONO:
-      - Profundamente POSITIVO y OPTIMISTA.
-      - CONTAGIOSO: debe hacer que el lector sienta orgullo por Saladillo y ganas de participar.
-      - RESALTA: el progreso, la curiosidad tecnológica y la transformación social.
+      ROL: Periodista social.
+      OBJETIVO: Generar orgullo y pertenencia en Saladillo.
+      TONO: Aspiracional, accesible y humano.
+      ENFOQUE: Traducir la técnica a beneficios comunitarios. Estructura de pirámide invertida. Evitá tecnicismos.
+      CIERRE: Frase que invite a sumarse al ecosistema ITEC.
       
-      ESTRUCTURA:
-      1. TÍTULO: Atrapante, corto y con fuerza. Sin comillas.
-      2. PRIMER PÁRRAFO (EL GANCHO): Debe ser una "IDEA FUERZA" extremadamente contundente y positiva que resuma el impacto social/tecnológico. Su objetivo es tentar al lector a abrir el artículo completo. RESTRICCIÓN CRÍTICA: Este párrafo DEBE tener un máximo de 25 palabras.
-      3. CUERPO: 2-3 párrafos adicionales que narren los hechos con fluidez.
-      4. CIERRE (CTA): Una frase final que invite al lector a ser parte del cambio o a hacer algo más por su comunidad.
-      
-      RESTRICCIONES:
-      - No uses palabras informales ni lunfardo.
+      RESTRICCIONES CRÍTICAS:
+      - No inventes datos; si falta información, redacta en torno a los hechos disponibles.
+      - No menciones constantemente a Augusto Cicaré; solo si es indispensable para el contexto histórico.
       - Evitá las palabras prohibidas ("hoy", "ayer", "mañana", "che", "viste").
       - Respondé en formato JSON puro: { "title": "...", "content": "..." }
     `,
@@ -211,24 +207,21 @@ export async function generateActionSuccessStory(
       
       Sos el Director de Comunicación de ITEC. Tu tarea es redactar una "historia de éxito" tras finalizar una actividad externa.
       
+      ROL: Jefe de Prensa.
+      TONO: Institucional, seco y fáctico.
+      ESTRUCTURA: Título + Bajada (Qué, Quién, Cuándo, Dónde) + Cuerpo breve + Cita simulada de autoridad de ITEC resaltando el hito.
+      
       DATOS CLAVE:
       - Título: ${actionTitle}
       - Tipo: ${actionType}
       - Asistentes: ${attendeesCount} ciudadanos de Saladillo.
       - Temas tratados: ${keyTopics}
       
-      TONO:
-      - Triunfalista pero elegante.
-      - Enfocado en el "Impacto Real": cómo esto cambia la vida de la gente.
-      - Saladillo como polo tecnológico.
-      
-      ESTRUCTURA:
-      1. TÍTULO: Un titular potente de éxito.
-      2. PRIMER PÁRRAFO: El gancho que resalta la magnitud del encuentro y el impacto en Saladillo. Debe ser contundente y positivo para tentar al lector a leer más. RESTRICCIÓN CRÍTICA: Máximo 25 palabras.
-      3. CUERPO: Narra la jornada, resalta la participación y el entusiasmo.
-      4. CIERRE: Frase inspiradora sobre el futuro.
-      
-      Respondé en JSON: { "title": "...", "content": "..." }
+      RESTRICCIONES CRÍTICAS:
+      - No inventes datos; si falta información, redacta en torno a los hechos disponibles.
+      - No menciones constantemente a Augusto Cicaré; solo si es indispensable para el contexto histórico.
+      - Evitá las palabras prohibidas ("hoy", "ayer", "mañana", "che", "viste").
+      - Respondé en JSON: { "title": "...", "content": "..." }
     `,
   })
 
@@ -256,18 +249,23 @@ export async function generateVideoSummary(title: string, description: string): 
   const prompt = `
     Generá un resumen profesional y atractivo para un video de ITEC Saladillo.
     
+    ROL: Periodista social.
+    OBJETIVO: Generar orgullo y pertenencia en Saladillo.
+    TONO: Aspiracional, accesible y humano.
+    ENFOQUE: Traducir la técnica a beneficios comunitarios. Evitá tecnicismos innecesarios.
+    CERRAR: Frase que invite a sumarse al ecosistema ITEC.
+    
     TÍTULO DEL VIDEO: ${title}
     DESCRIPCIÓN ORIGINAL: ${description}
     
     REQUISITOS CRÍTICOS:
-    - PRECISIÓN Y CONTENIDO REAL: Debés ser lo más certero posible sobre lo que realmente se trata en el video. Evitá generalidades vacías; buscá la idea general y los puntos clave de lo que efectivamente se dice o se muestra en el contenido.
-    - IDENTIFICACIÓN DE PROTAGONISTAS: Identificá y mencioná explícitamente quién es el entrevistado, orador o responsable. Prestá especial atención a presentaciones de nombres o cargos al inicio del texto.
+    - PRECISIÓN Y CONTENIDO REAL: Basarte en lo disponible sin inventar datos.
+    - IDENTIFICACIÓN DE PROTAGONISTAS: Mencionar quién es el entrevistado/orador.
     - LONGITUD: Máximo 200 palabras.
     - ESTILO ITEC: Técnico, Humano y Vanguardista.
     - IDIOMA: Español rioplatense formal (usando "vos").
     
     Respondé únicamente con el texto del resumen, sin títulos adicionales ni comillas.
-
   `
 
   const result = await model.generateContent(prompt)
