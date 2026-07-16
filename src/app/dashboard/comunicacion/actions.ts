@@ -107,6 +107,7 @@ export async function createMulticanalNewsAction(data: {
   para_miembros: boolean
   para_sponsors: boolean
   para_medios: boolean
+  media_urls?: string[]
 }) {
   const member = await getCurrentMember()
   if (!member || member.role !== 'admin') throw new Error('No autorizado')
@@ -127,6 +128,7 @@ export async function createMulticanalNewsAction(data: {
       para_miembros: data.para_miembros,
       para_sponsors: data.para_sponsors,
       para_medios: data.para_medios,
+      media_urls: data.media_urls || [],
       autor_id: member.id,
       is_published: true
     })

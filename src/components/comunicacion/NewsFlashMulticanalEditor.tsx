@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { 
   Sparkles, 
@@ -15,8 +15,12 @@ import {
   CheckSquare,
   Square,
   X,
-  CheckCircle
+  CheckCircle,
+  Upload,
+  Video,
+  ImageIcon
 } from 'lucide-react'
+import { createClient } from '@/lib/supabase/client'
 import type { NewsFlashMulticanal } from '@/services/news'
 
 interface MulticanalResult {
@@ -25,6 +29,12 @@ interface MulticanalResult {
   texto_miembros: string
   texto_sponsors: string
   texto_medios: string
+}
+
+interface MediaItem {
+  url: string
+  type: 'image' | 'video'
+  name: string
 }
 
 interface NewsFlashMulticanalEditorProps {
@@ -39,6 +49,7 @@ interface NewsFlashMulticanalEditorProps {
     para_miembros: boolean
     para_sponsors: boolean
     para_medios: boolean
+    media_urls?: string[]
   }) => Promise<{ success?: boolean; error?: string | null }>
   onCancel?: () => void
 }
@@ -51,6 +62,9 @@ export function NewsFlashMulticanalEditor({ onSave, onCancel }: NewsFlashMultica
   const [activeTab, setActiveTab] = useState<'preview' | 'publico' | 'miembros' | 'sponsors' | 'medios'>('preview')
   const [errorBanner, setErrorBanner] = useState<string | null>(null)
   const [successBanner, setSuccessBanner] = useState<string | null>(null)
+  const [media, setMedia] = useState<MediaItem[]>([])
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const supabase = createClient()
   
   // Checkboxes de destinatarios
   const [paraPublico, setParaPublico] = useState(true)
@@ -107,7 +121,8 @@ export function NewsFlashMulticanalEditor({ onSave, onCancel }: NewsFlashMultica
         para_publico: paraPublico,
         para_miembros: paraMiembros,
         para_sponsors: paraSponsors,
-        para_medios: paraMedios
+        para_medios: paraMedios,
+        media_urls: media.map(m => m.url)
       })
 
       if (res?.error) {
@@ -124,6 +139,46 @@ export function NewsFlashMulticanalEditor({ onSave, onCancel }: NewsFlashMultica
     } finally {
       setIsSaving(false)
     }
+  }
+
+  const handleFiles = async (files: FileList | null) => {
+    if (!files) return
+    
+    const newMedia: MediaItem[] = []
+    
+    for (const file of Array.from(files)) {
+      try {
+        const fileExt = file.name.split('.').pop()
+        const fileName = `${Date.now()}-${Math.random().toString(36).slice(2)}.${fileExt}`
+        const filePath = `news-multicanal/${fileName}`
+        
+        const { data, error } = await supabase.storage
+          .from('article-media')
+          .upload(filePath, file)
+        
+        if (error) throw error
+        
+        const { data: { publicUrl } } = supabase.storage
+          .from('article-media')
+          .getPublicUrl(filePath)
+        
+        newMedia.push({
+          url: publicUrl,
+          type: file.type.startsWith('video') ? 'video' : 'image',
+          name: file.name
+        })
+      } catch (err: any) {
+        console.error('Error subiendo archivo:', err.message)
+        alert('Error subiendo: ' + file.name)
+      }
+    }
+    
+    setMedia(prev => [...prev, ...newMedia])
+  }
+
+  const removeMedia = (index: number) => {
+    setMedia(prev => prev.filter((_, i) => i !== index))
+  }
   }
 
   const tabs = [
@@ -212,6 +267,52 @@ export function NewsFlashMulticanalEditor({ onSave, onCancel }: NewsFlashMultica
               </button>
               <span className="text-sm text-white">Medios</span>
             </label>
+          </div>
+        </div>
+
+        {/* Subida de Media */}
+        <div className="space-y-3">
+          <h3 className="text-xs font-bold uppercase tracking-widest text-white/60">Imágenes / Videos del Evento</h3>
+          
+          <input
+            ref={fileInputRef}
+            type="file"
+            multiple
+            accept="image/*,video/*"
+            onChange={(e) => handleFiles(e.target.files)}
+            className="hidden"
+          />
+          
+          <div className="flex flex-col gap-3">
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              disabled={isProcessing}
+              className="w-full py-2 rounded-xl border border-dashed border-white/20 text-white/60 text-xs font-medium hover:border-blue-500/40 hover:text-blue-400 transition-all flex items-center justify-center gap-2"
+            >
+              <Upload size={16} />
+              Click para seleccionar imágenes o videos
+            </button>
+            
+            {media.length > 0 && (
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-2">
+                {media.map((item, idx) => (
+                  <div key={idx} className="relative group rounded-lg overflow-hidden border border-white/10">
+                    {item.type === 'video' ? (
+                      <video src={item.url} className="w-full h-24 object-cover" />
+                    ) : (
+                      <img src={item.url} alt={item.name} className="w-full h-24 object-cover" />
+                    )}
+                    <button
+                      onClick={() => removeMedia(idx)}
+                      className="absolute top-1 right-1 p-1 rounded-full bg-red-500/80 opacity-0 group-hover:opacity-100 transition-all"
+                    >
+                      <X size={12} className="text-white" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
 
