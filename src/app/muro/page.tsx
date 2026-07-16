@@ -1,6 +1,6 @@
 ﻿import type { Metadata } from 'next'
-import { getPublicNewsFlashes, getMemberNewsFlashes } from '@/services/news'
-import { NewsWallMulticanal } from '@/components/comunicacion/NewsWallMulticanal'
+import { getNewsFlashes } from '@/services/news'
+import { FlashWall } from '@/components/comunicacion/FlashWall'
 
 export const metadata: Metadata = {
   title: 'Muro — ITEC',
@@ -8,8 +8,7 @@ export const metadata: Metadata = {
 }
 
 export default async function MuroPage() {
-  const publicFlashes = await getPublicNewsFlashes()
-  const memberFlashes = await getMemberNewsFlashes()
+  const flashes = await getNewsFlashes()
 
   return (
     <main className='min-h-screen bg-[#020617] pt-32 pb-20 px-6'>
@@ -19,14 +18,11 @@ export default async function MuroPage() {
             Muro de Noticias
           </h1>
           <p className='text-white/60 max-w-2xl mx-auto'>
-            Contenido publico y comentarios internos del ecosistema ITEC
+            Contenido del ecosistema ITEC
           </p>
         </div>
 
-        <NewsWallMulticanal
-          publicFlashes={publicFlashes}
-          memberFlashes={memberFlashes}
-        />
+        <FlashWall flashes={flashes} />
       </div>
     </main>
   )

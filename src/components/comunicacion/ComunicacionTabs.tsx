@@ -5,12 +5,10 @@ import { ArticleEditor } from './ArticleEditor'
 import { ArticleManagementList } from './ArticleManagementList'
 import { FlashManagementList } from './FlashManagementList'
 import { ActionManagementList } from './ActionManagementList'
-import { NewsFlashMulticanalEditor } from './NewsFlashMulticanalEditor'
-import { PenTool, ListOrdered, Zap, Calendar, Radio } from 'lucide-react'
-import { createMulticanalNewsAction } from '@/app/dashboard/comunicacion/actions'
+import { PenTool, ListOrdered, Zap, Calendar } from 'lucide-react'
 
 export function ComunicacionTabs({ member, articles, flashes: initialFlashes, actions }: { member: any; articles: any[]; flashes: any[]; actions: any[] }) {
-  const [activeTab, setActiveTab] = useState<'redactar' | 'multicanal' | 'gestionar' | 'flashes' | 'acciones'>('gestionar')
+  const [activeTab, setActiveTab] = useState<'redactar' | 'gestionar' | 'flashes' | 'acciones'>('gestionar')
   const [editingArticle, setEditingArticle] = useState<any>(null)
   const [flashes, setFlashes] = useState<any[]>(initialFlashes)
 
@@ -23,17 +21,6 @@ export function ComunicacionTabs({ member, articles, flashes: initialFlashes, ac
     setEditingArticle(null)
     setActiveTab('gestionar')
   }
-
-  const handleSaveMulticanal = async (data: any) => {
-     const res = await createMulticanalNewsAction(data)
-     if (res.success) {
-       // Forzar refresco de la página para mostrar nuevos flashes
-       window.location.reload()
-       return { success: true }
-     } else {
-       return { success: false, error: res.error }
-     }
-   }
 
   return (
     <div className="space-y-6">
@@ -82,17 +69,6 @@ export function ComunicacionTabs({ member, articles, flashes: initialFlashes, ac
           <PenTool size={18} />
           {editingArticle ? 'Editando Artículo' : 'Redactar Nuevo'}
         </button>
-        <button
-          onClick={() => setActiveTab('multicanal')}
-          className={`flex items-center gap-2 px-6 py-3 text-sm font-bold transition-all border-b-2 ${
-            activeTab === 'multicanal' 
-              ? 'border-cyan-500 text-white' 
-              : 'border-transparent text-white/40 hover:text-white'
-          }`}
-        >
-          <Radio size={18} />
-          Noticia Multicanal
-        </button>
       </div>
 
       <div className="mt-8">
@@ -107,12 +83,6 @@ export function ComunicacionTabs({ member, articles, flashes: initialFlashes, ac
             member={member} 
             initialArticle={editingArticle} 
             onCancel={handleCancelEdit}
-          />
-        )}
-        {activeTab === 'multicanal' && (
-          <NewsFlashMulticanalEditor 
-            onSave={handleSaveMulticanal}
-            onCancel={() => setActiveTab('gestionar')}
           />
         )}
       </div>

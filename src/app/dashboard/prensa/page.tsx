@@ -16,8 +16,7 @@ export default async function PrensaPage() {
 
   const { data: latestPress } = await supabase
     .from('news_flashes')
-    .select('texto_medios')
-    .eq('para_medios', true)
+    .select('*')
     .eq('is_published', true)
     .order('created_at', { ascending: false })
     .limit(1)
@@ -28,11 +27,11 @@ export default async function PrensaPage() {
       <div>
         <h1 className="text-3xl font-bold text-white mb-2">Gestión de Prensa</h1>
         <p className="text-[var(--text-secondary)] text-sm max-w-xl">
-          Administrá los medios de comunicación y enviá gacetillas personalizadas.
+          Administrá los medios de comunicación.
         </p>
       </div>
 
-      <MediosAdmin initialMedios={medios || []} latestPressRelease={latestPress?.texto_medios || null} />
+      <MediosAdmin initialMedios={medios || []} latestPressRelease={latestPress || null} />
     </div>
   )
 }

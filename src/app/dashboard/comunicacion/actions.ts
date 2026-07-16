@@ -4,9 +4,6 @@ import { createClient } from '@/lib/supabase/server'
 import { getCurrentMember } from '@/services/auth'
 import { generatePublicArticle } from '@/services/ai'
 import { revalidatePath } from 'next/cache'
-import { Resend } from 'resend'
-
-const resend = new Resend(process.env.RESEND_API_KEY)
 
 /**
  * Genera el borrador del artículo usando IA.
@@ -119,92 +116,3 @@ export async function deleteArticleAction(id: string) {
   revalidatePath('/')
   return { success: true }
 }
-
-export async function createMulticanalNewsAction(data: {
-   titulo: string
-   datos_crudos: string
-   texto_publico: string
-   texto_miembros: string
-   texto_sponsors: string
-   texto_medios: string
-   para_publico: boolean
-   para_miembros: boolean
-   para_sponsors: boolean
-   para_medios: boolean
- }) {
-   const member = await getCurrentMember()
-   if (!member || member.role !== 'admin') throw new Error('No autorizado')
-
-   console.log('[ServerAction] Creando noticia multicanal - título:', data.titulo)
-
-   const supabase = await createClient()
-   
-   // Derivar flash_text del texto_publico para la vista de gestión
-   const flashText = `📋 ${data.titulo}. ${data.texto_publico?.slice(0, 100) || ''}...`
-   
-   const { data: news, error } = await supabase
-     .from('news_flashes')
-     .insert({
-       titulo: data.titulo,
-       datos_crudos: data.datos_crudos,
-       texto_publico: data.texto_publico,
-       texto_miembros: data.texto_miembros,
-       texto_sponsors: data.texto_sponsors,
-       texto_medios: data.texto_medios,
-       flash_text: flashText,
-       para_publico: data.para_publico,
-       para_miembros: data.para_miembros,
-       para_sponsors: data.para_sponsors,
-       para_medios: data.para_medios,
-       autor_id: member.id,
-       is_published: true
-     })
-     .select()
-     .single()
-
-   if (error) {
-     console.error('[createMulticanalNewsAction] Error en Supabase:', error.message)
-     return { success: false, error: 'Fallo en base de datos: ' + error.message }
-   }
-
-   console.log('[ServerAction] Noticia creada - ID:', news.id)
-
-   // Envío asincrónico de emails
-   enviarEmailsAsincronos(news.id, data).catch(console.error)
-
-   revalidatePath('/dashboard/comunicacion')
-   return { success: true, data: news }
- }
-
-async function enviarEmailsAsincronos(newsFlashId: string, textos: {
-   titulo: string
-   texto_medios: string
-   texto_sponsors: string
-}) {
-   const supabase = await createClient()
-
-   const { data: medios } = await supabase.from('medios_prensa').select('email, nombre_medio')
-   if (medios?.length) {
-     for (const medio of medios) {
-       resend.emails.send({
-         from: 'ITEC Saladillo <notificaciones@itec-saladillo.app>',
-         to: medio.email,
-         subject: `Gacetilla ITEC - ${medio.nombre_medio}`,
-         html: `<pre style="font-family: monospace; white-space: pre-wrap;">${textos.texto_medios}</pre>`
-       }).catch(console.error)
-     }
-   }
-
-   const { data: sponsors } = await supabase.from('sponsors').select('id, nombre_empresa, email')
-   if (sponsors?.length) {
-     for (const sponsor of sponsors) {
-       const link = `https://itec-saladillo.app/sponsors/${newsFlashId}?auth=${sponsor.id}`
-       resend.emails.send({
-         from: 'ITEC Saladillo <notificaciones@itec-saladillo.app>',
-         to: sponsor.email,
-         subject: `Reporte de Impacto - ${sponsor.nombre_empresa}`,
-         html: `<p>Hola ${sponsor.nombre_empresa},</p><p>${textos.texto_sponsors}</p><p><a href="${link}">Ver reporte completo</a></p>`
-       }).catch(console.error)
-     }
-   }
- }
