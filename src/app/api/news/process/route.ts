@@ -16,7 +16,7 @@ async function generarTextosIA(datos_crudos: string) {
 
 RESTRICCIONES CRÍTICAS:
 1. Responde ÚNICAMENTE con un JSON válido.
-2. NO incluyas introducciones, comentarios ni etiquetas markdown (```json).
+2. NO incluyas introducciones, comentarios ni etiquetas markdown (bloques de código).
 3. NO menciones constantemente a Augusto Cicaré; solo si es indispensable para el contexto histórico.
 4. NUNCA inventes datos; si falta información, redacta en torno a los hechos disponibles.
 
