@@ -114,6 +114,7 @@ export async function createMulticanalNewsAction(data: {
 
   const supabase = await createClient()
   
+  // 1. Guardar en news_flashes
   const { data: news, error } = await supabase
     .from('news_flashes')
     .insert({
@@ -140,6 +141,32 @@ export async function createMulticanalNewsAction(data: {
     return { success: false, error: 'Fallo en base de datos: ' + error.message }
   }
 
+  // 2. Guardar en public_articles para el muro de acciones
+  const slug = data.titulo
+    .toLowerCase()
+    .replace(/[^\w\s-]/g, '')
+    .replace(/\s+/g, '-')
+    + '-' + Date.now().toString().slice(-4)
+  
+  const { error: articleError } = await supabase
+    .from('public_articles')
+    .insert({
+      title: data.titulo,
+      content: data.texto_publico,
+      media_urls: data.media_urls || [],
+      author_id: member.id,
+      is_published: true,
+      slug: slug,
+      excerpt: 'Noticia Multicanal'
+    })
+
+  if (articleError) {
+    console.error('[createMulticanalNewsAction] Error creando artículo:', articleError.message)
+    // No retornamos error para no bloquear la publicación del news flash
+  }
+
   revalidatePath('/dashboard/comunicacion')
+  revalidatePath('/')
+  revalidatePath('/acciones')
   return { success: true, data: news }
 }
