@@ -179,7 +179,6 @@ export function NewsFlashMulticanalEditor({ onSave, onCancel }: NewsFlashMultica
   const removeMedia = (index: number) => {
     setMedia(prev => prev.filter((_, i) => i !== index))
   }
-  }
 
   const tabs = [
     { id: 'preview', label: 'Previsualización', icon: Eye, disabled: !result },
