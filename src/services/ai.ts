@@ -269,18 +269,19 @@ ESTRUCTURA DE RESPUESTA (JSON):
 const prompt = `HECHOS CRUDOS PARA TRANSFORMAR:\n"""\n${rawFacts}\n"""`
 
 const raw = await generateTextWithFallback(prompt, systemPrompt)
-const cleaned = raw.replace(/^```json\s*/i, '').replace(/\s*```$/i, '').trim()
+  const cleaned = raw.replace(/^```json\s*/i, '').replace(/\s*```$/i, '').trim()
 
-try {
-  return JSON.parse(cleaned)
-} catch (err) {
-  // Fallback si falla el parseo
-  return {
-    titulo: 'Novedad ITEC',
-texto_publico: rawFacts + '\n\nEsta iniciativa fortalece el acceso a la tecnología para toda la comunidad saladense.',
-    texto_miembros: '¡Equipo! ' + rawFacts + '\n\nGracias a quienes hicieron posible este logro. Nuestro trabajo voluntario transforma realidades.',
-    texto_sponsors: 'Evento con impacto en el ecosistema local. Destacan los contributos recibidos.',
-    texto_medios: 'ITEC Saladillo informa actividad comunitaria. ' + rawFacts + '. "Un paso más hacia la innovación", comentó la institución.'
+  try {
+    return JSON.parse(cleaned)
+  } catch (err) {
+    // Fallback si falla el parseo
+    return {
+      titulo: 'Novedad ITEC',
+      texto_publico: rawFacts + '\n\nEsta iniciativa fortalece el acceso a la tecnología para toda la comunidad saladense.',
+      texto_miembros: '¡Equipo! ' + rawFacts + '\n\nGracias a quienes hicieron posible este logro. Nuestro trabajo voluntario transforma realidades.',
+      texto_sponsors: 'Evento con impacto en el ecosistema local. Destacan los contributos recibidos.',
+      texto_medios: 'ITEC Saladillo informa actividad comunitaria. ' + rawFacts + '. "Un paso más hacia la innovación", comentó la institución.'
+    }
   }
 }
 
