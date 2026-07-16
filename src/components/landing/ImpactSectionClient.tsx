@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Sparkles, Calendar, Zap, MessageSquare, ChevronRight, PlayCircle } from 'lucide-react'
+import { Sparkles, Calendar, Zap, ChevronRight, PlayCircle } from 'lucide-react'
 import { format } from 'date-fns'
 import { es, enUS, pt } from 'date-fns/locale'
 import Link from 'next/link'
@@ -99,13 +99,10 @@ function ImpactCard({ item, idx }: ImpactCardProps) {
         <div className="absolute top-4 left-4 z-20">
           <div className={`
             flex items-center gap-2 px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest backdrop-blur-md border border-white/10
-            ${item.feedType === 'action' ? 'bg-purple-500/30 text-purple-200' : 
-              item.feedType === 'article' ? 'bg-blue-600/40 text-blue-100 border-blue-400/30' : 'bg-emerald-500/30 text-emerald-200'}
+            ${item.feedType === 'action' ? 'bg-purple-500/30 text-purple-200' : 'bg-blue-600/40 text-blue-100 border-blue-400/30'}
           `}>
-            {item.feedType === 'action' ? <Calendar size={12} /> : 
-             item.feedType === 'article' ? <Zap size={12} className="fill-blue-400" /> : <MessageSquare size={12} />}
-            {item.feedType === 'action' ? dict.impactSection.evento : 
-             item.feedType === 'article' ? (displayExcerpt || dict.impactSection.impactoRegional) : dict.impactSection.novedad}
+            {item.feedType === 'action' ? <Calendar size={12} /> : <Zap size={12} className="fill-blue-400" />}
+            {item.feedType === 'action' ? dict.impactSection.evento : (displayExcerpt || dict.impactSection.impactoRegional)}
           </div>
         </div>
 
@@ -134,8 +131,8 @@ function ImpactCard({ item, idx }: ImpactCardProps) {
           {displayTitle}
         </h3>
         
-        <p className="text-sm text-[var(--text-secondary)] leading-relaxed font-medium mb-4 italic">
-          {item.feedType === 'news' ? displayFlashText : getFirstParagraph(item.feedType === 'article' ? displayContent : displayDescription)}
+<p className="text-sm text-[var(--text-secondary)] leading-relaxed font-medium mb-4 italic">
+          {getFirstParagraph(displayContent || displayDescription || '')}
         </p>
 
         <div className="mt-auto pt-3 border-t border-white/5 flex flex-col gap-2">
@@ -147,7 +144,7 @@ function ImpactCard({ item, idx }: ImpactCardProps) {
               {dict.impactSection.saberMas}
               <ChevronRight size={14} className="group-hover/link:translate-x-1 transition-transform" />
             </Link>
-          ) : item.feedType === 'article' ? (
+          ) : (
              <Link 
               href={`/articulo/${item.slug || item.id}`}
               className="inline-flex items-center gap-2 text-xs font-bold text-blue-400 hover:text-blue-300 transition-colors group/link"
@@ -155,10 +152,6 @@ function ImpactCard({ item, idx }: ImpactCardProps) {
               {dict.impactSection.leerHistoria}
               <ChevronRight size={14} className="group-hover/link:translate-x-1 transition-transform" />
             </Link>
-          ) : (
-            <div className="text-[10px] text-blue-400/50 font-black uppercase tracking-[0.2em]">
-              {dict.impactSection.noticiaInst}
-            </div>
           )}
 
           {/* Link al video relacionado */}
@@ -182,11 +175,10 @@ function ImpactCard({ item, idx }: ImpactCardProps) {
   )
 }
 
-export function ImpactSectionClient({ news, actions, articles }: any) {
+export function ImpactSectionClient({ actions, articles }: any) {
   const { dict } = useLanguage()
 
   const feedItems = [
-    ...news.map((n: any) => ({ ...n, feedType: 'news' as const, date: n.created_at })),
     ...actions.filter((a: any) => a.start_date).map((a: any) => ({ ...a, feedType: 'action' as const, date: a.start_date })),
     ...articles.map((art: any) => ({ ...art, feedType: 'article' as const, date: art.created_at }))
   ].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())

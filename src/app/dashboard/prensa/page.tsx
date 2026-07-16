@@ -14,14 +14,6 @@ export default async function PrensaPage() {
     .select('*')
     .order('created_at', { ascending: false })
 
-  const { data: latestPress } = await supabase
-    .from('news_flashes')
-    .select('*')
-    .eq('is_published', true)
-    .order('created_at', { ascending: false })
-    .limit(1)
-    .maybeSingle()
-
   return (
     <div className="space-y-8">
       <div>
@@ -31,7 +23,7 @@ export default async function PrensaPage() {
         </p>
       </div>
 
-      <MediosAdmin initialMedios={medios || []} latestPressRelease={latestPress || null} />
+      <MediosAdmin initialMedios={medios || []} latestPressRelease={null} />
     </div>
   )
 }

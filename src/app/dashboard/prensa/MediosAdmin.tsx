@@ -3,19 +3,16 @@
 import { useState } from 'react'
 import { MedioForm } from './MedioForm'
 import { deleteMedioAction } from './actions'
-import { FileText, Edit, Trash2, ExternalLink } from 'lucide-react'
-import type { NewsFlash } from '@/services/news'
+import { Edit, Trash2 } from 'lucide-react'
 
 interface Props {
   initialMedios: any[]
-  latestPressRelease: NewsFlash | null
 }
 
-export function MediosAdmin({ initialMedios, latestPressRelease }: Props) {
+export function MediosAdmin({ initialMedios }: Props) {
   const [medios, setMedios] = useState(initialMedios)
   const [showForm, setShowForm] = useState(false)
   const [editingMedio, setEditingMedio] = useState<any>(null)
-  const [showGacetilla, setShowGacetilla] = useState(false)
 
   const handleDelete = async (id: string) => {
     if (!confirm('¿Eliminar este medio?')) return
@@ -43,11 +40,6 @@ export function MediosAdmin({ initialMedios, latestPressRelease }: Props) {
             </div>
 
             <div className="flex gap-2">
-{latestPressRelease?.texto_medios && (
-                 <button onClick={() => setShowGacetilla(true)} className="p-2 hover:bg-white/5 rounded-lg text-white/40 hover:text-white transition-all" title="Enviar gacetilla">
-                   <FileText size={16} />
-                 </button>
-               )}
               <button onClick={() => { setEditingMedio(m); setShowForm(true) }} className="p-2 hover:bg-white/5 rounded-lg text-white/40 hover:text-white transition-all">
                 <Edit size={16} />
               </button>
@@ -62,16 +54,6 @@ export function MediosAdmin({ initialMedios, latestPressRelease }: Props) {
       {showForm && (
         <MedioForm medio={editingMedio} onClose={() => setShowForm(false)} />
       )}
-
-{showGacetilla && latestPressRelease?.texto_medios && (
-         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-           <div className="glass border border-white/10 rounded-2xl p-8 max-w-2xl w-full">
-             <h3 className="text-xl font-bold text-white mb-4">Gacetilla para Prensa</h3>
-             <pre className="whitespace-pre-wrap text-sm text-white/80 mb-6 max-h-96 overflow-y-auto">{latestPressRelease.texto_medios}</pre>
-             <button onClick={() => setShowGacetilla(false)} className="btn-primary w-full py-3 rounded-xl">Cerrar</button>
-           </div>
-         </div>
-       )}
     </div>
   )
 }

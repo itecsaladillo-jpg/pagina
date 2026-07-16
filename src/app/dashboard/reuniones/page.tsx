@@ -26,12 +26,11 @@ export default async function ReunionesPage() {
     .eq('is_active', true)
     .single()
 
-  // 2. Cargar historial de reuniones (General)
+  // 2. Cargar historial de reuniones (General) - desde meeting_notes
   const { data: history } = await supabase
-    .from('news_flashes')
-    .select('*')
+    .from('meeting_notes')
+    .select('id, content, session_date, created_at')
     .is('commission_id', null)
-    .eq('source_type', 'reunion')
     .eq('is_published', true)
     .order('created_at', { ascending: false })
     .limit(6)

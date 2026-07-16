@@ -3,14 +3,12 @@
 import { useState } from 'react'
 import { ArticleEditor } from './ArticleEditor'
 import { ArticleManagementList } from './ArticleManagementList'
-import { FlashManagementList } from './FlashManagementList'
 import { ActionManagementList } from './ActionManagementList'
-import { PenTool, ListOrdered, Zap, Calendar } from 'lucide-react'
+import { PenTool, ListOrdered, Calendar } from 'lucide-react'
 
-export function ComunicacionTabs({ member, articles, flashes: initialFlashes, actions }: { member: any; articles: any[]; flashes: any[]; actions: any[] }) {
-  const [activeTab, setActiveTab] = useState<'redactar' | 'gestionar' | 'flashes' | 'acciones'>('gestionar')
+export function ComunicacionTabs({ member, articles, actions }: { member: any; articles: any[]; actions: any[] }) {
+  const [activeTab, setActiveTab] = useState<'redactar' | 'gestionar' | 'acciones'>('gestionar')
   const [editingArticle, setEditingArticle] = useState<any>(null)
-  const [flashes, setFlashes] = useState<any[]>(initialFlashes)
 
   const handleEditArticle = (article: any) => {
     setEditingArticle(article)
@@ -35,17 +33,6 @@ export function ComunicacionTabs({ member, articles, flashes: initialFlashes, ac
         >
           <ListOrdered size={18} />
           Artículos ({articles.length})
-        </button>
-        <button
-          onClick={() => setActiveTab('flashes')}
-          className={`flex items-center gap-2 px-6 py-3 text-sm font-bold transition-all border-b-2 ${
-            activeTab === 'flashes' 
-              ? 'border-amber-500 text-white' 
-              : 'border-transparent text-white/40 hover:text-white'
-          }`}
-        >
-          <Zap size={18} />
-          Flashes ({flashes.length})
         </button>
         <button
           onClick={() => setActiveTab('acciones')}
@@ -75,7 +62,6 @@ export function ComunicacionTabs({ member, articles, flashes: initialFlashes, ac
         {activeTab === 'gestionar' && (
           <ArticleManagementList articles={articles} onEdit={handleEditArticle} />
         )}
-        {activeTab === 'flashes' && <FlashManagementList flashes={flashes} />}
         {activeTab === 'acciones' && <ActionManagementList actions={actions} />}
         {activeTab === 'redactar' && (
           <ArticleEditor 

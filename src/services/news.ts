@@ -1,31 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
 
-export interface NewsFlash {
-  id: string
-  created_at: string
-  updated_at: string
-  commission_id: string | null
-  autor_id: string | null
-  original_text: string
-  summary: string
-  action_items: string[]
-  flash_text: string
-  source_type: 'meet' | 'capacitacion' | 'reunion' | 'manual'
-  titulo: string
-  texto_publico: string | null
-  texto_miembros: string | null
-  texto_sponsors: string | null
-  texto_medios: string | null
-  is_published: boolean
-  tags: string[]
-  media_urls: string[]
-  datos_crudos: string | null
-  para_publico: boolean | null
-  para_miembros: boolean | null
-  para_sponsors: boolean | null
-  para_medios: boolean | null
-}
-
 export interface RelatedVideo {
   id: string
   title: string
@@ -45,44 +19,6 @@ export interface PublicArticle {
   excerpt: string | null
   related_video_id: string | null
   related_video?: RelatedVideo | null
-}
-
-export async function getNewsFlashes(commissionId?: string): Promise<NewsFlash[]> {
-  const supabase = await createClient()
-
-  let query = supabase
-    .from('news_flashes')
-    .select('*')
-    .eq('is_published', true)
-    .order('created_at', { ascending: false })
-
-  if (commissionId) {
-    query = query.or(`commission_id.eq.${commissionId},commission_id.is.null`)
-  }
-
-  const { data, error } = await query
-  if (error) {
-    console.error('[newsService] getNewsFlashes error:', error.message)
-    return []
-  }
-  return (data ?? []) as NewsFlash[]
-}
-
-export async function createNewsFlash(
-  flash: Omit<NewsFlash, 'id' | 'created_at' | 'updated_at'>
-): Promise<NewsFlash | null> {
-  const supabase = await createClient()
-  const { data, error } = await supabase
-    .from('news_flashes')
-    .insert(flash)
-    .select()
-    .single()
-
-  if (error) {
-    console.error('[newsService] createNewsFlash error:', error.message)
-    return null
-  }
-  return data as NewsFlash
 }
 
 export async function getPublicArticles(): Promise<PublicArticle[]> {

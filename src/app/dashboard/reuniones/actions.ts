@@ -53,7 +53,7 @@ export async function saveNotesAction(commissionId: string, content: string) {
 }
 
 /**
- * Finaliza la reunión: genera resumen con IA y lo publica en el Muro.
+ * Finaliza la reunión: guarda el resumen y cierra la sesión.
  */
 export async function finalizeAndPublishAction(commissionId: string, content: string) {
   const member = await getCurrentMember()
@@ -74,52 +74,24 @@ export async function finalizeAndPublishAction(commissionId: string, content: st
       generateActionItems(content),
     ])
 
-    // 2. Obtener nombre de la comisión
-    const { data: commission } = await supabase
-      .from('commissions')
-      .select('name')
-      .eq('id', commissionId)
-      .single()
-
-    const commissionName = commissionId === 'general' ? 'General' : (commission?.name || 'Comisión')
-    const sessionDate = new Date().toLocaleDateString('es-AR', { day: 'numeric', month: 'long', year: 'numeric' })
-
-    // 4. Publicar en el Muro de Noticias (alineado con tabla news_flashes)
-    const { error: flashError } = await supabase
-      .from('news_flashes')
-      .insert([{
-        titulo: `Resumen de Reunión — ${commissionName}`,
-        original_text: content,
-        summary: summary,
-        action_items: actionItems.split('\n').filter(Boolean),
-        flash_text: `📋 Se ha publicado la minuta de la Reunión ${commissionName} del ${sessionDate}.`,
-        source_type: 'reunion',
-        commission_id: commissionId === 'general' ? null : commissionId,
-        autor_id: member.id,
-        is_published: true,
-      }])
-
-    if (flashError) {
-      console.error('[finalize] Error publicando flash:', flashError.message)
-      return { success: false, error: 'El resumen se generó pero no se pudo publicar en el Muro.' }
-    }
-
-    // 5. Marcar la nota como inactiva (sesión cerrada)
+    // 2. Marcar la nota como inactiva y guardar el resumen
     const today = new Date().toISOString().split('T')[0]
-    const closeQuery = supabase
+    const updateQuery = supabase
       .from('meeting_notes')
-      .update({ is_active: false })
+      .update({ 
+        is_active: false, 
+        updated_at: new Date().toISOString(),
+        summary: summary,
+        action_items: actionItems.split('\n').filter(Boolean)
+      })
       .eq('session_date', today)
     
     if (commissionId === 'general') {
-      closeQuery.is('commission_id', null)
+      await updateQuery.is('commission_id', null)
     } else {
-      closeQuery.eq('commission_id', commissionId)
+      await updateQuery.eq('commission_id', commissionId)
     }
-    
-    await closeQuery
 
-    revalidatePath('/dashboard/muro')
     revalidatePath('/dashboard/reuniones')
 
     return { success: true, summary, actionItems }
