@@ -23,7 +23,7 @@ export default async function PrensaPage() {
         </p>
       </div>
 
-      <MediosAdmin initialMedios={medios || []} latestPressRelease={null} />
+      <MediosAdmin initialMedios={medios || []} />
     </div>
   )
 }
