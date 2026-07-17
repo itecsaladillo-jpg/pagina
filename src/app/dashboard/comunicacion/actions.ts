@@ -157,7 +157,7 @@ export async function createMulticanalNewsAction(data: {
       author_id: member.id,
       is_published: true,
       slug: slug,
-      excerpt: 'Noticia Multicanal'
+      excerpt: data.titulo
     })
 
   if (articleError) {
