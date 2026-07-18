@@ -1,12 +1,23 @@
 import { GoogleGenerativeAI } from '@google/generative-ai'
-import { GoogleGenAI } from '@google/genai'
 import { createClient } from '@/lib/supabase/server'
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY_2 || process.env.GEMINI_API_KEY!)
+const OLLAMA_BASE_URL = process.env.OLLAMA_API_BASE_URL || 'https://ai.itecsaladillo.org.ar'
+const OLLAMA_MODEL = 'llama3'
 
-const googleAI = new GoogleGenAI({
-  apiKey: process.env.GEMINI_API_KEY_4 || process.env.GEMINI_API_KEY_3 || process.env.GEMINI_API_KEY_2 || process.env.GEMINI_API_KEY || ''
-})
+async function chatWithOllama(messages: { role: string; content: string }[], temperature = 0.7): Promise<string> {
+  const response = await fetch(`${OLLAMA_BASE_URL}/api/chat`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ model: OLLAMA_MODEL, messages, stream: false, temperature }),
+  })
+  
+  if (!response.ok) {
+    throw new Error(`Error en Ollama: ${response.status}`)
+  }
+  
+  const data = await response.json()
+  return data.message?.content || ''
+}
 
 /**
  * Prompt de sistema — Estilo ITEC
@@ -52,11 +63,6 @@ export async function processWithAI(
   sourceType: 'meet' | 'capacitacion' | 'reunion' | 'manual',
   commissionName?: string
 ): Promise<AIProcessResult> {
-  const model = genAI.getGenerativeModel({
-    model: 'gemini-flash-latest',
-    systemInstruction: ITEC_SYSTEM_PROMPT,
-  })
-
   const contextLabel = {
     meet: 'transcripción de una reunión virtual de Google Meet',
     capacitacion: 'descripción de una capacitación',
@@ -68,8 +74,7 @@ export async function processWithAI(
     ? `La información pertenece a la Comisión de ${commissionName}.`
     : ''
 
-  const prompt = `
-Se te entrega la ${contextLabel} de ITEC Saladillo.
+  const userPrompt = `Se te entrega la ${contextLabel} de ITEC Saladillo.
 ${commissionContext}
 
 TEXTO A PROCESAR:
@@ -88,44 +93,34 @@ Generá exactamente dos elementos en formato JSON puro (sin markdown, sin bloque
   ]
 }
 
-Respondés ÚNICAMENTE con el JSON, sin ningún texto adicional antes o después.
-`
+Respondés ÚNICAMENTE con el JSON, sin ningún texto adicional antes o después.`
 
-  const result = await model.generateContent(prompt)
-  const raw = result.response.text().trim()
+  const raw = await chatWithOllama([
+    { role: 'system', content: ITEC_SYSTEM_PROMPT },
+    { role: 'user', content: userPrompt }
+  ])
 
   // Limpiar posibles bloques de código que el modelo incluya igual
-  const cleaned = raw
-    .replace(/^```json\s*/i, '')
-    .replace(/^```\s*/i, '')
-    .replace(/\s*```$/i, '')
-    .trim()
+  const cleaned = raw.replace(/^```json\s*/i, '').replace(/^```\s*/i, '').replace(/\s*```$/i, '').trim()
 
   const parsed = JSON.parse(cleaned) as AIProcessResult
   return parsed
 }
 
-/**
- * Genera únicamente un Flash Informativo corto a partir de un texto dado.
- */
 export async function generateFlash(text: string): Promise<string> {
-  const model = genAI.getGenerativeModel({
-    model: 'gemini-flash-latest',
-    systemInstruction: ITEC_SYSTEM_PROMPT,
-  })
-
-  const prompt = `
-Con base en el siguiente texto, redactá un Flash Informativo de máximo 2 oraciones 
+  const userPrompt = `Con base en el siguiente texto, redactá un Flash Informativo de máximo 2 oraciones 
 para el muro interno de ITEC. Dinámico, motivador, en Estilo ITEC.
 Respondé únicamente con el texto del flash, sin comillas ni etiquetas.
 
 TEXTO:
 """
 ${text}
-"""
-`
-  const result = await model.generateContent(prompt)
-  return result.response.text().trim()
+"""`
+  const result = await chatWithOllama([
+    { role: 'system', content: ITEC_SYSTEM_PROMPT },
+    { role: 'user', content: userPrompt }
+  ], 0.8)
+  return result
 }
 
 /**
@@ -146,15 +141,8 @@ export async function generateActionItems(notes: string): Promise<string> {
   return result.action_items.map((item, i) => `${i + 1}. ${item}`).join('\n')
 }
 
-/**
- * Genera un artículo periodístico optimista y contagioso a partir de hechos crudos.
- * Estilo ITEC: Elegante, Técnico y Humano.
- */
 export async function generatePublicArticle(rawFacts: string): Promise<{ title: string; content: string }> {
-  const model = genAI.getGenerativeModel({
-    model: 'gemini-flash-latest',
-    systemInstruction: `
-      ${ITEC_SYSTEM_PROMPT}
+  const systemPrompt = `${ITEC_SYSTEM_PROMPT}
       
       Sos un redactor periodístico experto para ITEC. Tu misión es transformar "hechos crudos" en un artículo inspirador.
       
@@ -168,19 +156,20 @@ export async function generatePublicArticle(rawFacts: string): Promise<{ title: 
       - No inventes datos; si falta información, redacta en torno a los hechos disponibles.
       - No menciones constantemente a Augusto Cicaré; solo si es indispensable para el contexto histórico.
       - Evitá las palabras prohibidas ("hoy", "ayer", "mañana", "che", "viste").
-      - Respondé en formato JSON puro: { "title": "...", "content": "..." }
-    `,
-  })
+      - Respondé en formato JSON puro: { "title": "...", "content": "..." }`
 
-  const prompt = `HECHOS PARA TRANSFORMAR:\n"""\n${rawFacts}\n"""`
-  const result = await model.generateContent(prompt)
-  const raw = result.response.text().trim()
+  const userPrompt = `HECHOS PARA TRANSFORMAR:\n"""\n${rawFacts}\n"""`
+  
+  const raw = await chatWithOllama([
+    { role: 'system', content: systemPrompt },
+    { role: 'user', content: userPrompt }
+  ], 0.8)
+  
   const cleaned = raw.replace(/^```json\s*/i, '').replace(/\s*```$/i, '').trim()
   
   try {
     return JSON.parse(cleaned)
   } catch (err) {
-    // Fallback si falla el parseo
     return { 
       title: 'Innovación en Marcha', 
       content: raw 
@@ -188,20 +177,13 @@ export async function generatePublicArticle(rawFacts: string): Promise<{ title: 
   }
 }
 
-/**
- * Genera una nota de prensa optimista tras la finalización de una acción de impacto.
- * Analiza asistencia y temática para resaltar el éxito institucional.
- */
 export async function generateActionSuccessStory(
   actionTitle: string, 
   actionType: string,
   attendeesCount: number,
   keyTopics: string
 ): Promise<{ title: string; content: string }> {
-  const model = genAI.getGenerativeModel({
-    model: 'gemini-flash-latest',
-    systemInstruction: `
-      ${ITEC_SYSTEM_PROMPT}
+  const systemPrompt = `${ITEC_SYSTEM_PROMPT}
       
       Sos el Director de Comunicación de ITEC. Tu tarea es redactar una "historia de éxito" tras finalizar una actividad externa.
       
@@ -219,13 +201,13 @@ export async function generateActionSuccessStory(
       - No inventes datos; si falta información, redacta en torno a los hechos disponibles.
       - No menciones constantemente a Augusto Cicaré; solo si es indispensable para el contexto histórico.
       - Evitá las palabras prohibidas ("hoy", "ayer", "mañana", "che", "viste").
-      - Respondé en JSON: { "title": "...", "content": "..." }
-    `,
-  })
+      - Respondé en JSON: { "title": "...", "content": "..." }`
 
-  const prompt = `Generar historia de éxito para la acción "${actionTitle}".`
-  const result = await model.generateContent(prompt)
-  const raw = result.response.text().trim()
+  const userPrompt = `Generar historia de éxito para la acción "${actionTitle}".`
+  const raw = await chatWithOllama([
+    { role: 'system', content: systemPrompt },
+    { role: 'user', content: userPrompt }
+  ], 0.8)
   const cleaned = raw.replace(/^```json\s*/i, '').replace(/\s*```$/i, '').trim()
   
   try {
@@ -235,10 +217,6 @@ export async function generateActionSuccessStory(
   }
 }
 
-/**
- * Genera noticias multicanal a partir de hechos crudos.
- * Usa fallback automático entre múltiples API keys.
- */
 export async function generateMulticanalNews(rawFacts: string): Promise<{
   titulo: string
   texto_publico: string
@@ -246,8 +224,7 @@ export async function generateMulticanalNews(rawFacts: string): Promise<{
   texto_sponsors: string
   texto_medios: string
 }> {
-  const systemPrompt = `
-${ITEC_SYSTEM_PROMPT}
+  const systemPrompt = `${ITEC_SYSTEM_PROMPT}
 
 Actuá como un Director de Comunicaciones Estratégicas experto. Tu misión es transformar "hechos crudos" en 5 piezas de comunicación con identidades TOTALMENTE divergentes.
 
@@ -266,15 +243,18 @@ ESTRUCTURA DE RESPUESTA (JSON):
   "texto_medios": "ROL: Jefe de Prensa. OBJETIVO: Publicación inmediata. TONO: Institucional, seco y fáctico. ESTRUCTURA: Título + Bajada (Qué, Quién, Cuándo, Dónde) + Cuerpo breve + Cita simulada de autoridad de ITEC resaltando el hito."
 }`
 
-const prompt = `HECHOS CRUDOS PARA TRANSFORMAR:\n"""\n${rawFacts}\n"""`
+  const userPrompt = `HECHOS CRUDOS PARA TRANSFORMAR:\n"""\n${rawFacts}\n"""`
 
-const raw = await generateTextWithFallback(prompt, systemPrompt)
+  const raw = await chatWithOllama([
+    { role: 'system', content: systemPrompt },
+    { role: 'user', content: userPrompt }
+  ], 0.8)
+  
   const cleaned = raw.replace(/^```json\s*/i, '').replace(/\s*```$/i, '').trim()
 
   try {
     return JSON.parse(cleaned)
   } catch (err) {
-    // Fallback si falla el parseo
     return {
       titulo: 'Novedad ITEC',
       texto_publico: rawFacts + '\n\nEsta iniciativa fortalece el acceso a la tecnología para toda la comunidad saladense.',
@@ -285,97 +265,54 @@ const raw = await generateTextWithFallback(prompt, systemPrompt)
   }
 }
 
-/**
- * Genera un resumen profesional de hasta 200 palabras para un video.
- */
 export async function generateVideoSummary(title: string, description: string): Promise<string> {
-  const model = genAI.getGenerativeModel({
-    model: 'gemini-flash-latest',
-    systemInstruction: ITEC_SYSTEM_PROMPT,
-  })
+  const userPrompt = `Generá un resumen profesional y atractivo para un video de ITEC Saladillo.
+  
+  ROL: Periodista social.
+  OBJETIVO: Generar orgullo y pertenencia en Saladillo.
+  TONO: Aspiracional, accesible y humano.
+  ENFOQUE: Traducir la técnica a beneficios comunitarios. Evitá tecnicismos innecesarios.
+  CERRAR: Frase que invite a sumarse al ecosistema ITEC.
+  
+  TÍTULO DEL VIDEO: ${title}
+  DESCRIPCIÓN ORIGINAL: ${description}
+  
+  REQUISITOS CRÍTICOS:
+  - PRECISIÓN Y CONTENIDO REAL: Basarte en lo disponible sin inventar datos.
+  - IDENTIFICACIÓN DE PROTAGONISTAS: Mencionar quién es el entrevistado/orador.
+  - LONGITUD: Máximo 200 palabras.
+  - ESTILO ITEC: Técnico, Humano y Vanguardista.
+  - IDIOMA: Español rioplatense formal (usando "vos").
+  
+  Respondé únicamente con el texto del resumen, sin títulos adicionales ni comillas.`
 
-  const prompt = `
-    Generá un resumen profesional y atractivo para un video de ITEC Saladillo.
-    
-    ROL: Periodista social.
-    OBJETIVO: Generar orgullo y pertenencia en Saladillo.
-    TONO: Aspiracional, accesible y humano.
-    ENFOQUE: Traducir la técnica a beneficios comunitarios. Evitá tecnicismos innecesarios.
-    CERRAR: Frase que invite a sumarse al ecosistema ITEC.
-    
-    TÍTULO DEL VIDEO: ${title}
-    DESCRIPCIÓN ORIGINAL: ${description}
-    
-    REQUISITOS CRÍTICOS:
-    - PRECISIÓN Y CONTENIDO REAL: Basarte en lo disponible sin inventar datos.
-    - IDENTIFICACIÓN DE PROTAGONISTAS: Mencionar quién es el entrevistado/orador.
-    - LONGITUD: Máximo 200 palabras.
-    - ESTILO ITEC: Técnico, Humano y Vanguardista.
-    - IDIOMA: Español rioplatense formal (usando "vos").
-    
-    Respondé únicamente con el texto del resumen, sin títulos adicionales ni comillas.
-  `
-
-  const result = await model.generateContent(prompt)
-  return result.response.text().trim()
+  const result = await chatWithOllama([
+    { role: 'system', content: ITEC_SYSTEM_PROMPT },
+    { role: 'user', content: userPrompt }
+  ], 0.8)
+  return result
 }
 
-/**
- * Genera el embedding de un texto usando el modelo text-embedding-004 de Google.
- */
 export async function generarEmbedding(texto: string): Promise<number[]> {
+  const apiKey = process.env.OLLAMA_API_KEY || process.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY_2 || ''
+  
+  if (!apiKey) {
+    throw new Error('No hay API key configurada para embeddings')
+  }
+
   try {
-    const response = await googleAI.models.embedContent({
-      model: 'text-embedding-004',
-      contents: texto,
-    });
+    const genAI = new GoogleGenerativeAI(apiKey)
+    const response = await genAI.getGenerativeModel({ model: 'text-embedding-004' }).embedContent(texto)
 
-    if (!response.embeddings || response.embeddings.length === 0 || !response.embeddings[0].values) {
-      throw new Error('No se devolvieron valores de embedding en la respuesta.');
+    if (!response.embedding?.values || response.embedding.values.length === 0) {
+      throw new Error('No se devolvieron valores de embedding en la respuesta.')
     }
 
-    return response.embeddings[0].values;
+    return response.embedding.values as number[]
   } catch (error) {
-    console.error('[AI Service] Error al generar embedding con text-embedding-004:', error);
-    throw error;
+    console.error('[AI Service] Error al generar embedding:', error)
+    throw error
   }
-}
-
-/**
- * Genera texto con IA usando fallback automático entre múltiples API keys.
- */
-async function generateTextWithFallback(prompt: string, systemPrompt: string): Promise<string> {
-  const apiKeys = [
-    process.env.GEMINI_API_KEY,
-    process.env.GEMINI_API_KEY_2,
-    process.env.GEMINI_API_KEY_3,
-    process.env.GEMINI_API_KEY_4
-  ].filter(Boolean) as string[]
-
-  let lastError: Error | null = null
-
-  for (const apiKey of apiKeys) {
-    try {
-      const { GoogleGenerativeAI } = await import('@google/generative-ai')
-      const genAI = new GoogleGenerativeAI(apiKey)
-      const model = genAI.getGenerativeModel({
-        model: 'gemini-flash-latest',
-        systemInstruction: systemPrompt,
-      })
-
-      const result = await model.generateContent(prompt)
-      const text = result.response.text().trim()
-      
-      if (text) return text
-      lastError = new Error('Empty response')
-    } catch (err: any) {
-      lastError = err
-      console.warn(`[AI Fallback] Key failed, trying next...`, err.message?.substring(0, 50))
-      continue
-    }
-  }
-
-  throw lastError || new Error('All API keys exhausted')
 }
 
 export interface FeedbackSimilar {

@@ -4,12 +4,29 @@
  * Servicio de IA para la generación de reportes narrativos de trascendencia
  * dirigidos a sponsors y socios estratégicos de la organización.
  * 
- * Utiliza Google Gemini con un System Prompt institucional calibrado para
+ * Utiliza Ollama con un System Prompt institucional calibrado para
  * comunicación de alto impacto, evitando el tono de "recibo de pago".
  */
 
-import { GoogleGenerativeAI, GenerateContentResult } from '@google/generative-ai'
 import { getAIPrompt } from './admin'
+
+const OLLAMA_BASE_URL = process.env.OLLAMA_API_BASE_URL || 'https://ai.itecsaladillo.org.ar'
+const OLLAMA_MODEL = 'llama3'
+
+async function chatWithOllama(messages: { role: string; content: string }[], temperature = 0.7): Promise<string> {
+  const response = await fetch(`${OLLAMA_BASE_URL}/api/chat`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ model: OLLAMA_MODEL, messages, stream: false, temperature }),
+  })
+  
+  if (!response.ok) {
+    throw new Error(`Error en Ollama: ${response.status}`)
+  }
+  
+  const data = await response.json()
+  return data.message?.content || ''
+}
 
 // ─────────────────────────────────────────
 // Tipos
@@ -91,14 +108,6 @@ PALABRAS Y CONSTRUCCIONES PROHIBIDAS:
 // ─────────────────────────────────────────
 
 export async function generateSponsorReport(data: SponsorReportInput): Promise<SponsorReportOutput> {
-  const apiKey = process.env.GEMINI_API_KEY_2 || process.env.GEMINI_API_KEY
-
-  // Fallback elegante si no hay clave
-  if (!apiKey) {
-    console.warn('[SponsorReport] GEMINI_API_KEY no configurada. Devolviendo estructura vacía.')
-    return buildFallbackReport(data)
-  }
-
   const totalFondo = Object.values(data.fondo_comun).reduce((s, v) => s + (parseFloat(String(v)) || 0), 0)
   const pctViaticos = totalFondo > 0 ? Math.round((data.fondo_comun.viaticos / totalFondo) * 100) : 0
   const pctHoteleria = totalFondo > 0 ? Math.round((data.fondo_comun.hoteleria / totalFondo) * 100) : 0
@@ -154,45 +163,31 @@ SECCIÓN 4 - FUTURO (2-3 oraciones):
 Cerrá con una visión de lo que se viene. Usá un tono de "camino compartido" y proyección a mediano plazo.
 Invitá implícitamente a renovar el compromiso sin pedirlo directamente.
 
-Respondé SOLO con las 4 secciones separadas por "---SECCION---", sin encabezados ni etiquetas adicionales.`
+Respondés SOLO con las 4 secciones separadas por "---SECCION---", sin encabezados ni etiquetas adicionales.`
 
-  let promptSistema = SYSTEM_PROMPT;
-  let promptTemperature = 0.85;
-  let promptMaxTokens = 1200;
+  let promptSistema = SYSTEM_PROMPT
+  let promptTemperature = 0.85
 
   try {
-    const promptConfig = await getAIPrompt('sponsor_report_mensual');
+    const promptConfig = await getAIPrompt('sponsor_report_mensual')
     if (promptConfig) {
-      promptSistema = promptConfig.system_prompt;
-      promptTemperature = promptConfig.temperature;
-      promptMaxTokens = promptConfig.max_tokens;
+      promptSistema = promptConfig.system_prompt
+      promptTemperature = promptConfig.temperature
     }
   } catch (err) {
-    console.warn('[SponsorReport] Error al recuperar prompt dinámico, usando fallback local:', err);
+    console.warn('[SponsorReport] Error al recuperar prompt dinámico, usando fallback local:', err)
   }
 
   try {
-    const genAI = new GoogleGenerativeAI(apiKey)
-    const model = genAI.getGenerativeModel({
-      model: 'gemini-flash-latest',
-      systemInstruction: promptSistema,
-    })
-
-    const result: GenerateContentResult = await model.generateContent({
-      contents: [{ role: 'user', parts: [{ text: userPrompt }] }],
-      generationConfig: {
-        temperature: promptTemperature,      // Creatividad controlada
-        topK: 40,
-        topP: 0.95,
-        maxOutputTokens: promptMaxTokens,
-      }
-    })
-
-    const rawText = result.response.text().trim()
+    const rawText = await chatWithOllama([
+      { role: 'system', content: promptSistema },
+      { role: 'user', content: userPrompt }
+    ], promptTemperature)
+    
     return parseReportSections(rawText)
 
   } catch (err: any) {
-    console.error('[SponsorReport] Error en Gemini:', err?.message || err)
+    console.error('[SponsorReport] Error en Ollama:', err?.message || err)
     return {
       ...buildFallbackReport(data),
       generado_con_ia: false,
