@@ -4,11 +4,9 @@ import { buscarFeedbacksSimilares, auditarRespuestaIA } from '@/services/ai';
 import { getAIPrompt } from '@/services/admin';
 import type { NextRequest } from 'next/server';
 
-// ─────────────────────────────────────────────
 // Configuración
-const OLLAMA_URL = process.env.OLLAMA_API_BASE_URL || 'https://ai.itecsaladillo.org.ar';
+const OLLAMA_BASE_URL = (process.env.OLLAMA_API_BASE_URL || 'https://ai.itecsaladillo.org.ar').replace(/\/$/, '');
 
-// Mantenemos tu instrucción de sistema original (asegúrate de incluir todo el texto)
 const SYSTEM_INSTRUCTION = `Sos el Asistente ITEC...`; 
 
 interface MensajeChat {
@@ -61,13 +59,19 @@ export async function POST(request: NextRequest): Promise<Response> {
     if (promptConfig) promptSistema = promptConfig.system_prompt;
   } catch (err) { console.warn(err); }
 
-  // 3. Llamada a Ollama con configuración dinámica
+  // 3. Llamada a Ollama con Timeout controlada
   try {
-    const response = await fetch(`${OLLAMA_URL}/api/chat`, {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 55000); // Vercel corta en 60s, abortamos a los 55s
+
+    const response = await fetch(`${OLLAMA_BASE_URL}/api/chat`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 
+        'Content-Type': 'application/json',
+        'Accept': 'application/json' 
+      },
       body: JSON.stringify({
-        model: aiConfig.model, // Usamos la configuración del JSON
+        model: aiConfig.model,
         messages: [
           { role: 'system', content: promptSistema + aprendizajesAdicionales + miembrosContext },
           ...historial.map(m => ({ role: m.role, content: m.text })),
@@ -80,17 +84,20 @@ export async function POST(request: NextRequest): Promise<Response> {
           top_p: aiConfig.top_p
         }
       }),
+      signal: controller.signal
     });
+
+    clearTimeout(timeoutId);
 
     if (!response.ok) {
       const errorText = await response.text();
-      throw new Error(`Error en Ollama: ${errorText}`);
+      throw new Error(`Ollama respondió ${response.status}: ${errorText}`);
     }
 
     const data = await response.json();
     const textoRespuesta = data.message.content;
 
-    // 4. Auditoría y respuesta
+    // 4. Auditoría
     const resultadoAuditoria = await auditarRespuestaIA(mensaje, textoRespuesta);
 
     return Response.json({
@@ -99,9 +106,9 @@ export async function POST(request: NextRequest): Promise<Response> {
     });
 
   } catch (error: any) {
-    console.error('[Asistente ITEC] Error en Ollama:', error);
+    console.error('[Asistente ITEC] Error crítico:', error);
     return Response.json(
-      { error: 'No se pudo contactar con la IA local. ' + error.message },
+      { error: error.name === 'AbortError' ? 'La IA tardó demasiado en responder' : error.message },
       { status: 502 }
     );
   }
