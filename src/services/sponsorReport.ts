@@ -14,18 +14,39 @@ const OLLAMA_BASE_URL = process.env.OLLAMA_API_BASE_URL || 'https://ai.itecsalad
 const OLLAMA_MODEL = 'llama3.2:latest'
 
 async function chatWithOllama(messages: { role: string; content: string }[], temperature = 0.7): Promise<string> {
-  const response = await fetch(`${OLLAMA_BASE_URL}/api/chat`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ model: OLLAMA_MODEL, messages, stream: false, temperature }),
-  })
-  
-  if (!response.ok) {
-    throw new Error(`Error en Ollama: ${response.status}`)
+  const controller = new AbortController()
+  const timeout = 90000
+  const timer = setTimeout(() => controller.abort(), timeout)
+
+  try {
+    const response = await fetch(`${OLLAMA_BASE_URL}/api/chat`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: OLLAMA_MODEL,
+        messages,
+        stream: false,
+        temperature,
+        options: { num_ctx: 4096 },
+      }),
+      signal: controller.signal,
+    })
+
+    if (!response.ok) {
+      const text = await response.text().catch(() => '')
+      throw new Error(`Error en Ollama: ${response.status}${text ? ` - ${text}` : ''}`)
+    }
+
+    const data = await response.json()
+    return data.message?.content || ''
+  } catch (err: any) {
+    if (err.name === 'AbortError') {
+      throw new Error(`Error en Ollama: 524 - Timeout después de ${timeout}ms`)
+    }
+    throw err
+  } finally {
+    clearTimeout(timer)
   }
-  
-  const data = await response.json()
-  return data.message?.content || ''
 }
 
 // ─────────────────────────────────────────

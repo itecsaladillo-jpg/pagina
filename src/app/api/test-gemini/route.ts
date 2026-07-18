@@ -12,6 +12,10 @@ export async function POST(request: NextRequest) {
   }
 
   try {
+    const controller = new AbortController()
+    const timeout = 90000
+    const timer = setTimeout(() => controller.abort(), timeout)
+
     const response = await fetch(`${OLLAMA_BASE_URL}/api/chat`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -27,12 +31,17 @@ export async function POST(request: NextRequest) {
             content: `JSON únicamente: {"titulo": "título", "texto_publico": "3-6 oraciones", "texto_miembros": "3-6 oraciones", "texto_sponsors": "3-6 oraciones", "texto_medios": "gacetilla"}\nDatos: ${datos_crudos}` 
           }
         ],
-        stream: false
+        stream: false,
+        options: { num_ctx: 4096 },
       }),
+      signal: controller.signal,
     })
 
+    clearTimeout(timer)
+
     if (!response.ok) {
-      throw new Error(`Error en Ollama: ${response.status}`)
+      const text = await response.text().catch(() => '')
+      throw new Error(`Error en Ollama: ${response.status}${text ? ` - ${text}` : ''}`)
     }
 
     const data = await response.json()

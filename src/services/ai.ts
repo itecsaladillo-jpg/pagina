@@ -4,19 +4,40 @@ import { createClient } from '@/lib/supabase/server'
 const OLLAMA_BASE_URL = process.env.OLLAMA_API_BASE_URL || 'https://ai.itecsaladillo.org.ar'
 const OLLAMA_MODEL = 'llama3.2:latest'
 
-async function chatWithOllama(messages: { role: string; content: string }[], temperature = 0.7): Promise<string> {
-  const response = await fetch(`${OLLAMA_BASE_URL}/api/chat`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ model: OLLAMA_MODEL, messages, stream: false, temperature }),
-  })
-  
-  if (!response.ok) {
-    throw new Error(`Error en Ollama: ${response.status}`)
+async function chatWithOllama(messages: { role: string; content: string }[], temperature = 0.7, options?: { num_ctx?: number; timeout?: number }): Promise<string> {
+  const controller = new AbortController()
+  const timeout = options?.timeout ?? 90000
+  const timer = setTimeout(() => controller.abort(), timeout)
+
+  try {
+    const response = await fetch(`${OLLAMA_BASE_URL}/api/chat`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: OLLAMA_MODEL,
+        messages,
+        stream: false,
+        temperature,
+        options: { num_ctx: options?.num_ctx ?? 4096 },
+      }),
+      signal: controller.signal,
+    })
+
+    if (!response.ok) {
+      const text = await response.text().catch(() => '')
+      throw new Error(`Error en Ollama: ${response.status}${text ? ` - ${text}` : ''}`)
+    }
+
+    const data = await response.json()
+    return data.message?.content || ''
+  } catch (err: any) {
+    if (err.name === 'AbortError') {
+      throw new Error(`Error en Ollama: 524 - Timeout después de ${timeout}ms`)
+    }
+    throw err
+  } finally {
+    clearTimeout(timer)
   }
-  
-  const data = await response.json()
-  return data.message?.content || ''
 }
 
 /**
@@ -226,29 +247,28 @@ export async function generateMulticanalNews(rawFacts: string): Promise<{
 }> {
   const systemPrompt = `${ITEC_SYSTEM_PROMPT}
 
-Actuá como un Director de Comunicaciones Estratégicas experto. Tu misión es transformar "hechos crudos" en 5 piezas de comunicación con identidades TOTALMENTE divergentes.
+Actuá como Director de Comunicaciones Estratégicas. Transformá los hechos crudos en 5 piezas con identidades divergentes.
 
-RESTRICCIONES CRÍTICAS:
-1. Responde ÚNICAMENTE con un JSON válido.
-2. NO incluyas introducciones, comentarios ni etiquetas markdown.
-3. NO menciones constantemente a Augusto Cicaré; solo si es indispensable para el contexto histórico.
-4. NUNCA inventes datos; si falta información, redacta en torno a los hechos disponibles.
+REGLAS:
+1. Respondé SOLO con JSON válido, sin markdown ni texto adicional.
+2. No inventes datos; usá solo la información disponible.
+3. No menciones a Augusto Cicaré salvo que sea indispensable.
 
-ESTRUCTURA DE RESPUESTA (JSON):
+FORMATO:
 {
-  "titulo": "Titular periodístico de alto impacto (máx. 10 palabras).",
-  "texto_publico": "ROL: Periodista social. OBJETIVO: Generar orgullo y pertenencia en Saladillo. TONO: Aspiracional, accesible y humano. ENFOQUE: Traducir la técnica a beneficios comunitarios. Estructura de pirámide invertida. Evitá tecnicismos. Cerrá con una frase que invite a sumarse al ecosistema ITEC.",
-  "texto_miembros": "ROL: Líder de equipo / Gestor interno. OBJETIVO: Reconocimiento y motivación. TONO: Cálido, entusiasta y muy cercano. ENFOQUE: Resaltá el 'quiénes' y el esfuerzo voluntario. Usá 'nosotros' y 'nuestro'. Celebrá los desafíos técnicos superados como una victoria colectiva.",
-  "texto_sponsors": "ROL: Analista de Proyectos / Ejecutivo. OBJETIVO: Reportar ROI social y eficiencia. TONO: Pragmático, profesional y de rendición de cuentas. ENFOQUE: Impacto en el mapa productivo local, métricas de asistencia y eficiencia en el uso de los fondos (gastos vs. resultados). Destacá la alianza estratégica.",
-  "texto_medios": "ROL: Jefe de Prensa. OBJETIVO: Publicación inmediata. TONO: Institucional, seco y fáctico. ESTRUCTURA: Título + Bajada (Qué, Quién, Cuándo, Dónde) + Cuerpo breve + Cita simulada de autoridad de ITEC resaltando el hito."
+  "titulo": "Titular de alto impacto (máx. 10 palabras)",
+  "texto_publico": "Para público general: tono aspiracional, accesible, traducí lo técnico a beneficio comunitario. Cerrá invitando a sumarse.",
+  "texto_miembros": "Para miembros: tono cálido y cercano, celebrando el esfuerzo colectivo. Usá 'nosotros'. Motivacional.",
+  "texto_sponsors": "Para sponsors: tono profesional, destacando impacto, métricas y eficiencia en uso de recursos.",
+  "texto_medios": "Para medios: tono institucional, estructura de gacetilla. Incluí cita simulada de autoridad ITEC."
 }`
 
-  const userPrompt = `HECHOS CRUDOS PARA TRANSFORMAR:\n"""\n${rawFacts}\n"""`
+  const userPrompt = `HECHOS CRUDOS:\n"""\n${rawFacts}\n"""`
 
   const raw = await chatWithOllama([
     { role: 'system', content: systemPrompt },
     { role: 'user', content: userPrompt }
-  ], 0.8)
+  ], 0.8, { num_ctx: 4096, timeout: 90000 })
   
   const cleaned = raw.replace(/^```json\s*/i, '').replace(/\s*```$/i, '').trim()
 
