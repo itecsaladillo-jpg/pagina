@@ -2,7 +2,7 @@ import { GoogleGenerativeAI } from '@google/generative-ai'
 import { createClient } from '@/lib/supabase/server'
 
 const OLLAMA_BASE_URL = process.env.OLLAMA_API_BASE_URL || 'https://ai.itecsaladillo.org.ar'
-const OLLAMA_MODEL = 'llama3'
+const OLLAMA_MODEL = 'llama3.2:latest'
 
 async function chatWithOllama(messages: { role: string; content: string }[], temperature = 0.7): Promise<string> {
   const response = await fetch(`${OLLAMA_BASE_URL}/api/chat`, {

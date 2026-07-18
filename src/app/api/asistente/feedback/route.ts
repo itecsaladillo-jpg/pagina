@@ -18,7 +18,7 @@ interface CuerpoSolicitudFeedback {
 
 // Configuración Ollama
 const OLLAMA_BASE_URL = process.env.OLLAMA_API_BASE_URL || 'https://ai.itecsaladillo.org.ar'
-const OLLAMA_MODEL = 'llama3'
+const OLLAMA_MODEL = 'llama3.2:latest'
 
 // ─────────────────────────────────────────────
 // POST /api/asistente/feedback
