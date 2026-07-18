@@ -18,7 +18,7 @@ interface CuerpoSolicitudFeedback {
 
 // Configuración Ollama
 const OLLAMA_BASE_URL = process.env.OLLAMA_API_BASE_URL || 'https://ai.itecsaladillo.org.ar'
-const OLLAMA_MODEL = 'llama3'
+const OLLAMA_MODEL = 'llama3.2:latest'
 
 // ─────────────────────────────────────────────
 // POST /api/asistente/feedback
@@ -76,28 +76,46 @@ ${historial
   .join('\n')}
         `.trim();
 
-        const ollamaResponse = await fetch(`${OLLAMA_BASE_URL}/api/chat`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            model: OLLAMA_MODEL,
-            messages: [
-              { 
-                role: 'system', 
-                content: 'Sos un asistente analítico. Respondés únicamente en formato JSON puro, sin markdown ni bloques de código.' 
-              },
-              { role: 'user', content: promptConsolidacion }
-            ],
-            stream: false,
-            temperature: 0.1
-          }),
-        })
+        const timeout = 98000
+        const controller = new AbortController()
+        const timer = setTimeout(() => controller.abort(), timeout)
 
-        if (!ollamaResponse.ok) {
-          throw new Error(`Error en Ollama: ${ollamaResponse.status}`)
+        let data: any
+        try {
+          const ollamaResponse = await fetch(`${OLLAMA_BASE_URL}/api/chat`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              model: OLLAMA_MODEL,
+              messages: [
+                { 
+                  role: 'system', 
+                  content: 'Sos un asistente analítico. Respondés únicamente en formato JSON puro, sin markdown ni bloques de código.' 
+                },
+                { role: 'user', content: promptConsolidacion }
+              ],
+              stream: false,
+              temperature: 0.1,
+              options: { num_ctx: 2048 },
+            }),
+            signal: controller.signal,
+          })
+
+          if (!ollamaResponse.ok) {
+            const text = await ollamaResponse.text().catch(() => '')
+            throw new Error(`Error en Ollama: ${ollamaResponse.status}${text ? ` - ${text}` : ''}`)
+          }
+
+          data = await ollamaResponse.json()
+        } catch (fetchErr: any) {
+          if (fetchErr.name === 'AbortError') {
+            throw new Error(`Error en Ollama: 524 - Timeout después de ${timeout}ms`)
+          }
+          throw fetchErr
+        } finally {
+          clearTimeout(timer)
         }
 
-        const data = await ollamaResponse.json()
         const textoIa = data.message?.content || ''
         
         if (textoIa) {

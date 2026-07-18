@@ -1,115 +1,64 @@
-import aiConfig from '@/config/aiConfig.json';
-import { createClient } from '@/lib/supabase/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { buscarFeedbacksSimilares, auditarRespuestaIA } from '@/services/ai';
+import { createClient } from '@/lib/supabase/server';
 import { getAIPrompt } from '@/services/admin';
-import type { NextRequest } from 'next/server';
 
-// Configuración
-const OLLAMA_BASE_URL = (process.env.OLLAMA_API_BASE_URL || 'https://ai.itecsaladillo.org.ar').replace(/\/$/, '');
+// Esto permite que la función corra en el Edge (más rápida, sin timeout de 10s)
+export const runtime = 'edge';
 
-const SYSTEM_INSTRUCTION = `Sos el Asistente ITEC...`; 
+export async function POST(req: NextRequest) {
+  const { action, mensaje, textoBase, historial = [] } = await req.json();
 
-interface MensajeChat {
-  role: 'user' | 'model';
-  text: string;
-}
-
-interface CuerpoSolicitud {
-  mensaje: string;
-  historial?: MensajeChat[];
-  idioma?: string;
-}
-
-export async function POST(request: NextRequest): Promise<Response> {
-  let cuerpo: CuerpoSolicitud;
   try {
-    cuerpo = await request.json();
-  } catch {
-    return Response.json({ error: 'JSON inválido' }, { status: 400 });
-  }
+    // 1. OBTENCIÓN DE CONTEXTO (RAG + Staff)
+    let contexto = '';
+    try {
+      const [feedbacks, supabase] = await Promise.all([
+        buscarFeedbacksSimilares(mensaje, 3, 0.35).catch(() => []),
+        createClient()
+      ]);
+      const { data: miembros } = await supabase.rpc('obtener_miembros_publicos');
+      
+      if (feedbacks?.length > 0) contexto += `\nAprendizaje: ${feedbacks.map(f => f.tema_principal).join(', ')}`;
+      if (miembros?.length > 0) contexto += `\nStaff ITEC: ${miembros.map((m: any) => m.full_name).join(', ')}`;
+    } catch (e) { console.error("Error al obtener contexto", e); }
 
-  const { mensaje, historial = [], idioma } = cuerpo;
-
-  if (!mensaje || typeof mensaje !== 'string' || mensaje.trim() === '') {
-    return Response.json({ error: 'Mensaje requerido' }, { status: 400 });
-  }
-
-  // 1. Contexto (RAG + Miembros)
-  let aprendizajesAdicionales = '';
-  try {
-    const feedbacks = await buscarFeedbacksSimilares(mensaje, 5, 0.35);
-    if (feedbacks?.length > 0) {
-      aprendizajesAdicionales = `\n\n## Aprendizaje Comunitario:\n${feedbacks.map(f => `- ${f.tema_principal} -> ${f.lo_mas_util}`).join('\n')}`;
-    }
-  } catch (err) { console.error(err); }
-
-  let miembrosContext = '';
-  try {
-    const supabase = await createClient();
-    const { data: miembros } = await supabase.rpc('obtener_miembros_publicos');
-    if (miembros?.length > 0) {
-      miembrosContext = `\n\n## Staff ITEC:\n${miembros.map((m: any) => `- ${m.full_name}: ${m.role}`).join('\n')}`;
-    }
-  } catch (err) { console.error(err); }
-
-  // 2. Prompt y Configuración
-  let promptSistema = SYSTEM_INSTRUCTION;
-  try {
-    const promptConfig = await getAIPrompt('asistente_global');
-    if (promptConfig) promptSistema = promptConfig.system_prompt;
-  } catch (err) { console.warn(err); }
-
-  // 3. Llamada a Ollama con Timeout controlada
-  try {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 55000); // Vercel corta en 60s, abortamos a los 55s
-
-    const response = await fetch(`${OLLAMA_BASE_URL}/api/chat`, {
-      method: 'POST',
-      headers: { 
-        'Content-Type': 'application/json',
-        'Accept': 'application/json' 
-      },
-      body: JSON.stringify({
-        model: aiConfig.model,
-        messages: [
-          { role: 'system', content: promptSistema + aprendizajesAdicionales + miembrosContext },
-          ...historial.map(m => ({ role: m.role, content: m.text })),
-          { role: 'user', content: mensaje }
-        ],
-        stream: false,
-        options: {
-          temperature: aiConfig.temperature,
-          num_ctx: aiConfig.num_ctx,
-          top_p: aiConfig.top_p
-        }
-      }),
-      signal: controller.signal
-    });
-
-    clearTimeout(timeoutId);
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`Ollama respondió ${response.status}: ${errorText}`);
+    // 2. LÓGICA DE ASISTENTE (GROQ)
+    if (action === 'chat') {
+      const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${process.env.GROQ_API_KEY}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          model: 'llama-3.1-8b-instant',
+          messages: [
+            { role: 'system', content: `Sos el Asistente ITEC. Contexto:${contexto}` },
+            ...historial,
+            { role: 'user', content: mensaje }
+          ],
+          stream: true
+        })
+      });
+      return new Response(response.body, { headers: { 'Content-Type': 'text/event-stream' } });
     }
 
-    const data = await response.json();
-    const textoRespuesta = data.message.content;
+    // 3. LÓGICA DE REDACCIÓN (GEMINI)
+    if (action === 'redactar') {
+      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:streamGenerateContent?key=${process.env.GEMINI_API_KEY}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: `Basado en: ${textoBase}. Genera 4 versiones de esta nota.` }] }]
+        })
+      });
+      return new Response(response.body, { headers: { 'Content-Type': 'text/event-stream' } });
+    }
 
-    // 4. Auditoría
-    const resultadoAuditoria = await auditarRespuestaIA(mensaje, textoRespuesta);
+    return NextResponse.json({ error: 'Acción inválida' }, { status: 400 });
 
-    return Response.json({
-      respuesta: resultadoAuditoria.respuestaFinal,
-      modelo: aiConfig.model,
-    });
-
-  } catch (error: any) {
-    console.error('[Asistente ITEC] Error crítico:', error);
-    return Response.json(
-      { error: error.name === 'AbortError' ? 'La IA tardó demasiado en responder' : error.message },
-      { status: 502 }
-    );
+  } catch (error) {
+    return NextResponse.json({ error: 'Error interno' }, { status: 500 });
   }
 }
