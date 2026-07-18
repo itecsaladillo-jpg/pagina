@@ -7,17 +7,18 @@ export default async function DashboardPage() {
   if (!member) redirect('/login')
   if (member.status !== 'activo') redirect('/acceso-pendiente')
 
-  // Redirigir a los miembros activos directamente a la sección de miembros (Directorio de Miembros)
-  if (member.status === 'activo') {
-    redirect('/dashboard/miembros')
-  }
+  // NOTA: Si descomentas esto, el usuario nunca verá el Dashboard, 
+  // será enviado directo a los miembros.
+  // if (member.status === 'activo') {
+  //   redirect('/dashboard/miembros')
+  // }
 
   return (
     <div>
       {/* Header de bienvenida */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-white mb-1">
-          Hola, {member.full_name.split(' ')[0]} 👋
+          Hola, {member.full_name?.split(' ')[0] || 'Miembro'} 👋
         </h1>
         <p className="text-[var(--text-secondary)] text-sm">
           Bienvenido al panel de control de ITEC Saladillo
@@ -47,7 +48,7 @@ export default async function DashboardPage() {
             <span className="text-[var(--text-secondary)] text-xs uppercase tracking-wider">Estado</span>
           </div>
           <p className="text-white font-semibold capitalize">{member.status}</p>
-          <p className="text-[var(--text-muted)] text-xs mt-1">Miembro desde {new Date(member.join_date).getFullYear()}</p>
+          <p className="text-[var(--text-muted)] text-xs mt-1">Miembro desde {member.join_date ? new Date(member.join_date).getFullYear() : 'N/A'}</p>
         </div>
 
         <div className="glass border border-[var(--border-subtle)] rounded-xl p-5 card-hover">
@@ -69,13 +70,13 @@ export default async function DashboardPage() {
         <h2 className="text-white font-semibold mb-4">Accesos rápidos</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           {[
-            { label: 'Mis capacitaciones', href: '/dashboard/capacitaciones', color: 'blue' },
-            { label: 'Aula Virtual', href: '/clases/demostracion', color: 'emerald' },
-            { label: 'Pasaporte Digital', href: '/dashboard/certificados', color: 'indigo' },
-            { label: 'Mis comisiones', href: '/dashboard/comisiones', color: 'cyan' },
-            { label: 'Buzón de ideas', href: '/dashboard/ideas', color: 'green' },
-            { label: 'Nube de Archivos', href: '/dashboard/drive', color: 'blue' },
-            { label: 'Directorio', href: '/dashboard/miembros', color: 'amber' },
+            { label: 'Mis capacitaciones', href: '/dashboard/capacitaciones' },
+            { label: 'Aula Virtual', href: '/clases/demostracion' },
+            { label: 'Pasaporte Digital', href: '/dashboard/certificados' },
+            { label: 'Mis comisiones', href: '/dashboard/comisiones' },
+            { label: 'Buzón de ideas', href: '/dashboard/ideas' },
+            { label: 'Nube de Archivos', href: '/dashboard/drive' },
+            { label: 'Directorio', href: '/dashboard/miembros' },
           ].map((item) => (
             <a
               key={item.href}
