@@ -1,64 +1,148 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { buscarFeedbacksSimilares, auditarRespuestaIA } from '@/services/ai';
-import { createClient } from '@/lib/supabase/server';
-import { getAIPrompt } from '@/services/admin';
+import { NextRequest, NextResponse } from 'next/server'
+import { buscarFeedbacksSimilares, auditarRespuestaIA } from '@/services/ai'
+import { createClient } from '@/lib/supabase/server'
+import { getAIPrompt } from '@/services/admin'
 
-// Esto permite que la función corra en el Edge (más rápida, sin timeout de 10s)
-export const runtime = 'edge';
+export const runtime = 'edge'
+
+const SYSTEM_INSTRUCTION = `Sos un asistente de comunicación interna para ITEC Saladillo, 
+una organización tecnológica y comunitaria de Saladillo, Buenos Aires.
+
+Tu estilo de escritura es:
+- TÉCNICO: usás terminología precisa y profesional
+- HUMANO: cálido, cercano, que conecta con las personas
+- VANGUARDISTA: dinámico, orientado al futuro, innovador
+
+PALABRAS Y ESTRUCTURAS COMPLETAMENTE PROHIBIDAS (nunca las uses):
+- "el ITEC", "la ITEC" (Nombrá a la organización únicamente como "ITEC").
+- "viste", "che", "pibe", "hoy", "ayer", "mañana".
+
+En su lugar, usá alternativas como:
+- En lugar de "hoy": "esta jornada", "en la sesión actual", "durante este encuentro"
+- En lugar de "ayer": "en la sesión anterior", "en el encuentro previo"
+- En lugar de "mañana": "en la próxima instancia", "en el siguiente encuentro"
+- En lugar de "che": nada, empezá directo con el mensaje
+- En lugar de "viste": "como se mencionó", "según lo tratado"
+- En lugar de "pibe": nada, usá el nombre o "miembro"
+
+Siempre escribís en español rioplatense formal, con vos y sus conjugaciones correctas.
+Nunca utilizás lenguaje informal ni regionalismos fuera de los autorizados.`
+
+async function callGroq(messages: { role: string; content: string }[]): Promise<Response> {
+  const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${process.env.GROQ_API_KEY}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      model: 'llama-3.1-8b-instant',
+      messages,
+      stream: false,
+      temperature: 0.7,
+      max_tokens: 4096
+    })
+  })
+
+  if (!response.ok) {
+    throw new Error(`Groq API error: ${response.status}`)
+  }
+  return response
+}
+
+async function callHuggingFace(prompt: string): Promise<string> {
+  const response = await fetch('https://api-inference.huggingface.co/models/meta-llama/Llama-3.1-8B-Instruct', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${process.env.HF_API_KEY}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      inputs: prompt,
+      parameters: {
+        max_new_tokens: 4096,
+        temperature: 0.7,
+        return_full_text: false
+      }
+    })
+  })
+
+  if (!response.ok) {
+    throw new Error(`HuggingFace API error: ${response.status}`)
+  }
+
+  const data = await response.json()
+  return data?.generated_text || data?.[0]?.generated_text || ''
+}
 
 export async function POST(req: NextRequest) {
-  const { action, mensaje, textoBase, historial = [] } = await req.json();
+  let cuerpo: { mensaje?: string; historial?: { role: string; content: string }[]; idioma?: string }
+  try {
+    cuerpo = await req.json()
+  } catch {
+    return NextResponse.json({ error: 'JSON inválido' }, { status: 400 })
+  }
+
+  const { mensaje, historial = [] } = cuerpo
+
+  if (!mensaje || typeof mensaje !== 'string') {
+    return NextResponse.json({ error: 'Mensaje requerido' }, { status: 400 })
+  }
+
+  let aprendizajesAdicionales = ''
+  try {
+    const feedbacks = await buscarFeedbacksSimilares(mensaje, 5, 0.35)
+    if (feedbacks?.length > 0) {
+      aprendizajesAdicionales = `\n\n## Aprendizaje Comunitario:\n${feedbacks.map(f => `- ${f.tema_principal} -> ${f.lo_mas_util}`).join('\n')}`
+    }
+  } catch (err) { console.error(err) }
+
+  let miembrosContext = ''
+  try {
+    const supabase = await createClient()
+    const { data: miembros } = await supabase.rpc('obtener_miembros_publicos')
+    if (miembros?.length > 0) {
+      miembrosContext = `\n\n## Staff ITEC:\n${miembros.map((m: any) => `- ${m.full_name}: ${m.role}`).join('\n')}`
+    }
+  } catch (err) { console.error(err) }
+
+  let promptSistema = SYSTEM_INSTRUCTION
+  try {
+    const promptConfig = await getAIPrompt('asistente_global')
+    if (promptConfig) promptSistema = promptConfig.system_prompt
+  } catch (err) { console.warn(err) }
+
+  const messages = [
+    { role: 'system', content: promptSistema + aprendizajesAdicionales + miembrosContext },
+    ...historial,
+    { role: 'user', content: mensaje }
+  ]
 
   try {
-    // 1. OBTENCIÓN DE CONTEXTO (RAG + Staff)
-    let contexto = '';
+    const groqResponse = await callGroq(messages)
+    const data = await groqResponse.json()
+    const textoRespuesta = data.choices?.[0]?.message?.content || ''
+
+    const resultadoAuditoria = await auditarRespuestaIA(mensaje, textoRespuesta)
+    return NextResponse.json({ respuesta: resultadoAuditoria.respuestaFinal })
+  } catch (error: any) {
+    console.error('Groq failed, trying HuggingFace fallback:', error)
+
     try {
-      const [feedbacks, supabase] = await Promise.all([
-        buscarFeedbacksSimilares(mensaje, 3, 0.35).catch(() => []),
-        createClient()
-      ]);
-      const { data: miembros } = await supabase.rpc('obtener_miembros_publicos');
-      
-      if (feedbacks?.length > 0) contexto += `\nAprendizaje: ${feedbacks.map(f => f.tema_principal).join(', ')}`;
-      if (miembros?.length > 0) contexto += `\nStaff ITEC: ${miembros.map((m: any) => m.full_name).join(', ')}`;
-    } catch (e) { console.error("Error al obtener contexto", e); }
+      const fallbackPrompt = `${promptSistema}\n\n${aprendizajesAdicionales}\n\n${miembrosContext}\n\nUsuario: ${mensaje}`
+      const respuestaCompleta = await callHuggingFace(fallbackPrompt)
+      const resultadoAuditoria = await auditarRespuestaIA(mensaje, respuestaCompleta)
 
-    // 2. LÓGICA DE ASISTENTE (GROQ)
-    if (action === 'chat') {
-      const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${process.env.GROQ_API_KEY}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          model: 'llama-3.1-8b-instant',
-          messages: [
-            { role: 'system', content: `Sos el Asistente ITEC. Contexto:${contexto}` },
-            ...historial,
-            { role: 'user', content: mensaje }
-          ],
-          stream: true
-        })
-      });
-      return new Response(response.body, { headers: { 'Content-Type': 'text/event-stream' } });
+      return NextResponse.json({
+        respuesta: resultadoAuditoria.respuestaFinal,
+        modelo: 'meta-llama/Llama-3.1-8B-Instruct',
+        fallback: true
+      })
+    } catch (fallbackError: any) {
+      return NextResponse.json({
+        error: error.message || 'Error de IA',
+        detalle: fallbackError.message
+      }, { status: 502 })
     }
-
-    // 3. LÓGICA DE REDACCIÓN (GEMINI)
-    if (action === 'redactar') {
-      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:streamGenerateContent?key=${process.env.GEMINI_API_KEY}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: `Basado en: ${textoBase}. Genera 4 versiones de esta nota.` }] }]
-        })
-      });
-      return new Response(response.body, { headers: { 'Content-Type': 'text/event-stream' } });
-    }
-
-    return NextResponse.json({ error: 'Acción inválida' }, { status: 400 });
-
-  } catch (error) {
-    return NextResponse.json({ error: 'Error interno' }, { status: 500 });
   }
 }
