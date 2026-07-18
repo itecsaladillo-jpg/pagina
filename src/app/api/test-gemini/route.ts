@@ -12,8 +12,8 @@ export async function POST(request: NextRequest) {
   }
 
   try {
+    const timeout = 98000
     const controller = new AbortController()
-    const timeout = 90000
     const timer = setTimeout(() => controller.abort(), timeout)
 
     const response = await fetch(`${OLLAMA_BASE_URL}/api/chat`, {
@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
           }
         ],
         stream: false,
-        options: { num_ctx: 4096 },
+        options: { num_ctx: 2048 },
       }),
       signal: controller.signal,
     })

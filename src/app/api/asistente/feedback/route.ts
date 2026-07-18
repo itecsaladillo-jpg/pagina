@@ -76,8 +76,8 @@ ${historial
   .join('\n')}
         `.trim();
 
+        const timeout = 98000
         const controller = new AbortController()
-        const timeout = 90000
         const timer = setTimeout(() => controller.abort(), timeout)
 
         let data: any
@@ -96,7 +96,7 @@ ${historial
               ],
               stream: false,
               temperature: 0.1,
-              options: { num_ctx: 4096 },
+              options: { num_ctx: 2048 },
             }),
             signal: controller.signal,
           })

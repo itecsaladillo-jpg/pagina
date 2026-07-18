@@ -5,8 +5,8 @@ const OLLAMA_BASE_URL = process.env.OLLAMA_API_BASE_URL || 'https://ai.itecsalad
 const OLLAMA_MODEL = 'llama3.2:latest'
 
 async function chatWithOllama(messages: { role: string; content: string }[], temperature = 0.7, options?: { num_ctx?: number; timeout?: number }): Promise<string> {
+  const timeout = options?.timeout ?? 98000
   const controller = new AbortController()
-  const timeout = options?.timeout ?? 90000
   const timer = setTimeout(() => controller.abort(), timeout)
 
   try {
@@ -18,7 +18,7 @@ async function chatWithOllama(messages: { role: string; content: string }[], tem
         messages,
         stream: false,
         temperature,
-        options: { num_ctx: options?.num_ctx ?? 4096 },
+        options: { num_ctx: options?.num_ctx ?? 2048 },
       }),
       signal: controller.signal,
     })
@@ -245,31 +245,25 @@ export async function generateMulticanalNews(rawFacts: string): Promise<{
   texto_sponsors: string
   texto_medios: string
 }> {
-  const systemPrompt = `${ITEC_SYSTEM_PROMPT}
+  const prompt = `Estilo ITEC: técnico, humano, vanguardista. Español formal con "vos". Prohibido: "hoy","ayer","mañana","che","viste","pibe","el ITEC","la ITEC". No menciones a Augusto Cicaré salvo necesario.
 
-Actuá como Director de Comunicaciones Estratégicas. Transformá los hechos crudos en 5 piezas con identidades divergentes.
+Dados estos hechos crudos, generá 5 piezas en JSON. Máximo 2 oraciones cada texto. Sin markdown. Sin inventar datos.
 
-REGLAS:
-1. Respondé SOLO con JSON válido, sin markdown ni texto adicional.
-2. No inventes datos; usá solo la información disponible.
-3. No menciones a Augusto Cicaré salvo que sea indispensable.
-
-FORMATO:
+JSON:
 {
-  "titulo": "Titular de alto impacto (máx. 10 palabras)",
-  "texto_publico": "Para público general: tono aspiracional, accesible, traducí lo técnico a beneficio comunitario. Cerrá invitando a sumarse.",
-  "texto_miembros": "Para miembros: tono cálido y cercano, celebrando el esfuerzo colectivo. Usá 'nosotros'. Motivacional.",
-  "texto_sponsors": "Para sponsors: tono profesional, destacando impacto, métricas y eficiencia en uso de recursos.",
-  "texto_medios": "Para medios: tono institucional, estructura de gacetilla. Incluí cita simulada de autoridad ITEC."
-}`
+  "titulo": "titular impacto (max 8 palabras)",
+  "texto_publico": "para público: aspiracional, traducí técnica a beneficio comunitario",
+  "texto_miembros": "para miembros: cálido, 'nosotros', celebrando esfuerzo colectivo",
+  "texto_sponsors": "para sponsors: profesional, destacando impacto y métricas",
+  "texto_medios": "para medios: institucional, gacetilla con cita de autoridad ITEC"
+}
 
-  const userPrompt = `HECHOS CRUDOS:\n"""\n${rawFacts}\n"""`
+HECHOS: """${rawFacts}"""`
 
   const raw = await chatWithOllama([
-    { role: 'system', content: systemPrompt },
-    { role: 'user', content: userPrompt }
-  ], 0.8, { num_ctx: 4096, timeout: 90000 })
-  
+    { role: 'user', content: prompt }
+  ], 0.8, { num_ctx: 2048, timeout: 98000 })
+
   const cleaned = raw.replace(/^```json\s*/i, '').replace(/\s*```$/i, '').trim()
 
   try {

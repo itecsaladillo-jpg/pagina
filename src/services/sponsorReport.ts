@@ -14,8 +14,8 @@ const OLLAMA_BASE_URL = process.env.OLLAMA_API_BASE_URL || 'https://ai.itecsalad
 const OLLAMA_MODEL = 'llama3.2:latest'
 
 async function chatWithOllama(messages: { role: string; content: string }[], temperature = 0.7): Promise<string> {
+  const timeout = 98000
   const controller = new AbortController()
-  const timeout = 90000
   const timer = setTimeout(() => controller.abort(), timeout)
 
   try {
@@ -27,7 +27,7 @@ async function chatWithOllama(messages: { role: string; content: string }[], tem
         messages,
         stream: false,
         temperature,
-        options: { num_ctx: 4096 },
+        options: { num_ctx: 2048 },
       }),
       signal: controller.signal,
     })
