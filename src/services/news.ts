@@ -16,6 +16,28 @@ export interface NewsFlashMulticanal {
   para_miembros: boolean
   para_sponsors: boolean
   para_medios: boolean
+  source_type?: string
+  commission_id?: string | null
+  original_text?: string
+  summary?: string
+  action_items?: string[]
+  flash_text?: string
+}
+
+export interface NewsFlash {
+  id: string
+  created_at: string
+  updated_at: string
+  commission_id: string | null
+  author_id: string | null
+  title: string
+  original_text: string
+  summary: string
+  action_items: string[]
+  flash_text: string
+  source_type: 'meet' | 'capacitacion' | 'reunion' | 'manual'
+  is_published: boolean
+  titulo?: string
 }
 
 export interface RelatedVideo {
@@ -138,6 +160,70 @@ export async function getArticleBySlug(slug: string): Promise<PublicArticle | nu
   }
 
   return article as PublicArticle
+}
+
+export async function getPublicNewsFlashes(): Promise<NewsFlashMulticanal[]> {
+  const supabase = await createClient()
+  const { data, error } = await supabase
+    .from('news_flashes')
+    .select('*')
+    .eq('para_publico', true)
+    .eq('is_published', true)
+    .order('created_at', { ascending: false })
+
+  if (error) {
+    console.error('[newsService] getPublicNewsFlashes error:', error.message)
+    return []
+  }
+  return (data ?? []) as NewsFlashMulticanal[]
+}
+
+export async function getMemberNewsFlashes(): Promise<NewsFlashMulticanal[]> {
+  const supabase = await createClient()
+  const { data, error } = await supabase
+    .from('news_flashes')
+    .select('*')
+    .eq('para_miembros', true)
+    .eq('is_published', true)
+    .order('created_at', { ascending: false })
+
+  if (error) {
+    console.error('[newsService] getMemberNewsFlashes error:', error.message)
+    return []
+  }
+  return (data ?? []) as NewsFlashMulticanal[]
+}
+
+export async function getSponsorNewsFlashes(): Promise<NewsFlashMulticanal[]> {
+  const supabase = await createClient()
+  const { data, error } = await supabase
+    .from('news_flashes')
+    .select('*')
+    .eq('para_sponsors', true)
+    .eq('is_published', true)
+    .order('created_at', { ascending: false })
+
+  if (error) {
+    console.error('[newsService] getSponsorNewsFlashes error:', error.message)
+    return []
+  }
+  return (data ?? []) as NewsFlashMulticanal[]
+}
+
+export async function getPressNewsFlashes(): Promise<NewsFlashMulticanal[]> {
+  const supabase = await createClient()
+  const { data, error } = await supabase
+    .from('news_flashes')
+    .select('*')
+    .eq('para_medios', true)
+    .eq('is_published', true)
+    .order('created_at', { ascending: false })
+
+  if (error) {
+    console.error('[newsService] getPressNewsFlashes error:', error.message)
+    return []
+  }
+  return (data ?? []) as NewsFlashMulticanal[]
 }
 
 export async function createMulticanalNewsFlash(

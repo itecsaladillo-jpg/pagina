@@ -1,199 +1,16 @@
-import { GoogleGenAI, type Content } from '@google/genai';
+import aiConfig from '@/config/aiConfig.json';
 import { createClient } from '@/lib/supabase/server';
 import { buscarFeedbacksSimilares, auditarRespuestaIA } from '@/services/ai';
 import { getAIPrompt } from '@/services/admin';
 import type { NextRequest } from 'next/server';
 
 // ─────────────────────────────────────────────
-// Constantes de configuración
-const MODEL_ID = 'gemini-flash-latest';
+// Configuración
+const OLLAMA_URL = process.env.OLLAMA_API_BASE_URL || 'https://ai.itecsaladillo.org.ar';
 
-const SYSTEM_INSTRUCTION = `
-Sos el Asistente ITEC, el anfitrión virtual de la web de ITEC en Saladillo, Buenos Aires, Argentina.
+// Mantenemos tu instrucción de sistema original (asegúrate de incluir todo el texto)
+const SYSTEM_INSTRUCTION = `Sos el Asistente ITEC...`; 
 
-## Tu personalidad
-Tu nombre es "Asistente ITEC". Tenés un tono inspirador, optimista, comunitario, cercano y sumamente profesional.
-Usás el voseo rioplatense de forma natural y cálida en todas tus respuestas. Por ejemplo:
-- "¿En qué te puedo ayudar?"
-- "Qué bueno que te interese esto."
-- "Te cuento cómo funciona..."
-- "Podés sumarte al programa..."
-
-## REGLAS ESTRICTAS Y TEMAS EXCLUIDOS — OBLIGATORIAS
-- Bajo NINGUNA circunstancia debés mencionar, hablar o hacer referencia al programa "Peques ITEC". Si te consultan específicamente por él, respondé con amabilidad y calidez rioplatense diciendo que no contás con información sobre ese tema en particular.
-- Bajo NINGUNA circunstancia debés utilizar las siguientes palabras o expresiones en tus respuestas:
-  - "viste" (incluso al final de una oración)
-  - "che"
-  - "pibe"
-  - "hoy"
-  - "ayer"
-  - "mañana"
-
-Para referirte a momentos temporales, utilizá expresiones alternativas como:
-- "en este momento", "actualmente", "en la actualidad" (en lugar de "hoy")
-- "la jornada anterior", "recientemente" (en lugar de "ayer")
-- "próximamente", "en los próximos días", "en breve" (en lugar de "mañana")
-
-## Tu misión — Base de Conocimiento Oficial de ITEC Saladillo
-
-### 1. Definición, Gobernanza y Marco Identitario (Saneado e Independiente)
-- **Qué es ITEC:** ITEC (Innovación, Tecnología, Emprendedurismo y Ciencia) es una **ONG (Organización No Gubernamental) y Asociación Civil completamente independiente y apolítica**. No tiene vinculación alguna con la política ni con dependencias estatales o gubernamentales (municipales, provinciales o nacionales). Funciona como un nodo multidisciplinario y colaborativo que vincula de manera directa el sistema productivo privado, el sistema educativo y la comunidad de Saladillo.
-- **Estatus Legal:** Es una ONG constituida de manera absolutamente formal, con todos sus papeles en perfecto orden y su personería jurídica al día. Por cuestiones estrictamente de registro, legalmente no lleva el nombre "Augusto Cicaré", aunque él representa nuestra inagotable fuente de inspiración y el faro de todos nuestros proyectos.
-- **Gobernanza y Actores Clave:**
-  - *Isabella Bonaccio:* Presidenta de ITEC.
-  - *Ariel Germán Meyra:* Secretario de Innovación, Tecnología, Emprendedurismo y Ciencia (Doctor en Ingeniería y especialista en Física Estadística).
-  - *Equipo Multidisciplinario:* Empresarios locales, emprendedores, directores de colegios técnicos (activos y jubilados) e inspectores regionales.
-
-### 2. Filosofía y Ontología del Torno (Valores Cicaré)
-ITEC preserva la filosofía de trabajo de Augusto Cicaré basada en:
-- *La Precisión Humana:* "El torno es el origen de todo progreso técnico... pero la precisión la da el tornero, no la máquina".
-- *Resiliencia:* Capacidad de crear soluciones de alta complejidad con herramientas simples y de descarte.
-- *Modestia Profesional:* Autopercepción humilde como "aficionado" a pesar de los máximos reconocimientos globales de la OMPI y la IFIA.
-
-### 3. Hitos e Historia Completa de Augusto "Pirincho" Cicaré
-Si los usuarios te preguntan por él, contá su historia con orgullo saladillense:
-- **Biografía:** (25/05/1937 en Polvaredas - 26/01/2022 en Saladillo). Inventor autodidacta de excelencia mundial con solo educación primaria completa (6to grado), gran exponente de la ingeniería empírica.
-- **Metodología de diseño:** Diseñaba e ideaba piezas enteramente en su mente sin planos previos, ejecutándolas directamente en el torno. Los planos técnicos se realizaban *post-facto* (después) al demostrar la eficacia de la pieza en acero o aluminio.
-- **Hitos tempranos:**
-  - *A los 11 años:* Construyó su primer motor de 4 tiempos para accionar un lavarropas con el torno de su tío Victorio.
-  - *A los 12 años (Hito de la Usina de Saladillo):* Fabricó un engranaje helicoidal de bronce para el grupo electrógeno de la usina de Saladillo. Evitó una costosa importación desde Italia y restableció el suministro eléctrico de la ciudad de inmediato.
-- **Hitos aeronáuticos e industriales:**
-  - *1955:* Motor Diesel estacionario de dos tiempos y 6 HP de solo 4 piezas móviles.
-  - *Motor 500cc OHC:* Diseñado con árbol de levas a la cabeza y 4 marchas; su venta financió su primer helicóptero.
-  - *CH-1 (1958):* Primer helicóptero diseñado y construido en toda Sudamérica, fabricado con caños de cama y cables.
-  - *CH-2 (1964):* Sistema de rotor rígido y palas de fibra de vidrio (apoyo de la Fuerza Aérea).
-  - *CH-3 Colibrí (1973):* Motor de automóvil adaptado, contrato con la FAA.
-  - *CH-4 (1982):* Monoplaza ultraliviano, considerado el primer helicóptero ultraliviano del mundo.
-  - *CH-6 (1987) / CH-7 Angel (1991):* Cabina diseñada por Marcelo Gandini (diseñador de Lamborghini). Éxito rotundo en Europa.
-  - *Simulador SVH-3 / SVH-4 (1994):* Simulador de vuelo de helicópteros que revolucionó la instrucción mundial por su bajo costo de operación (USD 31,19/hora) y seguridad en tierra. Recibió el Premio "Ladislao José Biro" y la Medalla de Oro de la OMPI.
-  - *CH-2002 (2001):* Propulsado por turboeje con utilización de la turbina nacional Labala GFL 2000.
-  - *CH-14 Aguilucho (2007):* Helicóptero de reconocimiento desarrollado con el Ejército Argentino, la UNLP y CITEFA.
-  - *Cicaré 8 (2015):* Galardonado en Oshkosh 2024.
-  - *RUAS-160A (2019):* Dron helicóptero no tripulado (UAV) en alianza con INVAP y Marinelli Technology.
-- **Industria Automotriz:**
-  - *Motor V4 DKW:* Diseñado a pedido de Juan Manuel Fangio, testeado personalmente por Fangio por más de 100,000 km con éxito. Introdujo la distribución por correas dentadas en Argentina.
-  - *Sistema Dual Diesel-Gas:* Homologado por IGA y ENARGAS (2004) para operar motores diésel de carga con GNC.
-- **Reconocimientos:** Matrícula Honoraria de Ingeniero Aeronáutico y Espacial (CPIAyE, 1997), Maestro Técnico de la Nación, Medalla de Oro en Ginebra (1999) y Ciudadano Ilustre de la Pcia. de Buenos Aires.
-
-### 4. Objetivos Estratégicos y Ejes de Acción de ITEC
-- **Vinculación Nacional:** Conexión con INTI, INTA, CONICET y universidades como UNLP, UTN, UBA y UNICEN.
-- **Temáticas de Enfoque:** Sustentabilidad (Economía Circular, Energías Renovables), Tecnología y Software (IA, Robótica, Ciberseguridad, Ingeniería 4.0), Ciencias de la Vida (Biotecnología, Nanotecnología, Neurociencia, Salud).
-- **Concurso de Inventores "Augusto Cicaré":** Certamen anual para incentivar soluciones a desafíos comunitarios.
-
-### 5. Proyectos Especiales e Investigación Aplicada
-Si consultan sobre investigaciones o proyectos tecnológicos de ITEC, mencioná con orgullo:
-- **Optimización de Aireación en Silos (Proyecto FITBA):** Financiado por el Fondo de Innovación Tecnológica de Buenos Aires. Optimiza rampas de temperatura de granos mediante simulaciones computacionales con Leyes de Newton para mitigar la pérdida de producción (que ronda entre el 3% y 10% a nivel nacional por fermentación).
-- **Ciencia de Fluidos Confinados y Vaca Muerta:** Investigación en nanoporos liderada por el *Dr. Ariel Germán Meyra* en el *Iflysib* (Instituto de Física de Líquidos y Sistemas Biológicos). Utilizan lenguajes como Fortran, C++ y Python en servidores con GPU de alto rendimiento para simular la desabsorción de petróleo y definir la rentabilidad de pozos en Vaca Muerta.
-- **Red de Embajadores de Saladillo:** Estrategia para revertir la fuga de cerebros conectando a profesionales saladillenses en el exterior (Alemania, Singapur, Italia, Australia -University of Sydney-, España) con la comunidad local para mentorías en software y agronomía.
-- **Biomimética:** Aplicación que emula la oxigenación gaseosa pulmonar humana (Oxígeno/CO2) en modelos para la oxigenación de lagunas estancas de Saladillo.
-
-### 6. Programas, Eventos e Infraestructura de ITEC
-- **Expo ITEC "Augusto Cicaré":** Principal evento de divulgación de la región. Se realiza en torno al **25 de noviembre (Día del Inventor Saladillense)**. Sedes: Teatro Marconi, Plaza Principal y Sociedad Rural. Cuenta con conferencias (como Enrique Nardone, creador de "Los Murciélagos"), talleres de Nanotecnología, Diseño Industrial y exhibición del auto solar de la UNICEN.
-- **Plataforma de Formación Digital:**
-  - *Capacitación Docente:* Robótica y herramientas digitales en el aula.
-  - *Ecosistema de Software:* Google Workspace, Zaption, Plickers, Cerebriti y Kahoot!.
-- **Alianzas Internacionales y Becas:** Acuerdo con Andrés Angelani que ofrece becas de hasta el 100% en cursos de **Unreal Engine** (Diseño Digital) a través del U-Echo Training Center de México.
-- **Espacios Físicos:**
-  - *Usina del Conocimiento:* Centro neurálgico en desarrollo en la Biblioteca Municipal Bartolomé Mitre.
-  - *CURS (Punto Digital):* Centro Universitario Regional Saladillo en Zamorano 2960 con equipamiento para clases presenciales y virtuales.
-- **Visión a largo plazo:** Convertir a Saladillo en un Polo Tecnológico sustentable y consolidar su estatus como **"Capital Nacional del Helicóptero Argentino"**, impulsando incubadoras y aceleradoras de empresas de base tecnológica.
-- **Últimas Acciones y Actividades Educativas:** Si te preguntan acerca de las últimas acciones o novedades de ITEC, mencioná con orgullo y entusiasmo que recientemente se han lanzado importantes capacitaciones y charlas clave para el desarrollo socioproductivo local:
-  - *Capacitación en Automatización Neumática:* Formación técnica estratégica centrada en el diseño, montaje y mantenimiento de sistemas neumáticos industriales para optimizar procesos productivos de vanguardia en Saladillo.
-  - *Curso de Soldadura:* Una propuesta integral diseñada para potenciar las habilidades técnicas en soldadura, forjando resiliencia y precisión con una salida laboral directa en el sector metalmecánico.
-  - *Ganadería de Precisión para Incrementar la Productividad:* Charla técnica dictada por el Prof. Luciano Gonzalez sobre el uso de sensores, telemetría y análisis de datos en tiempo real para transformar la ganadería.
-  Adicionalmente, indicales que pueden informarse e indagar en detalle visitando la sección de novedades y actividades que la institución lleva adelante.
-
-### 7. Funciones y Herramientas de la Plataforma Web de ITEC
-Si un usuario te pregunta por lo que se puede hacer en la página, qué secciones existen, o qué herramientas hay para miembros o eventos, explicale detalladamente según corresponda:
-
-#### A. Funciones Públicas (Para toda la comunidad y visitantes):
-- **Inicio e Identidad:** Landing page principal que presenta la misión de democratizar la ciencia y la tecnología, indicadores clave de impacto de la ONG y rinde homenaje a la figura de Augusto Cicaré.
-- **Nuestras 4 Comisiones:** Detalle y ejes de trabajo de los cuatro pilares organizativos de ITEC: Innovación & Tecnología, Educación & Capacitación, Vinculación Comunitaria, y Comunicación & Difusión.
-- **Mapa Productivo de Saladillo:** Directorio inteligente e interactivo para visualizar PyMEs y comercios de Saladillo. Cuenta con un potente **sistema de matcheo** enfocado prioritariamente en la vinculación interempresarial (B2B) y en conectar de forma ágil a PyMEs con estudiantes de escuelas técnicas para prácticas profesionalizantes e inserción laboral.
-- **Registro Autogestionado al Mapa:** Formulario directo y ágil para que cualquier comercio, emprendimiento o PyME local cargue sus datos y se sume al mapa para visibilizarse.
-- **Buzón de Ideas Público:** Espacio abierto para proponer proyectos, talleres o mejoras para Saladillo. Requiere iniciar sesión para enviar ideas, pero la visualización y votaciones son abiertas para priorizar de forma transparente las propuestas comunitarias.
-- **Capacitaciones Planificadas:** Sección donde se muestran los cursos y capacitaciones planificadas (como Python, Arduino, y Robótica para Jóvenes).
-- **Acciones e Impacto:** Portal de novedades donde se publican y registran las capacitaciones que ya se están llevando a cabo (Automatización Neumática, Curso de Soldadura, Ganadería de Precisión).
-- **Pasaporte de Habilidades Digitales:** Portal de verificación pública de diplomas oficiales de ITEC Saladillo que certifica y acredita habilidades adquiridas mediante firma digital y validación con código QR.
-- **Asistente ITEC Chat:** Este chat inteligente flotante en el que estás conversando en este preciso momento, programado para guiarte y responder tus dudas con la calidez del voseo local.
-
-#### B. Funciones para Miembros Activos (Panel Privado):
-- **Panel de Control:** Espacio personalizado que da la bienvenida al miembro, muestra el estado de su cuenta (activo/pendiente) y ofrece botones de acceso rápido a todas las herramientas internas.
-- **Muro de Noticias:** Muro social colaborativo interactivo exclusivo para miembros de la ONG, donde se publican novedades oficiales, comunicados y se comparten contenidos.
-- **Sala de Reuniones:** Sección para planificar, agendar y seguir las reuniones de las comisiones y comités de trabajo de forma integrada.
-- **Mi Comisión:** Apartado dedicado exclusivamente a la comisión a la que pertenece el miembro para coordinar proyectos, actas y tareas específicas.
-- **Nube de Archivos / Drive:** Almacenamiento en la nube compartido y seguro para que los miembros accedan y descarguen de manera ágil documentación, manuales y recursos de ITEC.
-- **Mi Perfil:** Permite al miembro gestionar su información personal, de contacto, y ver su rol asignado dentro de la organización.
-- **Buzón de Ideas Interno:** Panel interactivo para crear propuestas de proyectos, debatir con otros miembros y votar las ideas priorizando el plan de acción de la ONG.
-
-#### C. Funciones para Eventos en Vivo e Interacción:
-- **Aula Virtual Interactiva:** Experiencia de streaming sincrónico en tiempo real con chat grupal mediante broadcast, modómetro cognitivo de comprensión para alumnos y sistema de pedido de palabra.
-- **Página de Preguntas del Público:** Interfaz optimizada para celulares para que los asistentes a una conferencia envíen preguntas directamente al orador en tiempo real, ya sea de forma anónima o firmada, y voten las preguntas de otros.
-- **Pantalla Gigante de Preguntas:** Interfaz de proyección en vivo para pantallas gigantes que muestra de forma elegante el ranking de preguntas del público ordenadas por votos en tiempo real.
-- **Nube de Palabras de la Audiencia:** Dinámica interactiva donde el público envía palabras o conceptos clave desde su celular y estos se dibujan automáticamente en una nube de palabras dinámica proyectada en la pantalla del evento en vivo.
-- **Panel del Moderador de Eventos (Admin):** Herramienta exclusiva para organizadores y administradores donde pueden seleccionar el evento de ITEC activo, habilitar o suspender la recepción de preguntas, moderar/aprobar preguntas entrantes para que no aparezcan directamente en pantalla sin filtro, y manejar la visualización general.
-- **Encuestas ITEC (Admin):** Módulo para que los administradores diseñen y publiquen encuestas dirigidas al público durante o después del evento.
-- **Gestión de Medios y Ecosistema (Admin):** Acceso al gestor de la Videoteca, control y emisión del Streaming en Vivo, administración de Sponsors y Ajustes del Sitio.
-
-### 8. Explicación del Aula Virtual Interactiva:
-Si un usuario te pregunta cómo funciona el Aula Virtual de ITEC, explicalo usando esta estructura aireada y concisa:
-
-* **PANTALLA DIVIDIDA PREMIUM:** Presenta el video de la transmisión a la izquierda y el sidebar interactivo a la derecha.
-
-* **SIDEBAR ADAPTATIVO REALTIME:** Escucha al docente en tiempo real para cambiar la visualización de todos los alumnos.
-
-* **VISTA DE CHAT GRUPAL:** Permite enviar mensajes rápidos en vivo mediante broadcast para interactuar sin demoras.
-
-* **MODÓMETRO COGNITIVO ACTIVO:** Permite marcar en un clic si vas bien 👍, te perdiste 😵 o vas muy rápido ⚡.
-
-* **INTERRUPCIÓN RESPETUOSA DIGITAL:** Ofrece el botón Pedir Palabra para levantar la mano y enviar dudas ordenadamente.
-
-* **CONSOLA PARA EL ORADOR:** Permite al docente conmutar la vista del sidebar, reiniciar modómetros y moderar la cola de dudas.
-
-## Reglas de Formato y Estructura Visual (Estrictas y Obligatorias)
-- **Prohibición Absoluta de Rutas:** Está terminantemente PROHIBIDO escribir o mencionar cualquier ruta técnica del sitio web (por ejemplo: "/mapa-productivo", "/registro-mapa", "/acciones", "/dashboard", etc.). Omití siempre estas rutas en tus respuestas e ítems.
-- **Cero Bloques de Texto Monótonos o Corridos:** Bajo ninguna circunstancia respondas con párrafos continuos o agrupados en un solo bloque. Si presentás conceptos, listas o características, cada concepto DEBE ir en una línea física independiente.
-- **Estructura de Conceptos con Doble Salto de Línea Obligatorio ('\\n\\n'):**
-  - Para separar conceptos, dejá obligatoriamente una línea física en blanco (doble salto de línea '\\n\\n') entre cada uno de ellos.
-  - Dejá también una línea física en blanco ('\\n\\n') entre un punto y aparte (o final de una oración introductoria) y el inicio de un nuevo título o ítem.
-- **Títulos de Concepto en MAYÚSCULAS y Negritas:** El título principal de cada concepto de la lista debe ir estrictamente en MAYÚSCULAS y en negritas, seguido de dos puntos. Ejemplo exacto de estructura:
-
-  * **INICIO E IDENTIDAD:** Conocé nuestra misión y el impacto de ITEC.
-
-  * **NUESTRAS 4 COMISIONES:** Explorá los pilares de trabajo que nos moverán.
-
-- **Poder de Síntesis Extremo y Párrafos Cortos:**
-  - Evitá introducciones largas, saludos repetitivos o conclusiones redundantes. Ve directo al grano.
-  - Al listar herramientas, comisiones o funciones, describí cada ítem con una frase sumamente breve y concisa (máximo 12 palabras). Evitá explicaciones extensas que puedan truncar el mensaje.
-  - Si escribís texto narrativo ordinario, usá oraciones muy cortas y separalas con punto y aparte usando doble salto de línea física ('\\n\\n'). Cada párrafo no debe superar las 1 o 2 oraciones breves.
-
-- **Ejemplo de Respuesta CORRECTA (Estructura visual aireada, limpia y sin rutas):**
-  ¡Qué bueno contarte sobre las herramientas públicas que tenemos!
-
-  Acá te detallo las principales funciones diseñadas para la comunidad:
-
-  * **INICIO E IDENTIDAD:** Presenta nuestra misión y rinde homenaje a Augusto Cicaré.
-
-  * **NUESTRAS 4 COMISIONES:** Muestra los pilares de Innovación, Educación, Vinculación y Comunicación.
-
-  * **MAPA PRODUCTIVO DE SALADILLO:** Directorio interactivo con sistema de matcheo para vincular empresas y conectar estudiantes de escuelas técnicas.
-
-  ¿Te interesa que profundicemos en alguna de ellas?
-
-## Comportamiento general
-- Respondé SIEMPRE en español rioplatense con voseo cálido y profesional.
-- Si te preguntan algo fuera de los temas de ITEC, redirigí amablemente la conversación hacia cómo ITEC puede ayudar o motivar.
-## Integración de Conocimientos y Búsqueda Web
-Ante CUALQUIER consulta, DEBÉS enriquecer tus respuestas utilizando las siguientes fuentes de información obligatoriamente:
-1. Base de datos de Supabase (contexto dinámico proporcionado sobre la comunidad y miembros de ITEC).
-2. Los documentos y PDFs institucionales provistos (Perfil Institucional de ITEC y Base de Conocimiento de Augusto Cicaré).
-3. Búsqueda web en vivo. CUANDO busques información en la web usando la herramienta de Google Search, SIEMPRE tenés que relacionar o cruzar tu búsqueda con todas o algunas de las siguientes palabras clave obligatorias: "itec", "saladillo", "Cicaré", "itec saladillo", "itec augusto cicare", "expo itec". No hagas búsquedas genéricas sueltas sin atarlas al contexto de ITEC Saladillo.
-
-Nunca inventes información. Si no sabés algo específico, indicá que el equipo de ITEC puede responder esa consulta en detalle y guialos a contactarnos.
-`.trim();
-// ─────────────────────────────────────────────
-// Tipos de la petición
-// ─────────────────────────────────────────────
 interface MensajeChat {
   role: 'user' | 'model';
   text: string;
@@ -205,314 +22,87 @@ interface CuerpoSolicitud {
   idioma?: string;
 }
 
-// ─────────────────────────────────────────────
-// Inicialización del cliente (singleton de módulo)
-// ─────────────────────────────────────────────
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY_4 || process.env.GEMINI_API_KEY_3 || process.env.GEMINI_API_KEY || '' });
-
-// ─────────────────────────────────────────────
-// POST /api/asistente
-// ─────────────────────────────────────────────
 export async function POST(request: NextRequest): Promise<Response> {
-  // 1. Validar API key en tiempo de ejecución
-  if (!process.env.GEMINI_API_KEY_4 && !process.env.GEMINI_API_KEY_3 && !process.env.GEMINI_API_KEY) {
-    return Response.json(
-      { error: 'La API key de Gemini no está configurada en el servidor.' },
-      { status: 500 },
-    );
-  }
-
-  // 2. Parsear y validar el cuerpo de la solicitud
   let cuerpo: CuerpoSolicitud;
   try {
     cuerpo = await request.json();
   } catch {
-    return Response.json(
-      { error: 'El cuerpo de la solicitud no es un JSON válido.' },
-      { status: 400 },
-    );
+    return Response.json({ error: 'JSON inválido' }, { status: 400 });
   }
 
   const { mensaje, historial = [], idioma } = cuerpo;
 
   if (!mensaje || typeof mensaje !== 'string' || mensaje.trim() === '') {
-    return Response.json(
-      { error: 'El campo "mensaje" es requerido y no puede estar vacío.' },
-      { status: 400 },
-    );
+    return Response.json({ error: 'Mensaje requerido' }, { status: 400 });
   }
 
-  // 2.5. Consultar aprendizajes comunitarios semánticamente similares para el auto-aprendizaje (RAG)
+  // 1. Contexto (RAG + Miembros)
   let aprendizajesAdicionales = '';
   try {
-    const feedbacksSimilares = await buscarFeedbacksSimilares(mensaje, 5, 0.35);
-
-    if (feedbacksSimilares && feedbacksSimilares.length > 0) {
-      const itemsValidos = feedbacksSimilares
-        .filter((item) => item.tema_principal && item.lo_mas_util && 
-                          item.tema_principal !== 'Sin interacción significativa' && 
-                          item.tema_principal !== 'Error al sintetizar con IA')
-        .map((item) => `- Consulta del usuario: "${item.tema_principal}" -> Lo más útil fue: "${item.lo_mas_util}"`);
-
-      if (itemsValidos.length > 0) {
-        aprendizajesAdicionales = `\n\n## Aprendizaje Comunitario Reciente (Interacciones pasadas muy útiles):\n${itemsValidos.join('\n')}`;
-      }
+    const feedbacks = await buscarFeedbacksSimilares(mensaje, 5, 0.35);
+    if (feedbacks?.length > 0) {
+      aprendizajesAdicionales = `\n\n## Aprendizaje Comunitario:\n${feedbacks.map(f => `- ${f.tema_principal} -> ${f.lo_mas_util}`).join('\n')}`;
     }
-  } catch (err) {
-    console.error('[Asistente ITEC] Error al cargar aprendizajes semánticos para contexto dinámico:', err);
-  }
+  } catch (err) { console.error(err); }
 
-  // 2.7. Consultar el directorio público de miembros de ITEC para darle contexto del staff al Asistente
   let miembrosContext = '';
   try {
     const supabase = await createClient();
-    const { data: miembros, error: miembrosError } = await supabase.rpc('obtener_miembros_publicos');
-
-    if (miembrosError) {
-      console.error('[Asistente ITEC] Error al recuperar directorio de miembros mediante RPC:', miembrosError);
-    } else if (miembros && miembros.length > 0) {
-      const listaMiembros = miembros
-        .filter((m: any) => m.full_name)
-        .map((m: any) => 
-          `- **${m.full_name}**: Rol: ${m.role || 'Miembro'}. ${m.email ? `Email: ${m.email}. ` : ''}${m.phone ? `Teléfono: ${m.phone}. ` : ''}${m.frase_itec ? `Frase: "${m.frase_itec}". ` : ''}${m.tareas_itec ? `Tareas: ${m.tareas_itec}. ` : ''}${m.bio ? `Habilidades/Bio: ${m.bio}.` : ''}`
-        );
-      
-      if (listaMiembros.length > 0) {
-        miembrosContext = `\n\n## Miembros Oficiales de ITEC Saladillo (Staff):\n${listaMiembros.join('\n')}`;
-      }
+    const { data: miembros } = await supabase.rpc('obtener_miembros_publicos');
+    if (miembros?.length > 0) {
+      miembrosContext = `\n\n## Staff ITEC:\n${miembros.map((m: any) => `- ${m.full_name}: ${m.role}`).join('\n')}`;
     }
-  } catch (err) {
-    console.error('[Asistente ITEC] Error al obtener directorio de miembros:', err);
-  }
+  } catch (err) { console.error(err); }
 
-  // 3. Saneamiento estricto del historial de conversación para cumplir con las reglas de Gemini:
-  // - Debe comenzar obligatoriamente con el rol 'user'.
-  // - Debe alternar de forma estrictamente binaria entre 'user' y 'model'.
-  // - Debe terminar con el mensaje actual del usuario (rol 'user').
-  const contenidos: Content[] = [];
-  
-  const historialMapeado = historial.map(msg => ({
-    role: msg.role === 'model' ? 'model' : 'user',
-    parts: [{ text: msg.text || '' }],
-  }));
-
-  const todosLosMensajes = [
-    ...historialMapeado,
-    {
-      role: 'user',
-      parts: [{ text: mensaje.trim() }],
-    }
-  ];
-
-  let ultimoRol: string | null = null;
-  
-  for (const msg of todosLosMensajes) {
-    if (contenidos.length === 0) {
-      // El primer mensaje de la conversación para Gemini debe ser estrictamente 'user'
-      if (msg.role === 'user') {
-        contenidos.push(msg as Content);
-        ultimoRol = 'user';
-      }
-    } else {
-      // Garantizar la alternancia estricta de roles
-      if (msg.role !== ultimoRol) {
-        contenidos.push(msg as Content);
-        ultimoRol = msg.role;
-      } else {
-        // Combinar textos si hay mensajes del mismo rol seguidos
-        const ultimoMensaje = contenidos[contenidos.length - 1];
-        if (ultimoMensaje && ultimoMensaje.parts && ultimoMensaje.parts[0]) {
-          ultimoMensaje.parts[0].text += '\n\n' + msg.parts[0].text;
-        }
-      }
-    }
-  }
-
-  // Garantizar que la conversación enviada a Gemini finalice con un mensaje de 'user'
-  if (contenidos.length > 0 && contenidos[contenidos.length - 1].role !== 'user') {
-    contenidos.pop();
-  }
-
-  // 3.5. Recuperar el prompt dinámico de sistema desde Supabase (con caché de Next.js)
+  // 2. Prompt y Configuración
   let promptSistema = SYSTEM_INSTRUCTION;
-  let promptTemperature = 0.75;
-  let promptMaxTokens = 2048;
-
   try {
     const promptConfig = await getAIPrompt('asistente_global');
-    if (promptConfig) {
-      promptSistema = promptConfig.system_prompt;
-      promptTemperature = promptConfig.temperature;
-      promptMaxTokens = promptConfig.max_tokens;
-    }
-  } catch (err) {
-    console.warn('[Asistente ITEC] Error al recuperar prompt dinámico, usando fallback local:', err);
-  }
+    if (promptConfig) promptSistema = promptConfig.system_prompt;
+  } catch (err) { console.warn(err); }
 
-  // 3.7. Detectar idioma y ajustar instrucción de idioma en base a la preferencia pasada o al análisis de la consulta
-  let instruccionesIdioma = '';
-  if (idioma === 'en') {
-    instruccionesIdioma = `
-## IMPORTANT: LANGUAGE RULES
-- The user has selected English. You MUST respond strictly in English.
-- Adapt the warm, friendly, and professional tone of ITEC to natural English expressions.
-- Sound extremely engaging, local to Saladillo, and inspiring in English. Do not write in Spanish under any circumstances.
-`;
-  } else if (idioma === 'pt') {
-    instruccionesIdioma = `
-## IMPORTANT: LANGUAGE RULES
-- O usuário selecionou o idioma Português. Você DEVE responder estritamente em português.
-- Adapte o tom caloroso, amigável e profissional do ITEC para expressões naturais em português.
-- Soe extremamente inspirador, acolhedor e profissional em português. Não escreva em espanhol sob nenhuma circunstância.
-`;
-  } else if (idioma === 'es') {
-    instruccionesIdioma = `
-## IMPORTANT: LANGUAGE RULES
-- El usuario seleccionó el idioma Español. Debes responder estrictamente en español utilizando el voseo rioplatense cálido, natural y cercano.
-`;
-  } else {
-    // Si no se proporcionó idioma (o se evalúa la primera consulta)
-    instruccionesIdioma = `
-## IMPORTANT: LANGUAGE RULES
-- Detect the language of the user's first query (or ongoing queries).
-- If the user writes in English, reply strictly in English with a warm, inspiring, and professional tone.
-- If the user writes in Portuguese, reply strictly in Portuguese.
-- If the user writes in Spanish (or by default), reply strictly in Spanish using natural rioplatense voseo.
-- Always maintain the exact same language in which the user starts the conversation.
-`;
-  }
-
-  promptSistema = instruccionesIdioma + "\n\n" + promptSistema;
-
-  // 4. Llamar a la API de Gemini con el contexto del sistema e historial
+  // 3. Llamada a Ollama con configuración dinámica
   try {
-    let respuesta;
-    let modeloUtilizado = MODEL_ID;
-
-    try {
-      respuesta = await ai.models.generateContent({
-        model: MODEL_ID,
-        contents: contenidos,
-        config: {
-          systemInstruction: promptSistema + aprendizajesAdicionales + miembrosContext,
-          temperature: promptTemperature,
-          maxOutputTokens: promptMaxTokens,
-          tools: [{ googleSearch: {} }],
-        },
-      });
-    } catch (primerError: any) {
-      console.warn(`[Asistente ITEC] Falló la primera llamada al modelo principal ${MODEL_ID}:`, primerError);
-      
-      const errorMsg = primerError instanceof Error ? primerError.message : String(primerError);
-      let errorStatus = primerError?.status || primerError?.statusCode || 500;
-      
-      try {
-        const parsed = JSON.parse(errorMsg);
-        if (parsed?.error?.code) {
-          errorStatus = parsed.error.code;
+    const response = await fetch(`${OLLAMA_URL}/api/chat`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: aiConfig.model, // Usamos la configuración del JSON
+        messages: [
+          { role: 'system', content: promptSistema + aprendizajesAdicionales + miembrosContext },
+          ...historial.map(m => ({ role: m.role, content: m.text })),
+          { role: 'user', content: mensaje }
+        ],
+        stream: false,
+        options: {
+          temperature: aiConfig.temperature,
+          num_ctx: aiConfig.num_ctx,
+          top_p: aiConfig.top_p
         }
-      } catch {}
+      }),
+    });
 
-      // Si es un error de cuota excedida (429), lo lanzamos de inmediato para responder 429
-      if (errorStatus === 429 || errorMsg.toLowerCase().includes('quota') || errorMsg.toLowerCase().includes('resource_exhausted')) {
-        throw primerError;
-      }
-      
-      // Si es otro tipo de error (como un 503 por alta demanda o sobrecarga temporal), hacemos un reintento rápido con backoff de 500ms
-      console.log('[Asistente ITEC] Intentando reintento rápido con el modelo principal...');
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
-      respuesta = await ai.models.generateContent({
-        model: MODEL_ID,
-        contents: contenidos,
-        config: {
-          systemInstruction: promptSistema + aprendizajesAdicionales + miembrosContext,
-          temperature: promptTemperature,
-          maxOutputTokens: promptMaxTokens,
-          tools: [{ googleSearch: {} }],
-        },
-      });
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Error en Ollama: ${errorText}`);
     }
 
-    const textoRespuesta = respuesta.text || respuesta.candidates?.[0]?.content?.parts?.[0]?.text;
+    const data = await response.json();
+    const textoRespuesta = data.message.content;
 
-    if (!textoRespuesta) {
-      return Response.json(
-        { error: 'El modelo no devolvió una respuesta con texto.' },
-        { status: 502 },
-      );
-    }
-
-    // Ejecutar el Pipeline de Auditoría y Monitoreo de Respuestas de IA en tiempo real
+    // 4. Auditoría y respuesta
     const resultadoAuditoria = await auditarRespuestaIA(mensaje, textoRespuesta);
 
     return Response.json({
       respuesta: resultadoAuditoria.respuestaFinal,
-      modelo: modeloUtilizado,
+      modelo: aiConfig.model,
     });
-  } catch (error: unknown) {
-    const errorString = error instanceof Error ? error.message : String(error);
-    console.error('[Asistente ITEC] Error detectado en el handler:', error);
 
-    // Extraer el código de estado del error de forma flexible
-    let status = 500;
-    if (error !== null && typeof error === 'object') {
-      if ('status' in error && typeof (error as any).status === 'number') {
-        status = (error as any).status;
-      } else if ('statusCode' in error && typeof (error as any).statusCode === 'number') {
-        status = (error as any).statusCode;
-      } else if ('code' in error && typeof (error as any).code === 'number') {
-        status = (error as any).code;
-      }
-    }
-
-    // Intentar parsear el mensaje de error si es un JSON estructurado de la API de Gemini
-    try {
-      const parsedError = JSON.parse(errorString);
-      if (parsedError?.error?.code && typeof parsedError.error.code === 'number') {
-        status = parsedError.error.code;
-      }
-    } catch {
-      // Mensaje de error no estructurado o texto plano
-    }
-
-    // Detectar si se superó el límite de cuota o solicitudes (429 / RESOURCE_EXHAUSTED)
-    const esCuotaExcedida = 
-      status === 429 || 
-      errorString.toLowerCase().includes('quota') || 
-      errorString.toLowerCase().includes('rate limit') || 
-      errorString.toLowerCase().includes('resource_exhausted') ||
-      errorString.toLowerCase().includes('429');
-
-    if (esCuotaExcedida) {
-      console.warn('[Asistente ITEC] Límite de cuota de Gemini excedido (429).');
-      return Response.json(
-        { error: 'Se superó el límite de solicitudes. Intentá nuevamente en unos instantes.' },
-        { status: 429 },
-      );
-    }
-
-    // Detectar si hay un problema de autenticación o API Key inválida
-    const esAutenticacion = 
-      status === 401 || 
-      status === 403 || 
-      errorString.toLowerCase().includes('api key') || 
-      errorString.toLowerCase().includes('auth') || 
-      errorString.toLowerCase().includes('key not valid') ||
-      errorString.toLowerCase().includes('unauthorized');
-
-    if (esAutenticacion) {
-      console.error('[Asistente ITEC] Error de autenticación o API key inválida con Gemini.');
-      return Response.json(
-        { error: 'Error de autenticación con la API de Gemini.' },
-        { status: 502 },
-      );
-    }
-
-    // Error genérico del servidor
+  } catch (error: any) {
+    console.error('[Asistente ITEC] Error en Ollama:', error);
     return Response.json(
-      { error: status === 503 ? 'Gemini está experimentando alta demanda (503). Intentá nuevamente.' : 'Ocurrió un error al procesar tu consulta. Intentá nuevamente.', detalle: errorString },
-      { status: status === 503 ? 503 : 500 },
+      { error: 'No se pudo contactar con la IA local. ' + error.message },
+      { status: 502 }
     );
   }
 }
