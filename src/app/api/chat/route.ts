@@ -28,26 +28,16 @@ Siempre escribís en español rioplatense formal, con vos y sus conjugaciones co
 Nunca utilizás lenguaje informal ni regionalismos fuera de los autorizados.`
 
 interface MensajeChat {
-  role: 'user' | 'model';
-  text: string;
+  role: 'user' | 'model'
+  text: string
 }
 
 interface CuerpoSolicitud {
-  action: 'chat' | 'redactar';
-  mensaje?: string;
-  historial?: MensajeChat[];
-  idioma?: string;
-  datos_crudos?: string;
-}
-
-function limpiarJSON(texto: string): string {
-  const jsonMatch = texto.match(/\{[\s\S]*"[\s\S]*\}/)
-  if (jsonMatch) return jsonMatch[0]
-  return texto
-    .replace(/^```json\s*/i, '')
-    .replace(/^```\s*/i, '')
-    .replace(/\s*```$/i, '')
-    .trim()
+  action: 'chat' | 'redactar'
+  mensaje?: string
+  historial?: MensajeChat[]
+  idioma?: string
+  datos_crudos?: string
 }
 
 async function callGroq(messages: { role: string; content: string }[], stream = false): Promise<any> {
@@ -58,7 +48,7 @@ async function callGroq(messages: { role: string; content: string }[], stream = 
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      model: 'llama-3.1-8b-instant',
+      model: 'llama-4-maverick',
       messages,
       stream,
       temperature: 0.7,
@@ -67,9 +57,9 @@ async function callGroq(messages: { role: string; content: string }[], stream = 
   })
 
   if (!response.ok) {
-    throw new Error(`Groq API error: ${response.status}`)
+    const err = await response.text().catch(() => 'unknown error')
+    throw new Error(`Groq API error: ${response.status} - ${err}`)
   }
-
   return response
 }
 
@@ -93,9 +83,9 @@ async function callGemini(prompt: string, stream = false): Promise<any> {
   )
 
   if (!response.ok) {
-    throw new Error(`Gemini API error: ${response.status}`)
+    const err = await response.text().catch(() => 'unknown error')
+    throw new Error(`Gemini API error: ${response.status} - ${err}`)
   }
-
   return response
 }
 
@@ -117,9 +107,9 @@ async function callHuggingFace(prompt: string): Promise<string> {
   })
 
   if (!response.ok) {
-    throw new Error(`HuggingFace API error: ${response.status}`)
+    const err = await response.text().catch(() => 'unknown error')
+    throw new Error(`HuggingFace API error: ${response.status} - ${err}`)
   }
-
   const data = await response.json()
   return data?.generated_text || data?.[0]?.generated_text || ''
 }
@@ -219,51 +209,16 @@ export async function POST(request: Request): Promise<Response> {
     ]
 
     try {
-      const groqResponse = await callGroq(messages, true)
-      
-      const stream = new ReadableStream({
-        async pull(controller) {
-          const reader = groqResponse.body?.getReader()
-          if (!reader) {
-            controller.close()
-            return
-          }
+      const groqResponse = await callGroq(messages, false)
+      const data = await groqResponse.json()
+      const textoRespuesta = data.choices?.[0]?.message?.content || ''
 
-          const respuestaChunks: string[] = []
-
-          while (true) {
-            const { done, value } = await reader.read()
-            if (done) break
-
-            const chunk = new TextDecoder().decode(value)
-            const lines = chunk.split('\n')
-
-            for (const line of lines) {
-              if (line.startsWith('data: ')) {
-                const jsonStr = line.slice(6)
-                if (jsonStr === '[DONE]') continue
-
-                try {
-                  const json = JSON.parse(jsonStr)
-                  const delta = json.choices?.[0]?.delta?.content || ''
-                  if (delta) {
-                    respuestaChunks.push(delta)
-                    controller.enqueue(new TextEncoder().encode(delta))
-                  }
-                } catch {}
-              }
-            }
-          }
-
-          controller.close()
-        }
-      })
-
-      return new Response(stream, {
-        headers: {
-          'Content-Type': 'text/plain; charset=utf-8',
-          'Cache-Control': 'no-cache'
-        }
+      const resultadoAuditoria = await auditarRespuestaIA(mensaje, textoRespuesta)
+      return new Response(JSON.stringify({
+        respuesta: resultadoAuditoria.respuestaFinal,
+        modelo: 'llama-4-maverick'
+      }), {
+        headers: { 'Content-Type': 'application/json' }
       })
     } catch (error: any) {
       console.error('Groq failed, trying HuggingFace fallback:', error)
@@ -282,7 +237,7 @@ export async function POST(request: Request): Promise<Response> {
         })
       } catch (fallbackError: any) {
         return new Response(JSON.stringify({
-          error: error.name === 'AbortError' ? 'La IA tardó demasiado en responder' : error.message,
+          error: error.message || 'Error de IA',
           detalle: fallbackError.message
         }), { status: 502 })
       }
