@@ -1,4 +1,3 @@
-import { GoogleGenerativeAI } from '@google/generative-ai'
 import { createClient } from '@/lib/supabase/server'
 
 const OLLAMA_BASE_URL = process.env.OLLAMA_API_BASE_URL || 'https://ai.itecsaladillo.org.ar'
@@ -27,6 +26,13 @@ async function chatWithOllama(messages: { role: string; content: string }[], tem
       const text = await response.text().catch(() => '')
       throw new Error(`Error en Ollama: ${response.status}${text ? ` - ${text}` : ''}`)
     }
+
+    const data = await response.json()
+    return data.message?.content || ''
+  } finally {
+    clearTimeout(timer)
+  }
+}
 
     const data = await response.json()
     return data.message?.content || ''
@@ -312,14 +318,24 @@ export async function generarEmbedding(texto: string): Promise<number[]> {
   
   if (geminiKey) {
     try {
-      const genAI = new GoogleGenerativeAI(geminiKey)
-      const response = await genAI.getGenerativeModel({ model: 'text-embedding-004' }).embedContent(texto)
+      const response = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/text-embedding-004:embedContent?key=${geminiKey}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ content: { parts: [{ text: texto }] } })
+        }
+      )
 
-      if (response.embedding?.values && response.embedding.values.length > 0) {
-        return response.embedding.values as number[]
+      if (response.ok) {
+        const data = await response.json()
+        if (data.embedding?.values && data.embedding.values.length > 0) {
+          return data.embedding.values as number[]
+        }
       }
+      console.error('[AI Service] Gemini embedding failed:', response.status)
     } catch (error) {
-      console.error('[AI Service] Gemini embedding failed, trying HuggingFace fallback:', error)
+      console.error('[AI Service] Gemini embedding error:', error)
     }
   }
 

@@ -89,13 +89,18 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Mensaje requerido' }, { status: 400 })
   }
 
+  const errors: string[] = []
+
   let aprendizajesAdicionales = ''
   try {
     const feedbacks = await buscarFeedbacksSimilares(mensaje, 5, 0.35)
     if (feedbacks?.length > 0) {
       aprendizajesAdicionales = `\n\n## Aprendizaje Comunitario:\n${feedbacks.map(f => `- ${f.tema_principal} -> ${f.lo_mas_util}`).join('\n')}`
     }
-  } catch (err) { console.error(err) }
+  } catch (err) { 
+    errors.push(`RAG error: ${err instanceof Error ? err.message : String(err)}`)
+    console.error(err) 
+  }
 
   let miembrosContext = ''
   try {
@@ -104,13 +109,19 @@ export async function POST(req: NextRequest) {
     if (miembros?.length > 0) {
       miembrosContext = `\n\n## Staff ITEC:\n${miembros.map((m: any) => `- ${m.full_name}: ${m.role}`).join('\n')}`
     }
-  } catch (err) { console.error(err) }
+  } catch (err) { 
+    errors.push(`Miembros error: ${err instanceof Error ? err.message : String(err)}`)
+    console.error(err) 
+  }
 
   let promptSistema = SYSTEM_INSTRUCTION
   try {
     const promptConfig = await getAIPrompt('asistente_global')
     if (promptConfig) promptSistema = promptConfig.system_prompt
-  } catch (err) { console.warn(err) }
+  } catch (err) { 
+    errors.push(`Prompt error: ${err instanceof Error ? err.message : String(err)}`)
+    console.warn(err) 
+  }
 
   const messages = [
     { role: 'system', content: promptSistema + aprendizajesAdicionales + miembrosContext },
@@ -124,7 +135,10 @@ export async function POST(req: NextRequest) {
     const textoRespuesta = data.choices?.[0]?.message?.content || ''
 
     const resultadoAuditoria = await auditarRespuestaIA(mensaje, textoRespuesta)
-    return NextResponse.json({ respuesta: resultadoAuditoria.respuestaFinal })
+    return NextResponse.json({ 
+      respuesta: resultadoAuditoria.respuestaFinal,
+      errors: errors.length > 0 ? errors : undefined
+    })
   } catch (error: any) {
     console.error('Groq failed, trying HuggingFace fallback:', error)
 
@@ -141,7 +155,8 @@ export async function POST(req: NextRequest) {
     } catch (fallbackError: any) {
       return NextResponse.json({
         error: error.message || 'Error de IA',
-        detalle: fallbackError.message
+        detalle: fallbackError.message,
+        errors
       }, { status: 502 })
     }
   }
