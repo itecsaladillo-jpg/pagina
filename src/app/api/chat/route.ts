@@ -65,28 +65,27 @@ async function callOpenRouter(messages: { role: string; content: string }[]): Pr
   return response
 }
 
-async function callGemini(prompt: string): Promise<any> {
-  const response = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
-    {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        contents: [{
-          role: 'user',
-          parts: [{ text: prompt }]
-        }],
-        generationConfig: {
-          temperature: 0.7,
-          maxOutputTokens: 4096
-        }
-      })
-    }
-  )
+async function callOpenRouter2(prompt: string): Promise<any> {
+  const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${process.env.OPENROUTER2_API_KEY}`,
+      'Content-Type': 'application/json',
+      'HTTP-Referer': 'https://itecsaladillo.org.ar',
+      'X-Title': 'ITEC Redaccion'
+    },
+    body: JSON.stringify({
+      model: 'tencent/hunyuan-3d-latest',
+      messages: [{ role: 'user', content: prompt }],
+      stream: false,
+      temperature: 0.7,
+      max_tokens: 4096
+    })
+  })
 
   if (!response.ok) {
     const err = await response.text().catch(() => 'unknown error')
-    throw new Error(`Gemini API error: ${response.status} - ${err}`)
+    throw new Error(`OpenRouter2 API error: ${response.status} - ${err}`)
   }
   return response
 }
@@ -145,18 +144,18 @@ export async function POST(request: Request): Promise<Response> {
     Respondés únicamente con el texto del artículo, sin títulos adicionales ni comillas.`
 
     try {
-      const geminiResponse = await callGemini(prompt)
-      const data = await geminiResponse.json()
-      const textoRespuesta = data.candidates?.[0]?.content?.parts?.[0]?.text || 'No se generó respuesta'
+      const aiResponse = await callOpenRouter2(prompt)
+      const data = await aiResponse.json()
+      const textoRespuesta = data.choices?.[0]?.message?.content || 'No se generó respuesta'
 
       return new Response(JSON.stringify({
         respuesta: textoRespuesta,
-        modelo: 'gemini-1.5-flash'
+        modelo: 'tencent/hunyuan-3d-latest'
       }), {
         headers: { 'Content-Type': 'application/json' }
       })
     } catch (error: any) {
-      console.error('Gemini failed, trying HuggingFace fallback:', error)
+      console.error('OpenRouter2 failed, trying HuggingFace fallback:', error)
       
       try {
         const textoRespuesta = await callHuggingFace(prompt)
