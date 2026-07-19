@@ -308,24 +308,41 @@ export async function generateVideoSummary(title: string, description: string): 
 }
 
 export async function generarEmbedding(texto: string): Promise<number[]> {
-  const apiKey = process.env.OLLAMA_API_KEY || process.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY_2 || ''
+  const geminiKey = process.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY_2 || process.env.GEMINI_API_KEY_3 || process.env.GEMINI_API_KEY_4 || process.env.GOOGLE_GENERATIVE_AI_API_KEY || ''
   
-  if (!apiKey) {
-    throw new Error('No hay API key configurada para embeddings')
+  if (geminiKey) {
+    try {
+      const genAI = new GoogleGenerativeAI(geminiKey)
+      const response = await genAI.getGenerativeModel({ model: 'text-embedding-004' }).embedContent(texto)
+
+      if (response.embedding?.values && response.embedding.values.length > 0) {
+        return response.embedding.values as number[]
+      }
+    } catch (error) {
+      console.error('[AI Service] Gemini embedding failed, trying HuggingFace fallback:', error)
+    }
   }
 
   try {
-    const genAI = new GoogleGenerativeAI(apiKey)
-    const response = await genAI.getGenerativeModel({ model: 'text-embedding-004' }).embedContent(texto)
+    const hfKey = process.env.HF_API_KEY
+    if (!hfKey) throw new Error('No HF_API_KEY configured')
+    
+    const response = await fetch('https://api-inference.huggingface.co/models/sentence-transformers/all-MiniLM-L6-v2', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${hfKey}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ inputs: texto })
+    })
 
-    if (!response.embedding?.values || response.embedding.values.length === 0) {
-      throw new Error('No se devolvieron valores de embedding en la respuesta.')
-    }
-
-    return response.embedding.values as number[]
+    if (!response.ok) throw new Error(`HF embedding error: ${response.status}`)
+    
+    const data = await response.json()
+    return data[0]?.embedding || []
   } catch (error) {
-    console.error('[AI Service] Error al generar embedding:', error)
-    throw error
+    console.error('[AI Service] All embedding providers failed:', error)
+    return []
   }
 }
 
