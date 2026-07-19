@@ -30,6 +30,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ success: true, result })
   } catch (err: any) {
     console.error('[IA] Error:', err.message)
-    return NextResponse.json({ error: 'Error de conexión: ' + (err.message || 'Error desconocido') }, { status: 500 })
+    const errorMsg = err.message || err.toString() || 'Error desconocido'
+    return NextResponse.json({ error: 'Error al procesar con IA: ' + errorMsg }, { status: 500 })
   }
 }
