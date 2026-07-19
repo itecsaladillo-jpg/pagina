@@ -2,16 +2,6 @@ import { getCurrentMember } from '@/services/auth'
 import { NextRequest, NextResponse } from 'next/server'
 import { generateMulticanalNews } from '@/services/ai'
 
-function limpiarJSON(texto: string): string {
-  const jsonMatch = texto.match(/\{[\s\S]*\}/)
-  if (jsonMatch) return jsonMatch[0]
-  return texto
-    .replace(/^```json\s*/i, '')
-    .replace(/^```\s*/i, '')
-    .replace(/\s*```$/i, '')
-    .trim()
-}
-
 export async function POST(request: NextRequest) {
   const member = await getCurrentMember()
   if (!member || member.role !== 'admin') {
@@ -26,10 +16,18 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const result = await generateMulticanalNews(datos_crudos)
+    const raw = await generateMulticanalNews(datos_crudos)
+    const result = {
+      titulo: raw.titulo || '',
+      texto_publico: raw.texto_publico || '',
+      texto_miembros: raw.texto_miembros || '',
+      texto_sponsors: raw.texto_sponsors || '',
+      texto_medios: raw.texto_medios || ''
+    }
+    console.log('[API/News] Result generated:', result)
     return NextResponse.json({ success: true, result })
   } catch (err: any) {
-    console.error('[IA] Error:', err.message)
+    console.error('[IA] Error:', err.message, err.stack)
     const errorMsg = err.message || err.toString() || 'Error desconocido'
     return NextResponse.json({ error: 'Error al procesar con IA: ' + errorMsg }, { status: 500 })
   }
