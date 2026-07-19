@@ -17,7 +17,7 @@ async function callOpenRouter(messages: { role: string; content: string }[], tem
       messages,
       stream: false,
       temperature,
-      max_tokens: 4096
+      max_tokens: 8192
     })
   })
 
@@ -224,16 +224,16 @@ export async function generateMulticanalNews(rawFacts: string): Promise<{
 }> {
   const systemPrompt = `${ITEC_SYSTEM_PROMPT}
   
-  Sos un redactor multicanal para ITEC Saladillo. Generás 5 textos distintos para canales diferentes.`
+  Sos un redactor multicanal para ITEC Saladillo. Generás 5 piezas distintas, cada una con 3-4 frases extensas para contenido sustancial.`
 
-  const userPrompt = `Dados estos hechos crudos, generá 5 piezas en JSON puro (sin markdown). Máximo 2 oraciones cada texto. Sin inventar datos.
+  const userPrompt = `Dados estos hechos crudos, generá 5 piezas en JSON puro (sin markdown). Cada texto con 3-4 frases detalladas. Sin inventar datos.
   
   {
     "titulo": "titular impacto (max 8 palabras)",
-    "texto_publico": "aspiracional, traducí técnica a beneficio comunitario",
-    "texto_miembros": "cálido, 'nosotros', celebrando esfuerzo colectivo",
-    "texto_sponsors": "profesional, destacando impacto y métricas",
-    "texto_medios": "institucional, gacetilla con cita de autoridad ITEC"
+    "texto_publico": "aspiracional, 3-4 frases traducí técnica a beneficio comunitario, lenguaje accesible",
+    "texto_miembros": "cálido, 'nosotros', 3-4 frases celebrando esfuerzo colectivo y logros del equipo",
+    "texto_sponsors": "profesional, 3-4 frases destacando impacto, métricas y retorno de la inversión",
+    "texto_medios": "institucional, 3-4 frases gacetilla con datos, cita de autoridad ITEC, tono periodístico"
   }
   
   HECHOS: """${rawFacts}"""`
