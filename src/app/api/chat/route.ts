@@ -24,7 +24,7 @@ En su lugar, usá alternativas como:
 - En lugar de "viste": "como se mencionó", "según lo tratado"
 - En lugar de "pibe": nada, usá el nombre o "miembro"
 
-Siempre escribís en español rioplatense formal, con vos y sus conjuguaciones correctas.
+Siempre escribís en español rioplatense formal, con vos y sus conjugaciones correctas.
 Nunca utilizás lenguaje informal ni regionalismos fuera de los autorizados.`
 
 interface MensajeChat {
@@ -40,17 +40,19 @@ interface CuerpoSolicitud {
   datos_crudos?: string
 }
 
-async function callGroq(messages: { role: string; content: string }[], stream = false): Promise<any> {
-  const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+async function callOpenRouter(messages: { role: string; content: string }[]): Promise<any> {
+  const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
     method: 'POST',
     headers: {
-      'Authorization': `Bearer ${process.env.GROQ_API_KEY}`,
-      'Content-Type': 'application/json'
+      'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY}`,
+      'Content-Type': 'application/json',
+      'HTTP-Referer': 'https://itecsaladillo.org.ar',
+      'X-Title': 'ITEC Chat'
     },
     body: JSON.stringify({
-      model: 'llama-3.1-8b-instant',
+      model: 'meta-llama/llama-3.1-8b-instruct:free',
       messages,
-      stream,
+      stream: false,
       temperature: 0.7,
       max_tokens: 4096
     })
@@ -58,12 +60,12 @@ async function callGroq(messages: { role: string; content: string }[], stream = 
 
   if (!response.ok) {
     const err = await response.text().catch(() => 'unknown error')
-    throw new Error(`Groq API error: ${response.status} - ${err}`)
+    throw new Error(`OpenRouter API error: ${response.status} - ${err}`)
   }
   return response
 }
 
-async function callGemini(prompt: string, stream = false): Promise<any> {
+async function callGemini(prompt: string): Promise<any> {
   const response = await fetch(
     `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
     {
@@ -143,7 +145,7 @@ export async function POST(request: Request): Promise<Response> {
     Respondés únicamente con el texto del artículo, sin títulos adicionales ni comillas.`
 
     try {
-      const geminiResponse = await callGemini(prompt, false)
+      const geminiResponse = await callGemini(prompt)
       const data = await geminiResponse.json()
       const textoRespuesta = data.candidates?.[0]?.content?.parts?.[0]?.text || 'No se generó respuesta'
 
@@ -209,19 +211,19 @@ export async function POST(request: Request): Promise<Response> {
     ]
 
     try {
-      const groqResponse = await callGroq(messages, false)
-      const data = await groqResponse.json()
+      const aiResponse = await callOpenRouter(messages)
+      const data = await aiResponse.json()
       const textoRespuesta = data.choices?.[0]?.message?.content || ''
 
       const resultadoAuditoria = await auditarRespuestaIA(mensaje, textoRespuesta)
       return new Response(JSON.stringify({
         respuesta: resultadoAuditoria.respuestaFinal,
-        modelo: 'llama-3.1-8b-instant'
+        modelo: 'meta-llama/llama-3.1-8b-instruct:free'
       }), {
         headers: { 'Content-Type': 'application/json' }
       })
     } catch (error: any) {
-      console.error('Groq failed, trying HuggingFace fallback:', error)
+      console.error('OpenRouter failed, trying HuggingFace fallback:', error)
 
       try {
         const fallbackPrompt = `${promptSistema}\n\n${aprendizajesAdicionales}\n\n${miembrosContext}\n\nUsuario: ${mensaje}`

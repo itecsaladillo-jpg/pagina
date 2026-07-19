@@ -28,15 +28,17 @@ En su lugar, usá alternativas como:
 Siempre escribís en español rioplatense formal, con vos y sus conjugaciones correctas.
 Nunca utilizás lenguaje informal ni regionalismos fuera de los autorizados.`
 
-async function callGroq(messages: { role: string; content: string }[]): Promise<Response> {
-  const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+async function callOpenRouter(messages: { role: string; content: string }[]): Promise<Response> {
+  const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
     method: 'POST',
     headers: {
-      'Authorization': `Bearer ${process.env.GROQ_API_KEY}`,
-      'Content-Type': 'application/json'
+      'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY}`,
+      'Content-Type': 'application/json',
+      'HTTP-Referer': 'https://itecsaladillo.org.ar',
+      'X-Title': 'ITEC Asistente'
     },
     body: JSON.stringify({
-      model: 'llama-3.1-8b-instant',
+      model: 'meta-llama/llama-3.1-8b-instruct:free',
       messages,
       stream: false,
       temperature: 0.7,
@@ -46,7 +48,7 @@ async function callGroq(messages: { role: string; content: string }[]): Promise<
 
   if (!response.ok) {
     const err = await response.text().catch(() => 'unknown error')
-    throw new Error(`Groq API error: ${response.status} - ${err}`)
+    throw new Error(`OpenRouter API error: ${response.status} - ${err}`)
   }
   return response
 }
@@ -134,8 +136,8 @@ export async function POST(req: NextRequest) {
   ]
 
   try {
-    const groqResponse = await callGroq(messages)
-    const data = await groqResponse.json()
+    const aiResponse = await callOpenRouter(messages)
+    const data = await aiResponse.json()
     const textoRespuesta = data.choices?.[0]?.message?.content || ''
 
     const resultadoAuditoria = await auditarRespuestaIA(mensaje, textoRespuesta)
@@ -144,7 +146,7 @@ export async function POST(req: NextRequest) {
       errors: errors.length > 0 ? errors : undefined
     })
   } catch (error: any) {
-    console.error('Groq failed, trying HuggingFace fallback:', error)
+    console.error('OpenRouter failed, trying HuggingFace fallback:', error)
 
     try {
       const fallbackPrompt = `${promptSistema}\n\n${aprendizajesAdicionales}\n\n${miembrosContext}\n\nUsuario: ${mensaje}`
