@@ -88,7 +88,6 @@ export function NewsFlashMulticanalEditor({ onSave, onCancel }: NewsFlashMultica
       })
 
       const data = await res.json()
-      console.log('[Multicanal] API response:', data)
       
       if (data.success && data.result) {
         setResult(data.result)

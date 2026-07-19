@@ -24,7 +24,6 @@ export async function POST(request: NextRequest) {
       texto_sponsors: raw.texto_sponsors || '',
       texto_medios: raw.texto_medios || ''
     }
-    console.log('[API/News] Result generated:', result)
     return NextResponse.json({ success: true, result })
   } catch (err: any) {
     console.error('[IA] Error:', err.message, err.stack)
