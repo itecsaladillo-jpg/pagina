@@ -45,7 +45,8 @@ async function callGroq(messages: { role: string; content: string }[]): Promise<
   })
 
   if (!response.ok) {
-    throw new Error(`Groq API error: ${response.status}`)
+    const err = await response.text().catch(() => 'unknown error')
+    throw new Error(`Groq API error: ${response.status} - ${err}`)
   }
   return response
 }
@@ -68,9 +69,9 @@ async function callHuggingFace(prompt: string): Promise<string> {
   })
 
   if (!response.ok) {
-    throw new Error(`HuggingFace API error: ${response.status}`)
+    const err = await response.text().catch(() => 'unknown error')
+    throw new Error(`HuggingFace API error: ${response.status} - ${err}`)
   }
-
   const data = await response.json()
   return data?.generated_text || data?.[0]?.generated_text || ''
 }
@@ -125,7 +126,10 @@ export async function POST(req: NextRequest) {
 
   const messages = [
     { role: 'system', content: promptSistema + aprendizajesAdicionales + miembrosContext },
-    ...historial,
+    ...historial.map((m: { role: string; content: string }) => ({
+      role: m.role === 'model' ? 'assistant' : m.role,
+      content: m.content
+    })),
     { role: 'user', content: mensaje }
   ]
 
