@@ -29,13 +29,6 @@ async function chatWithOllama(messages: { role: string; content: string }[], tem
 
     const data = await response.json()
     return data.message?.content || ''
-  } finally {
-    clearTimeout(timer)
-  }
-}
-
-    const data = await response.json()
-    return data.message?.content || ''
   } catch (err: any) {
     if (err.name === 'AbortError') {
       throw new Error(`Error en Ollama: 524 - Timeout después de ${timeout}ms`)
@@ -81,10 +74,6 @@ export interface AIProcessResult {
   action_items: string[]
 }
 
-/**
- * Procesa un texto (transcripción de reunión o descripción de capacitación)
- * y genera resumen ejecutivo, tareas pendientes y flash informativo.
- */
 export async function processWithAI(
   text: string,
   sourceType: 'meet' | 'capacitacion' | 'reunion' | 'manual',
@@ -127,7 +116,6 @@ Respondés ÚNICAMENTE con el JSON, sin ningún texto adicional antes o después
     { role: 'user', content: userPrompt }
   ])
 
-  // Limpiar posibles bloques de código que el modelo incluya igual
   const cleaned = raw.replace(/^```json\s*/i, '').replace(/^```\s*/i, '').replace(/\s*```$/i, '').trim()
 
   const parsed = JSON.parse(cleaned) as AIProcessResult
@@ -150,19 +138,11 @@ ${text}
   return result
 }
 
-/**
- * Genera un Resumen Ejecutivo a partir de las notas de reunión.
- * Wrapper conveniente sobre processWithAI.
- */
 export async function generateExecutiveSummary(notes: string): Promise<string> {
   const result = await processWithAI(notes, 'reunion')
   return result.summary
 }
 
-/**
- * Genera los Action Items formateados como lista de texto.
- * Wrapper conveniente sobre processWithAI.
- */
 export async function generateActionItems(notes: string): Promise<string> {
   const result = await processWithAI(notes, 'reunion')
   return result.action_items.map((item, i) => `${i + 1}. ${item}`).join('\n')
@@ -363,47 +343,39 @@ export async function generarEmbedding(texto: string): Promise<number[]> {
 }
 
 export interface FeedbackSimilar {
-  id: string;
-  created_at: string;
-  historial: any;
-  calificacion: string;
-  comentario: string | null;
-  tema_principal: string;
-  lo_mas_util: string;
-  similarity: number;
+  id: string
+  created_at: string
+  historial: any
+  calificacion: string
+  comentario: string | null
+  tema_principal: string
+  lo_mas_util: string
+  similarity: number
 }
 
-/**
- * Busca feedbacks similares utilizando embeddings y la función RPC buscar_feedbacks_similares.
- */
 export async function buscarFeedbacksSimilares(
   mensaje: string,
   limit = 5,
   threshold = 0.3
 ): Promise<FeedbackSimilar[]> {
   try {
-    // 1. Generar el embedding de la pregunta del usuario
-    const embedding = await generarEmbedding(mensaje);
-
-    // 2. Obtener el cliente de Supabase
-    const supabase = await createClient();
-
-    // 3. Ejecutar la RPC para obtener registros similares
+    const embedding = await generarEmbedding(mensaje)
+    const supabase = await createClient()
     const { data, error } = await supabase.rpc('buscar_feedbacks_similares', {
       query_embedding: embedding,
       similarity_threshold: threshold,
       match_count: limit,
-    });
+    })
 
     if (error) {
-      console.error('[AI Service] Error al invocar la RPC buscar_feedbacks_similares:', error);
-      return [];
+      console.error('[AI Service] Error al invocar la RPC buscar_feedbacks_similares:', error)
+      return []
     }
 
-    return (data as FeedbackSimilar[]) || [];
+    return (data as FeedbackSimilar[]) || []
   } catch (error) {
-    console.error('[AI Service] Error en buscarFeedbacksSimilares:', error);
-    return [];
+    console.error('[AI Service] Error en buscarFeedbacksSimilares:', error)
+    return []
   }
 }
 
@@ -412,11 +384,6 @@ export interface ResultadoAuditoria {
   respuestaFinal: string
 }
 
-/**
- * Analiza en tiempo real la respuesta de la IA para prevenir violaciones a las reglas críticas.
- * Registra de forma asíncrona las violaciones en Supabase para no penalizar el tiempo de respuesta.
- * Si la gravedad es alta, sustituye el contenido en caliente con un fallback seguro.
- */
 export async function auditarRespuestaIA(
   mensajeUsuario: string,
   respuestaIA: string,
@@ -428,7 +395,6 @@ export async function auditarRespuestaIA(
     let reglaViolada: string | null = null
     let nivelGravedad: 'bajo' | 'medio' | 'alto' = 'bajo'
 
-    // Definición de las reglas críticas y sus regex
     const reglas = [
       {
         nombre: 'Mención prohibida a Peques ITEC',
@@ -456,22 +422,19 @@ export async function auditarRespuestaIA(
       }
     ]
 
-    // Evaluar cada una de las reglas de forma secuencial
     for (const regla of reglas) {
       if (regla.regex.test(respuestaIA)) {
         tieneViolacion = true
         reglaViolada = regla.nombre
         nivelGravedad = regla.gravedad
 
-        // Si la regla tiene un nivel de gravedad alto, reescribimos la respuesta en caliente
         if (regla.gravedad === 'alto' && regla.fallback) {
           respuestaFinal = regla.fallback
-          break // Priorizamos detenernos en la primera violación grave
+          break
         }
       }
     }
 
-    // Registrar en Supabase de forma totalmente asíncrona si hay violación
     if (tieneViolacion && reglaViolada) {
       const registroViolacion = {
         session_id: sessionId || null,
@@ -481,7 +444,6 @@ export async function auditarRespuestaIA(
         nivel_gravedad: nivelGravedad
       }
 
-      // Iniciamos la promesa pero NO usamos await, permitiendo que se ejecute en segundo plano
       createClient().then(async (supabase) => {
         const { error } = await supabase
           .from('ai_auditoria_violaciones')
@@ -501,6 +463,3 @@ export async function auditarRespuestaIA(
     return { tieneViolacion: false, respuestaFinal: respuestaIA }
   }
 }
-
-
-
