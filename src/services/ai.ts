@@ -222,23 +222,25 @@ export async function generateMulticanalNews(rawFacts: string): Promise<{
   texto_sponsors: string
   texto_medios: string
 }> {
-  const prompt = `Estilo ITEC: técnico, humano, vanguardista. Español formal con "vos". Prohibido: "hoy","ayer","mañana","che","viste","pibe","el ITEC","la ITEC". No menciones a Augusto Cicaré salvo necesario.
+  const systemPrompt = `${ITEC_SYSTEM_PROMPT}
+  
+  Sos un redactor multicanal para ITEC Saladillo. Generás 5 textos distintos para canales diferentes.`
 
-Dados estos hechos crudos, generá 5 piezas en JSON. Máximo 2 oraciones cada texto. Sin markdown. Sin inventar datos.
-
-JSON:
-{
-  "titulo": "titular impacto (max 8 palabras)",
-  "texto_publico": "para público: aspiracional, traducí técnica a beneficio comunitario",
-  "texto_miembros": "para miembros: cálido, 'nosotros', celebrando esfuerzo colectivo",
-  "texto_sponsors": "para sponsors: profesional, destacando impacto y métricas",
-  "texto_medios": "para medios: institucional, gacetilla con cita de autoridad ITEC"
-}
-
-HECHOS: """${rawFacts}"""`
+  const userPrompt = `Dados estos hechos crudos, generá 5 piezas en JSON puro (sin markdown). Máximo 2 oraciones cada texto. Sin inventar datos.
+  
+  {
+    "titulo": "titular impacto (max 8 palabras)",
+    "texto_publico": "aspiracional, traducí técnica a beneficio comunitario",
+    "texto_miembros": "cálido, 'nosotros', celebrando esfuerzo colectivo",
+    "texto_sponsors": "profesional, destacando impacto y métricas",
+    "texto_medios": "institucional, gacetilla con cita de autoridad ITEC"
+  }
+  
+  HECHOS: """${rawFacts}"""`
 
   const raw = await callOpenRouter([
-    { role: 'user', content: prompt }
+    { role: 'system', content: systemPrompt },
+    { role: 'user', content: userPrompt }
   ], 0.8)
 
   const cleaned = raw.replace(/^```json\s*/i, '').replace(/\s*```$/i, '').trim()
