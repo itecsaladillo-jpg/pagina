@@ -88,7 +88,9 @@ export function NewsFlashMulticanalEditor({ onSave, onCancel }: NewsFlashMultica
       })
 
       const data = await res.json()
-      if (data.success) {
+      console.log('[Multicanal] API response:', data)
+      
+      if (data.success && data.result) {
         setResult(data.result)
         setActiveTab('preview')
       } else {
