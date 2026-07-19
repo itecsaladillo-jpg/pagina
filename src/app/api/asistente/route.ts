@@ -38,7 +38,7 @@ async function callOpenRouter(messages: { role: string; content: string }[]): Pr
       'X-Title': 'ITEC Asistente'
     },
     body: JSON.stringify({
-      model: 'meta-llama/llama-3.1-8b-instruct:free',
+      model: 'deepseek/deepseek-chat',
       messages,
       stream: false,
       temperature: 0.7,

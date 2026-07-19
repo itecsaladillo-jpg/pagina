@@ -50,7 +50,7 @@ async function callOpenRouter(messages: { role: string; content: string }[]): Pr
       'X-Title': 'ITEC Chat'
     },
     body: JSON.stringify({
-      model: 'meta-llama/llama-3.1-8b-instruct:free',
+      model: 'deepseek/deepseek-chat',
       messages,
       stream: false,
       temperature: 0.7,
@@ -218,7 +218,7 @@ export async function POST(request: Request): Promise<Response> {
       const resultadoAuditoria = await auditarRespuestaIA(mensaje, textoRespuesta)
       return new Response(JSON.stringify({
         respuesta: resultadoAuditoria.respuestaFinal,
-        modelo: 'meta-llama/llama-3.1-8b-instruct:free'
+        modelo: 'deepseek/deepseek-chat'
       }), {
         headers: { 'Content-Type': 'application/json' }
       })
