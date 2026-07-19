@@ -3,40 +3,31 @@ import { createClient } from '@/lib/supabase/server'
 const OLLAMA_BASE_URL = process.env.OLLAMA_API_BASE_URL || 'https://ai.itecsaladillo.org.ar'
 const OLLAMA_MODEL = 'llama3.2:latest'
 
-async function chatWithOllama(messages: { role: string; content: string }[], temperature = 0.7, options?: { num_ctx?: number; timeout?: number }): Promise<string> {
-  const timeout = options?.timeout ?? 98000
-  const controller = new AbortController()
-  const timer = setTimeout(() => controller.abort(), timeout)
-
-  try {
-    const response = await fetch(`${OLLAMA_BASE_URL}/api/chat`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: OLLAMA_MODEL,
-        messages,
-        stream: false,
-        temperature,
-        options: { num_ctx: options?.num_ctx ?? 2048 },
-      }),
-      signal: controller.signal,
+async function callOpenRouter(messages: { role: string; content: string }[], temperature = 0.7): Promise<string> {
+  const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY}`,
+      'Content-Type': 'application/json',
+      'HTTP-Referer': 'https://itecsaladillo.org.ar',
+      'X-Title': 'ITEC AI'
+    },
+    body: JSON.stringify({
+      model: 'deepseek/deepseek-chat',
+      messages,
+      stream: false,
+      temperature,
+      max_tokens: 4096
     })
+  })
 
-    if (!response.ok) {
-      const text = await response.text().catch(() => '')
-      throw new Error(`Error en Ollama: ${response.status}${text ? ` - ${text}` : ''}`)
-    }
-
-    const data = await response.json()
-    return data.message?.content || ''
-  } catch (err: any) {
-    if (err.name === 'AbortError') {
-      throw new Error(`Error en Ollama: 524 - Timeout después de ${timeout}ms`)
-    }
-    throw err
-  } finally {
-    clearTimeout(timer)
+  if (!response.ok) {
+    const err = await response.text().catch(() => '')
+    throw new Error(`OpenRouter error: ${response.status} - ${err}`)
   }
+
+  const data = await response.json()
+  return data.choices?.[0]?.message?.content || ''
 }
 
 /**
@@ -111,7 +102,7 @@ Generá exactamente dos elementos en formato JSON puro (sin markdown, sin bloque
 
 Respondés ÚNICAMENTE con el JSON, sin ningún texto adicional antes o después.`
 
-  const raw = await chatWithOllama([
+  const raw = await callOpenRouter([
     { role: 'system', content: ITEC_SYSTEM_PROMPT },
     { role: 'user', content: userPrompt }
   ])
@@ -131,7 +122,7 @@ TEXTO:
 """
 ${text}
 """`
-  const result = await chatWithOllama([
+  const result = await callOpenRouter([
     { role: 'system', content: ITEC_SYSTEM_PROMPT },
     { role: 'user', content: userPrompt }
   ], 0.8)
@@ -167,7 +158,7 @@ export async function generatePublicArticle(rawFacts: string): Promise<{ title: 
 
   const userPrompt = `HECHOS PARA TRANSFORMAR:\n"""\n${rawFacts}\n"""`
   
-  const raw = await chatWithOllama([
+  const raw = await callOpenRouter([
     { role: 'system', content: systemPrompt },
     { role: 'user', content: userPrompt }
   ], 0.8)
@@ -211,7 +202,7 @@ export async function generateActionSuccessStory(
       - Respondé en JSON: { "title": "...", "content": "..." }`
 
   const userPrompt = `Generar historia de éxito para la acción "${actionTitle}".`
-  const raw = await chatWithOllama([
+  const raw = await callOpenRouter([
     { role: 'system', content: systemPrompt },
     { role: 'user', content: userPrompt }
   ], 0.8)
@@ -246,9 +237,9 @@ JSON:
 
 HECHOS: """${rawFacts}"""`
 
-  const raw = await chatWithOllama([
+  const raw = await callOpenRouter([
     { role: 'user', content: prompt }
-  ], 0.8, { num_ctx: 2048, timeout: 98000 })
+  ], 0.8)
 
   const cleaned = raw.replace(/^```json\s*/i, '').replace(/\s*```$/i, '').trim()
 
@@ -286,7 +277,7 @@ export async function generateVideoSummary(title: string, description: string): 
   
   Respondé únicamente con el texto del resumen, sin títulos adicionales ni comillas.`
 
-  const result = await chatWithOllama([
+  const result = await callOpenRouter([
     { role: 'system', content: ITEC_SYSTEM_PROMPT },
     { role: 'user', content: userPrompt }
   ], 0.8)
