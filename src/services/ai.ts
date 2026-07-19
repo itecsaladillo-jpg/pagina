@@ -224,19 +224,19 @@ export async function generateMulticanalNews(rawFacts: string): Promise<{
 }> {
   const systemPrompt = `${ITEC_SYSTEM_PROMPT}
   
-  Sos un redactor multicanal para ITEC Saladillo. Generás 5 piezas distintas, cada una con 3-4 frases extensas para contenido sustancial.`
+  Sos un redactor profesional de noticias para ITEC Saladillo. Estilo periodístico institucional: lenguaje claro, tercera persona, tono serio y profesional.`
 
-  const userPrompt = `Dados estos hechos crudos, generá 5 piezas en JSON puro (sin markdown). Cada texto con 3-4 frases detalladas. Sin inventar datos.
+  const userPrompt = `Actuá como redactor periodístico institucional para ITEC Saladillo. Generá 5 piezas siguiendo esta estructura exacta:
   
   {
-    "titulo": "titular impacto (max 8 palabras)",
-    "texto_publico": "aspiracional, 3-4 frases traducí técnica a beneficio comunitario, lenguaje accesible",
-    "texto_miembros": "cálido, 'nosotros', 3-4 frases celebrando esfuerzo colectivo y logros del equipo",
-    "texto_sponsors": "profesional, 3-4 frases destacando impacto, métricas y retorno de la inversión",
-    "texto_medios": "institucional, 3-4 frases gacetilla con datos, cita de autoridad ITEC, tono periodístico"
+    "titulo": "TITULAR atractivo, directo, con verbo de acción (máx 8 palabras)",
+    "texto_publico": "Lead de 5 preguntas (Qué, quién, cuándo, dónde, por qué). 2-3 párrafos con detalles. Cita de autoridad. Cierre positivo. Invitación a ver fotos/videos. Lenguaje accesible, sin tecnicismos.",
+    "texto_miembros": "Lead completo. Cuerpo con detalles del evento y reconocimiento al equipo. Cita de autoridad interna. Cierre motivador. Lenguaje cálido pero profesional.",
+    "texto_sponsors": "Titular profesional. Lead con métricas y ROI. Cuerpo con impacto cuantificable. Cita de autoridad. Cierre institucional.",
+    "texto_medios": "Gacetilla periodística: Titular, copete, cuerpo con datos, cita atribuible de autoridad ITEC, pie de foto. Lenguaje serio, tercera persona."
   }
   
-  HECHOS: """${rawFacts}"""`
+  NOTAS CRUDAS: """${rawFacts}"""`
 
   const raw = await callOpenRouter([
     { role: 'system', content: systemPrompt },
