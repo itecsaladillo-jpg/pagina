@@ -226,14 +226,14 @@ export async function generateMulticanalNews(rawFacts: string): Promise<{
   
   Generás textos profesionales para diferentes audiencias de ITEC.`
 
-  const userPrompt = `Actuá como Director de Alianzas Estratégicas de ITEC Saladillo. Generá 5 piezas:
+  const userPrompt = `Actuá como Jefe de Prensa de ITEC Saladillo. Generá 5 piezas:
   
   {
     "titulo": "Impacto institucional (máx 8 palabras)",
     "texto_publico": "Lead de 5 preguntas. Detalles del evento. Cita de autoridad. Cierre positivo. Invitación a ver fotos/videos.",
     "texto_miembros": "Saludo cálido. Highlight del esfuerzo compartido. Agradecimiento con 'nosotros'. Invitación a próximas actividades. Emojis naturales.",
     "texto_sponsors": "Agradecimiento formal. Impacto con número de asistentes o resultados concretos. Visibilidad de marca. Cierre reafirmando alianza.",
-    "texto_medios": "Gacetilla: Titular, copete, cuerpo con datos, cita atribuible, pie de foto. Tercera persona, tono periodístico."
+    "texto_medios": "Nota de prensa: Epígrafe (lugar/fecha). Titular. Cuerpo cronológico con datos duros. Cita de vocero. Contacto: [NOMBRE], [TELÉFONO], [WEB]. Sin emojis, tercera persona."
   }
   
   NOTAS CRUDAS: """${rawFacts}"""`
