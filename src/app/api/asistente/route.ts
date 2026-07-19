@@ -36,7 +36,7 @@ async function callGroq(messages: { role: string; content: string }[]): Promise<
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      model: 'llama-4-maverick',
+      model: 'llama-4-scout',
       messages,
       stream: false,
       temperature: 0.7,

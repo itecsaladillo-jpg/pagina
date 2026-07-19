@@ -48,7 +48,7 @@ async function callGroq(messages: { role: string; content: string }[], stream = 
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      model: 'llama-4-maverick',
+      model: 'llama-4-scout',
       messages,
       stream,
       temperature: 0.7,
@@ -216,7 +216,7 @@ export async function POST(request: Request): Promise<Response> {
       const resultadoAuditoria = await auditarRespuestaIA(mensaje, textoRespuesta)
       return new Response(JSON.stringify({
         respuesta: resultadoAuditoria.respuestaFinal,
-        modelo: 'llama-4-maverick'
+        modelo: 'llama-4-scout'
       }), {
         headers: { 'Content-Type': 'application/json' }
       })
