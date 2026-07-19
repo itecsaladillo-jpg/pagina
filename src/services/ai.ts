@@ -226,12 +226,12 @@ export async function generateMulticanalNews(rawFacts: string): Promise<{
   
   Sos un redactor profesional de noticias para ITEC Saladillo. Estilo periodístico institucional: lenguaje claro, tercera persona, tono serio y profesional.`
 
-  const userPrompt = `Actuá como redactor periodístico institucional para ITEC Saladillo. Generá 5 piezas siguiendo esta estructura exacta:
+  const userPrompt = `Actuá como coordinador de comunidad de ITEC Saladillo. Generá 5 piezas siguiendo esta estructura exacta:
   
   {
     "titulo": "TITULAR atractivo, directo, con verbo de acción (máx 8 palabras)",
     "texto_publico": "Lead de 5 preguntas (Qué, quién, cuándo, dónde, por qué). 2-3 párrafos con detalles. Cita de autoridad. Cierre positivo. Invitación a ver fotos/videos. Lenguaje accesible, sin tecnicismos.",
-    "texto_miembros": "Lead completo. Cuerpo con detalles del evento y reconocimiento al equipo. Cita de autoridad interna. Cierre motivador. Lenguaje cálido pero profesional.",
+    "texto_miembros": "Saludo cálido. Highlight enfocando el esfuerzo compartido. Agradecimiento especial con 'nosotros' y lenguaje inclusivo. Invitación a próximas actividades. Emojis naturales.",
     "texto_sponsors": "Titular profesional. Lead con métricas y ROI. Cuerpo con impacto cuantificable. Cita de autoridad. Cierre institucional.",
     "texto_medios": "Gacetilla periodística: Titular, copete, cuerpo con datos, cita atribuible de autoridad ITEC, pie de foto. Lenguaje serio, tercera persona."
   }
