@@ -24,7 +24,7 @@ En su lugar, usá alternativas como:
 - En lugar de "viste": "como se mencionó", "según lo tratado"
 - En lugar de "pibe": nada, usá el nombre o "miembro"
 
-Siempre escribís en español rioplatense formal, con vos y sus conjugaciones correctas.
+Siempre escribís en español rioplatense formal, con vos y sus conjuguaciones correctas.
 Nunca utilizás lenguaje informal ni regionalismos fuera de los autorizados.`
 
 interface MensajeChat {
@@ -48,7 +48,7 @@ async function callGroq(messages: { role: string; content: string }[], stream = 
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      model: 'llama-4-scout',
+      model: 'llama-3.1-8b-instant',
       messages,
       stream,
       temperature: 0.7,
@@ -216,7 +216,7 @@ export async function POST(request: Request): Promise<Response> {
       const resultadoAuditoria = await auditarRespuestaIA(mensaje, textoRespuesta)
       return new Response(JSON.stringify({
         respuesta: resultadoAuditoria.respuestaFinal,
-        modelo: 'llama-4-scout'
+        modelo: 'llama-3.1-8b-instant'
       }), {
         headers: { 'Content-Type': 'application/json' }
       })
