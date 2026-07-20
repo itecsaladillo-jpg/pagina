@@ -226,16 +226,18 @@ export async function generateMulticanalNews(rawFacts: string): Promise<{
   
   Generás textos profesionales para diferentes audiencias de ITEC.`
 
-  const userPrompt = `Actuá como Jefe de Prensa y redactor profesional de ITEC Saladillo. Generá 5 piezas:
-  
+  const userPrompt = `Actuá como Jefe de Prensa y redactor profesional de ITEC Saladillo. Generá 5 piezas siguiendo EXACTAMENTE este esquema JSON (no agregues texto fuera del JSON, no uses markdown, no uses etiquetas como **Titular:**):
+
   {
     "titulo": "Titular periodístico atractivo con verbo de acción (máx 8 palabras)",
-    "texto_publico": "Titular. Copete con las 5 preguntas (qué, quién, cuándo, dónde, por qué). Cuerpo con detalles, cita textual de autoridad, tono serio. Cierre positivo. Call to action ver fotos/videos.",
+    "texto_publico": "NOTICIA PARA LA PÁGINA OFICIAL. Estructura pirámide invertida en tercera persona, tono institucional pero accesible. IMPORTANTE: separá cada sección con DOS SALTOS DE LINEA (\\n\\n) para generar párrafos diferenciados; nunca entregues todo en un solo bloque. (1) TITULAR: atractivo y directo, verbo de acción, resume la esencia (ej: 'ITEC celebró con éxito [Evento] promoviendo [objetivo]'). (2) COPETE/LEAD: primer párrafo responde las 5 preguntas (qué, quién, cuándo, dónde, por qué) con datos concretos (fecha, lugar, número de asistentes). (3) DESARROLLO: 2-3 párrafos con detalles del transcurso, momentos destacados y actividades realizadas, priorizando lo más importante al principio. (4) CITA TEXTUAL de una autoridad o referente de ITEC que humanice la nota (entre comillas dobles \", formato: \"...\", señaló [Nombre, cargo]). (5) CIERRE positivo: impacto en la comunidad o próximos pasos. (6) CALL TO ACTION final invitando a ver fotos/videos/materiales. REGLAS: tercera persona (sin 'nosotros'), sin tecnicismos excesivos, siglas aclaradas en su primera mención. No inventes datos: si falta información, redacta en torno a los hechos disponibles.",
     "texto_miembros": "Saludo cálido. Highlight del esfuerzo compartido. Agradecimiento con 'nosotros'. Invitación a próximas actividades. Emojis naturales.",
     "texto_sponsors": "Agradecimiento formal. Impacto con asistentes/resultados. Visibilidad de marca. Cierre reafirmando alianza.",
     "texto_medios": "Nota de prensa: Epígrafe lugar/fecha. Titular. Cuerpo cronológico. Cita de vocero. Contacto: [NOMBRE], [TELÉFONO], [WEB]. Sin emojis."
   }
-  
+
+  Respondé ÚNICAMENTE con el JSON, sin markdown, sin bloques de código, sin texto antes o después.
+
   NOTAS CRUDAS: """${rawFacts}"""`
 
   const raw = await callOpenRouter([
@@ -245,16 +247,39 @@ export async function generateMulticanalNews(rawFacts: string): Promise<{
 
   const cleaned = raw.replace(/^```json\s*/i, '').replace(/\s*```$/i, '').trim()
 
-  try {
-    return JSON.parse(cleaned)
-  } catch (err) {
-    return {
-      titulo: 'Novedad ITEC',
-      texto_publico: rawFacts + '\n\nEsta iniciativa fortalece el acceso a la tecnología para toda la comunidad saladense.',
-      texto_miembros: '¡Equipo! ' + rawFacts + '\n\nGracias a quienes hicieron posible este logro. Nuestro trabajo voluntario transforma realidades.',
-      texto_sponsors: 'Evento con impacto en el ecosistema local. Destacan los contributos recibidos.',
-      texto_medios: 'ITEC Saladillo informa actividad comunitaria. ' + rawFacts + '. "Un paso más hacia la innovación", comentó la institución.'
+  // Estrategia de parseo robusta: si la respuesta vino con markdown o etiquetas
+  // (ej: "**Titular:** ..."), extraemos el primer bloque { ... } balanceado.
+  const tryParse = (text: string): any | null => {
+    try { return JSON.parse(text) } catch { return null }
+  }
+
+  let parsed = tryParse(cleaned)
+  if (!parsed) {
+    const start = cleaned.indexOf('{')
+    const end = cleaned.lastIndexOf('}')
+    if (start !== -1 && end !== -1 && end > start) {
+      parsed = tryParse(cleaned.slice(start, end + 1))
     }
+  }
+
+  if (parsed) {
+    return {
+      titulo: parsed.titulo || '',
+      texto_publico: parsed.texto_publico || '',
+      texto_miembros: parsed.texto_miembros || '',
+      texto_sponsors: parsed.texto_sponsors || '',
+      texto_medios: parsed.texto_medios || ''
+    }
+  }
+
+  // Fallback si el modelo no devolvió JSON válido
+  console.error('[generateMulticanalNews] Respuesta no parseable como JSON:\n', raw)
+  return {
+    titulo: 'Novedad ITEC',
+    texto_publico: rawFacts + '\n\nEsta iniciativa fortalece el acceso a la tecnología para toda la comunidad saladense.',
+    texto_miembros: '¡Equipo! ' + rawFacts + '\n\nGracias a quienes hicieron posible este logro. Nuestro trabajo voluntario transforma realidades.',
+    texto_sponsors: 'Evento con impacto en el ecosistema local. Destacan los contributos recibidos.',
+    texto_medios: 'ITEC Saladillo informa actividad comunitaria. ' + rawFacts + '. "Un paso más hacia la innovación", comentó la institución.'
   }
 }
 
