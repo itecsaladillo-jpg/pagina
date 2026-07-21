@@ -1,50 +1,85 @@
 ﻿import type { Metadata } from 'next'
 import { createClient } from '@/lib/supabase/server'
 import { NewsWallMulticanal } from '@/components/comunicacion/NewsWallMulticanal'
+import type { NotaPublico, NotaMiembro } from '@/services/news'
 
 export const metadata: Metadata = {
   title: 'Muro — ITEC',
   description: 'Novedades y comunicaciones del Instituto',
 }
 
-async function getPublicNewsFlashes() {
+async function getPublicNotas() {
   const supabase = await createClient()
   const { data, error } = await supabase
-    .from('news_flashes')
+    .from('notas_publico')
     .select('*')
-    .eq('para_publico', true)
     .eq('is_published', true)
     .order('created_at', { ascending: false })
 
   if (error) {
-    console.error('[public-muro] getPublicNewsFlashes error:', error.message)
+    console.error('[public-muro] getPublicNotas error:', error.message)
     return []
   }
-  return (data ?? [])
+  return (data ?? []) as NotaPublico[]
 }
 
-async function getMemberNewsFlashes() {
+async function getMemberNotas() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return null
   
   const { data, error } = await supabase
-    .from('news_flashes')
+    .from('notas_miembros')
     .select('*')
-    .eq('para_miembros', true)
     .eq('is_published', true)
     .order('created_at', { ascending: false })
 
   if (error) {
-    console.error('[public-muro] getMemberNewsFlashes error:', error.message)
+    console.error('[public-muro] getMemberNotas error:', error.message)
     return null
   }
-  return (data ?? [])
+  return (data ?? []) as NotaMiembro[]
 }
 
 export default async function MuroPage() {
-  const publicFlashes = await getPublicNewsFlashes()
-  const memberFlashes = await getMemberNewsFlashes()
+  const notasPublico = await getPublicNotas()
+  const notasMiembros = await getMemberNotas()
+
+  const publicFlashes = notasPublico.map((n) => ({
+    id: n.id,
+    created_at: n.created_at,
+    updated_at: n.updated_at,
+    autor_id: n.autor_id,
+    titulo: n.titulo,
+    datos_crudos: '',
+    texto_publico: n.contenido,
+    texto_miembros: '',
+    texto_sponsors: '',
+    texto_medios: '',
+    is_published: n.is_published,
+    para_publico: true,
+    para_miembros: false,
+    para_sponsors: false,
+    para_medios: false,
+  }))
+
+  const memberFlashes = notasMiembros?.map((n) => ({
+    id: n.id,
+    created_at: n.created_at,
+    updated_at: n.updated_at,
+    autor_id: n.autor_id,
+    titulo: n.titulo,
+    datos_crudos: '',
+    texto_publico: '',
+    texto_miembros: n.contenido,
+    texto_sponsors: '',
+    texto_medios: '',
+    is_published: n.is_published,
+    para_publico: false,
+    para_miembros: true,
+    para_sponsors: false,
+    para_medios: false,
+  })) ?? null
 
   return (
     <main className='min-h-screen bg-[#020617] pt-32 pb-20 px-6'>

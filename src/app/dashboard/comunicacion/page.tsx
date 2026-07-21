@@ -2,7 +2,8 @@ import type { Metadata } from 'next'
 import { getCurrentMember } from '@/services/auth'
 import { redirect } from 'next/navigation'
 import { ComunicacionTabs } from '@/components/comunicacion/ComunicacionTabs'
-import { getAllArticles } from '@/services/news'
+import { NotasMulticanalList } from '@/components/comunicacion/NotasMulticanalList'
+import { getAllArticles, getAllMulticanalNewsFlashes } from '@/services/news'
 import { getPublicActions } from '@/services/actions'
 
 export const dynamic = 'force-dynamic'
@@ -17,6 +18,7 @@ export default async function ComunicacionPage() {
 
   const articles = await getAllArticles()
   const actions = await getPublicActions()
+  const multicanalNotas = await getAllMulticanalNewsFlashes()
 
   return (
     <div className="space-y-8">
@@ -30,6 +32,8 @@ export default async function ComunicacionPage() {
         articles={articles} 
         actions={actions}
       />
+
+      <NotasMulticanalList notas={multicanalNotas} />
     </div>
   )
 }

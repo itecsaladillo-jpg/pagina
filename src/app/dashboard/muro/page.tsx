@@ -2,17 +2,51 @@ import type { Metadata } from 'next'
 import { getCurrentMember } from '@/services/auth'
 import { redirect } from 'next/navigation'
 import { NewsWallMulticanal } from '@/components/comunicacion/NewsWallMulticanal'
-import { getMemberNewsFlashes } from '@/services/news'
+import { createClient } from '@/lib/supabase/server'
+import type { NotaMiembro } from '@/services/news'
 
 export const metadata: Metadata = {
   title: 'Muro de Noticias — ITEC',
+}
+
+async function getMemberNotas() {
+  const supabase = await createClient()
+  const { data, error } = await supabase
+    .from('notas_miembros')
+    .select('*')
+    .eq('is_published', true)
+    .order('created_at', { ascending: false })
+
+  if (error) {
+    console.error('[dashboard-muro] getMemberNotas error:', error.message)
+    return []
+  }
+  return (data ?? []) as NotaMiembro[]
 }
 
 export default async function MuroPage() {
   const member = await getCurrentMember()
   if (!member || member.status !== 'activo') redirect('/acceso-pendiente')
 
-  const memberFlashes = await getMemberNewsFlashes()
+  const notas = await getMemberNotas()
+  const memberFlashes = notas.map((n) => ({
+    id: n.id,
+    created_at: n.created_at,
+    updated_at: n.updated_at,
+    autor_id: n.autor_id,
+    titulo: n.titulo,
+    datos_crudos: '',
+    texto_publico: '',
+    texto_miembros: n.contenido,
+    texto_sponsors: '',
+    texto_medios: '',
+    is_published: n.is_published,
+    para_publico: false,
+    para_miembros: true,
+    para_sponsors: false,
+    para_medios: false,
+    media_urls: n.media_urls,
+  }))
 
   return (
     <div>

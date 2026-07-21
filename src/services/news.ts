@@ -40,6 +40,55 @@ export interface NewsFlash {
   titulo?: string
 }
 
+export interface NotaPublico {
+  id: string
+  created_at: string
+  updated_at: string
+  news_flash_id: string | null
+  titulo: string
+  contenido: string
+  autor_id: string | null
+  is_published: boolean
+  media_urls: string[]
+  slug: string
+}
+
+export interface NotaMiembro {
+  id: string
+  created_at: string
+  updated_at: string
+  news_flash_id: string | null
+  titulo: string
+  contenido: string
+  autor_id: string | null
+  is_published: boolean
+  media_urls: string[]
+}
+
+export interface NotaSponsor {
+  id: string
+  created_at: string
+  updated_at: string
+  news_flash_id: string | null
+  titulo: string
+  contenido: string
+  autor_id: string | null
+  is_published: boolean
+  sponsor_ids: string[]
+}
+
+export interface NotaMedio {
+  id: string
+  created_at: string
+  updated_at: string
+  news_flash_id: string | null
+  titulo: string
+  contenido: string
+  autor_id: string | null
+  is_published: boolean
+  contacto_prensa: any
+}
+
 export interface RelatedVideo {
   id: string
   title: string
@@ -162,6 +211,84 @@ export async function getArticleBySlug(slug: string): Promise<PublicArticle | nu
   return article as PublicArticle
 }
 
+export async function getPublicNotas(): Promise<NotaPublico[]> {
+  const supabase = await createClient()
+  const { data, error } = await supabase
+    .from('notas_publico')
+    .select('*')
+    .eq('is_published', true)
+    .order('created_at', { ascending: false })
+
+  if (error) {
+    console.error('[newsService] getPublicNotas error:', error.message)
+    return []
+  }
+  return (data ?? []) as NotaPublico[]
+}
+
+export async function getMemberNotas(): Promise<NotaMiembro[]> {
+  const supabase = await createClient()
+  const { data, error } = await supabase
+    .from('notas_miembros')
+    .select('*')
+    .eq('is_published', true)
+    .order('created_at', { ascending: false })
+
+  if (error) {
+    console.error('[newsService] getMemberNotas error:', error.message)
+    return []
+  }
+  return (data ?? []) as NotaMiembro[]
+}
+
+export async function getSponsorNotas(): Promise<NotaSponsor[]> {
+  const supabase = await createClient()
+  const { data, error } = await supabase
+    .from('notas_sponsors')
+    .select('*')
+    .eq('is_published', true)
+    .order('created_at', { ascending: false })
+
+  if (error) {
+    console.error('[newsService] getSponsorNotas error:', error.message)
+    return []
+  }
+  return (data ?? []) as NotaSponsor[]
+}
+
+export async function getPressNotas(): Promise<NotaMedio[]> {
+  const supabase = await createClient()
+  const { data, error } = await supabase
+    .from('notas_medios')
+    .select('*')
+    .eq('is_published', true)
+    .order('created_at', { ascending: false })
+
+  if (error) {
+    console.error('[newsService] getPressNotas error:', error.message)
+    return []
+  }
+  return (data ?? []) as NotaMedio[]
+}
+
+export async function getAllMulticanalNewsFlashes(): Promise<NewsFlashMulticanal[]> {
+  const supabase = await createClient()
+  const { data, error } = await supabase
+    .from('news_flashes')
+    .select('*')
+    .order('created_at', { ascending: false })
+
+  if (error) {
+    console.error('[newsService] getAllMulticanalNewsFlashes error:', error.message)
+    return []
+  }
+
+  return (data ?? []).filter((f: any) =>
+    f.titulo && (f.texto_publico || f.texto_miembros || f.texto_sponsors || f.texto_medios)
+  ) as NewsFlashMulticanal[]
+}
+
+// Legacy: mantener funciones viejas para retrocompatibilidad
 export async function getPublicNewsFlashes(): Promise<NewsFlashMulticanal[]> {
   const supabase = await createClient()
   const { data, error } = await supabase
