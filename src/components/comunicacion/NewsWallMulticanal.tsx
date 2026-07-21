@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { MessageCircle, Send, Loader2, Globe, Users, ChevronDown, Building2, Newspaper, ChevronLeft, ChevronRight, Download } from 'lucide-react'
 import { format } from 'date-fns'
@@ -31,6 +31,15 @@ function MediaSlideshow({ mediaUrls }: { mediaUrls: string[] }) {
   const prev = useCallback(() => setCurrent(c => (c === 0 ? allMedia.length - 1 : c - 1)), [allMedia.length])
   const next = useCallback(() => setCurrent(c => (c === allMedia.length - 1 ? 0 : c + 1)), [allMedia.length])
 
+  // Slide automático cada 5 segundos si hay más de 1 imagen/video
+  useEffect(() => {
+    if (allMedia.length <= 1) return
+    const timer = setInterval(() => {
+      next()
+    }, 5000)
+    return () => clearInterval(timer)
+  }, [allMedia.length, next])
+
   const isVideo = current >= images.length
 
   return (
@@ -39,18 +48,18 @@ function MediaSlideshow({ mediaUrls }: { mediaUrls: string[] }) {
         {isVideo ? (
           <video src={videos[current - images.length]} controls className="w-full h-full object-contain" />
         ) : (
-          <img src={images[current]} alt="" className="w-full h-full object-contain" />
+          <img src={images[current]} alt="" className="w-full h-full object-contain transition-opacity duration-500" />
         )}
       </div>
       {allMedia.length > 1 && (
         <>
-          <button onClick={prev} className="absolute left-2 top-1/2 -translate-y-1/2 p-1.5 rounded-full bg-black/50 text-white opacity-0 group-hover:opacity-100 transition-all hover:bg-black/70">
+          <button onClick={prev} className="absolute left-2 top-1/2 -translate-y-1/2 p-1.5 rounded-full bg-black/50 text-white opacity-0 group-hover:opacity-100 transition-all hover:bg-black/70 z-10">
             <ChevronLeft size={18} />
           </button>
-          <button onClick={next} className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 rounded-full bg-black/50 text-white opacity-0 group-hover:opacity-100 transition-all hover:bg-black/70">
+          <button onClick={next} className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 rounded-full bg-black/50 text-white opacity-0 group-hover:opacity-100 transition-all hover:bg-black/70 z-10">
             <ChevronRight size={18} />
           </button>
-          <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5">
+          <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
             {allMedia.map((_, i) => (
               <button key={i} onClick={() => setCurrent(i)} className={`w-1.5 h-1.5 rounded-full transition-all ${i === current ? 'bg-white w-3' : 'bg-white/40'}`} />
             ))}
