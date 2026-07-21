@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, useTransition } from 'react'
+import { useState, useRef, useTransition, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Globe, Users, Building2, Newspaper, ChevronRight, Calendar, FileText, Save, Loader2, Upload, CheckCircle, Trash2, ArrowUp, ArrowDown } from 'lucide-react'
 import { format } from 'date-fns'
@@ -23,7 +23,8 @@ function getMediaArray(nota: NewsFlashMulticanal | undefined): string[] {
   return []
 }
 
-export function NotasMulticanalList({ notas }: NotasMulticanalListProps) {
+export function NotasMulticanalList({ notas: initialNotas }: NotasMulticanalListProps) {
+  const [notas, setNotas] = useState(initialNotas)
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [activeVariant, setActiveVariant] = useState<'publico' | 'miembros' | 'sponsors' | 'medios'>('publico')
   const [editContent, setEditContent] = useState<Record<string, string>>({})
@@ -33,6 +34,11 @@ export function NotasMulticanalList({ notas }: NotasMulticanalListProps) {
   const [isPending, startTransition] = useTransition()
   const fileInputRef = useRef<HTMLInputElement>(null)
   const supabase = createClient()
+
+  // Sincronizar estado local si cambian los props (cuando Next.js invalida la cache)
+  useEffect(() => {
+    setNotas(initialNotas)
+  }, [initialNotas])
 
   const selected = notas.find((n) => n.id === selectedId)
 
@@ -77,16 +83,21 @@ export function NotasMulticanalList({ notas }: NotasMulticanalListProps) {
   const handleDelete = async (e: React.MouseEvent, id: string) => {
     e.stopPropagation()
     if (!window.confirm('¿Estás seguro de eliminar esta noticia multicanal?')) return
+    
+    setNotas(prev => prev.filter(n => n.id !== id))
+    
     startTransition(async () => {
       try {
         const res = await deleteNotaAction(id)
         if (res && res.error) {
           alert('Error al eliminar: ' + res.error)
+          setNotas(initialNotas)
         } else {
           if (selectedId === id) setSelectedId(null)
         }
       } catch (err: any) {
         alert('Error inesperado: ' + err.message)
+        setNotas(initialNotas)
       }
     })
   }
@@ -94,12 +105,23 @@ export function NotasMulticanalList({ notas }: NotasMulticanalListProps) {
   const handleMoveUp = async (e: React.MouseEvent, idx: number) => {
     e.stopPropagation()
     if (idx === 0) return
+    
+    const newNotas = [...notas]
+    const temp = newNotas[idx]
+    newNotas[idx] = newNotas[idx - 1]
+    newNotas[idx - 1] = temp
+    setNotas(newNotas)
+    
     startTransition(async () => {
       try {
-        const res = await swapNotasOrderAction(notas[idx].id, notas[idx - 1].id)
-        if (res && res.error) alert('Error al mover: ' + res.error)
+        const res = await swapNotasOrderAction(initialNotas[idx].id, initialNotas[idx - 1].id)
+        if (res && res.error) {
+          alert('Error al mover: ' + res.error)
+          setNotas(initialNotas)
+        }
       } catch (err: any) {
         alert('Error inesperado: ' + err.message)
+        setNotas(initialNotas)
       }
     })
   }
@@ -107,12 +129,23 @@ export function NotasMulticanalList({ notas }: NotasMulticanalListProps) {
   const handleMoveDown = async (e: React.MouseEvent, idx: number) => {
     e.stopPropagation()
     if (idx === notas.length - 1) return
+    
+    const newNotas = [...notas]
+    const temp = newNotas[idx]
+    newNotas[idx] = newNotas[idx + 1]
+    newNotas[idx + 1] = temp
+    setNotas(newNotas)
+    
     startTransition(async () => {
       try {
-        const res = await swapNotasOrderAction(notas[idx].id, notas[idx + 1].id)
-        if (res && res.error) alert('Error al mover: ' + res.error)
+        const res = await swapNotasOrderAction(initialNotas[idx].id, initialNotas[idx + 1].id)
+        if (res && res.error) {
+          alert('Error al mover: ' + res.error)
+          setNotas(initialNotas)
+        }
       } catch (err: any) {
         alert('Error inesperado: ' + err.message)
+        setNotas(initialNotas)
       }
     })
   }
