@@ -117,7 +117,7 @@ export async function getPublicArticles(): Promise<PublicArticle[]> {
   const supabase = await createClient()
   const { data, error } = await supabase
     .from('public_articles')
-    .select('*')
+    .select('*, news_flashes(media_urls)')
     .eq('is_published', true)
     .order('created_at', { ascending: false })
 
@@ -126,7 +126,17 @@ export async function getPublicArticles(): Promise<PublicArticle[]> {
     return []
   }
 
-  const articles = (data ?? []) as any[]
+  const articles = (data ?? []).map((art: any) => {
+    // Resolver media_urls con fallback a news_flashes
+    let media = art.media_urls
+    let mediaArr = Array.isArray(media) ? media : (typeof media === 'string' ? (() => { try { return JSON.parse(media) } catch { return [] } })() : [])
+    if (mediaArr.length === 0 && art.news_flashes) {
+      const nfMedia = art.news_flashes.media_urls
+      mediaArr = Array.isArray(nfMedia) ? nfMedia : (typeof nfMedia === 'string' ? (() => { try { return JSON.parse(nfMedia) } catch { return [] } })() : [])
+    }
+    art.media_urls = mediaArr
+    return art
+  })
 
   // Intentar cargar la información del video de forma segura y tolerante a fallos
   try {
@@ -158,14 +168,23 @@ export async function getAllArticles(): Promise<PublicArticle[]> {
   const supabase = await createClient()
   const { data, error } = await supabase
     .from('public_articles')
-    .select('*')
+    .select('*, news_flashes(media_urls)')
     .order('created_at', { ascending: false })
 
   if (error) {
     console.error('[newsService] getAllArticles error:', error.message)
     return []
   }
-  return (data ?? []) as PublicArticle[]
+  return (data ?? []).map((art: any) => {
+    let media = art.media_urls
+    let mediaArr = Array.isArray(media) ? media : (typeof media === 'string' ? (() => { try { return JSON.parse(media) } catch { return [] } })() : [])
+    if (mediaArr.length === 0 && art.news_flashes) {
+      const nfMedia = art.news_flashes.media_urls
+      mediaArr = Array.isArray(nfMedia) ? nfMedia : (typeof nfMedia === 'string' ? (() => { try { return JSON.parse(nfMedia) } catch { return [] } })() : [])
+    }
+    art.media_urls = mediaArr
+    return art as PublicArticle
+  })
 }
 
 export async function getArticleBySlug(slug: string): Promise<PublicArticle | null> {
@@ -176,7 +195,7 @@ export async function getArticleBySlug(slug: string): Promise<PublicArticle | nu
   
   let query = supabase
     .from('public_articles')
-    .select('*')
+    .select('*, news_flashes(media_urls)')
   
   if (isUUID) {
     query = query.or(`slug.eq.${slug},id.eq.${slug}`)
@@ -193,6 +212,15 @@ export async function getArticleBySlug(slug: string): Promise<PublicArticle | nu
 
   if (!data) return null
   const article = data as any
+
+  // Resolver media_urls con fallback a news_flashes
+  let media = article.media_urls
+  let mediaArr = Array.isArray(media) ? media : (typeof media === 'string' ? (() => { try { return JSON.parse(media) } catch { return [] } })() : [])
+  if (mediaArr.length === 0 && article.news_flashes) {
+    const nfMedia = article.news_flashes.media_urls
+    mediaArr = Array.isArray(nfMedia) ? nfMedia : (typeof nfMedia === 'string' ? (() => { try { return JSON.parse(nfMedia) } catch { return [] } })() : [])
+  }
+  article.media_urls = mediaArr
 
   // Intentar cargar la información del video de forma segura y tolerante a fallos
   try {
