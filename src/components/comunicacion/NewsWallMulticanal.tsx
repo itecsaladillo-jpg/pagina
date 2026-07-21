@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useState, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -19,8 +19,10 @@ interface NewsWallMulticanalProps {
 function MediaSlideshow({ mediaUrls }: { mediaUrls: string[] }) {
   const [current, setCurrent] = useState(0)
   const stripQuery = (u: string) => u.split('?')[0]
-  const images = mediaUrls.filter(u => /\.(jpg|jpeg|png|gif|webp|avif)/i.test(stripQuery(u)))
-  const videos = mediaUrls.filter(u => /\.(mp4|webm|mov)/i.test(stripQuery(u)))
+  const isVideoUrl = (u: string) => /\.(mp4|webm|mov)/i.test(stripQuery(u))
+  // Tratar como imagen todo lo que no sea video (incluye URLs sin extensión de Supabase Storage)
+  const videos = mediaUrls.filter(u => isVideoUrl(u))
+  const images = mediaUrls.filter(u => !isVideoUrl(u))
 
   if (images.length === 0 && videos.length === 0) return null
 
@@ -251,9 +253,6 @@ export function NewsWallMulticanal({
                     </div>
                   )}
 
-                  {activeTab === 'sponsors' && mediaUrls.length > 0 && (
-                    <MediaSlideshow mediaUrls={mediaUrls} />
-                  )}
 
                   {activeTab === 'interno' && (
                     <div className='border-t border-white/5 pt-4 mt-4'>

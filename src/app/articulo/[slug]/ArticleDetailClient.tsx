@@ -60,26 +60,34 @@ export function ArticleDetailClient({ article }: ArticleDetailClientProps) {
         </div>
 
         {/* Multimedia Gallery/Slider */}
-        {article.media_urls && article.media_urls.length > 0 && (
-          <div className="grid grid-cols-1 gap-4">
-            <div className="aspect-video rounded-3xl overflow-hidden border border-white/5 bg-white/[0.02]">
-              <img 
-                src={article.media_urls[0]} 
-                alt={displayTitle} 
-                className="w-full h-full object-cover" 
-              />
-            </div>
-            {article.media_urls.length > 1 && (
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                {article.media_urls.slice(1).map((url: string, i: number) => (
-                  <div key={i} className="aspect-video rounded-2xl overflow-hidden border border-white/5 bg-white/[0.02]">
-                    <img src={url} alt="" className="w-full h-full object-cover" />
-                  </div>
-                ))}
+        {article.media_urls && article.media_urls.length > 0 && (() => {
+          const isVideo = (u: string) => /\.(mp4|webm|mov)/i.test(u.split('?')[0])
+          const firstUrl = article.media_urls[0]
+          return (
+            <div className="grid grid-cols-1 gap-4">
+              <div className="aspect-video rounded-3xl overflow-hidden border border-white/5 bg-white/[0.02]">
+                {isVideo(firstUrl) ? (
+                  <video src={firstUrl} controls className="w-full h-full object-cover" />
+                ) : (
+                  <img src={firstUrl} alt={displayTitle} className="w-full h-full object-cover" />
+                )}
               </div>
-            )}
-          </div>
-        )}
+              {article.media_urls.length > 1 && (
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                  {article.media_urls.slice(1).map((url: string, i: number) => (
+                    <div key={i} className="aspect-video rounded-2xl overflow-hidden border border-white/5 bg-white/[0.02]">
+                      {isVideo(url) ? (
+                        <video src={url} controls className="w-full h-full object-cover" />
+                      ) : (
+                        <img src={url} alt="" className="w-full h-full object-cover" />
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )
+        })()}
 
         {/* Content */}
         <div className="prose prose-invert prose-blue max-w-none">
