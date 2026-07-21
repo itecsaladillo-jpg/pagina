@@ -314,9 +314,20 @@ export async function getAllMulticanalNewsFlashes(): Promise<NewsFlashMulticanal
     return []
   }
 
-  return (data ?? []).filter((f: any) =>
-    f.titulo && (f.texto_publico || f.texto_miembros || f.texto_sponsors || f.texto_medios)
-  ) as NewsFlashMulticanal[]
+  return (data ?? [])
+    .map((f: any) => {
+      // Normalizar campos legacy
+      if (!f.titulo && f.title) f.titulo = f.title
+      if (!f.texto_publico && f.flash_text) f.texto_publico = f.flash_text
+      
+      // Asegurar booleanos de visibilidad si eran de la versión anterior
+      if (f.para_publico === undefined) f.para_publico = true
+      
+      return f
+    })
+    .filter((f: any) =>
+      f.titulo && (f.texto_publico || f.texto_miembros || f.texto_sponsors || f.texto_medios || f.flash_text)
+    ) as NewsFlashMulticanal[]
 }
 
 // Legacy: mantener funciones viejas para retrocompatibilidad
