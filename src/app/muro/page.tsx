@@ -1,97 +1,24 @@
 import type { Metadata } from 'next'
 import { createClient } from '@/lib/supabase/server'
 import { NewsWallMulticanal } from '@/components/comunicacion/NewsWallMulticanal'
+import { getAllMulticanalNewsFlashes } from '@/services/news'
+
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
 
 export const metadata: Metadata = {
   title: 'Muro — ITEC',
   description: 'Novedades y comunicaciones del Instituto',
 }
 
-async function getPublicNotas() {
-  const supabase = await createClient()
-  const { data, error } = await supabase
-    .from('notas_publico')
-    .select('*, news_flashes(media_urls)')
-    .eq('is_published', true)
-    .order('created_at', { ascending: false })
-
-  if (error) {
-    console.error('[public-muro] getPublicNotas error:', error.message)
-    return []
-  }
-  return (data ?? []) as any[]
-}
-
-async function getMemberNotas() {
+export default async function MuroPage() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return null
-  
-  const { data, error } = await supabase
-    .from('notas_miembros')
-    .select('*, news_flashes(media_urls)')
-    .eq('is_published', true)
-    .order('created_at', { ascending: false })
 
-  if (error) {
-    console.error('[public-muro] getMemberNotas error:', error.message)
-    return null
-  }
-  return (data ?? []) as any[]
-}
+  const allFlashes = await getAllMulticanalNewsFlashes()
 
-// Resuelve media_urls: usa las de la nota, o las de la noticia maestra como fallback
-function resolveMediaUrls(n: any): string[] {
-  const local = n.media_urls
-  const localArr = Array.isArray(local) ? local : (typeof local === 'string' ? (() => { try { return JSON.parse(local) } catch { return [] } })() : [])
-  if (localArr.length > 0) return localArr
-  // Fallback a news_flashes.media_urls
-  const nf = n.news_flashes?.media_urls
-  const nfArr = Array.isArray(nf) ? nf : (typeof nf === 'string' ? (() => { try { return JSON.parse(nf) } catch { return [] } })() : [])
-  return nfArr
-}
-
-export default async function MuroPage() {
-  const notasPublico = await getPublicNotas()
-  const notasMiembros = await getMemberNotas()
-
-  const publicFlashes = notasPublico.map((n) => ({
-    id: n.id,
-    created_at: n.created_at,
-    updated_at: n.updated_at,
-    autor_id: n.autor_id,
-    titulo: n.titulo,
-    datos_crudos: '',
-    texto_publico: n.contenido,
-    texto_miembros: '',
-    texto_sponsors: '',
-    texto_medios: '',
-    is_published: n.is_published,
-    para_publico: true,
-    para_miembros: false,
-    para_sponsors: false,
-    para_medios: false,
-    media_urls: resolveMediaUrls(n),
-  }))
-
-  const memberFlashes = notasMiembros?.map((n) => ({
-    id: n.id,
-    created_at: n.created_at,
-    updated_at: n.updated_at,
-    autor_id: n.autor_id,
-    titulo: n.titulo,
-    datos_crudos: '',
-    texto_publico: '',
-    texto_miembros: n.contenido,
-    texto_sponsors: '',
-    texto_medios: '',
-    is_published: n.is_published,
-    para_publico: false,
-    para_miembros: true,
-    para_sponsors: false,
-    para_medios: false,
-    media_urls: resolveMediaUrls(n),
-  })) ?? null
+  const publicFlashes = allFlashes.filter(f => f.para_publico && f.is_published !== false)
+  const memberFlashes = user ? allFlashes.filter(f => f.para_miembros && f.is_published !== false) : null
 
   return (
     <main className='min-h-screen bg-[#020617] pt-32 pb-20 px-6'>
@@ -112,4 +39,4 @@ export default async function MuroPage() {
       </div>
     </main>
   )
-}
+}
