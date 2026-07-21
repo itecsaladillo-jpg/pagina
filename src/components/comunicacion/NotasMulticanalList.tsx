@@ -38,9 +38,13 @@ export function NotasMulticanalList({ notas }: NotasMulticanalListProps) {
   const allMediaUrls: string[] = (() => {
     if (!selected) return []
     const stored = getMediaArray(selected)
-    const local = localMedia[selected.id]
-    if (local) return local
-    return stored
+    const local = localMedia[selected.id] ?? []
+    // Combina las guardadas con las nuevas subidas en la sesión, sin duplicar
+    const combined = [...stored]
+    for (const url of local) {
+      if (!combined.includes(url)) combined.push(url)
+    }
+    return combined
   })()
   const getTextKey = (notaId: string, variant: string) => `${notaId}-${variant}`
 
@@ -214,9 +218,44 @@ export function NotasMulticanalList({ notas }: NotasMulticanalListProps) {
                   ...prev,
                   [getTextKey(selected.id, activeVariant)]: e.target.value
                 }))}
-                className="w-full min-h-[300px] bg-white/[0.02] border border-white/10 rounded-xl p-4 text-sm text-white/80 focus:outline-none focus:border-cyan-500/40 transition-all resize-y leading-relaxed"
+                className="w-full min-h-[200px] bg-white/[0.02] border border-white/10 rounded-xl p-4 text-sm text-white/80 focus:outline-none focus:border-cyan-500/40 transition-all resize-y leading-relaxed"
               />
 
+              {/* Imágenes guardadas de la noticia */}
+              {allMediaUrls.length > 0 && (
+                <div className="space-y-2">
+                  <p className="text-xs font-semibold text-white/40 uppercase tracking-widest">Imágenes de la noticia</p>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                    {allMediaUrls.map((url, idx) => (
+                      <div key={idx} className="relative group rounded-xl overflow-hidden border border-white/10 bg-white/[0.02]">
+                        {/\.(mp4|webm|mov)$/i.test(url) ? (
+                          <video src={url} controls className="w-full h-32 object-cover" />
+                        ) : (
+                          <img
+                            src={url}
+                            alt={`Imagen ${idx + 1}`}
+                            className="w-full h-32 object-cover transition-transform duration-300 group-hover:scale-105"
+                          />
+                        )}
+                        <button
+                          onClick={() => removeMedia(url)}
+                          className="absolute top-1.5 right-1.5 p-1.5 rounded-full bg-red-500/80 opacity-0 group-hover:opacity-100 transition-all hover:bg-red-600"
+                          title="Eliminar imagen"
+                        >
+                          <Trash2 size={12} className="text-white" />
+                        </button>
+                        <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/70 to-transparent px-2 py-1.5 opacity-0 group-hover:opacity-100 transition-all">
+                          <span className="text-[10px] text-white/80 truncate block">
+                            {url.match(/([^/]+?)(?:\?.*)?$/)?.[1] || 'archivo'}
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Área de subida de nuevas imágenes */}
               <div className="space-y-2">
                 <input
                   ref={fileInputRef}
@@ -234,32 +273,6 @@ export function NotasMulticanalList({ notas }: NotasMulticanalListProps) {
                   <Upload size={14} />
                   Agregar imágenes o videos
                 </button>
-
-                {allMediaUrls.length > 0 && (
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                    {allMediaUrls.map((url, idx) => (
-                      <div key={idx} className="relative group rounded-lg overflow-hidden border border-white/10">
-                        {/\.(mp4|webm|mov)$/i.test(url) ? (
-                          <video src={url} className="w-full h-24 object-cover" />
-                        ) : (
-                          <img src={url} alt="" className="w-full h-24 object-cover" />
-                        )}
-                        <button
-                          onClick={() => removeMedia(url)}
-                          className="absolute top-1 right-1 p-1.5 rounded-full bg-red-500/80 opacity-0 group-hover:opacity-100 transition-all hover:bg-red-600"
-                          title="Eliminar imagen"
-                        >
-                          <Trash2 size={12} className="text-white" />
-                        </button>
-                        <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/60 to-transparent p-1.5 opacity-0 group-hover:opacity-100 transition-all">
-                          <span className="text-[10px] text-white truncate block">
-                            {url.match(/\.(\w+)(?:\?.*)?$/)?.[1]?.toUpperCase() || 'ARCHIVO'}
-                          </span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
               </div>
 
               <button
