@@ -18,7 +18,7 @@ export async function createMulticanalNewsAction(data: {
   media_urls?: string[]
 }) {
   const member = await getCurrentMember()
-  if (!member || member.role !== 'admin') throw new Error('No autorizado')
+  if (!member || !['admin', 'coordinador'].includes(member.role)) throw new Error('No autorizado')
 
   const supabase = await createClient()
   
@@ -157,7 +157,7 @@ export async function updateNotaAction(data: {
   media_urls?: string[]
 }) {
   const member = await getCurrentMember()
-  if (!member || member.role !== 'admin') throw new Error('No autorizado')
+  if (!member || !['admin', 'coordinador'].includes(member.role)) throw new Error('No autorizado')
 
   const supabase = await createClient()
 
@@ -231,7 +231,7 @@ export async function updateNotaAction(data: {
 
 export async function deleteNotaAction(newsFlashId: string) {
   const member = await getCurrentMember()
-  if (!member || member.role !== 'admin') throw new Error('No autorizado')
+  if (!member || !['admin', 'coordinador'].includes(member.role)) throw new Error('No autorizado')
 
   const supabase = await createClient()
 
@@ -259,7 +259,7 @@ export async function deleteNotaAction(newsFlashId: string) {
 
 export async function swapNotasOrderAction(notaId1: string, notaId2: string) {
   const member = await getCurrentMember()
-  if (!member || member.role !== 'admin') throw new Error('No autorizado')
+  if (!member || !['admin', 'coordinador'].includes(member.role)) throw new Error('No autorizado')
 
   const supabase = await createClient()
 

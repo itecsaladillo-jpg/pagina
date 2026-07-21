@@ -78,8 +78,16 @@ export function NotasMulticanalList({ notas }: NotasMulticanalListProps) {
     e.stopPropagation()
     if (!window.confirm('¿Estás seguro de eliminar esta noticia multicanal?')) return
     startTransition(async () => {
-      await deleteNotaAction(id)
-      if (selectedId === id) setSelectedId(null)
+      try {
+        const res = await deleteNotaAction(id)
+        if (res && res.error) {
+          alert('Error al eliminar: ' + res.error)
+        } else {
+          if (selectedId === id) setSelectedId(null)
+        }
+      } catch (err: any) {
+        alert('Error inesperado: ' + err.message)
+      }
     })
   }
 
@@ -87,7 +95,12 @@ export function NotasMulticanalList({ notas }: NotasMulticanalListProps) {
     e.stopPropagation()
     if (idx === 0) return
     startTransition(async () => {
-      await swapNotasOrderAction(notas[idx].id, notas[idx - 1].id)
+      try {
+        const res = await swapNotasOrderAction(notas[idx].id, notas[idx - 1].id)
+        if (res && res.error) alert('Error al mover: ' + res.error)
+      } catch (err: any) {
+        alert('Error inesperado: ' + err.message)
+      }
     })
   }
 
@@ -95,7 +108,12 @@ export function NotasMulticanalList({ notas }: NotasMulticanalListProps) {
     e.stopPropagation()
     if (idx === notas.length - 1) return
     startTransition(async () => {
-      await swapNotasOrderAction(notas[idx].id, notas[idx + 1].id)
+      try {
+        const res = await swapNotasOrderAction(notas[idx].id, notas[idx + 1].id)
+        if (res && res.error) alert('Error al mover: ' + res.error)
+      } catch (err: any) {
+        alert('Error inesperado: ' + err.message)
+      }
     })
   }
 
