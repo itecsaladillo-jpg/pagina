@@ -304,17 +304,82 @@ export async function getPressNotas(): Promise<NotaMedio[]> {
 
 export async function getAllMulticanalNewsFlashes(): Promise<NewsFlashMulticanal[]> {
   const supabase = await createClient()
-  const { data, error } = await supabase
+  
+  // 1. Obtener de news_flashes (sujeto a RLS)
+  const { data: flashesData, error } = await supabase
     .from('news_flashes')
     .select('*')
     .order('created_at', { ascending: false })
 
   if (error) {
     console.error('[newsService] getAllMulticanalNewsFlashes error:', error.message)
-    return []
   }
 
-  return (data ?? [])
+  const flashesMap = new Map<string, any>((flashesData || []).map((f: any) => [f.id, f]))
+
+  // 2. Obtener de notas_publico (acceso público irrestricto si is_published=true)
+  const { data: notasPublico } = await supabase
+    .from('notas_publico')
+    .select('*, news_flashes(media_urls)')
+    .eq('is_published', true)
+
+  if (notasPublico) {
+    for (const np of notasPublico) {
+      if (np.news_flash_id) {
+        const existing = flashesMap.get(np.news_flash_id)
+        if (existing) {
+          existing.texto_publico = np.contenido
+          existing.para_publico = true
+          if (np.media_urls && np.media_urls.length > 0) existing.media_urls = np.media_urls
+        } else {
+          flashesMap.set(np.news_flash_id, {
+            id: np.news_flash_id,
+            titulo: np.titulo,
+            texto_publico: np.contenido,
+            para_publico: true,
+            is_published: true,
+            created_at: np.created_at,
+            media_urls: np.media_urls?.length ? np.media_urls : np.news_flashes?.media_urls || []
+          })
+        }
+      }
+    }
+  }
+
+  // 3. Obtener de notas_miembros (si está autenticado)
+  const { data: { user } } = await supabase.auth.getUser()
+  if (user) {
+    const { data: notasMiembros } = await supabase
+      .from('notas_miembros')
+      .select('*, news_flashes(media_urls)')
+      .eq('is_published', true)
+      
+    if (notasMiembros) {
+      for (const nm of notasMiembros) {
+        if (nm.news_flash_id) {
+          const existing = flashesMap.get(nm.news_flash_id)
+          if (existing) {
+            existing.texto_miembros = nm.contenido
+            existing.para_miembros = true
+          } else {
+            flashesMap.set(nm.news_flash_id, {
+              id: nm.news_flash_id,
+              titulo: nm.titulo,
+              texto_miembros: nm.contenido,
+              para_miembros: true,
+              is_published: true,
+              created_at: nm.created_at,
+              media_urls: nm.media_urls?.length ? nm.media_urls : nm.news_flashes?.media_urls || []
+            })
+          }
+        }
+      }
+    }
+  }
+
+  const merged = Array.from(flashesMap.values())
+
+  const result = merged
     .map((f: any) => {
       // Normalizar campos legacy
       if (!f.titulo && f.title) f.titulo = f.title
@@ -322,7 +387,7 @@ export async function getAllMulticanalNewsFlashes(): Promise<NewsFlashMulticanal
       
       const hasPublicText = Boolean(f.texto_publico && typeof f.texto_publico === 'string' && f.texto_publico.trim().length > 0)
       
-      // Si tiene texto público o es noticia antigua, forzar para_publico en true si no estaba negado explícitamente
+      // Si tiene texto público o es noticia antigua, forzar para_publico en true
       if (f.para_publico === undefined || f.para_publico === null || hasPublicText) {
         f.para_publico = f.para_publico !== false
       }
@@ -337,6 +402,10 @@ export async function getAllMulticanalNewsFlashes(): Promise<NewsFlashMulticanal
     .filter((f: any) =>
       f.titulo && (f.texto_publico || f.texto_miembros || f.texto_sponsors || f.texto_medios || f.flash_text)
     ) as NewsFlashMulticanal[]
+
+  result.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+
+  return result
 }
 
 // Legacy: mantener funciones viejas para retrocompatibilidad
