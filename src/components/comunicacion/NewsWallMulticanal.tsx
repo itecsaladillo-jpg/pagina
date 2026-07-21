@@ -1,8 +1,8 @@
 ﻿'use client'
 
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { MessageCircle, Send, Loader2, Globe, Users, ChevronDown, Building2, Newspaper } from 'lucide-react'
+import { MessageCircle, Send, Loader2, Globe, Users, ChevronDown, Building2, Newspaper, ChevronLeft, ChevronRight, Download } from 'lucide-react'
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
 import type { NewsFlashMulticanal } from '@/services/news-multicanal'
@@ -14,6 +14,48 @@ interface NewsWallMulticanalProps {
   memberFlashes: NewsFlashMulticanal[] | null
   sponsorFlashes?: NewsFlashMulticanal[] | null
   pressFlashes?: NewsFlashMulticanal[] | null
+}
+
+function MediaSlideshow({ mediaUrls }: { mediaUrls: string[] }) {
+  const [current, setCurrent] = useState(0)
+  const images = mediaUrls.filter(u => /\.(jpg|jpeg|png|gif|webp|avif)$/i.test(u))
+  const videos = mediaUrls.filter(u => /\.(mp4|webm|mov)$/i.test(u))
+
+  if (images.length === 0 && videos.length === 0) return null
+
+  const allMedia = [...images, ...videos]
+
+  const prev = useCallback(() => setCurrent(c => (c === 0 ? allMedia.length - 1 : c - 1)), [allMedia.length])
+  const next = useCallback(() => setCurrent(c => (c === allMedia.length - 1 ? 0 : c + 1)), [allMedia.length])
+
+  const isVideo = current >= images.length
+
+  return (
+    <div className="relative group rounded-2xl overflow-hidden bg-black/20 mb-6">
+      <div className="aspect-video max-h-[400px] flex items-center justify-center">
+        {isVideo ? (
+          <video src={videos[current - images.length]} controls className="w-full h-full object-contain" />
+        ) : (
+          <img src={images[current]} alt="" className="w-full h-full object-contain" />
+        )}
+      </div>
+      {allMedia.length > 1 && (
+        <>
+          <button onClick={prev} className="absolute left-2 top-1/2 -translate-y-1/2 p-1.5 rounded-full bg-black/50 text-white opacity-0 group-hover:opacity-100 transition-all hover:bg-black/70">
+            <ChevronLeft size={18} />
+          </button>
+          <button onClick={next} className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 rounded-full bg-black/50 text-white opacity-0 group-hover:opacity-100 transition-all hover:bg-black/70">
+            <ChevronRight size={18} />
+          </button>
+          <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5">
+            {allMedia.map((_, i) => (
+              <button key={i} onClick={() => setCurrent(i)} className={`w-1.5 h-1.5 rounded-full transition-all ${i === current ? 'bg-white w-3' : 'bg-white/40'}`} />
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  )
 }
 
 export function NewsWallMulticanal({ 
@@ -88,6 +130,11 @@ export function NewsWallMulticanal({
     }
   }
 
+  const getMediaUrls = (flash: NewsFlashMulticanal): string[] => {
+    if (flash.media_urls && Array.isArray(flash.media_urls)) return flash.media_urls
+    return []
+  }
+
   const formatDate = (dateString: string) => {
     return format(new Date(dateString), 'd MMMM, yyyy', { locale: es })
   }
@@ -151,100 +198,129 @@ export function NewsWallMulticanal({
           </motion.div>
         ) : (
           <motion.div layout className='space-y-6'>
-            {currentFlashes.map((flash) => (
-              <motion.article
-                key={flash.id}
-                layout
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className='glass border border-white/5 rounded-3xl p-6'
-              >
-                <div className='flex items-start justify-between mb-4'>
-                  <div className='flex-1'>
-                    <h2 className='text-xl font-bold text-white mb-2'>{flash.titulo}</h2>
-                    <span className='text-xs text-white/40'>
-                      {formatDate(flash.created_at)}
-                    </span>
+            {currentFlashes.map((flash) => {
+              const mediaUrls = getMediaUrls(flash)
+              return (
+                <motion.article
+                  key={flash.id}
+                  layout
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className='glass border border-white/5 rounded-3xl p-6'
+                >
+                  <div className='flex items-start justify-between mb-4'>
+                    <div className='flex-1'>
+                      <h2 className='text-xl font-bold text-white mb-2'>{flash.titulo}</h2>
+                      <span className='text-xs text-white/40'>
+                        {formatDate(flash.created_at)}
+                      </span>
+                    </div>
                   </div>
-                </div>
 
-                <p className='text-white/80 leading-relaxed whitespace-pre-wrap mb-6'>
-                  {getFlashText(flash)}
-                </p>
+                  {mediaUrls.length > 0 && activeTab !== 'prensa' && (
+                    <MediaSlideshow mediaUrls={mediaUrls} />
+                  )}
 
-                {activeTab === 'interno' && (
-                  <div className='border-t border-white/5 pt-4 mt-4'>
-                    <button
-                      onClick={() => handleToggleComments(flash.id)}
-                      className='flex items-center gap-2 text-xs text-emerald-400 hover:text-emerald-300 transition-colors mb-4'
-                    >
-                      <MessageCircle size={14} />
-                      {expandedComments[flash.id] ? 'Ocultar' : 'Ver'} Comentarios
-                      <ChevronDown size={14} />
-                    </button>
+                  <p className='text-white/80 leading-relaxed whitespace-pre-wrap mb-6'>
+                    {getFlashText(flash)}
+                  </p>
 
-                    <AnimatePresence>
-                      {expandedComments[flash.id] && (
-                        <motion.div
-                          initial={{ opacity: 0, height: 0 }}
-                          animate={{ opacity: 1, height: 'auto' }}
-                          exit={{ opacity: 0, height: 0 }}
-                          className='space-y-4'
+                  {activeTab === 'prensa' && mediaUrls.length > 0 && (
+                    <div className='flex flex-wrap gap-2 mb-6'>
+                      {mediaUrls.map((url, i) => (
+                        <a
+                          key={i}
+                          href={url}
+                          download
+                          target='_blank'
+                          rel='noopener noreferrer'
+                          className='flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-white/10 text-white/60 text-xs hover:text-white hover:border-white/30 transition-all'
                         >
-                          {loadingComments[flash.id] ? (
-                            <div className='flex items-center justify-center py-4'>
-                              <Loader2 size={16} className='animate-spin text-white/40' />
-                            </div>
-                          ) : (
-                            <>
-                              {flashesWithComments[flash.id]?.length > 0 && (
-                                <div className='space-y-3 max-h-60 overflow-y-auto'>
-                                  {flashesWithComments[flash.id].map((comment) => (
-                                    <div
-                                      key={comment.id}
-                                      className='bg-white/[0.02] border border-white/5 rounded-xl p-3'
-                                    >
-                                      <div className='flex items-baseline gap-2 mb-1'>
-                                        <span className='text-xs font-bold text-emerald-400'>
-                                          {comment.member_name}
-                                        </span>
-                                        <span className='text-[10px] text-white/40'>
-                                          {formatDate(comment.created_at)}
-                                        </span>
-                                      </div>
-                                      <p className='text-sm text-white/70'>
-                                        {comment.content}
-                                      </p>
-                                    </div>
-                                  ))}
-                                </div>
-                              )}
+                          <Download size={12} />
+                          {url.match(/\.(\w+)$/)?.[1]?.toUpperCase() || 'ARCHIVO'} {i + 1}
+                        </a>
+                      ))}
+                    </div>
+                  )}
 
-                              <div className='flex flex-col gap-2'>
-                                <textarea
-                                  value={commentInputs[flash.id] || ''}
-                                  onChange={(e) => setCommentInputs(prev => ({ ...prev, [flash.id]: e.target.value }))}
-                                  placeholder='Escribi un comentario...'
-                                  className='w-full min-h-[80px] bg-white/[0.02] border border-white/10 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-emerald-500/40 resize-none'
-                                />
-                                <button
-                                  onClick={() => handleSubmitComment(flash.id)}
-                                  disabled={!commentInputs[flash.id]?.trim()}
-                                  className='self-end px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold uppercase tracking-widest transition-all disabled:opacity-40 flex items-center gap-2'
-                                >
-                                  <Send size={12} />
-                                  Comentar
-                                </button>
+                  {activeTab === 'sponsors' && mediaUrls.length > 0 && (
+                    <MediaSlideshow mediaUrls={mediaUrls} />
+                  )}
+
+                  {activeTab === 'interno' && (
+                    <div className='border-t border-white/5 pt-4 mt-4'>
+                      <button
+                        onClick={() => handleToggleComments(flash.id)}
+                        className='flex items-center gap-2 text-xs text-emerald-400 hover:text-emerald-300 transition-colors mb-4'
+                      >
+                        <MessageCircle size={14} />
+                        {expandedComments[flash.id] ? 'Ocultar' : 'Ver'} Comentarios
+                        <ChevronDown size={14} />
+                      </button>
+
+                      <AnimatePresence>
+                        {expandedComments[flash.id] && (
+                          <motion.div
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: 'auto' }}
+                            exit={{ opacity: 0, height: 0 }}
+                            className='space-y-4'
+                          >
+                            {loadingComments[flash.id] ? (
+                              <div className='flex items-center justify-center py-4'>
+                                <Loader2 size={16} className='animate-spin text-white/40' />
                               </div>
-                            </>
-                          )}
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </div>
-                )}
-              </motion.article>
-            ))}
+                            ) : (
+                              <>
+                                {flashesWithComments[flash.id]?.length > 0 && (
+                                  <div className='space-y-3 max-h-60 overflow-y-auto'>
+                                    {flashesWithComments[flash.id].map((comment) => (
+                                      <div
+                                        key={comment.id}
+                                        className='bg-white/[0.02] border border-white/5 rounded-xl p-3'
+                                      >
+                                        <div className='flex items-baseline gap-2 mb-1'>
+                                          <span className='text-xs font-bold text-emerald-400'>
+                                            {comment.member_name}
+                                          </span>
+                                          <span className='text-[10px] text-white/40'>
+                                            {formatDate(comment.created_at)}
+                                          </span>
+                                        </div>
+                                        <p className='text-sm text-white/70'>
+                                          {comment.content}
+                                        </p>
+                                      </div>
+                                    ))}
+                                  </div>
+                                )}
+
+                                <div className='flex flex-col gap-2'>
+                                  <textarea
+                                    value={commentInputs[flash.id] || ''}
+                                    onChange={(e) => setCommentInputs(prev => ({ ...prev, [flash.id]: e.target.value }))}
+                                    placeholder='Escribi un comentario...'
+                                    className='w-full min-h-[80px] bg-white/[0.02] border border-white/10 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-emerald-500/40 resize-none'
+                                  />
+                                  <button
+                                    onClick={() => handleSubmitComment(flash.id)}
+                                    disabled={!commentInputs[flash.id]?.trim()}
+                                    className='self-end px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold uppercase tracking-widest transition-all disabled:opacity-40 flex items-center gap-2'
+                                  >
+                                    <Send size={12} />
+                                    Comentar
+                                  </button>
+                                </div>
+                              </>
+                            )}
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  )}
+                </motion.article>
+              )
+            })}
           </motion.div>
         )}
       </AnimatePresence>

@@ -22,6 +22,7 @@ export interface NewsFlashMulticanal {
   summary?: string
   action_items?: string[]
   flash_text?: string
+  media_urls?: string[]
 }
 
 export interface NewsFlash {

@@ -23,5 +23,6 @@ export interface NewsFlashMulticanal {
   para_miembros: boolean
   para_sponsors: boolean
   para_medios: boolean
+  media_urls?: string[]
   comments?: NewsComment[]
 }

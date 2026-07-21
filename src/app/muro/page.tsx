@@ -61,6 +61,7 @@ export default async function MuroPage() {
     para_miembros: false,
     para_sponsors: false,
     para_medios: false,
+    media_urls: (n as any).media_urls || [],
   }))
 
   const memberFlashes = notasMiembros?.map((n) => ({
@@ -79,6 +80,7 @@ export default async function MuroPage() {
     para_miembros: true,
     para_sponsors: false,
     para_medios: false,
+    media_urls: (n as any).media_urls || [],
   })) ?? null
 
   return (
