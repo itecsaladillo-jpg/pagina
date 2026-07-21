@@ -86,7 +86,8 @@ export async function createMulticanalNewsAction(data: {
         author_id: member.id,
         is_published: true,
         slug: slug,
-        excerpt: data.titulo
+        excerpt: data.titulo,
+        news_flash_id: newsFlashId
       })
     if (articleError) {
       console.error('[createMulticanalNewsAction] Error creando artículo:', articleError.message)
@@ -144,6 +145,8 @@ export async function createMulticanalNewsAction(data: {
   revalidatePath('/dashboard/comunicacion')
   revalidatePath('/')
   revalidatePath('/acciones')
+  revalidatePath('/muro')
+  revalidatePath('/dashboard/muro')
   return { success: true, data: news }
 }
 
@@ -165,6 +168,7 @@ export async function updateNotaAction(data: {
     medios: 'notas_medios',
   } as const
 
+  // 1. Actualizar tabla por canal
   const table = tableMap[data.variant]
   const payload: any = { contenido: data.contenido }
   if (data.media_urls) {
@@ -181,6 +185,46 @@ export async function updateNotaAction(data: {
     return { success: false, error: error.message }
   }
 
+  // 2. Actualizar news_flashes (para que se vea en Comunicación Estratégica)
+  const newsUpdate: any = {}
+  if (data.media_urls) {
+    newsUpdate.media_urls = data.media_urls
+  }
+  const textFieldMap = {
+    publico: 'texto_publico',
+    miembros: 'texto_miembros',
+    sponsors: 'texto_sponsors',
+    medios: 'texto_medios',
+  } as const
+  newsUpdate[textFieldMap[data.variant]] = data.contenido
+
+  const { error: newsError } = await supabase
+    .from('news_flashes')
+    .update(newsUpdate)
+    .eq('id', data.newsFlashId)
+
+  if (newsError) {
+    console.error('[updateNotaAction] Error en news_flashes:', newsError.message)
+  }
+
+  // 3. Actualizar public_articles si es la variante público
+  if (data.variant === 'publico') {
+    const { error: articleError } = await supabase
+      .from('public_articles')
+      .update({
+        content: data.contenido,
+        media_urls: data.media_urls || [],
+      })
+      .eq('news_flash_id', data.newsFlashId)
+
+    if (articleError) {
+      console.error('[updateNotaAction] Error en public_articles:', articleError.message)
+    }
+  }
+
   revalidatePath('/dashboard/comunicacion')
+  revalidatePath('/acciones')
+  revalidatePath('/muro')
+  revalidatePath('/dashboard/muro')
   return { success: true }
 }
