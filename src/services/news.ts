@@ -207,11 +207,52 @@ export async function getArticleBySlug(slug: string): Promise<PublicArticle | nu
 
   if (error) {
     console.error('[newsService] getArticleBySlug error:', error.message)
-    return null
   }
 
-  if (!data) return null
-  const article = data as any
+  let article = data as any
+
+  // Si no se encuentra en public_articles y es un UUID (como los generados por Noticia Multicanal)
+  if (!article && isUUID) {
+    // Buscar en notas_publico
+    const { data: notaData } = await supabase
+      .from('notas_publico')
+      .select('*, news_flashes(media_urls)')
+      .eq('news_flash_id', slug)
+      .eq('is_published', true)
+      .maybeSingle()
+      
+    if (notaData) {
+      article = {
+        id: notaData.news_flash_id,
+        title: notaData.titulo,
+        content: notaData.contenido,
+        excerpt: 'NOTICIA',
+        created_at: notaData.created_at,
+        media_urls: notaData.media_urls?.length ? notaData.media_urls : notaData.news_flashes?.media_urls || [],
+        news_flashes: notaData.news_flashes
+      }
+    } else {
+      // Intentar buscar directamente en news_flashes
+      const { data: flashData } = await supabase
+        .from('news_flashes')
+        .select('*')
+        .eq('id', slug)
+        .maybeSingle()
+        
+      if (flashData && (flashData.para_publico || flashData.texto_publico)) {
+        article = {
+          id: flashData.id,
+          title: flashData.titulo || flashData.title,
+          content: flashData.texto_publico || flashData.flash_text || '',
+          excerpt: flashData.summary || 'NOTICIA',
+          created_at: flashData.created_at,
+          media_urls: flashData.media_urls || []
+        }
+      }
+    }
+  }
+
+  if (!article) return null
 
   // Resolver media_urls con fallback a news_flashes
   let media = article.media_urls
