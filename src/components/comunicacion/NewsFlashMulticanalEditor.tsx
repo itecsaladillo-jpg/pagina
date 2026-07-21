@@ -69,7 +69,7 @@ export function NewsFlashMulticanalEditor({ onSave, onCancel }: NewsFlashMultica
   // Checkboxes de destinatarios
   const [paraPublico, setParaPublico] = useState(true)
   const [paraMiembros, setParaMiembros] = useState(true)
-  const [paraSponsors, setParaSponsors] = useState(false)
+  const [paraSponsors, setParaSponsors] = useState(true)
   const [paraMedios, setParaMedios] = useState(true)
 
   const handleProcess = async () => {
