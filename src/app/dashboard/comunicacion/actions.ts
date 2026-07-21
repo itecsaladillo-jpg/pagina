@@ -119,7 +119,10 @@ export async function createMulticanalNewsAction(data: {
     .from('news_flashes')
     .insert({
       titulo: data.titulo,
+      title: data.titulo,
       datos_crudos: data.datos_crudos,
+      original_text: data.datos_crudos,
+      summary: data.texto_publico?.slice(0, 500) || '',
       texto_publico: data.texto_publico,
       texto_miembros: data.texto_miembros,
       texto_sponsors: data.texto_sponsors,
