@@ -1,12 +1,12 @@
 'use client'
 
-import { useState, useRef } from 'react'
+import { useState, useRef, useTransition } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Globe, Users, Building2, Newspaper, ChevronRight, Calendar, FileText, Save, Loader2, Upload, CheckCircle, Trash2 } from 'lucide-react'
+import { Globe, Users, Building2, Newspaper, ChevronRight, Calendar, FileText, Save, Loader2, Upload, CheckCircle, Trash2, ArrowUp, ArrowDown } from 'lucide-react'
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
 import { createClient } from '@/lib/supabase/client'
-import { updateNotaAction } from '@/app/dashboard/comunicacion/actions'
+import { updateNotaAction, deleteNotaAction, swapNotasOrderAction } from '@/app/dashboard/comunicacion/actions'
 import type { NewsFlashMulticanal } from '@/services/news'
 
 interface NotasMulticanalListProps {
@@ -30,6 +30,7 @@ export function NotasMulticanalList({ notas }: NotasMulticanalListProps) {
   const [localMedia, setLocalMedia] = useState<Record<string, string[]>>({})
   const [saving, setSaving] = useState<string | null>(null)
   const [successMsg, setSuccessMsg] = useState<string | null>(null)
+  const [isPending, startTransition] = useTransition()
   const fileInputRef = useRef<HTMLInputElement>(null)
   const supabase = createClient()
 
@@ -71,6 +72,31 @@ export function NotasMulticanalList({ notas }: NotasMulticanalListProps) {
     setSelectedId(id)
     setActiveVariant('publico')
     setSuccessMsg(null)
+  }
+
+  const handleDelete = async (e: React.MouseEvent, id: string) => {
+    e.stopPropagation()
+    if (!window.confirm('¿Estás seguro de eliminar esta noticia multicanal?')) return
+    startTransition(async () => {
+      await deleteNotaAction(id)
+      if (selectedId === id) setSelectedId(null)
+    })
+  }
+
+  const handleMoveUp = async (e: React.MouseEvent, idx: number) => {
+    e.stopPropagation()
+    if (idx === 0) return
+    startTransition(async () => {
+      await swapNotasOrderAction(notas[idx].id, notas[idx - 1].id)
+    })
+  }
+
+  const handleMoveDown = async (e: React.MouseEvent, idx: number) => {
+    e.stopPropagation()
+    if (idx === notas.length - 1) return
+    startTransition(async () => {
+      await swapNotasOrderAction(notas[idx].id, notas[idx + 1].id)
+    })
   }
 
   const handleFiles = async (files: FileList | null) => {
@@ -129,7 +155,7 @@ export function NotasMulticanalList({ notas }: NotasMulticanalListProps) {
           </div>
           <div>
             <h2 className="text-lg font-bold text-white">Noticias Multicanal Guardadas</h2>
-            <p className="text-xs text-white/40">{notas.length} noticias publicadas</p>
+            <p className="text-xs text-white/40">{notas.length} noticias publicadas {isPending && '(Actualizando...)'}</p>
           </div>
         </div>
       </div>
@@ -142,7 +168,7 @@ export function NotasMulticanalList({ notas }: NotasMulticanalListProps) {
             </div>
           ) : (
             <div className="divide-y divide-white/5">
-              {notas.map((nota) => (
+              {notas.map((nota, idx) => (
                 <button
                   key={nota.id}
                   onClick={() => handleSelect(nota)}
@@ -157,15 +183,36 @@ export function NotasMulticanalList({ notas }: NotasMulticanalListProps) {
                       {format(new Date(nota.created_at), 'd MMM yyyy', { locale: es })}
                     </p>
                   </div>
-                  <div className="flex gap-1.5 flex-shrink-0">
-                    {nota.para_publico && <Globe size={10} className="text-blue-400" />}
-                    {nota.para_miembros && <Users size={10} className="text-emerald-400" />}
-                    {nota.para_sponsors && <Building2 size={10} className="text-amber-400" />}
-                    {nota.para_medios && <Newspaper size={10} className="text-purple-400" />}
+                  
+                  {/* Controles de Acción (Orden y Borrar) */}
+                  <div className="flex items-center gap-1">
+                    <div className="flex flex-col gap-1">
+                      <div
+                        onClick={(e) => handleMoveUp(e, idx)}
+                        className={`p-1 rounded transition-colors ${idx === 0 ? 'opacity-20 cursor-not-allowed' : 'hover:bg-white/10 text-white/60 hover:text-white'}`}
+                      >
+                        <ArrowUp size={12} />
+                      </div>
+                      <div
+                        onClick={(e) => handleMoveDown(e, idx)}
+                        className={`p-1 rounded transition-colors ${idx === notas.length - 1 ? 'opacity-20 cursor-not-allowed' : 'hover:bg-white/10 text-white/60 hover:text-white'}`}
+                      >
+                        <ArrowDown size={12} />
+                      </div>
+                    </div>
+                    
+                    <div
+                      onClick={(e) => handleDelete(e, nota.id)}
+                      className="p-1.5 rounded hover:bg-red-500/20 text-red-500/60 hover:text-red-400 transition-colors ml-1"
+                      title="Eliminar Noticia"
+                    >
+                      <Trash2 size={14} />
+                    </div>
                   </div>
+
                   <ChevronRight
                     size={14}
-                    className={`text-white/30 transition-transform ${selectedId === nota.id ? 'rotate-90' : ''}`}
+                    className={`text-white/30 transition-transform ${selectedId === nota.id ? 'rotate-90' : ''} ml-2`}
                   />
                 </button>
               ))}

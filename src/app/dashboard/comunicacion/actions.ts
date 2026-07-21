@@ -228,3 +228,62 @@ export async function updateNotaAction(data: {
   revalidatePath('/dashboard/muro')
   return { success: true }
 }
+
+export async function deleteNotaAction(newsFlashId: string) {
+  const member = await getCurrentMember()
+  if (!member || member.role !== 'admin') throw new Error('No autorizado')
+
+  const supabase = await createClient()
+
+  // Borrar de tablas secundarias primero
+  const tables = ['public_articles', 'notas_publico', 'notas_miembros', 'notas_sponsors', 'notas_medios']
+  for (const table of tables) {
+    await supabase.from(table).delete().eq('news_flash_id', newsFlashId)
+  }
+
+  // Borrar de tabla principal
+  const { error } = await supabase.from('news_flashes').delete().eq('id', newsFlashId)
+
+  if (error) {
+    console.error('[deleteNotaAction] Error:', error.message)
+    return { success: false, error: error.message }
+  }
+
+  revalidatePath('/dashboard/comunicacion')
+  revalidatePath('/acciones')
+  revalidatePath('/muro')
+  revalidatePath('/dashboard/muro')
+  revalidatePath('/')
+  return { success: true }
+}
+
+export async function swapNotasOrderAction(notaId1: string, notaId2: string) {
+  const member = await getCurrentMember()
+  if (!member || member.role !== 'admin') throw new Error('No autorizado')
+
+  const supabase = await createClient()
+
+  // Fetch both to get their created_at
+  const { data: n1 } = await supabase.from('news_flashes').select('created_at').eq('id', notaId1).single()
+  const { data: n2 } = await supabase.from('news_flashes').select('created_at').eq('id', notaId2).single()
+
+  if (!n1 || !n2) return { success: false, error: 'Noticia no encontrada' }
+
+  // Swap created_at in news_flashes
+  await supabase.from('news_flashes').update({ created_at: n2.created_at }).eq('id', notaId1)
+  await supabase.from('news_flashes').update({ created_at: n1.created_at }).eq('id', notaId2)
+
+  // Swap in child tables too to maintain order across the app
+  const tables = ['notas_publico', 'notas_miembros', 'notas_sponsors', 'notas_medios', 'public_articles']
+  for (const table of tables) {
+    await supabase.from(table).update({ created_at: n2.created_at }).eq('news_flash_id', notaId1)
+    await supabase.from(table).update({ created_at: n1.created_at }).eq('news_flash_id', notaId2)
+  }
+
+  revalidatePath('/dashboard/comunicacion')
+  revalidatePath('/acciones')
+  revalidatePath('/muro')
+  revalidatePath('/dashboard/muro')
+  revalidatePath('/')
+  return { success: true }
+}
