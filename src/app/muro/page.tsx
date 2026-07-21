@@ -1,7 +1,6 @@
-﻿import type { Metadata } from 'next'
+import type { Metadata } from 'next'
 import { createClient } from '@/lib/supabase/server'
 import { NewsWallMulticanal } from '@/components/comunicacion/NewsWallMulticanal'
-import type { NotaPublico, NotaMiembro } from '@/services/news'
 
 export const metadata: Metadata = {
   title: 'Muro — ITEC',
@@ -12,7 +11,7 @@ async function getPublicNotas() {
   const supabase = await createClient()
   const { data, error } = await supabase
     .from('notas_publico')
-    .select('*')
+    .select('*, news_flashes(media_urls)')
     .eq('is_published', true)
     .order('created_at', { ascending: false })
 
@@ -20,7 +19,7 @@ async function getPublicNotas() {
     console.error('[public-muro] getPublicNotas error:', error.message)
     return []
   }
-  return (data ?? []) as NotaPublico[]
+  return (data ?? []) as any[]
 }
 
 async function getMemberNotas() {
@@ -30,7 +29,7 @@ async function getMemberNotas() {
   
   const { data, error } = await supabase
     .from('notas_miembros')
-    .select('*')
+    .select('*, news_flashes(media_urls)')
     .eq('is_published', true)
     .order('created_at', { ascending: false })
 
@@ -38,7 +37,18 @@ async function getMemberNotas() {
     console.error('[public-muro] getMemberNotas error:', error.message)
     return null
   }
-  return (data ?? []) as NotaMiembro[]
+  return (data ?? []) as any[]
+}
+
+// Resuelve media_urls: usa las de la nota, o las de la noticia maestra como fallback
+function resolveMediaUrls(n: any): string[] {
+  const local = n.media_urls
+  const localArr = Array.isArray(local) ? local : (typeof local === 'string' ? (() => { try { return JSON.parse(local) } catch { return [] } })() : [])
+  if (localArr.length > 0) return localArr
+  // Fallback a news_flashes.media_urls
+  const nf = n.news_flashes?.media_urls
+  const nfArr = Array.isArray(nf) ? nf : (typeof nf === 'string' ? (() => { try { return JSON.parse(nf) } catch { return [] } })() : [])
+  return nfArr
 }
 
 export default async function MuroPage() {
@@ -61,7 +71,7 @@ export default async function MuroPage() {
     para_miembros: false,
     para_sponsors: false,
     para_medios: false,
-    media_urls: (n as any).media_urls || [],
+    media_urls: resolveMediaUrls(n),
   }))
 
   const memberFlashes = notasMiembros?.map((n) => ({
@@ -80,7 +90,7 @@ export default async function MuroPage() {
     para_miembros: true,
     para_sponsors: false,
     para_medios: false,
-    media_urls: (n as any).media_urls || [],
+    media_urls: resolveMediaUrls(n),
   })) ?? null
 
   return (
