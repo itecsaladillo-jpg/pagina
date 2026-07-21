@@ -144,3 +144,41 @@ export async function createMulticanalNewsAction(data: {
   revalidatePath('/acciones')
   return { success: true, data: news }
 }
+
+export async function updateNotaAction(data: {
+  newsFlashId: string
+  variant: 'publico' | 'miembros' | 'sponsors' | 'medios'
+  contenido: string
+  media_urls?: string[]
+}) {
+  const member = await getCurrentMember()
+  if (!member || member.role !== 'admin') throw new Error('No autorizado')
+
+  const supabase = await createClient()
+
+  const tableMap = {
+    publico: 'notas_publico',
+    miembros: 'notas_miembros',
+    sponsors: 'notas_sponsors',
+    medios: 'notas_medios',
+  } as const
+
+  const table = tableMap[data.variant]
+  const payload: any = { contenido: data.contenido }
+  if (data.media_urls) {
+    payload.media_urls = data.media_urls
+  }
+
+  const { error } = await supabase
+    .from(table)
+    .update(payload)
+    .eq('news_flash_id', data.newsFlashId)
+
+  if (error) {
+    console.error(`[updateNotaAction] Error en ${table}:`, error.message)
+    return { success: false, error: error.message }
+  }
+
+  revalidatePath('/dashboard/comunicacion')
+  return { success: true }
+}

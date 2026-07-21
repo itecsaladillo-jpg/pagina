@@ -1,28 +1,123 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Globe, Users, Building2, Newspaper, ChevronDown, ChevronRight, Calendar, Eye, FileText } from 'lucide-react'
+import { Globe, Users, Building2, Newspaper, ChevronRight, Calendar, FileText, Save, Loader2, Upload, ImageIcon, Video, X, CheckCircle } from 'lucide-react'
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
+import { createClient } from '@/lib/supabase/client'
+import { updateNotaAction } from '@/app/dashboard/comunicacion/actions'
 import type { NewsFlashMulticanal } from '@/services/news'
 
 interface NotasMulticanalListProps {
   notas: NewsFlashMulticanal[]
 }
 
+interface MediaItem {
+  url: string
+  type: 'image' | 'video'
+  name: string
+}
+
 export function NotasMulticanalList({ notas }: NotasMulticanalListProps) {
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [activeVariant, setActiveVariant] = useState<'publico' | 'miembros' | 'sponsors' | 'medios'>('publico')
+  const [editContent, setEditContent] = useState<Record<string, string>>({})
+  const [media, setMedia] = useState<Record<string, MediaItem[]>>({})
+  const [saving, setSaving] = useState<string | null>(null)
+  const [successMsg, setSuccessMsg] = useState<string | null>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const supabase = createClient()
 
   const selected = notas.find((n) => n.id === selectedId)
 
+  const getTextKey = (notaId: string, variant: string) => `${notaId}-${variant}`
+
+  const getCurrentContent = (nota: NewsFlashMulticanal) => {
+    const key = getTextKey(nota.id, activeVariant)
+    if (editContent[key] !== undefined) return editContent[key]
+    switch (activeVariant) {
+      case 'publico': return nota.texto_publico
+      case 'miembros': return nota.texto_miembros
+      case 'sponsors': return nota.texto_sponsors
+      case 'medios': return nota.texto_medios
+    }
+  }
+
   const getVariantInfo = (nota: NewsFlashMulticanal) => [
-    { key: 'publico' as const, label: 'Público', icon: Globe, color: 'text-blue-400', border: 'border-blue-500/30', text: nota.texto_publico, enabled: nota.para_publico },
-    { key: 'miembros' as const, label: 'Miembros', icon: Users, color: 'text-emerald-400', border: 'border-emerald-500/30', text: nota.texto_miembros, enabled: nota.para_miembros },
-    { key: 'sponsors' as const, label: 'Sponsors', icon: Building2, color: 'text-amber-400', border: 'border-amber-500/30', text: nota.texto_sponsors, enabled: nota.para_sponsors },
-    { key: 'medios' as const, label: 'Medios', icon: Newspaper, color: 'text-purple-400', border: 'border-purple-500/30', text: nota.texto_medios, enabled: nota.para_medios },
+    { key: 'publico' as const, label: 'Público', icon: Globe, color: 'text-blue-400', border: 'border-blue-500/30', enabled: nota.para_publico },
+    { key: 'miembros' as const, label: 'Miembros', icon: Users, color: 'text-emerald-400', border: 'border-emerald-500/30', enabled: nota.para_miembros },
+    { key: 'sponsors' as const, label: 'Sponsors', icon: Building2, color: 'text-amber-400', border: 'border-amber-500/30', enabled: nota.para_sponsors },
+    { key: 'medios' as const, label: 'Medios', icon: Newspaper, color: 'text-purple-400', border: 'border-purple-500/30', enabled: nota.para_medios },
   ]
+
+  const handleSelect = (nota: NewsFlashMulticanal) => {
+    setSelectedId(selectedId === nota.id ? null : nota.id)
+    setActiveVariant('publico')
+    setSuccessMsg(null)
+  }
+
+  const handleFiles = async (files: FileList | null) => {
+    if (!files || !selectedId) return
+
+    for (const file of Array.from(files)) {
+      try {
+        const fileExt = file.name.split('.').pop()
+        const fileName = `news-multicanal/${Date.now()}-${Math.random().toString(36).slice(2)}.${fileExt}`
+
+        const { error } = await supabase.storage
+          .from('article-media')
+          .upload(fileName, file)
+
+        if (error) throw error
+
+        const { data: { publicUrl } } = supabase.storage
+          .from('article-media')
+          .getPublicUrl(fileName)
+
+        setMedia(prev => ({
+          ...prev,
+          [selectedId]: [
+            ...(prev[selectedId] || []),
+            { url: publicUrl, type: file.type.startsWith('video') ? 'video' : 'image', name: file.name }
+          ]
+        }))
+      } catch (err: any) {
+        console.error('Error subiendo archivo:', err.message)
+      }
+    }
+  }
+
+  const removeMedia = (idx: number) => {
+    if (!selectedId) return
+    setMedia(prev => ({
+      ...prev,
+      [selectedId]: (prev[selectedId] || []).filter((_, i) => i !== idx)
+    }))
+  }
+
+  const handleSave = async () => {
+    if (!selected) return
+    const saveKey = selected.id
+    setSaving(saveKey)
+    setSuccessMsg(null)
+
+    const content = getCurrentContent(selected)
+    const variantMedia = media[selected.id] || []
+
+    const res = await updateNotaAction({
+      newsFlashId: selected.id,
+      variant: activeVariant,
+      contenido: content,
+      media_urls: variantMedia.map(m => m.url),
+    })
+
+    setSaving(null)
+    if (res.success) {
+      setSuccessMsg(`Nota "${getVariantInfo(selected).find(v => v.key === activeVariant)?.label}" guardada`)
+      setTimeout(() => setSuccessMsg(null), 3000)
+    }
+  }
 
   return (
     <div className="glass border border-white/5 rounded-3xl overflow-hidden">
@@ -39,7 +134,7 @@ export function NotasMulticanalList({ notas }: NotasMulticanalListProps) {
       </div>
 
       <div className="flex flex-col lg:flex-row divide-y lg:divide-y-0 lg:divide-x divide-white/5">
-        <div className={`${selectedId ? 'lg:w-1/3' : 'lg:w-full'} max-h-[500px] overflow-y-auto`}>
+        <div className={`${selectedId ? 'lg:w-1/3' : 'lg:w-full'} max-h-[600px] overflow-y-auto`}>
           {notas.length === 0 ? (
             <div className="p-8 text-center">
               <p className="text-white/30 text-sm">No hay noticias multicanal guardadas aún</p>
@@ -49,10 +144,7 @@ export function NotasMulticanalList({ notas }: NotasMulticanalListProps) {
               {notas.map((nota) => (
                 <button
                   key={nota.id}
-                  onClick={() => {
-                    setSelectedId(selectedId === nota.id ? null : nota.id)
-                    setActiveVariant('publico')
-                  }}
+                  onClick={() => handleSelect(nota)}
                   className={`w-full text-left p-4 transition-all flex items-center gap-3 hover:bg-white/[0.02] ${
                     selectedId === nota.id ? 'bg-white/[0.03] border-l-2 border-cyan-500' : 'border-l-2 border-transparent'
                   }`}
@@ -87,11 +179,18 @@ export function NotasMulticanalList({ notas }: NotasMulticanalListProps) {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="flex-1 p-6"
+              className="flex-1 p-6 space-y-4"
             >
-              <h3 className="text-lg font-bold text-white mb-4">{selected.titulo}</h3>
+              <h3 className="text-lg font-bold text-white">{selected.titulo}</h3>
 
-              <div className="flex flex-wrap gap-2 mb-6">
+              {successMsg && (
+                <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-green-500/10 border border-green-500/20 text-green-400 text-sm">
+                  <CheckCircle size={14} />
+                  {successMsg}
+                </div>
+              )}
+
+              <div className="flex flex-wrap gap-2">
                 {getVariantInfo(selected).map((v) => {
                   const Icon = v.icon
                   if (!v.enabled) return null
@@ -112,13 +211,65 @@ export function NotasMulticanalList({ notas }: NotasMulticanalListProps) {
                 })}
               </div>
 
-              <div className="prose prose-invert max-w-none">
-                <div className="p-4 rounded-xl bg-white/[0.02] border border-white/5">
-                  <p className="text-sm text-white/80 whitespace-pre-wrap leading-relaxed">
-                    {getVariantInfo(selected).find((v) => v.key === activeVariant)?.text || 'Sin contenido'}
-                  </p>
-                </div>
+              <textarea
+                value={getCurrentContent(selected)}
+                onChange={(e) => setEditContent(prev => ({
+                  ...prev,
+                  [getTextKey(selected.id, activeVariant)]: e.target.value
+                }))}
+                className="w-full min-h-[300px] bg-white/[0.02] border border-white/10 rounded-xl p-4 text-sm text-white/80 focus:outline-none focus:border-cyan-500/40 transition-all resize-y leading-relaxed"
+              />
+
+              <div className="space-y-2">
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  multiple
+                  accept="image/*,video/*"
+                  onChange={(e) => handleFiles(e.target.files)}
+                  className="hidden"
+                />
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="w-full py-2 rounded-xl border border-dashed border-white/20 text-white/60 text-xs font-medium hover:border-cyan-500/40 hover:text-cyan-400 transition-all flex items-center justify-center gap-2"
+                >
+                  <Upload size={14} />
+                  Agregar imágenes o videos
+                </button>
+
+                {(media[selected.id]?.length ?? 0) > 0 && (
+                  <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
+                    {media[selected.id].map((item, idx) => (
+                      <div key={idx} className="relative group rounded-lg overflow-hidden border border-white/10">
+                        {item.type === 'video' ? (
+                          <video src={item.url} className="w-full h-20 object-cover" />
+                        ) : (
+                          <img src={item.url} alt={item.name} className="w-full h-20 object-cover" />
+                        )}
+                        <button
+                          onClick={() => removeMedia(idx)}
+                          className="absolute top-1 right-1 p-1 rounded-full bg-red-500/80 opacity-0 group-hover:opacity-100 transition-all"
+                        >
+                          <X size={10} className="text-white" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
+
+              <button
+                onClick={handleSave}
+                disabled={saving === selected.id}
+                className="w-full py-3 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-bold uppercase tracking-widest flex items-center justify-center gap-2 transition-all disabled:opacity-40"
+              >
+                {saving === selected.id ? (
+                  <><Loader2 size={14} className="animate-spin" /> Guardando...</>
+                ) : (
+                  <><Save size={14} /> Guardar Cambios</>
+                )}
+              </button>
             </motion.div>
           )}
         </AnimatePresence>
