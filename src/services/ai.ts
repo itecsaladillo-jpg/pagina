@@ -226,19 +226,50 @@ export async function generateMulticanalNews(rawFacts: string): Promise<{
   
   Generás textos profesionales para diferentes audiencias de ITEC.`
 
-  const userPrompt = `Actuá como Jefe de Prensa y redactor profesional de ITEC Saladillo. Generá 5 piezas siguiendo EXACTAMENTE este esquema JSON (no agregues texto fuera del JSON, no uses markdown, no uses etiquetas como **Titular:**):
+  const userPrompt = `Actuá como Jefe de Prensa y redactor profesional de ITEC Saladillo. Generá un titular y 4 textos para diferentes audiencias basándote en las notas crudas que están al final.
 
-  {
-    "titulo": "Titular periodístico atractivo con verbo de acción (máx 8 palabras)",
-    "texto_publico": "NOTICIA PARA LA PÁGINA OFICIAL. Estructura pirámide invertida en tercera persona, tono institucional pero accesible. IMPORTANTE: separá cada sección con DOS SALTOS DE LINEA (\\n\\n) para generar párrafos diferenciados; nunca entregues todo en un solo bloque. (1) TITULAR: atractivo y directo, verbo de acción, resume la esencia (ej: 'ITEC celebró con éxito [Evento] promoviendo [objetivo]'). (2) COPETE/LEAD: primer párrafo responde las 6 preguntas: QUÉ es el evento o noticia, QUIÉNES son los expositores, proveedores o generadores de la noticia, DÓNDE, CUÁNDO, CÓMO se desarrolla y POR QUÉ se realiza. (3) DESARROLLO: 2-3 párrafos contando de qué trata el evento o noticia, el impacto que tendrá o que tuvo en la comunidad, y detalles de las actividades. Identificá a los expositores, proveedores o generadores de la noticia mencionando sus nombres y roles. Priorizá lo más importante al principio. (4) CITA TEXTUAL de una autoridad o referente de ITEC que humanice la nota (entre comillas dobles \", formato: \"...\", señaló [Nombre, cargo]). (5) CIERRE positivo: impacto en la comunidad o próximos pasos. (6) CALL TO ACTION final invitando a ver fotos/videos/materiales. CRÍTICO: NO incluyas balance económico del evento. NO enumeres cosas que salieron bien o mal. Esta nota es informativa y aspiracional, no un balance interno. REGLAS: tercera persona (sin 'nosotros'), sin tecnicismos excesivos, siglas aclaradas en su primera mención. No inventes datos: si falta información, redacta en torno a los hechos disponibles.",
-    "texto_miembros": "COMUNICACIÓN INTERNA PARA EL EQUIPO DE ITEC. Tono cercano, directo y entusiasta, escrito en PRIMERA PERSONA DEL PLURAL ('nosotros', 'nuestro'). Reconocimiento del esfuerzo compartido y sentido de pertenencia. IMPORTANTE: separá cada sección con DOS SALTOS DE LINEA (\\n\\n) para generar párrafos diferenciados. (1) ASUNTO motivador y conciso en mayúsculas o con signos de exclamación (ej: '¡Lo logramos! Balance de [Evento]' o 'Gracias por hacer posible [Evento]'). (2) SALUDO cordial al equipo ('Hola equipo', 'Querido equipo'). (3) AGRADECIMIENTO INICIAL explícito: usá la palabra 'gracias' o 'agradecer' para reconocer el compromiso y dedicación de quienes trabajaron o trabajan en el evento o proyecto (ej: 'Queremos agradecer profundamente...'). Felicitá por nombre o rol a quienes se destacaron. (4) LO QUE FUNCIONÓ (cosas buenas para repetir): lista de 2-4 puntos que salieron bien y que debemos replicar en futuros eventos. (5) LO QUE MEJORAR (cosas malas para mejorar): lista de 2-4 puntos que no salieron como esperábamos, presentados de forma constructiva como oportunidades de mejora. (6) CONEXIÓN CON EL COMETIDO GENERAL: explicá brevemente cómo este evento o noticia es un aporte más al cometido general de ITEC (su misión institucional). (7) CITA DE LIDERAZGO breve de la dirección que refuerce el valor del trabajo y el rumbo. (8) INVITACIÓN a revivir momentos (fotos/video en drive) y a compartir comentarios. (9) CIERRE motivador mirando al próximo desafío, con firma institucional ('Un saludo cordial, Equipo ITEC'). Usá emojis naturales (🎉💪✨🚀) sin exagerar. CRÍTICO: NO incluyas balance económico. Esta nota es de reconocimiento y retrospective interno, no un informe financiero. REGLAS: lenguaje inclusivo y cálido, celebrá el logro grupal (nunca concentres el mérito en una sola persona o área). No inventes datos: si falta información, redacta en torno a los hechos disponibles.",
-    "texto_sponsors": "INFORME DE RESULTADOS PARA SPONSORS (Reporte de Valor). Tono profesional, orientado a resultados y centrado en el RETORNO DE VALOR (branding y visibilidad). Los sponsors son aliados estratégicos, NO donantes. IMPORTANTE: separá cada sección con DOS SALTOS DE LINEA (\\n\\n) para generar párrafos diferenciados. (1) ASUNTO profesional que incluya nombre del evento y la palabra 'Resultados' o 'Impacto' (ej: 'Informe de Resultados: [Evento] | Gracias por su compromiso con ITEC'). (2) SALUDO formal personalizado ('Estimados/as [Nombre del contacto en la empresa]:'). (3) AGRADECIMIENTO POR LA CONFIANZA en su apoyo, mencionando el evento y fecha. (4) LA IMPORTANCIA DE LO QUE HACEMOS JUNTOS: explicá por qué este evento/proyecto es relevante y cómo la alianza con el sponsor lo hace posible. (5) IMPACTO EN LA COMUNIDAD: describí el impacto concreto que queremos generar o que ya se generó (beneficios para la comunidad, reducción de brechas, acceso a tecnología, formación, etc.). (6) BALANCE ECONÓMICO: detallá cómo se utilizaron los fondos que el sponsor aportó (inversiones, compras de kits/materiales, servicios, logística). Si no hay datos exactos en las notas, usá placeholders como [Monto invertido en X] o [Cantidad] pero dejá la estructura del balance completa para que el usuario complete. (7) RESUMEN EJECUTIVO (Highlights): datos cuantitativos concretos en formato lista (alcance, asistentes, interacciones en redes, metas cumplidas). (8) VISIBILIDAD DE MARCA: evidencia de dónde y cómo apareció el logo/nombre del sponsor (banners, presentaciones, redes sociales, materiales gráficos, fotos). (9) EVIDENCIA ADJUNTA: mencioná explícitamente que se adjunta o comparte un PDF breve (1-2 páginas) con métricas y una carpeta de fotos donde se vea claramente el logo del sponsor. (10) INVITACIÓN A FUTURO: mantener la puerta abierta para próximas alianzas, ofrecer reunión para compartir visión a futuro. Cierre con firma institucional ('Atentamente, [Nombre y cargo]'). REGLAS: enfoque WIN-WIN, nunca los trates como fuente de dinero (usá 'gracias a nuestra alianza', no 'gracias por el dinero'); SIN emojis (es comunicación formal B2B); tercera persona o primera persona institucional. No inventes datos ni métricas: si falta información cuantitativa, dejá placeholders como [Número] o [Monto] para que el usuario los complete.",
-    "texto_medios": "GACETILLA DE PRENSA PARA MEDIOS. Tono periodístico objetivo, sin publicidad encubierta. El periodista debe poder publicarla directamente o usarla como base. IMPORTANTE: separá cada sección con DOS SALTOS DE LINEA (\\n\\n) para generar párrafos diferenciados. (1) ENCABEZADO: 'GACETILLA DE PRENSA – PARA PUBLICACIÓN INMEDIATA'. (2) LUGAR Y FECHA: epígrafe con ciudad y fecha (ej: 'Saladillo, Buenos Aires — [Fecha]'). (3) TITULAR INFORMATIVO: claro y llamativo, sin adjetivos exagerados (evitá 'increíble', 'maravilloso', 'único'). (4) SUBTÍTULO opcional que complemente el titular. (5) LEAD/ENTRADILLA: párrafo de máximo 4 líneas resumiendo las 6 preguntas: QUÉ es el evento o noticia, QUIÉNES son los expositores, proveedores o generadores, DÓNDE, CUÁNDO, CÓMO y POR QUÉ. (6) CUERPO: contá de qué trata el evento o noticia, su impacto esperado o logrado. Identificá a los expositores, proveedores o generadores mencionando sus nombres y roles. Priorizá hechos concretos. (7) PRÓXIMOS EVENTOS Y PROYECTOS EN DESARROLLO: mencioná brevemente qué actividades, proyectos o iniciativas tiene planificadas ITEC en el corto y mediano plazo, para dar contexto periodístico amplio. (8) CITA TEXTUAL ATRIBUIBLE de protagonista/autoridad de ITEC, entre comillas dobles, con formato '\"...\", expresó [Nombre y Apellido], [Cargo] de ITEC.' (9) CIERRE: materiales y fotos disponibles para descarga. (10) ACERCA DE ITEC: párrafo de 2-3 líneas describiendo qué es ITEC, su misión y qué hace como institución. (11) CONTACTO DE PRENSA con placeholders: 'Nombre: [Nombre del responsable] / Cargo: [Cargo] / Teléfono: [Número] / Correo: [Email] / Web: [URL]'. CRÍTICO: NO incluyas información de comunicación interna (agradecimientos al equipo, cosas para mejorar, retrospectiva). NO incluyas balance económico del evento. Esta nota es informativa y periodística. REGLAS: SIN emojis (es comunicación formal con medios); tercera persona estricta; lenguaje claro y fáctico sin adjetivos subjetivos; nunca uses palabras prohibidas del system prompt; no inventes datos, usá placeholders si falta información.",
-  }
+INSTRUCCIONES POR CANAL (seguilas estrictamente para que cada texto tenga su identidad propia):
 
-  Respondé ÚNICAMENTE con el JSON, sin markdown, sin bloques de código, sin texto antes o después.
+=== CANAL PÚBLICO ===
+Propósito: Noticia para la página web oficial.
+Tono: Tercera persona, institucional pero accesible. Sin "nosotros".
+Estructura: TITULAR atractivo con verbo de acción → COPETE/LEAD (5W: qué, quiénes, dónde, cuándo, cómo, por qué) → DESARROLLO (2-3 párrafos, impacto en comunidad, identificar expositores) → CITA TEXTUAL entre comillas → CIERRE positivo → CTA final.
+Prohibido: balance económico, enumerar aciertos/errores.
+Separar secciones con \\n\\n.
 
-  NOTAS CRUDAS: """${rawFacts}"""`
+=== CANAL MIEMBROS ===
+Propósito: Comunicación interna para el equipo ITEC.
+Tono: PRIMERA PERSONA DEL PLURAL ("nosotros", "nuestro"), cercano, entusiasta, con emojis moderados (🎉💪✨🚀).
+Estructura: ASUNTO motivador → SALUDO cordial → AGRADECIMIENTO explícito (nominar personas destacadas) → LO QUE FUNCIONÓ (lista 2-4 items) → LO QUE MEJORAR (lista 2-4 items constructivos) → CONEXIÓN CON COMETIDO GENERAL de ITEC → CITA DE LIDERAZGO → INVITACIÓN a fotos/video → CIERRE con firma "Equipo ITEC".
+Prohibido: balance económico.
+Separar secciones con \\n\\n.
+
+=== CANAL SPONSORS ===
+Propósito: Reporte de valor para sponsors (socios estratégicos, NO donantes).
+Tono: Profesional, formal B2B, orientado a resultados. SIN emojis.
+Estructura: ASUNTO con "Resultados" o "Impacto" → SALUDO formal → AGRADECIMIENTO por la confianza → IMPORTANCIA DE LA ALIANZA → IMPACTO EN LA COMUNIDAD → BALANCE ECONÓMICO (usar placeholders [Monto] si no hay dato exacto) → HIGHLIGHTS cuantitativos → VISIBILIDAD DE MARCA → EVIDENCIA ADJUNTA (PDF + fotos) → INVITACIÓN A FUTURO → Cierre formal.
+Prohibido: tratar al sponsor como donante, emojis.
+Separar secciones con \\n\\n.
+
+=== CANAL MEDIOS ===
+Propósito: Gacetilla de prensa para medios periodísticos.
+Tono: Periodístico objetivo, tercera persona estricta, SIN emojis, SIN adjetivos subjetivos.
+Estructura: ENCABEZADO "GACETILLA DE PRENSA – PARA PUBLICACIÓN INMEDIATA" → LUGAR Y FECHA → TITULAR INFORMATIVO → LEAD (5W) → CUERPO con contexto y actividades → PRÓXIMOS EVENTOS Y PROYECTOS → CITA TEXTUAL ATRIBUIBLE → CIERRE con mención de fotos disponibles → ACERCA DE ITEC (2-3 líneas) → CONTACTO DE PRENSA con placeholders.
+Prohibido: información interna, emojis, balance económico.
+Separar secciones con \\n\\n.
+
+Respondé ÚNICAMENTE con este JSON, sin texto adicional, sin markdown, sin bloques de código:
+
+{
+  "titulo": "titular periodístico con verbo de acción (máx 8 palabras)",
+  "texto_publico": "texto completo para canal público siguiendo las instrucciones de PUBLICO",
+  "texto_miembros": "texto completo para canal miembros siguiendo las instrucciones de MIEMBROS",
+  "texto_sponsors": "texto completo para canal sponsors siguiendo las instrucciones de SPONSORS",
+  "texto_medios": "texto completo para canal medios siguiendo las instrucciones de MEDIOS"
+}
+
+NOTAS CRUDAS:
+"""${rawFacts}"""`
 
   const raw = await callOpenRouter([
     { role: 'system', content: systemPrompt },
