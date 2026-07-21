@@ -51,6 +51,10 @@ export function AccionesClient({ actions, articles }: AccionesClientProps) {
       const displayTitle = translation?.title || art.title
       const displayContent = translation?.content || art.content || ''
       const displayExcerpt = translation?.excerpt || art.excerpt
+      let parsedMediaUrls = art.media_urls
+      if (typeof parsedMediaUrls === 'string') {
+        try { parsedMediaUrls = JSON.parse(parsedMediaUrls) } catch { parsedMediaUrls = [] }
+      }
 
       return {
         ...art,
@@ -62,7 +66,7 @@ export function AccionesClient({ actions, articles }: AccionesClientProps) {
         descriptionText: displayContent,
         linkUrl: `/articulo/${art.slug || art.id}`,
         linkText: dict.impactSection.leerHistoria || 'Leer historia completa',
-        imageUrl: art.media_urls?.[0] || null,
+        imageUrl: Array.isArray(parsedMediaUrls) && parsedMediaUrls.length > 0 ? parsedMediaUrls[0] : null,
         tagsList: [
           language === 'en' ? 'Communication' : language === 'pt' ? 'Comunicação' : 'Comunicación',
           language === 'en' ? 'Impact' : language === 'pt' ? 'Impacto' : 'Impacto',

@@ -60,9 +60,19 @@ export function ArticleDetailClient({ article }: ArticleDetailClientProps) {
         </div>
 
         {/* Multimedia Gallery/Slider */}
-        {article.media_urls && article.media_urls.length > 0 && (() => {
+        {(() => {
+          let mediaUrls = article.media_urls
+          if (typeof mediaUrls === 'string') {
+            try {
+              mediaUrls = JSON.parse(mediaUrls)
+            } catch {
+              mediaUrls = []
+            }
+          }
+          if (!Array.isArray(mediaUrls) || mediaUrls.length === 0) return null
+
           const isVideo = (u: string) => /\.(mp4|webm|mov)/i.test(u.split('?')[0])
-          const firstUrl = article.media_urls[0]
+          const firstUrl = mediaUrls[0]
           return (
             <div className="grid grid-cols-1 gap-4">
               <div className="aspect-video rounded-3xl overflow-hidden border border-white/5 bg-white/[0.02]">
@@ -72,9 +82,9 @@ export function ArticleDetailClient({ article }: ArticleDetailClientProps) {
                   <img src={firstUrl} alt={displayTitle} className="w-full h-full object-cover" />
                 )}
               </div>
-              {article.media_urls.length > 1 && (
+              {mediaUrls.length > 1 && (
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                  {article.media_urls.slice(1).map((url: string, i: number) => (
+                  {mediaUrls.slice(1).map((url: string, i: number) => (
                     <div key={i} className="aspect-video rounded-2xl overflow-hidden border border-white/5 bg-white/[0.02]">
                       {isVideo(url) ? (
                         <video src={url} controls className="w-full h-full object-cover" />
