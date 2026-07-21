@@ -1,8 +1,8 @@
 'use client'
 
-import { useState, useRef } from 'react'
+import { useState, useRef, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Globe, Users, Building2, Newspaper, ChevronRight, Calendar, FileText, Save, Loader2, Upload, ImageIcon, Video, X, CheckCircle } from 'lucide-react'
+import { Globe, Users, Building2, Newspaper, ChevronRight, Calendar, FileText, Save, Loader2, Upload, X, CheckCircle, Trash2 } from 'lucide-react'
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
 import { createClient } from '@/lib/supabase/client'
@@ -13,23 +13,26 @@ interface NotasMulticanalListProps {
   notas: NewsFlashMulticanal[]
 }
 
-interface MediaItem {
-  url: string
-  type: 'image' | 'video'
-  name: string
-}
-
 export function NotasMulticanalList({ notas }: NotasMulticanalListProps) {
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [activeVariant, setActiveVariant] = useState<'publico' | 'miembros' | 'sponsors' | 'medios'>('publico')
   const [editContent, setEditContent] = useState<Record<string, string>>({})
-  const [media, setMedia] = useState<Record<string, MediaItem[]>>({})
+  const [newUploads, setNewUploads] = useState<Record<string, string[]>>({})
+  const [deletedUrls, setDeletedUrls] = useState<Record<string, string[]>>({})
   const [saving, setSaving] = useState<string | null>(null)
   const [successMsg, setSuccessMsg] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const supabase = createClient()
 
   const selected = notas.find((n) => n.id === selectedId)
+
+  const currentMediaUrls = useMemo(() => {
+    if (!selected) return []
+    const dbUrls: string[] = Array.isArray(selected.media_urls) ? selected.media_urls : []
+    const uploaded = newUploads[selected.id] || []
+    const deleted = deletedUrls[selected.id] || []
+    return [...dbUrls.filter(u => !deleted.includes(u)), ...uploaded]
+  }, [selected, newUploads, deletedUrls])
 
   const getTextKey = (notaId: string, variant: string) => `${notaId}-${variant}`
 
@@ -75,12 +78,9 @@ export function NotasMulticanalList({ notas }: NotasMulticanalListProps) {
           .from('article-media')
           .getPublicUrl(fileName)
 
-        setMedia(prev => ({
+        setNewUploads(prev => ({
           ...prev,
-          [selectedId]: [
-            ...(prev[selectedId] || []),
-            { url: publicUrl, type: file.type.startsWith('video') ? 'video' : 'image', name: file.name }
-          ]
+          [selectedId]: [...(prev[selectedId] || []), publicUrl]
         }))
       } catch (err: any) {
         console.error('Error subiendo archivo:', err.message)
@@ -88,12 +88,19 @@ export function NotasMulticanalList({ notas }: NotasMulticanalListProps) {
     }
   }
 
-  const removeMedia = (idx: number) => {
+  const removeMedia = (url: string) => {
     if (!selectedId) return
-    setMedia(prev => ({
-      ...prev,
-      [selectedId]: (prev[selectedId] || []).filter((_, i) => i !== idx)
-    }))
+    if ((newUploads[selectedId] || []).includes(url)) {
+      setNewUploads(prev => ({
+        ...prev,
+        [selectedId]: (prev[selectedId] || []).filter(u => u !== url)
+      }))
+    } else {
+      setDeletedUrls(prev => ({
+        ...prev,
+        [selectedId]: [...(prev[selectedId] || []), url]
+      }))
+    }
   }
 
   const handleSave = async () => {
@@ -103,13 +110,12 @@ export function NotasMulticanalList({ notas }: NotasMulticanalListProps) {
     setSuccessMsg(null)
 
     const content = getCurrentContent(selected)
-    const variantMedia = media[selected.id] || []
 
     const res = await updateNotaAction({
       newsFlashId: selected.id,
       variant: activeVariant,
       contenido: content,
-      media_urls: variantMedia.map(m => m.url),
+      media_urls: currentMediaUrls,
     })
 
     setSaving(null)
@@ -238,21 +244,27 @@ export function NotasMulticanalList({ notas }: NotasMulticanalListProps) {
                   Agregar imágenes o videos
                 </button>
 
-                {(media[selected.id]?.length ?? 0) > 0 && (
-                  <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
-                    {media[selected.id].map((item, idx) => (
+                {currentMediaUrls.length > 0 && (
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                    {currentMediaUrls.map((url, idx) => (
                       <div key={idx} className="relative group rounded-lg overflow-hidden border border-white/10">
-                        {item.type === 'video' ? (
-                          <video src={item.url} className="w-full h-20 object-cover" />
+                        {/\.(mp4|webm|mov)$/i.test(url) ? (
+                          <video src={url} className="w-full h-24 object-cover" />
                         ) : (
-                          <img src={item.url} alt={item.name} className="w-full h-20 object-cover" />
+                          <img src={url} alt="" className="w-full h-24 object-cover" />
                         )}
                         <button
-                          onClick={() => removeMedia(idx)}
-                          className="absolute top-1 right-1 p-1 rounded-full bg-red-500/80 opacity-0 group-hover:opacity-100 transition-all"
+                          onClick={() => removeMedia(url)}
+                          className="absolute top-1 right-1 p-1.5 rounded-full bg-red-500/80 opacity-0 group-hover:opacity-100 transition-all hover:bg-red-600"
+                          title="Eliminar imagen"
                         >
-                          <X size={10} className="text-white" />
+                          <Trash2 size={12} className="text-white" />
                         </button>
+                        <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/60 to-transparent p-1.5 opacity-0 group-hover:opacity-100 transition-all">
+                          <span className="text-[10px] text-white truncate block">
+                            {url.match(/\.(\w+)(?:\?.*)?$/)?.[1]?.toUpperCase() || 'ARCHIVO'}
+                          </span>
+                        </div>
                       </div>
                     ))}
                   </div>
