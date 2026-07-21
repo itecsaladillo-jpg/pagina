@@ -1,8 +1,8 @@
 'use client'
 
-import { useState, useRef, useMemo } from 'react'
+import { useState, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Globe, Users, Building2, Newspaper, ChevronRight, Calendar, FileText, Save, Loader2, Upload, X, CheckCircle, Trash2 } from 'lucide-react'
+import { Globe, Users, Building2, Newspaper, ChevronRight, Calendar, FileText, Save, Loader2, Upload, CheckCircle, Trash2 } from 'lucide-react'
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
 import { createClient } from '@/lib/supabase/client'
@@ -13,12 +13,21 @@ interface NotasMulticanalListProps {
   notas: NewsFlashMulticanal[]
 }
 
+function getMediaArray(nota: NewsFlashMulticanal | undefined): string[] {
+  if (!nota) return []
+  const m = (nota as any).media_urls
+  if (Array.isArray(m)) return m
+  if (typeof m === 'string') {
+    try { return JSON.parse(m) } catch { return [] }
+  }
+  return []
+}
+
 export function NotasMulticanalList({ notas }: NotasMulticanalListProps) {
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [activeVariant, setActiveVariant] = useState<'publico' | 'miembros' | 'sponsors' | 'medios'>('publico')
   const [editContent, setEditContent] = useState<Record<string, string>>({})
-  const [newUploads, setNewUploads] = useState<Record<string, string[]>>({})
-  const [deletedUrls, setDeletedUrls] = useState<Record<string, string[]>>({})
+  const [localMedia, setLocalMedia] = useState<Record<string, string[]>>({})
   const [saving, setSaving] = useState<string | null>(null)
   const [successMsg, setSuccessMsg] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -26,14 +35,13 @@ export function NotasMulticanalList({ notas }: NotasMulticanalListProps) {
 
   const selected = notas.find((n) => n.id === selectedId)
 
-  const currentMediaUrls = useMemo(() => {
+  const allMediaUrls: string[] = (() => {
     if (!selected) return []
-    const dbUrls: string[] = Array.isArray(selected.media_urls) ? selected.media_urls : []
-    const uploaded = newUploads[selected.id] || []
-    const deleted = deletedUrls[selected.id] || []
-    return [...dbUrls.filter(u => !deleted.includes(u)), ...uploaded]
-  }, [selected, newUploads, deletedUrls])
-
+    const stored = getMediaArray(selected)
+    const local = localMedia[selected.id]
+    if (local) return local
+    return stored
+  })()
   const getTextKey = (notaId: string, variant: string) => `${notaId}-${variant}`
 
   const getCurrentContent = (nota: NewsFlashMulticanal) => {
@@ -55,58 +63,41 @@ export function NotasMulticanalList({ notas }: NotasMulticanalListProps) {
   ]
 
   const handleSelect = (nota: NewsFlashMulticanal) => {
-    setSelectedId(selectedId === nota.id ? null : nota.id)
+    const id = selectedId === nota.id ? null : nota.id
+    setSelectedId(id)
     setActiveVariant('publico')
     setSuccessMsg(null)
   }
 
   const handleFiles = async (files: FileList | null) => {
-    if (!files || !selectedId) return
+    if (!files || !selectedId || !selected) return
+    const currentUrls = getMediaArray(selected)
 
     for (const file of Array.from(files)) {
       try {
         const fileExt = file.name.split('.').pop()
         const fileName = `news-multicanal/${Date.now()}-${Math.random().toString(36).slice(2)}.${fileExt}`
-
-        const { error } = await supabase.storage
-          .from('article-media')
-          .upload(fileName, file)
-
+        const { error } = await supabase.storage.from('article-media').upload(fileName, file)
         if (error) throw error
-
-        const { data: { publicUrl } } = supabase.storage
-          .from('article-media')
-          .getPublicUrl(fileName)
-
-        setNewUploads(prev => ({
-          ...prev,
-          [selectedId]: [...(prev[selectedId] || []), publicUrl]
-        }))
+        const { data: { publicUrl } } = supabase.storage.from('article-media').getPublicUrl(fileName)
+        currentUrls.push(publicUrl)
       } catch (err: any) {
         console.error('Error subiendo archivo:', err.message)
       }
     }
+
+    setLocalMedia(prev => ({ ...prev, [selectedId]: currentUrls }))
   }
 
   const removeMedia = (url: string) => {
-    if (!selectedId) return
-    if ((newUploads[selectedId] || []).includes(url)) {
-      setNewUploads(prev => ({
-        ...prev,
-        [selectedId]: (prev[selectedId] || []).filter(u => u !== url)
-      }))
-    } else {
-      setDeletedUrls(prev => ({
-        ...prev,
-        [selectedId]: [...(prev[selectedId] || []), url]
-      }))
-    }
+    if (!selectedId || !selected) return
+    const current = localMedia[selectedId] ?? getMediaArray(selected)
+    setLocalMedia(prev => ({ ...prev, [selectedId]: current.filter(u => u !== url) }))
   }
 
   const handleSave = async () => {
     if (!selected) return
-    const saveKey = selected.id
-    setSaving(saveKey)
+    setSaving(selected.id)
     setSuccessMsg(null)
 
     const content = getCurrentContent(selected)
@@ -115,12 +106,12 @@ export function NotasMulticanalList({ notas }: NotasMulticanalListProps) {
       newsFlashId: selected.id,
       variant: activeVariant,
       contenido: content,
-      media_urls: currentMediaUrls,
+      media_urls: allMediaUrls,
     })
 
     setSaving(null)
     if (res.success) {
-      setSuccessMsg(`Nota "${getVariantInfo(selected).find(v => v.key === activeVariant)?.label}" guardada`)
+      setSuccessMsg(`"${getVariantInfo(selected).find(v => v.key === activeVariant)?.label}" guardada`)
       setTimeout(() => setSuccessMsg(null), 3000)
     }
   }
@@ -244,9 +235,9 @@ export function NotasMulticanalList({ notas }: NotasMulticanalListProps) {
                   Agregar imágenes o videos
                 </button>
 
-                {currentMediaUrls.length > 0 && (
+                {allMediaUrls.length > 0 && (
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                    {currentMediaUrls.map((url, idx) => (
+                    {allMediaUrls.map((url, idx) => (
                       <div key={idx} className="relative group rounded-lg overflow-hidden border border-white/10">
                         {/\.(mp4|webm|mov)$/i.test(url) ? (
                           <video src={url} className="w-full h-24 object-cover" />

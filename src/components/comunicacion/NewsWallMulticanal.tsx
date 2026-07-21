@@ -18,8 +18,9 @@ interface NewsWallMulticanalProps {
 
 function MediaSlideshow({ mediaUrls }: { mediaUrls: string[] }) {
   const [current, setCurrent] = useState(0)
-  const images = mediaUrls.filter(u => /\.(jpg|jpeg|png|gif|webp|avif)$/i.test(u))
-  const videos = mediaUrls.filter(u => /\.(mp4|webm|mov)$/i.test(u))
+  const stripQuery = (u: string) => u.split('?')[0]
+  const images = mediaUrls.filter(u => /\.(jpg|jpeg|png|gif|webp|avif)/i.test(stripQuery(u)))
+  const videos = mediaUrls.filter(u => /\.(mp4|webm|mov)/i.test(stripQuery(u)))
 
   if (images.length === 0 && videos.length === 0) return null
 
@@ -131,7 +132,14 @@ export function NewsWallMulticanal({
   }
 
   const getMediaUrls = (flash: NewsFlashMulticanal): string[] => {
-    if (flash.media_urls && Array.isArray(flash.media_urls)) return flash.media_urls
+    const m = (flash as any).media_urls
+    if (Array.isArray(m)) return m
+    if (typeof m === 'string') {
+      try {
+        const parsed = JSON.parse(m)
+        if (Array.isArray(parsed)) return parsed
+      } catch {}
+    }
     return []
   }
 

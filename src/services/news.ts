@@ -75,6 +75,7 @@ export interface NotaSponsor {
   contenido: string
   autor_id: string | null
   is_published: boolean
+  media_urls: string[]
   sponsor_ids: string[]
 }
 
@@ -87,6 +88,7 @@ export interface NotaMedio {
   contenido: string
   autor_id: string | null
   is_published: boolean
+  media_urls: string[]
   contacto_prensa: any
 }
 

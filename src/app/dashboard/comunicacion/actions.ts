@@ -117,7 +117,8 @@ export async function createMulticanalNewsAction(data: {
         titulo: data.titulo,
         contenido: data.texto_sponsors,
         autor_id: member.id,
-        is_published: true
+        is_published: true,
+        media_urls: data.media_urls || []
       })
     if (sponsorsError) {
       console.error('[createMulticanalNewsAction] Error en notas_sponsors:', sponsorsError.message)
@@ -132,7 +133,8 @@ export async function createMulticanalNewsAction(data: {
         titulo: data.titulo,
         contenido: data.texto_medios,
         autor_id: member.id,
-        is_published: true
+        is_published: true,
+        media_urls: data.media_urls || []
       })
     if (mediosError) {
       console.error('[createMulticanalNewsAction] Error en notas_medios:', mediosError.message)
