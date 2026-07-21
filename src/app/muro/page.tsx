@@ -17,8 +17,20 @@ export default async function MuroPage() {
 
   const allFlashes = await getAllMulticanalNewsFlashes()
 
-  const publicFlashes = allFlashes.filter(f => f.para_publico && f.is_published !== false)
-  const memberFlashes = user ? allFlashes.filter(f => f.para_miembros && f.is_published !== false) : null
+  const publicFlashes = allFlashes.filter(f => 
+    (f.para_publico || Boolean(f.texto_publico?.trim())) && f.is_published !== false
+  )
+  const memberFlashes = user ? allFlashes.filter(f => 
+    (f.para_miembros || Boolean(f.texto_miembros?.trim())) && f.is_published !== false
+  ) : null
+
+  const sponsorFlashes = user ? allFlashes.filter(f => 
+    (f.para_sponsors || Boolean(f.texto_sponsors?.trim())) && f.is_published !== false
+  ) : null
+
+  const pressFlashes = user ? allFlashes.filter(f => 
+    (f.para_medios || Boolean(f.texto_medios?.trim())) && f.is_published !== false
+  ) : null
 
   return (
     <main className='min-h-screen bg-[#020617] pt-32 pb-20 px-6'>
@@ -28,13 +40,15 @@ export default async function MuroPage() {
             Muro de Noticias
           </h1>
           <p className='text-white/60 max-w-2xl mx-auto'>
-            Contenido publico y comentarios internos del ecosistema ITEC
+            Contenido público y novedades del ecosistema ITEC
           </p>
         </div>
 
         <NewsWallMulticanal
           publicFlashes={publicFlashes}
           memberFlashes={memberFlashes}
+          sponsorFlashes={sponsorFlashes}
+          pressFlashes={pressFlashes}
         />
       </div>
     </main>

@@ -320,8 +320,17 @@ export async function getAllMulticanalNewsFlashes(): Promise<NewsFlashMulticanal
       if (!f.titulo && f.title) f.titulo = f.title
       if (!f.texto_publico && f.flash_text) f.texto_publico = f.flash_text
       
-      // Asegurar booleanos de visibilidad si eran de la versión anterior
-      if (f.para_publico === undefined) f.para_publico = true
+      const hasPublicText = Boolean(f.texto_publico && typeof f.texto_publico === 'string' && f.texto_publico.trim().length > 0)
+      
+      // Si tiene texto público o es noticia antigua, forzar para_publico en true si no estaba negado explícitamente
+      if (f.para_publico === undefined || f.para_publico === null || hasPublicText) {
+        f.para_publico = f.para_publico !== false
+      }
+
+      const hasMemberText = Boolean(f.texto_miembros && typeof f.texto_miembros === 'string' && f.texto_miembros.trim().length > 0)
+      if (hasMemberText && (f.para_miembros === undefined || f.para_miembros === null)) {
+        f.para_miembros = true
+      }
       
       return f
     })
