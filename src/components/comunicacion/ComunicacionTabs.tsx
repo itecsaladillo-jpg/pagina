@@ -1,26 +1,13 @@
 'use client'
 
 import { useState } from 'react'
-import { ArticleEditor } from './ArticleEditor'
-import { ArticleManagementList } from './ArticleManagementList'
 import { ActionManagementList } from './ActionManagementList'
 import { NewsFlashMulticanalEditor } from './NewsFlashMulticanalEditor'
-import { PenTool, ListOrdered, Zap, Calendar, Radio } from 'lucide-react'
+import { Calendar, Radio } from 'lucide-react'
 import { createMulticanalNewsAction } from '@/app/dashboard/comunicacion/actions'
 
-export function ComunicacionTabs({ member, articles, actions }: { member: any; articles: any[]; actions: any[] }) {
-  const [activeTab, setActiveTab] = useState<'redactar' | 'multicanal' | 'gestionar' | 'acciones'>('gestionar')
-  const [editingArticle, setEditingArticle] = useState<any>(null)
-
-  const handleEditArticle = (article: any) => {
-    setEditingArticle(article)
-    setActiveTab('redactar')
-  }
-
-  const handleCancelEdit = () => {
-    setEditingArticle(null)
-    setActiveTab('gestionar')
-  }
+export function ComunicacionTabs({ member, actions }: { member: any; actions: any[] }) {
+  const [activeTab, setActiveTab] = useState<'acciones' | 'multicanal'>('multicanal')
 
   const handleSaveMulticanal = async (data: any) => {
     const res = await createMulticanalNewsAction(data)
@@ -36,17 +23,6 @@ export function ComunicacionTabs({ member, articles, actions }: { member: any; a
     <div className="space-y-6">
       <div className="flex flex-wrap gap-4 border-b border-white/5 pb-1">
         <button
-          onClick={() => { setActiveTab('gestionar'); setEditingArticle(null); }}
-          className={`flex items-center gap-2 px-6 py-3 text-sm font-bold transition-all border-b-2 ${
-            activeTab === 'gestionar' 
-              ? 'border-blue-500 text-white' 
-              : 'border-transparent text-white/40 hover:text-white'
-          }`}
-        >
-          <ListOrdered size={18} />
-          Artículos ({articles.length})
-        </button>
-        <button
           onClick={() => setActiveTab('acciones')}
           className={`flex items-center gap-2 px-6 py-3 text-sm font-bold transition-all border-b-2 ${
             activeTab === 'acciones' 
@@ -56,17 +32,6 @@ export function ComunicacionTabs({ member, articles, actions }: { member: any; a
         >
           <Calendar size={18} />
           Acciones ({actions.length})
-        </button>
-        <button
-          onClick={() => { setActiveTab('redactar'); setEditingArticle(null); }}
-          className={`flex items-center gap-2 px-6 py-3 text-sm font-bold transition-all border-b-2 ${
-            activeTab === 'redactar' 
-              ? 'border-emerald-500 text-white' 
-              : 'border-transparent text-white/40 hover:text-white'
-          }`}
-        >
-          <PenTool size={18} />
-          {editingArticle ? 'Editando Artículo' : 'Redactar Nuevo'}
         </button>
         <button
           onClick={() => setActiveTab('multicanal')}
@@ -82,22 +47,11 @@ export function ComunicacionTabs({ member, articles, actions }: { member: any; a
       </div>
 
       <div className="mt-8">
-        {activeTab === 'gestionar' && (
-          <ArticleManagementList articles={articles} onEdit={handleEditArticle} />
-        )}
         {activeTab === 'acciones' && <ActionManagementList actions={actions} />}
-        {activeTab === 'redactar' && (
-          <ArticleEditor 
-            key={editingArticle?.id || 'new'}
-            member={member} 
-            initialArticle={editingArticle} 
-            onCancel={handleCancelEdit}
-          />
-        )}
         {activeTab === 'multicanal' && (
           <NewsFlashMulticanalEditor 
             onSave={handleSaveMulticanal}
-            onCancel={() => setActiveTab('gestionar')}
+            onCancel={() => setActiveTab('acciones')}
           />
         )}
       </div>
