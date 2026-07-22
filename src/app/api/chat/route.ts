@@ -29,7 +29,7 @@ export async function POST(request: Request) {
     const SYSTEM_PROMPT = `Eres el Asistente Virtual Oficial del ITEC. Responde con máxima prioridad basándote en los documentos adjuntos. Si la respuesta no está en los documentos, recurre al conocimiento general/búsqueda web pero aclara obligatoriamente: "Esta información no figura en la documentación oficial del ITEC, pero...". Sé breve, profesional y responde en español.`;
 
     const model = genAI.getGenerativeModel({
-      model: "gemini-1.5-flash",
+      model: "gemini-2.0-flash",
       systemInstruction: SYSTEM_PROMPT
     });
 
