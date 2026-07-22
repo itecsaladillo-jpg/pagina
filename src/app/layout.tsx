@@ -2,7 +2,6 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import { LanguageProvider } from '@/contexts/LanguageContext'
 import './globals.css'
-import ChatWidget from '@/components/chat/ChatWidget'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -38,7 +37,6 @@ export default function RootLayout({
         <LanguageProvider>
           {children}
         </LanguageProvider>
-        <ChatWidget />
       </body>
     </html>
   )
