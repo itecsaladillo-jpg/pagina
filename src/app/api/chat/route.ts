@@ -204,13 +204,18 @@ export async function POST(request: Request): Promise<Response> {
       if (promptConfig) promptSistema = promptConfig.system_prompt
     } catch (err) { console.warn(err) }
 
-    const instruccionPrioridad = `\n\nPRIORIDAD ABSOLUTA: Para tus respuestas, debes buscar la información de forma prioritaria en la sección "Documentación Institucional de ITEC" proveída más abajo. Basate siempre en esa fuente como verdad principal.
+    const instruccionPrioridad = `\n\n=========================================
+DIRECTIVA SUPREMA Y PRIORIDAD ABSOLUTA:
+1. ANTES de inventar, deducir o buscar en cualquier otro medio, TENÉS QUE BUSCAR Y BASAR TUS RESPUESTAS EXCLUSIVAMENTE en el texto proporcionado abajo bajo "Documentación Institucional de ITEC". 
+2. Esa documentación es tu ÚNICA fuente de verdad. Si la respuesta está ahí, usala textualmente o parafraseada.
+=========================================
 REGLAS ESTRICTAS CONTRA ALUCINACIONES:
 - NUNCA afirmes que ITEC "no es un espacio físico". ITEC SÍ cuenta con espacios físicos (Usina del Conocimiento, CURS).
 - NUNCA uses la estructura "Nuestra esencia: Técnica... Humana... Vanguardista..." ni digas que ITEC se especializa en "infraestructura de redes".
 - Evitá dar descripciones enlatadas incorrectas sobre el "Staff central".`
+    
     const messages = [
-      { role: 'system', content: promptSistema + instruccionPrioridad + aprendizajesAdicionales + miembrosContext + '\n\n' + DOCS_CONTEXT },
+      { role: 'system', content: instruccionPrioridad + '\n\n' + promptSistema + aprendizajesAdicionales + miembrosContext + '\n\n' + DOCS_CONTEXT },
       ...historial.map(m => ({ role: m.role === 'model' ? 'assistant' : m.role, content: m.text })),
       { role: 'user', content: mensaje }
     ]
@@ -231,12 +236,16 @@ REGLAS ESTRICTAS CONTRA ALUCINACIONES:
       console.error('OpenRouter failed, trying HuggingFace fallback:', error)
 
       try {
-        const instruccionPrioridad = `\n\nPRIORIDAD ABSOLUTA: Para tus respuestas, debes buscar la información de forma prioritaria en la sección "Documentación Institucional de ITEC" proveída más abajo. Basate siempre en esa fuente como verdad principal.
+        const instruccionPrioridad = `\n\n=========================================
+DIRECTIVA SUPREMA Y PRIORIDAD ABSOLUTA:
+1. ANTES de inventar, deducir o buscar en cualquier otro medio, TENÉS QUE BUSCAR Y BASAR TUS RESPUESTAS EXCLUSIVAMENTE en el texto proporcionado abajo bajo "Documentación Institucional de ITEC". 
+2. Esa documentación es tu ÚNICA fuente de verdad. Si la respuesta está ahí, usala textualmente o parafraseada.
+=========================================
 REGLAS ESTRICTAS CONTRA ALUCINACIONES:
 - NUNCA afirmes que ITEC "no es un espacio físico". ITEC SÍ cuenta con espacios físicos (Usina del Conocimiento, CURS).
 - NUNCA uses la estructura "Nuestra esencia: Técnica... Humana... Vanguardista..." ni digas que ITEC se especializa en "infraestructura de redes".
 - Evitá dar descripciones enlatadas incorrectas sobre el "Staff central".`
-        const fallbackPrompt = `${promptSistema}${instruccionPrioridad}\n\n${aprendizajesAdicionales}\n\n${miembrosContext}\n\n${DOCS_CONTEXT}\n\nUsuario: ${mensaje}`
+        const fallbackPrompt = `${instruccionPrioridad}\n\n${promptSistema}\n\n${aprendizajesAdicionales}\n\n${miembrosContext}\n\n${DOCS_CONTEXT}\n\nUsuario: ${mensaje}`
         const respuestaCompleta = await callHuggingFace(fallbackPrompt)
         const resultadoAuditoria = await auditarRespuestaIA(mensaje, respuestaCompleta)
 
