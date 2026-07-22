@@ -1,185 +1,69 @@
-export const runtime = 'edge'
+export const runtime = 'edge';
 
-import { createClient } from '@/lib/supabase/server'
-import { buscarFeedbacksSimilares, auditarRespuestaIA } from '@/services/ai'
-import { getAIPrompt } from '@/services/admin'
-import { DOCS_CONTEXT } from '@/lib/docsContext'
+import { GoogleGenerativeAI } from '@google/generative-ai';
+import geminiFiles from '@/lib/geminiFiles.json';
 
-const SYSTEM_INSTRUCTION = `Sos un asistente de comunicación interna para ITEC Saladillo, 
-una organización tecnológica y comunitaria de Saladillo, Buenos Aires.
-
-Tu estilo de escritura es:
-- TÉCNICO: usás terminología precisa y profesional
-- HUMANO: cálido, cercano, que conecta con las personas
-- VANGUARDISTA: dinámico, orientado al futuro, innovador
-
-PALABRAS Y ESTRUCTURAS COMPLETAMENTE PROHIBIDAS (nunca las uses):
-- "el ITEC", "la ITEC" (Nombrá a la organización únicamente como "ITEC").
-- "viste", "che", "pibe", "hoy", "ayer", "mañana".
-
-En su lugar, usá alternativas como:
-- En lugar de "hoy": "esta jornada", "en la sesión actual", "durante este encuentro"
-- En lugar de "ayer": "en la sesión anterior", "en el encuentro previo"
-- En lugar de "mañana": "en la próxima instancia", "en el siguiente encuentro"
-- En lugar de "che": nada, empezá directo con el mensaje
-- En lugar de "viste": "como se mencionó", "según lo tratado"
-- En lugar de "pibe": nada, usá el nombre o "miembro"
-
-Siempre escribís en español rioplatense formal, con vos y sus conjugaciones correctas.
-Nunca utilizás lenguaje informal ni regionalismos fuera de los autorizados.`
-
-interface MensajeChat {
-  role: 'user' | 'model'
-  text: string
+const API_KEY = process.env.GEMINI_API_KEY;
+if (!API_KEY) {
+  throw new Error("GEMINI_API_KEY no está configurada");
 }
 
-interface CuerpoSolicitud {
-  action: 'chat' | 'redactar'
-  mensaje?: string
-  historial?: MensajeChat[]
-  idioma?: string
-  datos_crudos?: string
-}
+const genAI = new GoogleGenerativeAI(API_KEY);
 
-async function callOpenRouter(messages: { role: string; content: string }[]): Promise<any> {
-  const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY}`,
-      'Content-Type': 'application/json',
-      'HTTP-Referer': 'https://itecsaladillo.org.ar',
-      'X-Title': 'ITEC Chat'
-    },
-    body: JSON.stringify({
-      model: 'deepseek/deepseek-chat',
-      messages,
-      stream: false,
-      temperature: 0.7,
-      max_tokens: 4096
-    })
-  })
+const SYSTEM_PROMPT = `Eres el Asistente Virtual Oficial del ITEC. Responde con máxima prioridad basándote en los documentos adjuntos. Si la respuesta no está en los documentos, recurre al conocimiento general/búsqueda web pero aclara obligatoriamente: "Esta información no figura en la documentación oficial del ITEC, pero...". Sé breve, profesional y responde en español.`;
 
-  if (!response.ok) {
-    const err = await response.text().catch(() => 'unknown error')
-    throw new Error(`OpenRouter API error: ${response.status} - ${err}`)
-  }
-  return response
-}
+const model = genAI.getGenerativeModel({
+  model: "gemini-1.5-flash",
+  systemInstruction: SYSTEM_PROMPT
+});
 
-async function callOpenRouter2(prompt: string): Promise<any> {
-  const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${process.env.OPENROUTER2_API_KEY}`,
-      'Content-Type': 'application/json',
-      'HTTP-Referer': 'https://itecsaladillo.org.ar',
-      'X-Title': 'ITEC Redaccion'
-    },
-    body: JSON.stringify({
-      model: 'tencent/hunyuan-3d-latest',
-      messages: [{ role: 'user', content: prompt }],
-      stream: false,
-      temperature: 0.7,
-      max_tokens: 4096
-    })
-  })
-
-  if (!response.ok) {
-    const err = await response.text().catch(() => 'unknown error')
-    throw new Error(`OpenRouter2 API error: ${response.status} - ${err}`)
-  }
-  return response
-}
-
-async function callHuggingFace(prompt: string): Promise<string> {
-  const response = await fetch('https://api-inference.huggingface.co/models/meta-llama/Llama-3.1-8B-Instruct', {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${process.env.HF_API_KEY}`,
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      inputs: prompt,
-      parameters: {
-        max_new_tokens: 4096,
-        temperature: 0.7,
-        return_full_text: false
-      }
-    })
-  })
-
-  if (!response.ok) {
-    const err = await response.text().catch(() => 'unknown error')
-    throw new Error(`HuggingFace API error: ${response.status} - ${err}`)
-  }
-  const data = await response.json()
-  return data?.generated_text || data?.[0]?.generated_text || ''
-}
-
-export async function POST(request: Request): Promise<Response> {
-  let cuerpo: CuerpoSolicitud
+export async function POST(request: Request) {
+  let cuerpo;
   try {
-    cuerpo = await request.json()
+    cuerpo = await request.json();
   } catch {
-    return new Response(JSON.stringify({ error: 'JSON inválido' }), { status: 400 })
+    return new Response(JSON.stringify({ error: 'JSON inválido' }), { status: 400 });
   }
 
-  const { action, mensaje, historial = [], idioma, datos_crudos } = cuerpo
+  const mensaje = cuerpo.message || cuerpo.mensaje;
 
-  if (action === 'redactar') {
-    if (!datos_crudos || typeof datos_crudos !== 'string') {
-      return new Response(JSON.stringify({ error: 'Datos requeridos para redactar' }), { status: 400 })
+  if (!mensaje || typeof mensaje !== 'string' || mensaje.trim() === '') {
+    return new Response(JSON.stringify({ error: 'Mensaje requerido' }), { status: 400 });
+  }
+
+  try {
+    const contents: any[] = [];
+    
+    // Agregamos los archivos pre-subidos al request
+    if (geminiFiles && geminiFiles.files && geminiFiles.files.length > 0) {
+      geminiFiles.files.forEach((file: any) => {
+        contents.push({
+          fileData: {
+            mimeType: file.mimeType || "application/pdf",
+            fileUri: file.uri
+          }
+        });
+      });
     }
 
-    const prompt = `Sos un redactor periodístico experto para ITEC Saladillo. Transformá los hechos crudos en un artículo inspirador.
-    
-    ROL: Periodista social.
-    OBJETIVO: Generar orgullo y pertenencia en Saladillo.
-    TONO: Aspiracional, accesible y humano.
-    ENFOQUE: Traducir la técnica a beneficios comunitarios. Estructura de pirámide invertida. Evitá tecnicismos.
-    CIERRE: Frase que invite a sumarse al ecosistema ITEC.
-    
-    HECHOS CRUDOS:
-    """${datos_crudos}"""
-    
-    Respondés únicamente con el texto del artículo, sin títulos adicionales ni comillas.`
+    // Agregamos el mensaje del usuario
+    contents.push({ text: mensaje });
 
-    try {
-      const aiResponse = await callOpenRouter2(prompt)
-      const data = await aiResponse.json()
-      const textoRespuesta = data.choices?.[0]?.message?.content || 'No se generó respuesta'
+    const result = await model.generateContent(contents);
+    const text = result.response.text();
 
-      return new Response(JSON.stringify({
-        respuesta: textoRespuesta,
-        modelo: 'tencent/hunyuan-3d-latest'
-      }), {
-        headers: { 'Content-Type': 'application/json' }
-      })
-    } catch (error: any) {
-      console.error('OpenRouter2 failed, trying HuggingFace fallback:', error)
-      
-      try {
-        const textoRespuesta = await callHuggingFace(prompt)
-        return new Response(JSON.stringify({
-          respuesta: textoRespuesta,
-          modelo: 'meta-llama/Llama-3.1-8B-Instruct',
-          fallback: true
-        }), {
-          headers: { 'Content-Type': 'application/json' }
-        })
-      } catch (fallbackError: any) {
-        return new Response(JSON.stringify({
-          error: 'Error procesando la redacción',
-          detalle: fallbackError.message
-        }), { status: 502 })
+    return new Response(JSON.stringify({ response: text }), {
+      headers: { 
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*'
       }
-    }
-  }
+    });
 
-  if (action === 'chat') {
-    // TODO: Nueva lógica del Asistente ITEC a implementar
-    return new Response(JSON.stringify({ error: 'Nueva lógica en desarrollo' }), { status: 501 })
+  } catch (error: any) {
+    console.error('Error con Gemini API:', error);
+    return new Response(JSON.stringify({ 
+      error: 'Error procesando la solicitud',
+      detail: error.message 
+    }), { status: 500 });
   }
-
-  return new Response(JSON.stringify({ error: 'Acción inválida' }), { status: 400 })
 }
