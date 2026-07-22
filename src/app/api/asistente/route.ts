@@ -105,15 +105,36 @@ export async function POST(req: NextRequest) {
     console.error(err) 
   }
 
+  const supabase = await createClient()
+
   let miembrosContext = ''
   try {
-    const supabase = await createClient()
     const { data: miembros } = await supabase.rpc('obtener_miembros_publicos')
     if (miembros?.length > 0) {
       miembrosContext = `\n\n## Staff ITEC:\n${miembros.map((m: any) => `- ${m.full_name}: ${m.role}`).join('\n')}`
     }
   } catch (err) { 
     errors.push(`Miembros error: ${err instanceof Error ? err.message : String(err)}`)
+    console.error(err) 
+  }
+
+  let notasContext = ''
+  try {
+    const { data: notas } = await supabase
+      .from('notas_publico')
+      .select('titulo, contenido, created_at')
+      .eq('is_published', true)
+      .order('created_at', { ascending: false })
+      .limit(10)
+    if (notas && notas.length > 0) {
+      notasContext = `\n\n## Noticias Recientes de ITEC:\n${notas.map(n => {
+        const fecha = n.created_at?.split('T')[0] ?? ''
+        const preview = n.contenido.length > 250 ? n.contenido.slice(0, 250) + '…' : n.contenido
+        return `- [${fecha}] ${n.titulo}: ${preview}`
+      }).join('\n')}`
+    }
+  } catch (err) { 
+    errors.push(`Notas error: ${err instanceof Error ? err.message : String(err)}`)
     console.error(err) 
   }
 
@@ -127,7 +148,7 @@ export async function POST(req: NextRequest) {
   }
 
   const messages = [
-    { role: 'system', content: promptSistema + aprendizajesAdicionales + miembrosContext },
+    { role: 'system', content: promptSistema + aprendizajesAdicionales + miembrosContext + notasContext },
     ...historial.map((m: { role: string; content: string }) => ({
       role: m.role === 'model' ? 'assistant' : m.role,
       content: m.content
@@ -149,7 +170,7 @@ export async function POST(req: NextRequest) {
     console.error('OpenRouter failed, trying HuggingFace fallback:', error)
 
     try {
-      const fallbackPrompt = `${promptSistema}\n\n${aprendizajesAdicionales}\n\n${miembrosContext}\n\nUsuario: ${mensaje}`
+      const fallbackPrompt = `${promptSistema}\n\n${aprendizajesAdicionales}\n\n${miembrosContext}\n\n${notasContext}\n\nUsuario: ${mensaje}`
       const respuestaCompleta = await callHuggingFace(fallbackPrompt)
       const resultadoAuditoria = await auditarRespuestaIA(mensaje, respuestaCompleta)
 
