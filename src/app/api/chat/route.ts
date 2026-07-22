@@ -204,7 +204,11 @@ export async function POST(request: Request): Promise<Response> {
       if (promptConfig) promptSistema = promptConfig.system_prompt
     } catch (err) { console.warn(err) }
 
-    const instruccionPrioridad = '\n\nPRIORIDAD ABSOLUTA: Para tus respuestas, debes buscar la información de forma prioritaria en la sección "Documentación Institucional de ITEC" proveída más abajo. Basate siempre en esa fuente como verdad principal.'
+    const instruccionPrioridad = `\n\nPRIORIDAD ABSOLUTA: Para tus respuestas, debes buscar la información de forma prioritaria en la sección "Documentación Institucional de ITEC" proveída más abajo. Basate siempre en esa fuente como verdad principal.
+REGLAS ESTRICTAS CONTRA ALUCINACIONES:
+- NUNCA afirmes que ITEC "no es un espacio físico". ITEC SÍ cuenta con espacios físicos (Usina del Conocimiento, CURS).
+- NUNCA uses la estructura "Nuestra esencia: Técnica... Humana... Vanguardista..." ni digas que ITEC se especializa en "infraestructura de redes".
+- Evitá dar descripciones enlatadas incorrectas sobre el "Staff central".`
     const messages = [
       { role: 'system', content: promptSistema + instruccionPrioridad + aprendizajesAdicionales + miembrosContext + '\n\n' + DOCS_CONTEXT },
       ...historial.map(m => ({ role: m.role === 'model' ? 'assistant' : m.role, content: m.text })),
@@ -227,7 +231,11 @@ export async function POST(request: Request): Promise<Response> {
       console.error('OpenRouter failed, trying HuggingFace fallback:', error)
 
       try {
-        const instruccionPrioridad = '\n\nPRIORIDAD ABSOLUTA: Para tus respuestas, debes buscar la información de forma prioritaria en la sección "Documentación Institucional de ITEC" proveída más abajo. Basate siempre en esa fuente como verdad principal.'
+        const instruccionPrioridad = `\n\nPRIORIDAD ABSOLUTA: Para tus respuestas, debes buscar la información de forma prioritaria en la sección "Documentación Institucional de ITEC" proveída más abajo. Basate siempre en esa fuente como verdad principal.
+REGLAS ESTRICTAS CONTRA ALUCINACIONES:
+- NUNCA afirmes que ITEC "no es un espacio físico". ITEC SÍ cuenta con espacios físicos (Usina del Conocimiento, CURS).
+- NUNCA uses la estructura "Nuestra esencia: Técnica... Humana... Vanguardista..." ni digas que ITEC se especializa en "infraestructura de redes".
+- Evitá dar descripciones enlatadas incorrectas sobre el "Staff central".`
         const fallbackPrompt = `${promptSistema}${instruccionPrioridad}\n\n${aprendizajesAdicionales}\n\n${miembrosContext}\n\n${DOCS_CONTEXT}\n\nUsuario: ${mensaje}`
         const respuestaCompleta = await callHuggingFace(fallbackPrompt)
         const resultadoAuditoria = await auditarRespuestaIA(mensaje, respuestaCompleta)
