@@ -128,7 +128,7 @@ export async function getPublicArticles(): Promise<PublicArticle[]> {
 
   const articles = (data ?? []).map((art: any) => {
     // Resolver media_urls con fallback a news_flashes
-    let media = art.media_urls
+    const media = art.media_urls
     let mediaArr = Array.isArray(media) ? media : (typeof media === 'string' ? (() => { try { return JSON.parse(media) } catch { return [] } })() : [])
     if (mediaArr.length === 0 && art.news_flashes) {
       const nfMedia = art.news_flashes.media_urls
@@ -176,7 +176,7 @@ export async function getAllArticles(): Promise<PublicArticle[]> {
     return []
   }
   return (data ?? []).map((art: any) => {
-    let media = art.media_urls
+    const media = art.media_urls
     let mediaArr = Array.isArray(media) ? media : (typeof media === 'string' ? (() => { try { return JSON.parse(media) } catch { return [] } })() : [])
     if (mediaArr.length === 0 && art.news_flashes) {
       const nfMedia = art.news_flashes.media_urls
@@ -255,7 +255,7 @@ export async function getArticleBySlug(slug: string): Promise<PublicArticle | nu
   if (!article) return null
 
   // Resolver media_urls con fallback a news_flashes
-  let media = article.media_urls
+  const media = article.media_urls
   let mediaArr = Array.isArray(media) ? media : (typeof media === 'string' ? (() => { try { return JSON.parse(media) } catch { return [] } })() : [])
   if (mediaArr.length === 0 && article.news_flashes) {
     const nfMedia = article.news_flashes.media_urls
