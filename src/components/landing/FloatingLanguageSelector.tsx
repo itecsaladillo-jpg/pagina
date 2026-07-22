@@ -47,7 +47,7 @@ export function FloatingLanguageSelector() {
                   setLanguage(lang.code);
                   setOpen(false);
                 }}
-                className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-bold transition-all text-left cursor-pointer ${
+                className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-bold transition-all text-left cursor-pointer ${
                   isSelected 
                     ? 'bg-blue-500/10 text-blue-400 border border-blue-500/20' 
                     : 'text-slate-300 hover:text-white hover:bg-white/[0.04] border border-transparent'
@@ -57,7 +57,7 @@ export function FloatingLanguageSelector() {
                   <span>{lang.flag}</span>
                   <span>{lang.name}</span>
                 </div>
-                {isSelected && <Check size={12} className="text-blue-400 shrink-0" />}
+                {isSelected && <Check size={14} className="text-blue-400 shrink-0" />}
               </button>
             );
           })}
@@ -67,7 +67,7 @@ export function FloatingLanguageSelector() {
       {/* Floating Action Button (FAB) */}
       <button
         onClick={() => setOpen(!open)}
-        className="h-12 rounded-full flex items-center gap-2.5 px-4 transition-all active:scale-95 shadow-xl hover:shadow-2xl border border-white/[0.08] hover:border-blue-500/40 cursor-pointer"
+        className="h-14 rounded-full flex items-center gap-3 px-5 transition-all active:scale-95 shadow-xl hover:shadow-2xl border border-white/[0.08] hover:border-blue-500/40 cursor-pointer"
         style={{
           background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.9), rgba(30, 41, 59, 0.95))',
           boxShadow: '0 4px 20px rgba(0,0,0,0.3), 0 0 10px rgba(59,130,246,0.05)',
@@ -77,10 +77,10 @@ export function FloatingLanguageSelector() {
         aria-label="Seleccionar idioma"
         title="Idioma / Language"
       >
-        <div className="w-6 h-6 rounded-full bg-blue-500/10 flex items-center justify-center text-blue-400 shrink-0">
-          <Globe size={14} />
+        <div className="w-7 h-7 rounded-full bg-blue-500/10 flex items-center justify-center text-blue-400 shrink-0">
+          <Globe size={16} />
         </div>
-        <span className="text-[11px] font-black tracking-wider text-slate-200 uppercase flex items-center gap-1.5">
+        <span className="text-[13px] font-black tracking-wider text-slate-200 uppercase flex items-center gap-2">
           {currentLang.flag}
         </span>
       </button>
