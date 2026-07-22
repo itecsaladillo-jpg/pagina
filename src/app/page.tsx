@@ -6,7 +6,6 @@ import { IdeasSection } from '@/components/landing/IdeasSection'
 import { ImpactSection } from '@/components/landing/ImpactSection'
 import { VideotecaSection } from '@/components/landing/VideotecaSection'
 import { Footer } from '@/components/landing/Footer'
-import { AsistenteChat } from '@/components/AsistenteChat'
 import { FloatingLanguageSelector } from '@/components/landing/FloatingLanguageSelector'
 
 export default function HomePage() {
@@ -31,9 +30,6 @@ export default function HomePage() {
       <IdeasSection />
 
       <Footer />
-
-      {/* Asistente ITEC — overlay flotante global (izq) */}
-      <AsistenteChat />
 
       {/* Selector de Idiomas flotante premium (der) */}
       <FloatingLanguageSelector />
