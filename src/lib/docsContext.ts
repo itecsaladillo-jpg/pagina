@@ -4,6 +4,79 @@
 export const DOCS_CONTEXT = `
 Documentación Institucional de ITEC:
 
+--- Inicio del documento: GUÍA DE ENTRENAMIENTO PARA ASISTENTE VIRTUAL.pdf ---
+GUÍA DE ENTRENAMIENTO PARA ASISTENTE VIRTUAL – ITEC SALADILLO
+"AUGUSTO CICARÉ"
+1. Definición y Significado
+ITEC es una organización no gubernamental y asociación civil con sede en la ciudad de
+Saladillo, provincia de Buenos Aires. Sus siglas representan los cuatro vectores
+fundamentales del desarrollo que promueve: Innovación, Tecnología,
+Emprendeduris mo y Ciencia. A diferencia de los institutos técnicos tradicionales con
+currículos cerrados, ITEC funciona como una plataforma de articulación
+socioproductiva regional y un nodo de fomento para la economía del conocimiento.
+2. Misión y Objetivos Estratégicos
+El propósito central de ITEC es promover y divulgar el conocimiento como el pilar
+fundamental para el crecimiento sostenible de la comunidad y la sociedad. Sus objetivos
+incluyen:
+ Democratizar el acceso a la ciencia y despertar vocaciones científicas tempranas en niños
+y jóvenes.
+ Unir los sectores de la educación, la producción y el Estado para potenciar el desarrollo
+local.
+ Estimular el espíritu emprendedor mediante mentorías, redes de contacto y oportunidades de
+financiamiento.
+ Evitar la fuga de talentos locales hacia grandes centros urbanos, consolidando un ecosistema
+tecnológico en Saladillo.
+3. El Legado de Augusto Cicaré
+La institución lleva el nombre de Augusto "Pirincho" Cicaré, un inventor y
+emprendedor saladillense autodidacta reconocido mundialmente por el diseño y
+fabricación de helicópteros con solo estudios primarios.
+ Cicaré representa el arquetipo del innovador y es símbolo de identidad y pertenencia para
+la ciudad.
+ El 25 de noviembre fue declarado por el Honorable Concejo Deliberante de Saladillo como
+el “Día del Inventor Saladillense” en su honor, conmemorando la fecha en que recibió el
+premio "Ladislao José Biró" por su simulador de vuelo SVH-3.
+4. La Expo ITEC
+Es el evento insignia de la organización y se define como la primera Exposición
+Interactiva en Innovación, Tecnología, Emprendedurismo y Ciencia de la región.
+ Propósito: Visibilizar el potencial de la comunidad e inspirar a través de propuestas
+novedosas e interactivas.
+ Sinergia con el Agro: La exposición suele integrarse con la Exposición Rural de
+Saladillo, vinculando la tecnología 4.0 con la cadena productiva del agro.
+ Impacto: Se realizan presentaciones de expertos, charlas inspiradoras y muestras de
+proyectos que están transformando la industria.
+5. Ejes Temáticos y Áreas de Intervención
+ITEC enfoca sus programas en doce áreas de conocimiento contemporáneo:
+1. Sostenibilidad: Economía circular, gestión ambiental, energías renovables y movilidad
+sustentable.
+2. Industria 4.0: Ingeniería 4.0, robótica, informática y materiales avanzados.
+3. Economía del Conocimiento: Software, programación e inteligencia artificial.
+
+4. Ciencias Aplicadas: Biotecnología, ciencias de la salud, neurociencia y exploración
+espacial.
+5. Educación Disruptiva: Realidad virtual y aumentada aplicada al aprendizaje.
+6. Acciones y Herramientas de Participación
+ITEC implementa diversas iniciativas para involucrar a la ciudadanía:
+ Buzón de Ideas: Una herramienta para motivar a toda la comunidad a proponer mejoras
+para la ciudad de Saladillo.
+ Concurso de Inventores "Augusto Cicaré": Certamen que fomenta una cultura de
+búsqueda de soluciones innovadoras ante desafíos comunitarios.
+ Capacitaciones: Oferta de cursos sobre tecnologías emergentes (como Unreal Engine 5 o
+IA en educación) y talleres prácticos de oficios industriales, como soldadura.
+ Embajadores de Buena Voluntad: Programa que reconoce a saladillenses en el exterior
+para que actúen como agentes de cambio y difusión de los principios de ITEC.
+7. Vinculación Institucional
+ITEC actúa como un nodo que conecta la formación formal con la práctica:
+ Educación: Colabora con el Centro Universitario Regional Saladillo (CURS), el ISFT Nº
+135 y el ISFD Nº 16.
+ Estado y Empresas: Trabaja junto a la Municipalidad, el Concejo Deliberante y empresas
+locales para facilitar prácticas profesionalizantes y transferencia de tecnología.
+8. Proyecciones Futuras
+En el mediano y largo plazo, ITEC aspira a liderar la creación de un Polo Tecnológico
+y Emprendedor Sustentable en Saladillo, que incluya incubadoras y aceleradoras de
+empresas de base científica y tecnológica.
+--- Fin del documento: GUÍA DE ENTRENAMIENTO PARA ASISTENTE VIRTUAL.pdf ---
+
+
 --- Inicio del documento: Perfil Maestro de Entrenamiento IA_ Augusto Ulderico Cicaré.pdf ---
 Perfil Maestro de Entrenamiento IA: Augusto Ulderico Cicaré
 1. Ficha Biográfica y Cronología Fundamental
