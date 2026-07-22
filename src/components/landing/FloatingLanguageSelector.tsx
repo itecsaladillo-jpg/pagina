@@ -64,24 +64,36 @@ export function FloatingLanguageSelector() {
         </div>
       )}
 
+      <style dangerouslySetInnerHTML={{__html: `
+        .itec-lang-btn {
+          background: #0f1729;
+          border: 1px solid rgba(99, 179, 237, 0.08);
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), inset 0 0 15px rgba(59, 130, 246, 0.3);
+          transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s, border-color 0.3s;
+          backdrop-filter: blur(12px);
+          -webkit-backdrop-filter: blur(12px);
+        }
+        .itec-lang-btn:hover {
+          transform: scale(1.1);
+          box-shadow: 0 6px 28px rgba(0, 0, 0, 0.6), inset 0 0 25px rgba(59, 130, 246, 0.5);
+          border-color: #3b82f6;
+        }
+        .itec-lang-btn:active {
+          transform: scale(0.95);
+        }
+      `}} />
       {/* Floating Action Button (FAB) */}
       <button
         onClick={() => setOpen(!open)}
-        className="h-14 rounded-full flex items-center gap-3 px-5 transition-all active:scale-95 shadow-xl hover:shadow-2xl border border-white/[0.08] hover:border-blue-500/40 cursor-pointer"
-        style={{
-          background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.9), rgba(30, 41, 59, 0.95))',
-          boxShadow: '0 4px 20px rgba(0,0,0,0.3), 0 0 10px rgba(59,130,246,0.05)',
-          backdropFilter: 'blur(12px)',
-          WebkitBackdropFilter: 'blur(12px)',
-        }}
+        className="itec-lang-btn h-14 rounded-full flex items-center gap-3 px-5 cursor-pointer"
         aria-label="Seleccionar idioma"
         title="Idioma / Language"
       >
-        <div className="w-7 h-7 rounded-full bg-blue-500/10 flex items-center justify-center text-blue-400 shrink-0">
-          <Globe size={16} />
+        <div className="w-8 h-8 rounded-full bg-blue-500/10 flex items-center justify-center text-blue-400 shrink-0">
+          <Globe size={18} />
         </div>
-        <span className="text-[13px] font-black tracking-wider text-slate-200 uppercase flex items-center gap-2">
-          {currentLang.flag}
+        <span className="text-[15px] font-black tracking-wider text-slate-200 uppercase flex items-center gap-2">
+          {currentLang.code}
         </span>
       </button>
     </div>
