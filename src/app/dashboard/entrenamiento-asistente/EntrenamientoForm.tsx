@@ -325,7 +325,7 @@ export function EntrenamientoForm() {
         <div className="mt-8 pt-6 border-t border-[var(--border-subtle)]">
           <div className="bg-emerald-500/5 border border-emerald-500/10 rounded-2xl p-5 mb-4">
             <p className="text-[var(--text-muted)] text-xs leading-relaxed">
-              Después de subir o eliminar documentos, ejecutá <strong>Sincronizar</strong> para extraer el texto
+              Después de subir o eliminar documentos, ejecutá <strong>Actualizar Contexto</strong> para extraer el texto
               de los archivos y actualizar el contexto del asistente. Este proceso regenera el archivo{' '}
               <code className="text-emerald-400">docsContext.ts</code> que se inyecta en el prompt del asistente.
             </p>
@@ -341,7 +341,7 @@ export function EntrenamientoForm() {
             ) : (
               <RefreshCw size={20} />
             )}
-            {syncing ? 'Sincronizando...' : 'Sincronizar Documentos'}
+            {syncing ? 'Actualizando contexto...' : 'Actualizar Contexto'}
           </button>
         </div>
       </div>
