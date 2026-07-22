@@ -24,15 +24,16 @@ export default function ChatWidget() {
   useEffect(() => {
     async function fetchAvatar() {
       const supabase = createClient();
-      const { data } = await supabase
-        .from('members')
-        .select('avatar_url')
-        .ilike('full_name', '%Asistente%')
-        .single();
+      const { data } = await supabase.rpc('obtener_miembros_publicos');
       
-      if (data?.avatar_url) {
-        setAvatarUrl(data.avatar_url);
+      if (data && Array.isArray(data)) {
+        const asistente = data.find((m: any) => m.full_name?.toLowerCase().includes('asistente'));
+        if (asistente?.avatar_url) {
+          setAvatarUrl(asistente.avatar_url);
+          return;
+        }
       }
+      setAvatarUrl('/asistente.png');
     }
     fetchAvatar();
   }, []);
