@@ -3,6 +3,7 @@ export const runtime = 'edge'
 import { createClient } from '@/lib/supabase/server'
 import { buscarFeedbacksSimilares, auditarRespuestaIA } from '@/services/ai'
 import { getAIPrompt } from '@/services/admin'
+import { DOCS_CONTEXT } from '@/lib/docsContext'
 
 const SYSTEM_INSTRUCTION = `Sos un asistente de comunicación interna para ITEC Saladillo, 
 una organización tecnológica y comunitaria de Saladillo, Buenos Aires.
@@ -203,8 +204,9 @@ export async function POST(request: Request): Promise<Response> {
       if (promptConfig) promptSistema = promptConfig.system_prompt
     } catch (err) { console.warn(err) }
 
+    const instruccionPrioridad = '\n\nPRIORIDAD ABSOLUTA: Para tus respuestas, debes buscar la información de forma prioritaria en la sección "Documentación Institucional de ITEC" proveída más abajo. Basate siempre en esa fuente como verdad principal.'
     const messages = [
-      { role: 'system', content: promptSistema + aprendizajesAdicionales + miembrosContext },
+      { role: 'system', content: promptSistema + instruccionPrioridad + aprendizajesAdicionales + miembrosContext + '\n\n' + DOCS_CONTEXT },
       ...historial.map(m => ({ role: m.role === 'model' ? 'assistant' : m.role, content: m.text })),
       { role: 'user', content: mensaje }
     ]
@@ -225,7 +227,8 @@ export async function POST(request: Request): Promise<Response> {
       console.error('OpenRouter failed, trying HuggingFace fallback:', error)
 
       try {
-        const fallbackPrompt = `${promptSistema}\n\n${aprendizajesAdicionales}\n\n${miembrosContext}\n\nUsuario: ${mensaje}`
+        const instruccionPrioridad = '\n\nPRIORIDAD ABSOLUTA: Para tus respuestas, debes buscar la información de forma prioritaria en la sección "Documentación Institucional de ITEC" proveída más abajo. Basate siempre en esa fuente como verdad principal.'
+        const fallbackPrompt = `${promptSistema}${instruccionPrioridad}\n\n${aprendizajesAdicionales}\n\n${miembrosContext}\n\n${DOCS_CONTEXT}\n\nUsuario: ${mensaje}`
         const respuestaCompleta = await callHuggingFace(fallbackPrompt)
         const resultadoAuditoria = await auditarRespuestaIA(mensaje, respuestaCompleta)
 
