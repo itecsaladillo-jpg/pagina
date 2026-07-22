@@ -8,8 +8,6 @@ interface Mensaje {
   texto: string;
 }
 
-const CHAT_API = process.env.NEXT_PUBLIC_CHAT_API_URL || 'http://localhost:8000/chat';
-
 export default function ChatWidget() {
   const [abierto, setAbierto] = useState(false);
   const [mensajes, setMensajes] = useState<Mensaje[]>([
@@ -41,7 +39,7 @@ export default function ChatWidget() {
     setCargando(true);
 
     try {
-      const res = await fetch(CHAT_API, {
+      const res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: texto }),
@@ -53,7 +51,7 @@ export default function ChatWidget() {
       }
 
       const data = await res.json();
-      setMensajes(prev => [...prev, { rol: 'bot', texto: data.response || 'Sin respuesta.' }]);
+      setMensajes(prev => [...prev, { rol: 'bot', texto: data.reply || 'Sin respuesta.' }]);
     } catch (e: any) {
       setMensajes(prev => [
         ...prev,
