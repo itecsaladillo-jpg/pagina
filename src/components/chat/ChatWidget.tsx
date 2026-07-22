@@ -93,10 +93,12 @@ export default function ChatWidget() {
       >
         {/* Header */}
         <div className="itec-chat-header">
-          <div className="itec-avatar">🎓</div>
+          <div className="itec-avatar">
+            <img src="/asistente.png" alt="Asistente ITEC" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
+          </div>
           <div className="itec-header-info">
             <div className="itec-header-name">Asistente ITEC</div>
-            <div className="itec-header-status">En línea · Groq LLaMA 3.1</div>
+            <div className="itec-header-status">En línea · iTec LLaMA 3.1</div>
           </div>
           <button
             className="itec-close-btn"
