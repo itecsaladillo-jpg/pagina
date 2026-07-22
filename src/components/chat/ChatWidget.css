@@ -41,12 +41,12 @@
   right: 24px;
   width: 360px;
   height: 442px;
-  background: rgba(15, 23, 41, 0.6); /* 40% transparent */
+  background: rgba(15, 23, 41, 0.3); /* 70% transparent */
   border-radius: 16px;
   border: 1px solid var(--border-subtle, rgba(99, 179, 237, 0.08));
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5), 0 0 40px rgba(59, 130, 246, 0.05);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -70,7 +70,7 @@
 
 /* Header */
 .itec-chat-header {
-  background: rgba(10, 15, 30, 0.6);
+  background: rgba(10, 15, 30, 0.3);
   color: var(--text-primary, #f1f5f9);
   padding: 16px 20px;
   display: flex;
@@ -146,7 +146,7 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
-  background: rgba(3, 7, 18, 0.6);
+  background: rgba(3, 7, 18, 0.3);
 }
 .itec-messages::-webkit-scrollbar { width: 6px; }
 .itec-messages::-webkit-scrollbar-track {
@@ -226,7 +226,7 @@
   display: flex;
   gap: 10px;
   padding: 16px;
-  background: rgba(10, 15, 30, 0.6);
+  background: rgba(10, 15, 30, 0.3);
   border-top: 1px solid var(--border-subtle, rgba(99, 179, 237, 0.08));
   flex-shrink: 0;
   align-items: center;

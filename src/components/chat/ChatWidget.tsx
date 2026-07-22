@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import { createClient } from '@/lib/supabase/client';
 import './ChatWidget.css';
 
 interface Mensaje {
@@ -15,8 +16,26 @@ export default function ChatWidget() {
   ]);
   const [input, setInput] = useState('');
   const [cargando, setCargando] = useState(false);
+  const [avatarUrl, setAvatarUrl] = useState<string>('/asistente.png');
   const mensajesRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+
+  // Fetch avatar on mount
+  useEffect(() => {
+    async function fetchAvatar() {
+      const supabase = createClient();
+      const { data } = await supabase
+        .from('members')
+        .select('avatar_url')
+        .ilike('full_name', '%Asistente%')
+        .single();
+      
+      if (data?.avatar_url) {
+        setAvatarUrl(data.avatar_url);
+      }
+    }
+    fetchAvatar();
+  }, []);
 
   // Auto-scroll al último mensaje
   useEffect(() => {
@@ -94,7 +113,7 @@ export default function ChatWidget() {
         {/* Header */}
         <div className="itec-chat-header">
           <div className="itec-avatar">
-            <img src="/asistente.png" alt="Asistente ITEC" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
+            <img src={avatarUrl} alt="Asistente ITEC" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
           </div>
           <div className="itec-header-info">
             <div className="itec-header-name">Asistente ITEC</div>
