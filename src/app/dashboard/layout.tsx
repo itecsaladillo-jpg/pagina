@@ -165,7 +165,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
                 .map((item) => (
                   <Link
                     key={item.href}
-                    href={item.href}
+                    href={item.href} scroll={false}
                     className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-purple-400/70 hover:text-purple-300 hover:bg-purple-500/5 transition-all text-sm font-medium group border border-transparent hover:border-purple-500/10"
                   >
                     <svg
@@ -193,7 +193,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
                 </summary>
                 <div className="pl-4 pt-1 space-y-1">
                   <Link
-                    href="/dashboard/prensaNews"
+                    href="/dashboard/prensaNews" scroll={false}
                     className="flex items-center gap-3 px-3 py-2 rounded-lg text-cyan-400/60 hover:text-cyan-300 hover:bg-cyan-500/5 transition-all text-xs font-semibold group border border-transparent hover:border-cyan-500/5"
                   >
                     <svg className="w-3.5 h-3.5 flex-shrink-0 transition-colors text-cyan-400/55 group-hover:text-cyan-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -202,7 +202,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
                     Gacetillas
                   </Link>
                   <Link
-                    href="/dashboard/prensa"
+                    href="/dashboard/prensa" scroll={false}
                     className="flex items-center gap-3 px-3 py-2 rounded-lg text-cyan-400/60 hover:text-cyan-300 hover:bg-cyan-500/5 transition-all text-xs font-semibold group border border-transparent hover:border-cyan-500/5"
                   >
                     <svg className="w-3.5 h-3.5 flex-shrink-0 transition-colors text-cyan-400/55 group-hover:text-cyan-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -228,7 +228,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
                 </summary>
                 <div className="pl-4 pt-1 space-y-1">
                   <Link
-                    href="/dashboard/sponsorsNews"
+                    href="/dashboard/sponsorsNews" scroll={false}
                     className="flex items-center gap-3 px-3 py-2 rounded-lg text-amber-400/60 hover:text-amber-300 hover:bg-amber-500/5 transition-all text-xs font-semibold group border border-transparent hover:border-amber-500/5"
                   >
                     <svg className="w-3.5 h-3.5 flex-shrink-0 transition-colors text-amber-400/55 group-hover:text-amber-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -237,7 +237,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
                     Muro Sponsors
                   </Link>
                   <Link
-                    href="/dashboard/sponsors"
+                    href="/dashboard/sponsors" scroll={false}
                     className="flex items-center gap-3 px-3 py-2 rounded-lg text-amber-400/60 hover:text-amber-300 hover:bg-amber-500/5 transition-all text-xs font-semibold group border border-transparent hover:border-amber-500/5"
                   >
                     <svg className="w-3.5 h-3.5 flex-shrink-0 transition-colors text-amber-400/55 group-hover:text-amber-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -287,8 +287,8 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
         {/* Mapa Productivo — acceso rápido destacado */}
         <div className="mx-3 mb-3">
-          <Link
-            href="/mapa-productivo"
+           <Link
+            href="/mapa-productivo" scroll={false}
             className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl
               bg-gradient-to-r from-blue-600/15 to-cyan-600/10
               border border-blue-500/20 hover:border-blue-500/40
