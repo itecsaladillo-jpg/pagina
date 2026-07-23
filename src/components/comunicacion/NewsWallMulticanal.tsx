@@ -14,6 +14,8 @@ interface NewsWallMulticanalProps {
   memberFlashes: NewsFlashMulticanal[] | null
   sponsorFlashes?: NewsFlashMulticanal[] | null
   pressFlashes?: NewsFlashMulticanal[] | null
+  defaultTab?: 'publico' | 'interno' | 'sponsors' | 'prensa'
+  hideTabs?: boolean
 }
 
 function MediaSlideshow({ mediaUrls }: { mediaUrls: string[] }) {
@@ -74,9 +76,11 @@ export function NewsWallMulticanal({
   publicFlashes, 
   memberFlashes,
   sponsorFlashes,
-  pressFlashes
+  pressFlashes,
+  defaultTab = 'publico',
+  hideTabs = false
 }: NewsWallMulticanalProps) {
-  const [activeTab, setActiveTab] = useState<'publico' | 'interno' | 'sponsors' | 'prensa'>('publico')
+  const [activeTab, setActiveTab] = useState<'publico' | 'interno' | 'sponsors' | 'prensa'>(defaultTab)
   const [commentInputs, setCommentInputs] = useState<Record<string, string>>({})
   const [loadingComments, setLoadingComments] = useState<Record<string, boolean>>({})
   const [expandedComments, setExpandedComments] = useState<Record<string, boolean>>({})
@@ -167,7 +171,8 @@ export function NewsWallMulticanal({
 
   return (
     <div className='space-y-6'>
-      <div className='flex items-center gap-2 bg-white/[0.02] border border-white/5 rounded-2xl p-2 w-fit flex-wrap'>
+      {!hideTabs && (
+        <div className='flex items-center gap-2 bg-white/[0.02] border border-white/5 rounded-2xl p-2 w-fit flex-wrap'>
         <button
           onClick={() => setActiveTab('publico')}
           className='flex items-center gap-2 px-4 py-2 text-xs font-bold uppercase tracking-widest rounded-lg transition-all bg-blue-600/20 text-blue-400 border border-blue-500/30'
@@ -203,6 +208,7 @@ export function NewsWallMulticanal({
           </button>
         )}
       </div>
+      )}
 
       <AnimatePresence>
         {currentFlashes.length === 0 ? (

@@ -78,6 +78,8 @@ export default async function MuroPage() {
       <NewsWallMulticanal
         publicFlashes={[]}
         memberFlashes={memberFlashes}
+        defaultTab="interno"
+        hideTabs={true}
       />
     </div>
   )
