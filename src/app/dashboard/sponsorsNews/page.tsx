@@ -61,6 +61,8 @@ export default async function SponsorsNewsPage() {
         memberFlashes={null}
         sponsorFlashes={sponsorFlashes}
         pressFlashes={null}
+        hideTabs
+        defaultTab="sponsors"
       />
     </div>
   )
