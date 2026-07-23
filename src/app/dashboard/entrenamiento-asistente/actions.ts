@@ -1,7 +1,6 @@
 'use server'
 
 import { createClient } from '@/lib/supabase/server'
-import pdfParse from 'pdf-parse'
 import { getCurrentMember } from '@/services/auth'
 import { revalidateTag } from 'next/cache'
 import { revalidatePath } from 'next/cache'
@@ -156,9 +155,17 @@ export async function syncDocsAction() {
       if (lower.endsWith('.pdf')) {
         try {
           const dataBuf = await fs.readFile(filePath)
-          const parsed = await pdfParse(dataBuf)
-          text = parsed.text || ''
-          if (!text) errores.push(`${f.name}: PDF parseado pero sin texto extraíble`)
+          const pdfjsLib = await import('pdfjs-dist')
+          const doc = await pdfjsLib.getDocument({ data: dataBuf.buffer }).promise
+          const pages: string[] = []
+          for (let i = 1; i <= doc.numPages; i++) {
+            const page = await doc.getPage(i)
+            const content = await page.getTextContent()
+            const pageText = content.items.map((item: any) => item.str).join(' ')
+            pages.push(pageText)
+          }
+          text = pages.join('\n')
+          if (!text.trim()) errores.push(`${f.name}: PDF sin texto extraíble`)
         } catch (e: any) {
           errores.push(`${f.name}: ${e?.message || 'Error al parsear PDF'}`)
         }
