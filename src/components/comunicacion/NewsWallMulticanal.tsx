@@ -94,30 +94,38 @@ export function NewsWallMulticanal({
     const content = commentInputs[flashId]?.trim()
     if (!content) return
 
-    const res = await fetch('/api/news-comments', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ news_flash_id: flashId, content })
-    })
-    const data = await res.json()
-    
-    if (data.comment) {
-      setFlashesWithComments(prev => ({
-        ...prev,
-        [flashId]: [...(prev[flashId] || []), data.comment]
-      }))
-      setCommentInputs(prev => ({ ...prev, [flashId]: '' }))
+    try {
+      const res = await fetch('/api/news-comments', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ news_flash_id: flashId, content })
+      })
+      const data = await res.json()
+      
+      if (data.comment) {
+        setFlashesWithComments(prev => ({
+          ...prev,
+          [flashId]: [...(prev[flashId] || []), data.comment]
+        }))
+        setCommentInputs(prev => ({ ...prev, [flashId]: '' }))
+      }
+    } catch (err) {
+      console.error('[comentar] error:', err)
     }
   }
 
   const loadComments = async (flashId: string) => {
-    const res = await fetch('/api/news-comments?news_flash_id=' + flashId)
-    const data: { comments: Comment[] } = await res.json()
-    setFlashesWithComments(prev => ({ ...prev, [flashId]: data.comments || [] }))
+    try {
+      const res = await fetch('/api/news-comments?news_flash_id=' + flashId)
+      if (!res.ok) return
+      const data: { comments: Comment[] } = await res.json()
+      if (data.comments) {
+        setFlashesWithComments(prev => ({ ...prev, [flashId]: data.comments! }))
+      }
+    } catch (err) {
+      console.error('[loadComments] error:', err)
+    }
   }
-
-  const loadCommentsOld = async (flashId: string) => {}
-    
 
   const handleToggleComments = async (flashId: string) => {
     setExpandedComments(prev => ({ ...prev, [flashId]: !prev[flashId] }))
