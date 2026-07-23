@@ -4,6 +4,11 @@
 export const DOCS_CONTEXT = `
 Documentación Institucional de ITEC:
 
+--- Inicio del documento: correr para entrenar.txt ---
+node --env-file=.env scripts/uploadDocsToGemini.mjs
+--- Fin del documento: correr para entrenar.txt ---
+
+
 --- Inicio del documento: GUÍA DE ENTRENAMIENTO PARA ASISTENTE VIRTUAL.pdf ---
 GUÍA DE ENTRENAMIENTO PARA ASISTENTE VIRTUAL – ITEC SALADILLO
 "AUGUSTO CICARÉ"

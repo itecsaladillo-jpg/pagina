@@ -81,25 +81,27 @@ function dividirEnChunks(texto: string): string[] {
 }
 
 /**
- * Encuentra el chunk más relevante para una query dada.
- * Retorna el chunk y su score de overlap.
+ * Encuentra los chunks más relevantes para una query dada.
+ * Retorna los mejores chunks y el score máximo.
  */
-function encontrarMejorChunk(query: string, texto: string): { chunk: string; score: number } {
+function encontrarMejoresChunks(query: string, texto: string, topK: number = 3): { chunks: string[]; maxScore: number } {
   const tokensQuery = tokenizar(query)
   const chunks = dividirEnChunks(texto)
 
-  let mejorChunk = ''
-  let mejorScore = 0
+  const chunkScores = chunks.map(chunk => ({
+    chunk: chunk.trim(),
+    score: calcularOverlap(tokensQuery, tokenizar(chunk))
+  }))
 
-  for (const chunk of chunks) {
-    const score = calcularOverlap(tokensQuery, tokenizar(chunk))
-    if (score > mejorScore) {
-      mejorScore = score
-      mejorChunk = chunk
-    }
+  // Ordenar de mayor a menor score
+  chunkScores.sort((a, b) => b.score - a.score)
+
+  const mejores = chunkScores.slice(0, topK).filter(c => c.score > 0)
+
+  return {
+    chunks: mejores.map(m => m.chunk),
+    maxScore: mejores.length > 0 ? mejores[0].score : 0
   }
-
-  return { chunk: mejorChunk.trim(), score: mejorScore }
 }
 
 // ============================================================
@@ -112,10 +114,11 @@ function encontrarMejorChunk(query: string, texto: string): { chunk: string; sco
  */
 function buscarEnDocsLocales(query: string): { contexto: string; score: number } {
   try {
-    const { chunk, score } = encontrarMejorChunk(query, DOCS_CONTEXT)
+    const { chunks, maxScore } = encontrarMejoresChunks(query, DOCS_CONTEXT, 3)
+    const contextoUnido = chunks.join('\n...\n')
     return {
-      contexto: chunk.slice(0, MAX_CONTEXT_CHARS),
-      score,
+      contexto: contextoUnido.slice(0, MAX_CONTEXT_CHARS),
+      score: maxScore,
     }
   } catch (error) {
     console.error('[RAG P1] Error inesperado buscando en docs locales:', error)
@@ -185,8 +188,9 @@ async function buscarEnSupabaseBucket(
   const textoTotal = await obtenerTextoDesupabaseBucket(supabase)
   if (!textoTotal.trim()) return { contexto: '', score: 0 }
 
-  const { chunk, score } = encontrarMejorChunk(query, textoTotal)
-  return { contexto: chunk.slice(0, MAX_CONTEXT_CHARS), score }
+  const { chunks, maxScore } = encontrarMejoresChunks(query, textoTotal, 3)
+  const contextoUnido = chunks.join('\n...\n')
+  return { contexto: contextoUnido.slice(0, MAX_CONTEXT_CHARS), score: maxScore }
 }
 
 // ============================================================
