@@ -56,6 +56,7 @@ export function EntrenamientoForm() {
   const [deleting, setDeleting] = useState<string | null>(null)
 
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
+  const [toast, setToast] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
 
   useEffect(() => {
     loadPrompt()
@@ -106,6 +107,7 @@ export function EntrenamientoForm() {
     const res = await uploadDocAction(fd)
     if (res.success) {
       setMessage({ type: 'success', text: `"${res.fileName}" subido correctamente.` })
+      showToast('success', `"${res.fileName}" subido correctamente`)
       form.reset()
       await loadDocs()
     } else {
@@ -132,12 +134,19 @@ export function EntrenamientoForm() {
     setSyncing(true)
     setMessage(null)
     const res = await syncDocsAction()
-    setMessage(
-      res.success
-        ? { type: 'success', text: 'Documentos sincronizados correctamente. El asistente usará el nuevo contexto en su próxima consulta.' }
-        : { type: 'error', text: res.error || 'Error al sincronizar.' },
-    )
+    if (res.success) {
+      setMessage({ type: 'success', text: 'Documentos sincronizados correctamente. El asistente usará el nuevo contexto en su próxima consulta.' })
+      showToast('success', 'Entrenamiento completado. El asistente actualizará su conocimiento.')
+    } else {
+      setMessage({ type: 'error', text: res.error || 'Error al sincronizar.' })
+      showToast('error', res.error || 'Error al sincronizar.')
+    }
     setSyncing(false)
+  }
+
+  function showToast(type: 'success' | 'error', text: string) {
+    setToast({ type, text })
+    setTimeout(() => setToast(null), 4000)
   }
 
   function formatSize(bytes: number) {
@@ -345,6 +354,28 @@ export function EntrenamientoForm() {
           </button>
         </div>
       </div>
+      {toast && (
+        <div className="fixed bottom-6 right-6 z-50 animate-slide-up">
+          <div className={`flex items-center gap-3 px-5 py-4 rounded-2xl shadow-2xl border backdrop-blur-md ${
+            toast.type === 'success'
+              ? 'bg-emerald-900/90 border-emerald-500/40 text-emerald-200'
+              : 'bg-red-900/90 border-red-500/40 text-red-200'
+          }`}>
+            {toast.type === 'success' ? (
+              <svg className="w-6 h-6 text-emerald-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" strokeLinecap="round" strokeLinejoin="round"/>
+                <polyline points="22 4 12 14.01 9 11.01" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            ) : (
+              <AlertCircle size={24} className="text-red-400 shrink-0" />
+            )}
+            <div>
+              <p className="text-sm font-semibold">{toast.type === 'success' ? 'Operación exitosa' : 'Error'}</p>
+              <p className="text-xs opacity-80">{toast.text}</p>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
