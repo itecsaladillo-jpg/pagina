@@ -1,6 +1,7 @@
 'use server'
 
 import { createClient } from '@/lib/supabase/server'
+import pdfParse from 'pdf-parse'
 import { getCurrentMember } from '@/services/auth'
 import { revalidateTag } from 'next/cache'
 import { revalidatePath } from 'next/cache'
@@ -153,7 +154,6 @@ export async function syncDocsAction() {
       let text = ''
       if (lower.endsWith('.pdf')) {
         try {
-          const { default: pdfParse } = await import('pdf-parse')
           const dataBuf = await fs.readFile(filePath)
           const parsed = await pdfParse(dataBuf)
           text = parsed.text || ''
