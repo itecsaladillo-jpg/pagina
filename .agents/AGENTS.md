@@ -12,13 +12,13 @@ When modifying or interacting with the "Asistente ITEC" AI (specifically the `/a
    - Used as a fallback if P1 fails or falls below the confidence threshold.
    - Downloads the combined raw text from the `training-docs` bucket and analyzes chunks locally in-memory.
 
-3. **PRIORITY 3: Web Search (DuckDuckGo)**
-   - Used only if P1 and P2 fail to provide relevant context.
-   - We **MUST** use native DuckDuckGo scraping. **DO NOT USE SERPER API**.
-
-4. **PRIORITY 4: Saved Conversations**
+3. **PRIORITY 3: Saved Conversations**
    - Context is enriched with previously saved chats from the `saved_conversations` table using vector search (`buscar_conversaciones_similares`).
    - The user can explicitly request to save a chat (e.g., "guarda esta charla") or it automatically saves after a certain number of turns. This relies on the client passing a `sessionId` generated in the browser.
+
+4. **PRIORITY 4: Web Search (DuckDuckGo)**
+   - Used only if P1, P2 and P3 fail to provide relevant context.
+   - We **MUST** use native DuckDuckGo scraping. **DO NOT USE SERPER API**.
 
 ## Database Real-time Context
 Alongside the RAG Cascade, the assistant endpoint (`/api/asistente/route.ts`) must dynamically inject the following live entities from the database into the system prompt:

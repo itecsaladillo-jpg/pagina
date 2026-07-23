@@ -2,10 +2,10 @@
  * ragCascade.ts
  * Módulo de Recuperación de Contexto con Cascada de Prioridades — Asistente ITEC
  *
- * Flujo:
  *   P1 (score ≥ 0.45) → Documentos locales pre-parseados (DOCS_CONTEXT en memoria)
  *   P2 (score ≥ 0.40) → Bucket Supabase Storage "training-docs"
- *   P3              → Web search (Serper.dev → DuckDuckGo fallback)
+ *   P3              → Conversaciones Guardadas (historial previo relevante)
+ *   P4              → Web search (DuckDuckGo fallback)
  *   Soft fallback   → Mejor resultado encontrado aunque esté por debajo del threshold
  *
  * Nota de diseño: el contexto se inyecta sin etiquetas de fuente para que el LLM
@@ -296,36 +296,36 @@ export async function recuperarContextoRAG(
     console.error('[RAG P2] Error en Supabase Storage, pasando a P3:', err)
   }
 
-  // ── P3: Web Search Fallback ────────────────────────────────
+  // ── P3: Conversaciones Guardadas ───────────────────────────
+  if (sessionId) {
+    try {
+      const p3_conv = await buscarConversacionesSimilares(query, sessionId, supabase)
+      console.log(`[RAG P3] score=${p3_conv.score.toFixed(3)} (threshold=0.35)`)
+
+      // El umbral (0.35) ya se aplica en buscarConversacionesSimilares (RPC),
+      // por lo que si retorna contexto, asumimos que superó la relevancia mínima.
+      if (p3_conv.contexto) {
+        return { contexto: p3_conv.contexto, nivel: 'conversaciones', score: p3_conv.score }
+      }
+
+      if (p3_conv.score > softBest.score && p3_conv.contexto) {
+        softBest = { contexto: p3_conv.contexto, score: p3_conv.score, nivel: 'conversaciones' }
+      }
+    } catch (err) {
+      console.error('[RAG P3] Error buscando conversaciones:', err)
+    }
+  }
+
+  // ── P4: Web Search Fallback ────────────────────────────────
   try {
     const webContexto = await buscarEnWeb(query)
-    console.log(`[RAG P3] ${webContexto ? `${webContexto.length} chars recuperados` : 'sin resultados'}`)
+    console.log(`[RAG P4] ${webContexto ? `${webContexto.length} chars recuperados` : 'sin resultados'}`)
 
     if (webContexto) {
       return { contexto: webContexto, nivel: 'web', score: 0 }
     }
   } catch (err) {
-    console.error('[RAG P3] Error en búsqueda web:', err)
-  }
-
-  // ── P4: Conversaciones Guardadas ───────────────────────────
-  if (sessionId) {
-    try {
-      const p4 = await buscarConversacionesSimilares(query, sessionId, supabase)
-      console.log(`[RAG P4] score=${p4.score.toFixed(3)} (threshold=0.35)`)
-
-      // El umbral (0.35) ya se aplica en buscarConversacionesSimilares (RPC),
-      // por lo que si retorna contexto, asumimos que superó la relevancia mínima.
-      if (p4.contexto) {
-        return { contexto: p4.contexto, nivel: 'conversaciones', score: p4.score }
-      }
-
-      if (p4.score > softBest.score && p4.contexto) {
-        softBest = { contexto: p4.contexto, score: p4.score, nivel: 'conversaciones' }
-      }
-    } catch (err) {
-      console.error('[RAG P4] Error buscando conversaciones:', err)
-    }
+    console.error('[RAG P4] Error en búsqueda web:', err)
   }
 
   // ── Soft Fallback: mejor resultado aunque esté bajo el threshold ──
