@@ -224,20 +224,36 @@ export function NewsWallMulticanal({
                   )}
 
                   {activeTab === 'prensa' && mediaUrls.length > 0 && (
-                    <div className='flex flex-wrap gap-2 mb-4'>
-                      {mediaUrls.map((url, i) => (
-                        <a
-                          key={i}
-                          href={url}
-                          download
-                          target='_blank'
-                          rel='noopener noreferrer'
-                          className='flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-white/10 text-white/60 text-xs hover:text-white hover:border-white/30 transition-all'
-                        >
-                          <Download size={12} />
-                          {url.match(/\.(\w+)$/)?.[1]?.toUpperCase() || 'ARCHIVO'} {i + 1}
-                        </a>
-                      ))}
+                    <div className='flex flex-wrap gap-3 mb-4'>
+                      {mediaUrls.map((url, i) => {
+                        const isImage = /\.(jpg|jpeg|png|gif|webp|bmp|svg)/i.test(url.split('?')[0])
+                        return isImage ? (
+                          <div key={i} className='group relative w-24 h-24 rounded-lg overflow-hidden border border-white/10 bg-black/30'>
+                            <img src={url} alt={`Imagen ${i + 1}`} className='w-full h-full object-cover' />
+                            <a
+                              href={url}
+                              download
+                              target='_blank'
+                              rel='noopener noreferrer'
+                              className='absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity'
+                            >
+                              <Download size={16} className='text-white' />
+                            </a>
+                          </div>
+                        ) : (
+                          <a
+                            key={i}
+                            href={url}
+                            download
+                            target='_blank'
+                            rel='noopener noreferrer'
+                            className='flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-white/10 text-white/60 text-xs hover:text-white hover:border-white/30 transition-all'
+                          >
+                            <Download size={12} />
+                            {url.match(/\.(\w+)$/)?.[1]?.toUpperCase() || 'ARCHIVO'} {i + 1}
+                          </a>
+                        )
+                      })}
                     </div>
                   )}
                 </motion.article>

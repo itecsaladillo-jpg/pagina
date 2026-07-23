@@ -61,6 +61,8 @@ export default async function PressNewsPage() {
         memberFlashes={null}
         sponsorFlashes={null}
         pressFlashes={pressFlashes}
+        hideTabs
+        defaultTab="prensa"
       />
     </div>
   )
