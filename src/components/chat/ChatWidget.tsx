@@ -16,7 +16,7 @@ export default function ChatWidget() {
   ]);
   const [input, setInput] = useState('');
   const [cargando, setCargando] = useState(false);
-  const [avatarUrl, setAvatarUrl] = useState<string>('/asistente.png');
+  const [avatarUrl, setAvatarUrl] = useState<string>('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><rect width="40" height="40" rx="20" fill="%233b82f6"/><text x="20" y="26" text-anchor="middle" fill="white" font-size="18" font-weight="bold">IT</text></svg>');
   const [conversacionGuardada, setConversacionGuardada] = useState(false);
   const mensajesRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -142,7 +142,7 @@ export default function ChatWidget() {
         {/* Header */}
         <div className="itec-chat-header">
           <div className="itec-avatar">
-            <img src={avatarUrl} alt="Asistente ITEC" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
+            <img src={avatarUrl} alt="Asistente ITEC" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; (e.target as HTMLImageElement).parentElement!.innerHTML = '<span style=\"display:flex;align-items:center;justify-content:center;width:100%;height:100%;background:#3b82f6;border-radius:50%;color:white;font-weight:bold;font-size:16px\">IT</span>'; }} />
           </div>
           <div className="itec-header-info">
             <div className="itec-header-name">Asistente ITEC</div>

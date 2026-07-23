@@ -2,7 +2,22 @@ import { NextResponse } from 'next/server';
 import Groq from 'groq-sdk';
 import type { ChatCompletionMessageParam } from 'groq-sdk/resources/chat/completions';
 import { createClient } from '@/lib/supabase/server';
-import docsContext from '@/lib/docsContext.json';
+import staticDocsContext from '@/lib/docsContext.json';
+
+async function fetchDocsContext(): Promise<string> {
+  try {
+    const supabase = await createClient();
+    const { data } = await supabase
+      .from('ai_prompt_settings')
+      .select('system_prompt')
+      .eq('clave_prompt', 'docs_context')
+      .maybeSingle();
+    if (data?.system_prompt) return data.system_prompt;
+  } catch (err) {
+    console.warn('[chat] Error fetching docs context from DB:', err);
+  }
+  return staticDocsContext.text;
+}
 
 const groq = new Groq({
   apiKey: process.env.GROQ_API_KEY,
@@ -160,7 +175,10 @@ export async function POST(request: Request) {
       internetContext = await searchWeb(`ITEC Saladillo ${keywords}`);
     }
 
-    const datosDinamicos = await fetchDynamicContext();
+    const [baseDocs, datosDinamicos] = await Promise.all([
+      fetchDocsContext(),
+      fetchDynamicContext(),
+    ]);
 
     const webSection = internetContext
       ? `\n--- INFORMACIÓN DE INTERNET (usar solo si no se encuentra en las fuentes anteriores) ---\n${internetContext}\n----------------------------\n`
@@ -178,7 +196,7 @@ Respondé de forma directa, concisa y sin rodeos. Priorizá la información úti
 Si no sabes la respuesta, indícalo de manera cortés y sugiere contactar a la institución.
 
 --- INFORMACIÓN DE BASE ---
-${docsContext.text}
+${baseDocs}
 ---------------------------
 
 --- DATOS EN VIVO ---

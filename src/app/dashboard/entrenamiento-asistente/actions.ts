@@ -2,15 +2,13 @@
 
 import { createClient } from '@/lib/supabase/server'
 import { getCurrentMember } from '@/services/auth'
-import { updateAIPrompt } from '@/services/admin'
+import { revalidateTag } from 'next/cache'
 import { revalidatePath } from 'next/cache'
-import { exec } from 'child_process'
-import { promisify } from 'util'
 import fs from 'fs/promises'
 import path from 'path'
+import os from 'os'
 
-const execAsync = promisify(exec)
-const DOCS_PATH = path.join(process.cwd(), 'docs')
+const BUCKET = 'training-docs'
 
 async function ensureAdmin() {
   const member = await getCurrentMember()
@@ -40,9 +38,26 @@ export async function savePromptAction(formData: {
 }) {
   try {
     await ensureAdmin()
-    const result = await updateAIPrompt('asistente_global', formData)
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return { success: false, error: 'No autorizado.' }
+
+    const { data, error } = await supabase
+      .from('ai_prompt_settings')
+      .update({
+        system_prompt: formData.system_prompt,
+        temperature: formData.temperature,
+        max_tokens: formData.max_tokens,
+        updated_by: user.id,
+        updated_at: new Date().toISOString(),
+      })
+      .eq('clave_prompt', 'asistente_global')
+      .select()
+
+    if (error) return { success: false, error: error.message }
+    revalidateTag('ai-prompt-settings', 'max')
     revalidatePath('/dashboard/entrenamiento-asistente')
-    return result
+    return { success: true, data: data?.[0] || null }
   } catch (err: any) {
     return { success: false, error: err.message }
   }
@@ -50,22 +65,18 @@ export async function savePromptAction(formData: {
 
 export async function listDocsAction() {
   try {
-    await fs.access(DOCS_PATH)
-    const files = await fs.readdir(DOCS_PATH)
-    const details = await Promise.all(
-      files.map(async (name) => {
-        const stat = await fs.stat(path.join(DOCS_PATH, name))
-        return {
-          name,
-          size: stat.size,
-          modifiedAt: stat.mtime.toISOString(),
-        }
-      })
-    )
-    details.sort((a, b) => b.modifiedAt.localeCompare(a.modifiedAt))
-    return { success: true, files: details }
+    const supabase = await createClient()
+    const { data, error } = await supabase.storage.from(BUCKET).list()
+    if (error) return { success: false, error: error.message }
+
+    const files = (data || []).map((f: any) => ({
+      name: f.name,
+      size: f.metadata?.size || 0,
+      modifiedAt: f.updated_at || f.created_at || new Date().toISOString(),
+    }))
+    files.sort((a, b) => b.modifiedAt.localeCompare(a.modifiedAt))
+    return { success: true, files }
   } catch (err: any) {
-    if (err.code === 'ENOENT') return { success: true, files: [] }
     return { success: false, error: err.message }
   }
 }
@@ -81,10 +92,14 @@ export async function uploadDocAction(formData: FormData) {
       return { success: false, error: 'Solo se aceptan archivos PDF, TXT o MD.' }
     }
 
+    const supabase = await createClient()
     const buffer = Buffer.from(await file.arrayBuffer())
-    await fs.mkdir(DOCS_PATH, { recursive: true })
-    await fs.writeFile(path.join(DOCS_PATH, file.name), buffer)
+    const { error } = await supabase.storage.from(BUCKET).upload(file.name, buffer, {
+      contentType: file.type || 'application/octet-stream',
+      upsert: true,
+    })
 
+    if (error) return { success: false, error: error.message }
     return { success: true, fileName: file.name }
   } catch (err: any) {
     return { success: false, error: err.message }
@@ -94,8 +109,9 @@ export async function uploadDocAction(formData: FormData) {
 export async function deleteDocAction(fileName: string) {
   try {
     await ensureAdmin()
-    const filePath = path.join(DOCS_PATH, fileName)
-    await fs.unlink(filePath)
+    const supabase = await createClient()
+    const { error } = await supabase.storage.from(BUCKET).remove([fileName])
+    if (error) return { success: false, error: error.message }
     return { success: true }
   } catch (err: any) {
     return { success: false, error: err.message }
@@ -105,11 +121,67 @@ export async function deleteDocAction(fileName: string) {
 export async function syncDocsAction() {
   try {
     await ensureAdmin()
-    const { stdout, stderr } = await execAsync('npm run sync-docs', {
-      cwd: process.cwd(),
-    })
-    console.log('[syncDocs]', stdout)
-    if (stderr) console.warn('[syncDocs]', stderr)
+    const supabase = await createClient()
+
+    const { data: fileList, error: listError } = await supabase.storage.from(BUCKET).list()
+    if (listError) return { success: false, error: listError.message }
+    if (!fileList?.length) {
+      return { success: false, error: 'No hay documentos para sincronizar.' }
+    }
+
+    const tmpDir = path.join(os.tmpdir(), 'itec-sync-' + Date.now())
+    await fs.mkdir(tmpDir, { recursive: true })
+    const texts: string[] = []
+
+    for (const f of fileList) {
+      const { data: blob, error: dlError } = await supabase.storage.from(BUCKET).download(f.name)
+      if (dlError || !blob) {
+        console.warn('[syncDocs] Error descargando', f.name, dlError)
+        continue
+      }
+
+      const filePath = path.join(tmpDir, f.name)
+      await fs.writeFile(filePath, Buffer.from(await blob.arrayBuffer()))
+
+      const lower = f.name.toLowerCase()
+      let text = ''
+      if (lower.endsWith('.pdf')) {
+        try {
+          const pdfParse = (await import('pdf-parse-new')).default
+          const dataBuf = await fs.readFile(filePath)
+          const parsed = await pdfParse(dataBuf)
+          text = parsed.text || ''
+        } catch (e) {
+          console.warn('[syncDocs] Error parseando PDF', f.name, e)
+        }
+      } else if (lower.endsWith('.txt') || lower.endsWith('.md')) {
+        text = await fs.readFile(filePath, 'utf8')
+      }
+
+      if (text.trim()) {
+        texts.push(`--- Inicio del documento: ${f.name} ---\n${text.trim()}\n--- Fin del documento: ${f.name} ---`)
+      }
+    }
+
+    await fs.rm(tmpDir, { recursive: true, force: true })
+
+    const combinedText = texts.join('\n\n')
+    if (!combinedText) return { success: false, error: 'No se pudo extraer texto de los documentos.' }
+
+    const { data: { user } } = await supabase.auth.getUser()
+    const { error: upsertError } = await supabase
+      .from('ai_prompt_settings')
+      .upsert({
+        clave_prompt: 'docs_context',
+        system_prompt: combinedText,
+        descripcion: 'Contexto extraído de documentos de entrenamiento',
+        updated_by: user?.id || null,
+        updated_at: new Date().toISOString(),
+      }, { onConflict: 'clave_prompt' })
+
+    if (upsertError) return { success: false, error: upsertError.message }
+
+    revalidateTag('ai-prompt-settings', 'max')
     revalidatePath('/dashboard/entrenamiento-asistente')
     return { success: true }
   } catch (err: any) {
