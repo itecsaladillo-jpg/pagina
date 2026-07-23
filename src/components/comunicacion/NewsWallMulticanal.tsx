@@ -189,7 +189,7 @@ export function NewsWallMulticanal({
                   animate={{ opacity: 1, y: 0 }}
                   className='glass border border-white/5 rounded-xl p-3'
                 >
-                  {activeTab === 'interno' ? (
+                  {activeTab === 'interno' || activeTab === 'sponsors' ? (
                     <div className='overflow-hidden'>
                       <h2 className='text-base font-bold text-white mb-0.5'>{flash.titulo}</h2>
                       <span className='text-[10px] text-white/40 block mb-1'>
