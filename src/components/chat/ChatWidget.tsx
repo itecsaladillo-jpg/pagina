@@ -51,12 +51,21 @@ export default function ChatWidget() {
     fetchAvatar();
   }, []);
 
-  // Auto-scroll al último mensaje solo si el usuario envía o al cargar
+  // Auto-scroll logic
   useEffect(() => {
-    if (mensajesRef.current) {
-      const isLastUser = mensajes[mensajes.length - 1]?.rol === 'user';
-      if (cargando || isLastUser || mensajes.length === 1) {
-        mensajesRef.current.scrollTop = mensajesRef.current.scrollHeight;
+    if (!mensajesRef.current) return;
+    
+    const isLastUser = mensajes[mensajes.length - 1]?.rol === 'user';
+    const isLastBot = mensajes[mensajes.length - 1]?.rol === 'bot';
+
+    if (cargando || isLastUser || mensajes.length === 1) {
+      // Cuando el usuario envía o carga inicial, ir al fondo
+      mensajesRef.current.scrollTop = mensajesRef.current.scrollHeight;
+    } else if (isLastBot && mensajes.length > 1) {
+      // Cuando responde el bot, alinear el último mensaje del usuario arriba de todo
+      const userMsgs = mensajesRef.current.querySelectorAll('.itec-msg.user');
+      if (userMsgs.length > 0) {
+        userMsgs[userMsgs.length - 1].scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
     }
   }, [mensajes, cargando]);
