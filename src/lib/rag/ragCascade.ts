@@ -146,35 +146,34 @@ async function obtenerTextoDesupabaseBucket(supabase: SupabaseClient): Promise<s
   }
 
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? ''
-  const textos: string[] = []
+  
+  const fetchPromises = archivos
+    .filter(archivo => archivo.name.match(/\.(txt|md|json)$/i))
+    .map(async (archivo) => {
+      const publicUrl = `${supabaseUrl}/storage/v1/object/public/training-docs/${encodeURIComponent(archivo.name)}`
+      try {
+        const res = await fetch(publicUrl, { signal: AbortSignal.timeout(4000) })
+        if (!res.ok) return ''
 
-  for (const archivo of archivos) {
-    if (!archivo.name.match(/\.(txt|md|json)$/i)) continue
+        const texto = await res.text()
 
-    const publicUrl = `${supabaseUrl}/storage/v1/object/public/training-docs/${encodeURIComponent(archivo.name)}`
-    try {
-      const res = await fetch(publicUrl, { signal: AbortSignal.timeout(4000) })
-      if (!res.ok) continue
-
-      const texto = await res.text()
-
-      if (archivo.name.endsWith('.json')) {
-        try {
-          const parsed = JSON.parse(texto) as Record<string, unknown>
-          // Soporta tanto { text: "..." } como cualquier formato plano
-          textos.push(typeof parsed.text === 'string' ? parsed.text : JSON.stringify(parsed))
-        } catch {
-          textos.push(texto)
+        if (archivo.name.endsWith('.json')) {
+          try {
+            const parsed = JSON.parse(texto) as Record<string, unknown>
+            return typeof parsed.text === 'string' ? parsed.text : JSON.stringify(parsed)
+          } catch {
+            return texto
+          }
         }
-      } else {
-        textos.push(texto)
+        return texto
+      } catch (err) {
+        console.warn(`[RAG P2] No se pudo descargar "${archivo.name}":`, err)
+        return ''
       }
-    } catch (err) {
-      console.warn(`[RAG P2] No se pudo descargar "${archivo.name}":`, err)
-    }
-  }
+    })
 
-  return textos.join('\n\n')
+  const textosArray = await Promise.all(fetchPromises)
+  return textosArray.filter(t => t.length > 0).join('\n\n')
 }
 
 /**
