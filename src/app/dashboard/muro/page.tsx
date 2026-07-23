@@ -30,7 +30,7 @@ export default async function MuroPage() {
 
   const notas = await getMemberNotas()
   const memberFlashes = notas.map((n) => ({
-    id: n.id,
+    id: n.news_flash_id ?? n.id,
     created_at: n.created_at,
     updated_at: n.updated_at,
     autor_id: n.autor_id,
