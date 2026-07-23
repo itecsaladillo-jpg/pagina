@@ -147,7 +147,7 @@ export async function syncDocsAction() {
       let text = ''
       if (lower.endsWith('.pdf')) {
         try {
-          const pdfParse = (await import('pdf-parse-new')).default
+          const { default: pdfParse } = await import('pdf-parse')
           const dataBuf = await fs.readFile(filePath)
           const parsed = await pdfParse(dataBuf)
           text = parsed.text || ''
