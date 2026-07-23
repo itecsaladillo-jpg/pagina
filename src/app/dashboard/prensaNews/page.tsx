@@ -1,59 +1,41 @@
-import type { Metadata } from 'next'
-import { getCurrentMember } from '@/services/auth'
-import { redirect } from 'next/navigation'
+'use client'
+
+import { useState, useEffect } from 'react'
 import { NewsWallMulticanal } from '@/components/comunicacion/NewsWallMulticanal'
-import { createClient } from '@/lib/supabase/server'
-import type { NotaMedio } from '@/services/news'
+import { MedioForm } from '@/app/dashboard/prensa/MedioForm'
+import { Plus } from 'lucide-react'
 
-export const metadata: Metadata = {
-  title: 'Prensa — ITEC',
-}
+export default function PressNewsPage() {
+  const [pressFlashes, setPressFlashes] = useState<any[]>([])
+  const [showForm, setShowForm] = useState(false)
 
-async function getPressNotas() {
-  const supabase = await createClient()
-  const { data, error } = await supabase
-    .from('notas_medios')
-    .select('*')
-    .eq('is_published', true)
-    .order('created_at', { ascending: false })
-
-  if (error) {
-    console.error('[pressNews] getPressNotas error:', error.message)
-    return []
+  const loadPressFlashes = () => {
+    fetch('/api/press-news')
+      .then(r => r.json())
+      .then(d => setPressFlashes(d))
+      .catch(() => {})
   }
-  return (data ?? []) as NotaMedio[]
-}
 
-export default async function PressNewsPage() {
-  const member = await getCurrentMember()
-  if (!member || member.role !== 'admin') redirect('/dashboard')
-
-  const notas = await getPressNotas()
-  const pressFlashes = notas.map((n) => ({
-    id: n.id,
-    created_at: n.created_at,
-    updated_at: n.updated_at,
-    autor_id: n.autor_id,
-    titulo: n.titulo,
-    datos_crudos: '',
-    texto_publico: '',
-    texto_miembros: '',
-    texto_sponsors: '',
-    texto_medios: n.contenido,
-    is_published: n.is_published,
-    para_publico: false,
-    para_miembros: false,
-    para_sponsors: false,
-    para_medios: true,
-  }))
+  useEffect(() => {
+    loadPressFlashes()
+  }, [])
 
   return (
     <div>
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-white mb-2">Prensa</h1>
-        <p className="text-white/60 text-sm">
-          Gacetillas y comunicados para medios de comunicación
-        </p>
+      <div className="flex items-start justify-between mb-8">
+        <div>
+          <h1 className="text-2xl font-bold text-white mb-2">Prensa</h1>
+          <p className="text-white/60 text-sm">
+            Gacetillas y comunicados para medios de comunicación
+          </p>
+        </div>
+        <button
+          onClick={() => setShowForm(true)}
+          className="flex items-center gap-2 bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold px-5 py-2.5 rounded-xl transition-all shadow-lg shadow-purple-500/20"
+        >
+          <Plus size={16} />
+          Nuevo Medio de Comunicación
+        </button>
       </div>
 
       <NewsWallMulticanal
@@ -64,6 +46,10 @@ export default async function PressNewsPage() {
         hideTabs
         defaultTab="prensa"
       />
+
+      {showForm && (
+        <MedioForm medio={null} onClose={() => { setShowForm(false); loadPressFlashes() }} />
+      )}
     </div>
   )
 }

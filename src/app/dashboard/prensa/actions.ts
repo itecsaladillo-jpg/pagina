@@ -30,6 +30,7 @@ export async function createMedioAction(data: z.infer<typeof medioSchema>) {
 
   if (error) throw new Error(error.message)
   revalidatePath('/dashboard/prensa')
+  revalidatePath('/dashboard/prensaNews')
   return { success: true, data: result }
 }
 
@@ -45,6 +46,7 @@ export async function updateMedioAction(id: string, data: Partial<z.infer<typeof
 
   if (error) throw new Error(error.message)
   revalidatePath('/dashboard/prensa')
+  revalidatePath('/dashboard/prensaNews')
   return { success: true }
 }
 
