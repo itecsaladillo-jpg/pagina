@@ -20,9 +20,9 @@ export default async function MuroPage() {
   const publicFlashes = allFlashes.filter(f => 
     (f.para_publico || Boolean(f.texto_publico?.trim())) && f.is_published !== false
   )
-  const memberFlashes = allFlashes.filter(f => 
+  const memberFlashes = user ? allFlashes.filter(f => 
     (f.para_miembros || Boolean(f.texto_miembros?.trim())) && f.is_published !== false
-  )
+  ) : null
 
   const sponsorFlashes = user ? allFlashes.filter(f => 
     (f.para_sponsors || Boolean(f.texto_sponsors?.trim())) && f.is_published !== false
@@ -37,7 +37,7 @@ export default async function MuroPage() {
       <div className='max-w-4xl mx-auto space-y-16'>
         <div className='text-center space-y-6'>
           <h1 className='text-4xl md:text-5xl font-bold text-white'>
-            Muro de Noticias
+            Muro Público
           </h1>
           <p className='text-white/60 max-w-2xl mx-auto'>
             Contenido público y novedades del ecosistema ITEC
