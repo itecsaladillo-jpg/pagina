@@ -11,7 +11,7 @@
 export type MemberRole = 'admin' | 'coordinador' | 'miembro' | 'colaborador'
 export type MemberStatus = 'activo' | 'inactivo' | 'pendiente'
 export type TrainingStatus = 'planificada' | 'en_curso' | 'finalizada' | 'cancelada'
-export type IdeaStatus = 'nueva' | 'en_revision' | 'aprobada' | 'rechazada' | 'implementada'
+export type IdeaStatus = 'pendiente' | 'en_revision' | 'aprobada' | 'descartada'
 export type SponsorTier = 'platino' | 'oro' | 'plata' | 'bronce'
 export type ActionType = 'capacitacion' | 'evento_social' | 'divulgacion'
 export type ActionStatus = 'planificacion' | 'en_curso' | 'finalizada' | 'cancelada'
@@ -107,17 +107,12 @@ export interface ActionRegistration {
 export interface Idea {
   id: string
   created_at: string
-  updated_at: string
-  title: string
-  description: string
-  author_id: string | null
-  author_name: string | null
-  commission_id: string | null
-  status: IdeaStatus
-  upvotes: number
+  idea_text: string
   is_anonymous: boolean
-  tags: string[]
-  admin_notes: string | null
+  author_name: string | null
+  author_email: string | null
+  author_phone: string | null
+  status: IdeaStatus
 }
 
 // ─────────────────────────────────────────
@@ -198,7 +193,7 @@ export interface Database {
       }
       ideas: {
         Row: Idea
-        Insert: Omit<Idea, 'id' | 'created_at' | 'updated_at' | 'upvotes'>
+        Insert: Omit<Idea, 'id' | 'created_at'>
         Update: Partial<Omit<Idea, 'id' | 'created_at'>>
       }
       sponsors: {
