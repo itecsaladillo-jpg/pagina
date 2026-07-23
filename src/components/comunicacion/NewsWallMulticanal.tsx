@@ -45,8 +45,8 @@ function MediaSlideshow({ mediaUrls }: { mediaUrls: string[] }) {
   const isVideo = current >= images.length
 
   return (
-    <div className="relative group rounded-2xl overflow-hidden bg-black/20 mb-6">
-      <div className="aspect-video max-h-[400px] flex items-center justify-center">
+    <div className="relative group rounded-xl overflow-hidden bg-black/20 mb-4">
+      <div className="aspect-video max-h-[250px] flex items-center justify-center">
         {isVideo ? (
           <video src={videos[current - images.length]} controls className="w-full h-full object-contain" />
         ) : (
@@ -222,7 +222,7 @@ export function NewsWallMulticanal({
             </p>
           </motion.div>
         ) : (
-          <motion.div layout className='space-y-6'>
+          <motion.div layout className='space-y-4'>
             {currentFlashes.map((flash) => {
               const mediaUrls = getMediaUrls(flash)
               return (
@@ -231,12 +231,12 @@ export function NewsWallMulticanal({
                   layout
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className='glass border border-white/5 rounded-3xl p-6'
+                  className='glass border border-white/5 rounded-2xl p-4'
                 >
                   <div className='flex items-start justify-between mb-4'>
                     <div className='flex-1'>
-                      <h2 className='text-xl font-bold text-white mb-2'>{flash.titulo}</h2>
-                      <span className='text-xs text-white/40'>
+                      <h2 className='text-lg font-bold text-white mb-1'>{flash.titulo}</h2>
+                      <span className='text-[10px] text-white/40'>
                         {formatDate(flash.created_at)}
                       </span>
                     </div>
@@ -246,12 +246,12 @@ export function NewsWallMulticanal({
                     <MediaSlideshow mediaUrls={mediaUrls} />
                   )}
 
-                  <p className='text-white/80 leading-relaxed whitespace-pre-wrap mb-6'>
+                  <p className='text-white/80 leading-snug whitespace-pre-wrap mb-4 text-sm'>
                     {getFlashText(flash)}
                   </p>
 
                   {activeTab === 'prensa' && mediaUrls.length > 0 && (
-                    <div className='flex flex-wrap gap-2 mb-6'>
+                    <div className='flex flex-wrap gap-2 mb-4'>
                       {mediaUrls.map((url, i) => (
                         <a
                           key={i}
