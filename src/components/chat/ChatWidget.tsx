@@ -51,10 +51,13 @@ export default function ChatWidget() {
     fetchAvatar();
   }, []);
 
-  // Auto-scroll al último mensaje
+  // Auto-scroll al último mensaje solo si el usuario envía o al cargar
   useEffect(() => {
     if (mensajesRef.current) {
-      mensajesRef.current.scrollTop = mensajesRef.current.scrollHeight;
+      const isLastUser = mensajes[mensajes.length - 1]?.rol === 'user';
+      if (cargando || isLastUser || mensajes.length === 1) {
+        mensajesRef.current.scrollTop = mensajesRef.current.scrollHeight;
+      }
     }
   }, [mensajes, cargando]);
 
