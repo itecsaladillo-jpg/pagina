@@ -30,6 +30,7 @@ export async function createAccionAction(data: {
 
   if (error) throw new Error(error.message)
   revalidatePath('/dashboard/sponsors')
+  revalidatePath('/dashboard/sponsorsNews')
   return { success: true, data: result }
 }
 
@@ -42,6 +43,7 @@ export async function deleteAccionAction(id: string) {
   if (error) throw new Error(error.message)
 
   revalidatePath('/dashboard/sponsors')
+  revalidatePath('/dashboard/sponsorsNews')
   return { success: true }
 }
 
@@ -133,6 +135,7 @@ export async function createReporteAction(data: {
   if (error) throw new Error(error.message)
 
   revalidatePath('/dashboard/sponsors')
+  revalidatePath('/dashboard/sponsorsNews')
   return { success: true, data: result }
 }
 
@@ -145,6 +148,7 @@ export async function updateSponsorAction(id: string, formData: any) {
   if (error) throw new Error(error.message)
 
   revalidatePath('/dashboard/sponsors')
+  revalidatePath('/dashboard/sponsorsNews')
   return { success: true }
 }
 
@@ -157,6 +161,7 @@ export async function createSponsorAction(formData: any) {
   if (error) throw new Error(error.message)
 
   revalidatePath('/dashboard/sponsors')
+  revalidatePath('/dashboard/sponsorsNews')
   return { success: true, data }
 }
 
@@ -169,5 +174,6 @@ export async function deleteSponsorAction(id: string) {
   if (error) throw new Error(error.message)
 
   revalidatePath('/dashboard/sponsors')
+  revalidatePath('/dashboard/sponsorsNews')
   return { success: true }
 }

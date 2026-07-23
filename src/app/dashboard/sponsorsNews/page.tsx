@@ -1,59 +1,39 @@
-import type { Metadata } from 'next'
-import { getCurrentMember } from '@/services/auth'
-import { redirect } from 'next/navigation'
+'use client'
+
+import { useState, useEffect } from 'react'
 import { NewsWallMulticanal } from '@/components/comunicacion/NewsWallMulticanal'
-import { createClient } from '@/lib/supabase/server'
-import type { NotaSponsor } from '@/services/news'
+import { SponsorForm } from '@/app/dashboard/sponsors/SponsorForm'
 
-export const metadata: Metadata = {
-  title: 'Muro Sponsors — ITEC',
-}
+export default function SponsorsNewsPage() {
+  const [sponsorFlashes, setSponsorFlashes] = useState<any[]>([])
+  const [showForm, setShowForm] = useState(false)
 
-async function getSponsorNotas() {
-  const supabase = await createClient()
-  const { data, error } = await supabase
-    .from('notas_sponsors')
-    .select('*')
-    .eq('is_published', true)
-    .order('created_at', { ascending: false })
-
-  if (error) {
-    console.error('[sponsorsNews] getSponsorNotas error:', error.message)
-    return []
+  const loadSponsorFlashes = () => {
+    fetch('/api/sponsors-news')
+      .then(r => r.json())
+      .then(d => setSponsorFlashes(d))
+      .catch(() => {})
   }
-  return (data ?? []) as NotaSponsor[]
-}
 
-export default async function SponsorsNewsPage() {
-  const member = await getCurrentMember()
-  if (!member || member.role !== 'admin') redirect('/dashboard')
-
-  const notas = await getSponsorNotas()
-  const sponsorFlashes = notas.map((n) => ({
-    id: n.id,
-    created_at: n.created_at,
-    updated_at: n.updated_at,
-    autor_id: n.autor_id,
-    titulo: n.titulo,
-    datos_crudos: '',
-    texto_publico: '',
-    texto_miembros: '',
-    texto_sponsors: n.contenido,
-    texto_medios: '',
-    is_published: n.is_published,
-    para_publico: false,
-    para_miembros: false,
-    para_sponsors: true,
-    para_medios: false,
-  }))
+  useEffect(() => {
+    loadSponsorFlashes()
+  }, [])
 
   return (
     <div>
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-white mb-2">Muro Sponsors</h1>
-        <p className="text-white/60 text-sm">
-          Noticias y reportes para sponsors del ecosistema ITEC
-        </p>
+      <div className="flex items-start justify-between mb-8">
+        <div>
+          <h1 className="text-2xl font-bold text-white mb-2">Muro Sponsors</h1>
+          <p className="text-white/60 text-sm">
+            Noticias y reportes para sponsors del ecosistema ITEC
+          </p>
+        </div>
+        <button
+          onClick={() => setShowForm(true)}
+          className="btn-primary text-xs py-2 px-6 rounded-xl"
+        >
+          + Nuevo Socio
+        </button>
       </div>
 
       <NewsWallMulticanal
@@ -64,6 +44,10 @@ export default async function SponsorsNewsPage() {
         hideTabs
         defaultTab="sponsors"
       />
+
+      {showForm && (
+        <SponsorForm sponsor={null} onClose={() => { setShowForm(false); loadSponsorFlashes() }} />
+      )}
     </div>
   )
 }
