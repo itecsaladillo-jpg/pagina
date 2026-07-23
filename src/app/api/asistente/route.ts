@@ -103,6 +103,8 @@ export async function POST(req: NextRequest) {
     feedbacksResult,
     miembrosResult,
     notasResult,
+    comisionesResult,
+    accionesResult,
     promptConfigResult,
     ragResult,
   ] = await Promise.allSettled([
@@ -113,6 +115,17 @@ export async function POST(req: NextRequest) {
       .select('titulo, contenido, created_at')
       .eq('is_published', true)
       .order('created_at', { ascending: false })
+      .limit(10),
+    supabase
+      .from('commissions')
+      .select('name, description')
+      .eq('is_active', true)
+      .order('name'),
+    supabase
+      .from('itec_actions')
+      .select('title, type, status, start_date, description')
+      .in('status', ['planificacion', 'en_curso'])
+      .order('start_date', { ascending: true })
       .limit(10),
     getAIPrompt('asistente_global'),
     recuperarContextoRAG(mensaje, supabase, sessionId),
@@ -158,6 +171,33 @@ export async function POST(req: NextRequest) {
     console.error('[Asistente] Notas:', notasResult.reason)
   }
 
+  // Comisiones
+  let comisionesContext = ''
+  if (comisionesResult.status === 'fulfilled') {
+    const comisiones = comisionesResult.value?.data
+    if (comisiones && comisiones.length > 0) {
+      comisionesContext = `\n\n## Comisiones / Áreas de ITEC:\n${comisiones.map((c: any) => `- ${c.name}${c.description ? `: ${c.description}` : ''}`).join('\n')}`
+    }
+  } else {
+    errors.push(`Comisiones error: ${comisionesResult.reason}`)
+    console.error('[Asistente] Comisiones:', comisionesResult.reason)
+  }
+
+  // Actividades y Eventos
+  let accionesContext = ''
+  if (accionesResult.status === 'fulfilled') {
+    const acciones = accionesResult.value?.data
+    if (acciones && acciones.length > 0) {
+      accionesContext = `\n\n## Próximas actividades / Eventos:\n${acciones.map((a: any) => {
+        const fecha = a.start_date ? a.start_date.split('T')[0] : 'fecha a confirmar'
+        return `- [${a.type}] ${a.title} (${fecha})${a.description ? ` — ${a.description.slice(0, 200)}` : ''}`
+      }).join('\n')}`
+    }
+  } else {
+    errors.push(`Acciones error: ${accionesResult.reason}`)
+    console.error('[Asistente] Acciones:', accionesResult.reason)
+  }
+
   // Prompt base (desde Supabase config o fallback local)
   let promptSistema = SYSTEM_INSTRUCTION
   if (promptConfigResult.status === 'fulfilled') {
@@ -189,7 +229,7 @@ export async function POST(req: NextRequest) {
   }
 
   const messages = [
-    { role: 'system', content: promptSistema + ragContext + aprendizajesAdicionales + miembrosContext + notasContext },
+    { role: 'system', content: promptSistema + ragContext + aprendizajesAdicionales + miembrosContext + notasContext + comisionesContext + accionesContext },
     ...historial.map((m: { role: string; content: string }) => ({
       role: m.role === 'model' ? 'assistant' : m.role,
       content: m.content
@@ -225,7 +265,7 @@ export async function POST(req: NextRequest) {
     console.error('OpenRouter failed, trying HuggingFace fallback:', error)
 
     try {
-      const fallbackPrompt = `${promptSistema}\n\n${aprendizajesAdicionales}\n\n${miembrosContext}\n\n${notasContext}\n\nUsuario: ${mensaje}`
+      const fallbackPrompt = `${promptSistema}\n\n${ragContext}\n\n${aprendizajesAdicionales}\n\n${miembrosContext}\n\n${notasContext}\n\n${comisionesContext}\n\n${accionesContext}\n\nUsuario: ${mensaje}`
       const respuestaCompleta = await callHuggingFace(fallbackPrompt)
       const resultadoAuditoria = await auditarRespuestaIA(mensaje, respuestaCompleta)
 
