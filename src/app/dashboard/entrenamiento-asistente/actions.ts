@@ -154,8 +154,12 @@ export async function syncDocsAction() {
       let text = ''
       if (lower.endsWith('.pdf')) {
         try {
+          if (typeof globalThis.DOMMatrix === 'undefined') {
+            const dommatrix: any = await import('dommatrix')
+            globalThis.DOMMatrix = dommatrix.default || dommatrix.DOMMatrix || dommatrix
+          }
           const dataBuf = await fs.readFile(filePath)
-          const pdfjsLib = await import('pdfjs-dist/legacy/build/pdf.mjs')
+          const pdfjsLib: any = await import('pdfjs-dist/build/pdf.mjs')
           const doc = await pdfjsLib.getDocument({ data: dataBuf.buffer }).promise
           const pages: string[] = []
           for (let i = 1; i <= doc.numPages; i++) {
