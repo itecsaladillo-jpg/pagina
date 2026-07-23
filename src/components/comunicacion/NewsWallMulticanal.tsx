@@ -2,12 +2,10 @@
 
 import { useState, useCallback, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { MessageCircle, Send, Loader2, Globe, Users, ChevronDown, Building2, Newspaper, ChevronLeft, ChevronRight, Download } from 'lucide-react'
+import { Globe, Users, Building2, Newspaper, ChevronLeft, ChevronRight, Download } from 'lucide-react'
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
 import type { NewsFlashMulticanal } from '@/services/news-multicanal'
-
-type Comment = { id: string; created_at: string; member_name: string; content: string }
 
 interface NewsWallMulticanalProps {
   publicFlashes: NewsFlashMulticanal[]
@@ -81,60 +79,10 @@ export function NewsWallMulticanal({
   hideTabs = false
 }: NewsWallMulticanalProps) {
   const [activeTab, setActiveTab] = useState<'publico' | 'interno' | 'sponsors' | 'prensa'>(defaultTab)
-  const [commentInputs, setCommentInputs] = useState<Record<string, string>>({})
-  const [loadingComments, setLoadingComments] = useState<Record<string, boolean>>({})
-  const [expandedComments, setExpandedComments] = useState<Record<string, boolean>>({})
-  const [flashesWithComments, setFlashesWithComments] = useState<Record<string, Comment[]>>({})
 
   const hasInternalAccess = memberFlashes !== null && memberFlashes.length > 0
   const hasSponsorAccess = (sponsorFlashes?.length ?? 0) > 0
   const hasPressAccess = (pressFlashes?.length ?? 0) > 0
-
-  const handleSubmitComment = async (flashId: string) => {
-    const content = commentInputs[flashId]?.trim()
-    if (!content) return
-
-    try {
-      const res = await fetch('/api/news-comments', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ news_flash_id: flashId, content })
-      })
-      const data = await res.json()
-      
-      if (data.comment) {
-        setFlashesWithComments(prev => ({
-          ...prev,
-          [flashId]: [...(prev[flashId] || []), data.comment]
-        }))
-        setCommentInputs(prev => ({ ...prev, [flashId]: '' }))
-      }
-    } catch (err) {
-      console.error('[comentar] error:', err)
-    }
-  }
-
-  const loadComments = async (flashId: string) => {
-    try {
-      const res = await fetch('/api/news-comments?news_flash_id=' + flashId)
-      if (!res.ok) return
-      const data: { comments: Comment[] } = await res.json()
-      if (data.comments) {
-        setFlashesWithComments(prev => ({ ...prev, [flashId]: data.comments! }))
-      }
-    } catch (err) {
-      console.error('[loadComments] error:', err)
-    }
-  }
-
-  const handleToggleComments = async (flashId: string) => {
-    setExpandedComments(prev => ({ ...prev, [flashId]: !prev[flashId] }))
-    if (!flashesWithComments[flashId] && !loadingComments[flashId]) {
-      setLoadingComments(prev => ({ ...prev, [flashId]: true }))
-      await loadComments(flashId)
-      setLoadingComments(prev => ({ ...prev, [flashId]: false }))
-    }
-  }
 
   const currentFlashes = activeTab === 'publico' 
     ? publicFlashes 
@@ -290,79 +238,6 @@ export function NewsWallMulticanal({
                           {url.match(/\.(\w+)$/)?.[1]?.toUpperCase() || 'ARCHIVO'} {i + 1}
                         </a>
                       ))}
-                    </div>
-                  )}
-
-
-                  {activeTab === 'interno' && (
-                    <div className='border-t border-white/5 pt-2 mt-2'>
-                      <button
-                        onClick={() => handleToggleComments(flash.id)}
-                        className='flex items-center gap-2 text-[10px] text-emerald-400 hover:text-emerald-300 transition-colors mb-2'
-                      >
-                        <MessageCircle size={14} />
-                        {expandedComments[flash.id] ? 'Ocultar' : 'Ver'} Comentarios
-                        <ChevronDown size={14} />
-                      </button>
-
-                      <AnimatePresence>
-                        {expandedComments[flash.id] && (
-                          <motion.div
-                            initial={{ opacity: 0, height: 0 }}
-                            animate={{ opacity: 1, height: 'auto' }}
-                            exit={{ opacity: 0, height: 0 }}
-                            className='space-y-4'
-                          >
-                            {loadingComments[flash.id] ? (
-                              <div className='flex items-center justify-center py-4'>
-                                <Loader2 size={16} className='animate-spin text-white/40' />
-                              </div>
-                            ) : (
-                              <>
-                                {flashesWithComments[flash.id]?.length > 0 && (
-                                  <div className='space-y-3 max-h-60 overflow-y-auto'>
-                                    {flashesWithComments[flash.id].map((comment) => (
-                                      <div
-                                        key={comment.id}
-                                        className='bg-white/[0.02] border border-white/5 rounded-lg p-2'
-                                      >
-                                        <div className='flex items-baseline gap-2 mb-1'>
-                                          <span className='text-xs font-bold text-emerald-400'>
-                                            {comment.member_name}
-                                          </span>
-                                          <span className='text-[10px] text-white/40'>
-                                            {formatDate(comment.created_at)}
-                                          </span>
-                                        </div>
-                                        <p className='text-sm text-white/70'>
-                                          {comment.content}
-                                        </p>
-                                      </div>
-                                    ))}
-                                  </div>
-                                )}
-
-                                <div className='flex flex-col gap-2'>
-                                  <textarea
-                                    value={commentInputs[flash.id] || ''}
-                                    onChange={(e) => setCommentInputs(prev => ({ ...prev, [flash.id]: e.target.value }))}
-                                    placeholder='Escribi un comentario...'
-                                    className='w-full min-h-[50px] bg-white/[0.02] border border-white/10 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-emerald-500/40 resize-none'
-                                  />
-                                  <button
-                                    onClick={() => handleSubmitComment(flash.id)}
-                                    disabled={!commentInputs[flash.id]?.trim()}
-                                    className='self-end px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold uppercase tracking-widest transition-all disabled:opacity-40 flex items-center gap-2'
-                                  >
-                                    <Send size={12} />
-                                    Comentar
-                                  </button>
-                                </div>
-                              </>
-                            )}
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
                     </div>
                   )}
                 </motion.article>
