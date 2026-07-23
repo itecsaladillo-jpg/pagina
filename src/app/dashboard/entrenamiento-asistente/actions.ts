@@ -84,6 +84,7 @@ export async function listDocsAction() {
 export async function uploadDocAction(formData: FormData) {
   try {
     await ensureAdmin()
+
     const file = formData.get('file') as File | null
     if (!file) return { success: false, error: 'No se envió ningún archivo.' }
 
@@ -93,16 +94,24 @@ export async function uploadDocAction(formData: FormData) {
     }
 
     const supabase = await createClient()
+
+    const { data: buckets } = await supabase.storage.listBuckets()
+    const bucketExists = buckets?.some(b => b.id === BUCKET)
+    if (!bucketExists) {
+      return { success: false, error: 'El bucket training-docs no existe. Ejecutá la migración 042 en Supabase.' }
+    }
+
     const buffer = Buffer.from(await file.arrayBuffer())
     const { error } = await supabase.storage.from(BUCKET).upload(file.name, buffer, {
       contentType: file.type || 'application/octet-stream',
       upsert: true,
     })
 
-    if (error) return { success: false, error: error.message }
+    if (error) return { success: false, error: `Error de Storage: ${error.message}` }
     return { success: true, fileName: file.name }
   } catch (err: any) {
-    return { success: false, error: err.message }
+    console.error('[uploadDocAction] Error:', err)
+    return { success: false, error: err?.message || 'Error interno del servidor' }
   }
 }
 

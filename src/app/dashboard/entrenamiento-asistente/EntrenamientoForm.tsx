@@ -103,15 +103,22 @@ export function EntrenamientoForm() {
 
     setUploading(true)
     setMessage(null)
-    const fd = new FormData(form)
-    const res = await uploadDocAction(fd)
-    if (res.success) {
-      setMessage({ type: 'success', text: `"${res.fileName}" subido correctamente.` })
-      showToast('success', `"${res.fileName}" subido correctamente`)
-      form.reset()
-      await loadDocs()
-    } else {
-      setMessage({ type: 'error', text: res.error || 'Error al subir.' })
+    try {
+      const fd = new FormData(form)
+      const res = await uploadDocAction(fd)
+      if (res.success) {
+        setMessage({ type: 'success', text: `"${res.fileName}" subido correctamente.` })
+        showToast('success', `"${res.fileName}" subido correctamente`)
+        form.reset()
+        await loadDocs()
+      } else {
+        setMessage({ type: 'error', text: res.error || 'Error al subir.' })
+        showToast('error', res.error || 'Error al subir el archivo')
+      }
+    } catch (err: any) {
+      const msg = err?.message || 'Error inesperado al subir el archivo'
+      setMessage({ type: 'error', text: msg })
+      showToast('error', msg)
     }
     setUploading(false)
   }
@@ -133,13 +140,19 @@ export function EntrenamientoForm() {
   async function handleSync() {
     setSyncing(true)
     setMessage(null)
-    const res = await syncDocsAction()
-    if (res.success) {
-      setMessage({ type: 'success', text: 'Documentos sincronizados correctamente. El asistente usará el nuevo contexto en su próxima consulta.' })
-      showToast('success', 'Entrenamiento completado. El asistente actualizará su conocimiento.')
-    } else {
-      setMessage({ type: 'error', text: res.error || 'Error al sincronizar.' })
-      showToast('error', res.error || 'Error al sincronizar.')
+    try {
+      const res = await syncDocsAction()
+      if (res.success) {
+        setMessage({ type: 'success', text: 'Documentos sincronizados correctamente. El asistente usará el nuevo contexto en su próxima consulta.' })
+        showToast('success', 'Entrenamiento completado. El asistente actualizará su conocimiento.')
+      } else {
+        setMessage({ type: 'error', text: res.error || 'Error al sincronizar.' })
+        showToast('error', res.error || 'Error al sincronizar.')
+      }
+    } catch (err: any) {
+      const msg = err?.message || 'Error inesperado al sincronizar'
+      setMessage({ type: 'error', text: msg })
+      showToast('error', msg)
     }
     setSyncing(false)
   }
