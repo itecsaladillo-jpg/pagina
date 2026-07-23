@@ -155,7 +155,7 @@ export async function syncDocsAction() {
       if (lower.endsWith('.pdf')) {
         try {
           const dataBuf = await fs.readFile(filePath)
-          const pdfjsLib = await import('pdfjs-dist')
+          const pdfjsLib = await import('pdfjs-dist/legacy/build/pdf.mjs')
           const doc = await pdfjsLib.getDocument({ data: dataBuf.buffer }).promise
           const pages: string[] = []
           for (let i = 1; i <= doc.numPages; i++) {
