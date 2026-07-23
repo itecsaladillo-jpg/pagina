@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
-import Groq, { ChatCompletionMessageParam } from 'groq-sdk';
+import Groq from 'groq-sdk';
+import type { ChatCompletionMessageParam } from 'groq-sdk/resources/chat/completions';
 import { createClient } from '@/lib/supabase/server';
 import docsContext from '@/lib/docsContext.json';
 
@@ -188,14 +189,12 @@ ${webSection}--- REGLAS DE RESPUESTA ---
 - Si usaste información de internet (fuente 4), comienza tu respuesta con "Según información disponible en internet:".
 - No inventes datos. Si no hay suficiente información de ninguna fuente, dilo claramente.`;
 
-    const mensajesAPI: ChatCompletionMessageParam[] = [
-      { role: 'system', content: systemPrompt },
-      ...historial.slice(-20).map(m => ({ role: m.rol === 'assistant' ? 'assistant' : 'user', content: m.texto } as ChatCompletionMessageParam)),
-      { role: 'user', content: userMessage },
-    ];
-
     const chatCompletion = await groq.chat.completions.create({
-      messages: mensajesAPI,
+      messages: [
+        { role: 'system', content: systemPrompt },
+        ...historial.slice(-20).map(m => ({ role: m.rol === 'assistant' ? 'assistant' : 'user', content: m.texto })),
+        { role: 'user', content: userMessage },
+      ] as ChatCompletionMessageParam[],
       model: 'llama-3.1-8b-instant',
       temperature: 0.4,
       max_tokens: 300,
