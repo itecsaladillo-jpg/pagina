@@ -242,13 +242,29 @@ export function NewsWallMulticanal({
                     </div>
                   </div>
 
-                  {mediaUrls.length > 0 && activeTab !== 'prensa' && (
-                    <MediaSlideshow mediaUrls={mediaUrls} />
+                  {activeTab === 'interno' ? (
+                    <div className='grid grid-cols-1 md:grid-cols-2 gap-4 mb-4'>
+                      <div>
+                        {mediaUrls.length > 0 && (
+                          <MediaSlideshow mediaUrls={mediaUrls} />
+                        )}
+                      </div>
+                      <div className='flex flex-col justify-center'>
+                        <p className='text-white/80 leading-snug whitespace-pre-wrap text-sm'>
+                          {getFlashText(flash)}
+                        </p>
+                      </div>
+                    </div>
+                  ) : (
+                    <>
+                      {mediaUrls.length > 0 && activeTab !== 'prensa' && (
+                        <MediaSlideshow mediaUrls={mediaUrls} />
+                      )}
+                      <p className='text-white/80 leading-snug whitespace-pre-wrap mb-4 text-sm'>
+                        {getFlashText(flash)}
+                      </p>
+                    </>
                   )}
-
-                  <p className='text-white/80 leading-snug whitespace-pre-wrap mb-4 text-sm'>
-                    {getFlashText(flash)}
-                  </p>
 
                   {activeTab === 'prensa' && mediaUrls.length > 0 && (
                     <div className='flex flex-wrap gap-2 mb-4'>
