@@ -233,30 +233,42 @@ export function NewsWallMulticanal({
                   animate={{ opacity: 1, y: 0 }}
                   className='glass border border-white/5 rounded-2xl p-4'
                 >
-                  <div className='flex items-start justify-between mb-4'>
-                    <div className='flex-1'>
-                      <h2 className='text-lg font-bold text-white mb-1'>{flash.titulo}</h2>
-                      <span className='text-[10px] text-white/40'>
-                        {formatDate(flash.created_at)}
-                      </span>
-                    </div>
-                  </div>
-
                   {activeTab === 'interno' ? (
-                    <div className='grid grid-cols-1 md:grid-cols-2 gap-4 mb-4'>
-                      <div>
-                        {mediaUrls.length > 0 && (
-                          <MediaSlideshow mediaUrls={mediaUrls} />
-                        )}
-                      </div>
-                      <div className='flex flex-col justify-center'>
-                        <p className='text-white/80 leading-snug whitespace-pre-wrap text-sm'>
-                          {getFlashText(flash)}
-                        </p>
-                      </div>
-                    </div>
+                    <>
+                      {mediaUrls.length > 0 ? (
+                        <div className='grid grid-cols-1 md:grid-cols-2 gap-4 mb-4'>
+                          <div>
+                            <MediaSlideshow mediaUrls={mediaUrls} />
+                          </div>
+                          <div className='flex flex-col justify-center'>
+                            <h2 className='text-lg font-bold text-white mb-1'>{flash.titulo}</h2>
+                            <span className='text-[10px] text-white/40'>
+                              {formatDate(flash.created_at)}
+                            </span>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className='mb-4'>
+                          <h2 className='text-lg font-bold text-white mb-1'>{flash.titulo}</h2>
+                          <span className='text-[10px] text-white/40'>
+                            {formatDate(flash.created_at)}
+                          </span>
+                        </div>
+                      )}
+                      <p className='text-white/80 leading-snug whitespace-pre-wrap mb-4 text-sm'>
+                        {getFlashText(flash)}
+                      </p>
+                    </>
                   ) : (
                     <>
+                      <div className='flex items-start justify-between mb-4'>
+                        <div className='flex-1'>
+                          <h2 className='text-lg font-bold text-white mb-1'>{flash.titulo}</h2>
+                          <span className='text-[10px] text-white/40'>
+                            {formatDate(flash.created_at)}
+                          </span>
+                        </div>
+                      </div>
                       {mediaUrls.length > 0 && activeTab !== 'prensa' && (
                         <MediaSlideshow mediaUrls={mediaUrls} />
                       )}
