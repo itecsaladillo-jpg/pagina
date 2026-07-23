@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react'
 import { NewsWallMulticanal } from '@/components/comunicacion/NewsWallMulticanal'
 import { MedioForm } from '@/app/dashboard/prensa/MedioForm'
-import { Plus } from 'lucide-react'
 
 export default function PressNewsPage() {
   const [pressFlashes, setPressFlashes] = useState<any[]>([])
@@ -31,10 +30,9 @@ export default function PressNewsPage() {
         </div>
         <button
           onClick={() => setShowForm(true)}
-          className="flex items-center gap-2 bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold px-5 py-2.5 rounded-xl transition-all shadow-lg shadow-purple-500/20"
+          className="btn-primary text-xs py-2 px-6 rounded-xl"
         >
-          <Plus size={16} />
-          Nuevo Medio de Comunicación
+          + Nuevo Medio
         </button>
       </div>
 
