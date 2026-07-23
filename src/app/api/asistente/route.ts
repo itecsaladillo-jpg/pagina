@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { buscarFeedbacksSimilares, auditarRespuestaIA } from '@/services/ai'
 import { createClient } from '@/lib/supabase/server'
 import { getAIPrompt } from '@/services/admin'
+import { recuperarContextoRAG } from '@/lib/rag/ragCascade'
+import { detectarComandoGuardar, debeAutoGuardar, guardarConversacion } from '@/lib/rag/conversacionesGuardadas'
 
 export const runtime = 'edge'
 
@@ -79,14 +81,14 @@ async function callHuggingFace(prompt: string): Promise<string> {
 }
 
 export async function POST(req: NextRequest) {
-  let cuerpo: { mensaje?: string; historial?: { role: string; content: string }[]; idioma?: string }
+  let cuerpo: { mensaje?: string; historial?: { role: string; content: string }[]; idioma?: string; sessionId?: string }
   try {
     cuerpo = await req.json()
   } catch {
     return NextResponse.json({ error: 'JSON inválido' }, { status: 400 })
   }
 
-  const { mensaje, historial = [] } = cuerpo
+  const { mensaje, historial = [], sessionId } = cuerpo
 
   if (!mensaje || typeof mensaje !== 'string') {
     return NextResponse.json({ error: 'Mensaje requerido' }, { status: 400 })
@@ -94,61 +96,100 @@ export async function POST(req: NextRequest) {
 
   const errors: string[] = []
 
-  let aprendizajesAdicionales = ''
-  try {
-    const feedbacks = await buscarFeedbacksSimilares(mensaje, 5, 0.35)
-    if (feedbacks?.length > 0) {
-      aprendizajesAdicionales = `\n\n## Aprendizaje Comunitario:\n${feedbacks.map(f => `- ${f.tema_principal} -> ${f.lo_mas_util}`).join('\n')}`
-    }
-  } catch (err) { 
-    errors.push(`RAG error: ${err instanceof Error ? err.message : String(err)}`)
-    console.error(err) 
-  }
-
   const supabase = await createClient()
 
-  let miembrosContext = ''
-  try {
-    const { data: miembros } = await supabase.rpc('obtener_miembros_publicos')
-    if (miembros?.length > 0) {
-      miembrosContext = `\n\n## Staff ITEC:\n${miembros.map((m: any) => `- ${m.full_name}: ${m.role}`).join('\n')}`
-    }
-  } catch (err) { 
-    errors.push(`Miembros error: ${err instanceof Error ? err.message : String(err)}`)
-    console.error(err) 
-  }
-
-  let notasContext = ''
-  try {
-    const { data: notas } = await supabase
+  // ── Contexto enriquecido: ejecutar en paralelo todo lo que no depende de RAG ──
+  const [
+    feedbacksResult,
+    miembrosResult,
+    notasResult,
+    promptConfigResult,
+    ragResult,
+  ] = await Promise.allSettled([
+    buscarFeedbacksSimilares(mensaje, 5, 0.35),
+    supabase.rpc('obtener_miembros_publicos'),
+    supabase
       .from('notas_publico')
       .select('titulo, contenido, created_at')
       .eq('is_published', true)
       .order('created_at', { ascending: false })
-      .limit(10)
+      .limit(10),
+    getAIPrompt('asistente_global'),
+    recuperarContextoRAG(mensaje, supabase, sessionId),
+  ])
+
+  // Aprendizajes comunitarios (feedback RAG semántico)
+  let aprendizajesAdicionales = ''
+  if (feedbacksResult.status === 'fulfilled') {
+    const feedbacks = feedbacksResult.value
+    if (feedbacks?.length > 0) {
+      aprendizajesAdicionales = `\n\n## Aprendizaje Comunitario:\n${feedbacks.map(f => `- ${f.tema_principal} -> ${f.lo_mas_util}`).join('\n')}`
+    }
+  } else {
+    errors.push(`Feedback RAG error: ${feedbacksResult.reason}`)
+    console.error('[Asistente] Feedback RAG:', feedbacksResult.reason)
+  }
+
+  // Staff ITEC
+  let miembrosContext = ''
+  if (miembrosResult.status === 'fulfilled') {
+    const miembros = miembrosResult.value?.data
+    if (miembros?.length > 0) {
+      miembrosContext = `\n\n## Staff ITEC:\n${miembros.map((m: any) => `- ${m.full_name}: ${m.role}`).join('\n')}`
+    }
+  } else {
+    errors.push(`Miembros error: ${miembrosResult.reason}`)
+    console.error('[Asistente] Miembros:', miembrosResult.reason)
+  }
+
+  // Noticias recientes
+  let notasContext = ''
+  if (notasResult.status === 'fulfilled') {
+    const notas = notasResult.value?.data
     if (notas && notas.length > 0) {
-      notasContext = `\n\n## Noticias Recientes de ITEC:\n${notas.map(n => {
+      notasContext = `\n\n## Noticias Recientes de ITEC:\n${notas.map((n: any) => {
         const fecha = n.created_at?.split('T')[0] ?? ''
         const preview = n.contenido.length > 250 ? n.contenido.slice(0, 250) + '…' : n.contenido
         return `- [${fecha}] ${n.titulo}: ${preview}`
       }).join('\n')}`
     }
-  } catch (err) { 
-    errors.push(`Notas error: ${err instanceof Error ? err.message : String(err)}`)
-    console.error(err) 
+  } else {
+    errors.push(`Notas error: ${notasResult.reason}`)
+    console.error('[Asistente] Notas:', notasResult.reason)
   }
 
+  // Prompt base (desde Supabase config o fallback local)
   let promptSistema = SYSTEM_INSTRUCTION
-  try {
-    const promptConfig = await getAIPrompt('asistente_global')
-    if (promptConfig) promptSistema = promptConfig.system_prompt
-  } catch (err) { 
-    errors.push(`Prompt error: ${err instanceof Error ? err.message : String(err)}`)
-    console.warn(err) 
+  if (promptConfigResult.status === 'fulfilled') {
+    if (promptConfigResult.value) promptSistema = promptConfigResult.value.system_prompt
+  } else {
+    errors.push(`Prompt config error: ${promptConfigResult.reason}`)
+    console.warn('[Asistente] Prompt config:', promptConfigResult.reason)
+  }
+
+  // Contexto RAG recuperado por la cascada (P1→P2→P3)
+  // Se inyecta como texto plano, sin revelar la fuente al LLM.
+  let ragContext = ''
+  if (ragResult.status === 'fulfilled') {
+    const { contexto, nivel } = ragResult.value
+    if (contexto) {
+      ragContext = `\n\n## Información de contexto relevante:\n${contexto}`
+      console.log(`[Asistente] Contexto RAG inyectado (nivel: ${nivel}, ${contexto.length} chars)`)
+    }
+  } else {
+    errors.push(`RAG cascade error: ${ragResult.reason}`)
+    console.error('[Asistente] RAG cascade:', ragResult.reason)
+  }
+
+  const esComandoGuardar = detectarComandoGuardar(mensaje)
+  const esAutoGuardar = debeAutoGuardar(historial.length + 1) // +1 por el mensaje actual
+
+  if (esComandoGuardar) {
+    promptSistema += `\n\n[INSTRUCCIÓN DEL SISTEMA]: El usuario solicitó explícitamente guardar esta conversación o usarla como memoria. Confirma de manera breve y natural en tu respuesta que los datos de la charla han quedado registrados como contexto guardado.`
   }
 
   const messages = [
-    { role: 'system', content: promptSistema + aprendizajesAdicionales + miembrosContext + notasContext },
+    { role: 'system', content: promptSistema + ragContext + aprendizajesAdicionales + miembrosContext + notasContext },
     ...historial.map((m: { role: string; content: string }) => ({
       role: m.role === 'model' ? 'assistant' : m.role,
       content: m.content
@@ -162,8 +203,22 @@ export async function POST(req: NextRequest) {
     const textoRespuesta = data.choices?.[0]?.message?.content || ''
 
     const resultadoAuditoria = await auditarRespuestaIA(mensaje, textoRespuesta)
+
+    // Fire and forget persistencia
+    if (sessionId && (esComandoGuardar || esAutoGuardar)) {
+      const historialCompleto = [
+        ...historial,
+        { role: 'user', content: mensaje },
+        { role: 'model', content: resultadoAuditoria.respuestaFinal }
+      ]
+      guardarConversacion(historialCompleto, sessionId, supabase, esComandoGuardar).catch(e => 
+        console.error('[Asistente] Error en fire-and-forget de guardarConversacion:', e)
+      )
+    }
+
     return NextResponse.json({ 
       respuesta: resultadoAuditoria.respuestaFinal,
+      guardado: (esComandoGuardar || esAutoGuardar) ? true : undefined,
       errors: errors.length > 0 ? errors : undefined
     })
   } catch (error: any) {
@@ -174,8 +229,20 @@ export async function POST(req: NextRequest) {
       const respuestaCompleta = await callHuggingFace(fallbackPrompt)
       const resultadoAuditoria = await auditarRespuestaIA(mensaje, respuestaCompleta)
 
+      if (sessionId && (esComandoGuardar || esAutoGuardar)) {
+        const historialCompleto = [
+          ...historial,
+          { role: 'user', content: mensaje },
+          { role: 'model', content: resultadoAuditoria.respuestaFinal }
+        ]
+        guardarConversacion(historialCompleto, sessionId, supabase, esComandoGuardar).catch(e => 
+          console.error('[Asistente] Error en fire-and-forget de guardarConversacion:', e)
+        )
+      }
+
       return NextResponse.json({
         respuesta: resultadoAuditoria.respuestaFinal,
+        guardado: (esComandoGuardar || esAutoGuardar) ? true : undefined,
         modelo: 'meta-llama/Llama-3.1-8B-Instruct',
         fallback: true
       })
