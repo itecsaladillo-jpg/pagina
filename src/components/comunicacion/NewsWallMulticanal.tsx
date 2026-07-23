@@ -46,7 +46,7 @@ function MediaSlideshow({ mediaUrls }: { mediaUrls: string[] }) {
 
   return (
     <div className="relative group rounded-xl overflow-hidden bg-black/20 mb-4">
-      <div className="aspect-video max-h-[250px] flex items-center justify-center">
+      <div className="aspect-video max-h-[125px] flex items-center justify-center">
         {isVideo ? (
           <video src={videos[current - images.length]} controls className="w-full h-full object-contain" />
         ) : (
@@ -234,31 +234,20 @@ export function NewsWallMulticanal({
                   className='glass border border-white/5 rounded-2xl p-4'
                 >
                   {activeTab === 'interno' ? (
-                    <>
-                      {mediaUrls.length > 0 ? (
-                        <div className='grid grid-cols-1 md:grid-cols-2 gap-4 mb-4'>
-                          <div>
-                            <MediaSlideshow mediaUrls={mediaUrls} />
-                          </div>
-                          <div className='flex flex-col justify-center'>
-                            <h2 className='text-lg font-bold text-white mb-1'>{flash.titulo}</h2>
-                            <span className='text-[10px] text-white/40'>
-                              {formatDate(flash.created_at)}
-                            </span>
-                          </div>
-                        </div>
-                      ) : (
-                        <div className='mb-4'>
-                          <h2 className='text-lg font-bold text-white mb-1'>{flash.titulo}</h2>
-                          <span className='text-[10px] text-white/40'>
-                            {formatDate(flash.created_at)}
-                          </span>
+                    <div className='overflow-hidden'>
+                      <h2 className='text-lg font-bold text-white mb-1'>{flash.titulo}</h2>
+                      <span className='text-[10px] text-white/40 block mb-2'>
+                        {formatDate(flash.created_at)}
+                      </span>
+                      {mediaUrls.length > 0 && (
+                        <div className='float-right ml-4 mb-2 w-1/2 md:w-1/3'>
+                          <MediaSlideshow mediaUrls={mediaUrls} />
                         </div>
                       )}
-                      <p className='text-white/80 leading-snug whitespace-pre-wrap mb-4 text-sm'>
+                      <p className='text-white/80 leading-snug whitespace-pre-wrap text-sm'>
                         {getFlashText(flash)}
                       </p>
-                    </>
+                    </div>
                   ) : (
                     <>
                       <div className='flex items-start justify-between mb-4'>
