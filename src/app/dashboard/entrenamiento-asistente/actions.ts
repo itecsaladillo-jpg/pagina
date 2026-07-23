@@ -139,11 +139,12 @@ export async function syncDocsAction() {
     const tmpDir = path.join(os.tmpdir(), 'itec-sync-' + Date.now())
     await fs.mkdir(tmpDir, { recursive: true })
     const texts: string[] = []
+    const errores: string[] = []
 
     for (const f of fileList) {
       const { data: blob, error: dlError } = await supabase.storage.from(BUCKET).download(f.name)
       if (dlError || !blob) {
-        console.warn('[syncDocs] Error descargando', f.name, dlError)
+        errores.push(`${f.name}: error al descargar`)
         continue
       }
 
@@ -157,11 +158,15 @@ export async function syncDocsAction() {
           const dataBuf = await fs.readFile(filePath)
           const parsed = await pdfParse(dataBuf)
           text = parsed.text || ''
-        } catch (e) {
-          console.warn('[syncDocs] Error parseando PDF', f.name, e)
+          if (!text) errores.push(`${f.name}: PDF parseado pero sin texto extraíble`)
+        } catch (e: any) {
+          errores.push(`${f.name}: ${e?.message || 'Error al parsear PDF'}`)
         }
       } else if (lower.endsWith('.txt') || lower.endsWith('.md')) {
         text = await fs.readFile(filePath, 'utf8')
+        if (!text.trim()) errores.push(`${f.name}: archivo vacío`)
+      } else {
+        errores.push(`${f.name}: extensión no soportada (${lower.split('.').pop()})`)
       }
 
       if (text.trim()) {
@@ -172,7 +177,9 @@ export async function syncDocsAction() {
     await fs.rm(tmpDir, { recursive: true, force: true })
 
     const combinedText = texts.join('\n\n')
-    if (!combinedText) return { success: false, error: 'No se pudo extraer texto de los documentos.' }
+    if (!combinedText) {
+      return { success: false, error: `No se pudo extraer texto. Detalles: ${errores.join(' | ')}` }
+    }
 
     const { data: { user } } = await supabase.auth.getUser()
     const { error: upsertError } = await supabase
