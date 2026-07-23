@@ -1,6 +1,8 @@
 'use server'
 
 import { createClient } from '@/lib/supabase/server'
+import { createRequire } from 'module'
+const require = createRequire(import.meta.url)
 import { getCurrentMember } from '@/services/auth'
 import { revalidateTag } from 'next/cache'
 import { revalidatePath } from 'next/cache'
@@ -154,22 +156,11 @@ export async function syncDocsAction() {
       let text = ''
       if (lower.endsWith('.pdf')) {
         try {
-          if (typeof globalThis.DOMMatrix === 'undefined') {
-            const dommatrix: any = await import('dommatrix')
-            globalThis.DOMMatrix = dommatrix.default || dommatrix.DOMMatrix || dommatrix
-          }
+          const pdfParse = require('pdf-parse')
           const dataBuf = await fs.readFile(filePath)
-          const pdfjsLib: any = await import('pdfjs-dist/build/pdf.mjs')
-          const doc = await pdfjsLib.getDocument({ data: dataBuf.buffer }).promise
-          const pages: string[] = []
-          for (let i = 1; i <= doc.numPages; i++) {
-            const page = await doc.getPage(i)
-            const content = await page.getTextContent()
-            const pageText = content.items.map((item: any) => item.str).join(' ')
-            pages.push(pageText)
-          }
-          text = pages.join('\n')
-          if (!text.trim()) errores.push(`${f.name}: PDF sin texto extraíble`)
+          const parsed = await pdfParse(dataBuf)
+          text = parsed.text || ''
+          if (!text.trim()) errores.push(`${f.name}: PDF parseado pero sin texto extraíble`)
         } catch (e: any) {
           errores.push(`${f.name}: ${e?.message || 'Error al parsear PDF'}`)
         }
