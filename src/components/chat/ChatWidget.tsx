@@ -17,8 +17,10 @@ export default function ChatWidget() {
   const [input, setInput] = useState('');
   const [cargando, setCargando] = useState(false);
   const [avatarUrl, setAvatarUrl] = useState<string>('/asistente.png');
+  const [conversacionGuardada, setConversacionGuardada] = useState(false);
   const mensajesRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const intercambiosRef = useRef(0);
 
   // Fetch avatar on mount
   useEffect(() => {
@@ -50,19 +52,39 @@ export default function ChatWidget() {
     if (abierto) inputRef.current?.focus();
   }, [abierto]);
 
+  function guardarConversacion(tipo: 'autogestion' | 'manual') {
+    const msgs = mensajes.map(m => ({ rol: m.rol === 'user' ? 'user' : 'assistant', texto: m.texto }));
+    fetch('/api/chat/guardar', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ historial: msgs, tipo }),
+    }).catch(e => console.warn('[chat] Error al guardar conversación:', e));
+  }
+
   async function enviar() {
     const texto = input.trim();
     if (!texto || cargando) return;
+
+    const esComandoGuardar = texto.toLowerCase().includes('guarda esta charla');
 
     setInput('');
     setMensajes(prev => [...prev, { rol: 'user', texto }]);
     setCargando(true);
 
+    if (esComandoGuardar && mensajes.length > 1) {
+      guardarConversacion('manual');
+      setConversacionGuardada(true);
+      setMensajes(prev => [...prev, { rol: 'bot', texto: 'Entendido, esta conversación se ha guardado como referencia para futuras consultas.' }]);
+      setCargando(false);
+      return;
+    }
+
     try {
+      const historial = mensajes.map(m => ({ rol: m.rol === 'user' ? 'user' : 'assistant', texto: m.texto }));
       const res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: texto }),
+        body: JSON.stringify({ message: texto, historial }),
       });
 
       if (!res.ok) {
@@ -72,6 +94,12 @@ export default function ChatWidget() {
 
       const data = await res.json();
       setMensajes(prev => [...prev, { rol: 'bot', texto: data.reply || 'Sin respuesta.' }]);
+      intercambiosRef.current += 1;
+
+      if (!conversacionGuardada && intercambiosRef.current >= 4) {
+        guardarConversacion('autogestion');
+        setConversacionGuardada(true);
+      }
     } catch (e: any) {
       setMensajes(prev => [
         ...prev,

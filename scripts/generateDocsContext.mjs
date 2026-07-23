@@ -68,6 +68,10 @@ ${combinedContext.replace(/`/g, '\\`')}
 
   fs.writeFileSync(OUTPUT_FILE, fileContent, 'utf8');
   console.log(`Contexto guardado exitosamente en: ${OUTPUT_FILE}`);
+
+  const JSON_OUTPUT_FILE = path.join(__dirname, '..', 'src', 'lib', 'docsContext.json');
+  fs.writeFileSync(JSON_OUTPUT_FILE, JSON.stringify({ text: combinedContext.trim() }, null, 2), 'utf8');
+  console.log(`Contexto JSON guardado en: ${JSON_OUTPUT_FILE}`);
 }
 
 generateDocsContext().catch(console.error);
