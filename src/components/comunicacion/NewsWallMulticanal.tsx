@@ -230,28 +230,36 @@ export function NewsWallMulticanal({
                         return isImage ? (
                           <div key={i} className='group relative w-24 h-24 rounded-lg overflow-hidden border border-white/10 bg-black/30'>
                             <img src={url} alt={`Imagen ${i + 1}`} className='w-full h-full object-cover' />
-                            <a
-                              href={url}
-                              download
-                              target='_blank'
-                              rel='noopener noreferrer'
-                              className='absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity'
+                            <button
+                              onClick={() => {
+                                const a = document.createElement('a')
+                                a.href = url
+                                a.download = `imagen_${i + 1}`
+                                document.body.appendChild(a)
+                                a.click()
+                                document.body.removeChild(a)
+                              }}
+                              className='absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer'
                             >
                               <Download size={16} className='text-white' />
-                            </a>
+                            </button>
                           </div>
                         ) : (
-                          <a
+                          <button
                             key={i}
-                            href={url}
-                            download
-                            target='_blank'
-                            rel='noopener noreferrer'
-                            className='flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-white/10 text-white/60 text-xs hover:text-white hover:border-white/30 transition-all'
+                            onClick={() => {
+                              const a = document.createElement('a')
+                              a.href = url
+                              a.download = `archivo_${i + 1}`
+                              document.body.appendChild(a)
+                              a.click()
+                              document.body.removeChild(a)
+                            }}
+                            className='flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-white/10 text-white/60 text-xs hover:text-white hover:border-white/30 transition-all cursor-pointer'
                           >
                             <Download size={12} />
                             {url.match(/\.(\w+)$/)?.[1]?.toUpperCase() || 'ARCHIVO'} {i + 1}
-                          </a>
+                          </button>
                         )
                       })}
                     </div>
