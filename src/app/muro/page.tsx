@@ -20,9 +20,9 @@ export default async function MuroPage() {
   const publicFlashes = allFlashes.filter(f => 
     (f.para_publico || Boolean(f.texto_publico?.trim())) && f.is_published !== false
   )
-  const memberFlashes = user ? allFlashes.filter(f => 
+  const memberFlashes = allFlashes.filter(f => 
     (f.para_miembros || Boolean(f.texto_miembros?.trim())) && f.is_published !== false
-  ) : null
+  )
 
   const sponsorFlashes = user ? allFlashes.filter(f => 
     (f.para_sponsors || Boolean(f.texto_sponsors?.trim())) && f.is_published !== false

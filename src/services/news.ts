@@ -387,32 +387,29 @@ export async function getAllMulticanalNewsFlashes(): Promise<NewsFlashMulticanal
     }
   }
 
-  // 3. Obtener de notas_miembros (si está autenticado)
-  const { data: { user } } = await supabase.auth.getUser()
-  if (user) {
-    const { data: notasMiembros } = await supabase
-      .from('notas_miembros')
-      .select('*, news_flashes(media_urls)')
-      .eq('is_published', true)
-      
-    if (notasMiembros) {
-      for (const nm of notasMiembros) {
-        if (nm.news_flash_id) {
-          const existing = flashesMap.get(nm.news_flash_id)
-          if (existing) {
-            existing.texto_miembros = nm.contenido
-            existing.para_miembros = true
-          } else {
-            flashesMap.set(nm.news_flash_id, {
-              id: nm.news_flash_id,
-              titulo: nm.titulo,
-              texto_miembros: nm.contenido,
-              para_miembros: true,
-              is_published: true,
-              created_at: nm.created_at,
-              media_urls: nm.media_urls?.length ? nm.media_urls : nm.news_flashes?.media_urls || []
-            })
-          }
+  // 3. Obtener de notas_miembros (siempre expuesto para el equipo ITEC en el muro)
+  const { data: notasMiembros } = await supabase
+    .from('notas_miembros')
+    .select('*, news_flashes(media_urls)')
+    .eq('is_published', true)
+    
+  if (notasMiembros) {
+    for (const nm of notasMiembros) {
+      if (nm.news_flash_id) {
+        const existing = flashesMap.get(nm.news_flash_id)
+        if (existing) {
+          existing.texto_miembros = nm.contenido
+          existing.para_miembros = true
+        } else {
+          flashesMap.set(nm.news_flash_id, {
+            id: nm.news_flash_id,
+            titulo: nm.titulo,
+            texto_miembros: nm.contenido,
+            para_miembros: true,
+            is_published: true,
+            created_at: nm.created_at,
+            media_urls: nm.media_urls?.length ? nm.media_urls : nm.news_flashes?.media_urls || []
+          })
         }
       }
     }
