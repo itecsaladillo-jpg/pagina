@@ -45,7 +45,7 @@ function MediaSlideshow({ mediaUrls }: { mediaUrls: string[] }) {
   const isVideo = current >= images.length
 
   return (
-    <div className="relative group rounded-xl overflow-hidden bg-black/20 mb-4">
+    <div className="relative group rounded-xl overflow-hidden bg-black/20">
       <div className="aspect-video max-h-[125px] flex items-center justify-center">
         {isVideo ? (
           <video src={videos[current - images.length]} controls className="w-full h-full object-contain" />
@@ -170,40 +170,40 @@ export function NewsWallMulticanal({
   }
 
   return (
-    <div className='space-y-6'>
+    <div className='space-y-2'>
       {!hideTabs && (
-        <div className='flex items-center gap-2 bg-white/[0.02] border border-white/5 rounded-2xl p-2 w-fit flex-wrap'>
+        <div className='flex items-center gap-1 bg-white/[0.02] border border-white/5 rounded-xl p-1.5 w-fit flex-wrap'>
         <button
           onClick={() => setActiveTab('publico')}
-          className='flex items-center gap-2 px-4 py-2 text-xs font-bold uppercase tracking-widest rounded-lg transition-all bg-blue-600/20 text-blue-400 border border-blue-500/30'
+          className='flex items-center gap-1.5 px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest rounded-lg transition-all bg-blue-600/20 text-blue-400 border border-blue-500/30'
         >
-          <Globe size={14} />
+          <Globe size={12} />
           Público
         </button>
         {hasInternalAccess && (
           <button
             onClick={() => setActiveTab('interno')}
-            className='flex items-center gap-2 px-4 py-2 text-xs font-bold uppercase tracking-widest rounded-lg transition-all bg-emerald-600/20 text-emerald-400 border border-emerald-500/30'
+            className='flex items-center gap-1.5 px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest rounded-lg transition-all bg-emerald-600/20 text-emerald-400 border border-emerald-500/30'
           >
-            <Users size={14} />
+            <Users size={12} />
             Muro Noticias
           </button>
         )}
         {hasSponsorAccess && (
           <button
             onClick={() => setActiveTab('sponsors')}
-            className='flex items-center gap-2 px-4 py-2 text-xs font-bold uppercase tracking-widest rounded-lg transition-all bg-amber-600/20 text-amber-400 border border-amber-500/30'
+            className='flex items-center gap-1.5 px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest rounded-lg transition-all bg-amber-600/20 text-amber-400 border border-amber-500/30'
           >
-            <Building2 size={14} />
+            <Building2 size={12} />
             Muro Sponsors
           </button>
         )}
         {hasPressAccess && (
           <button
             onClick={() => setActiveTab('prensa')}
-            className='flex items-center gap-2 px-4 py-2 text-xs font-bold uppercase tracking-widest rounded-lg transition-all bg-purple-600/20 text-purple-400 border border-purple-500/30'
+            className='flex items-center gap-1.5 px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest rounded-lg transition-all bg-purple-600/20 text-purple-400 border border-purple-500/30'
           >
-            <Newspaper size={14} />
+            <Newspaper size={12} />
             Prensa
           </button>
         )}
@@ -215,14 +215,14 @@ export function NewsWallMulticanal({
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className='glass border border-white/5 rounded-3xl p-12 text-center'
+            className='glass border border-white/5 rounded-2xl p-8 text-center'
           >
             <p className='text-white/40 text-sm'>
               {getEmptyMessage()}
             </p>
           </motion.div>
         ) : (
-          <motion.div layout className='space-y-4'>
+          <motion.div layout className='space-y-2'>
             {currentFlashes.map((flash) => {
               const mediaUrls = getMediaUrls(flash)
               return (
@@ -231,12 +231,12 @@ export function NewsWallMulticanal({
                   layout
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className='glass border border-white/5 rounded-2xl p-4'
+                  className='glass border border-white/5 rounded-xl p-3'
                 >
                   {activeTab === 'interno' ? (
                     <div className='overflow-hidden'>
-                      <h2 className='text-lg font-bold text-white mb-1'>{flash.titulo}</h2>
-                      <span className='text-[10px] text-white/40 block mb-2'>
+                      <h2 className='text-base font-bold text-white mb-0.5'>{flash.titulo}</h2>
+                      <span className='text-[10px] text-white/40 block mb-1'>
                         {formatDate(flash.created_at)}
                       </span>
                       {mediaUrls.length > 0 && (
@@ -252,7 +252,7 @@ export function NewsWallMulticanal({
                     <>
                       <div className='flex items-start justify-between mb-4'>
                         <div className='flex-1'>
-                          <h2 className='text-lg font-bold text-white mb-1'>{flash.titulo}</h2>
+                          <h2 className='text-base font-bold text-white mb-0.5'>{flash.titulo}</h2>
                           <span className='text-[10px] text-white/40'>
                             {formatDate(flash.created_at)}
                           </span>
@@ -261,7 +261,7 @@ export function NewsWallMulticanal({
                       {mediaUrls.length > 0 && activeTab !== 'prensa' && (
                         <MediaSlideshow mediaUrls={mediaUrls} />
                       )}
-                      <p className='text-white/80 leading-snug whitespace-pre-wrap mb-4 text-sm'>
+                      <p className='text-white/80 leading-snug whitespace-pre-wrap mb-2 text-sm'>
                         {getFlashText(flash)}
                       </p>
                     </>
@@ -287,10 +287,10 @@ export function NewsWallMulticanal({
 
 
                   {activeTab === 'interno' && (
-                    <div className='border-t border-white/5 pt-4 mt-4'>
+                    <div className='border-t border-white/5 pt-2 mt-2'>
                       <button
                         onClick={() => handleToggleComments(flash.id)}
-                        className='flex items-center gap-2 text-xs text-emerald-400 hover:text-emerald-300 transition-colors mb-4'
+                        className='flex items-center gap-2 text-[10px] text-emerald-400 hover:text-emerald-300 transition-colors mb-2'
                       >
                         <MessageCircle size={14} />
                         {expandedComments[flash.id] ? 'Ocultar' : 'Ver'} Comentarios
@@ -316,7 +316,7 @@ export function NewsWallMulticanal({
                                     {flashesWithComments[flash.id].map((comment) => (
                                       <div
                                         key={comment.id}
-                                        className='bg-white/[0.02] border border-white/5 rounded-xl p-3'
+                                        className='bg-white/[0.02] border border-white/5 rounded-lg p-2'
                                       >
                                         <div className='flex items-baseline gap-2 mb-1'>
                                           <span className='text-xs font-bold text-emerald-400'>
@@ -339,7 +339,7 @@ export function NewsWallMulticanal({
                                     value={commentInputs[flash.id] || ''}
                                     onChange={(e) => setCommentInputs(prev => ({ ...prev, [flash.id]: e.target.value }))}
                                     placeholder='Escribi un comentario...'
-                                    className='w-full min-h-[80px] bg-white/[0.02] border border-white/10 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-emerald-500/40 resize-none'
+                                    className='w-full min-h-[50px] bg-white/[0.02] border border-white/10 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-emerald-500/40 resize-none'
                                   />
                                   <button
                                     onClick={() => handleSubmitComment(flash.id)}
