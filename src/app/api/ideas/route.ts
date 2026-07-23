@@ -15,12 +15,12 @@ export async function POST(req: Request) {
   const author_email = fd.get('author_email')?.toString().trim() || null
   const author_phone = fd.get('author_phone')?.toString().trim() || null
 
-  const { error } = await supabase.from('ideas').insert({
+  const { error } = await supabase.rpc('insert_idea', {
     idea_text,
     is_anonymous,
-    author_name: is_anonymous ? null : author_name,
-    author_email: is_anonymous ? null : author_email,
-    author_phone: is_anonymous ? null : author_phone,
+    author_name,
+    author_email,
+    author_phone,
   })
 
   if (error) {

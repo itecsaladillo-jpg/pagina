@@ -17,12 +17,12 @@ export async function createIdeaAction(formData: FormData) {
   const author_email = formData.get('author_email')?.toString().trim() || null
   const author_phone = formData.get('author_phone')?.toString().trim() || null
 
-  const { error } = await supabase.from('ideas').insert({
+  const { error } = await supabase.rpc('insert_idea', {
     idea_text,
     is_anonymous,
-    author_name: is_anonymous ? null : author_name,
-    author_email: is_anonymous ? null : author_email,
-    author_phone: is_anonymous ? null : author_phone,
+    author_name,
+    author_email,
+    author_phone,
   })
 
   if (error) return { success: false, error: error.message }
