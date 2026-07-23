@@ -94,20 +94,16 @@ export async function uploadDocAction(formData: FormData) {
     }
 
     const supabase = await createClient()
-
-    const { data: buckets } = await supabase.storage.listBuckets()
-    const bucketExists = buckets?.some(b => b.id === BUCKET)
-    if (!bucketExists) {
-      return { success: false, error: 'El bucket training-docs no existe. Ejecutá la migración 042 en Supabase.' }
-    }
-
     const buffer = Buffer.from(await file.arrayBuffer())
     const { error } = await supabase.storage.from(BUCKET).upload(file.name, buffer, {
       contentType: file.type || 'application/octet-stream',
       upsert: true,
     })
 
-    if (error) return { success: false, error: `Error de Storage: ${error.message}` }
+    if (error) {
+      console.error('[uploadDocAction] Storage error:', error)
+      return { success: false, error: `Error de Storage: ${error.message}` }
+    }
     return { success: true, fileName: file.name }
   } catch (err: any) {
     console.error('[uploadDocAction] Error:', err)
