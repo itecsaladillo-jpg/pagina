@@ -18,10 +18,10 @@ export default async function LoginPage({
 }) {
   const params = await searchParams
 
-  // Si ya está autenticado y tiene perfil, va al dashboard
+  // Si ya está autenticado y tiene perfil, va al muro de noticias del dashboard
   const member = await getCurrentMember()
   if (member) {
-    redirect('/dashboard')
+    redirect('/dashboard/muro')
   }
 
   return <LoginClientContent error={params.error} errorDesc={params.desc} />

@@ -47,8 +47,8 @@ export async function GET(request: Request) {
       return NextResponse.redirect(`${origin}/?acceso=no-autorizado`)
     }
 
-    // Usuario activo → redirigir al dashboard
-    return NextResponse.redirect(`${origin}/dashboard/miembros`)
+    // Usuario activo → redirigir al muro de noticias
+    return NextResponse.redirect(`${origin}/dashboard/muro`)
   }
 
   // Sin code ni error — algo raro pasó
