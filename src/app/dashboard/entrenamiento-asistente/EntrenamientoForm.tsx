@@ -107,8 +107,9 @@ export function EntrenamientoForm() {
       const fd = new FormData(form)
       const res = await uploadDocAction(fd)
       if (res.success) {
-        setMessage({ type: 'success', text: `"${res.fileName}" subido correctamente.` })
-        showToast('success', `"${res.fileName}" subido correctamente`)
+        const nombre = res.originalName || res.fileName
+        setMessage({ type: 'success', text: `"${nombre}" subido correctamente.` })
+        showToast('success', `"${nombre}" subido correctamente`)
         form.reset()
         await loadDocs()
       } else {

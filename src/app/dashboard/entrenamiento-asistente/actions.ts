@@ -95,7 +95,8 @@ export async function uploadDocAction(formData: FormData) {
 
     const supabase = await createClient()
     const buffer = Buffer.from(await file.arrayBuffer())
-    const { error } = await supabase.storage.from(BUCKET).upload(file.name, buffer, {
+    const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_')
+    const { error } = await supabase.storage.from(BUCKET).upload(safeName, buffer, {
       contentType: file.type || 'application/octet-stream',
       upsert: true,
     })
@@ -104,7 +105,7 @@ export async function uploadDocAction(formData: FormData) {
       console.error('[uploadDocAction] Storage error:', error)
       return { success: false, error: `Error de Storage: ${error.message}` }
     }
-    return { success: true, fileName: file.name }
+    return { success: true, fileName: safeName, originalName: file.name }
   } catch (err: any) {
     console.error('[uploadDocAction] Error:', err)
     return { success: false, error: err?.message || 'Error interno del servidor' }
