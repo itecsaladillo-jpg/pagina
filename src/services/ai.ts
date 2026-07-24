@@ -3,31 +3,45 @@ import { createClient } from '@/lib/supabase/server'
 const OLLAMA_BASE_URL = process.env.OLLAMA_API_BASE_URL || 'https://ai.itecsaladillo.org.ar'
 const OLLAMA_MODEL = 'llama3.2:latest'
 
-async function callOpenRouter(messages: { role: string; content: string }[], temperature = 0.7): Promise<string> {
-  const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY}`,
-      'Content-Type': 'application/json',
-      'HTTP-Referer': 'https://itecsaladillo.org.ar',
-      'X-Title': 'ITEC AI'
-    },
-    body: JSON.stringify({
-      model: 'deepseek/deepseek-chat',
-      messages,
-      stream: false,
-      temperature,
-      max_tokens: 8192
-    })
-  })
+const FREE_MODELS = [
+  'google/gemini-2.0-flash-001',
+  'mistralai/mistral-small-24b-instruct-2501:free',
+  'meta-llama/llama-3.1-8b-instruct:free',
+]
 
-  if (!response.ok) {
+async function callOpenRouter(messages: { role: string; content: string }[], temperature = 0.7): Promise<string> {
+  const lastError: string[] = []
+
+  for (const model of FREE_MODELS) {
+    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY}`,
+        'Content-Type': 'application/json',
+        'HTTP-Referer': 'https://itecsaladillo.org.ar',
+        'X-Title': 'ITEC AI'
+      },
+      body: JSON.stringify({
+        model,
+        messages,
+        stream: false,
+        temperature,
+        max_tokens: 8192
+      })
+    })
+
+    if (response.ok) {
+      const data = await response.json()
+      return data.choices?.[0]?.message?.content || ''
+    }
+
     const err = await response.text().catch(() => '')
-    throw new Error(`OpenRouter error: ${response.status} - ${err}`)
+    lastError.push(`[${model}] ${response.status} - ${err}`)
+
+    if (response.status !== 429) break
   }
 
-  const data = await response.json()
-  return data.choices?.[0]?.message?.content || ''
+  throw new Error(`OpenRouter error (todos los modelos gratuitos fallaron):\n${lastError.join('\n')}`)
 }
 
 /**
