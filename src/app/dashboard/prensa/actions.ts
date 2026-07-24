@@ -76,13 +76,13 @@ export async function sendGacetillaToMedios(payload: SendGacetillaPayload) {
 
   const supabase = await createClient()
 
-  const { data: newsFlash, error: newsError } = await supabase
-    .from('news_flashes')
-    .select('id, titulo, texto_medios, media_urls, created_at')
+  const { data: nota, error: notaError } = await supabase
+    .from('notas_medios')
+    .select('id, news_flash_id, titulo, contenido, media_urls, created_at')
     .eq('id', payload.newsFlashId)
     .single()
 
-  if (newsError || !newsFlash) {
+  if (notaError || !nota) {
     return { success: false, error: 'Gacetilla no encontrada' }
   }
 
@@ -95,16 +95,16 @@ export async function sendGacetillaToMedios(payload: SendGacetillaPayload) {
     return { success: false, error: 'No se encontraron medios seleccionados' }
   }
 
-  const fecha = new Date(newsFlash.created_at).toLocaleDateString('es-AR', {
+  const fecha = new Date(nota.created_at).toLocaleDateString('es-AR', {
     day: 'numeric',
     month: 'long',
     year: 'numeric',
   })
 
   const html = generatePrensaEmailHtml({
-    titulo: newsFlash.titulo || '',
-    contenidoMedios: newsFlash.texto_medios || '',
-    mediaUrls: Array.isArray(newsFlash.media_urls) ? newsFlash.media_urls : [],
+    titulo: nota.titulo || '',
+    contenidoMedios: nota.contenido || '',
+    mediaUrls: Array.isArray(nota.media_urls) ? nota.media_urls : [],
     fecha,
   })
 
@@ -126,7 +126,7 @@ export async function sendGacetillaToMedios(payload: SendGacetillaPayload) {
         const { error: sendError } = await resend.emails.send({
           from: 'ITEC Saladillo <prensa@resend.dev>',
           to: [medio.email],
-          subject: `Gacetilla de Prensa — ${newsFlash.titulo || 'Comunicado ITEC'}`,
+          subject: `Gacetilla de Prensa — ${nota.titulo || 'Comunicado ITEC'}`,
           html,
         })
         if (sendError) {
@@ -143,7 +143,7 @@ export async function sendGacetillaToMedios(payload: SendGacetillaPayload) {
     }
 
     const { error: logError } = await supabase.from('prensa_envios_log').insert({
-      news_flash_id: payload.newsFlashId,
+      news_flash_id: nota.news_flash_id,
       medio_id: medio.id,
       medio_nombre: medio.nombre_medio,
       recipient_email: medio.email,
@@ -194,17 +194,26 @@ export async function getActiveMediosPrensa() {
   return data || []
 }
 
-export async function getGacetillaEnviosHistory(newsFlashId: string) {
+export async function getGacetillaEnviosHistory(notaMediosId: string) {
   const member = await getCurrentMember()
   if (!member || !['admin', 'coordinador'].includes(member.role)) {
     return []
   }
 
   const supabase = await createClient()
+
+  const { data: nota } = await supabase
+    .from('notas_medios')
+    .select('news_flash_id')
+    .eq('id', notaMediosId)
+    .single()
+
+  if (!nota?.news_flash_id) return []
+
   const { data } = await supabase
     .from('prensa_envios_log')
     .select('*')
-    .eq('news_flash_id', newsFlashId)
+    .eq('news_flash_id', nota.news_flash_id)
     .order('created_at', { ascending: false })
 
   return data || []
