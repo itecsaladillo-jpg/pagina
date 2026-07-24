@@ -1,45 +1,85 @@
 import { createClient } from '@/lib/supabase/server'
 
 const OLLAMA_BASE_URL = process.env.OLLAMA_API_BASE_URL || 'https://ai.itecsaladillo.org.ar'
-const OLLAMA_MODEL = 'llama3.2:latest'
+const OLLAMA_MODEL = process.env.OLLAMA_MODEL || 'llama3.2:latest'
 
-const FREE_MODELS = [
-  'google/gemini-2.0-flash-exp:free',
-  'mistralai/mistral-7b-instruct:free',
-  'meta-llama/llama-3.2-3b-instruct:free',
-]
+async function callAI(messages: { role: string; content: string }[], temperature = 0.7): Promise<string> {
+  const errors: string[] = []
 
-async function callOpenRouter(messages: { role: string; content: string }[], temperature = 0.7): Promise<string> {
-  const lastError: string[] = []
-
-  for (const model of FREE_MODELS) {
-    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY}`,
-        'Content-Type': 'application/json',
-        'HTTP-Referer': 'https://itecsaladillo.org.ar',
-        'X-Title': 'ITEC AI'
-      },
-      body: JSON.stringify({
-        model,
-        messages,
-        stream: false,
-        temperature,
-        max_tokens: 8192
+  const callOllama = async (): Promise<string | null> => {
+    try {
+      const res = await fetch(`${OLLAMA_BASE_URL}/api/chat`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: OLLAMA_MODEL,
+          messages,
+          stream: false,
+          options: { temperature },
+        }),
       })
-    })
-
-    if (response.ok) {
-      const data = await response.json()
-      return data.choices?.[0]?.message?.content || ''
-    }
-
-    const err = await response.text().catch(() => '')
-    lastError.push(`[${model}] ${response.status} - ${err}`)
+      if (!res.ok) { errors.push(`[Ollama] ${res.status}`); return null }
+      const data = await res.json()
+      return data.message?.content || ''
+    } catch (e: any) { errors.push(`[Ollama] ${e.message}`); return null }
   }
 
-  throw new Error(`OpenRouter error (todos los modelos gratuitos fallaron):\n${lastError.join('\n')}`)
+  const callGemini = async (): Promise<string | null> => {
+    const key = process.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY_2 || process.env.GEMINI_API_KEY_3 || process.env.GEMINI_API_KEY_4 || process.env.GOOGLE_GENERATIVE_AI_API_KEY
+    if (!key) { errors.push('[Gemini] no API key'); return null }
+    try {
+      const systemMsg = messages.find(m => m.role === 'system')?.content || ''
+      const userMsg = messages.filter(m => m.role === 'user').map(m => m.content).join('\n')
+      const res = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            systemInstruction: systemMsg ? { parts: [{ text: systemMsg }] } : undefined,
+            contents: [{ parts: [{ text: userMsg }] }],
+            generationConfig: { temperature, maxOutputTokens: 8192 },
+          }),
+        },
+      )
+      if (!res.ok) { errors.push(`[Gemini] ${res.status}`); return null }
+      const data = await res.json()
+      return data.candidates?.[0]?.content?.parts?.[0]?.text || ''
+    } catch (e: any) { errors.push(`[Gemini] ${e.message}`); return null }
+  }
+
+  const callOpenRouter = async (): Promise<string | null> => {
+    const key = process.env.OPENROUTER_API_KEY
+    if (!key) { errors.push('[OpenRouter] no API key'); return null }
+    try {
+      const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${key}`,
+          'Content-Type': 'application/json',
+          'HTTP-Referer': 'https://itecsaladillo.org.ar',
+          'X-Title': 'ITEC AI',
+        },
+        body: JSON.stringify({
+          model: 'deepseek/deepseek-chat',
+          messages,
+          stream: false,
+          temperature,
+          max_tokens: 8192,
+        }),
+      })
+      if (!res.ok) { errors.push(`[OpenRouter] ${res.status}`); return null }
+      const data = await res.json()
+      return data.choices?.[0]?.message?.content || ''
+    } catch (e: any) { errors.push(`[OpenRouter] ${e.message}`); return null }
+  }
+
+  for (const fn of [callOllama, callGemini, callOpenRouter]) {
+    const result = await fn()
+    if (result) return result
+  }
+
+  throw new Error(`Todos los proveedores de IA fallaron:\n${errors.join('\n')}`)
 }
 
 /**
@@ -114,7 +154,7 @@ Generá exactamente dos elementos en formato JSON puro (sin markdown, sin bloque
 
 Respondés ÚNICAMENTE con el JSON, sin ningún texto adicional antes o después.`
 
-  const raw = await callOpenRouter([
+  const raw = await callAI([
     { role: 'system', content: ITEC_SYSTEM_PROMPT },
     { role: 'user', content: userPrompt }
   ])
@@ -134,7 +174,7 @@ TEXTO:
 """
 ${text}
 """`
-  const result = await callOpenRouter([
+  const result = await callAI([
     { role: 'system', content: ITEC_SYSTEM_PROMPT },
     { role: 'user', content: userPrompt }
   ], 0.8)
@@ -170,7 +210,7 @@ export async function generatePublicArticle(rawFacts: string): Promise<{ title: 
 
   const userPrompt = `HECHOS PARA TRANSFORMAR:\n"""\n${rawFacts}\n"""`
   
-  const raw = await callOpenRouter([
+  const raw = await callAI([
     { role: 'system', content: systemPrompt },
     { role: 'user', content: userPrompt }
   ], 0.8)
@@ -214,7 +254,7 @@ export async function generateActionSuccessStory(
       - Respondé en JSON: { "title": "...", "content": "..." }`
 
   const userPrompt = `Generar historia de éxito para la acción "${actionTitle}".`
-  const raw = await callOpenRouter([
+  const raw = await callAI([
     { role: 'system', content: systemPrompt },
     { role: 'user', content: userPrompt }
   ], 0.8)
@@ -283,7 +323,7 @@ Respondé ÚNICAMENTE con este JSON, sin texto adicional, sin markdown, sin bloq
 NOTAS CRUDAS:
 """${rawFacts}"""`
 
-  const raw = await callOpenRouter([
+  const raw = await callAI([
     { role: 'system', content: systemPrompt },
     { role: 'user', content: userPrompt }
   ], 0.8)
@@ -347,7 +387,7 @@ export async function generateVideoSummary(title: string, description: string): 
   
   Respondé únicamente con el texto del resumen, sin títulos adicionales ni comillas.`
 
-  const result = await callOpenRouter([
+  const result = await callAI([
     { role: 'system', content: ITEC_SYSTEM_PROMPT },
     { role: 'user', content: userPrompt }
   ], 0.8)
