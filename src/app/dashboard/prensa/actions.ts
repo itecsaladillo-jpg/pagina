@@ -123,8 +123,9 @@ export async function sendGacetillaToMedios(payload: SendGacetillaPayload) {
 
     if (resend) {
       try {
+        const fromAddress = process.env.RESEND_FROM_PRENSA || 'ITEC Saladillo <prensa@resend.dev>'
         const { error: sendError } = await resend.emails.send({
-          from: 'ITEC Saladillo <prensa@resend.dev>',
+          from: fromAddress,
           to: [medio.email],
           subject: `Gacetilla de Prensa — ${nota.titulo || 'Comunicado ITEC'}`,
           html,
