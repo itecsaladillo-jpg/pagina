@@ -4,9 +4,9 @@ const OLLAMA_BASE_URL = process.env.OLLAMA_API_BASE_URL || 'https://ai.itecsalad
 const OLLAMA_MODEL = 'llama3.2:latest'
 
 const FREE_MODELS = [
-  'google/gemini-2.0-flash-001',
-  'mistralai/mistral-small-24b-instruct-2501:free',
-  'meta-llama/llama-3.1-8b-instruct:free',
+  'google/gemini-2.0-flash-exp:free',
+  'mistralai/mistral-7b-instruct:free',
+  'meta-llama/llama-3.2-3b-instruct:free',
 ]
 
 async function callOpenRouter(messages: { role: string; content: string }[], temperature = 0.7): Promise<string> {
@@ -37,8 +37,6 @@ async function callOpenRouter(messages: { role: string; content: string }[], tem
 
     const err = await response.text().catch(() => '')
     lastError.push(`[${model}] ${response.status} - ${err}`)
-
-    if (response.status !== 429) break
   }
 
   throw new Error(`OpenRouter error (todos los modelos gratuitos fallaron):\n${lastError.join('\n')}`)
