@@ -71,7 +71,7 @@ export function SendGacetillaModal({ newsFlashId, titulo, textoMedios, onClose, 
   const handleSend = async () => {
     setStep('sending')
     const res = await sendGacetillaToMedios({ newsFlashId, selectedMediosIds: Array.from(selectedIds) })
-    setResult({ enviados: res.enviados, fallidos: res.fallidos, results: res.results })
+    setResult({ enviados: res.enviados ?? 0, fallidos: res.fallidos ?? 0, results: res.results ?? [] })
     setStep('result')
   }
 
