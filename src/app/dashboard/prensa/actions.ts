@@ -178,3 +178,34 @@ export async function sendGacetillaToMedios(payload: SendGacetillaPayload) {
     results,
   }
 }
+
+export async function getActiveMediosPrensa() {
+  const member = await getCurrentMember()
+  if (!member || !['admin', 'coordinador'].includes(member.role)) {
+    return []
+  }
+
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from('medios_prensa')
+    .select('id, nombre_medio, tipo_medio, email, nombre_contacto, apellido_contacto')
+    .order('nombre_medio', { ascending: true })
+
+  return data || []
+}
+
+export async function getGacetillaEnviosHistory(newsFlashId: string) {
+  const member = await getCurrentMember()
+  if (!member || !['admin', 'coordinador'].includes(member.role)) {
+    return []
+  }
+
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from('prensa_envios_log')
+    .select('*')
+    .eq('news_flash_id', newsFlashId)
+    .order('created_at', { ascending: false })
+
+  return data || []
+}
