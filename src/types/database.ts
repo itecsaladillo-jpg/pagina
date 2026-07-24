@@ -160,6 +160,22 @@ export interface SponsorMetrics {
 }
 
 // ─────────────────────────────────────────
+// TABLA: prensa_envios_log
+// ─────────────────────────────────────────
+
+export interface PrensaEnvioLog {
+  id: string
+  created_at: string
+  news_flash_id: string
+  medio_id: string | null
+  medio_nombre: string
+  recipient_email: string
+  status: 'enviado' | 'fallido'
+  error_message: string | null
+  sent_by_member_id: string
+}
+
+// ─────────────────────────────────────────
 // DATABASE TYPE (para generics de Supabase)
 // ─────────────────────────────────────────
 
@@ -195,6 +211,11 @@ export interface Database {
         Row: Idea
         Insert: Omit<Idea, 'id' | 'created_at'>
         Update: Partial<Omit<Idea, 'id' | 'created_at'>>
+      }
+      prensa_envios_log: {
+        Row: PrensaEnvioLog
+        Insert: Omit<PrensaEnvioLog, 'id' | 'created_at'>
+        Update: Partial<Omit<PrensaEnvioLog, 'id' | 'created_at'>>
       }
       sponsors: {
         Row: Sponsor

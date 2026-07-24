@@ -4,6 +4,8 @@ import { z } from 'zod'
 import { createClient } from '@/lib/supabase/server'
 import { getCurrentMember } from '@/services/auth'
 import { revalidatePath } from 'next/cache'
+import { Resend } from 'resend'
+import { generatePrensaEmailHtml } from '@/lib/email-templates/prensa'
 
 const medioSchema = z.object({
   nombre_medio: z.string().min(1, 'Nombre del medio requerido'),
@@ -59,4 +61,120 @@ export async function deleteMedioAction(id: string) {
   if (error) throw new Error(error.message)
   revalidatePath('/dashboard/prensa')
   return { success: true }
+}
+
+export interface SendGacetillaPayload {
+  newsFlashId: string
+  selectedMediosIds: string[]
+}
+
+export async function sendGacetillaToMedios(payload: SendGacetillaPayload) {
+  const member = await getCurrentMember()
+  if (!member || !['admin', 'coordinador'].includes(member.role)) {
+    return { success: false, error: 'No autorizado' }
+  }
+
+  const supabase = await createClient()
+
+  const { data: newsFlash, error: newsError } = await supabase
+    .from('news_flashes')
+    .select('id, titulo, texto_medios, media_urls, created_at')
+    .eq('id', payload.newsFlashId)
+    .single()
+
+  if (newsError || !newsFlash) {
+    return { success: false, error: 'Gacetilla no encontrada' }
+  }
+
+  const { data: medios, error: mediosError } = await supabase
+    .from('medios_prensa')
+    .select('id, nombre_medio, email')
+    .in('id', payload.selectedMediosIds)
+
+  if (mediosError || !medios || medios.length === 0) {
+    return { success: false, error: 'No se encontraron medios seleccionados' }
+  }
+
+  const fecha = new Date(newsFlash.created_at).toLocaleDateString('es-AR', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  })
+
+  const html = generatePrensaEmailHtml({
+    titulo: newsFlash.titulo || '',
+    contenidoMedios: newsFlash.texto_medios || '',
+    mediaUrls: Array.isArray(newsFlash.media_urls) ? newsFlash.media_urls : [],
+    fecha,
+  })
+
+  const apiKey = process.env.RESEND_API_KEY
+  if (!apiKey || apiKey === 're_123456789...') {
+    console.warn('[sendGacetillaToMedios] RESEND_API_KEY no configurada. Simulando envíos.')
+  }
+
+  const resend = apiKey && apiKey !== 're_123456789...' ? new Resend(apiKey) : null
+
+  const results: { medioId: string; medioNombre: string; email: string; status: 'enviado' | 'fallido'; error?: string }[] = []
+
+  for (const medio of medios) {
+    let status: 'enviado' | 'fallido' = 'fallido'
+    let errorMessage: string | null = null
+
+    if (resend) {
+      try {
+        const { error: sendError } = await resend.emails.send({
+          from: 'ITEC Saladillo <prensa@resend.dev>',
+          to: [medio.email],
+          subject: `Gacetilla de Prensa — ${newsFlash.titulo || 'Comunicado ITEC'}`,
+          html,
+        })
+        if (sendError) {
+          errorMessage = sendError.message
+        } else {
+          status = 'enviado'
+        }
+      } catch (err: any) {
+        errorMessage = err.message || 'Error desconocido al enviar'
+      }
+    } else {
+      console.log(`[SIMULACIÓN] Enviando gacetilla a ${medio.nombre_medio} <${medio.email}>`)
+      status = 'enviado'
+    }
+
+    const { error: logError } = await supabase.from('prensa_envios_log').insert({
+      news_flash_id: payload.newsFlashId,
+      medio_id: medio.id,
+      medio_nombre: medio.nombre_medio,
+      recipient_email: medio.email,
+      status,
+      error_message: errorMessage,
+      sent_by_member_id: member.id,
+    })
+
+    if (logError) {
+      console.error('[sendGacetillaToMedios] Error al registrar log:', logError.message)
+    }
+
+    results.push({
+      medioId: medio.id,
+      medioNombre: medio.nombre_medio,
+      email: medio.email,
+      status,
+      error: errorMessage || undefined,
+    })
+  }
+
+  const exitosos = results.filter(r => r.status === 'enviado').length
+  const fallidos = results.filter(r => r.status === 'fallido').length
+
+  revalidatePath('/dashboard/prensaNews')
+  revalidatePath('/dashboard/prensa')
+
+  return {
+    success: fallidos === 0,
+    enviados: exitosos,
+    fallidos,
+    results,
+  }
 }
