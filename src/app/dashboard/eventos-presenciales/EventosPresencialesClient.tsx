@@ -14,7 +14,9 @@ import {
   Check, 
   AlertTriangle,
   X,
-  ExternalLink
+  ExternalLink,
+  Tv,
+  SlidersHorizontal
 } from "lucide-react";
 
 interface Evento {
@@ -318,8 +320,32 @@ export default function EventosPresencialesClient({ initialEventos }: { initialE
                   </div>
                 </div>
 
+                {/* Enlaces directos cuando el evento está activo */}
+                {ev.estado_activo && (
+                  <div className="flex gap-2">
+                    <a
+                      href={`/eventos/${ev.slug_qr}/pantalla`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex-1 flex items-center justify-center gap-1.5 py-3 px-3 rounded-2xl border text-[10px] font-black uppercase tracking-wider transition-all cursor-pointer
+                        bg-cyan-950/30 text-cyan-400 border-cyan-500/20 hover:bg-cyan-950/50 hover:border-cyan-500/40 hover:text-cyan-300"
+                    >
+                      <Tv size={12} />
+                      Pantalla Gigante
+                    </a>
+                    <button
+                      onClick={() => router.push(`/dashboard/eventos-presenciales/${ev.id}`)}
+                      className="flex-1 flex items-center justify-center gap-1.5 py-3 px-3 rounded-2xl border text-[10px] font-black uppercase tracking-wider transition-all cursor-pointer
+                        bg-violet-950/30 text-violet-400 border-violet-500/20 hover:bg-violet-950/50 hover:border-violet-500/40 hover:text-violet-300"
+                    >
+                      <SlidersHorizontal size={12} />
+                      Consola ITEC
+                    </button>
+                  </div>
+                )}
+
                 {/* Acciones de la Tarjeta */}
-                <div className="flex gap-2.5 mt-5 border-t border-zinc-900 pt-4">
+                <div className="flex gap-2.5 mt-3 border-t border-zinc-900 pt-3">
                   {/* Botón de Enlace Copiar */}
                   <button
                     onClick={() => handleCopyLink(ev.slug_qr, ev.id)}
