@@ -30,8 +30,10 @@ export function IdeasManagementClient({ ideas, isAdmin }: { ideas: Idea[], isAdm
   const handleDelete = async (id: string) => {
     if (!confirm('¿Eliminar esta idea definitivamente?')) return
     setLoadingId(id)
-    await deleteIdeaAction(id)
-    setLocalIdeas(prev => prev.filter(i => i.id !== id))
+    const res = await deleteIdeaAction(id)
+    if (res.success) {
+      setLocalIdeas(prev => prev.filter(i => i.id !== id))
+    }
     setLoadingId(null)
   }
 
