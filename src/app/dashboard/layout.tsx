@@ -2,6 +2,8 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { getCurrentMember, isAdmin } from '@/services/auth'
+import { createClient } from '@/lib/supabase/server'
+import { SidebarIdeasLink } from '@/components/dashboard/SidebarIdeasLink'
 
 export const metadata: Metadata = {
   title: 'Panel de Control — ITEC Saladillo',
@@ -112,6 +114,14 @@ export default async function DashboardLayout({ children }: { children: React.Re
   const member = await getCurrentMember()
   const isUserAdmin = isAdmin(member)
 
+  const supabase = await createClient()
+  const { count } = await supabase
+    .from('ideas')
+    .select('*', { count: 'exact', head: true })
+    .eq('status', 'pendiente')
+  const hasPendingIdeas = (count ?? 0) > 0
+  const pendingIdeasCount = count ?? 0
+
   return (
     <div className="min-h-screen bg-black flex">
       {/* Sidebar */}
@@ -134,21 +144,29 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
         {/* Nav principal */}
         <nav className="flex-1 p-3 flex flex-col gap-0.5 overflow-y-auto">
-          {navItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[var(--text-secondary)] hover:text-white hover:bg-white/5 transition-all text-sm font-medium group"
-            >
-              <svg
-                className="w-4 h-4 flex-shrink-0 group-hover:text-[var(--accent-primary-2)] transition-colors"
-                fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}
+          {navItems.map((item) =>
+            item.label === 'Buzón de Ideas' ? (
+              <SidebarIdeasLink
+                key={item.href}
+                hasPendingIdeas={hasPendingIdeas}
+                pendingCount={pendingIdeasCount}
+              />
+            ) : (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[var(--text-secondary)] hover:text-white hover:bg-white/5 transition-all text-sm font-medium group"
               >
-                <path strokeLinecap="round" strokeLinejoin="round" d={item.icon} />
-              </svg>
-              {item.label}
-            </Link>
-          ))}
+                <svg
+                  className="w-4 h-4 flex-shrink-0 group-hover:text-[var(--accent-primary-2)] transition-colors"
+                  fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d={item.icon} />
+                </svg>
+                {item.label}
+              </Link>
+            )
+          )}
 
           {/* Sección HERRAMIENTAS (Solo Admins) */}
           {isUserAdmin && (

@@ -37,7 +37,7 @@ export async function updateIdeaStatusAction(id: string, status: string) {
   const { error } = await supabase.from('ideas').update({ status }).eq('id', id)
 
   if (error) return { success: false, error: error.message }
-  revalidatePath('/dashboard/ideas')
+  revalidatePath('/dashboard', 'layout')
   return { success: true }
 }
 
@@ -49,6 +49,6 @@ export async function deleteIdeaAction(id: string) {
   const { error } = await supabase.from('ideas').delete().eq('id', id)
 
   if (error) return { success: false, error: error.message }
-  revalidatePath('/dashboard/ideas')
+  revalidatePath('/dashboard', 'layout')
   return { success: true }
 }
