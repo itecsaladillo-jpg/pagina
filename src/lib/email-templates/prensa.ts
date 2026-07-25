@@ -1,4 +1,4 @@
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://pagina-eight-alpha.vercel.app'
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.itecsaladillo.org.ar'
 
 export function generatePrensaEmailHtml({
   titulo,
