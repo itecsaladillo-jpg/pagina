@@ -25,8 +25,9 @@ export function generatePrensaEmailHtml({
             const ext = url.split('.').pop()?.toLowerCase() || ''
             const isImage = ['jpg', 'jpeg', 'png', 'webp', 'gif'].includes(ext)
             const label = isImage ? `📷 Imagen ${i + 1}` : `🎬 Video ${i + 1}`
+            const downloadAttr = isImage ? ' download' : ''
             return `
-              <a href="${url}" target="_blank"
+              <a href="${url}" target="_blank"${downloadAttr}
                  style="display: inline-block; padding: 10px 20px; background: #1e293b; color: #ffffff; text-decoration: none; border-radius: 8px; font-size: 13px; font-weight: 600;">
                 ${label}
               </a>
