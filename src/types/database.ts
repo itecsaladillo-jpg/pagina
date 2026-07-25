@@ -176,6 +176,36 @@ export interface PrensaEnvioLog {
 }
 
 // ─────────────────────────────────────────
+// TABLA: eventos (control presencial/consola)
+// ─────────────────────────────────────────
+
+export type HerramientasActivas = {
+  encuestas: boolean
+  preguntas: boolean
+  nube: boolean
+  semaforo: boolean
+}
+
+export type ModoPantallaGigante = 'bienvenida' | 'nube' | 'encuestas' | 'preguntas'
+
+export interface Evento {
+  id: string
+  created_at: string
+  updated_at: string
+  nombre_evento: string
+  slug_qr: string
+  fecha: string
+  estado_activo: boolean
+  modalidad: 'presencial' | 'virtual' | null
+  herramienta_activa: 'encuestas' | 'preguntas' | 'nube_ideas'
+  encuesta_activa_id: string | null
+  nube_activa_id: string | null
+  semaforo_last_reset_at: string | null
+  herramientas_activas: HerramientasActivas
+  modo_pantalla_gigante: ModoPantallaGigante
+}
+
+// ─────────────────────────────────────────
 // DATABASE TYPE (para generics de Supabase)
 // ─────────────────────────────────────────
 
@@ -226,6 +256,11 @@ export interface Database {
         Row: SponsorReport
         Insert: Omit<SponsorReport, 'id' | 'created_at' | 'updated_at'>
         Update: Partial<Omit<SponsorReport, 'id' | 'created_at'>>
+      }
+      eventos: {
+        Row: Evento
+        Insert: Omit<Evento, 'id' | 'created_at' | 'updated_at'>
+        Update: Partial<Omit<Evento, 'id' | 'created_at'>>
       }
     }
   }
