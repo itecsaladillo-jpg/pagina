@@ -282,6 +282,10 @@ export default async function DashboardLayout({ children }: { children: React.Re
                 <div className="pl-4 pt-1 space-y-1">
                   {adminNavItems
                     .filter((item) => item.label === 'Encuestas ITEC' || item.label === 'Sistema de Preguntas' || item.label === 'Nube de Ideas' || item.label === 'Crear Evento')
+                    .sort((a, b) => {
+                      const order = ['Crear Evento', 'Encuestas ITEC', 'Sistema de Preguntas', 'Nube de Ideas']
+                      return order.indexOf(a.label) - order.indexOf(b.label)
+                    })
                     .map((item) => (
                       <Link
                         key={item.href}
