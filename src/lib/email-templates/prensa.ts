@@ -27,8 +27,9 @@ export function generatePrensaEmailHtml({
               const ext = url.split('.').pop()?.toLowerCase() || ''
               const isImage = ['jpg', 'jpeg', 'png', 'webp', 'gif'].includes(ext)
               const label = isImage ? `📷 Imagen ${i + 1}` : `🎬 Video ${i + 1}`
+              const filename = url.split('/').pop() || `archivo_${i + 1}.${ext}`
               const separator = url.includes('?') ? '&' : '?'
-              const downloadUrl = `${url}${separator}download=true`
+              const downloadUrl = `${url}${separator}download=${filename}`
               return `
                 <td style="padding: 0 4px 8px; width: ${Math.floor(100 / Math.min(mediaUrls.length, 3))}%; vertical-align: top;" class="resp-btn-cell">
                   <a href="${downloadUrl}" target="_blank"
