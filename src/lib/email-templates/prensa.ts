@@ -1,3 +1,5 @@
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://pagina-eight-alpha.vercel.app'
+
 export function generatePrensaEmailHtml({
   titulo,
   contenidoMedios,
@@ -55,7 +57,7 @@ export function generatePrensaEmailHtml({
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
                 <tr>
                   <td style="width: 160px;">
-                    <img src="${process.env.NEXT_PUBLIC_SITE_URL}/logoitectrans_v2.png"
+                    <img src="${SITE_URL}/logoitectrans_v2.png"
                          alt="ITEC Saladillo"
                          width="160"
                          style="max-width: 160px; height: auto; display: block; border: 0;" />
@@ -126,7 +128,7 @@ export function generatePrensaEmailHtml({
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
                 <tr>
                   <td style="width: 100px; vertical-align: middle; padding-right: 24px;">
-                    <img src="${process.env.NEXT_PUBLIC_SITE_URL}/logoitectrans_v2.png"
+                    <img src="${SITE_URL}/logoitectrans_v2.png"
                          alt="ITEC Saladillo"
                          width="100"
                          style="max-width: 100px; height: auto; display: block; border: 0;" />
