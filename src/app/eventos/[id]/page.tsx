@@ -25,6 +25,13 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 
+interface HerramientasActivas {
+  encuestas: boolean;
+  preguntas: boolean;
+  nube: boolean;
+  semaforo: boolean;
+}
+
 interface Evento {
   id: string;
   nombre_evento: string;
@@ -34,6 +41,9 @@ interface Evento {
   herramienta_activa: "encuestas" | "preguntas" | "nube_ideas";
   encuesta_activa_id: string | null;
   nube_activa_id: string | null;
+  semaforo_last_reset_at: string | null;
+  herramientas_activas: HerramientasActivas;
+  modo_pantalla_gigante: string;
 }
 
 interface Asistente {
@@ -154,7 +164,11 @@ export default function EventoPage({ params }: { params: Promise<{ id: string }>
           return;
         }
 
-        const currentEvent = eventData as Evento;
+        const currentEvent = {
+          ...eventData,
+          herramientas_activas: (eventData as any).herramientas_activas ?? { encuestas: true, preguntas: true, nube: true, semaforo: true },
+          modo_pantalla_gigante: (eventData as any).modo_pantalla_gigante ?? 'bienvenida',
+        } as Evento;
         setEvento(currentEvent);
         lastToolRef.current = currentEvent.herramienta_activa;
         setActiveTab(currentEvent.herramienta_activa);
@@ -204,19 +218,27 @@ export default function EventoPage({ params }: { params: Promise<{ id: string }>
           filter: `id=eq.${evento.id}` 
         },
         (payload) => {
-          const newEventData = payload.new as Evento;
-          setEvento(newEventData);
-
-          if (newEventData.herramienta_activa !== lastToolRef.current) {
-            lastToolRef.current = newEventData.herramienta_activa;
-            
-            if (newEventData.herramienta_activa !== activeTab) {
-              setNotifTargetTab(newEventData.herramienta_activa);
-              setShowNotification(true);
-            } else {
-              setShowNotification(false);
+          const newData = payload.new as any;
+          if (!newData) return;
+          setEvento(prev => {
+            if (!prev) return prev;
+            const updated: Evento = {
+              ...prev,
+              ...newData,
+              herramientas_activas: newData.herramientas_activas ?? prev.herramientas_activas ?? { encuestas: true, preguntas: true, nube: true, semaforo: true },
+              modo_pantalla_gigante: newData.modo_pantalla_gigante ?? prev.modo_pantalla_gigante,
+            };
+            if (newData.herramienta_activa && newData.herramienta_activa !== lastToolRef.current) {
+              lastToolRef.current = newData.herramienta_activa;
+              if (newData.herramienta_activa !== activeTab) {
+                setNotifTargetTab(newData.herramienta_activa);
+                setShowNotification(true);
+              } else {
+                setShowNotification(false);
+              }
             }
-          }
+            return updated;
+          });
         }
       )
       .subscribe();
@@ -225,6 +247,25 @@ export default function EventoPage({ params }: { params: Promise<{ id: string }>
       supabase.removeChannel(eventChannel);
     };
   }, [evento, activeTab, supabase]);
+
+  // 3b. Si la herramienta activa actual fue desactivada, redirigir a la primera disponible
+  useEffect(() => {
+    if (!evento) return;
+    const herramientas = evento.herramientas_activas;
+    if (!herramientas) return;
+
+    const tabValido = (
+      (activeTab === 'encuestas' && herramientas.encuestas) ||
+      (activeTab === 'preguntas' && herramientas.preguntas) ||
+      (activeTab === 'nube_ideas' && herramientas.nube)
+    );
+
+    if (!tabValido) {
+      if (herramientas.encuestas) setActiveTab('encuestas');
+      else if (herramientas.preguntas) setActiveTab('preguntas');
+      else if (herramientas.nube) setActiveTab('nube_ideas');
+    }
+  }, [evento?.herramientas_activas, activeTab]);
 
   // 4. Lógica de Pestaña 1: Encuestas (Carga y Sincronización)
   useEffect(() => {
@@ -851,62 +892,63 @@ export default function EventoPage({ params }: { params: Promise<{ id: string }>
         </div>
       </div>
 
-      <nav className="max-w-md mx-auto px-4 mt-3">
-        <div className="flex bg-zinc-900/50 border border-zinc-850 p-1 rounded-2xl backdrop-blur-sm relative">
-          <button
-            onClick={() => setActiveTab("encuestas")}
-            className={`flex-1 flex items-center justify-center gap-2 py-3 px-2 rounded-xl text-xs font-extrabold uppercase tracking-wider transition-all cursor-pointer relative z-10 ${
-              activeTab === "encuestas" 
-                ? "text-white" 
-                : "text-zinc-500 hover:text-zinc-300"
-            }`}
-          >
-            <Vote size={15} />
-            {dict.eventos.panel.tabEncuestas}
-            {evento.herramienta_activa === "encuestas" && (
-              <span className="w-1.5 h-1.5 bg-cyan-400 rounded-full absolute top-2.5 right-2.5 animate-pulse" />
-            )}
-          </button>
+      {(() => {
+        const tabsDisponibles = [
+          { key: "encuestas" as const, icon: Vote, label: dict.eventos.panel.tabEncuestas },
+          { key: "preguntas" as const, icon: MessageSquare, label: dict.eventos.panel.tabPreguntas },
+          { key: "nube_ideas" as const, icon: Cloud, label: dict.eventos.panel.tabNube },
+        ].filter(t => {
+          const ha = evento.herramientas_activas;
+          if (!ha) return false;
+          if (t.key === "encuestas") return ha.encuestas;
+          if (t.key === "preguntas") return ha.preguntas;
+          if (t.key === "nube_ideas") return ha.nube;
+          return false;
+        });
 
-          <button
-            onClick={() => setActiveTab("preguntas")}
-            className={`flex-1 flex items-center justify-center gap-2 py-3 px-2 rounded-xl text-xs font-extrabold uppercase tracking-wider transition-all cursor-pointer relative z-10 ${
-              activeTab === "preguntas" 
-                ? "text-white" 
-                : "text-zinc-500 hover:text-zinc-350"
-            }`}
-          >
-            <MessageSquare size={15} />
-            {dict.eventos.panel.tabPreguntas}
-            {evento.herramienta_activa === "preguntas" && (
-              <span className="w-1.5 h-1.5 bg-cyan-400 rounded-full absolute top-2.5 right-2.5 animate-pulse" />
-            )}
-          </button>
+        const tabCount = tabsDisponibles.length;
+        const tabWidth = tabCount > 0 ? `calc(${100 / tabCount}% - 4px)` : '0px';
 
-          <button
-            onClick={() => setActiveTab("nube_ideas")}
-            className={`flex-1 flex items-center justify-center gap-2 py-3 px-2 rounded-xl text-xs font-extrabold uppercase tracking-wider transition-all cursor-pointer relative z-10 ${
-              activeTab === "nube_ideas" 
-                ? "text-white" 
-                : "text-zinc-500 hover:text-zinc-300"
-            }`}
-          >
-            <Cloud size={15} />
-            {dict.eventos.panel.tabNube}
-            {evento.herramienta_activa === "nube_ideas" && (
-              <span className="w-1.5 h-1.5 bg-cyan-400 rounded-full absolute top-2.5 right-2.5 animate-pulse" />
-            )}
-          </button>
+        const getLeftPosition = () => {
+          const idx = tabsDisponibles.findIndex(t => t.key === activeTab);
+          if (idx === -1) return '4px';
+          return `calc(${(idx / tabCount) * 100}% + 4px)`;
+        };
 
-          <div 
-            className="absolute top-1 bottom-1 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl transition-all duration-300 pointer-events-none"
-            style={{
-              width: "calc(33.333% - 4px)",
-              left: activeTab === "encuestas" ? "4px" : activeTab === "preguntas" ? "33.333%" : "calc(66.666% - 4px)"
-            }}
-          />
-        </div>
-      </nav>
+        if (tabCount === 0) return null;
+
+        return (
+          <nav className="max-w-md mx-auto px-4 mt-3">
+            <div className="flex bg-zinc-900/50 border border-zinc-850 p-1 rounded-2xl backdrop-blur-sm relative">
+              {tabsDisponibles.map(({ key, icon: Icon, label }) => (
+                <button
+                  key={key}
+                  onClick={() => setActiveTab(key)}
+                  className={`flex-1 flex items-center justify-center gap-2 py-3 px-2 rounded-xl text-xs font-extrabold uppercase tracking-wider transition-all cursor-pointer relative z-10 ${
+                    activeTab === key
+                      ? "text-white"
+                      : "text-zinc-500 hover:text-zinc-300"
+                  }`}
+                >
+                  <Icon size={15} />
+                  {label}
+                  {evento.herramienta_activa === key && (
+                    <span className="w-1.5 h-1.5 bg-cyan-400 rounded-full absolute top-2.5 right-2.5 animate-pulse" />
+                  )}
+                </button>
+              ))}
+
+              <div
+                className="absolute top-1 bottom-1 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl transition-all duration-300 pointer-events-none"
+                style={{
+                  width: tabWidth,
+                  left: getLeftPosition(),
+                }}
+              />
+            </div>
+          </nav>
+        );
+      })()}
 
       <main className="max-w-md mx-auto px-4 mt-4 space-y-4 relative z-10">
         

@@ -1,6 +1,8 @@
 'use client'
 
 import { useState } from 'react'
+import { CheckCircle2 } from 'lucide-react'
+import { motion } from 'framer-motion'
 
 export function PublicIdeasForm() {
   const [ideaText, setIdeaText] = useState('')
@@ -8,9 +10,17 @@ export function PublicIdeasForm() {
   const [authorName, setAuthorName] = useState('')
   const [authorEmail, setAuthorEmail] = useState('')
   const [authorPhone, setAuthorPhone] = useState('')
-  const [submitted, setSubmitted] = useState(false)
+  const [isSubmitted, setIsSubmitted] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+
+  const reset = () => {
+    setIdeaText('')
+    setIsAnonymous(false)
+    setAuthorName('')
+    setAuthorEmail('')
+    setAuthorPhone('')
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -28,7 +38,8 @@ export function PublicIdeasForm() {
       const res = await fetch('/api/ideas', { method: 'POST', body: fd })
       const data = await res.json()
       if (data.success) {
-        setSubmitted(true)
+        reset()
+        setIsSubmitted(true)
       } else {
         setError(data.error || 'Error al enviar la idea.')
       }
@@ -38,17 +49,34 @@ export function PublicIdeasForm() {
     setLoading(false)
   }
 
-  if (submitted) {
+  if (isSubmitted) {
     return (
-      <div className="glass rounded-2xl p-8 text-center border border-green-500/20">
-        <div className="w-14 h-14 rounded-full bg-green-500/10 flex items-center justify-center mx-auto mb-4">
-          <svg className="w-7 h-7 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.35 }}
+        className="glass rounded-2xl p-8 text-center border border-emerald-500/20 max-w-xl mx-auto"
+      >
+        <div className="w-16 h-16 rounded-full bg-emerald-500/10 flex items-center justify-center mx-auto mb-5 shadow-[0_0_24px_-4px_rgba(16,185,129,0.3)]">
+          <CheckCircle2 className="w-8 h-8 text-emerald-400" />
         </div>
-        <h3 className="text-white font-semibold text-lg mb-1">¡Idea enviada!</h3>
-        <p className="text-[var(--text-muted)] text-sm">Gracias por contribuir. El equipo la revisará pronto.</p>
-      </div>
+        <h3 className="text-white font-semibold text-xl mb-3">¡Muchas gracias por aportar tu idea!</h3>
+        <div className="text-[var(--text-muted)] text-sm leading-relaxed space-y-3 mb-6">
+          <p>
+            Hemos recibido tu propuesta correctamente. El equipo de ITEC Saladillo la analizará con atención para evaluar su viabilidad e impacto en nuestra comunidad.
+          </p>
+          <p>
+            Si nos dejaste tus datos de contacto, nos comunicaremos con vos para profundizar en la iniciativa e invitarte a ser parte activa del proyecto. ¡Tu aporte nos ayuda a seguir construyendo juntos!
+          </p>
+        </div>
+        <button
+          type="button"
+          onClick={() => setIsSubmitted(false)}
+          className="btn-secondary py-2.5 px-6 rounded-xl text-sm font-semibold"
+        >
+          Enviar otra propuesta
+        </button>
+      </motion.div>
     )
   }
 

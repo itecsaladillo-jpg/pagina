@@ -18,8 +18,21 @@ import {
   Copy,
   ExternalLink,
   ChevronRight,
-  TrendingUp
+  TrendingUp,
+  TrafficCone,
+  ToggleLeft,
+  Monitor,
+  RefreshCw
 } from "lucide-react";
+
+interface HerramientasActivas {
+  encuestas: boolean;
+  preguntas: boolean;
+  nube: boolean;
+  semaforo: boolean;
+}
+
+type ModoPantalla = 'bienvenida' | 'nube' | 'encuestas' | 'preguntas';
 
 interface Evento {
   id: string;
@@ -30,6 +43,9 @@ interface Evento {
   herramienta_activa: "encuestas" | "preguntas" | "nube_ideas";
   encuesta_activa_id: string | null;
   nube_activa_id: string | null;
+  semaforo_last_reset_at: string | null;
+  herramientas_activas: HerramientasActivas;
+  modo_pantalla_gigante: ModoPantalla;
 }
 
 interface Encuesta {
@@ -63,8 +79,12 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
   const supabase = createClient();
 
   // Estados principales
-  const [evento, setEvento] = useState<Evento>(initialEvento);
-  const [panelTab, setPanelTab] = useState<"herramientas" | "moderacion" | "nube">("herramientas");
+  const [evento, setEvento] = useState<Evento>(() => ({
+    ...initialEvento,
+    herramientas_activas: (initialEvento as any).herramientas_activas ?? { encuestas: true, preguntas: true, nube: true, semaforo: true },
+    modo_pantalla_gigante: (initialEvento as any).modo_pantalla_gigante ?? 'bienvenida',
+  }));
+  const [panelTab, setPanelTab] = useState<"herramientas" | "moderacion" | "nube" | "semaforo">("herramientas");
   const [copiedLink, setCopiedLink] = useState(false);
   const [asistentesCount, setAsistentesCount] = useState(0);
 
@@ -82,6 +102,10 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
 
   // Estados de Nube de Ideas
   const [palabrasNube, setPalabrasNube] = useState<PalabraNube[]>([]);
+
+  // Estados de Semáforo
+  const [estadoSemaforo, setEstadoSemaforo] = useState<{ totalAcreditados: number; votosNegativos: number; porcentajeNegativo: number; estado: 'VERDE' | 'AMARILLO' | 'ROJO' } | null>(null);
+  const [resetSemaforoLoading, setResetSemaforoLoading] = useState(false);
 
   // 1. Carga Inicial y Conteo de Asistentes
   useEffect(() => {
@@ -123,8 +147,27 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
       )
       .subscribe();
 
+    // Sincronizar cambios del evento en tiempo real (herramientas_activas, modo_pantalla, etc.)
+    const eventoChannel = supabase
+      .channel(`realtime:panel_evento_${evento.id}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "UPDATE",
+          schema: "public",
+          table: "eventos",
+          filter: `id=eq.${evento.id}`
+        },
+        (payload) => {
+          const updated = payload.new as Partial<Evento>;
+          setEvento(prev => ({ ...prev, ...updated }));
+        }
+      )
+      .subscribe();
+
     return () => {
       supabase.removeChannel(asistentesChannel);
+      supabase.removeChannel(eventoChannel);
     };
   }, [evento.id, supabase]);
 
@@ -246,6 +289,82 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
     };
   }, [evento.id, supabase]);
 
+  // 5. Semáforo: fetch inicial y suscripción Realtime
+  useEffect(() => {
+    const fetchEstadoSemaforo = async () => {
+      const { count: totalAcreditados } = await supabase
+        .from("eventos_asistentes")
+        .select("*", { count: "exact", head: true })
+        .eq("evento_id", evento.id);
+
+      const { data: eventoData } = await supabase
+        .from("eventos")
+        .select("semaforo_last_reset_at")
+        .eq("id", evento.id)
+        .single();
+
+      const lastResetAt = eventoData?.semaforo_last_reset_at;
+
+      let votosNegativos = 0;
+      if (lastResetAt) {
+        const { count } = await supabase
+          .from("evento_semaforo_votos")
+          .select("*", { count: "exact", head: true })
+          .eq("evento_id", evento.id)
+          .eq("voto", "negativo")
+          .gte("created_at", lastResetAt);
+
+        votosNegativos = count ?? 0;
+      }
+
+      const total = totalAcreditados ?? 0;
+      const porcentajeNegativo = total === 0 ? 0 : Math.round((votosNegativos / total) * 100);
+
+      let estado: 'VERDE' | 'AMARILLO' | 'ROJO';
+      if (porcentajeNegativo < 30) estado = "VERDE";
+      else if (porcentajeNegativo < 50) estado = "AMARILLO";
+      else estado = "ROJO";
+
+      setEstadoSemaforo({ totalAcreditados: total, votosNegativos, porcentajeNegativo, estado });
+    };
+
+    fetchEstadoSemaforo();
+
+    const semaforoChannel = supabase
+      .channel(`realtime:orador_semaforo_${evento.id}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "evento_semaforo_votos",
+          filter: `evento_id=eq.${evento.id}`
+        },
+        () => {
+          fetchEstadoSemaforo();
+        }
+      )
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "eventos",
+          filter: `id=eq.${evento.id}`
+        },
+        (payload) => {
+          if (payload.new && (payload.new as any).semaforo_last_reset_at !== (payload.old as any).semaforo_last_reset_at) {
+            fetchEstadoSemaforo();
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(semaforoChannel);
+    };
+  }, [evento.id, supabase]);
+
   // --- MÉTODOS DE DATOS ---
 
   const fetchEncuestas = async () => {
@@ -344,18 +463,36 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
     }
   };
 
-  // --- LÓGICA DE CONTROL DEL ORADOR (REALTIME TRIGGER) ---
+  // --- LÓGICA DE CONTROL DEL ORADOR (SWITCHES + MODO PROYECCIÓN) ---
 
-  const handleUpdateHerramienta = async (tool: "encuestas" | "preguntas" | "nube_ideas") => {
+  const handleToggleHerramienta = async (key: keyof HerramientasActivas) => {
+    const nuevas = {
+      ...evento.herramientas_activas,
+      [key]: !evento.herramientas_activas[key],
+    }
+
     const { error } = await supabase
       .from("eventos")
-      .update({ herramienta_activa: tool })
+      .update({ herramientas_activas: nuevas })
       .eq("id", evento.id);
 
     if (!error) {
-      setEvento(prev => ({ ...prev, herramienta_activa: tool }));
+      setEvento(prev => ({ ...prev, herramientas_activas: nuevas }));
     } else {
-      alert("Error al actualizar la herramienta activa.");
+      alert("Error al actualizar las herramientas activas.");
+    }
+  };
+
+  const handleSetModoPantalla = async (modo: ModoPantalla) => {
+    const { error } = await supabase
+      .from("eventos")
+      .update({ modo_pantalla_gigante: modo })
+      .eq("id", evento.id);
+
+    if (!error) {
+      setEvento(prev => ({ ...prev, modo_pantalla_gigante: modo }));
+    } else {
+      alert("Error al cambiar el modo de pantalla.");
     }
   };
 
@@ -439,19 +576,28 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
   };
 
   const handleLanzarEncuesta = async (pollId: string) => {
-    // 1. Desactivar encuestas previas en Supabase y activar esta
+    const nuevasHerramientas = {
+      ...evento.herramientas_activas,
+      encuestas: true,
+    }
+
     const { error: patchEventError } = await supabase
       .from("eventos")
-      .update({ encuesta_activa_id: pollId, herramienta_activa: "encuestas" })
+      .update({
+        encuesta_activa_id: pollId,
+        modo_pantalla_gigante: "encuestas",
+        herramientas_activas: nuevasHerramientas,
+      })
       .eq("id", evento.id);
 
     if (!patchEventError) {
-      setEvento(prev => ({ 
-        ...prev, 
-        encuesta_activa_id: pollId, 
-        herramienta_activa: "encuestas" 
+      setEvento(prev => ({
+        ...prev,
+        encuesta_activa_id: pollId,
+        modo_pantalla_gigante: "encuestas",
+        herramientas_activas: nuevasHerramientas,
       }));
-      alert("¡Encuesta lanzada en vivo! Todos los asistentes verán el panel de votación.");
+      alert("¡Encuesta lanzada en vivo! La pantalla gigante muestra los resultados.");
       fetchEncuestas();
     } else {
       alert("Error al lanzar la encuesta.");
@@ -534,6 +680,24 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
     }
   };
 
+  const handleResetSemaforo = async () => {
+    if (!confirm("¿Reiniciar el semáforo? Se borrarán todos los votos registrados hasta ahora.")) return;
+
+    setResetSemaforoLoading(true);
+    const { error } = await supabase
+      .from("eventos")
+      .update({ semaforo_last_reset_at: new Date().toISOString() })
+      .eq("id", evento.id);
+
+    if (!error) {
+      setEstadoSemaforo(null);
+      setResetSemaforoLoading(false);
+    } else {
+      alert("Error al reiniciar el semáforo.");
+      setResetSemaforoLoading(false);
+    }
+  };
+
   return (
     <div className="space-y-6">
       {/* 1. Header con Información de Proyección */}
@@ -580,50 +744,74 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
           </div>
         </div>
 
-        {/* 2. Control de Herramienta Activa en el Auditorio */}
-        <div className="bg-zinc-950/60 border border-zinc-850 p-4 rounded-3xl space-y-3 min-w-[280px]">
-          <h3 className="text-[10px] uppercase font-black text-zinc-400 tracking-wider text-center flex items-center gap-1 justify-center">
-            <Sparkles size={11} className="text-indigo-400 animate-pulse" /> Actividad en los Celulares
-          </h3>
-          <div className="flex gap-1.5">
-            <button
-              onClick={() => handleUpdateHerramienta("encuestas")}
-              className={`flex-1 flex flex-col items-center justify-center py-3.5 px-1 rounded-2xl transition-all cursor-pointer border text-center ${
-                evento.herramienta_activa === "encuestas"
-                  ? "bg-indigo-600 border-indigo-500 text-white font-black scale-[1.03] shadow-md shadow-indigo-500/10"
-                  : "bg-zinc-900/40 border-zinc-800 text-zinc-550 hover:text-zinc-300"
-              }`}
-              title="Activar Encuesta en los teléfonos"
-            >
-              <Vote size={18} className="mb-1" />
-              <span className="text-[9px] uppercase tracking-wider font-extrabold">Encuestas</span>
-            </button>
+        {/* 2. Panel de Control: Switches individuales + selector de proyección */}
+        <div className="space-y-3 min-w-[280px]">
+          {/* Toggle switches por herramienta */}
+          <div className="bg-zinc-950/60 border border-zinc-850 p-4 rounded-3xl space-y-3">
+            <h3 className="text-[10px] uppercase font-black text-zinc-400 tracking-wider text-center flex items-center gap-1 justify-center">
+              <ToggleLeft size={11} className="text-indigo-400" /> Herramientas Activas en Celulares
+            </h3>
+            <div className="grid grid-cols-2 gap-2">
+              {([
+                { key: 'encuestas' as const, label: 'Encuestas', icon: Vote },
+                { key: 'preguntas' as const, label: 'Muro Q&A', icon: MessageSquare },
+                { key: 'nube' as const, label: 'Nube', icon: Cloud },
+                { key: 'semaforo' as const, label: 'Semáforo', icon: TrafficCone },
+              ]).map(({ key, label, icon: Icon }) => {
+                const isOn = evento.herramientas_activas[key]
+                return (
+                  <button
+                    key={key}
+                    onClick={() => handleToggleHerramienta(key)}
+                    className={`flex items-center gap-2 py-2.5 px-3 rounded-2xl transition-all cursor-pointer border text-left ${
+                      isOn
+                        ? 'bg-indigo-600/20 border-indigo-500/40 text-white'
+                        : 'bg-zinc-900/40 border-zinc-800 text-zinc-500 hover:text-zinc-300'
+                    }`}
+                    title={isOn ? `Desactivar ${label}` : `Activar ${label}`}
+                  >
+                    <Icon size={16} className={isOn ? 'text-indigo-400' : 'text-zinc-600'} />
+                    <span className="flex-1 text-[9px] uppercase tracking-wider font-extrabold">{label}</span>
+                    <span className={`w-4 h-4 rounded-full border-2 transition-all ${
+                      isOn
+                        ? 'bg-indigo-500 border-indigo-400 shadow-sm shadow-indigo-500/30'
+                        : 'bg-zinc-800 border-zinc-700'
+                    }`}>
+                      {isOn && <span className="block w-1.5 h-1.5 bg-white rounded-full mx-auto mt-0.5" />}
+                    </span>
+                  </button>
+                )
+              })}
+            </div>
+          </div>
 
-            <button
-              onClick={() => handleUpdateHerramienta("preguntas")}
-              className={`flex-1 flex flex-col items-center justify-center py-3.5 px-1 rounded-2xl transition-all cursor-pointer border text-center ${
-                evento.herramienta_activa === "preguntas"
-                  ? "bg-indigo-600 border-indigo-500 text-white font-black scale-[1.03] shadow-md shadow-indigo-500/10"
-                  : "bg-zinc-900/40 border-zinc-800 text-zinc-550 hover:text-zinc-300"
-              }`}
-              title="Activar Preguntas en los teléfonos"
-            >
-              <MessageSquare size={18} className="mb-1" />
-              <span className="text-[9px] uppercase tracking-wider font-extrabold">Muro Q&A</span>
-            </button>
-
-            <button
-              onClick={() => handleUpdateHerramienta("nube_ideas")}
-              className={`flex-1 flex flex-col items-center justify-center py-3.5 px-1 rounded-2xl transition-all cursor-pointer border text-center ${
-                evento.herramienta_activa === "nube_ideas"
-                  ? "bg-indigo-600 border-indigo-500 text-white font-black scale-[1.03] shadow-md shadow-indigo-500/10"
-                  : "bg-zinc-900/40 border-zinc-800 text-zinc-550 hover:text-zinc-300"
-              }`}
-              title="Activar Nube en los teléfonos"
-            >
-              <Cloud size={18} className="mb-1" />
-              <span className="text-[9px] uppercase tracking-wider font-extrabold">Nube</span>
-            </button>
+          {/* Selector de modo de proyección */}
+          <div className="bg-zinc-950/60 border border-zinc-850 p-4 rounded-3xl space-y-3">
+            <h3 className="text-[10px] uppercase font-black text-zinc-400 tracking-wider text-center flex items-center gap-1 justify-center">
+              <Monitor size={11} className="text-indigo-400" /> Modo Pantalla Gigante
+            </h3>
+            <div className="flex gap-1.5">
+              {([
+                { key: 'bienvenida' as const, label: 'Bienvenida', icon: Sparkles },
+                { key: 'nube' as const, label: 'Nube', icon: Cloud },
+                { key: 'encuestas' as const, label: 'Encuestas', icon: Vote },
+                { key: 'preguntas' as const, label: 'Preguntas', icon: MessageSquare },
+              ]).map(({ key, label, icon: Icon }) => (
+                <button
+                  key={key}
+                  onClick={() => handleSetModoPantalla(key)}
+                  className={`flex-1 flex flex-col items-center justify-center py-3 px-1 rounded-2xl transition-all cursor-pointer border text-center ${
+                    evento.modo_pantalla_gigante === key
+                      ? "bg-indigo-600 border-indigo-500 text-white font-black scale-[1.03] shadow-md shadow-indigo-500/10"
+                      : "bg-zinc-900/40 border-zinc-800 text-zinc-550 hover:text-zinc-300"
+                  }`}
+                  title={`Mostrar ${label} en el proyector`}
+                >
+                  <Icon size={16} className="mb-1" />
+                  <span className="text-[7px] uppercase tracking-wider font-extrabold">{label}</span>
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </div>
@@ -665,6 +853,20 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
           <Cloud size={15} />
           Nube ({palabrasNube.length})
         </button>
+
+        {evento.herramientas_activas.semaforo && (
+          <button
+            onClick={() => setPanelTab("semaforo")}
+            className={`flex-1 flex items-center justify-center gap-2 py-3.5 px-3 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer ${
+              panelTab === "semaforo" 
+                ? "bg-indigo-600 text-white shadow-md" 
+                : "text-zinc-450 hover:text-zinc-200"
+            }`}
+          >
+            <TrafficCone size={15} />
+            Semáforo
+          </button>
+        )}
       </nav>
 
       {/* CONTENIDO GESTIONADO POR TABS */}
@@ -1095,6 +1297,101 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
                     ))}
                   </div>
                 </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* --- PESTAÑA D: SEMÁFORO --- */}
+        {panelTab === "semaforo" && (
+          <div className="bg-zinc-900/40 border border-zinc-850 rounded-3xl p-5 shadow-xl space-y-6 relative overflow-hidden">
+            <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-amber-500/20 to-transparent" />
+
+            <div className="flex justify-between items-center">
+              <div className="space-y-0.5">
+                <h3 className="text-sm font-black text-white uppercase tracking-wider flex items-center gap-1.5">
+                  <TrafficCone size={16} className="text-amber-400" /> Semáforo de Comprensión
+                </h3>
+                <p className="text-[10px] text-zinc-550">
+                  Monitoreá en tiempo real la comprensión del auditorio. Los asistentes votan si van al ritmo de la explicación.
+                </p>
+              </div>
+            </div>
+
+            {/* Estado actual del semáforo */}
+            {estadoSemaforo && (
+              <div className="grid grid-cols-3 gap-4">
+                <div className={`rounded-3xl p-5 text-center border transition-all ${
+                  estadoSemaforo.estado === 'VERDE'
+                    ? 'bg-emerald-500/20 border-emerald-500/40 shadow-lg shadow-emerald-500/10 scale-105'
+                    : 'bg-zinc-950/40 border-zinc-800 opacity-40'
+                }`}>
+                  <div className={`w-12 h-12 rounded-full mx-auto mb-2 ${
+                    estadoSemaforo.estado === 'VERDE' ? 'bg-emerald-500 shadow-lg shadow-emerald-500/30 animate-pulse' : 'bg-zinc-700'
+                  }`} />
+                  <span className="text-[10px] font-black uppercase tracking-wider text-emerald-400">Verde</span>
+                </div>
+                <div className={`rounded-3xl p-5 text-center border transition-all ${
+                  estadoSemaforo.estado === 'AMARILLO'
+                    ? 'bg-yellow-500/20 border-yellow-500/40 shadow-lg shadow-yellow-500/10 scale-105'
+                    : 'bg-zinc-950/40 border-zinc-800 opacity-40'
+                }`}>
+                  <div className={`w-12 h-12 rounded-full mx-auto mb-2 ${
+                    estadoSemaforo.estado === 'AMARILLO' ? 'bg-yellow-500 shadow-lg shadow-yellow-500/30 animate-pulse' : 'bg-zinc-700'
+                  }`} />
+                  <span className="text-[10px] font-black uppercase tracking-wider text-yellow-400">Amarillo</span>
+                </div>
+                <div className={`rounded-3xl p-5 text-center border transition-all ${
+                  estadoSemaforo.estado === 'ROJO'
+                    ? 'bg-rose-500/20 border-rose-500/40 shadow-lg shadow-rose-500/10 scale-105'
+                    : 'bg-zinc-950/40 border-zinc-800 opacity-40'
+                }`}>
+                  <div className={`w-12 h-12 rounded-full mx-auto mb-2 ${
+                    estadoSemaforo.estado === 'ROJO' ? 'bg-rose-500 shadow-lg shadow-rose-500/30 animate-pulse' : 'bg-zinc-700'
+                  }`} />
+                  <span className="text-[10px] font-black uppercase tracking-wider text-rose-400">Rojo</span>
+                </div>
+              </div>
+            )}
+
+            {/* Métricas */}
+            {estadoSemaforo && (
+              <div className="grid grid-cols-3 gap-4">
+                <div className="bg-zinc-950/40 border border-zinc-900 rounded-2xl p-4 text-center space-y-1">
+                  <span className="text-2xl font-black text-white">{estadoSemaforo.totalAcreditados}</span>
+                  <p className="text-[9px] font-bold text-zinc-500 uppercase tracking-wider">Acreditados</p>
+                </div>
+                <div className="bg-zinc-950/40 border border-zinc-900 rounded-2xl p-4 text-center space-y-1">
+                  <span className="text-2xl font-black text-rose-400">{estadoSemaforo.votosNegativos}</span>
+                  <p className="text-[9px] font-bold text-zinc-500 uppercase tracking-wider">Votos Negativos</p>
+                </div>
+                <div className="bg-zinc-950/40 border border-zinc-900 rounded-2xl p-4 text-center space-y-1">
+                  <span className={`text-2xl font-black ${
+                    estadoSemaforo.porcentajeNegativo < 30 ? 'text-emerald-400' : estadoSemaforo.porcentajeNegativo < 50 ? 'text-yellow-400' : 'text-rose-400'
+                  }`}>{estadoSemaforo.porcentajeNegativo}%</span>
+                  <p className="text-[9px] font-bold text-zinc-500 uppercase tracking-wider">Negativos</p>
+                </div>
+              </div>
+            )}
+
+            {/* Botón de reseteo */}
+            <div className="flex justify-center">
+              <button
+                onClick={handleResetSemaforo}
+                disabled={resetSemaforoLoading}
+                className="flex items-center gap-2 px-5 py-3 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-400 hover:bg-amber-500/20 font-extrabold text-[10px] uppercase tracking-wider transition-all cursor-pointer"
+              >
+                <RefreshCw size={14} className={resetSemaforoLoading ? 'animate-spin' : ''} />
+                {resetSemaforoLoading ? 'Reiniciando...' : 'Reiniciar Semáforo'}
+              </button>
+            </div>
+
+            {/* Sin datos todavía */}
+            {!estadoSemaforo && (
+              <div className="text-center py-12 bg-zinc-900/10 border border-dashed border-zinc-850 rounded-3xl space-y-2">
+                <TrafficCone size={28} className="mx-auto text-zinc-700" />
+                <p className="text-[11px] font-bold text-zinc-500">No hay datos del semáforo aún.</p>
+                <p className="text-[10px] text-zinc-600">Esperá a que los asistentes comiencen a votar.</p>
               </div>
             )}
           </div>

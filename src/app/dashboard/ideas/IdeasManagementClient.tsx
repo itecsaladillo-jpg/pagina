@@ -15,23 +15,29 @@ export function IdeasManagementClient({ ideas, isAdmin }: { ideas: Idea[], isAdm
   const [filter, setFilter] = useState<string>('todas')
   const [loadingId, setLoadingId] = useState<string | null>(null)
   const [localIdeas, setLocalIdeas] = useState(ideas)
+  const [error, setError] = useState('')
 
   const filtered = filter === 'todas' ? localIdeas : localIdeas.filter(i => i.status === filter)
 
   const handleStatus = async (id: string, status: string) => {
+    setError('')
     setLoadingId(id)
     const res = await updateIdeaStatusAction(id, status)
-    if (res.success) {
-      setLocalIdeas(prev => prev.map(i => i.id === id ? { ...i, status: status as any } : i))
-    }
+    if (!res.success) setError(res.error || 'Error al actualizar estado')
+    else setLocalIdeas(prev => prev.map(i => i.id === id ? { ...i, status: status as any } : i))
     setLoadingId(null)
   }
 
   const handleDelete = async (id: string) => {
     if (!confirm('¿Eliminar esta idea definitivamente?')) return
+    setError('')
     setLoadingId(id)
-    await deleteIdeaAction(id)
-    setLocalIdeas(prev => prev.filter(i => i.id !== id))
+    const res = await deleteIdeaAction(id)
+    if (res.success) {
+      setLocalIdeas(prev => prev.filter(i => i.id !== id))
+    } else {
+      setError(res.error || 'Error al eliminar la idea')
+    }
     setLoadingId(null)
   }
 
@@ -45,6 +51,12 @@ export function IdeasManagementClient({ ideas, isAdmin }: { ideas: Idea[], isAdm
 
   return (
     <div className="space-y-6">
+      {error && (
+        <div className="bg-red-500/10 border border-red-500/20 rounded-xl px-4 py-3 text-red-400 text-sm">
+          {error}
+        </div>
+      )}
+
       {/* Filtros */}
       <div className="flex gap-2 flex-wrap">
         {[
