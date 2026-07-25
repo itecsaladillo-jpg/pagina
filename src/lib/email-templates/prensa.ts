@@ -1,4 +1,5 @@
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.itecsaladillo.org.ar'
+const ASSETS_URL = 'https://www.itecsaladillo.org.ar'
 
 export function generatePrensaEmailHtml({
   titulo,
@@ -76,7 +77,7 @@ export function generatePrensaEmailHtml({
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
                 <tr>
                   <td style="width: 160px;" class="resp-stack resp-center">
-                    <img src="${SITE_URL}/logoitectrans_v2.png"
+                    <img src="${ASSETS_URL}/logoitectrans_v2.png"
                          alt="ITEC Saladillo"
                          width="160"
                          class="resp-hdr-logo"
@@ -148,7 +149,7 @@ export function generatePrensaEmailHtml({
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
                 <tr>
                   <td style="width: 100px; vertical-align: middle; padding-right: 24px;" class="resp-stack resp-center">
-                    <img src="${SITE_URL}/logoitectrans_v2.png"
+                    <img src="${ASSETS_URL}/logoitectrans_v2.png"
                          alt="ITEC Saladillo"
                          width="100"
                          class="resp-ftr-logo"
