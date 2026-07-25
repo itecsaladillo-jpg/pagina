@@ -39,7 +39,8 @@ export default function EventosPresencialesClient({ initialEventos }: { initialE
 
   // Estados del Formulario
   const [nombre, setNombre] = useState("");
-  const [fecha, setFecha] = useState("");
+  const [fechaDate, setFechaDate] = useState("");
+  const [fechaTime, setFechaTime] = useState("");
   const [slugQr, setSlugQr] = useState("");
   const [modalidad, setModalidad] = useState<"presencial" | "virtual">("presencial");
   const [loading, setLoading] = useState(false);
@@ -110,7 +111,7 @@ export default function EventosPresencialesClient({ initialEventos }: { initialE
 
   const handleCreateEvento = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!nombre.trim() || !slugQr.trim() || !fecha) {
+    if (!nombre.trim() || !slugQr.trim() || !fechaDate || !fechaTime) {
       setError("Completá todos los campos obligatorios.");
       return;
     }
@@ -127,6 +128,25 @@ export default function EventosPresencialesClient({ initialEventos }: { initialE
       return;
     }
 
+    // Parsear fecha en formato dd/mm/aa y combinar con hora
+    const partes = fechaDate.split("/");
+    if (partes.length !== 3) {
+      setError("Formato de fecha inválido. Usá dd/mm/aa.");
+      return;
+    }
+    const [dia, mes, anio] = partes;
+    if (dia.length < 1 || mes.length < 1 || anio.length < 1) {
+      setError("Formato de fecha inválido. Usá dd/mm/aa.");
+      return;
+    }
+    const anioCompleto = anio.length === 2 ? `20${anio}` : anio;
+    const fechaISO = new Date(`${anioCompleto}-${mes}-${dia}T${fechaTime}:00`).toISOString();
+
+    if (isNaN(new Date(fechaISO).getTime())) {
+      setError("La fecha ingresada no es válida.");
+      return;
+    }
+
     setLoading(true);
     setError("");
 
@@ -136,7 +156,7 @@ export default function EventosPresencialesClient({ initialEventos }: { initialE
         .insert({
           nombre_evento: nombre.trim(),
           slug_qr: cleanSlug,
-          fecha: new Date(fecha).toISOString(),
+          fecha: fechaISO,
           estado_activo: true,
           modalidad: modalidad,
           herramienta_activa: "encuestas"
@@ -154,7 +174,8 @@ export default function EventosPresencialesClient({ initialEventos }: { initialE
         setEventos(prev => [data as Evento, ...prev]);
         setShowModal(false);
         setNombre("");
-        setFecha("");
+        setFechaDate("");
+        setFechaTime("");
         setSlugQr("");
       }
     } catch (err) {
@@ -441,13 +462,26 @@ export default function EventosPresencialesClient({ initialEventos }: { initialE
                 <label className="text-[10px] uppercase font-bold tracking-wider text-zinc-400 block px-1">
                   Fecha y Hora del Evento
                 </label>
-                <input
-                  type="datetime-local"
-                  required
-                  value={fecha}
-                  onChange={(e) => setFecha(e.target.value)}
-                  className="w-full px-4 py-3 bg-zinc-900 border border-zinc-800 focus:border-indigo-500/50 rounded-2xl text-white focus:outline-none transition-colors text-sm h-[48px] calendar-dark-scheme"
-                />
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    required
+                    placeholder="dd/mm/aa"
+                    value={fechaDate}
+                    onChange={(e) => {
+                      const val = e.target.value.replace(/[^0-9/]/g, "")
+                      if (val.length <= 8) setFechaDate(val)
+                    }}
+                    className="flex-1 px-4 py-3 bg-zinc-900 border border-zinc-800 focus:border-indigo-500/50 rounded-2xl text-white placeholder-zinc-600 focus:outline-none transition-colors text-sm h-[48px]"
+                  />
+                  <input
+                    type="time"
+                    required
+                    value={fechaTime}
+                    onChange={(e) => setFechaTime(e.target.value)}
+                    className="w-[140px] px-4 py-3 bg-zinc-900 border border-zinc-800 focus:border-indigo-500/50 rounded-2xl text-white focus:outline-none transition-colors text-sm h-[48px] [color-scheme:dark]"
+                  />
+                </div>
               </div>
 
               <button
