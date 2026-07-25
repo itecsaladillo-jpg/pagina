@@ -51,14 +51,26 @@ export function generatePrensaEmailHtml({
 
           <!-- Header -->
           <tr>
-            <td style="background: linear-gradient(135deg, #1e3a5f 0%, #0f172a 100%); padding: 32px 40px; text-align: center;">
-              <h1 style="margin: 0; font-size: 12px; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase; color: #94a3b8;">
-                ITEC Saladillo
-              </h1>
-              <div style="height: 2px; width: 60px; background: #3b82f6; margin: 12px auto;"></div>
-              <p style="margin: 0; font-size: 14px; color: #e2e8f0; font-weight: 300;">
-                Innovación · Ciencia · Tecnología
-              </p>
+            <td style="background: linear-gradient(135deg, #1e3a5f 0%, #0f172a 100%); padding: 28px 40px;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td style="width: 160px;">
+                    <img src="${process.env.NEXT_PUBLIC_SITE_URL}/logoitectrans_v2.png"
+                         alt="ITEC Saladillo"
+                         width="160"
+                         style="max-width: 160px; height: auto; display: block; border: 0;" />
+                  </td>
+                  <td style="text-align: right; vertical-align: middle;">
+                    <h1 style="margin: 0; font-size: 12px; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase; color: #94a3b8;">
+                      ITEC Saladillo
+                    </h1>
+                    <div style="height: 2px; width: 60px; background: #3b82f6; margin: 8px 0 8px auto;"></div>
+                    <p style="margin: 0; font-size: 14px; color: #e2e8f0; font-weight: 300;">
+                      Innovación · Tecnología · Emprendedurismo · Ciencia
+                    </p>
+                  </td>
+                </tr>
+              </table>
             </td>
           </tr>
 
@@ -113,31 +125,43 @@ export function generatePrensaEmailHtml({
             <td style="padding: 24px 40px 32px;">
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
                 <tr>
-                  <td style="text-align: center; padding-bottom: 16px;">
-                    <p style="margin: 0 0 4px; font-size: 14px; font-weight: 700; color: #0f172a;">
-                      ITEC Saladillo
-                    </p>
-                    <p style="margin: 0; font-size: 12px; color: #64748b;">
-                      Saladillo, Provincia de Buenos Aires
-                    </p>
+                  <td style="width: 100px; vertical-align: middle; padding-right: 24px;">
+                    <img src="${process.env.NEXT_PUBLIC_SITE_URL}/logoitectrans_v2.png"
+                         alt="ITEC Saladillo"
+                         width="100"
+                         style="max-width: 100px; height: auto; display: block; border: 0;" />
                   </td>
-                </tr>
-                <tr>
-                  <td style="text-align: center; padding-bottom: 16px;">
-                    <a href="mailto:prensa@itecsaladillo.org.ar" style="color: #2563eb; text-decoration: none; font-size: 13px; font-weight: 500;">
-                      prensa@itecsaladillo.org.ar
-                    </a>
-                    <span style="color: #cbd5e1; margin: 0 8px;">·</span>
-                    <a href="https://itecsaladillo.org.ar" target="_blank" style="color: #2563eb; text-decoration: none; font-size: 13px; font-weight: 500;">
-                      itecsaladillo.org.ar
-                    </a>
-                  </td>
-                </tr>
-                <tr>
-                  <td style="text-align: center;">
-                    <p style="margin: 0; font-size: 11px; color: #94a3b8; font-style: italic;">
-                      Este comunicado fue enviado exclusivamente a medios de comunicación acreditados.
-                    </p>
+                  <td style="vertical-align: middle;">
+                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td>
+                          <p style="margin: 0 0 4px; font-size: 14px; font-weight: 700; color: #0f172a;">
+                            ITEC Saladillo
+                          </p>
+                          <p style="margin: 0 0 8px; font-size: 12px; color: #64748b;">
+                            Saladillo, Provincia de Buenos Aires
+                          </p>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style="padding-bottom: 8px;">
+                          <a href="mailto:prensa@itecsaladillo.org.ar" style="color: #2563eb; text-decoration: none; font-size: 13px; font-weight: 500;">
+                            prensa@itecsaladillo.org.ar
+                          </a>
+                          <span style="color: #cbd5e1; margin: 0 8px;">·</span>
+                          <a href="https://itecsaladillo.org.ar" target="_blank" style="color: #2563eb; text-decoration: none; font-size: 13px; font-weight: 500;">
+                            itecsaladillo.org.ar
+                          </a>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <p style="margin: 0; font-size: 11px; color: #94a3b8; font-style: italic;">
+                            Este comunicado fue enviado exclusivamente a medios de comunicación acreditados.
+                          </p>
+                        </td>
+                      </tr>
+                    </table>
                   </td>
                 </tr>
               </table>
