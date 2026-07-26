@@ -79,6 +79,9 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
   const supabase = createClient();
 
   // Estados principales
+  console.log("[INIT] initialEvento keys:", Object.keys(initialEvento));
+  console.log("[INIT] herramientas_activas from DB:", (initialEvento as any).herramientas_activas);
+
   const [evento, setEvento] = useState<Evento>(() => ({
     ...initialEvento,
     herramientas_activas: (initialEvento as any).herramientas_activas ?? { encuestas: false, preguntas: false, nube: false, semaforo: false },
@@ -488,7 +491,7 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
     if (!error) {
       setEvento(prev => ({ ...prev, herramientas_activas: nuevas }));
     } else {
-      console.error("[TOGGLE] error:", error);
+      console.error("[TOGGLE] error:", JSON.stringify(error));
       alert("Error al actualizar las herramientas activas.");
     }
   };
