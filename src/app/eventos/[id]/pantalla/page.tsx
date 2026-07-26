@@ -749,7 +749,7 @@ export default function PantallaGigantePage({ params }: { params: Promise<{ id: 
                   transition={{ duration: 0.4 }}
                 >
                   <MessageSquare size={14} className="inline mr-1.5 -mt-0.5" />
-                  Muro de Preguntas
+                  Preguntas
                 </motion.span>
                 <motion.h2
                   className="text-3xl md:text-4xl font-black text-white"
