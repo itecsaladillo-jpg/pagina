@@ -748,6 +748,13 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
     semaforo: 'Semáforo',
   };
 
+  const toolColors: Record<string, { chip: string; chipTrack: string; active: string; hover: string; border: string; badge: string }> = {
+    encuestas: { chip: 'bg-sky-500/15 border-sky-500/30 text-sky-400 shadow-sm', chipTrack: 'bg-sky-500', active: 'bg-sky-600 border-sky-500', hover: 'hover:text-sky-400 hover:border-sky-600', border: 'border-sky-500/40', badge: 'text-sky-400 bg-sky-950/40 border-sky-900/50' },
+    preguntas: { chip: 'bg-violet-500/15 border-violet-500/30 text-violet-400 shadow-sm', chipTrack: 'bg-violet-500', active: 'bg-violet-600 border-violet-500', hover: 'hover:text-violet-400 hover:border-violet-600', border: 'border-violet-500/40', badge: 'text-violet-400 bg-violet-950/40 border-violet-900/50' },
+    nube: { chip: 'bg-emerald-500/15 border-emerald-500/30 text-emerald-400 shadow-sm', chipTrack: 'bg-emerald-500', active: 'bg-emerald-600 border-emerald-500', hover: 'hover:text-emerald-400 hover:border-emerald-600', border: 'border-emerald-500/40', badge: 'text-emerald-400 bg-emerald-950/40 border-emerald-900/50' },
+    semaforo: { chip: 'bg-amber-500/15 border-amber-500/30 text-amber-400 shadow-sm', chipTrack: 'bg-amber-500', active: 'bg-amber-600 border-amber-500', hover: 'hover:text-amber-400 hover:border-amber-600', border: 'border-amber-500/40', badge: 'text-amber-400 bg-amber-950/40 border-amber-900/50' },
+  };
+
   return (
     <div className="space-y-6">
 
@@ -816,25 +823,26 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
             </div>
             <div className="flex flex-wrap gap-2">
               {([
-                { key: 'encuestas' as const, label: 'Encuestas', icon: Vote, onClass: 'bg-indigo-500/15 border-indigo-500/30 text-indigo-400 shadow-sm', onTrack: 'bg-indigo-500' },
-                { key: 'preguntas' as const, label: 'Muro Q&A', icon: MessageSquare, onClass: 'bg-cyan-500/15 border-cyan-500/30 text-cyan-400 shadow-sm', onTrack: 'bg-cyan-500' },
-                { key: 'nube' as const, label: 'Nube', icon: Cloud, onClass: 'bg-fuchsia-500/15 border-fuchsia-500/30 text-fuchsia-400 shadow-sm', onTrack: 'bg-fuchsia-500' },
-                { key: 'semaforo' as const, label: 'Semáforo', icon: TrafficCone, onClass: 'bg-amber-500/15 border-amber-500/30 text-amber-400 shadow-sm', onTrack: 'bg-amber-500' },
-              ]).map(({ key, label, icon: Icon, onClass, onTrack }) => {
+                { key: 'encuestas' as const, label: 'Encuestas', icon: Vote },
+                { key: 'preguntas' as const, label: 'Muro Q&A', icon: MessageSquare },
+                { key: 'nube' as const, label: 'Nube', icon: Cloud },
+                { key: 'semaforo' as const, label: 'Semáforo', icon: TrafficCone },
+              ]).map(({ key, label, icon: Icon }) => {
                 const isOn = evento.herramientas_activas[key]
+                const c = toolColors[key]
                 return (
                   <button
                     key={key}
                     onClick={() => handleToggleHerramienta(key)}
                     className={`inline-flex items-center gap-1.5 py-1.5 px-3 rounded-xl border transition-all cursor-pointer text-[10px] font-extrabold uppercase tracking-wider ${
-                      isOn ? onClass : 'bg-zinc-950/40 border-zinc-800 text-zinc-600 hover:text-zinc-400 hover:border-zinc-700'
+                      isOn ? c.chip : 'bg-zinc-950/40 border-zinc-800 text-zinc-600 hover:text-zinc-400 hover:border-zinc-700'
                     }`}
                     title={`${isOn ? 'Desactivar' : 'Activar'} ${label}`}
                   >
                     <Icon size={12} />
                     {label}
                     <span className={`relative w-7 h-3.5 rounded-full transition-all ${
-                      isOn ? onTrack : 'bg-zinc-700'
+                      isOn ? c.chipTrack : 'bg-zinc-700'
                     }`}>
                       <span className={`absolute top-0.5 left-0.5 w-2.5 h-2.5 rounded-full bg-white transition-all ${
                         isOn ? 'translate-x-3.5' : 'translate-x-0'
@@ -855,13 +863,17 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
                 <Monitor size={11} className="text-indigo-400" />
                 <span className="text-[9px] font-black uppercase tracking-wider text-zinc-400">En Pantalla Gigante</span>
               </div>
-              <span className={`text-[8px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full border ${
-                evento.modo_pantalla_gigante === 'bienvenida'
-                  ? 'text-zinc-500 bg-zinc-950/40 border-zinc-800'
-                  : 'text-indigo-400 bg-indigo-950/40 border-indigo-900/50'
-              }`}>
-                {modoLabel[evento.modo_pantalla_gigante] || evento.modo_pantalla_gigante}
-              </span>
+              {(() => {
+                const modo = evento.modo_pantalla_gigante
+                const c = modo !== 'bienvenida' ? toolColors[modo] : null
+                return (
+                  <span className={`text-[8px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full border ${
+                    c ? c.badge : 'text-zinc-500 bg-zinc-950/40 border-zinc-800'
+                  }`}>
+                    {modoLabel[modo] || modo}
+                  </span>
+                )
+              })()}
             </div>
 
             {/* Live Preview — miniatura a escala fiel 1:1 de la pantalla gigante */}
@@ -898,14 +910,15 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
                 { key: 'preguntas' as const, label: 'Preguntas', icon: MessageSquare },
               ]).map(({ key, label, icon: Icon }) => {
                 const isModoActivo = evento.modo_pantalla_gigante === key
+                const c = toolColors[key]
                 return (
                   <button
                     key={key}
                     onClick={() => handleSetModoPantalla(key)}
                     className={`flex-1 flex items-center justify-center gap-1 py-2 px-1 rounded-xl border transition-all cursor-pointer text-[7px] font-black uppercase tracking-wider ${
                       isModoActivo
-                        ? 'bg-indigo-600 border-indigo-500 text-white shadow-sm'
-                        : 'bg-zinc-950/40 border-zinc-800 text-zinc-600 hover:text-zinc-400 hover:border-zinc-700'
+                        ? c.active + ' text-white shadow-sm'
+                        : 'bg-zinc-950/40 border-zinc-800 text-zinc-600 ' + c.hover
                     }`}
                   >
                     <Icon size={11} />
@@ -923,29 +936,31 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
       {/* ================================================================ */}
       <nav className="flex bg-zinc-900/20 border border-zinc-850 p-1 rounded-2xl">
         {([
-          { key: 'herramientas' as const, label: 'Encuestas', icon: BarChart3, badge: null },
-          { key: 'moderacion' as const, label: 'Muro Q&A', icon: MessageSquare, badge: preguntasPendientes.length },
-          { key: 'nube' as const, label: 'Nube Ideas', icon: Cloud, badge: palabrasNube.length },
-          { key: 'semaforo' as const, label: 'Semáforo', icon: TrafficCone, badge: null, requiereHerramienta: 'semaforo' as const },
-        ]).map(({ key, label, icon: Icon, badge, requiereHerramienta }) => {
+          { key: 'herramientas' as const, label: 'Encuestas', tabIcon: BarChart3, count: null },
+          { key: 'moderacion' as const, label: 'Muro Q&A', tabIcon: MessageSquare, count: preguntasPendientes.length },
+          { key: 'nube' as const, label: 'Nube Ideas', tabIcon: Cloud, count: palabrasNube.length },
+          { key: 'semaforo' as const, label: 'Semáforo', tabIcon: TrafficCone, count: null, requiereHerramienta: 'semaforo' as const },
+        ]).map(({ key, label, tabIcon: Icon, count, requiereHerramienta }) => {
           if (requiereHerramienta && !evento.herramientas_activas[requiereHerramienta]) return null;
+          const isActive = panelTab === key
+          const c = toolColors[key === 'herramientas' ? 'encuestas' : key === 'moderacion' ? 'preguntas' : key as keyof typeof toolColors]
           return (
             <button
               key={key}
               onClick={() => setPanelTab(key)}
               className={`flex-1 flex items-center justify-center gap-2 py-3 px-3 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer relative ${
-                panelTab === key
-                  ? 'bg-indigo-600 text-white shadow-md'
-                  : 'text-zinc-450 hover:text-zinc-200'
+                isActive
+                  ? c.active + ' text-white shadow-md'
+                  : 'text-zinc-450 ' + c.hover
               }`}
             >
               <Icon size={15} />
               {label}
-              {badge !== null && badge > 0 && (
+              {count !== null && count > 0 && (
                 <span className={`text-[8px] font-black px-1.5 py-0.5 rounded-full ${
-                  panelTab === key ? 'bg-white/20 text-white' : 'bg-zinc-800 text-zinc-400'
+                  isActive ? 'bg-white/20 text-white' : 'bg-zinc-800 text-zinc-400'
                 }`}>
-                  {badge}
+                  {count}
                 </span>
               )}
             </button>
@@ -965,7 +980,7 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
             <div className="bg-zinc-900/40 border border-zinc-850 rounded-3xl p-5 shadow-xl space-y-4 lg:col-span-1 h-fit">
               <div className="space-y-1">
                 <h3 className="text-sm font-black text-white uppercase tracking-wider flex items-center gap-1.5">
-                  <Plus size={16} className="text-indigo-400" /> Crear Nueva Encuesta
+                  <Plus size={16} className="text-sky-400" /> Crear Nueva Encuesta
                 </h3>
                 <p className="text-[10px] text-zinc-550">Agrega una pregunta e introduce las opciones de opción múltiple.</p>
               </div>
@@ -979,7 +994,7 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
                     placeholder="Ej. ¿Qué lenguaje usás más para IA?"
                     value={encuestaNuevaPregunta}
                     onChange={(e) => setEncuestaNuevaPregunta(e.target.value)}
-                    className="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 focus:border-indigo-500/50 rounded-2xl text-white placeholder-zinc-650 focus:outline-none transition-colors text-xs h-[42px]"
+                    className="w-full px-4 py-3 bg-zinc-950 border border-zinc-800 focus:border-sky-500/50 rounded-2xl text-white placeholder-zinc-650 focus:outline-none transition-colors text-xs h-[42px]"
                   />
                 </div>
 
@@ -990,7 +1005,7 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
                       <button
                         type="button"
                         onClick={handleAddOpcionField}
-                        className="text-[9px] font-black uppercase text-indigo-400 hover:text-indigo-300 transition-all cursor-pointer"
+                        className="text-[9px] font-black uppercase text-sky-400 hover:text-sky-300 transition-all cursor-pointer"
                       >
                         + Agregar Opción
                       </button>
@@ -1009,7 +1024,7 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
                           placeholder={idx < 2 ? `Opción obligatoria` : `Opción opcional`}
                           value={opc}
                           onChange={(e) => handleOpcionChange(idx, e.target.value)}
-                          className="flex-1 px-4 py-2.5 bg-zinc-950 border border-zinc-800 focus:border-indigo-500/50 rounded-xl text-white placeholder-zinc-650 focus:outline-none transition-colors text-xs h-[38px]"
+                          className="flex-1 px-4 py-2.5 bg-zinc-950 border border-zinc-800 focus:border-sky-500/50 rounded-xl text-white placeholder-zinc-650 focus:outline-none transition-colors text-xs h-[38px]"
                         />
                         {encuestaNuevaOpciones.length > 2 && (
                           <button
@@ -1028,7 +1043,7 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
                 <button
                   type="submit"
                   disabled={encuestaSubmitting}
-                  className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-extrabold text-[10px] uppercase tracking-wider py-3.5 px-6 rounded-2xl transition-all shadow-lg active:scale-[0.97] cursor-pointer h-[44px]"
+                  className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-sky-600 to-sky-500 hover:from-sky-500 hover:to-sky-400 text-white font-extrabold text-[10px] uppercase tracking-wider py-3.5 px-6 rounded-2xl transition-all shadow-lg active:scale-[0.97] cursor-pointer h-[44px]"
                 >
                   {encuestaSubmitting ? (
                     <span className="animate-pulse">Guardando...</span>
@@ -1048,11 +1063,11 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
               {/* Resultados Activos en Vivo */}
               {evento.encuesta_activa_id && (
                 <div className="bg-zinc-900/40 border border-zinc-850 rounded-3xl p-5 shadow-xl space-y-4 relative overflow-hidden">
-                  <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-indigo-500/20 to-transparent" />
+                  <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-sky-500/20 to-transparent" />
 
                   <div className="flex justify-between items-center">
                     <div className="space-y-0.5">
-                      <span className="text-[9px] font-black uppercase tracking-widest text-indigo-400 bg-indigo-950/40 border border-indigo-900/50 px-2 py-0.5 rounded">
+                      <span className="text-[9px] font-black uppercase tracking-widest text-sky-400 bg-sky-950/40 border border-sky-900/50 px-2 py-0.5 rounded">
                         EN VIVO EN EL AUDITORIO
                       </span>
                       <h4 className="text-sm font-extrabold text-white pt-1">
@@ -1084,11 +1099,11 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
                             <div key={opc.id} className="space-y-1.5">
                               <div className="flex justify-between text-xs font-bold text-zinc-350">
                                 <span>{opc.texto_opcion}</span>
-                                <span className="text-indigo-400">{pct}% <span className="text-zinc-650">({votos} {votos === 1 ? "voto" : "votos"})</span></span>
+                                <span className="text-sky-400">{pct}% <span className="text-zinc-650">({votos} {votos === 1 ? "voto" : "votos"})</span></span>
                               </div>
                               <div className="w-full bg-zinc-950 border border-zinc-900 h-3.5 rounded-full overflow-hidden relative">
                                 <div
-                                  className="absolute left-0 top-0 bottom-0 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full transition-all duration-500"
+                                  className="absolute left-0 top-0 bottom-0 bg-gradient-to-r from-sky-500 to-sky-400 rounded-full transition-all duration-500"
                                   style={{ width: `${pct}%` }}
                                 />
                               </div>
@@ -1124,7 +1139,7 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
                         key={enc.id}
                         className={`bg-zinc-900/20 border rounded-3xl p-4 flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all ${
                           evento.encuesta_activa_id === enc.id
-                            ? "border-indigo-500/40 bg-indigo-950/5 shadow-md shadow-indigo-500/5"
+                            ? "border-sky-500/40 bg-sky-950/5 shadow-md shadow-sky-500/5"
                             : "border-zinc-850"
                         }`}
                       >
@@ -1134,7 +1149,7 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
                               {enc.opciones.length} opciones
                             </span>
                             {evento.encuesta_activa_id === enc.id && (
-                              <span className="text-[8px] font-black uppercase tracking-wider px-2 py-0.5 rounded-md bg-indigo-500/20 border border-indigo-500/30 text-indigo-400 animate-pulse">
+                              <span className="text-[8px] font-black uppercase tracking-wider px-2 py-0.5 rounded-md bg-sky-500/20 border border-sky-500/30 text-sky-400 animate-pulse">
                                 Activa en vivo
                               </span>
                             )}
@@ -1155,7 +1170,7 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
                           {evento.encuesta_activa_id !== enc.id ? (
                             <button
                               onClick={() => handleLanzarEncuesta(enc.id)}
-                              className="flex items-center gap-1.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-extrabold text-[9px] uppercase tracking-wider py-2.5 px-4 rounded-xl shadow cursor-pointer transition-all"
+                              className="flex items-center gap-1.5 bg-gradient-to-r from-sky-600 to-sky-500 hover:from-sky-500 hover:to-sky-400 text-white font-extrabold text-[9px] uppercase tracking-wider py-2.5 px-4 rounded-xl shadow cursor-pointer transition-all"
                             >
                               <Play size={10} className="fill-white" />
                               Lanzar al Proyector
@@ -1211,7 +1226,7 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
                     >
                       <div className="space-y-1.5 flex-1">
                         <div className="flex items-center gap-2">
-                          <span className="text-[8px] font-black uppercase tracking-widest text-cyan-400 bg-cyan-950/40 border border-cyan-900/40 px-2 py-0.5 rounded">
+                          <span className="text-[8px] font-black uppercase tracking-widest text-violet-400 bg-violet-950/40 border border-violet-900/40 px-2 py-0.5 rounded">
                             {q.nombre}
                           </span>
                           <span className="text-[8px] text-zinc-550">
@@ -1249,7 +1264,7 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
             <div className="space-y-4">
               <h3 className="text-xs font-black text-zinc-400 uppercase tracking-widest px-1 flex justify-between items-center">
                 <span>Muro en Proyector (Aprobadas)</span>
-                <span className="text-[9px] bg-cyan-500/10 border border-cyan-500/20 px-2.5 py-0.5 rounded-full text-cyan-400">
+                <span className="text-[9px] bg-violet-500/10 border border-violet-500/20 px-2.5 py-0.5 rounded-full text-violet-400">
                   {preguntasAprobadas.length} en pantalla
                 </span>
               </h3>
@@ -1267,12 +1282,12 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
                       className="bg-zinc-900/30 border border-zinc-850 rounded-3xl p-4 flex justify-between items-start gap-4 shadow relative"
                     >
                       {idx === 0 && (
-                        <div className="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-cyan-500 to-cyan-700 rounded-l-3xl" />
+                        <div className="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-violet-500 to-violet-700 rounded-l-3xl" />
                       )}
 
                       <div className="space-y-1.5 flex-1 pl-1">
                         <div className="flex items-center gap-1.5">
-                          <span className="text-[8px] font-black uppercase tracking-widest text-cyan-400 bg-cyan-950/40 border border-cyan-900/40 px-2 py-0.5 rounded">
+                          <span className="text-[8px] font-black uppercase tracking-widest text-violet-400 bg-violet-950/40 border border-violet-900/40 px-2 py-0.5 rounded">
                             {q.nombre}
                           </span>
                           {idx === 0 && (
@@ -1287,7 +1302,7 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
                       </div>
 
                       <div className="flex items-center gap-3 shrink-0 self-center">
-                        <span className="text-[10px] font-black text-cyan-400 bg-cyan-500/10 border border-cyan-500/20 px-2.5 py-1 rounded-xl">
+                        <span className="text-[10px] font-black text-violet-400 bg-violet-500/10 border border-violet-500/20 px-2.5 py-1 rounded-xl">
                           👍 {q.likes}
                         </span>
                         <button
@@ -1309,7 +1324,7 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
         {/* --- PESTAÑA NUBE IDEAS --- */}
         {panelTab === "nube" && (
           <div className="bg-zinc-900/40 border border-zinc-850 rounded-3xl p-5 shadow-xl space-y-6 relative overflow-hidden">
-            <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-fuchsia-500/20 to-transparent" />
+            <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-emerald-500/20 to-transparent" />
 
             <div className="flex justify-between items-center">
               <div className="space-y-0.5">
@@ -1337,7 +1352,7 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
             ) : (
               <div className="space-y-4">
                 <div className="bg-zinc-950/60 border border-zinc-900 rounded-3xl p-6 min-h-[160px] flex flex-wrap items-center justify-center gap-4 relative">
-                  <div className="absolute top-3 left-4 text-[8px] font-black tracking-widest text-fuchsia-400 uppercase">Proyección Colectiva</div>
+                  <div className="absolute top-3 left-4 text-[8px] font-black tracking-widest text-emerald-400 uppercase">Proyección Colectiva</div>
 
                   {palabrasNube.map((pal, idx) => {
                     const maxQty = palabrasNube[0]?.cantidad || 1;
@@ -1347,11 +1362,11 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
                     return (
                       <span
                         key={idx}
-                        className="inline-block uppercase tracking-wide font-black transition-all bg-fuchsia-500/[0.03] hover:bg-fuchsia-500/[0.08] border border-zinc-900 px-3.5 py-1.5 rounded-2xl cursor-default"
+                        className="inline-block uppercase tracking-wide font-black transition-all bg-emerald-500/[0.03] hover:bg-emerald-500/[0.08] border border-zinc-900 px-3.5 py-1.5 rounded-2xl cursor-default"
                         style={{
                           fontSize: `${sizeScale}rem`,
                           opacity: opacityScale,
-                          color: idx === 0 ? "#d946ef" : idx === 1 ? "#c026d3" : idx === 2 ? "#a21caf" : "#f1f5f9"
+                          color: idx === 0 ? "#10b981" : idx === 1 ? "#34d399" : idx === 2 ? "#6ee7b7" : "#f1f5f9"
                         }}
                       >
                         {pal.palabra} <span className="text-[9px] text-zinc-600 font-normal">({pal.cantidad})</span>
@@ -1371,7 +1386,7 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
                         <span className="text-xs font-extrabold uppercase tracking-wide text-zinc-200">
                           {pal.palabra}
                         </span>
-                        <span className="text-[10px] font-black text-fuchsia-400 bg-fuchsia-500/10 border border-fuchsia-500/20 px-2 py-0.5 rounded">
+                        <span className="text-[10px] font-black text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded">
                           {pal.cantidad} {pal.cantidad === 1 ? "concepto" : "conceptos"}
                         </span>
                       </div>
