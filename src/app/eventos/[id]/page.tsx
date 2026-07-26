@@ -94,6 +94,7 @@ export default function EventoPage({ params }: { params: Promise<{ id: string }>
   const [showNotification, setShowNotification] = useState(false);
   const [notifTargetTab, setNotifTargetTab] = useState<"encuestas" | "preguntas" | "nube_ideas" | null>(null);
   const lastToolRef = useRef<string>("");
+  const dispositivoIdRef = useRef<string>("");
 
   // Estados del Formulario de Registro
   const [regNombre, setRegNombre] = useState("");
@@ -146,6 +147,7 @@ export default function EventoPage({ params }: { params: Promise<{ id: string }>
       localStorage.setItem("itec_dispositivo_id", devId);
     }
     setDispositivoId(devId);
+    dispositivoIdRef.current = devId;
 
     const inicializar = async () => {
       try {
@@ -499,6 +501,7 @@ export default function EventoPage({ params }: { params: Promise<{ id: string }>
           table: "eventos_preguntas_likes"
         },
         (payload) => {
+          if (payload.new.dispositivo_id === dispositivoIdRef.current) return;
           setPreguntas(prev => {
             const updated = prev.map(p => {
               if (p.id === payload.new.pregunta_id) {

@@ -188,8 +188,7 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
       return;
     }
 
-    const fetchVotosYActivarRealtime = async () => {
-      // Obtener opciones de la encuesta activa
+    const refreshVotosLocal = async () => {
       const { data: optionsData } = await supabase
         .from("eventos_encuestas_opciones")
         .select("id")
@@ -198,47 +197,42 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
       const opcionesIds = (optionsData || []).map(o => o.id);
       if (opcionesIds.length === 0) return;
 
-      const refreshVotosLocal = async () => {
-        const { data, error } = await supabase
-          .from("eventos_encuestas_votos")
-          .select("opcion_id")
-          .in("opcion_id", opcionesIds);
+      const { data, error } = await supabase
+        .from("eventos_encuestas_votos")
+        .select("opcion_id")
+        .in("opcion_id", opcionesIds);
 
-        if (data && !error) {
-          const counts: Record<string, number> = {};
-          opcionesIds.forEach(id => counts[id] = 0);
-          data.forEach((v: any) => {
-            counts[v.opcion_id] = (counts[v.opcion_id] || 0) + 1;
-          });
-          setVotosEncuesta(counts);
-          setEncuestaActivaVotosCount(data.length);
-        }
-      };
-
-      refreshVotosLocal();
-
-      // Suscribirse a inserción de votos en tiempo real
-      const votosRealtimeChannel = supabase
-        .channel(`realtime:orador_votos_${evento.id}`)
-        .on(
-          "postgres_changes",
-          {
-            event: "INSERT",
-            schema: "public",
-            table: "eventos_encuestas_votos"
-          },
-          () => {
-            refreshVotosLocal();
-          }
-        )
-        .subscribe();
-
-      return () => {
-        supabase.removeChannel(votosRealtimeChannel);
-      };
+      if (data && !error) {
+        const counts: Record<string, number> = {};
+        opcionesIds.forEach(id => counts[id] = 0);
+        data.forEach((v: any) => {
+          counts[v.opcion_id] = (counts[v.opcion_id] || 0) + 1;
+        });
+        setVotosEncuesta(counts);
+        setEncuestaActivaVotosCount(data.length);
+      }
     };
 
-    fetchVotosYActivarRealtime();
+    refreshVotosLocal();
+
+    const votosRealtimeChannel = supabase
+      .channel(`realtime:orador_votos_${evento.id}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "eventos_encuestas_votos"
+        },
+        () => {
+          refreshVotosLocal();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(votosRealtimeChannel);
+    };
   }, [evento.encuesta_activa_id, supabase]);
 
   // 3. Suscripción Realtime a Preguntas Formuladas por la Audiencia (Q&A)
@@ -297,6 +291,31 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
       supabase.removeChannel(nubeChannel);
     };
   }, [evento.id, supabase]);
+
+  // 4b. Suscripción Realtime a la lista de Encuestas (crear/eliminar)
+  useEffect(() => {
+    if (!evento?.id) return;
+
+    const encuestasChannel = supabase
+      .channel(`realtime:orador_encuestas_${evento.id}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "eventos_encuestas",
+          filter: `evento_id=eq.${evento.id}`
+        },
+        () => {
+          fetchEncuestas();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(encuestasChannel);
+    };
+  }, [evento?.id, supabase]);
 
   // 5. Semáforo: fetch inicial y suscripción Realtime
   useEffect(() => {
