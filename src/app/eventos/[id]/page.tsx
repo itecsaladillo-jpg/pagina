@@ -20,7 +20,10 @@ import {
   Building, 
   Mail,
   ChevronRight,
-  AlertCircle
+  AlertCircle,
+  AlertTriangle,
+  ThumbsDown,
+  X
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
@@ -124,6 +127,45 @@ export default function EventoPage({ params }: { params: Promise<{ id: string }>
   const [nubeEnviada, setNubeEnviada] = useState<string | null>(null);
   const [nubeSubmitting, setNubeSubmitting] = useState(false);
   const [nubeSuccess, setNubeSuccess] = useState("");
+
+  // Semáforo de Comprensión (botón rojo fijo)
+  const [semaforoFeedback, setSemaforoFeedback] = useState<"idle" | "sent" | "error">("idle");
+
+  const toolColors = {
+    encuestas: 'sky',
+    preguntas: 'violet',
+    nube_ideas: 'emerald',
+    semaforo: 'amber',
+  } as const;
+
+  const tabColorMap: Record<string, { active: string; glow: string; border: string; text: string }> = {
+    encuestas: { active: 'from-sky-600 to-cyan-600', glow: 'bg-sky-500/10', border: 'border-sky-500/20', text: 'text-sky-400' },
+    preguntas: { active: 'from-violet-600 to-purple-600', glow: 'bg-violet-500/10', border: 'border-violet-500/20', text: 'text-violet-400' },
+    nube_ideas: { active: 'from-emerald-600 to-teal-600', glow: 'bg-emerald-500/10', border: 'border-emerald-500/20', text: 'text-emerald-400' },
+  };
+
+  const handleVotoSemaforo = async () => {
+    if (!evento || !dispositivoId) return;
+    setSemaforoFeedback("sent");
+    try {
+      const { error } = await supabase
+        .from("evento_semaforo_votos")
+        .insert({
+          evento_id: evento.id,
+          dispositivo_id: dispositivoId,
+          voto: "negativo"
+        });
+      if (error) {
+        setSemaforoFeedback("error");
+        setTimeout(() => setSemaforoFeedback("idle"), 3000);
+        return;
+      }
+      setTimeout(() => setSemaforoFeedback("idle"), 3000);
+    } catch {
+      setSemaforoFeedback("error");
+      setTimeout(() => setSemaforoFeedback("idle"), 3000);
+    }
+  };
 
   // 1. Detección Inteligente de UUID (Redirección para compatibilidad heredada)
   useEffect(() => {
@@ -520,6 +562,62 @@ export default function EventoPage({ params }: { params: Promise<{ id: string }>
     };
   }, [evento, activeTab, supabase]);
 
+  // 5b. Suscripción Realtime para reseteo de Nube de Ideas
+  useEffect(() => {
+    if (!evento?.id) return;
+
+    const nubeChannel = supabase
+      .channel(`realtime:nube_reset_${evento.id}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "DELETE",
+          schema: "public",
+          table: "eventos_nube_palabras",
+          filter: `evento_id=eq.${evento.id}`
+        },
+        () => {
+          setNubeEnviada(null);
+          setNubePalabra("");
+          setNubeSuccess("");
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(nubeChannel);
+    };
+  }, [evento?.id, supabase]);
+
+  // 5c. Suscripción Realtime para reseteo de Encuesta Activa
+  useEffect(() => {
+    if (!evento?.id) return;
+
+    const resetChannel = supabase
+      .channel(`realtime:encuesta_reset_${evento.id}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "UPDATE",
+          schema: "public",
+          table: "eventos",
+          filter: `id=eq.${evento.id}`
+        },
+        (payload) => {
+          const newData = payload.new as any;
+          if (newData && newData.encuesta_activa_id === null) {
+            setVotoRealizadoId(null);
+            setVotosEncuesta({});
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(resetChannel);
+    };
+  }, [evento?.id, supabase]);
+
   const handleSendPregunta = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!evento || !pregTexto.trim() || pregSubmitting) return;
@@ -888,10 +986,28 @@ export default function EventoPage({ params }: { params: Promise<{ id: string }>
         </div>
       </header>
 
-      <div className="max-w-md mx-auto px-4 mt-4">
-        <div className="text-center py-2">
-          <h2 className="text-lg font-black text-white uppercase tracking-tight line-clamp-1">{evento.nombre_evento}</h2>
-          <p className="text-[9px] text-zinc-400 font-medium">{dict.eventos.panel.asistente} <span className="text-indigo-400 font-extrabold">{asistente.nombre_completo}</span></p>
+      {/* Sub-header con info del evento y botón rojo de Semáforo */}
+      <div className="max-w-md mx-auto px-4 mt-3">
+        <div className="bg-zinc-900/30 border border-zinc-850 rounded-2xl p-3 flex items-center justify-between gap-3">
+          <div className="min-w-0 flex-1">
+            <h2 className="text-sm font-bold text-white truncate">{evento.nombre_evento}</h2>
+            <p className="text-[10px] text-zinc-400 font-medium truncate">
+              {asistente.nombre_completo}
+            </p>
+          </div>
+          <button
+            onClick={handleVotoSemaforo}
+            disabled={semaforoFeedback !== "idle"}
+            className="shrink-0 flex items-center gap-1.5 bg-red-600 hover:bg-red-700 active:scale-95 disabled:bg-zinc-800 disabled:text-zinc-500 text-white font-extrabold text-[9px] uppercase tracking-wider px-3 py-2 rounded-xl shadow-md transition-all cursor-pointer"
+          >
+            {semaforoFeedback === "sent" ? (
+              <><ThumbsDown size={13} className="fill-white" /> Voto enviado</>
+            ) : semaforoFeedback === "error" ? (
+              <><AlertTriangle size={13} /> Error</>
+            ) : (
+              <><AlertTriangle size={13} /> No Entiendo, Me Perdí</>
+            )}
+          </button>
         </div>
       </div>
 
@@ -942,7 +1058,7 @@ export default function EventoPage({ params }: { params: Promise<{ id: string }>
               ))}
 
               <div
-                className="absolute top-1 bottom-1 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl transition-all duration-300 pointer-events-none"
+                className={`absolute top-1 bottom-1 rounded-xl transition-all duration-300 pointer-events-none ${tabColorMap[activeTab]?.active || 'from-blue-600 to-indigo-600'} bg-gradient-to-r`}
                 style={{
                   width: tabWidth,
                   left: getLeftPosition(),
@@ -958,9 +1074,9 @@ export default function EventoPage({ params }: { params: Promise<{ id: string }>
         {/* --- PESTAÑA 1: ENCUESTAS --- */}
         {activeTab === "encuestas" && (
           <div className="space-y-4 animate-fade-in">
-            <div className="bg-gradient-to-br from-indigo-950/40 to-slate-900/40 border border-indigo-500/20 rounded-3xl p-4 shadow-xl">
-              <h3 className="text-xs font-extrabold text-indigo-300 uppercase tracking-widest mb-1.5 flex items-center gap-1.5">
-                <Sparkles size={13} className="text-indigo-400" /> {language === 'en' ? 'Live Voting' : language === 'pt' ? 'Votação Ao Vivo' : 'Votación en Vivo'}
+            <div className="bg-gradient-to-br from-sky-950/40 to-slate-900/40 border border-sky-500/20 rounded-3xl p-4 shadow-xl">
+              <h3 className="text-xs font-extrabold text-sky-300 uppercase tracking-widest mb-1.5 flex items-center gap-1.5">
+                <Sparkles size={13} className="text-sky-400" /> {language === 'en' ? 'Live Voting' : language === 'pt' ? 'Votação Ao Vivo' : 'Votación en Vivo'}
               </h3>
               <p className="text-xs text-zinc-300 leading-relaxed font-medium">
                 {language === 'en' ? 'Vote options in real time as the speaker activates them on the main screen.' : language === 'pt' ? 'Vote nas opções em tempo real à medida que o palestrante as ativa na tela principal.' : 'Votá las opciones en tiempo real a medida que el disertante las active en la pantalla principal.'}
@@ -974,7 +1090,7 @@ export default function EventoPage({ params }: { params: Promise<{ id: string }>
               </div>
             ) : encuestaActiva ? (
               <div className="bg-zinc-900/40 border border-zinc-850 rounded-3xl p-5 backdrop-blur-sm space-y-5 relative overflow-hidden">
-                <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-indigo-500/10 to-transparent" />
+                <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-sky-500/10 to-transparent" />
                 
                 <h4 className="text-sm font-black text-white leading-snug">
                   {encuestaActiva.pregunta}
@@ -995,18 +1111,18 @@ export default function EventoPage({ params }: { params: Promise<{ id: string }>
                             <div 
                               className={`absolute left-0 top-0 bottom-0 transition-all duration-500 rounded-l-2xl ${
                                 esEstaOpc 
-                                  ? "bg-gradient-to-r from-indigo-500/20 to-blue-500/20 border-r border-indigo-500/30" 
+                                  ? "bg-gradient-to-r from-sky-500/20 to-cyan-500/20 border-r border-sky-500/30" 
                                   : "bg-white/[0.02]"
                               }`}
                               style={{ width: `${porcentaje}%` }}
                             />
                             
-                            <span className={`text-xs font-bold relative z-10 flex items-center gap-2 ${esEstaOpc ? 'text-indigo-300' : 'text-zinc-300'}`}>
-                              {esEstaOpc && <CheckCircle2 size={14} className="text-indigo-400 shrink-0" />}
+                            <span className={`text-xs font-bold relative z-10 flex items-center gap-2 ${esEstaOpc ? 'text-sky-300' : 'text-zinc-300'}`}>
+                              {esEstaOpc && <CheckCircle2 size={14} className="text-sky-400 shrink-0" />}
                               {opc.texto_opcion}
                             </span>
                             
-                            <span className="text-xs font-black relative z-10 text-indigo-400">
+                            <span className="text-xs font-black relative z-10 text-sky-400">
                               {porcentaje}% <span className="text-[9px] text-zinc-600 font-extrabold ml-1">({votosOpc})</span>
                             </span>
                           </div>
@@ -1045,9 +1161,9 @@ export default function EventoPage({ params }: { params: Promise<{ id: string }>
         {/* --- PESTAÑA 2: PREGUNTAS EN VIVO (Q&A) --- */}
         {activeTab === "preguntas" && (
           <div className="space-y-4 animate-fade-in overflow-y-auto max-h-[calc(100dvh-220px)] pr-2">
-            <div className="bg-gradient-to-br from-indigo-950/40 to-slate-900/40 border border-indigo-500/20 rounded-3xl p-4 shadow-xl">
-              <h3 className="text-xs font-extrabold text-indigo-300 uppercase tracking-widest mb-1.5 flex items-center gap-1.5">
-                <Sparkles size={13} className="text-indigo-400" /> Bloque de Preguntas
+            <div className="bg-gradient-to-br from-violet-950/40 to-slate-900/40 border border-violet-500/20 rounded-3xl p-4 shadow-xl">
+              <h3 className="text-xs font-extrabold text-violet-300 uppercase tracking-widest mb-1.5 flex items-center gap-1.5">
+                <Sparkles size={13} className="text-violet-400" /> Bloque de Preguntas
               </h3>
               <p className="text-xs text-zinc-300 leading-relaxed font-medium">
                 Dejá tu consulta de forma clara para el bloque de preguntas al final. Votá con 👍 las preguntas que más te gusten.
@@ -1067,7 +1183,7 @@ export default function EventoPage({ params }: { params: Promise<{ id: string }>
                     onClick={() => setPregAnonima(!pregAnonima)}
                     className={`text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded border transition-all cursor-pointer ${
                       pregAnonima
-                        ? "bg-indigo-500/20 text-indigo-400 border-indigo-500/30"
+                        ? "bg-violet-500/20 text-violet-400 border-violet-500/30"
                         : "bg-white/[0.03] text-zinc-500 border-zinc-800"
                     }`}
                   >
@@ -1084,7 +1200,7 @@ export default function EventoPage({ params }: { params: Promise<{ id: string }>
                       value={pregNombre}
                       onChange={(e) => setPregNombre(e.target.value)}
                       autoCapitalize="words"
-                      className="w-full pl-10 pr-4 py-3 bg-zinc-950/60 border border-zinc-800 focus:border-indigo-500/50 rounded-2xl text-white placeholder-zinc-650 focus:outline-none transition-colors text-sm h-[44px]"
+                      className="w-full pl-10 pr-4 py-3 bg-zinc-950/60 border border-zinc-800 focus:border-violet-500/50 rounded-2xl text-white placeholder-zinc-650 focus:outline-none transition-colors text-sm h-[44px]"
                     />
                   </div>
                 )}
@@ -1103,7 +1219,7 @@ export default function EventoPage({ params }: { params: Promise<{ id: string }>
                     value={pregTexto}
                     onChange={(e) => setPregTexto(e.target.value)}
                     rows={3}
-                    className="w-full px-4 py-3 bg-zinc-950/60 border border-zinc-800 focus:border-indigo-500/50 rounded-2xl text-white placeholder-zinc-655 focus:outline-none transition-colors text-xs resize-none leading-relaxed"
+                    className="w-full px-4 py-3 bg-zinc-950/60 border border-zinc-800 focus:border-violet-500/50 rounded-2xl text-white placeholder-zinc-655 focus:outline-none transition-colors text-xs resize-none leading-relaxed"
                   />
                 </div>
 
@@ -1134,9 +1250,9 @@ export default function EventoPage({ params }: { params: Promise<{ id: string }>
             <div className="space-y-3.5">
               <div className="flex items-center justify-between px-1">
                 <h4 className="text-xs font-bold text-zinc-300 uppercase tracking-widest flex items-center gap-1.5">
-                  <MessageSquare size={14} className="text-indigo-400" /> Preguntas en el Muro
+                  <MessageSquare size={14} className="text-violet-400" /> Preguntas en el Muro
                 </h4>
-                <span className="text-[9px] bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 px-2 py-0.5 rounded-full font-extrabold uppercase tracking-widest animate-pulse">
+                <span className="text-[9px] bg-violet-500/10 text-violet-400 border border-violet-500/20 px-2 py-0.5 rounded-full font-extrabold uppercase tracking-widest animate-pulse">
                   En Vivo
                 </span>
               </div>
@@ -1157,12 +1273,12 @@ export default function EventoPage({ params }: { params: Promise<{ id: string }>
                       className="bg-zinc-900/30 border border-zinc-850 rounded-2xl p-4 flex gap-4 items-start relative shadow-md overflow-hidden"
                     >
                       {idx === 0 && (
-                        <div className="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-blue-500 to-indigo-500 rounded-l-2xl" />
+                        <div className="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-violet-500 to-purple-500 rounded-l-2xl" />
                       )}
 
                       <div className="flex-1 space-y-1.5">
                         <div className="flex items-center gap-1.5">
-                          <span className="text-[9px] font-extrabold uppercase tracking-widest text-indigo-400 bg-indigo-950/40 px-2 py-0.5 rounded border border-indigo-900/40">
+                          <span className="text-[9px] font-extrabold uppercase tracking-widest text-violet-400 bg-violet-950/40 px-2 py-0.5 rounded border border-violet-900/40">
                             {q.nombre}
                           </span>
                           {idx === 0 && (
@@ -1182,11 +1298,11 @@ export default function EventoPage({ params }: { params: Promise<{ id: string }>
                           disabled={pregLikedIds.includes(q.id)}
                           className={`flex flex-col items-center justify-center gap-1 min-w-[48px] py-2 px-1.5 rounded-xl transition-all border cursor-pointer ${
                             pregLikedIds.includes(q.id)
-                              ? "bg-indigo-500/10 text-indigo-400 border-indigo-500/30"
+                              ? "bg-violet-500/10 text-violet-400 border-violet-500/30"
                               : "bg-zinc-950/60 text-zinc-500 border-zinc-800 hover:text-zinc-350 hover:bg-zinc-900 active:scale-90"
                           }`}
                         >
-                          <ThumbsUp className={`w-3.5 h-3.5 ${pregLikedIds.includes(q.id) ? "fill-indigo-400 text-indigo-400" : ""}`} />
+                          <ThumbsUp className={`w-3.5 h-3.5 ${pregLikedIds.includes(q.id) ? "fill-violet-400 text-violet-400" : ""}`} />
                           <span className="text-[9px] font-black">{q.likes} 👍</span>
                         </button>
                       </div>
@@ -1201,9 +1317,9 @@ export default function EventoPage({ params }: { params: Promise<{ id: string }>
         {/* --- PESTAÑA 3: NUBE DE IDEAS --- */}
         {activeTab === "nube_ideas" && (
           <div className="space-y-4 animate-fade-in">
-            <div className="bg-gradient-to-br from-indigo-950/40 to-slate-900/40 border border-indigo-500/20 rounded-3xl p-4 shadow-xl">
-              <h3 className="text-xs font-extrabold text-indigo-300 uppercase tracking-widest mb-1.5 flex items-center gap-1.5">
-                <Sparkles size={13} className="text-indigo-400" /> Nube Colectiva
+            <div className="bg-gradient-to-br from-emerald-950/40 to-slate-900/40 border border-emerald-500/20 rounded-3xl p-4 shadow-xl">
+              <h3 className="text-xs font-extrabold text-emerald-300 uppercase tracking-widest mb-1.5 flex items-center gap-1.5">
+                <Sparkles size={13} className="text-emerald-400" /> Nube Colectiva
               </h3>
               <p className="text-xs text-zinc-300 leading-relaxed font-medium">
                 Escribí una palabra clave que resuma lo aprendido cuando el profesor lo indique en el proyector.
@@ -1211,14 +1327,14 @@ export default function EventoPage({ params }: { params: Promise<{ id: string }>
             </div>
 
             <div className="bg-zinc-900/40 border border-zinc-850 rounded-3xl p-5 backdrop-blur-sm space-y-4 relative overflow-hidden">
-              <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-indigo-500/10 to-transparent" />
+              <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-emerald-500/10 to-transparent" />
               
               {nubeEnviada ? (
                 <div className="text-center py-6 space-y-3.5">
-                  <Cloud size={40} className="mx-auto text-indigo-400 animate-pulse" />
+                  <Cloud size={40} className="mx-auto text-emerald-400 animate-pulse" />
                   <div className="space-y-1">
                     <p className="text-xs text-zinc-400">Tu palabra aportada es:</p>
-                    <span className="inline-block text-lg font-black tracking-tight text-white uppercase bg-indigo-500/10 border border-indigo-500/30 px-5 py-2 rounded-2xl">
+                    <span className="inline-block text-lg font-black tracking-tight text-white uppercase bg-emerald-500/10 border border-emerald-500/30 px-5 py-2 rounded-2xl">
                       {nubeEnviada}
                     </span>
                   </div>
@@ -1245,7 +1361,7 @@ export default function EventoPage({ params }: { params: Promise<{ id: string }>
                         value={nubePalabra}
                         onChange={(e) => setNubePalabra(e.target.value.replace(/\s+/g, ""))}
                         autoCapitalize="characters"
-                        className="w-full pl-10 pr-4 py-3 bg-zinc-950/60 border border-zinc-800 focus:border-indigo-500/50 rounded-2xl text-white placeholder-zinc-650 focus:outline-none transition-colors text-sm h-[44px] uppercase font-bold tracking-wide"
+                        className="w-full pl-10 pr-4 py-3 bg-zinc-950/60 border border-zinc-800 focus:border-emerald-500/50 rounded-2xl text-white placeholder-zinc-650 focus:outline-none transition-colors text-sm h-[44px] uppercase font-bold tracking-wide"
                       />
                     </div>
                   </div>
@@ -1253,7 +1369,7 @@ export default function EventoPage({ params }: { params: Promise<{ id: string }>
                   <button
                     type="submit"
                     disabled={nubeSubmitting || !nubePalabra.trim()}
-                    className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 disabled:from-zinc-850 disabled:to-zinc-850 disabled:text-zinc-600 text-white font-extrabold text-xs uppercase tracking-wider py-3.5 px-6 rounded-2xl transition-all shadow-lg active:scale-[0.97] cursor-pointer h-[46px]"
+                  className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 disabled:from-zinc-850 disabled:to-zinc-850 disabled:text-zinc-600 text-white font-extrabold text-xs uppercase tracking-wider py-3.5 px-6 rounded-2xl transition-all shadow-lg active:scale-[0.97] cursor-pointer h-[46px]"
                   >
                     {nubeSubmitting ? (
                       <span className="animate-pulse">Enviando palabra...</span>
