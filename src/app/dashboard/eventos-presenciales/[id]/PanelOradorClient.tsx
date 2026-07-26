@@ -782,12 +782,14 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
                   >
                     <Icon size={16} className={isOn ? 'text-indigo-400' : 'text-zinc-600'} />
                     <span className="flex-1 text-[9px] uppercase tracking-wider font-extrabold">{label}</span>
-                    <span className={`w-4 h-4 rounded-full border-2 transition-all ${
+                    <span className={`relative w-9 h-5 rounded-full transition-all ${
                       isOn
-                        ? 'bg-indigo-500 border-indigo-400 shadow-sm shadow-indigo-500/30'
-                        : 'bg-zinc-800 border-zinc-700'
+                        ? 'bg-indigo-500 shadow-sm shadow-indigo-500/40'
+                        : 'bg-zinc-800'
                     }`}>
-                      {isOn && <span className="block w-1.5 h-1.5 bg-white rounded-full mx-auto mt-0.5" />}
+                      <span className={`absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white transition-all ${
+                        isOn ? 'translate-x-4' : 'translate-x-0'
+                      }`} />
                     </span>
                   </button>
                 )
