@@ -146,7 +146,6 @@ export default function EventoPage({ params }: { params: Promise<{ id: string }>
 
   const handleVotoSemaforo = async () => {
     if (!evento || !dispositivoId) return;
-    setSemaforoFeedback("sent");
     try {
       const { error } = await supabase
         .from("evento_semaforo_votos")
@@ -160,6 +159,7 @@ export default function EventoPage({ params }: { params: Promise<{ id: string }>
         setTimeout(() => setSemaforoFeedback("idle"), 3000);
         return;
       }
+      setSemaforoFeedback("sent");
       setTimeout(() => setSemaforoFeedback("idle"), 3000);
     } catch {
       setSemaforoFeedback("error");
