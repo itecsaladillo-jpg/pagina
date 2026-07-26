@@ -844,13 +844,16 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
               </span>
             </div>
 
-            {/* Live Preview iframe 16:9 */}
-            <div className="relative rounded-2xl overflow-hidden bg-zinc-950 border border-zinc-800 flex-1">
-              <iframe
-                src={`/eventos/${evento.slug_qr}/pantalla`}
-                className="w-full aspect-video"
-                title="Vista previa de la pantalla gigante"
-              />
+            {/* Live Preview — miniatura completa de la pantalla gigante */}
+            <div className="relative rounded-2xl overflow-hidden bg-zinc-950 border border-zinc-800">
+              <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
+                <iframe
+                  src={`/eventos/${evento.slug_qr}/pantalla`}
+                  className="absolute inset-0 w-full h-full"
+                  title="Vista previa de la pantalla gigante"
+                  scrolling="no"
+                />
+              </div>
             </div>
 
             {/* Selector de modo directo */}
