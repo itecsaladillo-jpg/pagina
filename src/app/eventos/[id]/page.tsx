@@ -898,19 +898,12 @@ export default function EventoPage({ params }: { params: Promise<{ id: string }>
           { key: "preguntas" as const, icon: MessageSquare, label: dict.eventos.panel.tabPreguntas },
           { key: "nube_ideas" as const, icon: Cloud, label: dict.eventos.panel.tabNube },
         ].filter(t => {
-<<<<<<< HEAD
           const ha = evento.herramientas_activas;
           if (!ha) return false;
           if (t.key === "encuestas") return ha.encuestas;
           if (t.key === "preguntas") return ha.preguntas;
           if (t.key === "nube_ideas") return ha.nube;
           return false;
-=======
-          if (t.key === "encuestas") return evento.herramientas_activas?.encuestas ?? false;
-          if (t.key === "preguntas") return evento.herramientas_activas?.preguntas ?? false;
-          if (t.key === "nube_ideas") return evento.herramientas_activas?.nube ?? false;
-          return true;
->>>>>>> 5489cc5 (feat: estado inicial herramientas en false, filtro dinamico en pantalla gigante y auto-switch en consola ITEC)
         });
 
         const tabCount = tabsDisponibles.length;
