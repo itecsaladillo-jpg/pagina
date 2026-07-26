@@ -112,6 +112,10 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
   const [estadoSemaforo, setEstadoSemaforo] = useState<{ totalAcreditados: number; votosNegativos: number; porcentajeNegativo: number; estado: 'VERDE' | 'AMARILLO' | 'ROJO' } | null>(null);
   const [resetSemaforoLoading, setResetSemaforoLoading] = useState(false);
 
+  // Ref + estado para escala 1:1 del preview de pantalla gigante
+  const previewContainerRef = useRef<HTMLDivElement>(null);
+  const [previewScale, setPreviewScale] = useState(1);
+
   // 1. Carga Inicial y Conteo de Asistentes
   useEffect(() => {
     const fetchInicial = async () => {
@@ -713,6 +717,22 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
     }
   };
 
+  // ResizeObserver para escalar el iframe 1920x1080 al ancho del contenedor
+  useEffect(() => {
+    const el = previewContainerRef.current;
+    if (!el) return;
+
+    const calcScale = () => {
+      const w = el.clientWidth;
+      setPreviewScale(Math.min(w / 1920, 1));
+    };
+
+    calcScale();
+    const ro = new ResizeObserver(calcScale);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
   const toolMeta = [
     { key: 'encuestas' as const, label: 'Encuestas', icon: Vote },
     { key: 'preguntas' as const, label: 'Muro Q&A', icon: MessageSquare },
@@ -844,13 +864,26 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
               </span>
             </div>
 
-            {/* Live Preview — miniatura completa de la pantalla gigante */}
-            <div className="relative rounded-2xl overflow-hidden bg-zinc-950 border border-zinc-800">
-              <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
+            {/* Live Preview — miniatura a escala fiel 1:1 de la pantalla gigante */}
+            <div
+              ref={previewContainerRef}
+              className="relative rounded-2xl overflow-hidden bg-zinc-950 border border-zinc-800 pointer-events-none"
+              style={{ aspectRatio: '16 / 9' }}
+            >
+              <div
+                style={{
+                  width: 1920,
+                  height: 1080,
+                  transformOrigin: 'top left',
+                  transform: `scale(${previewScale})`,
+                }}
+              >
                 <iframe
                   src={`/eventos/${evento.slug_qr}/pantalla`}
-                  className="absolute inset-0 w-full h-full"
+                  width={1920}
+                  height={1080}
                   title="Vista previa de la pantalla gigante"
+                  className="border-0"
                   scrolling="no"
                 />
               </div>
