@@ -754,7 +754,7 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
 
   const toolMeta = [
     { key: 'encuestas' as const, label: 'Encuestas', icon: Vote },
-    { key: 'preguntas' as const, label: 'Muro Q&A', icon: MessageSquare },
+    { key: 'preguntas' as const, label: 'Preguntas', icon: MessageSquare },
     { key: 'nube' as const, label: 'Nube', icon: Cloud },
     { key: 'semaforo' as const, label: 'Semáforo', icon: TrafficCone },
   ];
@@ -843,7 +843,7 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
             <div className="flex flex-wrap gap-2">
               {([
                 { key: 'encuestas' as const, label: 'Encuestas', icon: Vote },
-                { key: 'preguntas' as const, label: 'Muro Q&A', icon: MessageSquare },
+                { key: 'preguntas' as const, label: 'Preguntas', icon: MessageSquare },
                 { key: 'nube' as const, label: 'Nube', icon: Cloud },
                 { key: 'semaforo' as const, label: 'Semáforo', icon: TrafficCone },
               ]).map(({ key, label, icon: Icon }) => {
@@ -910,6 +910,7 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
                 }}
               >
                 <iframe
+                  key={evento.modo_pantalla_gigante}
                   src={`/eventos/${evento.slug_qr}/pantalla`}
                   width={1920}
                   height={1080}
@@ -956,7 +957,7 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
       <nav className="flex bg-zinc-900/20 border border-zinc-850 p-1 rounded-2xl">
         {([
           { key: 'herramientas' as const, label: 'Encuestas', tabIcon: BarChart3, count: null },
-          { key: 'moderacion' as const, label: 'Muro Q&A', tabIcon: MessageSquare, count: preguntasPendientes.length },
+          { key: 'moderacion' as const, label: 'Preguntas', tabIcon: MessageSquare, count: preguntasPendientes.length },
           { key: 'nube' as const, label: 'Nube Ideas', tabIcon: Cloud, count: palabrasNube.length },
           { key: 'semaforo' as const, label: 'Semáforo', tabIcon: TrafficCone, count: null, requiereHerramienta: 'semaforo' as const },
         ]).map(({ key, label, tabIcon: Icon, count, requiereHerramienta }) => {
@@ -1218,7 +1219,7 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
           </div>
         )}
 
-        {/* --- PESTAÑA MURO Q&A --- */}
+        {/* --- PESTAÑA PREGUNTAS --- */}
         {panelTab === "moderacion" && (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
 
@@ -1298,7 +1299,7 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
                   preguntasAprobadas.map((q, idx) => (
                     <div
                       key={q.id}
-                      className="bg-zinc-900/30 border border-zinc-850 rounded-3xl p-4 flex justify-between items-start gap-4 shadow relative"
+                      className="bg-zinc-900/30 border border-zinc-850 rounded-3xl p-4 flex justify-between items-start gap-4 shadow relative w-[85%] mx-auto"
                     >
                       {idx === 0 && (
                         <div className="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-violet-500 to-violet-700 rounded-l-3xl" />

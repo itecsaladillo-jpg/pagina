@@ -362,6 +362,31 @@ export default function PantallaGigantePage({ params }: { params: Promise<{ id: 
     return () => { supabase.removeChannel(semChannel) }
   }, [evento?.id, evento?.semaforo_last_reset_at, supabase])
 
+  // Forzar re-sincronización al recuperar el foco de la pestaña
+  useEffect(() => {
+    if (!evento?.id) return
+
+    const handleVisibility = async () => {
+      if (document.visibilityState !== 'visible') return
+      const { data } = await supabase
+        .from("eventos")
+        .select("*")
+        .eq("id", evento.id)
+        .single()
+      if (data) {
+        const refreshed = {
+          ...data,
+          herramientas_activas: (data as any).herramientas_activas ?? evento.herramientas_activas,
+          modo_pantalla_gigante: (data as any).modo_pantalla_gigante ?? evento.modo_pantalla_gigante,
+        }
+        setEvento(prev => prev ? { ...prev, ...refreshed } : prev)
+      }
+    }
+
+    document.addEventListener('visibilitychange', handleVisibility)
+    return () => document.removeEventListener('visibilitychange', handleVisibility)
+  }, [evento?.id, supabase])
+
   if (loading) {
     return (
       <div className="h-screen w-screen bg-[#030712] text-white flex flex-col items-center justify-center">
