@@ -910,7 +910,7 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
                 { key: 'preguntas' as const, label: 'Preguntas', icon: MessageSquare },
               ]).map(({ key, label, icon: Icon }) => {
                 const isModoActivo = evento.modo_pantalla_gigante === key
-                const c = toolColors[key]
+                const c = toolColors[key] || { active: 'bg-zinc-600 border-zinc-500', hover: 'hover:text-zinc-300 hover:border-zinc-600' }
                 return (
                   <button
                     key={key}
