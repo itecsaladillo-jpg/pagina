@@ -1281,7 +1281,7 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
             </div>
 
             {/* Muro Aprobado */}
-            <div className="space-y-4">
+            <div className="space-y-4 overflow-y-auto max-h-[65vh] pr-2">
               <h3 className="text-xs font-black text-zinc-400 uppercase tracking-widest px-1 flex justify-between items-center">
                 <span>Muro en Proyector (Aprobadas)</span>
                 <span className="text-[9px] bg-violet-500/10 border border-violet-500/20 px-2.5 py-0.5 rounded-full text-violet-400">
