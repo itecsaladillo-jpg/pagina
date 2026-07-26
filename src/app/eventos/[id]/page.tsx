@@ -1154,7 +1154,7 @@ export default function EventoPage({ params }: { params: Promise<{ id: string }>
                   preguntas.map((q, idx) => (
                     <div 
                       key={q.id}
-                      className="bg-zinc-900/30 border border-zinc-850 rounded-2xl p-4 flex gap-4 items-start relative shadow-md"
+                      className="bg-zinc-900/30 border border-zinc-850 rounded-2xl p-4 flex gap-4 items-start relative shadow-md overflow-hidden"
                     >
                       {idx === 0 && (
                         <div className="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-blue-500 to-indigo-500 rounded-l-2xl" />
@@ -1171,7 +1171,7 @@ export default function EventoPage({ params }: { params: Promise<{ id: string }>
                             </span>
                           )}
                         </div>
-                        <p className="text-zinc-200 text-xs leading-relaxed font-semibold">
+                        <p className="text-zinc-200 text-xs leading-relaxed font-semibold break-words whitespace-pre-wrap">
                           "{q.pregunta}"
                         </p>
                       </div>
