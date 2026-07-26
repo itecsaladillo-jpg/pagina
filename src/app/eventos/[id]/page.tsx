@@ -146,8 +146,9 @@ export default function EventoPage({ params }: { params: Promise<{ id: string }>
 
   const handleVotoSemaforo = async () => {
     if (!evento || !dispositivoId) return;
+    console.log('[SEMAFORO] Enviando voto negativo:', { eventoId: evento.id, visitorId: dispositivoId });
     try {
-      const { error } = await supabase
+      const { error, status } = await supabase
         .from("evento_semaforo_votos")
         .upsert({
           evento_id: evento.id,
@@ -155,13 +156,16 @@ export default function EventoPage({ params }: { params: Promise<{ id: string }>
           voto: "negativo"
         }, { onConflict: "evento_id,visitor_id", ignoreDuplicates: false });
       if (error) {
+        console.error('[SEMAFORO] Error al insertar voto:', error);
         setSemaforoFeedback("error");
         setTimeout(() => setSemaforoFeedback("idle"), 3000);
         return;
       }
+      console.log('[SEMAFORO] Voto registrado exitosamente. Status:', status);
       setSemaforoFeedback("sent");
       setTimeout(() => setSemaforoFeedback("idle"), 3000);
-    } catch {
+    } catch (err) {
+      console.error('[SEMAFORO] Excepción en handleVotoSemaforo:', err);
       setSemaforoFeedback("error");
       setTimeout(() => setSemaforoFeedback("idle"), 3000);
     }

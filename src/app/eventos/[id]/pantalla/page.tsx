@@ -355,7 +355,10 @@ export default function PantallaGigantePage({ params }: { params: Promise<{ id: 
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "evento_semaforo_votos", filter: `evento_id=eq.${evento.id}` },
-        () => { fetchSemaforo() }
+        (payload) => {
+          console.log('[SEMAFORO REALTIME] Pantalla Gigante - cambio detectado:', payload.eventType);
+          fetchSemaforo()
+        }
       )
       .subscribe()
 

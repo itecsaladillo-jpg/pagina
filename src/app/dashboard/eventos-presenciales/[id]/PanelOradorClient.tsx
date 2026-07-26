@@ -368,7 +368,8 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
           table: "evento_semaforo_votos",
           filter: `evento_id=eq.${evento.id}`
         },
-        () => {
+        (payload) => {
+          console.log('[SEMAFORO REALTIME] Consola ITEC - cambio en evento_semaforo_votos:', payload.eventType);
           fetchEstadoSemaforo();
         }
       )
@@ -382,6 +383,7 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
         },
         (payload) => {
           if (payload.new && (payload.new as any).semaforo_last_reset_at !== (payload.old as any).semaforo_last_reset_at) {
+            console.log('[SEMAFORO REALTIME] Consola ITEC - reseteo detectado');
             fetchEstadoSemaforo();
           }
         }
