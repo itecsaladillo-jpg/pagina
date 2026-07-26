@@ -181,7 +181,7 @@ export default function PantallaPreguntasPage({ params }: { params: Promise<{ id
             </div>
 
             {/* List */}
-            <div className="flex-1 overflow-y-auto pr-2 space-y-5 custom-scrollbar pb-6">
+            <div className="flex-1 overflow-y-auto pr-2 space-y-5 no-scrollbar pb-6">
               <AnimatePresence mode="popLayout">
                 {preguntas.length === 0 ? (
                   <motion.div
@@ -296,19 +296,12 @@ export default function PantallaPreguntasPage({ params }: { params: Promise<{ id
       </div>
 
       <style jsx global>{`
-        .custom-scrollbar::-webkit-scrollbar {
-          width: 8px;
+        .no-scrollbar::-webkit-scrollbar {
+          display: none;
         }
-        .custom-scrollbar::-webkit-scrollbar-track {
-          background: rgba(255, 255, 255, 0.02);
-          border-radius: 10px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-          background: rgba(99, 102, 241, 0.2);
-          border-radius: 10px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-          background: rgba(99, 102, 241, 0.6);
+        .no-scrollbar {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
         }
       `}</style>
     </div>
