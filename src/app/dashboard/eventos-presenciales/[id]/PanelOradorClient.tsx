@@ -22,7 +22,9 @@ import {
   TrafficCone,
   ToggleLeft,
   Monitor,
-  RefreshCw
+  RefreshCw,
+  Radio,
+  BarChart3
 } from "lucide-react";
 
 interface HerramientasActivas {
@@ -711,87 +713,111 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
     }
   };
 
+  const toolMeta = [
+    { key: 'encuestas' as const, label: 'Encuestas', icon: Vote },
+    { key: 'preguntas' as const, label: 'Muro Q&A', icon: MessageSquare },
+    { key: 'nube' as const, label: 'Nube', icon: Cloud },
+    { key: 'semaforo' as const, label: 'Semáforo', icon: TrafficCone },
+  ];
+
+  const modoLabel: Record<string, string> = {
+    bienvenida: 'Bienvenida',
+    encuestas: 'Encuestas',
+    preguntas: 'Preguntas',
+    nube: 'Nube de Ideas',
+    semaforo: 'Semáforo',
+  };
+
   return (
     <div className="space-y-6">
-      {/* 1. Header con Información de Proyección */}
-      <div className="bg-zinc-900/40 border border-zinc-850 rounded-3xl p-6 backdrop-blur-sm relative overflow-hidden flex flex-col md:flex-row justify-between md:items-center gap-6 shadow-xl">
-        <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-indigo-500/20 to-transparent" />
-        
-        <div className="space-y-3">
-          <div className="flex items-center gap-2">
-            <span className="text-[9px] font-black uppercase tracking-widest text-indigo-400 bg-indigo-950/40 border border-indigo-900/50 px-2.5 py-0.5 rounded-md">
-              Panel Vivo
-            </span>
-            <span className="text-[10px] font-bold text-zinc-550 flex items-center gap-1">
-              <Users size={12} className="text-zinc-550 shrink-0" />
-              {asistentesCount} {asistentesCount === 1 ? "Acreditado" : "Acreditados"}
-            </span>
+
+      {/* ================================================================ */}
+      {/* SECTION 1: HEADER + RESÚMEN HERRAMIENTAS + VISTA PREVIA BIG SCREEN */}
+      {/* ================================================================ */}
+      <div className="grid grid-cols-1 xl:grid-cols-5 gap-4">
+
+        {/* --- COL IZQUIERDA: INFO + CHIPS (3/5) --- */}
+        <div className="xl:col-span-3 space-y-4">
+
+          {/* A. Título Evento + Badge + Acciones */}
+          <div className="bg-zinc-900/40 border border-zinc-850 rounded-3xl p-5 backdrop-blur-sm relative overflow-hidden shadow-xl">
+            <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-indigo-500/20 to-transparent" />
+            <div className="flex items-start justify-between gap-4">
+              <div className="space-y-2.5">
+                <div className="flex items-center gap-2.5">
+                  <span className="flex items-center gap-1.5 text-[9px] font-black uppercase tracking-widest text-indigo-400 bg-indigo-950/40 border border-indigo-900/50 px-2.5 py-1 rounded-md">
+                    <Radio size={10} className="text-indigo-400" /> Consola ITEC
+                  </span>
+                  <span className="flex items-center gap-1.5 text-[10px] font-bold text-emerald-400 bg-emerald-950/30 border border-emerald-900/40 px-2.5 py-1 rounded-md">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shadow-sm shadow-emerald-400" />
+                    EN VIVO
+                  </span>
+                  <span className="flex items-center gap-1.5 text-[10px] font-bold text-zinc-400 bg-zinc-950/40 border border-zinc-800 px-2.5 py-1 rounded-md">
+                    <Users size={11} className="text-zinc-500" />
+                    {asistentesCount} {asistentesCount === 1 ? 'Acreditado' : 'Acreditados'}
+                  </span>
+                </div>
+                <h2 className="text-xl font-black text-white uppercase tracking-tight leading-tight">
+                  {evento.nombre_evento}
+                </h2>
+              </div>
+              <div className="flex items-center gap-2 shrink-0">
+                <button
+                  onClick={handleCopyLink}
+                  className={`flex items-center gap-1.5 px-3 py-2 rounded-xl border transition-all cursor-pointer ${
+                    copiedLink
+                      ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
+                      : 'bg-zinc-950/50 text-indigo-400 border-zinc-850 hover:bg-zinc-900'
+                  }`}
+                  title="Copiar link de asistente"
+                >
+                  {copiedLink ? <Check size={13} /> : <Copy size={13} />}
+                  <span className="hidden sm:inline text-[9px] font-extrabold uppercase tracking-wider">{copiedLink ? 'Copiado' : 'Link Asistente'}</span>
+                </button>
+                <a
+                  href={`/eventos/${evento.slug_qr}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex items-center gap-1.5 px-3 py-2 bg-zinc-950/50 hover:bg-zinc-900 border border-zinc-850 rounded-xl transition-all"
+                  title="Ver vista asistente"
+                >
+                  <ExternalLink size={13} className="text-zinc-400" />
+                  <span className="hidden sm:inline text-[9px] font-extrabold uppercase tracking-wider text-zinc-400">Asistente</span>
+                </a>
+              </div>
+            </div>
           </div>
 
-          <h2 className="text-2xl font-black text-white uppercase tracking-tight leading-tight">
-            {evento.nombre_evento}
-          </h2>
-
-          <div className="flex flex-wrap items-center gap-3 text-xs text-indigo-400 font-extrabold tracking-wide">
-            <button
-              onClick={handleCopyLink}
-              className={`flex items-center gap-1.5 px-3 py-2 rounded-xl border transition-all cursor-pointer ${
-                copiedLink 
-                  ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" 
-                  : "bg-zinc-950/50 text-indigo-400 border-zinc-850 hover:bg-zinc-900"
-              }`}
-            >
-              {copiedLink ? <Check size={13} /> : <Copy size={13} />}
-              {copiedLink ? "Link Asistente Copiado" : "Copiar Link de Asistente"}
-            </button>
-            
-            <a 
-              href={`/eventos/${evento.slug_qr}`}
-              target="_blank"
-              rel="noreferrer"
-              className="flex items-center gap-1.5 px-3 py-2 bg-zinc-950/50 hover:bg-zinc-900 border border-zinc-850 rounded-xl transition-all"
-            >
-              <ExternalLink size={13} />
-              Ver Vista Asistente
-            </a>
-          </div>
-        </div>
-
-        {/* 2. Panel de Control: Switches individuales + selector de proyección */}
-        <div className="space-y-3 min-w-[280px]">
-          {/* Toggle switches por herramienta */}
-          <div className="bg-zinc-950/60 border border-zinc-850 p-4 rounded-3xl space-y-3">
-            <h3 className="text-[10px] uppercase font-black text-zinc-400 tracking-wider text-center flex items-center gap-1 justify-center">
-              <ToggleLeft size={11} className="text-indigo-400" /> Herramientas Activas en Celulares
-            </h3>
-            <div className="grid grid-cols-2 gap-2">
+          {/* B. Resumen de Herramientas Activas en Celulares (chips compactos) */}
+          <div className="bg-zinc-900/40 border border-zinc-850 rounded-3xl p-4 shadow-xl">
+            <div className="flex items-center gap-1.5 mb-3">
+              <ToggleLeft size={11} className="text-indigo-400" />
+              <span className="text-[9px] font-black uppercase tracking-wider text-zinc-400">Herramientas Activas en Celulares</span>
+            </div>
+            <div className="flex flex-wrap gap-2">
               {([
-                { key: 'encuestas' as const, label: 'Encuestas', icon: Vote },
-                { key: 'preguntas' as const, label: 'Muro Q&A', icon: MessageSquare },
-                { key: 'nube' as const, label: 'Nube', icon: Cloud },
-                { key: 'semaforo' as const, label: 'Semáforo', icon: TrafficCone },
-              ]).map(({ key, label, icon: Icon }) => {
+                { key: 'encuestas' as const, label: 'Encuestas', icon: Vote, onClass: 'bg-indigo-500/15 border-indigo-500/30 text-indigo-400 shadow-sm', onTrack: 'bg-indigo-500' },
+                { key: 'preguntas' as const, label: 'Muro Q&A', icon: MessageSquare, onClass: 'bg-cyan-500/15 border-cyan-500/30 text-cyan-400 shadow-sm', onTrack: 'bg-cyan-500' },
+                { key: 'nube' as const, label: 'Nube', icon: Cloud, onClass: 'bg-fuchsia-500/15 border-fuchsia-500/30 text-fuchsia-400 shadow-sm', onTrack: 'bg-fuchsia-500' },
+                { key: 'semaforo' as const, label: 'Semáforo', icon: TrafficCone, onClass: 'bg-amber-500/15 border-amber-500/30 text-amber-400 shadow-sm', onTrack: 'bg-amber-500' },
+              ]).map(({ key, label, icon: Icon, onClass, onTrack }) => {
                 const isOn = evento.herramientas_activas[key]
                 return (
                   <button
                     key={key}
                     onClick={() => handleToggleHerramienta(key)}
-                    className={`flex items-center gap-2 py-2.5 px-3 rounded-2xl transition-all cursor-pointer border text-left ${
-                      isOn
-                        ? 'bg-indigo-600/20 border-indigo-500/40 text-white'
-                        : 'bg-zinc-900/40 border-zinc-800 text-zinc-500 hover:text-zinc-300'
+                    className={`inline-flex items-center gap-1.5 py-1.5 px-3 rounded-xl border transition-all cursor-pointer text-[10px] font-extrabold uppercase tracking-wider ${
+                      isOn ? onClass : 'bg-zinc-950/40 border-zinc-800 text-zinc-600 hover:text-zinc-400 hover:border-zinc-700'
                     }`}
-                    title={isOn ? `Desactivar ${label}` : `Activar ${label}`}
+                    title={`${isOn ? 'Desactivar' : 'Activar'} ${label}`}
                   >
-                    <Icon size={16} className={isOn ? 'text-indigo-400' : 'text-zinc-600'} />
-                    <span className="flex-1 text-[9px] uppercase tracking-wider font-extrabold">{label}</span>
-                    <span className={`relative w-9 h-5 rounded-full transition-all ${
-                      isOn
-                        ? 'bg-indigo-500 shadow-sm shadow-indigo-500/40'
-                        : 'bg-zinc-800'
+                    <Icon size={12} />
+                    {label}
+                    <span className={`relative w-7 h-3.5 rounded-full transition-all ${
+                      isOn ? onTrack : 'bg-zinc-700'
                     }`}>
-                      <span className={`absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white transition-all ${
-                        isOn ? 'translate-x-4' : 'translate-x-0'
+                      <span className={`absolute top-0.5 left-0.5 w-2.5 h-2.5 rounded-full bg-white transition-all ${
+                        isOn ? 'translate-x-3.5' : 'translate-x-0'
                       }`} />
                     </span>
                   </button>
@@ -799,13 +825,36 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
               })}
             </div>
           </div>
+        </div>
 
-          {/* Selector de modo de proyección */}
-          <div className="bg-zinc-950/60 border border-zinc-850 p-4 rounded-3xl space-y-3">
-            <h3 className="text-[10px] uppercase font-black text-zinc-400 tracking-wider text-center flex items-center gap-1 justify-center">
-              <Monitor size={11} className="text-indigo-400" /> Modo Pantalla Gigante
-            </h3>
-            <div className="flex gap-1.5">
+        {/* --- COL DERECHA: VISTA PREVIA PANTALLA GIGANTE (2/5) --- */}
+        <div className="xl:col-span-2">
+          <div className="bg-zinc-900/40 border border-zinc-850 rounded-3xl p-4 shadow-xl h-full flex flex-col">
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-1.5">
+                <Monitor size={11} className="text-indigo-400" />
+                <span className="text-[9px] font-black uppercase tracking-wider text-zinc-400">En Pantalla Gigante</span>
+              </div>
+              <span className={`text-[8px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full border ${
+                evento.modo_pantalla_gigante === 'bienvenida'
+                  ? 'text-zinc-500 bg-zinc-950/40 border-zinc-800'
+                  : 'text-indigo-400 bg-indigo-950/40 border-indigo-900/50'
+              }`}>
+                {modoLabel[evento.modo_pantalla_gigante] || evento.modo_pantalla_gigante}
+              </span>
+            </div>
+
+            {/* Live Preview iframe 16:9 */}
+            <div className="relative rounded-2xl overflow-hidden bg-zinc-950 border border-zinc-800 flex-1">
+              <iframe
+                src={`/eventos/${evento.slug_qr}/pantalla`}
+                className="w-full aspect-video"
+                title="Vista previa de la pantalla gigante"
+              />
+            </div>
+
+            {/* Selector de modo directo */}
+            <div className="flex gap-1 mt-3">
               {([
                 { key: 'bienvenida' as const, label: 'Bienvenida', icon: Sparkles },
                 { key: 'nube' as const, label: 'Nube', icon: Cloud },
@@ -813,28 +862,18 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
                 { key: 'preguntas' as const, label: 'Preguntas', icon: MessageSquare },
               ]).map(({ key, label, icon: Icon }) => {
                 const isModoActivo = evento.modo_pantalla_gigante === key
-                const toolKey = key as keyof HerramientasActivas
-                const toolEstaActiva = key === 'bienvenida' || evento.herramientas_activas[toolKey]
                 return (
                   <button
                     key={key}
                     onClick={() => handleSetModoPantalla(key)}
-                    className={`flex-1 flex flex-col items-center justify-center py-3 px-1 rounded-2xl transition-all cursor-pointer border text-center relative ${
+                    className={`flex-1 flex items-center justify-center gap-1 py-2 px-1 rounded-xl border transition-all cursor-pointer text-[7px] font-black uppercase tracking-wider ${
                       isModoActivo
-                        ? "bg-indigo-600 border-indigo-500 text-white font-black scale-[1.03] shadow-md shadow-indigo-500/10"
-                        : toolEstaActiva
-                          ? "bg-zinc-900/40 border-zinc-800 text-zinc-550 hover:text-zinc-300"
-                          : "bg-zinc-950/30 border-zinc-900 text-zinc-700 hover:text-zinc-500"
+                        ? 'bg-indigo-600 border-indigo-500 text-white shadow-sm'
+                        : 'bg-zinc-950/40 border-zinc-800 text-zinc-600 hover:text-zinc-400 hover:border-zinc-700'
                     }`}
-                    title={`${toolEstaActiva ? `Mostrar ${label} en el proyector` : `Activá "${label}" en herramientas primero`}`}
                   >
-                    <Icon size={16} className="mb-1" />
-                    <span className="text-[7px] uppercase tracking-wider font-extrabold">{label}</span>
-                    {!toolEstaActiva && (
-                      <span className="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-amber-500/20 border border-amber-500/30 flex items-center justify-center">
-                        <span className="text-[6px] text-amber-400 font-black">!</span>
-                      </span>
-                    )}
+                    <Icon size={11} />
+                    {label}
                   </button>
                 )
               })}
@@ -843,63 +882,47 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
         </div>
       </div>
 
-      {/* TABS DE GESTIÓN INTERNA */}
-      <nav className="flex bg-zinc-900/20 border border-zinc-850 p-1 rounded-2xl max-w-md">
-        <button
-          onClick={() => setPanelTab("herramientas")}
-          className={`flex-1 flex items-center justify-center gap-2 py-3.5 px-3 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer ${
-            panelTab === "herramientas" 
-              ? "bg-indigo-600 text-white shadow-md" 
-              : "text-zinc-450 hover:text-zinc-200"
-          }`}
-        >
-          <Vote size={15} />
-          Encuestas
-        </button>
-
-        <button
-          onClick={() => setPanelTab("moderacion")}
-          className={`flex-1 flex items-center justify-center gap-2 py-3.5 px-3 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer ${
-            panelTab === "moderacion" 
-              ? "bg-indigo-600 text-white shadow-md" 
-              : "text-zinc-450 hover:text-zinc-200"
-          }`}
-        >
-          <MessageSquare size={15} />
-          Preguntas ({preguntasPendientes.length})
-        </button>
-
-        <button
-          onClick={() => setPanelTab("nube")}
-          className={`flex-1 flex items-center justify-center gap-2 py-3.5 px-3 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer ${
-            panelTab === "nube" 
-              ? "bg-indigo-600 text-white shadow-md" 
-              : "text-zinc-450 hover:text-zinc-200"
-          }`}
-        >
-          <Cloud size={15} />
-          Nube ({palabrasNube.length})
-        </button>
-
-        {evento.herramientas_activas.semaforo && (
-          <button
-            onClick={() => setPanelTab("semaforo")}
-            className={`flex-1 flex items-center justify-center gap-2 py-3.5 px-3 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer ${
-              panelTab === "semaforo" 
-                ? "bg-indigo-600 text-white shadow-md" 
-                : "text-zinc-450 hover:text-zinc-200"
-            }`}
-          >
-            <TrafficCone size={15} />
-            Semáforo
-          </button>
-        )}
+      {/* ================================================================ */}
+      {/* SECTION 2: NAVEGACIÓN POR PESTAÑAS (Tabs) */}
+      {/* ================================================================ */}
+      <nav className="flex bg-zinc-900/20 border border-zinc-850 p-1 rounded-2xl">
+        {([
+          { key: 'herramientas' as const, label: 'Encuestas', icon: BarChart3, badge: null },
+          { key: 'moderacion' as const, label: 'Muro Q&A', icon: MessageSquare, badge: preguntasPendientes.length },
+          { key: 'nube' as const, label: 'Nube Ideas', icon: Cloud, badge: palabrasNube.length },
+          { key: 'semaforo' as const, label: 'Semáforo', icon: TrafficCone, badge: null, requiereHerramienta: 'semaforo' as const },
+        ]).map(({ key, label, icon: Icon, badge, requiereHerramienta }) => {
+          if (requiereHerramienta && !evento.herramientas_activas[requiereHerramienta]) return null;
+          return (
+            <button
+              key={key}
+              onClick={() => setPanelTab(key)}
+              className={`flex-1 flex items-center justify-center gap-2 py-3 px-3 rounded-xl text-xs font-black uppercase tracking-wider transition-all cursor-pointer relative ${
+                panelTab === key
+                  ? 'bg-indigo-600 text-white shadow-md'
+                  : 'text-zinc-450 hover:text-zinc-200'
+              }`}
+            >
+              <Icon size={15} />
+              {label}
+              {badge !== null && badge > 0 && (
+                <span className={`text-[8px] font-black px-1.5 py-0.5 rounded-full ${
+                  panelTab === key ? 'bg-white/20 text-white' : 'bg-zinc-800 text-zinc-400'
+                }`}>
+                  {badge}
+                </span>
+              )}
+            </button>
+          )
+        })}
       </nav>
 
-      {/* CONTENIDO GESTIONADO POR TABS */}
+      {/* ================================================================ */}
+      {/* SECTION 3: CONTENIDO GESTIONADO POR TABS */}
+      {/* ================================================================ */}
       <div className="space-y-6">
-        
-        {/* --- PESTAÑA A: ENCUESTAS --- */}
+
+        {/* --- PESTAÑA ENCUESTAS --- */}
         {panelTab === "herramientas" && (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Creador de Encuesta */}
@@ -985,12 +1008,12 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
 
             {/* Listado y Visualización Activa */}
             <div className="lg:col-span-2 space-y-6">
-              
+
               {/* Resultados Activos en Vivo */}
               {evento.encuesta_activa_id && (
                 <div className="bg-zinc-900/40 border border-zinc-850 rounded-3xl p-5 shadow-xl space-y-4 relative overflow-hidden">
                   <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-cyan-500/20 to-transparent" />
-                  
+
                   <div className="flex justify-between items-center">
                     <div className="space-y-0.5">
                       <span className="text-[9px] font-black uppercase tracking-widest text-cyan-400 bg-cyan-950/40 border border-cyan-900/50 px-2 py-0.5 rounded">
@@ -1009,7 +1032,6 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
                     </button>
                   </div>
 
-                  {/* Detalle de Encuesta Activa */}
                   {encuestas.find(e => e.id === evento.encuesta_activa_id) && (
                     <div className="space-y-4 pt-1">
                       <h5 className="text-base font-black text-white">
@@ -1029,7 +1051,7 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
                                 <span className="text-indigo-400">{pct}% <span className="text-zinc-650">({votos} {votos === 1 ? "voto" : "votos"})</span></span>
                               </div>
                               <div className="w-full bg-zinc-950 border border-zinc-900 h-3.5 rounded-full overflow-hidden relative">
-                                <div 
+                                <div
                                   className="absolute left-0 top-0 bottom-0 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full transition-all duration-500"
                                   style={{ width: `${pct}%` }}
                                 />
@@ -1062,7 +1084,7 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
                     </div>
                   ) : (
                     encuestas.map(enc => (
-                      <div 
+                      <div
                         key={enc.id}
                         className={`bg-zinc-900/20 border rounded-3xl p-4 flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all ${
                           evento.encuesta_activa_id === enc.id
@@ -1126,10 +1148,10 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
           </div>
         )}
 
-        {/* --- PESTAÑA B: MODERACIÓN DE PREGUNTAS --- */}
+        {/* --- PESTAÑA MURO Q&A --- */}
         {panelTab === "moderacion" && (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            
+
             {/* Preguntas Pendientes */}
             <div className="space-y-4">
               <h3 className="text-xs font-black text-zinc-400 uppercase tracking-widest px-1 flex justify-between items-center">
@@ -1147,7 +1169,7 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
                   </div>
                 ) : (
                   preguntasPendientes.map((q) => (
-                    <div 
+                    <div
                       key={q.id}
                       className="bg-zinc-900/20 border border-zinc-850 rounded-3xl p-4 flex justify-between items-start gap-4 shadow"
                     >
@@ -1161,7 +1183,7 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
                           </span>
                         </div>
                         <p className="text-xs font-extrabold text-white leading-relaxed">
-                          "{q.pregunta}"
+                          &quot;{q.pregunta}&quot;
                         </p>
                       </div>
 
@@ -1204,7 +1226,7 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
                   </div>
                 ) : (
                   preguntasAprobadas.map((q, idx) => (
-                    <div 
+                    <div
                       key={q.id}
                       className="bg-zinc-900/30 border border-zinc-850 rounded-3xl p-4 flex justify-between items-start gap-4 shadow relative"
                     >
@@ -1224,7 +1246,7 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
                           )}
                         </div>
                         <p className="text-xs font-semibold text-zinc-200 leading-relaxed">
-                          "{q.pregunta}"
+                          &quot;{q.pregunta}&quot;
                         </p>
                       </div>
 
@@ -1248,11 +1270,11 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
           </div>
         )}
 
-        {/* --- PESTAÑA C: NUBE DE IDEAS --- */}
+        {/* --- PESTAÑA NUBE IDEAS --- */}
         {panelTab === "nube" && (
           <div className="bg-zinc-900/40 border border-zinc-850 rounded-3xl p-5 shadow-xl space-y-6 relative overflow-hidden">
             <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-indigo-500/20 to-transparent" />
-            
+
             <div className="flex justify-between items-center">
               <div className="space-y-0.5">
                 <h3 className="text-sm font-black text-white uppercase tracking-wider">
@@ -1271,7 +1293,6 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
               )}
             </div>
 
-            {/* Visualización Simple de Conceptos y Frecuencias */}
             {palabrasNube.length === 0 ? (
               <div className="text-center py-16 bg-zinc-900/10 border border-dashed border-zinc-850 rounded-3xl space-y-2">
                 <Cloud size={32} className="mx-auto text-zinc-700" />
@@ -1279,21 +1300,19 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
               </div>
             ) : (
               <div className="space-y-4">
-                {/* Canvas de Tag Cloud de Frecuencia */}
                 <div className="bg-zinc-950/60 border border-zinc-900 rounded-3xl p-6 min-h-[160px] flex flex-wrap items-center justify-center gap-4 relative">
                   <div className="absolute top-3 left-4 text-[8px] font-black tracking-widest text-indigo-400 uppercase">Proyección Colectiva</div>
-                  
+
                   {palabrasNube.map((pal, idx) => {
-                    // Generar diferentes tamaños según su frecuencia
                     const maxQty = palabrasNube[0]?.cantidad || 1;
-                    const sizeScale = 0.8 + (pal.cantidad / maxQty) * 1.4; // Multiplicador de escala font-size
+                    const sizeScale = 0.8 + (pal.cantidad / maxQty) * 1.4;
                     const opacityScale = 0.5 + (pal.cantidad / maxQty) * 0.5;
 
                     return (
-                      <span 
+                      <span
                         key={idx}
                         className="inline-block uppercase tracking-wide font-black transition-all bg-indigo-500/[0.03] hover:bg-indigo-500/[0.08] border border-zinc-900 px-3.5 py-1.5 rounded-2xl cursor-default"
-                        style={{ 
+                        style={{
                           fontSize: `${sizeScale}rem`,
                           opacity: opacityScale,
                           color: idx === 0 ? "#fbbf24" : idx === 1 ? "#22d3ee" : idx === 2 ? "#60a5fa" : "#f1f5f9"
@@ -1305,12 +1324,11 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
                   })}
                 </div>
 
-                {/* Listado Desglosado con Frecuencia */}
                 <div className="space-y-3.5">
                   <h4 className="text-[10px] font-black text-zinc-450 uppercase tracking-widest px-1">Frecuencia de Conceptos Recibidos</h4>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                     {palabrasNube.map((pal, idx) => (
-                      <div 
+                      <div
                         key={idx}
                         className="bg-zinc-950/40 border border-zinc-900 rounded-2xl p-3 flex justify-between items-center"
                       >
@@ -1329,7 +1347,7 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
           </div>
         )}
 
-        {/* --- PESTAÑA D: SEMÁFORO --- */}
+        {/* --- PESTAÑA SEMÁFORO --- */}
         {panelTab === "semaforo" && (
           <div className="bg-zinc-900/40 border border-zinc-850 rounded-3xl p-5 shadow-xl space-y-6 relative overflow-hidden">
             <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-amber-500/20 to-transparent" />
@@ -1345,7 +1363,6 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
               </div>
             </div>
 
-            {/* Estado actual del semáforo */}
             {estadoSemaforo && (
               <div className="grid grid-cols-3 gap-4">
                 <div className={`rounded-3xl p-5 text-center border transition-all ${
@@ -1381,7 +1398,6 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
               </div>
             )}
 
-            {/* Métricas */}
             {estadoSemaforo && (
               <div className="grid grid-cols-3 gap-4">
                 <div className="bg-zinc-950/40 border border-zinc-900 rounded-2xl p-4 text-center space-y-1">
@@ -1401,7 +1417,6 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
               </div>
             )}
 
-            {/* Botón de reseteo */}
             <div className="flex justify-center">
               <button
                 onClick={handleResetSemaforo}
@@ -1413,7 +1428,6 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
               </button>
             </div>
 
-            {/* Sin datos todavía */}
             {!estadoSemaforo && (
               <div className="text-center py-12 bg-zinc-900/10 border border-dashed border-zinc-850 rounded-3xl space-y-2">
                 <TrafficCone size={28} className="mx-auto text-zinc-700" />
