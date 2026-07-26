@@ -234,7 +234,7 @@ export default function PantallaPreguntasPage({ params }: { params: Promise<{ id
                       
                       {/* Question Content */}
                       <div className="flex-1 space-y-4">
-                        <p className={`text-2xl lg:text-3xl font-extrabold leading-snug tracking-wide ${
+                        <p className={`text-2xl lg:text-3xl font-extrabold leading-snug tracking-wide break-words whitespace-pre-wrap ${
                           idx === 0 ? 'text-white' : 'text-slate-200'
                         }`}>
                           "{q.pregunta}"

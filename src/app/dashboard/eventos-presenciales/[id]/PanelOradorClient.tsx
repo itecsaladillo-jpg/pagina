@@ -1242,7 +1242,7 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
                   preguntasPendientes.map((q) => (
                     <div
                       key={q.id}
-                      className="bg-zinc-900/20 border border-zinc-850 rounded-3xl p-4 flex justify-between items-start gap-4 shadow"
+                      className="bg-zinc-900/20 border border-zinc-850 rounded-3xl p-4 flex justify-between items-start gap-4 shadow overflow-hidden"
                     >
                       <div className="space-y-1.5 flex-1">
                         <div className="flex items-center gap-2">
@@ -1253,7 +1253,7 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
                             {new Date(q.created_at).toLocaleTimeString("es-AR", { hour: "2-digit", minute: "2-digit" })}
                           </span>
                         </div>
-                        <p className="text-xs font-extrabold text-white leading-relaxed">
+                        <p className="text-xs font-extrabold text-white leading-relaxed break-words whitespace-pre-wrap">
                           &quot;{q.pregunta}&quot;
                         </p>
                       </div>
@@ -1299,7 +1299,7 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
                   preguntasAprobadas.map((q, idx) => (
                     <div
                       key={q.id}
-                      className="bg-zinc-900/30 border border-zinc-850 rounded-3xl p-4 flex justify-between items-start gap-4 shadow relative w-[85%] mx-auto"
+                      className="bg-zinc-900/30 border border-zinc-850 rounded-3xl p-4 flex justify-between items-start gap-4 shadow relative w-[85%] mx-auto overflow-hidden"
                     >
                       {idx === 0 && (
                         <div className="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-violet-500 to-violet-700 rounded-l-3xl" />
@@ -1316,7 +1316,7 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
                             </span>
                           )}
                         </div>
-                        <p className="text-xs font-semibold text-zinc-200 leading-relaxed">
+                        <p className="text-xs font-semibold text-zinc-200 leading-relaxed break-words whitespace-pre-wrap">
                           &quot;{q.pregunta}&quot;
                         </p>
                       </div>

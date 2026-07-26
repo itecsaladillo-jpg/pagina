@@ -820,7 +820,7 @@ export default function PantallaGigantePage({ params }: { params: Promise<{ id: 
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.4, delay: idx * 0.08 }}
-                      className={`relative backdrop-blur-xl border rounded-3xl p-6 ${
+                      className={`relative backdrop-blur-xl border rounded-3xl p-6 overflow-hidden ${
                         idx === 0
                           ? 'md:col-span-2 bg-gradient-to-br from-indigo-500/10 via-purple-500/5 to-transparent border-indigo-500/25'
                           : 'bg-white/[0.04] border-white/10'
@@ -849,7 +849,7 @@ export default function PantallaGigantePage({ params }: { params: Promise<{ id: 
                           )}
                         </div>
 
-                        <p className={`font-bold text-white leading-snug ${
+                        <p className={`font-bold text-white leading-snug break-words whitespace-pre-wrap ${
                           idx === 0 ? 'text-3xl md:text-4xl' : 'text-xl md:text-2xl'
                         }`}>
                           &ldquo;{q.pregunta}&rdquo;
