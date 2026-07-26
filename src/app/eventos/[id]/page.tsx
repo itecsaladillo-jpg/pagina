@@ -149,11 +149,11 @@ export default function EventoPage({ params }: { params: Promise<{ id: string }>
     try {
       const { error } = await supabase
         .from("evento_semaforo_votos")
-        .insert({
+        .upsert({
           evento_id: evento.id,
-          dispositivo_id: dispositivoId,
+          visitor_id: dispositivoId,
           voto: "negativo"
-        });
+        }, { onConflict: "evento_id,visitor_id", ignoreDuplicates: false });
       if (error) {
         setSemaforoFeedback("error");
         setTimeout(() => setSemaforoFeedback("idle"), 3000);
