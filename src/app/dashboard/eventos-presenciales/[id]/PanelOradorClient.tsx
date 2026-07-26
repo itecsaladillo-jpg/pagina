@@ -465,39 +465,30 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
 
   // --- LÓGICA DE CONTROL DEL ORADOR (SWITCHES + MODO PROYECCIÓN) ---
 
-  const handleToggleHerramienta = async (key: keyof HerramientasActivas) => {
+  const handleToggleHerramienta = async (key: keyof HerramientasActivas & string) => {
+    console.log("[TOGGLE] clicked", key, "current ha:", JSON.stringify(evento.herramientas_activas));
+
+    if (!evento.id) {
+      console.error("[TOGGLE] evento.id is falsy");
+      return;
+    }
+
     const nuevas = {
       ...evento.herramientas_activas,
       [key]: !evento.herramientas_activas[key],
     }
 
-    const updatePayload: Record<string, any> = { herramientas_activas: nuevas };
-
-    // Si se desactiva la herramienta que se está proyectando, volver a bienvenida
-    if (!nuevas[key]) {
-      const modoMap: Record<string, ModoPantalla> = {
-        encuestas: 'encuestas',
-        preguntas: 'preguntas',
-        nube: 'nube',
-        semaforo: 'bienvenida',
-      };
-      if (modoMap[key] === evento.modo_pantalla_gigante) {
-        updatePayload.modo_pantalla_gigante = 'bienvenida';
-      }
-    }
+    console.log("[TOGGLE] nuevas:", JSON.stringify(nuevas));
 
     const { error } = await supabase
       .from("eventos")
-      .update(updatePayload)
+      .update({ herramientas_activas: nuevas })
       .eq("id", evento.id);
 
     if (!error) {
-      setEvento(prev => ({
-        ...prev,
-        herramientas_activas: nuevas,
-        ...(updatePayload.modo_pantalla_gigante ? { modo_pantalla_gigante: 'bienvenida' } : {}),
-      }));
+      setEvento(prev => ({ ...prev, herramientas_activas: nuevas }));
     } else {
+      console.error("[TOGGLE] error:", error);
       alert("Error al actualizar las herramientas activas.");
     }
   };
