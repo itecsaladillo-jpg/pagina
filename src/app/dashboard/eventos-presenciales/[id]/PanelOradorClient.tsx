@@ -81,7 +81,7 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
   // Estados principales
   const [evento, setEvento] = useState<Evento>(() => ({
     ...initialEvento,
-    herramientas_activas: (initialEvento as any).herramientas_activas ?? { encuestas: true, preguntas: true, nube: true, semaforo: true },
+    herramientas_activas: (initialEvento as any).herramientas_activas ?? { encuestas: false, preguntas: false, nube: false, semaforo: false },
     modo_pantalla_gigante: (initialEvento as any).modo_pantalla_gigante ?? 'bienvenida',
   }));
   const [panelTab, setPanelTab] = useState<"herramientas" | "moderacion" | "nube" | "semaforo">("herramientas");
@@ -471,13 +471,32 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
       [key]: !evento.herramientas_activas[key],
     }
 
+    const updatePayload: Record<string, any> = { herramientas_activas: nuevas };
+
+    // Si se desactiva la herramienta que se está proyectando, volver a bienvenida
+    if (!nuevas[key]) {
+      const modoMap: Record<string, ModoPantalla> = {
+        encuestas: 'encuestas',
+        preguntas: 'preguntas',
+        nube: 'nube',
+        semaforo: 'bienvenida',
+      };
+      if (modoMap[key] === evento.modo_pantalla_gigante) {
+        updatePayload.modo_pantalla_gigante = 'bienvenida';
+      }
+    }
+
     const { error } = await supabase
       .from("eventos")
-      .update({ herramientas_activas: nuevas })
+      .update(updatePayload)
       .eq("id", evento.id);
 
     if (!error) {
-      setEvento(prev => ({ ...prev, herramientas_activas: nuevas }));
+      setEvento(prev => ({
+        ...prev,
+        herramientas_activas: nuevas,
+        ...(updatePayload.modo_pantalla_gigante ? { modo_pantalla_gigante: 'bienvenida' } : {}),
+      }));
     } else {
       alert("Error al actualizar las herramientas activas.");
     }
@@ -796,21 +815,33 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
                 { key: 'nube' as const, label: 'Nube', icon: Cloud },
                 { key: 'encuestas' as const, label: 'Encuestas', icon: Vote },
                 { key: 'preguntas' as const, label: 'Preguntas', icon: MessageSquare },
-              ]).map(({ key, label, icon: Icon }) => (
-                <button
-                  key={key}
-                  onClick={() => handleSetModoPantalla(key)}
-                  className={`flex-1 flex flex-col items-center justify-center py-3 px-1 rounded-2xl transition-all cursor-pointer border text-center ${
-                    evento.modo_pantalla_gigante === key
-                      ? "bg-indigo-600 border-indigo-500 text-white font-black scale-[1.03] shadow-md shadow-indigo-500/10"
-                      : "bg-zinc-900/40 border-zinc-800 text-zinc-550 hover:text-zinc-300"
-                  }`}
-                  title={`Mostrar ${label} en el proyector`}
-                >
-                  <Icon size={16} className="mb-1" />
-                  <span className="text-[7px] uppercase tracking-wider font-extrabold">{label}</span>
-                </button>
-              ))}
+              ]).map(({ key, label, icon: Icon }) => {
+                const isModoActivo = evento.modo_pantalla_gigante === key
+                const toolKey = key as keyof HerramientasActivas
+                const toolEstaActiva = key === 'bienvenida' || evento.herramientas_activas[toolKey]
+                return (
+                  <button
+                    key={key}
+                    onClick={() => handleSetModoPantalla(key)}
+                    className={`flex-1 flex flex-col items-center justify-center py-3 px-1 rounded-2xl transition-all cursor-pointer border text-center relative ${
+                      isModoActivo
+                        ? "bg-indigo-600 border-indigo-500 text-white font-black scale-[1.03] shadow-md shadow-indigo-500/10"
+                        : toolEstaActiva
+                          ? "bg-zinc-900/40 border-zinc-800 text-zinc-550 hover:text-zinc-300"
+                          : "bg-zinc-950/30 border-zinc-900 text-zinc-700 hover:text-zinc-500"
+                    }`}
+                    title={`${toolEstaActiva ? `Mostrar ${label} en el proyector` : `Activá "${label}" en herramientas primero`}`}
+                  >
+                    <Icon size={16} className="mb-1" />
+                    <span className="text-[7px] uppercase tracking-wider font-extrabold">{label}</span>
+                    {!toolEstaActiva && (
+                      <span className="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-amber-500/20 border border-amber-500/30 flex items-center justify-center">
+                        <span className="text-[6px] text-amber-400 font-black">!</span>
+                      </span>
+                    )}
+                  </button>
+                )
+              })}
             </div>
           </div>
         </div>

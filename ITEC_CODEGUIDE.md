@@ -10,7 +10,7 @@ Plataforma web full-stack de **ITEC Saladillo** (Asociación Civil de Ciencia y 
 - **React:** 19.2.4
 - **Lenguaje:** TypeScript (strict)
 - **Estilos:** Tailwind CSS v4 + CSS custom properties (tema oscuro)
-- **Base de datos:** Supabase PostgreSQL (48 migraciones)
+- **Base de datos:** Supabase PostgreSQL (51+ migraciones)
 - **Auth:** Supabase Auth + Google OAuth
 - **Despliegue:** Vercel
 - **Path alias:** `@/` → `./src/`
@@ -51,8 +51,9 @@ D:\ITEC\
 │   │   │   └── [id]/
 │   │   ├── certificados/       # Pasaporte Digital (verificación QR)
 │   │   │   └── [codigo]/
-│   │   ├── eventos/            # Eventos presenciales (QR, acreditación, preguntas, nube, encuestas)
+│   │   ├── eventos/            # Eventos presenciales (QR, acreditación, preguntas, nube, encuestas, pantalla)
 │   │   │   ├── [id]/
+│   │   │   ├── [id]/pantalla/          # Pantalla grande para proyector (bienvenida, encuestas, nube, Q&A, semáforo)
 │   │   │   ├── [id]/preguntar/
 │   │   │   ├── [id]/pantalla-preguntas/
 │   │   │   ├── [id]/pantalla-nube/
@@ -91,9 +92,12 @@ D:\ITEC\
 │   │   │   ├── videoteca/      # Gestión de videos (admin)
 │   │   │   ├── streaming/      # Streaming (admin)
 │   │   │   ├── ai/             # Procesador IA (transcripciones)
-│   │   │   └── acciones/nueva/ # Crear nueva acción
+│   │   │   ├── acciones/nueva/ # Crear nueva acción
+│   │   │   ├── eventos-presenciales/[id]/ # Editar evento presencial
+│   │   │   └── encuestas/[id]/pantalla/   # Pantalla de resultados de encuesta
 │   │   └── api/                # API routes
 │   │       ├── asistente/      # Chat IA principal (OpenRouter + HuggingFace fallback)
+│   │       │   └── feedback/   # Feedback de respuestas del asistente
 │   │       ├── chat/           # Chat legacy (Groq)
 │   │       │   └── guardar/    # Guardar conversación
 │   │       ├── news/process/   # Procesamiento IA de noticias multicanal
@@ -104,20 +108,45 @@ D:\ITEC\
 │   │       ├── ideas/          # Envío de ideas (formulario público)
 │   │       ├── test-grok/      # Endpoint test Groq
 │   │       └── test-gemini/    # Endpoint test Gemini/Ollama
-│   ├── auth/                   # Auth callbacks
+│   ├── auth/                   # Auth routes
 │   │   ├── callback/           # Intercambio código OAuth por sesión
 │   │   └── signout/            # Cerrar sesión
 │   ├── components/
-│   │   ├── landing/            # Componentes de landing page
-│   │   ├── comunicacion/       # NewsWallMulticanal, editor multicanal
-│   │   ├── chat/               # Widget flotante del asistente IA
-│   │   ├── capacitaciones/     # Componente de encuestas en vivo
-│   │   ├── acciones/           # Formulario de registro a acciones
-│   │   ├── reuniones/          # Sala de reuniones
-│   │   ├── auth/               # Componentes de autenticación
-│   │   ├── dashboard/          # SidebarLinkWithBadge
-│   │   ├── ideas/              # Formulario público de ideas
-│   │   ├── prensa/              # Componentes de prensa
+│   │   ├── landing/             # Componentes de landing page
+│   │   │   ├── Navbar.tsx       # Navegación principal
+│   │   │   ├── HeroSection.tsx  # Hero con headline animado y CTAs
+│   │   │   ├── AboutSection.tsx # Acerca de ITEC
+│   │   │   ├── ImpactSection.tsx # Métricas de impacto (server)
+│   │   │   ├── ImpactSectionClient.tsx # Métricas con animaciones cliente
+│   │   │   ├── ComisionesSection.tsx  # Grid de comisiones activas
+│   │   │   ├── IdeasSection.tsx # CTA del buzón de ideas
+│   │   │   ├── VideotecaSection.tsx   # Videoteca destacada
+│   │   │   ├── Footer.tsx       # Footer del sitio
+│   │   │   └── FloatingLanguageSelector.tsx # Selector flotante ES/EN/PT
+│   │   ├── comunicacion/        # Comunicación multicanal
+│   │   │   ├── NewsWallMulticanal.tsx       # Muro con tabs: Público/Miembros/Sponsors/Prensa
+│   │   │   ├── NewsFlashMulticanalEditor.tsx # Editor multicanal con IA
+│   │   │   ├── ComunicacionTabs.tsx         # Tabs de comunicación
+│   │   │   ├── NotasMulticanalList.tsx      # Lista de notas publicadas
+│   │   │   └── ActionManagementList.tsx     # Lista de acciones
+│   │   ├── chat/                # Widget flotante del asistente IA
+│   │   │   └── ChatWidget.tsx   # Widget visible en todas las páginas públicas
+│   │   ├── capacitaciones/      # Encuestas en vivo
+│   │   │   └── LivePoll.tsx     # Votación en tiempo real
+│   │   ├── acciones/            # Registro a acciones
+│   │   │   └── ActionRegistrationForm.tsx
+│   │   ├── reuniones/           # Salas de reuniones
+│   │   │   └── GeneralMeetingRoom.tsx
+│   │   ├── auth/                # Autenticación
+│   │   │   ├── LoginClientContent.tsx  # Login Google OAuth
+│   │   │   └── MembersAccessButton.tsx # Botón de acceso en navbar
+│   │   ├── dashboard/           # Sidebar del dashboard
+│   │   │   └── SidebarIdeasLink.tsx    # Link con badge de ideas pendientes
+│   │   ├── ideas/               # Formulario público de ideas
+│   │   │   └── PublicIdeasForm.tsx
+│   │   └── prensa/              # Gestión de prensa
+│   │       ├── SendGacetillaModal.tsx   # Modal envío gacetillas por email
+│   │       └── PrensaEnviosHistoryModal.tsx # Historial de envíos
 │   ├── services/
 │   │   ├── auth.ts             # getCurrentMember(), signInWithGoogle(), isAdmin()
 │   │   ├── ai.ts               # Procesamiento con IA (OpenRouter), embeddings (Gemini), auditoría
@@ -211,8 +240,7 @@ D:\ITEC\
 | `eventos_asistentes` | Asistentes a eventos presenciales |
 | `evento_preguntas` | Preguntas para oradores (con sistema de likes) |
 | `evento_preguntas_colaborador` | Colaboración en preguntas |
-| `eventos_encuestas` | Encuestas en eventos con opciones y votos |
-| `eventos_nube_palabras` | Nube de palabras colaborativa |
+| `evento_preguntas_likes` | Likes en preguntas de eventos |
 
 ### Sponsors
 | Tabla | Descripción |
@@ -241,17 +269,49 @@ D:\ITEC\
 | `chat_conocimiento` | Base de conocimiento de interacciones |
 | `training_docs` | Documentos de entrenamiento del asistente (en Storage bucket) |
 
+### Aula Virtual
+| Tabla | Descripción |
+|-------|-------------|
+| `clases_virtuales` | Sesiones de clases virtuales con estado de streaming |
+| `clase_interacciones` | Interacciones en vivo (chat, mano alzada, modómetro) vía Supabase Broadcast |
+
+### Certificados
+| Tabla | Descripción |
+|-------|-------------|
+| `certificados_digitales` | Certificados digitales verificables por QR con `codigo(UNIQUE)`, `titulo`, `alumno_nombre`, `fecha`, `competencias(text[])`, `horas_catedra`, `thumbnail_url` |
+
+### Entrenamiento
+| Tabla | Descripción |
+|-------|-------------|
+| `trainings` | Sesiones de entrenamiento/capacitación |
+| `entrenamiento_acciones` | Acciones vinculadas a entrenamientos |
+
+### Mapa Productivo
+| Tabla | Descripción |
+|-------|-------------|
+| `mapa_empresas` | Empresas registradas en el Mapa Productivo |
+| `mapa_empresas_telefono` | Teléfonos de empresas del mapa |
+| `alumnos_talentos` | Perfiles de talento estudiantil registrados en el mapa |
+
+### Eventos — Tables Adicionales
+| Tabla | Descripción |
+|-------|-------------|
+| `eventos_encuestas` | Encuestas dentro de eventos con opciones y votos |
+| `eventos_encuestas_opciones` | Opciones de respuesta de encuestas de evento |
+| `eventos_encuestas_votos` | Votos emitidos en encuestas de evento |
+| `evento_semaforo_votos` | Votos del semáforo de comprensión (bien/regular/mal) |
+| `evento_nubes` | Configuración de nubes de palabras múltiples por evento |
+| `evento_nube_palabras` | Palabras enviadas a cada nube |
+
 ### Otras
 | Tabla | Descripción |
 |-------|-------------|
 | `ideas` | Ideas/comentarios de la comunidad |
 | `videos` | Videoteca (YouTube) |
-| `clases_virtuales` | Clases virtuales / estado de streaming |
-| `certificados` | Certificados digitales |
 | `prensa_envios_log` | Log de envíos de prensa por email |
-| `mapa_empresas` | Empresas registradas en el Mapa Productivo |
-| `mapa_empresas_telefono` | Teléfonos de empresas del mapa |
 | `medios_prensa` | Medios de comunicación registrados |
+| `sponsor_reportes` | Reportes de impacto generados por IA para sponsors |
+| `sponsor_reportes_acciones` | Acciones registradas en reportes de sponsor |
 
 ---
 
@@ -273,11 +333,11 @@ El flujo de creación de noticias funciona así:
 
 ## Sidebar del Dashboard (`layout.tsx`)
 
-- **Nav principal** (todos los miembros): Muro, Sala Reuniones, Aula Virtual, Pasaporte Digital, Buzón Ideas, Mi Perfil, Nube Archivos, Mapa Productivo.
+- **Nav principal** (todos los miembros): Muro, Sala Reuniones, Aula Virtual, Pasaporte Digital, Buzón Ideas, Mi Perfil, Nube Archivos, Mapa Productivo, Capacitaciones.
 - **HERRAMIENTAS** (solo admin): Items sueltos + submenús colapsables (`<details>`):
   - **Prensa** (cyan): Gacetillas, Gestión de Prensa
   - **Sponsors** (amber): Muro Sponsors, Gestión de Sponsors
-  - **Herramientas para Eventos** (púrpura): Encuestas, Sistema Preguntas, Nube Ideas, Crear Evento
+  - **Herramientas para Eventos** (púrpura): Encuestas, Sistema Preguntas, Nube Ideas, Crear Evento, Editar Evento
 - Usa `scroll={false}` en todos los links para mantener posición al navegar.
 - Diseño responsive con color-coding por sección.
 - Los badges muestran conteos de items pendientes (ej. comentarios no leídos).
@@ -289,11 +349,11 @@ El flujo de creación de noticias funciona así:
 ### Proveedores de IA
 | Proveedor | Modelo | Uso |
 |-----------|--------|-----|
-| **OpenRouter** | DeepSeek Chat | Provider principal del asistente (`/api/asistente`) y procesamiento de noticias |
+| **OpenRouter** | DeepSeek Chat / DeepSeek R1 | Provider principal del asistente (`/api/asistente`) y procesamiento de noticias |
 | **Ollama** (self-hosted) | llama3.2:latest | Generación de reportes de sponsors, consolidación de feedback |
 | **Google Gemini** | gemini-2.0-flash / text-embedding-004 | Fallback para servicios IA, embeddings vectoriales primarios |
 | **Groq** | LLaMA 3.3 70B / LLaMA 3.1 8B | Chat legacy (`/api/chat`), endpoints de test |
-| **HuggingFace** | Llama 3.1 8B | Fallback del asistente + embeddings secundarios |
+| **HuggingFace** | Llama 3.1 8B / all-MiniLM-L6-v2 | Fallback del asistente + embeddings secundarios |
 
 ### Servicios de IA (`src/services/ai.ts`)
 | Función | Propósito |
@@ -302,8 +362,10 @@ El flujo de creación de noticias funciona así:
 | `generateFlash()` | Crea flashes noticiosos cortos para el muro interno |
 | `generateExecutiveSummary()` | Resúmenes ejecutivos a partir de notas |
 | `generateActionItems()` | Extrae items de acción de textos |
-| `generatePublicArticle()` | Transforma datos crudos en artículos publicables |
+| `generatePublicArticle()` | Transforma datos crudos en artículos publicables usando IA |
 | `generateActionSuccessStory()` | Crea historias de éxito de acciones completadas |
+| `transcribirAudio()` | Transcripción de audio a texto |
+| `generateMinutesFromSummary()` | Genera actas formales a partir de resúmenes |
 | `generateMulticanalNews()` | Genera contenido para 4 audiencias (público, miembros, sponsors, medios) |
 | `generateVideoSummary()` | Resume videos de YouTube |
 | `generarEmbedding()` | Genera embeddings vía Gemini o HuggingFace |
@@ -311,19 +373,31 @@ El flujo de creación de noticias funciona así:
 | `auditarRespuestaIA()` | Audita respuestas por violaciones de policy (4 categorías) |
 
 ### RAG Cascade (`src/lib/rag/ragCascade.ts`)
-Sistema de recuperación de 4 niveles:
+Sistema de recuperación de 4 niveles con scoring por solapamiento de tokens (estilo Jaccard):
 1. **P1** (score >= 0.45) — Documentos locales pre-parseados (`DOCS_CONTEXT` generado por `npm run sync-docs`)
 2. **P2** (score >= 0.40) — Supabase Storage bucket `training-docs`
-3. **P3** — Conversaciones guardadas (búsqueda semántica por embeddings)
-4. **P4** — Web search (DuckDuckGo como fallback)
+3. **P3** — Conversaciones guardadas (búsqueda semántica por embeddings vectoriales)
+4. **P4** — Web search (DuckDuckGo como fallback externo)
 - **Soft fallback:** Retorna el mejor resultado incluso si no alcanza thresholds
+- Compatible con Edge Runtime (sin dependencias Node pesadas)
 
 ### Asistente IA (`/api/asistente`)
 - Edge runtime
 - Obtiene contexto dinámico (comisiones, staff, actividades recientes, news, feedbacks)
 - Inyecta contexto RAG del cascade
-- Detecta comandos explícitos de guardado y auto-guarda conversaciones largas
-- Audita respuestas por 4 categorías de reglas (menciones prohibidas, exposición de rutas, lenguaje informal, uso de palabras temporales)
+- Detecta comandos explícitos de guardado y auto-guarda conversaciones largas (umbral de mensajes)
+- System prompt: enforce estilo ITEC (técnico, humano, vanguardista)
+- Palabras prohibidas: "hoy", "ayer", "mañana", "che", "viste", "pibe"
+- **Auditoría de IA** (`auditarRespuestaIA()`) — 4 categorías de detección vía regex:
+  1. Menciones prohibidas (palabras bloqueadas)
+  2. Exposición de rutas internas del sistema
+  3. Lenguaje informal o fuera de tono
+  4. Uso de palabras temporales relativas
+  Las violaciones se registran en `ai_auditoria_violaciones`
+- **Sistema de Feedback** (`/api/asistente/feedback`):
+  - Usuarios califican respuestas (rating + comentario)
+  - Se guardan en `asistente_feedback` con embeddings generados
+  - Búsqueda semántica de feedbacks similares via `buscarFeedbacksSimilares()` (Gemini + HuggingFace)
 - Fallback: OpenRouter → HuggingFace
 
 ---
@@ -337,7 +411,9 @@ Secciones: Hero (logo + fotos Cicaré), Navbar con navegación completa, Métric
 Muro público que muestra `notas_publico` publicadas. Incluye sistema de comentarios via `/api/news-comments`. Visualización con medios adjuntos (imágenes, videos).
 
 ### Mapa Productivo (`/mapa-productivo`)
-Directorio interactivo de empresas locales y talento técnico. Los usuarios pueden explorar empresas registradas. Las empresas/estudiantes se registran via `/registro-mapa`. Datos almacenados en `mapa_empresas`.
+Directorio interactivo del ecosistema productivo regional. Muestra beneficios para empresas y estudiantes, y guía paso a paso de cómo funciona la iniciativa. Las empresas/estudiantes se registran via `/registro-mapa` con formulario de doble perfil:
+- **Empresa**: nombre, sector, contacto, necesidades, desafíos → datos en `mapa_empresas`
+- **Estudiante**: escuela, especialidad, habilidades → datos en `alumnos_talentos`
 
 ### Acciones de Impacto (`/acciones`)
 Catálogo público de acciones (capacitaciones, eventos sociales, divulgaciones científicas) con filtros por tipo. Cada acción tiene detalle (`/acciones/[id]`) con formulario de inscripción pública.
@@ -346,18 +422,35 @@ Catálogo público de acciones (capacitaciones, eventos sociales, divulgaciones 
 Artículos publicados con slugs amigables. Cada artículo (`/articulo/[slug]`) soporta contenido enriquecido.
 
 ### Aula Virtual (`/clases/[id]`)
-Sala de streaming en vivo para clases virtuales. Estado en tiempo real vía Supabase Realtime (`postgres_changes`).
+Sala de clases virtuales interactiva con streaming en vivo:
+- **Reproductor de video** simulado con controles de reproducción
+- **Chat en tiempo real** via Supabase Broadcast
+- **Modómetro** — Votación de comprensión en vivo: "Voy bien", "Me perdí", "Muy rápido"
+- **Mano Alzada** — Sistema para pedir turno de palabra respetuosamente
+- **Consola del Docente** — Cambia entre vista de chat/modómetro, reinicia votos, gestiona cola de preguntas
+- **Simulación de roles** — Alterna entre vista alumno/docente para testing
+- **Identificación por dispositivo** — localStorage anónimo
+- Estado de streaming en tiempo real vía Supabase Realtime (`postgres_changes`)
 
-### Certificados Digitales (`/certificados/[codigo]`)
-Verificación pública de certificados digitales mediante código QR único. Muestra datos del certificado y valida autenticidad.
+### Certificados Digitales — Pasaporte Digital (`/certificados/[codigo]`)
+Verificación pública de certificados digitales mediante código QR único. Muestra: nombre del alumno, título, fecha, competencias adquiridas, horas cátedra. Datos en `certificados_digitales`. SEO optimizado con meta tags para compartir en redes.
 
 ### Eventos Presenciales (`/eventos/[id]`)
 Sistema completo de interacción en vivo:
-- **QR de acreditación** — Los asistentes se acreditan escaneando QR
-- **Preguntas al orador** (`/preguntar`) — Los asistentes envían preguntas con sistema de likes
-- **Pantalla de preguntas** (`/pantalla-preguntas`) — Moderador muestra preguntas en pantalla grande
-- **Nube de palabras** (`/nube`, `/pantalla-nube`) — Audiencia envía palabras, se genera nube en vivo
-- **Encuestas** — Votación en tiempo real con resultados visibles
+- **QR de acreditación** — Los asistentes se acreditan escaneando QR o completan formulario con nombre, email, teléfono, organización
+- **Credencial por dispositivo** — Identificación por localStorage (sin login requerido)
+- **Preguntas al orador** (`/preguntar`) — Los asistentes envían preguntas con sistema de likes, opción de anonimato
+- **Pantalla de preguntas** (`/pantalla-preguntas`) — Moderador muestra preguntas aprobadas en pantalla grande
+- **Nube de palabras** (`/nube`, `/pantalla-nube`) — Audiencia envía palabras a nubes colaborativas; soporta múltiples nubes activas por evento con límite de caracteres, normalización de diacríticos y desduplicación
+- **Encuestas** — Votación en tiempo real con resultados visibles, un voto por dispositivo
+- **Big Screen Display** (`/pantalla`) — Pantalla completa para proyector con múltiples modos:
+  - **Modo Bienvenida** — Código QR + conteo de asistentes
+  - **Modo Encuestas** — Barras animadas con resultados en vivo
+  - **Modo Nube de Palabras** — Visualización de palabras con tamaño proporcional a frecuencia
+  - **Modo Q&A** — Preguntas destacadas con más votos
+  - **Semáforo** — Indicador visual de comprensión de la audiencia (verde/amarillo/rojo)
+  - Fondos animados con Framer Motion
+- **Confirmación por email** — Email de bienvenida al registrarse via Resend
 
 ### Portal del Sponsor (`/sponsors/[id]`)
 Acceso por token privado (`private_token`). Muestra contenido exclusivo para el sponsor, reportes de impacto generados por IA.
@@ -402,6 +495,12 @@ Gestión de transmisiones en vivo. Control de estado de aulas virtuales.
 ### Videoteca (`/dashboard/videoteca`)
 CRUD de videos de YouTube. Cada entrada incluye: título, descripción, URL, miniatura, resumen generado por IA.
 
+### Gestión de Capacitaciones (`/dashboard/capacitaciones`)
+CRUD de capacitaciones/acciones de impacto con dashboard de estadísticas. Creación de nuevas acciones via `/dashboard/acciones/nueva`.
+
+### Certificados / Pasaporte Digital (`/dashboard/certificados`)
+Gestión de certificados digitales emitidos a miembros y alumnos.
+
 ---
 
 ## Herramientas de Administrador
@@ -419,13 +518,13 @@ Configuración global: Google Service Account JSON, Drive root folder ID, y otra
 Configuración de system prompts dinámicos para cada modelo IA (keyed por `clave_prompt` en tabla `ai_prompt_settings`).
 
 ### Encuestas en Vivo (`/dashboard/encuestas`)
-Creación de encuestas con preguntas y opciones. Pantalla de resultados en vivo (`/pantalla`). Analíticas avanzadas con Recharts en `/analytics`.
+Creación de encuestas con preguntas y opciones. Pantalla de resultados en vivo (`/dashboard/encuestas/[id]/pantalla`). Analíticas avanzadas con Recharts en `/dashboard/encuestas/analytics`.
 
 ### Sistema de Preguntas (`/dashboard/eventos`)
 Moderación de preguntas enviadas por la audiencia durante eventos. Aprobación, ordenamiento, destacar en pantalla.
 
 ### Eventos Presenciales (`/dashboard/eventos-presenciales`)
-Creación de eventos con slug QR, fecha, ubicación, panel de oradores. Gestión del panel del orador.
+Creación de eventos con slug QR, fecha, ubicación, panel de oradores. Edición de eventos existentes via `/[id]`. Incluye: preacreditación, configuración de modos de pantalla (bienvenida, encuestas, nube, Q&A, semáforo), gestión de herramientas activas por evento.
 
 ### Nubes de Palabras (`/dashboard/nubes`)
 Gestión de nubes de palabras generadas durante eventos. Visualización y exportación.
@@ -441,6 +540,9 @@ CRUD de sponsors con niveles (platino, oro, plata, bronce). Generación de repor
 
 ### Muro Sponsors (`/dashboard/sponsorsNews`)
 Gestión de contenido exclusivo para sponsors. Noticias visibles en portal del sponsor.
+
+### Creación de Acciones de Impacto (`/dashboard/acciones/nueva`)
+Formulario para crear nuevas acciones de impacto (capacitaciones, eventos sociales, divulgaciones) con campos: título, descripción, tipo, audiencia, capacidad, costo, fechas, ubicación, tags, responsable, comisión.
 
 ---
 
@@ -467,10 +569,10 @@ Gestión de contenido exclusivo para sponsors. Noticias visibles en portal del s
 ## Integraciones Externas
 
 ### Supabase
-- **Database:** PostgreSQL con 48 migraciones, RLS policies
+- **Database:** PostgreSQL con 51+ migraciones, RLS policies
 - **Auth:** Supabase Auth con Google OAuth, manejo de sesiones via cookies SSR
 - **Storage:** 3 buckets: `article-media` (imágenes artículos), `avatars` (fotos perfil), `training-docs` (PDFs entrenamiento IA)
-- **Realtime:** Suscripciones `postgres_changes` para estado de clases virtuales en vivo
+- **Realtime:** Suscripciones `postgres_changes` para estado de clases virtuales en vivo; **Supabase Broadcast** para chat en tiempo real en aula virtual; Realtime para votos de encuestas, preguntas y nubes de palabras en eventos
 
 ### Google Drive API
 - Autenticación via Service Account (credenciales en `site_settings`)
@@ -557,6 +659,8 @@ Gestión de contenido exclusivo para sponsors. Noticias visibles en portal del s
 | `OLLAMA_MODEL` | Nombre del modelo Ollama |
 | `HF_API_KEY` | API key de HuggingFace |
 | `NEXT_PUBLIC_SITE_URL` | URL pública del sitio |
+| `NEXT_PUBLIC_MEET_LINK` | Link default de Google Meet para reuniones y streaming |
+| `OPENAI_API_KEY` | API key de OpenAI (usada en endpoint test-grok) |
 
 ---
 
@@ -624,12 +728,13 @@ Server Action     →  getCurrentMember()  →  validate Zod  →  mutate DB  �
 
 | Stakeholder | Interfaz Principal | Contenido |
 |-------------|-------------------|-----------|
-| **Público General** | Landing, `/muro`, `/acciones`, `/articulo`, `/mapa-productivo` | Noticias públicas, acciones, artículos, mapa, certificados |
-| **Miembros** | Dashboard (`/dashboard/*`) | Muro interno, reuniones, drive, ideas, perfil, certificados |
-| **Administradores** | Dashboard + herramientas admin | Gestión de miembros, comisiones, prensa, sponsors, eventos, encuestas, IA |
-| **Sponsors** | Portal sponsor (`/sponsors/[token]`) | Noticias exclusivas, reportes de impacto |
-| **Prensa/Medios** | API `/api/press-news` + email | Gacetillas, materiales de prensa |
-| **Asistentes a Eventos** | Portal evento (`/eventos/[id]/*`) | Acreditación QR, preguntas, nube de palabras, encuestas |
+| **Público General** | Landing, `/muro`, `/acciones`, `/articulo`, `/mapa-productivo`, `/registro-mapa`, `/certificados/[codigo]` | Noticias públicas, acciones, artículos, mapa productivo, registro, certificados digitales |
+| **Miembros** | Dashboard (`/dashboard/*`) | Muro interno, reuniones, drive, ideas, perfil, certificados, aula virtual |
+| **Administradores** | Dashboard + herramientas admin | Gestión de miembros, comisiones, prensa, sponsors, eventos presenciales, encuestas, nubes, streaming, videoteca, IA, capacitaciones |
+| **Sponsors** | Portal sponsor (`/sponsors/[token]`) | Noticias exclusivas, reportes de impacto generados por IA |
+| **Prensa/Medios** | API `/api/press-news` + email | Gacetillas, materiales de prensa, historial de envíos |
+| **Asistentes a Eventos** | Portal evento (`/eventos/[id]/*`), pantalla grande (`/pantalla`) | Acreditación, preguntas, nube de palabras, encuestas, semáforo de comprensión |
+| **Estudiantes / Alumnos** | `/capacitaciones/[id]`, `/clases/[id]`, `/registro-mapa` | Aula virtual interactiva (modómetro, chat, mano alzada), registro de talento en mapa productivo |
 
 ---
 
@@ -642,3 +747,7 @@ Server Action     →  getCurrentMember()  →  validate Zod  →  mutate DB  �
 - **Edge Runtime:** Algunas API routes usan Edge Runtime. Verificar compatibilidad de dependencias.
 - **Google Service Account:** Las credenciales se almacenan en `site_settings` (no en `.env.local`) para permitir actualización sin redeploy.
 - **sync-docs:** Script que extrae texto de PDFs en `training-docs` y genera `docsContext.ts`. Ejecutar después de subir nuevos documentos de entrenamiento.
+- **Supabase Broadcast:** Se usa para el chat en tiempo real del aula virtual (`/clases/[id]`), independiente de `postgres_changes`.
+- **localStorage como identidad:** Asistentes a eventos y alumnos en aula virtual se identifican por dispositivo via localStorage (sin login requerido).
+- **Multi-nube:** Los eventos pueden tener múltiples nubes de palabras activas simultáneamente, cada una con su propia configuración.
+- **Embeddings:** Se generan con Gemini `text-embedding-004` como primario y HuggingFace `all-MiniLM-L6-v2` como fallback, tanto para RAG como para el sistema de feedback del asistente.

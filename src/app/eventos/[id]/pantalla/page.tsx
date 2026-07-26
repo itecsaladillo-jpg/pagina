@@ -115,7 +115,7 @@ export default function PantallaGigantePage({ params }: { params: Promise<{ id: 
 
         const ev = {
           ...data,
-          herramientas_activas: (data as any).herramientas_activas ?? { encuestas: true, preguntas: true, nube: true, semaforo: true },
+          herramientas_activas: (data as any).herramientas_activas ?? { encuestas: false, preguntas: false, nube: false, semaforo: false },
           modo_pantalla_gigante: (data as any).modo_pantalla_gigante ?? 'bienvenida',
         } as Evento
 
@@ -390,6 +390,13 @@ export default function PantallaGigantePage({ params }: { params: Promise<{ id: 
   const semaforoActivo = evento.herramientas_activas?.semaforo ?? false
   const mostrarSemaforo = semaforoActivo && evento.modo_pantalla_gigante !== 'bienvenida'
 
+  const herramientas = evento.herramientas_activas ?? { encuestas: false, preguntas: false, nube: false, semaforo: false }
+  const modoEfectivo: ModoPantalla = (
+    (evento.modo_pantalla_gigante === 'encuestas' && !herramientas.encuestas) ||
+    (evento.modo_pantalla_gigante === 'nube' && !herramientas.nube) ||
+    (evento.modo_pantalla_gigante === 'preguntas' && !herramientas.preguntas)
+  ) ? 'bienvenida' : evento.modo_pantalla_gigante
+
   const semaforoConfig = {
     VERDE: { glow: '#10B981', bg: 'bg-emerald-500', shadow: 'shadow-emerald-500/40', text: 'text-emerald-400', label: 'Comprensión Fluida', border: 'border-emerald-500/30' },
     AMARILLO: { glow: '#F59E0B', bg: 'bg-amber-500', shadow: 'shadow-amber-500/40', text: 'text-amber-400', label: 'Ritmo Acelerado', border: 'border-amber-500/30' },
@@ -435,7 +442,7 @@ export default function PantallaGigantePage({ params }: { params: Promise<{ id: 
           />
         </motion.div>
 
-        {evento.modo_pantalla_gigante === 'bienvenida' ? (
+        {modoEfectivo === 'bienvenida' ? (
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -462,11 +469,21 @@ export default function PantallaGigantePage({ params }: { params: Promise<{ id: 
         )}
       </header>
 
+      {/* === Overlay cuando el modo está desactivado por herramienta inactiva === */}
+      {modoEfectivo !== evento.modo_pantalla_gigante && (
+        <div className="absolute top-24 left-1/2 -translate-x-1/2 z-20">
+          <div className="bg-amber-500/10 border border-amber-500/20 backdrop-blur-xl rounded-full px-6 py-2 text-amber-400 text-sm font-bold tracking-wide flex items-center gap-2 shadow-lg shadow-amber-500/5">
+            <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
+            Herramienta desactivada — modo Bienvenida hasta que el orador la active
+          </div>
+        </div>
+      )}
+
       {/* === Main Content === */}
       <main className="relative z-10 flex-1 flex flex-col items-center justify-center px-12 pb-10">
         <AnimatePresence mode="wait">
           {/* ===== MODO: BIENVENIDA ===== */}
-          {evento.modo_pantalla_gigante === 'bienvenida' && (
+          {modoEfectivo === 'bienvenida' && (
             <motion.div
               key="bienvenida"
               initial={{ opacity: 0, y: 30 }}
@@ -532,7 +549,7 @@ export default function PantallaGigantePage({ params }: { params: Promise<{ id: 
           )}
 
           {/* ===== MODO: ENCUESTAS ===== */}
-          {evento.modo_pantalla_gigante === 'encuestas' && (
+          {modoEfectivo === 'encuestas' && (
             <motion.div
               key="encuestas"
               initial={{ opacity: 0, y: 30 }}
@@ -627,7 +644,7 @@ export default function PantallaGigantePage({ params }: { params: Promise<{ id: 
           )}
 
           {/* ===== MODO: NUBE ===== */}
-          {evento.modo_pantalla_gigante === 'nube' && (
+          {modoEfectivo === 'nube' && (
             <motion.div
               key="nube"
               initial={{ opacity: 0, y: 30 }}
@@ -715,7 +732,7 @@ export default function PantallaGigantePage({ params }: { params: Promise<{ id: 
           )}
 
           {/* ===== MODO: PREGUNTAS ===== */}
-          {evento.modo_pantalla_gigante === 'preguntas' && (
+          {modoEfectivo === 'preguntas' && (
             <motion.div
               key="preguntas"
               initial={{ opacity: 0, y: 30 }}
