@@ -1048,11 +1048,11 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
               {/* Resultados Activos en Vivo */}
               {evento.encuesta_activa_id && (
                 <div className="bg-zinc-900/40 border border-zinc-850 rounded-3xl p-5 shadow-xl space-y-4 relative overflow-hidden">
-                  <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-cyan-500/20 to-transparent" />
+                  <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-indigo-500/20 to-transparent" />
 
                   <div className="flex justify-between items-center">
                     <div className="space-y-0.5">
-                      <span className="text-[9px] font-black uppercase tracking-widest text-cyan-400 bg-cyan-950/40 border border-cyan-900/50 px-2 py-0.5 rounded">
+                      <span className="text-[9px] font-black uppercase tracking-widest text-indigo-400 bg-indigo-950/40 border border-indigo-900/50 px-2 py-0.5 rounded">
                         EN VIVO EN EL AUDITORIO
                       </span>
                       <h4 className="text-sm font-extrabold text-white pt-1">
@@ -1124,7 +1124,7 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
                         key={enc.id}
                         className={`bg-zinc-900/20 border rounded-3xl p-4 flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all ${
                           evento.encuesta_activa_id === enc.id
-                            ? "border-cyan-500/40 bg-cyan-950/5 shadow-md shadow-cyan-500/5"
+                            ? "border-indigo-500/40 bg-indigo-950/5 shadow-md shadow-indigo-500/5"
                             : "border-zinc-850"
                         }`}
                       >
@@ -1134,7 +1134,7 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
                               {enc.opciones.length} opciones
                             </span>
                             {evento.encuesta_activa_id === enc.id && (
-                              <span className="text-[8px] font-black uppercase tracking-wider px-2 py-0.5 rounded-md bg-cyan-500/20 border border-cyan-500/30 text-cyan-400 animate-pulse">
+                              <span className="text-[8px] font-black uppercase tracking-wider px-2 py-0.5 rounded-md bg-indigo-500/20 border border-indigo-500/30 text-indigo-400 animate-pulse">
                                 Activa en vivo
                               </span>
                             )}
@@ -1211,7 +1211,7 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
                     >
                       <div className="space-y-1.5 flex-1">
                         <div className="flex items-center gap-2">
-                          <span className="text-[8px] font-black uppercase tracking-widest text-indigo-400 bg-indigo-950/40 border border-indigo-900/40 px-2 py-0.5 rounded">
+                          <span className="text-[8px] font-black uppercase tracking-widest text-cyan-400 bg-cyan-950/40 border border-cyan-900/40 px-2 py-0.5 rounded">
                             {q.nombre}
                           </span>
                           <span className="text-[8px] text-zinc-550">
@@ -1249,7 +1249,7 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
             <div className="space-y-4">
               <h3 className="text-xs font-black text-zinc-400 uppercase tracking-widest px-1 flex justify-between items-center">
                 <span>Muro en Proyector (Aprobadas)</span>
-                <span className="text-[9px] bg-indigo-500/10 border border-indigo-500/20 px-2.5 py-0.5 rounded-full text-indigo-400">
+                <span className="text-[9px] bg-cyan-500/10 border border-cyan-500/20 px-2.5 py-0.5 rounded-full text-cyan-400">
                   {preguntasAprobadas.length} en pantalla
                 </span>
               </h3>
@@ -1267,12 +1267,12 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
                       className="bg-zinc-900/30 border border-zinc-850 rounded-3xl p-4 flex justify-between items-start gap-4 shadow relative"
                     >
                       {idx === 0 && (
-                        <div className="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-blue-500 to-indigo-500 rounded-l-3xl" />
+                        <div className="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-cyan-500 to-cyan-700 rounded-l-3xl" />
                       )}
 
                       <div className="space-y-1.5 flex-1 pl-1">
                         <div className="flex items-center gap-1.5">
-                          <span className="text-[8px] font-black uppercase tracking-widest text-indigo-400 bg-indigo-950/40 border border-indigo-900/40 px-2 py-0.5 rounded">
+                          <span className="text-[8px] font-black uppercase tracking-widest text-cyan-400 bg-cyan-950/40 border border-cyan-900/40 px-2 py-0.5 rounded">
                             {q.nombre}
                           </span>
                           {idx === 0 && (
@@ -1287,7 +1287,7 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
                       </div>
 
                       <div className="flex items-center gap-3 shrink-0 self-center">
-                        <span className="text-[10px] font-black text-indigo-400 bg-indigo-500/10 border border-indigo-500/20 px-2.5 py-1 rounded-xl">
+                        <span className="text-[10px] font-black text-cyan-400 bg-cyan-500/10 border border-cyan-500/20 px-2.5 py-1 rounded-xl">
                           👍 {q.likes}
                         </span>
                         <button
@@ -1309,7 +1309,7 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
         {/* --- PESTAÑA NUBE IDEAS --- */}
         {panelTab === "nube" && (
           <div className="bg-zinc-900/40 border border-zinc-850 rounded-3xl p-5 shadow-xl space-y-6 relative overflow-hidden">
-            <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-indigo-500/20 to-transparent" />
+            <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-fuchsia-500/20 to-transparent" />
 
             <div className="flex justify-between items-center">
               <div className="space-y-0.5">
@@ -1337,7 +1337,7 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
             ) : (
               <div className="space-y-4">
                 <div className="bg-zinc-950/60 border border-zinc-900 rounded-3xl p-6 min-h-[160px] flex flex-wrap items-center justify-center gap-4 relative">
-                  <div className="absolute top-3 left-4 text-[8px] font-black tracking-widest text-indigo-400 uppercase">Proyección Colectiva</div>
+                  <div className="absolute top-3 left-4 text-[8px] font-black tracking-widest text-fuchsia-400 uppercase">Proyección Colectiva</div>
 
                   {palabrasNube.map((pal, idx) => {
                     const maxQty = palabrasNube[0]?.cantidad || 1;
@@ -1347,11 +1347,11 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
                     return (
                       <span
                         key={idx}
-                        className="inline-block uppercase tracking-wide font-black transition-all bg-indigo-500/[0.03] hover:bg-indigo-500/[0.08] border border-zinc-900 px-3.5 py-1.5 rounded-2xl cursor-default"
+                        className="inline-block uppercase tracking-wide font-black transition-all bg-fuchsia-500/[0.03] hover:bg-fuchsia-500/[0.08] border border-zinc-900 px-3.5 py-1.5 rounded-2xl cursor-default"
                         style={{
                           fontSize: `${sizeScale}rem`,
                           opacity: opacityScale,
-                          color: idx === 0 ? "#fbbf24" : idx === 1 ? "#22d3ee" : idx === 2 ? "#60a5fa" : "#f1f5f9"
+                          color: idx === 0 ? "#d946ef" : idx === 1 ? "#c026d3" : idx === 2 ? "#a21caf" : "#f1f5f9"
                         }}
                       >
                         {pal.palabra} <span className="text-[9px] text-zinc-600 font-normal">({pal.cantidad})</span>
@@ -1371,7 +1371,7 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
                         <span className="text-xs font-extrabold uppercase tracking-wide text-zinc-200">
                           {pal.palabra}
                         </span>
-                        <span className="text-[10px] font-black text-indigo-400 bg-indigo-500/10 border border-indigo-500/20 px-2 py-0.5 rounded">
+                        <span className="text-[10px] font-black text-fuchsia-400 bg-fuchsia-500/10 border border-fuchsia-500/20 px-2 py-0.5 rounded">
                           {pal.cantidad} {pal.cantidad === 1 ? "concepto" : "conceptos"}
                         </span>
                       </div>
