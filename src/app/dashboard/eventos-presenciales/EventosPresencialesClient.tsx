@@ -333,14 +333,16 @@ export default function EventosPresencialesClient({ initialEventos }: { initialE
                       <Tv size={12} />
                       Pantalla Gigante
                     </a>
-                    <button
-                      onClick={() => router.push(`/dashboard/eventos-presenciales/${ev.id}`)}
+                    <a
+                      href={`/dashboard/eventos-presenciales/${ev.id}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="flex-1 flex items-center justify-center gap-1.5 py-3 px-3 rounded-2xl border text-[10px] font-black uppercase tracking-wider transition-all cursor-pointer
                         bg-violet-950/30 text-violet-400 border-violet-500/20 hover:bg-violet-950/50 hover:border-violet-500/40 hover:text-violet-300"
                     >
                       <SlidersHorizontal size={12} />
                       Consola ITEC
-                    </button>
+                    </a>
                   </div>
                 )}
 
