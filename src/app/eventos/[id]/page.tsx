@@ -1044,7 +1044,7 @@ export default function EventoPage({ params }: { params: Promise<{ id: string }>
 
         {/* --- PESTAÑA 2: PREGUNTAS EN VIVO (Q&A) --- */}
         {activeTab === "preguntas" && (
-          <div className="space-y-4 animate-fade-in">
+          <div className="space-y-4 animate-fade-in overflow-y-auto max-h-[calc(100dvh-220px)] pr-2">
             <div className="bg-gradient-to-br from-indigo-950/40 to-slate-900/40 border border-indigo-500/20 rounded-3xl p-4 shadow-xl">
               <h3 className="text-xs font-extrabold text-indigo-300 uppercase tracking-widest mb-1.5 flex items-center gap-1.5">
                 <Sparkles size={13} className="text-indigo-400" /> Bloque de Preguntas
