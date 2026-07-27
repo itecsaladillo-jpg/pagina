@@ -130,6 +130,7 @@ export default function EventoPage({ params }: { params: Promise<{ id: string }>
 
   // Semáforo de Comprensión (botón rojo fijo)
   const [semaforoFeedback, setSemaforoFeedback] = useState<"idle" | "sent" | "error">("idle");
+  const [estadoSemaforo, setEstadoSemaforo] = useState<{ totalAcreditados: number; votosNegativos: number; porcentajeNegativo: number; estado: 'VERDE' | 'AMARILLO' | 'ROJO' } | null>(null);
 
   const toolColors = {
     encuestas: 'sky',
@@ -145,23 +146,34 @@ export default function EventoPage({ params }: { params: Promise<{ id: string }>
   };
 
   const handleVotoSemaforo = async () => {
-    if (!evento || !dispositivoId) return;
-    console.log('[SEMAFORO] Enviando voto negativo:', { eventoId: evento.id, visitorId: dispositivoId });
+    if (!evento || !dispositivoIdRef.current) {
+      console.error('[SEMAFORO] Error: evento o dispositivoId no disponible');
+      setSemaforoFeedback("error");
+      setTimeout(() => setSemaforoFeedback("idle"), 3000);
+      return;
+    }
+    console.log('[SEMAFORO] Enviando voto negativo:', { eventoId: evento.id, visitorId: dispositivoIdRef.current });
     try {
-      const { error, status } = await supabase
-        .from("evento_semaforo_votos")
-        .upsert({
-          evento_id: evento.id,
-          visitor_id: dispositivoId,
+      const res = await fetch("/api/eventos/semaforo-voto", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          eventoId: evento.id,
+          visitorId: dispositivoIdRef.current,
           voto: "negativo"
-        }, { onConflict: "evento_id,visitor_id", ignoreDuplicates: false });
-      if (error) {
-        console.error('[SEMAFORO] Error al insertar voto:', error);
+        })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        console.error('[SEMAFORO] Error al insertar voto:', data.error);
         setSemaforoFeedback("error");
         setTimeout(() => setSemaforoFeedback("idle"), 3000);
         return;
       }
-      console.log('[SEMAFORO] Voto registrado exitosamente. Status:', status);
+
+      console.log('[SEMAFORO] Voto registrado exitosamente');
       setSemaforoFeedback("sent");
       setTimeout(() => setSemaforoFeedback("idle"), 3000);
     } catch (err) {
@@ -622,6 +634,132 @@ export default function EventoPage({ params }: { params: Promise<{ id: string }>
     };
   }, [evento?.id, supabase]);
 
+  // Función para calcular el estado del semáforo
+  const fetchEstadoSemaforo = async (eventoId: string, resetAt?: string | null) => {
+    try {
+      const { count: totalAcreditados } = await supabase
+        .from("eventos_asistentes")
+        .select("*", { count: "exact", head: true })
+        .eq("evento_id", eventoId);
+
+      let votosNegativos = 0;
+      if (resetAt) {
+        const { count } = await supabase
+          .from("evento_semaforo_votos")
+          .select("*", { count: "exact", head: true })
+          .eq("evento_id", eventoId)
+          .eq("voto", "negativo")
+          .gte("created_at", resetAt);
+        votosNegativos = count ?? 0;
+      }
+
+      const total = totalAcreditados ?? 0;
+      const porcentajeNegativo = total === 0 ? 0 : Math.round((votosNegativos / total) * 100);
+
+      let estado: 'VERDE' | 'AMARILLO' | 'ROJO';
+      if (porcentajeNegativo < 30) estado = "VERDE";
+      else if (porcentajeNegativo < 50) estado = "AMARILLO";
+      else estado = "ROJO";
+
+      setEstadoSemaforo({ 
+        totalAcreditados: total, 
+        votosNegativos, 
+        porcentajeNegativo, 
+        estado 
+      });
+    } catch (err) {
+      console.error('[SEMAFORO] Error fetchEstadoSemaforo:', err);
+    }
+  };
+
+  // Suscripción Realtime para VOTOS del semáforo
+  useEffect(() => {
+    if (!evento) return;
+
+    const semChannel = supabase
+      .channel(`realtime:semaforo_votos_${evento.id}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "evento_semaforo_votos",
+          filter: `evento_id=eq.${evento.id}`
+        },
+        () => {
+          console.log('[SEMAFORO] Voto recibido, actualizando estado...');
+          fetchEstadoSemaforo(evento.id, evento.semaforo_last_reset_at);
+        }
+      )
+      .subscribe();
+
+    return () => { 
+      supabase.removeChannel(semChannel); 
+    }
+  }, [evento?.id, evento?.semaforo_last_reset_at, supabase]);
+
+  // CRÍTICO: Suscripción Realtime para ASISTENTES (actualiza totalAcreditados)
+  useEffect(() => {
+    if (!evento) return;
+
+    const asistentesChannel = supabase
+      .channel(`realtime:asistentes_${evento.id}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "eventos_asistentes",
+          filter: `evento_id=eq.${evento.id}`
+        },
+        () => {
+          console.log('[SEMAFORO] Nuevo asistente acreditado, actualizando contador...');
+          fetchEstadoSemaforo(evento.id, evento.semaforo_last_reset_at);
+        }
+      )
+      .subscribe();
+
+    return () => { 
+      supabase.removeChannel(asistentesChannel); 
+    }
+  }, [evento?.id, evento?.semaforo_last_reset_at, supabase]);
+
+  // Suscripción Realtime para RESET del semáforo
+  useEffect(() => {
+    if (!evento) return;
+
+    const resetChannel = supabase
+      .channel(`realtime:semaforo_reset_${evento.id}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "UPDATE",
+          schema: "public",
+          table: "eventos",
+          filter: `id=eq.${evento.id}`
+        },
+        (payload: any) => {
+          const newData = payload.new as Partial<Evento>;
+          if (newData.semaforo_last_reset_at !== evento.semaforo_last_reset_at) {
+            console.log('[SEMAFORO] Reset detectado, recalculando...');
+            fetchEstadoSemaforo(evento.id, newData.semaforo_last_reset_at);
+          }
+        }
+      )
+      .subscribe();
+
+    return () => { 
+      supabase.removeChannel(resetChannel); 
+    }
+  }, [evento?.id, evento?.semaforo_last_reset_at, supabase]);
+
+  // Calcular estado inicial del semáforo después del registro
+  useEffect(() => {
+    if (evento && asistente) {
+      fetchEstadoSemaforo(evento.id, evento.semaforo_last_reset_at);
+    }
+  }, [evento, asistente]);
+
   const handleSendPregunta = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!evento || !pregTexto.trim() || pregSubmitting) return;
@@ -1001,7 +1139,7 @@ export default function EventoPage({ params }: { params: Promise<{ id: string }>
           </div>
           <button
             onClick={handleVotoSemaforo}
-            disabled={semaforoFeedback !== "idle"}
+            disabled={semaforoFeedback !== "idle" || !evento}
             className="shrink-0 flex items-center gap-1.5 bg-red-600 hover:bg-red-700 active:scale-95 disabled:bg-zinc-800 disabled:text-zinc-500 text-white font-extrabold text-[9px] uppercase tracking-wider px-3 py-2 rounded-xl shadow-md transition-all cursor-pointer"
           >
             {semaforoFeedback === "sent" ? (
@@ -1429,7 +1567,42 @@ export default function EventoPage({ params }: { params: Promise<{ id: string }>
             </button>
           </motion.div>
         )}
+
+        {/* Widget Semáforo flotante (esquina inferior derecha) */}
+        {activeTab === "encuestas" && estadoSemaforo && (
+          <motion.div
+            initial={{ opacity: 0, x: 50, scale: 0.9 }}
+            animate={{ opacity: 1, x: 0, scale: 1 }}
+            exit={{ opacity: 0, x: 50, scale: 0.9 }}
+            transition={{ duration: 0.4, ease: 'easeOut' }}
+            className={`fixed bottom-8 right-8 z-50 flex items-center gap-4 bg-black/70 backdrop-blur-2xl border rounded-2xl px-5 py-3.5 shadow-2xl ${semaforoConfig[estadoSemaforo.estado].border}`}
+          >
+            <div className="relative flex items-center justify-center w-6 h-6">
+              <div
+                className={`absolute inset-0 rounded-full animate-ping opacity-40 ${semaforoConfig[estadoSemaforo.estado].bg}`}
+              />
+              <div
+                className={`relative w-5 h-5 rounded-full shadow-lg ${semaforoConfig[estadoSemaforo.estado].bg}`}
+                style={{ boxShadow: `0 0 20px ${semaforoConfig[estadoSemaforo.estado].glow}66` }}
+              />
+            </div>
+            <div className="flex flex-col">
+              <span className={`text-sm font-black uppercase tracking-wider ${semaforoConfig[estadoSemaforo.estado].text}`}>
+                {semaforoConfig[estadoSemaforo.estado].label}
+              </span>
+              <span className="text-xs text-zinc-500 font-bold">
+                {estadoSemaforo.porcentajeNegativo}% negativo ({estadoSemaforo.votosNegativos}/{estadoSemaforo.totalAcreditados})
+              </span>
+            </div>
+          </motion.div>
+        )}
       </AnimatePresence>
     </div>
   );
 }
+
+const semaforoConfig = {
+  VERDE: { glow: '#10B981', bg: 'bg-emerald-500', shadow: 'shadow-emerald-500/40', text: 'text-emerald-400', label: 'Comprensión Fluida', border: 'border-emerald-500/30' },
+  AMARILLO: { glow: '#F59E0B', bg: 'bg-amber-500', shadow: 'shadow-amber-500/40', text: 'text-amber-400', label: 'Ritmo Acelerado', border: 'border-amber-500/30' },
+  ROJO: { glow: '#EF4444', bg: 'bg-rose-500', shadow: 'shadow-rose-500/40', text: 'text-rose-400', label: 'Repasar Contenido', border: 'border-rose-500/30' },
+};
