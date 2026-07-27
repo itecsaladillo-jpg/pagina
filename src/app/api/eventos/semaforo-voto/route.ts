@@ -26,16 +26,16 @@ export async function POST(req: NextRequest) {
     if (error) {
       console.error("[SEMÁFORO API] Error al insertar voto:", error);
       return NextResponse.json(
-        { error: "Error al registrar el voto" },
+        { error: "Error al registrar el voto: " + (error.message || "Error desconocido") },
         { status: 500 }
       );
     }
 
     return NextResponse.json({ success: true });
-  } catch (err) {
+  } catch (err: any) {
     console.error("[SEMÁFORO API] Error inesperado:", err);
     return NextResponse.json(
-      { error: "Error inesperado al procesar el voto" },
+      { error: "Error inesperado al procesar el voto: " + (err?.message || "Error desconocido") },
       { status: 500 }
     );
   }

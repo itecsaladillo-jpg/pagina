@@ -147,27 +147,39 @@ export default function EventoPage({ params }: { params: Promise<{ id: string }>
 
   const handleVotoSemaforo = async () => {
     if (!evento || !dispositivoIdRef.current) {
-      console.error('[SEMAFORO] Error: evento o dispositivoId no disponible');
+      console.error('[SEMAFORO] Error: evento o dispositivoId no disponible', { 
+        evento: !!evento, 
+        dispositivoIdRef: dispositivoIdRef.current 
+      });
       setSemaforoFeedback("error");
       setTimeout(() => setSemaforoFeedback("idle"), 3000);
       return;
     }
-    console.log('[SEMAFORO] Enviando voto negativo:', { eventoId: evento.id, visitorId: dispositivoIdRef.current });
+    console.log('[SEMAFORO] Enviando voto negativo:', { 
+      eventoId: evento.id, 
+      visitorId: dispositivoIdRef.current,
+      dispositivoIdRefType: typeof dispositivoIdRef.current
+    });
     try {
+      const requestBody = {
+        eventoId: evento.id,
+        visitorId: dispositivoIdRef.current,
+        voto: "negativo"
+      };
+      console.log('[SEMAFORO] Request body:', requestBody);
+      
       const res = await fetch("/api/eventos/semaforo-voto", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          eventoId: evento.id,
-          visitorId: dispositivoIdRef.current,
-          voto: "negativo"
-        })
+        body: JSON.stringify(requestBody)
       });
 
+      console.log('[SEMAFORO] Response status:', res.status);
       const data = await res.json();
+      console.log('[SEMAFORO] Response data:', data);
 
       if (!res.ok || !data.success) {
-        console.error('[SEMAFORO] Error al insertar voto:', data.error);
+        console.error('[SEMAFORO] Error al insertar voto:', data.error, res.status);
         setSemaforoFeedback("error");
         setTimeout(() => setSemaforoFeedback("idle"), 3000);
         return;
