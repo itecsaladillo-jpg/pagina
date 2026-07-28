@@ -964,7 +964,6 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
                 { key: 'nube' as const, label: 'Nube', icon: Cloud },
                 { key: 'encuestas' as const, label: 'Encuestas', icon: Vote },
                 { key: 'preguntas' as const, label: 'Preguntas', icon: MessageSquare },
-                { key: 'semaforo' as const, label: 'Semáforo', icon: Activity },
               ]).map(({ key, label, icon: Icon }) => {
                 const isModoActivo = evento.modo_pantalla_gigante === key
                 const c = toolColors[key] || { active: 'bg-zinc-600 border-zinc-500', hover: 'hover:text-zinc-300 hover:border-zinc-600' }
@@ -1446,7 +1445,11 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
                           {pal.cantidad} {pal.cantidad === 1 ? "concepto" : "conceptos"}
                         </span>
                       </div>
-            </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         )}
 
