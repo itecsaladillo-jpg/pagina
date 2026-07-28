@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { createClient } from "@/lib/supabase/client";
+import { submitSemaphoreVoteAction } from "@/app/dashboard/encuestas/actions";
 import { 
   ThumbsUp, 
   Send, 
@@ -156,19 +157,10 @@ export default function EventoPage({ params }: { params: Promise<{ id: string }>
     setSemaforoFeedback("sending");
 
     try {
-      const res = await fetch("/api/semaforo", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          eventId: evento.id,
-          visitorId: dispositivoIdRef.current
-        })
-      });
+      const result = await submitSemaphoreVoteAction(evento.id, dispositivoIdRef.current);
 
-      const data = await res.json();
-
-      if (!res.ok || !data.success) {
-        console.error('[SEMAFORO] Error al insertar voto:', data.error, res.status);
+      if (!result.success) {
+        console.error('[SEMAFORO] Error al registrar voto:', result.error);
         setSemaforoFeedback("error");
         setTimeout(() => setSemaforoFeedback("idle"), 3000);
         return;

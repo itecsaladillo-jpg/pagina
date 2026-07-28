@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+import { submitSemaphoreVoteAction } from "@/app/dashboard/encuestas/actions";
 
 export async function POST(req: NextRequest) {
   try {
@@ -14,21 +14,12 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "visitorId requerido" }, { status: 400 });
     }
 
-    const supabase = await createClient();
+    const result = await submitSemaphoreVoteAction(eventId, visitorId);
 
-    const { error } = await supabase
-      .from("evento_semaforo_votos")
-      .insert({
-        evento_id: eventId,
-        visitor_id: visitorId,
-        voto: "negativo"
-      });
-
-    if (error) {
-      console.error("[SEMÁFORO API] Error:", error);
+    if (!result.success) {
       return NextResponse.json(
-        { error: error.message || "Error al registrar" },
-        { status: error.code === "PGRST101" ? 403 : 500 }
+        { error: result.error || "Error al registrar" },
+        { status: 400 }
       );
     }
 

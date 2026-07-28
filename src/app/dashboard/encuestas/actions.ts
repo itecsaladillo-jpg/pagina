@@ -264,3 +264,35 @@ export async function markPollAsCompletedAction(pollId: string) {
     return { success: false }
   }
 }
+
+export async function submitSemaphoreVoteAction(eventId: string, visitorId: string) {
+  try {
+    const { cookies } = await import('next/headers')
+    const cookieStore = await cookies()
+
+    const hasVoted = cookieStore.get(`semaphore_voted_${eventId}`)
+    if (hasVoted) {
+      return { success: false, error: 'Ya has votado en el semáforo.' }
+    }
+
+    const supabase = await createClient()
+
+    const { error } = await supabase
+      .from('evento_semaforo_votos')
+      .insert({ evento_id: eventId, visitor_id: visitorId, voto: 'negativo' })
+
+    if (error) throw error
+
+    cookieStore.set(`semaphore_voted_${eventId}`, 'true', {
+      maxAge: 60 * 60 * 24 * 30,
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict'
+    })
+
+    return { success: true }
+  } catch (err: any) {
+    console.error('[submitSemaphoreVote]', err)
+    return { success: false, error: 'Error al registrar el voto' }
+  }
+}
