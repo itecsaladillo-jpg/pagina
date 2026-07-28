@@ -10,7 +10,7 @@ Plataforma web full-stack de **ITEC Saladillo** (Asociación Civil de Ciencia y 
 - **React:** 19.2.4
 - **Lenguaje:** TypeScript (strict)
 - **Estilos:** Tailwind CSS v4 + CSS custom properties (tema oscuro)
-- **Base de datos:** Supabase PostgreSQL (56 migraciones)
+- **Base de datos:** Supabase PostgreSQL (61 migraciones)
 - **Auth:** Supabase Auth + Google OAuth
 - **Despliegue:** Vercel
 - **Path alias:** `@/` → `./src/`
@@ -135,7 +135,8 @@ D:\ITEC\
 │   │   │   ├── ChatWidget.css   # Estilos del widget
 │   │   │   └── ChatWidgetWrapper.tsx # Wrapper condicional (oculta en rutas de eventos)
 │   │   ├── capacitaciones/      # Encuestas en vivo
-│   │   │   └── LivePoll.tsx     # Votación en tiempo real
+│   │   │   ├── LivePoll.tsx     # Votación en tiempo real
+│   │   │   └── actions.ts       # voteLivePollAction() con cookie dedup
 │   │   ├── acciones/            # Registro a acciones
 │   │   │   └── ActionRegistrationForm.tsx
 │   │   ├── reuniones/           # Salas de reuniones
@@ -242,7 +243,7 @@ D:\ITEC\
 
 ### Datos Anónimos en Eventos
 - **Identificación por dispositivo:** `localStorage` almacena un `dispositivo_id` UUID sin login.
-- **Un voto por dispositivo:** Encuestas y semáforo usan `dispositivo_id` para evitar duplicación (no dependen de autenticación).
+- **Un voto por dispositivo:** Encuestas usan cookie-based dedup por `questionId`. Semáforo no tiene dedup server-side (votos append-only por diseño v3).
 - **Límite de 25 caracteres** en palabras de nube de ideas para prevenir abuso de almacenamiento.
 
 ### Seguridad de la IA
@@ -254,6 +255,7 @@ D:\ITEC\
 - Violaciones se registran en `ai_auditoria_violaciones` para monitoreo.
 - **Palabras prohibidas en asistente:** "hoy", "ayer", "mañana", "che", "viste", "pibe".
 - **No se exponen API keys** en el cliente. Todas las llamadas a IA se hacen desde server-side o API routes.
+- **Mensajes de error sanitizados:** Los errores de providers IA (OpenRouter, HuggingFace) no exponen detalles internos al cliente. Solo se loguean códigos de estado en server-side.
 
 ### Tokens y Credenciales
 - **Supabase anon key** (pública): Solo lectura de datos públicos, filtrada por RLS.
@@ -268,8 +270,9 @@ D:\ITEC\
 
 ### Vulnerabilidades Conocidas y Mitigaciones
 - **localStorage como identidad:** Aceptado como trade-off para UX sin login. No se almacenan datos sensibles.
-- **Semáforo anónimo:** Sin autenticación intencionalmente (para no intimidar a asistentes). Mitigado con rate limiting por dispositivo.
+- **Semáforo sin dedup server-side:** Por diseño v3 (anonimato total). Un usuario puede enviar múltiples votos cada 5s. Mitigado por el contexto del evento (presencial, corto alcance).
 - **ChatWidget en rutas de eventos:** Oculto condicionalmente via `ChatWidgetWrapper` para no interferir con herramientas de eventos en vivo.
+- **`HerramientasActivas` type incompleto:** `database.ts` no incluye `semaforo: boolean`. Los componentes usan `(evento as any).herramientas_activas` como workaround.
 
 ### Recomendaciones para Nuevos Desarrollos
 1. **Nunca**放置 API keys o secrets en el cliente o en `localStorage`.
@@ -354,11 +357,14 @@ D:\ITEC\
 |-------|-------------|
 | `certificados_digitales` | Certificados digitales verificables por QR con `codigo(UNIQUE)`, `titulo`, `alumno_nombre`, `fecha`, `competencias(text[])`, `horas_catedra`, `thumbnail_url` |
 
-### Entrenamiento
+### Capacitaciones
 | Tabla | Descripción |
 |-------|-------------|
 | `trainings` | Sesiones de entrenamiento/capacitación |
 | `entrenamiento_acciones` | Acciones vinculadas a entrenamientos |
+| `polls` (capacitaciones) | Encuestas en vivo para capacitaciones (con `training_id`) |
+
+**LivePoll (`capacitaciones/LivePoll.tsx`):** Componente de votación en tiempo real. Usa `voteLivePollAction()` (server action) con cookie-based dedup (`livepoll_voted_{pollId}`) para prevenir votos duplicados. Lee el conteo actual de votes antes de incrementar para evitar race conditions.
 
 ### Mapa Productivo
 | Tabla | Descripción |
@@ -411,7 +417,7 @@ El flujo de creación de noticias funciona así:
 - **HERRAMIENTAS** (solo admin): Items sueltos + submenús colapsables (`<details>`):
   - **Prensa** (cyan): Gacetillas, Gestión de Prensa
   - **Sponsors** (amber): Muro Sponsors, Gestión de Sponsors
-  - **Herramientas para Eventos** (púrpura): Encuestas, Sistema Preguntas, Nube Ideas, Semáforo, Crear Evento, Editar Evento. Cada herramienta se activa/desactiva individualmente por evento via `herramientas_activas` (JSONB, claves: `encuestas`, `preguntas`, `nube`, `semaforo`).
+  - **Herramientas para Eventos** (púrpura): Encuestas, Sistema Preguntas, Nube Ideas, Semáforo de Comprensión, Crear Evento, Editar Evento. Cada herramienta se activa/desactiva individualmente por evento via `herramientas_activas` (JSONB, claves: `encuestas`, `preguntas`, `nube`, `semaforo`).
 - Usa `scroll={false}` en todos los links para mantener posición al navegar.
 - Diseño responsive con color-coding por sección.
 - Los badges muestran conteos de items pendientes (ej. comentarios no leídos).
@@ -514,13 +520,23 @@ Sistema completo de interacción en vivo:
 - **Nube de palabras** (`/nube`, `/pantalla-nube`) — Audiencia envía palabras a nubes colaborativas; soporta múltiples nubes activas por evento con límite de caracteres, normalización de diacríticos y desduplicación
 - **Concepto de Charla dinámico** — El operador configura un concepto (`nube_concepto`) desde la Consola ITEC que se muestra en celulares y pantalla gigante en tiempo real vía Realtime
 - **Encuestas** — Votación en tiempo real con resultados visibles, un voto por dispositivo
-- **Semáforo de Comprensión** — Sistema de alertas anónimas desde celulares:
-  - Botón "NO ENTIENDO, ME PERDÍ (Anonimo)" para que asistentes reporten confusión
-  - Cálculo de porcentaje con denominator seguro: `Math.max(totalAcreditados, votosNegativos, 1)` para evitar división por cero
-  - Estados: VERDE (<30%), AMARILLO (30-49%), ROJO (>=50%)
-  - Botón "Reiniciar" para resetear la ventana de votos (actualiza `semaforo_last_reset_at`)
-  - Widget visual oculto en móvil (solo visible en pantalla gigante y consola)
-  - Suscripciones Realtime a `evento_semaforo_votos`, `eventos_asistentes` y `eventos` para actualización en vivo
+- **Semáforo de Comprensión** — Sistema de alertas anónimas desde celulares (v3, migración 054):
+  - **Tabla `evento_semaforo_votos`:** Solo columnas `id(uuid)` + `evento_id(uuid FK)` + `created_at(timestamptz)`. Sin `visitor_id`, sin columna `voto` — cada fila ES un voto negativo. Append-only, sin UPDATE/DELETE.
+  - **Botón "NO ENTIENDO, ME PERDÍ (Anonimo)"** en `eventos/[id]/page.tsx`: inserta fila en `evento_semaforo_votos`. Cooldown de 5s por dispositivo (solo client-side, sin server dedup).
+  - **Cálculo de porcentaje:** `votosNegativos / Math.max(totalAcreditados, votosNegativos, 1) * 100`. El denominator seguro previene división por cero y maneja el caso de más votos que acreditados.
+  - **Umbrales de estado:**
+    - VERDE: < 30% de alertas
+    - AMARILLO: 30–49% de alertas
+    - ROJO: >= 50% de alertas
+  - **Función `calcularEstado()`** duplicada idénticamente en 4 archivos: `semaforoActions.ts`, `PanelOradorClient.tsx`, `eventos/[id]/page.tsx`, `pantalla/page.tsx`.
+  - **Reset (`resetearSemaforo()`):** Requiere rol admin/coordinador. Actualiza `semaforo_last_reset_at` a `now()` en tabla `eventos`. NO borra votos — el COUNT filtra por `created_at >= resetAt`.
+  - **3 suscripciones Realtime por cliente:**
+    1. `evento_semaforo_votos` INSERT → incrementa contador optimista (consola) o recalcula desde DB (móvil/pantalla)
+    2. `eventos` UPDATE (filtro `id=eq.{eventoId}`) → detecta cambio en `semaforo_last_reset_at` y recalcula
+    3. `eventos_asistentes` INSERT/DELETE → actualiza denominator (solo consola y pantalla, NO móvil)
+  - **Arquitectura:** 3 clientes independientes (móvil, consola orador, pantalla gigante) que suscriben los mismos canales Realtime y calculan estado localmente. El orador puede reiniciar desde `PanelOradorClient.tsx`.
+  - **RLS:** SELECT e INSERT públicos (sin auth). Sin políticas UPDATE/DELETE (votos inmutables).
+  - **Nota de tipo:** `HerramientasActivas` en `database.ts` NO incluye `semaforo: boolean` — los componentes trabajan around this con `(evento as any).herramientas_activas.semaforo`.
 - **Big Screen Display** (`/pantalla`) — Pantalla completa para proyector con múltiples modos:
   - **Modo Bienvenida** — Código QR + conteo de asistentes
   - **Modo Encuestas** — Barras animadas con resultados en vivo
@@ -610,7 +626,7 @@ Creación de eventos con slug QR, fecha, ubicación, panel de oradores. Edición
 - Switches individuales de herramientas en layout grid `2x2` responsive
 - Modo de proyección de pantalla gigante (orden: Bienvenida → Encuestas → Preguntas → Nube)
 - **Concepto de Charla** — Campo de texto para definir el concepto de la nube de ideas (se guarda vía `actualizarConceptoNube()` y se muestra en celulares/pantalla en tiempo real)
-- **Semáforo de Comprensión** — Panel con estado visual (verde/amarillo/rojo), estadísticas de acreditados/alertas/porcentaje, botón de reinicio con auth check
+- **Semáforo de Comprensión** — Panel con estado visual (verde/amarillo/rojo), estadísticas de acreditados/alertas/porcentaje, botón de reinicio con auth check. El panel muestra las 3 columnas de semáforo, tarjetas de estadísticas, reglas de umbrales, y botón "Reiniciar" (requiere admin/coordinador). El toggle del semáforo se controla desde el grid `2x2` de herramientas activas.
 - Conteo de asistentes acreditados en tiempo real (suscripción Realtime con manejo de INSERT y DELETE)
 
 ### Nubes de Palabras (`/dashboard/nubes`)
@@ -660,7 +676,7 @@ Formulario para crear nuevas acciones de impacto (capacitaciones, eventos social
 - **Realtime:** Suscripciones `postgres_changes` para:
   - Estado de clases virtuales en vivo
   - Votos de encuestas, preguntas y nubes de palabras en eventos
-  - Semáforo de comprensión (`evento_semaforo_votos`, `eventos_asistentes`, `eventos`)
+  - Semáforo de comprensión (`evento_semaforo_votos` INSERT, `eventos` UPDATE para reset, `eventos_asistentes` INSERT/DELETE para conteo)
   - Concepto de nube dinámico (cambios en tabla `eventos`)
   - Conteo de asistentes acreditados (INSERT/DELETE en `eventos_asistentes`)
 - **Supabase Broadcast:** Chat en tiempo real en aula virtual (`/clases/[id]`)
@@ -704,6 +720,7 @@ Formulario para crear nuevas acciones de impacto (capacitaciones, eventos social
 - **Archivos de actions para eventos:**
   - `herramientasActions.ts`: `actualizarHerramientasActivasAction()`, `actualizarModoPantallaAction()`, `actualizarConceptoNube()`
   - `semaforoActions.ts`: `registrarVotoNegativo()`, `obtenerEstadoSemaforo()`, `resetearSemaforo()`
+  - `capacitaciones/actions.ts`: `voteLivePollAction()` — server action con cookie-based dedup para encuestas de capacitaciones
 
 ### API Routes
 - Para endpoints consumidos por client components (fetch desde el browser)
@@ -848,5 +865,7 @@ Server Action     →  getCurrentMember()  →  validate Zod  →  mutate DB  �
 - **Concepto de Nube Dinámico:** Campo `nube_concepto` en tabla `eventos`. Se actualiza vía Server Action `actualizarConceptoNube()` (requiere rol admin/coordinador). Se propaga en tiempo real a celulares y pantalla gigante via suscripción Realtime a tabla `eventos`.
 - **Migración 055_nube_concepto.sql:** Agrega columna `nube_concepto TEXT DEFAULT ''` a tabla `eventos`. Debe ejecutarse en Supabase después del deploy.
 - **Migración 056_fix_rls_critical.sql:** Corrige políticas RLS en `clases_virtuales`, `clase_interacciones`, `certificados_digitales`, `saved_conversations`. Debe ejecutarse en Supabase.
+- **Migración 031 (actualizada):** RPC `obtener_miembros_publicos` ya no retorna `email` ni `phone` para proteger PII.
 - **ChatWidget lazy-loaded:** Se carga con `next/dynamic({ ssr: false })` para no impactar carga inicial de páginas.
 - **Dead code cleanup:** Eliminados archivos huérfanos (`test-grok`, `test-gemini`, `news-multicanal.ts`, `aiConfig.json`), 22+ funciones nunca importadas, dependencia `dotenv` innecesaria, assets públicos default de Next.js.
+- **Security hardening (jul 2026):** RPC `obtener_miembros_publicos` ya no retorna `email` ni `phone` (PII leak). LivePoll usa server action con cookie dedup en vez de update client-side directo. Errores de providers IA sanitizados (no exponen detalles internos). `createSponsorAction` tipado explícito en vez de `Record<string, unknown>`.
