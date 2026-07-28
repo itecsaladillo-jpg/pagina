@@ -623,7 +623,8 @@ export default function EventoPage({ params }: { params: Promise<{ id: string }>
       const neg = votos || 0;
       setSemaforoVotosNegativos(neg);
 
-      const pct = total > 0 ? Math.round((neg / total) * 100) : 0;
+      const denominadorEfectivo = Math.max(total, neg, 1);
+      const pct = Math.round((neg / denominadorEfectivo) * 100);
       setSemaforoPct(pct);
 
       if (pct >= 50) setSemaforoEstado('rojo');

@@ -201,6 +201,7 @@ export interface Evento {
   nube_activa_id: string | null
   herramientas_activas: HerramientasActivas
   modo_pantalla_gigante: ModoPantallaGigante
+  semaforo_last_reset_at: string | null
 }
 
 // ─────────────────────────────────────────

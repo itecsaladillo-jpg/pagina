@@ -368,9 +368,8 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
         () => {
           setSemaforoState(prev => {
             const nuevosVotos = prev.votosNegativos + 1;
-            const pct = prev.totalAcreditados > 0
-              ? Math.round((nuevosVotos / prev.totalAcreditados) * 100)
-              : 0;
+            const denominadorEfectivo = Math.max(prev.totalAcreditados, nuevosVotos, 1);
+            const pct = Math.round((nuevosVotos / denominadorEfectivo) * 100);
             return {
               ...prev,
               votosNegativos: nuevosVotos,
@@ -404,9 +403,31 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
       )
       .subscribe();
 
+    // Escuchar cambios en eventos_asistentes (acreditaciones/desacreditaciones)
+    const semaforoAsistentesChannel = supabase
+      .channel(`realtime:orador_semaforo_asistentes_${evento.id}`)
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'eventos_asistentes',
+          filter: `evento_id=eq.${evento.id}`,
+        },
+        () => {
+          if (semaforoLastReset) {
+            recalcularSemaforo(semaforoLastReset);
+          } else {
+            cargarSemaforo();
+          }
+        }
+      )
+      .subscribe();
+
     return () => {
       supabase.removeChannel(semaforoVotosChannel);
       supabase.removeChannel(semaforoResetChannel);
+      supabase.removeChannel(semaforoAsistentesChannel);
     };
   }, [evento?.id, supabase]);
 
@@ -526,7 +547,8 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
       .gte('created_at', resetAt);
 
     const votosNegativos = votos ?? 0;
-    const porcentajeNegativo = total > 0 ? Math.round((votosNegativos / total) * 100) : 0;
+    const denominadorEfectivo = Math.max(total, votosNegativos, 1);
+    const porcentajeNegativo = Math.round((votosNegativos / denominadorEfectivo) * 100);
     const estado = calcularEstadoLocal(porcentajeNegativo);
 
     setSemaforoState({ totalAcreditados: total, votosNegativos, porcentajeNegativo, estado });

@@ -336,7 +336,8 @@ export default function PantallaGigantePage({ params }: { params: Promise<{ id: 
       const neg = votos || 0;
       setSemaforoVotosNegativos(neg);
 
-      const pct = total > 0 ? Math.round((neg / total) * 100) : 0;
+      const denominadorEfectivo = Math.max(total, neg, 1);
+      const pct = Math.round((neg / denominadorEfectivo) * 100);
       setSemaforoPct(pct);
 
       if (pct >= 50) setSemaforoEstado('rojo');
@@ -397,9 +398,30 @@ export default function PantallaGigantePage({ params }: { params: Promise<{ id: 
       )
       .subscribe();
 
+    const semaforoAsistentesChannel = supabase
+      .channel(`realtime:pantalla_semaforo_asistentes_${evento.id}`)
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'eventos_asistentes',
+          filter: `evento_id=eq.${evento.id}`,
+        },
+        () => {
+          if (semaforoLastReset) {
+            recalcularEstado(semaforoLastReset);
+          } else {
+            cargarReset();
+          }
+        }
+      )
+      .subscribe();
+
     return () => {
       supabase.removeChannel(semaforoVotosChannel);
       supabase.removeChannel(semaforoResetChannel);
+      supabase.removeChannel(semaforoAsistentesChannel);
     };
   }, [evento?.id, semaforoLastReset, supabase]);
 
