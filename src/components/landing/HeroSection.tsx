@@ -10,6 +10,14 @@ import { MembersAccessButton } from '@/components/auth/MembersAccessButton'
 export function HeroSection() {
   const { dict } = useLanguage()
   const [claseEnVivo, setClaseEnVivo] = useState(false)
+  const [fraseHero] = useState(() => {
+    const FRASES_HERO = [
+      "Construimos futuro desde la raíz: potenciando saberes, impulsando pymes y abriendo horizontes en Saladillo. Si logramos encender la chispa de los grandes inventores de mañana, nuestro viaje habrá valido la pena.",
+      "Aportamos valor al trabajo diario y al motor pyme de Saladillo. Cada joven capacitado es una promesa viva; si descubrimos a tiempo al próximo gran creador local, habremos cumplido nuestra misión.",
+      "Impulsar el desarrollo productivo y guiar a las nuevas generaciones es nuestra razón de ser en Saladillo. Si en ese camino descubrimos al genio que marcará el mañana, todo el esfuerzo cobra sentido."
+    ]
+    return FRASES_HERO[Math.floor(Math.random() * FRASES_HERO.length)]
+  })
 
   useEffect(() => {
     const supabase = createClient()
@@ -188,7 +196,7 @@ export function HeroSection() {
             </div>
 
             <p className="relative z-10 text-[var(--text-secondary)] text-sm md:text-base max-w-sm text-left mt-8 leading-relaxed">
-              {dict.hero.desc}
+              {fraseHero}
             </p>
           </div>
 
