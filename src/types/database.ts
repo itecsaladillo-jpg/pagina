@@ -183,7 +183,6 @@ export type HerramientasActivas = {
   encuestas: boolean
   preguntas: boolean
   nube: boolean
-  semaforo: boolean
 }
 
 export type ModoPantallaGigante = 'bienvenida' | 'nube' | 'encuestas' | 'preguntas'
@@ -200,7 +199,6 @@ export interface Evento {
   herramienta_activa: 'encuestas' | 'preguntas' | 'nube_ideas'
   encuesta_activa_id: string | null
   nube_activa_id: string | null
-  semaforo_last_reset_at: string | null
   herramientas_activas: HerramientasActivas
   modo_pantalla_gigante: ModoPantallaGigante
 }

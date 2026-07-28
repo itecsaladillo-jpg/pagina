@@ -53,7 +53,7 @@ D:\ITEC\
 │   │   │   └── [codigo]/
 │   │   ├── eventos/            # Eventos presenciales (QR, acreditación, preguntas, nube, encuestas, pantalla)
 │   │   │   ├── [id]/
-│   │   │   ├── [id]/pantalla/          # Pantalla grande para proyector (bienvenida, encuestas, nube, Q&A, semáforo)
+│   │   │   ├── [id]/pantalla/          # Pantalla grande para proyector (bienvenida, encuestas, nube, Q&A)
 │   │   │   ├── [id]/preguntar/
 │   │   │   ├── [id]/pantalla-preguntas/
 │   │   │   ├── [id]/pantalla-nube/
@@ -299,7 +299,6 @@ D:\ITEC\
 | `eventos_encuestas` | Encuestas dentro de eventos con opciones y votos |
 | `eventos_encuestas_opciones` | Opciones de respuesta de encuestas de evento |
 | `eventos_encuestas_votos` | Votos emitidos en encuestas de evento |
-| `evento_semaforo_votos` | Votos del semáforo de comprensión (bien/regular/mal) |
 | `evento_nubes` | Configuración de nubes de palabras múltiples por evento |
 | `evento_nube_palabras` | Palabras enviadas a cada nube |
 
@@ -337,7 +336,7 @@ El flujo de creación de noticias funciona así:
 - **HERRAMIENTAS** (solo admin): Items sueltos + submenús colapsables (`<details>`):
   - **Prensa** (cyan): Gacetillas, Gestión de Prensa
   - **Sponsors** (amber): Muro Sponsors, Gestión de Sponsors
-  - **Herramientas para Eventos** (púrpura): Encuestas, Sistema Preguntas, Nube Ideas, Crear Evento, Editar Evento
+  - **Herramientas para Eventos** (púrpura): Encuestas, Sistema Preguntas, Nube Ideas, Crear Evento, Editar Evento. Cada herramienta se activa/desactiva individualmente por evento via `herramientas_activas` (JSONB, claves: `encuestas`, `preguntas`, `nube`).
 - Usa `scroll={false}` en todos los links para mantener posición al navegar.
 - Diseño responsive con color-coding por sección.
 - Los badges muestran conteos de items pendientes (ej. comentarios no leídos).
@@ -448,7 +447,6 @@ Sistema completo de interacción en vivo:
   - **Modo Encuestas** — Barras animadas con resultados en vivo
   - **Modo Nube de Palabras** — Visualización de palabras con tamaño proporcional a frecuencia
   - **Modo Q&A** — Preguntas destacadas con más votos
-  - **Semáforo** — Indicador visual de comprensión de la audiencia (verde/amarillo/rojo)
   - Fondos animados con Framer Motion
 - **Confirmación por email** — Email de bienvenida al registrarse via Resend
 
@@ -524,7 +522,7 @@ Creación de encuestas con preguntas y opciones. Pantalla de resultados en vivo 
 Moderación de preguntas enviadas por la audiencia durante eventos. Aprobación, ordenamiento, destacar en pantalla.
 
 ### Eventos Presenciales (`/dashboard/eventos-presenciales`)
-Creación de eventos con slug QR, fecha, ubicación, panel de oradores. Edición de eventos existentes via `/[id]`. Incluye: preacreditación, configuración de modos de pantalla (bienvenida, encuestas, nube, Q&A, semáforo), gestión de herramientas activas por evento.
+Creación de eventos con slug QR, fecha, ubicación, panel de oradores. Edición de eventos existentes via `/[id]`. Incluye: preacreditación, configuración de modos de pantalla (bienvenida, encuestas, nube, Q&A), gestión de herramientas activas por evento (encuestas, preguntas, nube). El **Panel del Orador** (`PanelOradorClient`) gestiona switches individuales de herramientas y modo de proyección.
 
 ### Nubes de Palabras (`/dashboard/nubes`)
 Gestión de nubes de palabras generadas durante eventos. Visualización y exportación.
@@ -733,7 +731,7 @@ Server Action     →  getCurrentMember()  →  validate Zod  →  mutate DB  �
 | **Administradores** | Dashboard + herramientas admin | Gestión de miembros, comisiones, prensa, sponsors, eventos presenciales, encuestas, nubes, streaming, videoteca, IA, capacitaciones |
 | **Sponsors** | Portal sponsor (`/sponsors/[token]`) | Noticias exclusivas, reportes de impacto generados por IA |
 | **Prensa/Medios** | API `/api/press-news` + email | Gacetillas, materiales de prensa, historial de envíos |
-| **Asistentes a Eventos** | Portal evento (`/eventos/[id]/*`), pantalla grande (`/pantalla`) | Acreditación, preguntas, nube de palabras, encuestas, semáforo de comprensión |
+| **Asistentes a Eventos** | Portal evento (`/eventos/[id]/*`), pantalla grande (`/pantalla`) | Acreditación, preguntas, nube de palabras, encuestas |
 | **Estudiantes / Alumnos** | `/capacitaciones/[id]`, `/clases/[id]`, `/registro-mapa` | Aula virtual interactiva (modómetro, chat, mano alzada), registro de talento en mapa productivo |
 
 ---

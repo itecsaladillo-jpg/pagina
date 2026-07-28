@@ -4,7 +4,7 @@ import { useState, useEffect, use } from "react"
 import { createClient } from "@/lib/supabase/client"
 import Image from "next/image"
 import { QRCode } from "react-qr-code"
-import { AlertCircle, Cloud, Vote, MessageSquare, Users, ThumbsUp, TrafficCone, Sparkles, ChevronRight } from "lucide-react"
+import { AlertCircle, Cloud, Vote, MessageSquare, Users, ThumbsUp, Sparkles, ChevronRight, Activity } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 
 interface HerramientasActivas {
@@ -13,6 +13,8 @@ interface HerramientasActivas {
   nube: boolean
   semaforo: boolean
 }
+
+type EstadoSemaforo = 'verde' | 'amarillo' | 'rojo'
 
 type ModoPantalla = 'bienvenida' | 'nube' | 'encuestas' | 'preguntas'
 
@@ -25,7 +27,6 @@ interface Evento {
   herramienta_activa: string
   encuesta_activa_id: string | null
   nube_activa_id: string | null
-  semaforo_last_reset_at: string | null
   herramientas_activas: HerramientasActivas
   modo_pantalla_gigante: ModoPantalla
 }
@@ -51,13 +52,6 @@ interface Pregunta {
   nombre: string
   pregunta: string
   likes: number
-}
-
-interface EstadoSemaforo {
-  totalAcreditados: number
-  votosNegativos: number
-  porcentajeNegativo: number
-  estado: 'VERDE' | 'AMARILLO' | 'ROJO'
 }
 
 const PALETA_NUBE = [
@@ -86,8 +80,13 @@ export default function PantallaGigantePage({ params }: { params: Promise<{ id: 
 
   const [preguntas, setPreguntas] = useState<Pregunta[]>([])
 
-  const [estadoSemaforo, setEstadoSemaforo] = useState<EstadoSemaforo | null>(null)
   const [asistentesCount, setAsistentesCount] = useState(0)
+
+  // Estados del Semáforo
+  const [semaforoEstado, setSemaforoEstado] = useState<EstadoSemaforo>('verde')
+  const [semaforoPct, setSemaforoPct] = useState(0)
+  const [semaforoVotosNegativos, setSemaforoVotosNegativos] = useState(0)
+  const [semaforoLastReset, setSemaforoLastReset] = useState<string | null>(null)
 
   useEffect(() => {
     setSiteUrl(window.location.origin)
@@ -318,52 +317,91 @@ export default function PantallaGigantePage({ params }: { params: Promise<{ id: 
   }, [evento?.id, evento?.modo_pantalla_gigante, supabase])
 
   useEffect(() => {
-    if (!evento) return
+    if (!evento?.id) return;
 
-    const fetchSemaforo = async () => {
-      const { count: totalAcreditados } = await supabase
+    const recalcularEstado = async (resetAt: string) => {
+      const { count: totalAsistentes } = await supabase
         .from("eventos_asistentes")
-        .select("*", { count: "exact", head: true })
+        .select("id", { count: "exact", head: true })
+        .eq("evento_id", evento.id);
+
+      const total = totalAsistentes || 0;
+
+      const { count: votos } = await supabase
+        .from("evento_semaforo_votos")
+        .select("id", { count: "exact", head: true })
         .eq("evento_id", evento.id)
+        .gte("created_at", resetAt);
 
-      let votosNegativos = 0
-      if (evento.semaforo_last_reset_at) {
-        const { count } = await supabase
-          .from("evento_semaforo_votos")
-          .select("*", { count: "exact", head: true })
-          .eq("evento_id", evento.id)
-          .eq("voto", "negativo")
-          .gte("created_at", evento.semaforo_last_reset_at)
-        votosNegativos = count ?? 0
-      }
+      const neg = votos || 0;
+      setSemaforoVotosNegativos(neg);
 
-      const total = totalAcreditados ?? 0
-      const porcentajeNegativo = total === 0 ? 0 : Math.round((votosNegativos / total) * 100)
+      const pct = total > 0 ? Math.round((neg / total) * 100) : 0;
+      setSemaforoPct(pct);
 
-      let estado: 'VERDE' | 'AMARILLO' | 'ROJO'
-      if (porcentajeNegativo < 30) estado = "VERDE"
-      else if (porcentajeNegativo < 50) estado = "AMARILLO"
-      else estado = "ROJO"
+      if (pct >= 50) setSemaforoEstado('rojo');
+      else if (pct >= 30) setSemaforoEstado('amarillo');
+      else setSemaforoEstado('verde');
+    };
 
-      setEstadoSemaforo({ totalAcreditados: total, votosNegativos, porcentajeNegativo, estado })
-    }
+    const cargarReset = async () => {
+      const { data } = await supabase
+        .from('eventos')
+        .select('semaforo_last_reset_at')
+        .eq('id', evento.id)
+        .single();
+      const reset = data?.semaforo_last_reset_at ?? new Date(0).toISOString();
+      setSemaforoLastReset(reset);
+      recalcularEstado(reset);
+    };
 
-    fetchSemaforo()
+    cargarReset();
 
-    const semChannel = supabase
-      .channel(`realtime:pantalla_semaforo_${evento.id}`)
+    const semaforoVotosChannel = supabase
+      .channel(`realtime:pantalla_semaforo_votos_${evento.id}`)
       .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "evento_semaforo_votos", filter: `evento_id=eq.${evento.id}` },
-        (payload) => {
-          console.log('[SEMAFORO REALTIME] Pantalla Gigante - cambio detectado:', payload.eventType);
-          fetchSemaforo()
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'evento_semaforo_votos',
+          filter: `evento_id=eq.${evento.id}`,
+        },
+        () => {
+          if (semaforoLastReset) {
+            recalcularEstado(semaforoLastReset);
+          } else {
+            cargarReset();
+          }
         }
       )
-      .subscribe()
+      .subscribe();
 
-    return () => { supabase.removeChannel(semChannel) }
-  }, [evento?.id, evento?.semaforo_last_reset_at, supabase])
+    const semaforoResetChannel = supabase
+      .channel(`realtime:pantalla_semaforo_reset_${evento.id}`)
+      .on(
+        'postgres_changes',
+        {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'eventos',
+          filter: `id=eq.${evento.id}`,
+        },
+        (payload) => {
+          const newData = payload.new as any;
+          if (newData?.semaforo_last_reset_at && newData.semaforo_last_reset_at !== semaforoLastReset) {
+            setSemaforoLastReset(newData.semaforo_last_reset_at);
+            recalcularEstado(newData.semaforo_last_reset_at);
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(semaforoVotosChannel);
+      supabase.removeChannel(semaforoResetChannel);
+    };
+  }, [evento?.id, semaforoLastReset, supabase]);
 
   // Forzar re-sincronización al recuperar el foco de la pestaña
   useEffect(() => {
@@ -415,21 +453,13 @@ export default function PantallaGigantePage({ params }: { params: Promise<{ id: 
   }
 
   const eventUrl = `${siteUrl}/eventos/${evento.slug_qr}`
-  const semaforoActivo = evento.herramientas_activas?.semaforo ?? false
-  const mostrarSemaforo = semaforoActivo && evento.modo_pantalla_gigante !== 'bienvenida'
 
-  const herramientas = evento.herramientas_activas ?? { encuestas: false, preguntas: false, nube: false, semaforo: false }
+  const herramientas = evento.herramientas_activas ?? { encuestas: false, preguntas: false, nube: false }
   const modoEfectivo: ModoPantalla = (
     (evento.modo_pantalla_gigante === 'encuestas' && !herramientas.encuestas) ||
     (evento.modo_pantalla_gigante === 'nube' && !herramientas.nube) ||
     (evento.modo_pantalla_gigante === 'preguntas' && !herramientas.preguntas)
   ) ? 'bienvenida' : evento.modo_pantalla_gigante
-
-  const semaforoConfig = {
-    VERDE: { glow: '#10B981', bg: 'bg-emerald-500', shadow: 'shadow-emerald-500/40', text: 'text-emerald-400', label: 'Comprensión Fluida', border: 'border-emerald-500/30' },
-    AMARILLO: { glow: '#F59E0B', bg: 'bg-amber-500', shadow: 'shadow-amber-500/40', text: 'text-amber-400', label: 'Ritmo Acelerado', border: 'border-amber-500/30' },
-    ROJO: { glow: '#EF4444', bg: 'bg-rose-500', shadow: 'shadow-rose-500/40', text: 'text-rose-400', label: 'Repasar Contenido', border: 'border-rose-500/30' },
-  }
 
   return (
     <div className="h-screen w-screen bg-[#030712] text-white flex flex-col relative overflow-hidden select-none">
@@ -505,6 +535,45 @@ export default function PantallaGigantePage({ params }: { params: Promise<{ id: 
             Herramienta desactivada — modo Bienvenida hasta que el orador la active
           </div>
         </div>
+      )}
+
+      {/* === Widget de Semáforo (Visible en cualquier modo que no sea bienvenida, si la herramienta está activa) === */}
+      {evento.herramientas_activas?.semaforo && modoEfectivo !== 'bienvenida' && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9, x: 20 }}
+          animate={{ opacity: 1, scale: 1, x: 0 }}
+          className="absolute top-24 right-12 z-50 bg-[#030712]/80 backdrop-blur-2xl border border-white/10 rounded-[24px] p-5 shadow-2xl flex items-center gap-6"
+        >
+          <div className="flex flex-col gap-1">
+            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 flex items-center gap-1.5">
+              <Activity size={12} className="text-rose-400" /> Semáforo
+            </span>
+            <div className="flex items-center gap-2">
+              <span className="text-3xl font-black text-white">{semaforoPct}%</span>
+              <span className="text-xs text-zinc-500 font-bold uppercase tracking-widest leading-tight">Nivel de<br/>Alerta</span>
+            </div>
+            {semaforoVotosNegativos > 0 && (
+              <span className="text-[9px] font-bold text-rose-400 bg-rose-500/10 border border-rose-500/20 px-2 py-0.5 rounded-md mt-1 w-fit inline-block">
+                {semaforoVotosNegativos} {semaforoVotosNegativos === 1 ? 'ALERTA' : 'ALERTAS'}
+              </span>
+            )}
+          </div>
+
+          <div className="w-[1px] h-12 bg-white/10" />
+
+          <div className="flex flex-col items-center gap-1.5">
+            {semaforoEstado === 'rojo' && <span className="w-10 h-10 rounded-full bg-rose-500 animate-pulse shadow-[0_0_30px_rgba(244,63,94,0.6)]" />}
+            {semaforoEstado === 'amarillo' && <span className="w-10 h-10 rounded-full bg-amber-400 shadow-[0_0_20px_rgba(251,191,36,0.5)]" />}
+            {semaforoEstado === 'verde' && <span className="w-10 h-10 rounded-full bg-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.5)]" />}
+            <span className={`text-[9px] font-black uppercase tracking-[0.1em] ${
+              semaforoEstado === 'rojo' ? 'text-rose-400' :
+              semaforoEstado === 'amarillo' ? 'text-amber-400' :
+              'text-emerald-400'
+            }`}>
+              {semaforoEstado}
+            </span>
+          </div>
+        </motion.div>
       )}
 
       {/* === Main Content === */}
@@ -896,37 +965,6 @@ export default function PantallaGigantePage({ params }: { params: Promise<{ id: 
           ITEC Saladillo — Innovación · Tecnología · Emprendedurismo · Ciencia
         </p>
       </footer>
-
-      {/* === Widget Semáforo flotante (esquina inferior derecha) === */}
-      <AnimatePresence>
-        {mostrarSemaforo && estadoSemaforo && (
-          <motion.div
-            initial={{ opacity: 0, x: 50, scale: 0.9 }}
-            animate={{ opacity: 1, x: 0, scale: 1 }}
-            exit={{ opacity: 0, x: 50, scale: 0.9 }}
-            transition={{ duration: 0.4, ease: 'easeOut' }}
-            className={`fixed bottom-8 right-8 z-50 flex items-center gap-4 bg-black/70 backdrop-blur-2xl border rounded-2xl px-5 py-3.5 shadow-2xl ${semaforoConfig[estadoSemaforo.estado].border}`}
-          >
-            <div className="relative flex items-center justify-center w-6 h-6">
-              <div
-                className={`absolute inset-0 rounded-full animate-ping opacity-40 ${semaforoConfig[estadoSemaforo.estado].bg}`}
-              />
-              <div
-                className={`relative w-5 h-5 rounded-full shadow-lg ${semaforoConfig[estadoSemaforo.estado].bg}`}
-                style={{ boxShadow: `0 0 20px ${semaforoConfig[estadoSemaforo.estado].glow}66` }}
-              />
-            </div>
-            <div className="flex flex-col">
-              <span className={`text-sm font-black uppercase tracking-wider ${semaforoConfig[estadoSemaforo.estado].text}`}>
-                {semaforoConfig[estadoSemaforo.estado].label}
-              </span>
-              <span className="text-xs text-zinc-500 font-bold">
-                {estadoSemaforo.porcentajeNegativo}% negativo ({estadoSemaforo.votosNegativos}/{estadoSemaforo.totalAcreditados})
-              </span>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </div>
   )
 }
