@@ -927,7 +927,7 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
               <ToggleLeft size={11} className="text-indigo-400" />
               <span className="text-[9px] font-black uppercase tracking-wider text-zinc-400">Herramientas Activas en Celulares</span>
             </div>
-            <div className="flex flex-row items-center gap-1.5">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 w-full">
               {toolMeta.map(({ key, label, icon: Icon }) => {
                 const isOn = evento.herramientas_activas[key]
                 const c = toolColors[key]
@@ -935,12 +935,12 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
                   <button
                     key={key}
                     onClick={() => handleToggleHerramienta(key)}
-                    className={`inline-flex items-center gap-1 py-1.5 px-2.5 rounded-xl border transition-all cursor-pointer text-[9px] font-extrabold uppercase tracking-wider whitespace-nowrap shrink-0 ${
+                    className={`flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl border transition-all cursor-pointer text-[10px] font-extrabold uppercase tracking-wider ${
                       isOn ? c.chip : 'bg-zinc-950/40 border-zinc-800 text-zinc-600 hover:text-zinc-400 hover:border-zinc-700'
                     }`}
                     title={`${isOn ? 'Desactivar' : 'Activar'} ${label}`}
                   >
-                    <Icon size={11} />
+                    <Icon size={12} />
                     {label}
                     <span className={`relative w-6 h-3 rounded-full transition-all ${
                       isOn ? c.chipTrack : 'bg-zinc-700'
@@ -1523,128 +1523,6 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
                 </div>
               </div>
             )}
-          </div>
-        )}
-
-        {/* --- PESTAÑA PREGUNTAS --- */}
-        {panelTab === "moderacion" && (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-
-            {/* Preguntas Pendientes */}
-            <div className="space-y-4">
-              <h3 className="text-xs font-black text-zinc-400 uppercase tracking-widest px-1 flex justify-between items-center">
-                <span>Cola de Aprobación Pendiente</span>
-                <span className="text-[9px] bg-zinc-900 border border-zinc-850 px-2.5 py-0.5 rounded-full text-zinc-500">
-                  {preguntasPendientes.length} por moderar
-                </span>
-              </h3>
-
-              <div className="space-y-3">
-                {preguntasPendientes.length === 0 ? (
-                  <div className="text-center py-16 bg-zinc-900/10 border border-dashed border-zinc-850 rounded-3xl space-y-2">
-                    <MessageSquare size={24} className="mx-auto text-zinc-700" />
-                    <p className="text-[11px] font-bold text-zinc-500">Ninguna pregunta pendiente de moderación.</p>
-                  </div>
-                ) : (
-                  preguntasPendientes.map((q) => (
-                    <div
-                      key={q.id}
-                      className="bg-zinc-900/20 border border-zinc-850 rounded-3xl p-4 flex justify-between items-start gap-4 shadow overflow-hidden"
-                    >
-                      <div className="space-y-1.5 flex-1">
-                        <div className="flex items-center gap-2">
-                          <span className="text-[8px] font-black uppercase tracking-widest text-violet-400 bg-violet-950/40 border border-violet-900/40 px-2 py-0.5 rounded">
-                            {q.nombre}
-                          </span>
-                          <span className="text-[8px] text-zinc-550">
-                            {new Date(q.created_at).toLocaleTimeString("es-AR", { hour: "2-digit", minute: "2-digit" })}
-                          </span>
-                        </div>
-                        <p className="text-xs font-extrabold text-white leading-relaxed break-words whitespace-pre-wrap">
-                          &quot;{q.pregunta}&quot;
-                        </p>
-                      </div>
-
-                      <div className="flex items-center gap-1.5 shrink-0 self-center">
-                        <button
-                          onClick={() => handleAprobarPregunta(q.id)}
-                          className="p-2.5 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/20 text-emerald-400 rounded-xl cursor-pointer transition-all"
-                          title="Aprobar para el muro"
-                        >
-                          <Check size={14} />
-                        </button>
-                        <button
-                          onClick={() => handleRechazarPregunta(q.id)}
-                          className="p-2.5 bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/20 text-rose-450 rounded-xl cursor-pointer transition-all"
-                          title="Rechazar y borrar"
-                        >
-                          <X size={14} />
-                        </button>
-                      </div>
-                    </div>
-                  ))
-                )}
-              </div>
-            </div>
-
-            {/* Muro Aprobado */}
-            <div className="space-y-4 overflow-y-auto max-h-[65vh] pr-2">
-              <h3 className="text-xs font-black text-zinc-400 uppercase tracking-widest px-1 flex justify-between items-center">
-                <span>Muro en Proyector (Aprobadas)</span>
-                <span className="text-[9px] bg-violet-500/10 border border-violet-500/20 px-2.5 py-0.5 rounded-full text-violet-400">
-                  {preguntasAprobadas.length} en pantalla
-                </span>
-              </h3>
-
-              <div className="space-y-3">
-                {preguntasAprobadas.length === 0 ? (
-                  <div className="text-center py-16 bg-zinc-900/10 border border-dashed border-zinc-850 rounded-3xl space-y-2">
-                    <TrendingUp size={24} className="mx-auto text-zinc-700" />
-                    <p className="text-[11px] font-bold text-zinc-500">Aún no hay preguntas aprobadas en el muro en vivo.</p>
-                  </div>
-                ) : (
-                  preguntasAprobadas.map((q, idx) => (
-                    <div
-                      key={q.id}
-                      className="bg-zinc-900/30 border border-zinc-850 rounded-3xl p-4 flex justify-between items-start gap-4 shadow relative w-[85%] mx-auto overflow-hidden"
-                    >
-                      {idx === 0 && (
-                        <div className="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-violet-500 to-violet-700 rounded-l-3xl" />
-                      )}
-
-                      <div className="space-y-1.5 flex-1 pl-1">
-                        <div className="flex items-center gap-1.5">
-                          <span className="text-[8px] font-black uppercase tracking-widest text-violet-400 bg-violet-950/40 border border-violet-900/40 px-2 py-0.5 rounded">
-                            {q.nombre}
-                          </span>
-                          {idx === 0 && (
-                            <span className="text-[8px] font-black uppercase tracking-wider text-yellow-400 bg-yellow-400/10 px-1.5 py-0.5 rounded border border-yellow-400/20 flex items-center gap-0.5 shrink-0">
-                              Top 1
-                            </span>
-                          )}
-                        </div>
-                        <p className="text-xs font-semibold text-zinc-200 leading-relaxed break-words whitespace-pre-wrap">
-                          &quot;{q.pregunta}&quot;
-                        </p>
-                      </div>
-
-                      <div className="flex items-center gap-3 shrink-0 self-center">
-                        <span className="text-[10px] font-black text-violet-400 bg-violet-500/10 border border-violet-500/20 px-2.5 py-1 rounded-xl">
-                          👍 {q.likes}
-                        </span>
-                        <button
-                          onClick={() => handleRechazarPregunta(q.id)}
-                          className="p-2 text-zinc-600 hover:text-rose-400 transition-all cursor-pointer"
-                          title="Remover de pantalla"
-                        >
-                          <Trash2 size={13} />
-                        </button>
-                      </div>
-                    </div>
-                  ))
-                )}
-              </div>
-            </div>
           </div>
         )}
 
