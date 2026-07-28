@@ -22,7 +22,6 @@ import {
   ToggleLeft,
   Monitor,
   RefreshCw,
-  Radio,
   BarChart3,
   Activity,
   RotateCcw,
@@ -169,6 +168,18 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
         },
         () => {
           setAsistentesCount(prev => prev + 1);
+        }
+      )
+      .on(
+        "postgres_changes",
+        {
+          event: "DELETE",
+          schema: "public",
+          table: "eventos_asistentes",
+          filter: `evento_id=eq.${evento.id}`
+        },
+        () => {
+          setAsistentesCount(prev => Math.max(0, prev - 1));
         }
       )
       .subscribe();
@@ -538,7 +549,13 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
   };
 
   const recalcularSemaforo = async (resetAt: string) => {
-    const total = asistentesCount;
+    const { count: totalDirecto } = await supabase
+      .from('eventos_asistentes')
+      .select('id', { count: 'exact', head: true })
+      .eq('evento_id', evento.id);
+
+    const total = totalDirecto ?? asistentesCount;
+    setAsistentesCount(total);
 
     const { count: votos } = await supabase
       .from('evento_semaforo_votos')
@@ -853,18 +870,21 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
             <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-indigo-500/20 to-transparent" />
             <div className="flex items-start justify-between gap-4">
               <div className="space-y-2.5">
-                <div className="flex items-center gap-2.5">
-                  <span className="flex items-center gap-1.5 text-[9px] font-black uppercase tracking-widest text-indigo-400 bg-indigo-950/40 border border-indigo-900/50 px-2.5 py-1 rounded-md">
-                    <Radio size={10} className="text-indigo-400" /> Consola ITEC
-                  </span>
-                  <span className="flex items-center gap-1.5 text-[10px] font-bold text-emerald-400 bg-emerald-950/30 border border-emerald-900/40 px-2.5 py-1 rounded-md">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shadow-sm shadow-emerald-400" />
-                    EN VIVO
-                  </span>
-                  <span className="flex items-center gap-1.5 text-[10px] font-bold text-zinc-400 bg-zinc-950/40 border border-zinc-800 px-2.5 py-1 rounded-md">
-                    <Users size={11} className="text-zinc-500" />
+                <div className="flex items-center gap-3">
+                  <span className="flex items-center gap-2 text-xl font-black text-white bg-zinc-950/40 border border-zinc-800 px-4 py-1.5 rounded-xl">
+                    <Users size={18} className="text-indigo-400" />
                     {asistentesCount} {asistentesCount === 1 ? 'Acreditado' : 'Acreditados'}
                   </span>
+                  <a
+                    href={`/eventos/${evento.id}/pantalla`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="flex items-center gap-1.5 px-3 py-2 bg-indigo-500/10 hover:bg-indigo-500/20 border border-indigo-500/30 text-indigo-400 rounded-xl transition-all cursor-pointer"
+                    title="Abrir pantalla gigante"
+                  >
+                    <ExternalLink size={13} />
+                    <span className="text-[10px] font-extrabold uppercase tracking-wider">Link Pantalla</span>
+                  </a>
                 </div>
                 <h2 className="text-xl font-black text-white uppercase tracking-tight leading-tight">
                   {evento.nombre_evento}
@@ -903,7 +923,7 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
               <ToggleLeft size={11} className="text-indigo-400" />
               <span className="text-[9px] font-black uppercase tracking-wider text-zinc-400">Herramientas Activas en Celulares</span>
             </div>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-row items-center gap-2 overflow-x-auto">
               {toolMeta.map(({ key, label, icon: Icon }) => {
                 const isOn = evento.herramientas_activas[key]
                 const c = toolColors[key]
@@ -911,7 +931,7 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
                   <button
                     key={key}
                     onClick={() => handleToggleHerramienta(key)}
-                    className={`inline-flex items-center gap-1.5 py-1.5 px-3 rounded-xl border transition-all cursor-pointer text-[10px] font-extrabold uppercase tracking-wider ${
+                    className={`inline-flex items-center gap-1.5 py-1.5 px-3 rounded-xl border transition-all cursor-pointer text-[10px] font-extrabold uppercase tracking-wider whitespace-nowrap shrink-0 ${
                       isOn ? c.chip : 'bg-zinc-950/40 border-zinc-800 text-zinc-600 hover:text-zinc-400 hover:border-zinc-700'
                     }`}
                     title={`${isOn ? 'Desactivar' : 'Activar'} ${label}`}
@@ -983,9 +1003,9 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
             <div className="flex gap-1 mt-3">
               {([
                 { key: 'bienvenida' as const, label: 'Bienvenida', icon: Sparkles },
-                { key: 'nube' as const, label: 'Nube', icon: Cloud },
                 { key: 'encuestas' as const, label: 'Encuestas', icon: Vote },
                 { key: 'preguntas' as const, label: 'Preguntas', icon: MessageSquare },
+                { key: 'nube' as const, label: 'Nube', icon: Cloud },
               ]).map(({ key, label, icon: Icon }) => {
                 const isModoActivo = evento.modo_pantalla_gigante === key
                 const c = toolColors[key] || { active: 'bg-zinc-600 border-zinc-500', hover: 'hover:text-zinc-300 hover:border-zinc-600' }
@@ -1710,9 +1730,9 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
                     id="btn-reiniciar-semaforo"
                     onClick={handleResetearSemaforo}
                     disabled={semaforoResetting}
-                    className="flex items-center gap-1.5 text-[9px] font-black uppercase tracking-wider px-3 py-1.5 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 hover:bg-rose-500/20 cursor-pointer transition-all disabled:opacity-50"
+                    className="flex items-center gap-2 text-lg font-bold uppercase tracking-wider px-6 py-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 hover:bg-rose-500/20 cursor-pointer transition-all disabled:opacity-50"
                   >
-                    <RotateCcw size={11} className={semaforoResetting ? 'animate-spin' : ''} />
+                    <RotateCcw size={18} className={semaforoResetting ? 'animate-spin' : ''} />
                     Reiniciar
                   </button>
                 )}
