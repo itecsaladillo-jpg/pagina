@@ -129,7 +129,7 @@ export default function EventoPage({ params }: { params: Promise<{ id: string }>
   const [nubeSuccess, setNubeSuccess] = useState("");
 
   // Semáforo de Comprensión (botón rojo fijo)
-  const [semaforoFeedback, setSemaforoFeedback] = useState<"idle" | "sent" | "error">("idle");
+  const [semaforoFeedback, setSemaforoFeedback] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [estadoSemaforo, setEstadoSemaforo] = useState<{ totalAcreditados: number; votosNegativos: number; porcentajeNegativo: number; estado: 'VERDE' | 'AMARILLO' | 'ROJO' } | null>(null);
 
   const toolColors = {
@@ -147,39 +147,25 @@ export default function EventoPage({ params }: { params: Promise<{ id: string }>
 
   const handleVotoSemaforo = async () => {
     if (!evento || !dispositivoIdRef.current) {
-      console.error('[SEMAFORO] Error: evento o dispositivoId no disponible', { 
-        evento: !!evento, 
-        dispositivoIdRef: dispositivoIdRef.current 
-      });
+      console.error('[SEMAFORO] Error: evento o dispositivoId no disponible');
       setSemaforoFeedback("error");
       setTimeout(() => setSemaforoFeedback("idle"), 3000);
       return;
     }
-    console.log('[SEMAFORO] Enviando voto negativo:', { 
-      eventoId: evento.id, 
-      visitorId: dispositivoIdRef.current,
-      dispositivoIdRefType: typeof dispositivoIdRef.current
-    });
+
+    setSemaforoFeedback("sending");
+    
     try {
-      const requestBody = {
-        eventoId: evento.id,
-        visitorId: dispositivoIdRef.current,
-        voto: "negativo"
-      };
-      console.log('[SEMAFORO] Request body:', requestBody);
-      
-      const res = await fetch("/api/eventos/semaforo-voto", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(requestBody)
-      });
+      const { error } = await supabase
+        .from("evento_semaforo_votos")
+        .insert({
+          evento_id: evento.id,
+          visitor_id: dispositivoIdRef.current,
+          voto: "negativo"
+        });
 
-      console.log('[SEMAFORO] Response status:', res.status);
-      const data = await res.json();
-      console.log('[SEMAFORO] Response data:', data);
-
-      if (!res.ok || !data.success) {
-        console.error('[SEMAFORO] Error al insertar voto:', data.error, res.status);
+      if (error) {
+        console.error('[SEMAFORO] Error al insertar voto:', error);
         setSemaforoFeedback("error");
         setTimeout(() => setSemaforoFeedback("idle"), 3000);
         return;
