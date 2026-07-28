@@ -10,7 +10,7 @@ Plataforma web full-stack de **ITEC Saladillo** (Asociación Civil de Ciencia y 
 - **React:** 19.2.4
 - **Lenguaje:** TypeScript (strict)
 - **Estilos:** Tailwind CSS v4 + CSS custom properties (tema oscuro)
-- **Base de datos:** Supabase PostgreSQL (51+ migraciones)
+- **Base de datos:** Supabase PostgreSQL (55+ migraciones)
 - **Auth:** Supabase Auth + Google OAuth
 - **Despliegue:** Vercel
 - **Path alias:** `@/` → `./src/`
@@ -36,7 +36,7 @@ D:\ITEC\
 ├── src/
 │   ├── app/                    # App Router (rutas públicas + dashboard + API)
 │   │   ├── page.tsx            # Landing page
-│   │   ├── layout.tsx          # Root layout (Navbar + Footer + Chat Widget)
+│   │   ├── layout.tsx          # Root layout (Navbar + Footer + ChatWidgetWrapper condicional)
 │   │   ├── globals.css         # Estilos globales y sistema de diseño
 │   │   ├── acceso-pendiente/   # Página de acceso pendiente
 │   │   ├── login/              # Login (Google OAuth)
@@ -81,6 +81,8 @@ D:\ITEC\
 │   │   │   ├── eventos/        # Sistema de preguntas en vivo (admin)
 │   │   │   │   └── [id]/moderacion/ # Moderación de preguntas
 │   │   │   ├── eventos-presenciales/ # Crear/modificar eventos (admin)
+│   │   │   │   ├── herramientasActions.ts # Toggle herramientas, modo pantalla, concepto nube
+│   │   │   │   ├── semaforoActions.ts # Voto negativo, obtener estado, reiniciar semáforo
 │   │   │   │   └── [id]/       # Panel del orador
 │   │   │   ├── nubes/          # Gestión de nubes de palabras (admin)
 │   │   │   ├── prensa/         # Gestión de medios de prensa (admin)
@@ -130,7 +132,9 @@ D:\ITEC\
 │   │   │   ├── NotasMulticanalList.tsx      # Lista de notas publicadas
 │   │   │   └── ActionManagementList.tsx     # Lista de acciones
 │   │   ├── chat/                # Widget flotante del asistente IA
-│   │   │   └── ChatWidget.tsx   # Widget visible en todas las páginas públicas
+│   │   │   ├── ChatWidget.tsx   # Widget visible en páginas públicas
+│   │   │   ├── ChatWidget.css   # Estilos del widget
+│   │   │   └── ChatWidgetWrapper.tsx # Wrapper condicional (oculta en rutas de eventos)
 │   │   ├── capacitaciones/      # Encuestas en vivo
 │   │   │   └── LivePoll.tsx     # Votación en tiempo real
 │   │   ├── acciones/            # Registro a acciones
@@ -175,7 +179,7 @@ D:\ITEC\
 │   │   └── LanguageContext.tsx  # Contexto de idioma
 │   └── proxy.ts                # Next.js middleware (auth, protección de rutas)
 ├── supabase/
-│   └── migrations/             # 48 migraciones de base de datos
+│   └── migrations/             # 55 migraciones de base de datos
 ├── AGENTS.md                   # Instrucciones para agentes IA (Next.js)
 ├── CLAUDE.md                   # Instrucciones para Claude
 ├── ITEC_CODEGUIDE.md           # Esta guía
@@ -204,6 +208,79 @@ D:\ITEC\
 6. **Server Components** usan `getCurrentMember()` para obtener el miembro actual.
 7. **Server Actions** (`'use server'`) también usan `getCurrentMember()` y verifican `member.role === 'admin'` para acciones administrativas.
 8. **RLS (Row-Level Security):** Las tablas usan políticas de seguridad de Supabase basadas en auth.uid() y roles.
+
+---
+
+## Seguridad del Sitio
+
+### Autenticación y Autorización
+- **Supabase Auth** con Google OAuth como único provider. No hay login por contraseña.
+- **Pre-aprobación obligatoria:** Emails deben estar en `allowed_emails` para auto-aprobarse. Usuarios sin pre-aprobación quedan `status = 'pendiente'` con acceso restringido.
+- **Trigger `handle_new_user()`:** Asigna rol y comisión automáticamente al registrarse. No permite auto-asignación de roles.
+- **Proxy middleware (`proxy.ts`):** Protege rutas `/dashboard/*`, redirige no-auth a `/login`, pending a `/acceso-pendiente`.
+
+### Control de Acceso por Roles
+| Rol | Acceso | Restricciones |
+|-----|--------|---------------|
+| `admin` | Total | Acceso completo a todas las herramientas |
+| `coordinador` | Amplio | Limitado a su comisión |
+| `miembro` | Básico | Muro, perfil, drive, reuniones, ideas |
+| `colaborador` | Restringido | Solo lectura en áreas específicas |
+
+### Server Actions — Seguridad
+- Todas las Server Actions verifican `getCurrentMember()` antes de ejecutar.
+- Acciones administrativas (toggle herramientas, reiniciar semáforo, actualizar concepto nube) requieren rol `admin` o `coordinador`.
+- Ejemplo patrón seguro:
+  ```typescript
+  const member = await getCurrentMember()
+  if (!member || !['admin', 'coordinador'].includes(member.role)) {
+    return { success: false, error: 'No autorizado' }
+  }
+  ```
+
+### Row-Level Security (RLS)
+- Todas las tablas críticas usan políticas RLS de Supabase.
+- Las políticas filtran por `auth.uid()` y el rol del miembro en `members`.
+- Las tablas de eventos presenciales (`evento_semaforo_votos`, `eventos_asistentes`, etc.) permiten INSERT anónimo (sin login) pero restringen DELETE/UPDATE a admins.
+
+### Datos Anónimos en Eventos
+- **Identificación por dispositivo:** `localStorage` almacena un `dispositivo_id` UUID sin login.
+- **Un voto por dispositivo:** Encuestas y semáforo usan `dispositivo_id` para evitar duplicación (no dependen de autenticación).
+- **Límite de 25 caracteres** en palabras de nube de ideas para prevenir abuso de almacenamiento.
+
+### Seguridad de la IA
+- **Auditoría de respuestas** (`auditarRespuestaIA()`): 4 categorías de detección vía regex:
+  1. Menciones prohibidas (palabras bloqueadas)
+  2. Exposición de rutas internas del sistema
+  3. Lenguaje informal o fuera de tono
+  4. Uso de palabras temporales relativas
+- Violaciones se registran en `ai_auditoria_violaciones` para monitoreo.
+- **Palabras prohibidas en asistente:** "hoy", "ayer", "mañana", "che", "viste", "pibe".
+- **No se exponen API keys** en el cliente. Todas las llamadas a IA se hacen desde server-side o API routes.
+
+### Tokens y Credenciales
+- **Supabase anon key** (pública): Solo lectura de datos públicos, filtrada por RLS.
+- **Service role key** (servidor): Solo se usa en Server Components y API routes, nunca en el cliente.
+- **Sponsors `private_token`:** UUID único por sponsor para acceso a portal exclusivo. No se expone en URLs públicas.
+- **Google Service Account:** Almacenada en `site_settings` (no en `.env.local`) para permitir rotación sin redeploy.
+
+### Headers de Seguridad
+- **CSP (Content Security Policy):** Configurado en `next.config.ts` para restringir orígenes de scripts, estilos y frames.
+- **X-Frame-Options:** Previene clickjacking en páginas sensibles.
+- **Rate limiting:** Implementado en endpoints de IA (`/api/asistente`) para prevenir abuso.
+
+### Vulnerabilidades Conocidas y Mitigaciones
+- **localStorage como identidad:** Aceptado como trade-off para UX sin login. No se almacenan datos sensibles.
+- **Semáforo anónimo:** Sin autenticación intencionalmente (para no intimidar a asistentes). Mitigado con rate limiting por dispositivo.
+- **ChatWidget en rutas de eventos:** Oculto condicionalmente via `ChatWidgetWrapper` para no interferir con herramientas de eventos en vivo.
+
+### Recomendaciones para Nuevos Desarrollos
+1. **Nunca**放置 API keys o secrets en el cliente o en `localStorage`.
+2. **Siempre** usar `getCurrentMember()` en Server Actions antes de mutar datos.
+3. **Usar RLS** en todas las tablas nuevas. No confiar solo en la validación de la aplicación.
+4. **Auditar** cualquier endpoint público que acepte datos del usuario.
+5. **No deshabilitar** RLS en migraciones sin aprobación explícita.
+6. **Loggear** intentos de acceso no autorizado en `ai_auditoria_violaciones` o tablas similares.
 
 ---
 
@@ -236,7 +313,7 @@ D:\ITEC\
 |-------|-------------|
 | `itec_actions` | Acciones de impacto (capacitacion\|evento_social\|divulgacion) con `title`, `description`, `type`, `status`, `target_audience`, `capacity`, `cost`, `start_date`, `end_date`, `location`, `thumbnail_url`, `tags(text[])`, `responsible_id`, `commission_id`, `materials_urls(text[])`, `media_urls(text[])` |
 | `action_registrations` | Inscripciones a acciones públicas |
-| `eventos` | Eventos presenciales (slug QR, titulo, fecha, ubicacion, portada) |
+| `eventos` | Eventos presenciales con `herramientas_activas` (JSONB: encuestas, preguntas, nube, semáforo), `modo_pantalla_gigante`, `semaforo_last_reset_at`, `nube_concepto` |
 | `eventos_asistentes` | Asistentes a eventos presenciales |
 | `evento_preguntas` | Preguntas para oradores (con sistema de likes) |
 | `evento_preguntas_colaborador` | Colaboración en preguntas |
@@ -301,6 +378,7 @@ D:\ITEC\
 | `eventos_encuestas_votos` | Votos emitidos en encuestas de evento |
 | `evento_nubes` | Configuración de nubes de palabras múltiples por evento |
 | `evento_nube_palabras` | Palabras enviadas a cada nube |
+| `evento_semaforo_votos` | Votos del semáforo de comprensión (anónimos, por evento) |
 
 ### Otras
 | Tabla | Descripción |
@@ -336,7 +414,7 @@ El flujo de creación de noticias funciona así:
 - **HERRAMIENTAS** (solo admin): Items sueltos + submenús colapsables (`<details>`):
   - **Prensa** (cyan): Gacetillas, Gestión de Prensa
   - **Sponsors** (amber): Muro Sponsors, Gestión de Sponsors
-  - **Herramientas para Eventos** (púrpura): Encuestas, Sistema Preguntas, Nube Ideas, Crear Evento, Editar Evento. Cada herramienta se activa/desactiva individualmente por evento via `herramientas_activas` (JSONB, claves: `encuestas`, `preguntas`, `nube`).
+  - **Herramientas para Eventos** (púrpura): Encuestas, Sistema Preguntas, Nube Ideas, Semáforo, Crear Evento, Editar Evento. Cada herramienta se activa/desactiva individualmente por evento via `herramientas_activas` (JSONB, claves: `encuestas`, `preguntas`, `nube`, `semaforo`).
 - Usa `scroll={false}` en todos los links para mantener posición al navegar.
 - Diseño responsive con color-coding por sección.
 - Los badges muestran conteos de items pendientes (ej. comentarios no leídos).
@@ -404,7 +482,7 @@ Sistema de recuperación de 4 niveles con scoring por solapamiento de tokens (es
 ## Páginas Públicas — Detalle Funcional
 
 ### Landing Page (`/`)
-Secciones: Hero (logo + fotos Cicaré), Navbar con navegación completa, Métricas de Impacto (contadores animados), Videoteca (videos de YouTube con resúmenes IA), Sección "Acerca de", Comisiones (grid visual con colores), Buzón de Ideas (formulario), Footer completo.
+Secciones: Hero (logo + fotos Cicaré + frase aleatoria de 3 opciones que cambia en cada carga), Navbar con navegación completa, Métricas de Impacto (contadores animados), Videoteca (videos de YouTube con resúmenes IA), Sección "Acerca de", Comisiones (grid visual con colores), Buzón de Ideas (formulario), Footer completo.
 
 ### Muro de Noticias (`/muro`)
 Muro público que muestra `notas_publico` publicadas. Incluye sistema de comentarios via `/api/news-comments`. Visualización con medios adjuntos (imágenes, videos).
@@ -441,11 +519,19 @@ Sistema completo de interacción en vivo:
 - **Preguntas al orador** (`/preguntar`) — Los asistentes envían preguntas con sistema de likes, opción de anonimato
 - **Pantalla de preguntas** (`/pantalla-preguntas`) — Moderador muestra preguntas aprobadas en pantalla grande
 - **Nube de palabras** (`/nube`, `/pantalla-nube`) — Audiencia envía palabras a nubes colaborativas; soporta múltiples nubes activas por evento con límite de caracteres, normalización de diacríticos y desduplicación
+- **Concepto de Charla dinámico** — El operador configura un concepto (`nube_concepto`) desde la Consola ITEC que se muestra en celulares y pantalla gigante en tiempo real vía Realtime
 - **Encuestas** — Votación en tiempo real con resultados visibles, un voto por dispositivo
+- **Semáforo de Comprensión** — Sistema de alertas anónimas desde celulares:
+  - Botón "NO ENTIENDO, ME PERDÍ (Anonimo)" para que asistentes reporten confusión
+  - Cálculo de porcentaje con denominator seguro: `Math.max(totalAcreditados, votosNegativos, 1)` para evitar división por cero
+  - Estados: VERDE (<30%), AMARILLO (30-49%), ROJO (>=50%)
+  - Botón "Reiniciar" para resetear la ventana de votos (actualiza `semaforo_last_reset_at`)
+  - Widget visual oculto en móvil (solo visible en pantalla gigante y consola)
+  - Suscripciones Realtime a `evento_semaforo_votos`, `eventos_asistentes` y `eventos` para actualización en vivo
 - **Big Screen Display** (`/pantalla`) — Pantalla completa para proyector con múltiples modos:
   - **Modo Bienvenida** — Código QR + conteo de asistentes
   - **Modo Encuestas** — Barras animadas con resultados en vivo
-  - **Modo Nube de Palabras** — Visualización de palabras con tamaño proporcional a frecuencia
+  - **Modo Nube de Palabras** — Visualización de palabras con concepto del operador + tamaño proporcional a frecuencia
   - **Modo Q&A** — Preguntas destacadas con más votos
   - Fondos animados con Framer Motion
 - **Confirmación por email** — Email de bienvenida al registrarse via Resend
@@ -453,8 +539,13 @@ Sistema completo de interacción en vivo:
 ### Portal del Sponsor (`/sponsors/[id]`)
 Acceso por token privado (`private_token`). Muestra contenido exclusivo para el sponsor, reportes de impacto generados por IA.
 
-### Chat Widget Asistente IA
-Widget flotante visible en todas las páginas públicas. Usa el endpoint `/api/asistente` con RAG cascade completo. Interfaz tipo chat con historial.
+### Chat Widget Asistente ITEC
+Widget flotante visible en todas las páginas públicas EXCEPTO en herramientas de eventos. Usa `ChatWidgetWrapper.tsx` que evalúa la ruta actual con `usePathname()` y oculta el widget en:
+- `/eventos/*` (vistas móviles del evento, pantalla, preguntas, nube)
+- `/dashboard/eventos-presenciales/*` (Consola ITEC)
+- `/dashboard/eventos/*` (administración de eventos)
+
+El wrapper usa el endpoint `/api/asistente` con RAG cascade completo. Interfaz tipo chat con historial.
 
 ### Soporte Multi-idioma
 Sistema i18n basado en contexto React (`LanguageContext`) con diccionario en `src/locales/dictionary.ts`. Idiomas: Español, English, Português.
@@ -522,7 +613,12 @@ Creación de encuestas con preguntas y opciones. Pantalla de resultados en vivo 
 Moderación de preguntas enviadas por la audiencia durante eventos. Aprobación, ordenamiento, destacar en pantalla.
 
 ### Eventos Presenciales (`/dashboard/eventos-presenciales`)
-Creación de eventos con slug QR, fecha, ubicación, panel de oradores. Edición de eventos existentes via `/[id]`. Incluye: preacreditación, configuración de modos de pantalla (bienvenida, encuestas, nube, Q&A), gestión de herramientas activas por evento (encuestas, preguntas, nube). El **Panel del Orador** (`PanelOradorClient`) gestiona switches individuales de herramientas y modo de proyección.
+Creación de eventos con slug QR, fecha, ubicación, panel de oradores. Edición de eventos existentes via `/[id]`. Incluye: preacreditación, configuración de modos de pantalla (bienvenida, encuestas, nube, Q&A), gestión de herramientas activas por evento (encuestas, preguntas, nube, semáforo). El **Panel del Orador** (`PanelOradorClient`) gestiona:
+- Switches individuales de herramientas en layout grid `2x2` responsive
+- Modo de proyección de pantalla gigante (orden: Bienvenida → Encuestas → Preguntas → Nube)
+- **Concepto de Charla** — Campo de texto para definir el concepto de la nube de ideas (se guarda vía `actualizarConceptoNube()` y se muestra en celulares/pantalla en tiempo real)
+- **Semáforo de Comprensión** — Panel con estado visual (verde/amarillo/rojo), estadísticas de acreditados/alertas/porcentaje, botón de reinicio con auth check
+- Conteo de asistentes acreditados en tiempo real (suscripción Realtime con manejo de INSERT y DELETE)
 
 ### Nubes de Palabras (`/dashboard/nubes`)
 Gestión de nubes de palabras generadas durante eventos. Visualización y exportación.
@@ -567,10 +663,16 @@ Formulario para crear nuevas acciones de impacto (capacitaciones, eventos social
 ## Integraciones Externas
 
 ### Supabase
-- **Database:** PostgreSQL con 51+ migraciones, RLS policies
+- **Database:** PostgreSQL con 55+ migraciones, RLS policies
 - **Auth:** Supabase Auth con Google OAuth, manejo de sesiones via cookies SSR
 - **Storage:** 3 buckets: `article-media` (imágenes artículos), `avatars` (fotos perfil), `training-docs` (PDFs entrenamiento IA)
-- **Realtime:** Suscripciones `postgres_changes` para estado de clases virtuales en vivo; **Supabase Broadcast** para chat en tiempo real en aula virtual; Realtime para votos de encuestas, preguntas y nubes de palabras en eventos
+- **Realtime:** Suscripciones `postgres_changes` para:
+  - Estado de clases virtuales en vivo
+  - Votos de encuestas, preguntas y nubes de palabras en eventos
+  - Semáforo de comprensión (`evento_semaforo_votos`, `eventos_asistentes`, `eventos`)
+  - Concepto de nube dinámico (cambios en tabla `eventos`)
+  - Conteo de asistentes acreditados (INSERT/DELETE en `eventos_asistentes`)
+- **Supabase Broadcast:** Chat en tiempo real en aula virtual (`/clases/[id]`)
 
 ### Google Drive API
 - Autenticación via Service Account (credenciales en `site_settings`)
@@ -608,6 +710,9 @@ Formulario para crear nuevas acciones de impacto (capacitaciones, eventos social
 - Verificación de rol admin con `getCurrentMember()` para acciones administrativas
 - `revalidatePath()` después de mutaciones para refrescar caché
 - Manejo de errores con `{ error: string }` o `{ success: boolean }`
+- **Archivos de actions para eventos:**
+  - `herramientasActions.ts`: `actualizarHerramientasActivasAction()`, `actualizarModoPantallaAction()`, `actualizarConceptoNube()`
+  - `semaforoActions.ts`: `registrarVotoNegativo()`, `obtenerEstadoSemaforo()`, `resetearSemaforo()`
 
 ### API Routes
 - Para endpoints consumidos por client components (fetch desde el browser)
@@ -749,3 +854,6 @@ Server Action     →  getCurrentMember()  →  validate Zod  →  mutate DB  �
 - **localStorage como identidad:** Asistentes a eventos y alumnos en aula virtual se identifican por dispositivo via localStorage (sin login requerido).
 - **Multi-nube:** Los eventos pueden tener múltiples nubes de palabras activas simultáneamente, cada una con su propia configuración.
 - **Embeddings:** Se generan con Gemini `text-embedding-004` como primario y HuggingFace `all-MiniLM-L6-v2` como fallback, tanto para RAG como para el sistema de feedback del asistente.
+- **Semáforo de Comprensión:** Sistema de alertas anónimas. El denominator para el cálculo de porcentaje usa `Math.max(totalAcreditados, votosNegativos, 1)` para evitar división por cero cuando no hay acreditados. Suscripciones Realtime manejan INSERT y DELETE de `eventos_asistentes`.
+- **Concepto de Nube Dinámico:** Campo `nube_concepto` en tabla `eventos`. Se actualiza vía Server Action `actualizarConceptoNube()` (requiere rol admin/coordinador). Se propaga en tiempo real a celulares y pantalla gigante via suscripción Realtime a tabla `eventos`.
+- **Migración 055_nube_concepto.sql:** Agrega columna `nube_concepto TEXT DEFAULT ''` a tabla `eventos`. Debe ejecutarse en Supabase después del deploy.
