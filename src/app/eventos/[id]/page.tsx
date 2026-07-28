@@ -154,18 +154,21 @@ export default function EventoPage({ params }: { params: Promise<{ id: string }>
     }
 
     setSemaforoFeedback("sending");
-    
-    try {
-      const { error } = await supabase
-        .from("evento_semaforo_votos")
-        .insert({
-          evento_id: evento.id,
-          visitor_id: dispositivoIdRef.current,
-          voto: "negativo"
-        });
 
-      if (error) {
-        console.error('[SEMAFORO] Error al insertar voto:', error);
+    try {
+      const res = await fetch("/api/semaforo", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          eventId: evento.id,
+          visitorId: dispositivoIdRef.current
+        })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        console.error('[SEMAFORO] Error al insertar voto:', data.error, res.status);
         setSemaforoFeedback("error");
         setTimeout(() => setSemaforoFeedback("idle"), 3000);
         return;

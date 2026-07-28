@@ -1,28 +1,26 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 
-const PROCESSING = new Set<string>();
-
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { eventId } = body;
+    const { eventId, visitorId } = body;
 
     if (!eventId) {
       return NextResponse.json({ error: "eventId requerido" }, { status: 400 });
     }
 
-    if (PROCESSING.has(eventId)) {
-      return NextResponse.json({ success: true });
+    if (!visitorId || typeof visitorId !== "string") {
+      return NextResponse.json({ error: "visitorId requerido" }, { status: 400 });
     }
-    PROCESSING.add(eventId);
 
     const supabase = await createClient();
+
     const { error } = await supabase
       .from("evento_semaforo_votos")
       .insert({
         evento_id: eventId,
-        visitor_id: `anon_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`,
+        visitor_id: visitorId,
         voto: "negativo"
       });
 
@@ -30,7 +28,7 @@ export async function POST(req: NextRequest) {
       console.error("[SEMÁFORO API] Error:", error);
       return NextResponse.json(
         { error: error.message || "Error al registrar" },
-        { status: 500 }
+        { status: error.code === "PGRST101" ? 403 : 500 }
       );
     }
 
@@ -41,11 +39,5 @@ export async function POST(req: NextRequest) {
       { error: err?.message || "Error inesperado" },
       { status: 500 }
     );
-  } finally {
-    const url = new URL(req.url);
-    const eventId = url.searchParams.get("eventId") || "all";
-    PROCESSING.delete(eventId);
   }
 }
-
-export { PROCESSING };
