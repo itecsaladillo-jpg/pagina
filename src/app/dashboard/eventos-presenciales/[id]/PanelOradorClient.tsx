@@ -28,6 +28,7 @@ import {
   AlertTriangle
 } from "lucide-react";
 import { resetearSemaforo } from "../semaforoActions";
+import { actualizarConceptoNube } from "../herramientasActions";
 
 interface HerramientasActivas {
   encuestas: boolean;
@@ -58,6 +59,7 @@ interface Evento {
   nube_activa_id: string | null;
   herramientas_activas: HerramientasActivas;
   modo_pantalla_gigante: ModoPantalla;
+  nube_concepto: string | null;
 }
 
 interface Encuesta {
@@ -127,6 +129,8 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
 
   // Estados de Nube de Ideas
   const [palabrasNube, setPalabrasNube] = useState<PalabraNube[]>([]);
+  const [nubeConcepto, setNubeConcepto] = useState(initialEvento.nube_concepto ?? "");
+  const [nubeConceptoSaving, setNubeConceptoSaving] = useState(false);
 
   // Ref + estado para escala 1:1 del preview de pantalla gigante
   const previewContainerRef = useRef<HTMLDivElement>(null);
@@ -1441,6 +1445,33 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
               )}
             </div>
 
+            {/* Campo de Concepto de la Charla */}
+            <div className="bg-zinc-950/50 border border-zinc-900 rounded-2xl p-4 space-y-2">
+              <label className="text-[9px] font-black uppercase tracking-widest text-emerald-400 block">
+                Concepto de la Charla
+              </label>
+              <div className="flex items-center gap-2">
+                <input
+                  type="text"
+                  value={nubeConcepto}
+                  onChange={(e) => setNubeConcepto(e.target.value)}
+                  onBlur={async () => {
+                    if (nubeConcepto === (initialEvento.nube_concepto ?? "")) return;
+                    setNubeConceptoSaving(true);
+                    await actualizarConceptoNube(evento.id, nubeConcepto);
+                    setEvento(prev => ({ ...prev, nube_concepto: nubeConcepto }));
+                    setNubeConceptoSaving(false);
+                  }}
+                  placeholder="Ej: Inteligencia Artificial aplicada"
+                  className="flex-1 px-4 py-2.5 bg-zinc-950 border border-zinc-800 focus:border-emerald-500/50 rounded-xl text-white placeholder-zinc-600 focus:outline-none transition-colors text-xs"
+                />
+                {nubeConceptoSaving && (
+                  <span className="text-[9px] text-zinc-500 animate-pulse">Guardando...</span>
+                )}
+              </div>
+              <p className="text-[9px] text-zinc-600">Este texto se mostrará en los celulares y en la pantalla gigante como consigna.</p>
+            </div>
+
             {palabrasNube.length === 0 ? (
               <div className="text-center py-16 bg-zinc-900/10 border border-dashed border-zinc-850 rounded-3xl space-y-2">
                 <Cloud size={32} className="mx-auto text-zinc-700" />
@@ -1614,83 +1645,6 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
                 )}
               </div>
             </div>
-          </div>
-        )}
-
-        {/* --- PESTAÑA NUBE IDEAS --- */}
-        {panelTab === "nube" && (
-          <div className="bg-zinc-900/40 border border-zinc-850 rounded-3xl p-5 shadow-xl space-y-6 relative overflow-hidden">
-            <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-emerald-500/20 to-transparent" />
-
-            <div className="flex justify-between items-center">
-              <div className="space-y-0.5">
-                <h3 className="text-sm font-black text-white uppercase tracking-wider">
-                  Nube de Ideas y Aprendizaje
-                </h3>
-                <p className="text-[10px] text-zinc-550">Compilación de conceptos y palabras aportadas en vivo por los participantes del auditorio.</p>
-              </div>
-
-              {palabrasNube.length > 0 && (
-                <button
-                  onClick={handleReiniciarNube}
-                  className="text-[9px] font-black uppercase tracking-wider px-3.5 py-1.5 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 hover:bg-rose-500/20 cursor-pointer transition-all"
-                >
-                  Reiniciar Nube
-                </button>
-              )}
-            </div>
-
-            {palabrasNube.length === 0 ? (
-              <div className="text-center py-16 bg-zinc-900/10 border border-dashed border-zinc-850 rounded-3xl space-y-2">
-                <Cloud size={32} className="mx-auto text-zinc-700" />
-                <p className="text-[11px] font-bold text-zinc-500">Ninguna palabra clave aportada aún por la audiencia.</p>
-              </div>
-            ) : (
-              <div className="space-y-4">
-                <div className="bg-zinc-950/60 border border-zinc-900 rounded-3xl p-6 min-h-[160px] flex flex-wrap items-center justify-center gap-4 relative">
-                  <div className="absolute top-3 left-4 text-[8px] font-black tracking-widest text-emerald-400 uppercase">Proyección Colectiva</div>
-
-                  {palabrasNube.map((pal, idx) => {
-                    const maxQty = palabrasNube[0]?.cantidad || 1;
-                    const sizeScale = 0.8 + (pal.cantidad / maxQty) * 1.4;
-                    const opacityScale = 0.5 + (pal.cantidad / maxQty) * 0.5;
-
-                    return (
-                      <span
-                        key={idx}
-                        className="inline-block uppercase tracking-wide font-black transition-all bg-emerald-500/[0.03] hover:bg-emerald-500/[0.08] border border-zinc-900 px-3.5 py-1.5 rounded-2xl cursor-default"
-                        style={{
-                          fontSize: `${sizeScale}rem`,
-                          opacity: opacityScale,
-                          color: idx === 0 ? "#10b981" : idx === 1 ? "#34d399" : idx === 2 ? "#6ee7b7" : "#f1f5f9"
-                        }}
-                      >
-                        {pal.palabra} <span className="text-[9px] text-zinc-600 font-normal">({pal.cantidad})</span>
-                      </span>
-                    );
-                  })}
-                </div>
-
-                <div className="space-y-3.5">
-                  <h4 className="text-[10px] font-black text-zinc-450 uppercase tracking-widest px-1">Frecuencia de Conceptos Recibidos</h4>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                    {palabrasNube.map((pal, idx) => (
-                      <div
-                        key={idx}
-                        className="bg-zinc-950/40 border border-zinc-900 rounded-2xl p-3 flex justify-between items-center"
-                      >
-                        <span className="text-xs font-extrabold uppercase tracking-wide text-zinc-200">
-                          {pal.palabra}
-                        </span>
-                        <span className="text-[10px] font-black text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded">
-                          {pal.cantidad} {pal.cantidad === 1 ? "concepto" : "conceptos"}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            )}
           </div>
         )}
 

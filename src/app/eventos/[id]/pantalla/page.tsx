@@ -29,6 +29,7 @@ interface Evento {
   nube_activa_id: string | null
   herramientas_activas: HerramientasActivas
   modo_pantalla_gigante: ModoPantalla
+  nube_concepto: string | null
 }
 
 interface OpcionEncuesta {
@@ -781,6 +782,17 @@ export default function PantallaGigantePage({ params }: { params: Promise<{ id: 
                 <Cloud size={14} className="inline mr-1.5 -mt-0.5" />
                 Nube de Ideas
               </motion.span>
+
+              {evento.nube_concepto && evento.nube_concepto.trim() !== '' && (
+                <motion.p
+                  className="text-3xl font-bold text-white tracking-wide"
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4, delay: 0.2 }}
+                >
+                  {evento.nube_concepto}
+                </motion.p>
+              )}
 
               {palabrasNube.length === 0 ? (
                 <motion.div

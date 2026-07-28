@@ -49,6 +49,7 @@ interface Evento {
   nube_activa_id: string | null;
   herramientas_activas: HerramientasActivas;
   modo_pantalla_gigante: string;
+  nube_concepto: string | null;
 }
 
 interface Asistente {
@@ -1174,7 +1175,7 @@ export default function EventoPage({ params }: { params: Promise<{ id: string }>
             ) : (
               <>
                 <AlertTriangle size={18} className="animate-pulse" />
-                <span>No entiendo, me perdí</span>
+                <span>NO ENTIENDO, ME PERDÍ (Anonimo)</span>
               </>
             )}
           </button>
@@ -1434,8 +1435,14 @@ export default function EventoPage({ params }: { params: Promise<{ id: string }>
                 <Sparkles size={13} className="text-emerald-400" /> Nube Colectiva
               </h3>
               <p className="text-xs text-zinc-300 leading-relaxed font-medium">
-                Escribí una palabra clave que resuma lo aprendido cuando el profesor lo indique en el proyector.
+                Escribí una palabra que te represente el concepto indicado
               </p>
+              {evento.nube_concepto && evento.nube_concepto.trim() !== '' && (
+                <div className="mt-2 inline-flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/30 rounded-xl px-4 py-2">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-400">Concepto actual:</span>
+                  <span className="text-sm font-black text-white">{evento.nube_concepto}</span>
+                </div>
+              )}
             </div>
 
             <div className="bg-zinc-900/40 border border-zinc-850 rounded-3xl p-5 backdrop-blur-sm space-y-4 relative overflow-hidden">
@@ -1539,15 +1546,7 @@ export default function EventoPage({ params }: { params: Promise<{ id: string }>
         )}
       </AnimatePresence>
 
-      {/* --- WIDGET FLOTANTE SEMÁFORO --- */}
-      {evento.herramientas_activas?.semaforo && (
-        <div className="fixed top-20 right-4 z-40 bg-zinc-950/80 border border-zinc-800 rounded-full py-1.5 px-3 flex items-center gap-2 shadow-lg backdrop-blur-md">
-          {semaforoEstado === 'rojo' && <span className="w-2.5 h-2.5 rounded-full bg-rose-500 animate-pulse shadow-[0_0_10px_rgba(244,63,94,0.8)]" />}
-          {semaforoEstado === 'amarillo' && <span className="w-2.5 h-2.5 rounded-full bg-amber-400 shadow-[0_0_10px_rgba(251,191,36,0.8)]" />}
-          {semaforoEstado === 'verde' && <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.8)]" />}
-          <span className="text-[10px] font-black text-white">{semaforoPct}%</span>
-        </div>
-      )}
+      {/* --- WIDGET FLOTANTE SEMÁFORO (oculto en móvil) --- */}
     </div>
   );
 }

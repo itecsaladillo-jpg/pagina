@@ -66,3 +66,30 @@ export async function actualizarModoPantallaAction(
 
   return { success: true }
 }
+
+/**
+ * Actualiza el concepto de la Nube de Ideas para un evento.
+ */
+export async function actualizarConceptoNube(
+  eventoId: string,
+  concepto: string
+) {
+  const member = await getCurrentMember()
+  if (!member || !['admin', 'coordinador'].includes(member.role)) {
+    return { success: false, error: 'No autorizado' }
+  }
+
+  const supabase = await createClient()
+
+  const { error } = await supabase
+    .from('eventos')
+    .update({ nube_concepto: concepto })
+    .eq('id', eventoId)
+
+  if (error) {
+    console.error('[actualizarConceptoNube] Error:', error.message)
+    return { success: false, error: error.message }
+  }
+
+  return { success: true }
+}

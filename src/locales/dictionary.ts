@@ -267,7 +267,7 @@ export const dictionary = {
         acreditando: 'Acreditando...'
       },
       panel: {
-        interactua: 'Interactúa',
+        interactua: 'Interactivo',
         auditorio: 'Auditorio',
         asistente: 'Asistente:',
         tabEncuestas: 'Encuestas',
