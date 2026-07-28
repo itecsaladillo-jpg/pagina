@@ -874,8 +874,8 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
             <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-indigo-500/20 to-transparent" />
             <div className="flex items-start justify-between gap-4">
               <div className="space-y-2.5">
-                <div className="flex items-center gap-3">
-                  <span className="flex items-center gap-2 text-xl font-black text-white bg-zinc-950/40 border border-zinc-800 px-4 py-1.5 rounded-xl">
+                <div className="flex items-center gap-3 flex-wrap">
+                  <span className="flex items-center gap-2 text-xl font-black text-white bg-zinc-950/40 border border-zinc-800 px-4 py-1.5 rounded-xl whitespace-nowrap">
                     <Users size={18} className="text-indigo-400" />
                     {asistentesCount} {asistentesCount === 1 ? 'Acreditado' : 'Acreditados'}
                   </span>
@@ -883,7 +883,7 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
                     href={`/eventos/${evento.id}/pantalla`}
                     target="_blank"
                     rel="noreferrer"
-                    className="flex items-center gap-1.5 px-3 py-2 bg-indigo-500/10 hover:bg-indigo-500/20 border border-indigo-500/30 text-indigo-400 rounded-xl transition-all cursor-pointer"
+                    className="flex items-center gap-1.5 px-3 py-2 bg-indigo-500/10 hover:bg-indigo-500/20 border border-indigo-500/30 text-indigo-400 rounded-xl transition-all cursor-pointer whitespace-nowrap"
                     title="Abrir pantalla gigante"
                   >
                     <ExternalLink size={13} />
@@ -927,7 +927,7 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
               <ToggleLeft size={11} className="text-indigo-400" />
               <span className="text-[9px] font-black uppercase tracking-wider text-zinc-400">Herramientas Activas en Celulares</span>
             </div>
-            <div className="flex flex-row items-center gap-2 overflow-x-auto">
+            <div className="flex flex-row items-center gap-1.5">
               {toolMeta.map(({ key, label, icon: Icon }) => {
                 const isOn = evento.herramientas_activas[key]
                 const c = toolColors[key]
@@ -935,18 +935,18 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
                   <button
                     key={key}
                     onClick={() => handleToggleHerramienta(key)}
-                    className={`inline-flex items-center gap-1.5 py-1.5 px-3 rounded-xl border transition-all cursor-pointer text-[10px] font-extrabold uppercase tracking-wider whitespace-nowrap shrink-0 ${
+                    className={`inline-flex items-center gap-1 py-1.5 px-2.5 rounded-xl border transition-all cursor-pointer text-[9px] font-extrabold uppercase tracking-wider whitespace-nowrap shrink-0 ${
                       isOn ? c.chip : 'bg-zinc-950/40 border-zinc-800 text-zinc-600 hover:text-zinc-400 hover:border-zinc-700'
                     }`}
                     title={`${isOn ? 'Desactivar' : 'Activar'} ${label}`}
                   >
-                    <Icon size={12} />
+                    <Icon size={11} />
                     {label}
-                    <span className={`relative w-7 h-3.5 rounded-full transition-all ${
+                    <span className={`relative w-6 h-3 rounded-full transition-all ${
                       isOn ? c.chipTrack : 'bg-zinc-700'
                     }`}>
-                      <span className={`absolute top-0.5 left-0.5 w-2.5 h-2.5 rounded-full bg-white transition-all ${
-                        isOn ? 'translate-x-3.5' : 'translate-x-0'
+                      <span className={`absolute top-0.5 left-0.5 w-2 h-2 rounded-full bg-white transition-all ${
+                        isOn ? 'translate-x-3' : 'translate-x-0'
                       }`} />
                     </span>
                   </button>
