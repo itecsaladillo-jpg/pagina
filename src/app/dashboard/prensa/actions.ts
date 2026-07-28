@@ -23,10 +23,12 @@ export async function createMedioAction(data: z.infer<typeof medioSchema>) {
   const admin = await getCurrentMember()
   if (!admin || admin.role !== 'admin') throw new Error('No autorizado')
 
+  const validated = medioSchema.parse(data)
+
   const supabase = await createClient()
   const { data: result, error } = await supabase
     .from('medios_prensa')
-    .insert(data)
+    .insert(validated)
     .select()
     .single()
 
@@ -40,10 +42,12 @@ export async function updateMedioAction(id: string, data: Partial<z.infer<typeof
   const admin = await getCurrentMember()
   if (!admin || admin.role !== 'admin') throw new Error('No autorizado')
 
+  const validated = medioSchema.partial().parse(data)
+
   const supabase = await createClient()
   const { error } = await supabase
     .from('medios_prensa')
-    .update(data)
+    .update(validated)
     .eq('id', id)
 
   if (error) throw new Error(error.message)

@@ -12,7 +12,7 @@ export async function GET(request: NextRequest) {
 
   const { data: comments, error } = await supabase
     .from('news_comments')
-    .select('id, created_at, member_name, member_email, content')
+    .select('id, created_at, member_name, content')
     .eq('news_flash_id', news_flash_id)
     .eq('is_deleted', false)
     .order('created_at', { ascending: true })
@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
 
   const { data: member } = await supabase
     .from('members')
-    .select('id, name, email')
+    .select('id, full_name, email')
     .eq('id', user.id)
     .single()
 
@@ -54,8 +54,7 @@ export async function POST(request: NextRequest) {
     .insert({
       news_flash_id,
       member_id: member.id,
-      member_name: member.name,
-      member_email: member.email,
+      member_name: member.full_name,
       content: content.trim(),
     })
     .select()

@@ -1,13 +1,14 @@
 'use server'
 
 import { createClient } from '@/lib/supabase/server'
-import { getCurrentMember } from '@/services/auth'
+import { getCurrentMember, isAdmin } from '@/services/auth'
 import { revalidatePath } from 'next/cache'
 
 export async function createPollAction(name: string, questions: { text: string, options: string[], chart_type: string }[]) {
   try {
     const member = await getCurrentMember()
     if (!member) return { success: false, error: 'No autorizado' }
+    if (!isAdmin(member)) return { success: false, error: 'Solo administradores pueden crear encuestas' }
 
     const supabase = await createClient()
 
@@ -58,6 +59,7 @@ export async function updatePollAction(
   try {
     const member = await getCurrentMember()
     if (!member) return { success: false, error: 'No autorizado' }
+    if (!isAdmin(member)) return { success: false, error: 'Solo administradores pueden editar encuestas' }
 
     const supabase = await createClient()
 
@@ -166,6 +168,7 @@ export async function togglePollStatusAction(pollId: string, makeActive: boolean
   try {
     const member = await getCurrentMember()
     if (!member) return { success: false, error: 'No autorizado' }
+    if (!isAdmin(member)) return { success: false, error: 'Solo administradores pueden activar/desactivar encuestas' }
 
     const supabase = await createClient()
 
@@ -194,6 +197,7 @@ export async function deletePollAction(pollId: string) {
   try {
     const member = await getCurrentMember()
     if (!member) return { success: false, error: 'No autorizado' }
+    if (!isAdmin(member)) return { success: false, error: 'Solo administradores pueden eliminar encuestas' }
 
     const supabase = await createClient()
 

@@ -94,8 +94,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Mensaje requerido' }, { status: 400 })
   }
 
-  const errors: string[] = []
-
   const supabase = await createClient()
 
   // ── Contexto enriquecido: ejecutar en paralelo todo lo que no depende de RAG ──
@@ -139,7 +137,6 @@ export async function POST(req: NextRequest) {
       aprendizajesAdicionales = `\n\n## Aprendizaje Comunitario:\n${feedbacks.map(f => `- ${f.tema_principal} -> ${f.lo_mas_util}`).join('\n')}`
     }
   } else {
-    errors.push(`Feedback RAG error: ${feedbacksResult.reason}`)
     console.error('[Asistente] Feedback RAG:', feedbacksResult.reason)
   }
 
@@ -151,7 +148,6 @@ export async function POST(req: NextRequest) {
       miembrosContext = `\n\n## Staff ITEC:\n${miembros.map((m: any) => `- ${m.full_name}: ${m.role}`).join('\n')}`
     }
   } else {
-    errors.push(`Miembros error: ${miembrosResult.reason}`)
     console.error('[Asistente] Miembros:', miembrosResult.reason)
   }
 
@@ -167,7 +163,6 @@ export async function POST(req: NextRequest) {
       }).join('\n')}`
     }
   } else {
-    errors.push(`Notas error: ${notasResult.reason}`)
     console.error('[Asistente] Notas:', notasResult.reason)
   }
 
@@ -179,7 +174,6 @@ export async function POST(req: NextRequest) {
       comisionesContext = `\n\n## Comisiones / Áreas de ITEC:\n${comisiones.map((c: any) => `- ${c.name}${c.description ? `: ${c.description}` : ''}`).join('\n')}`
     }
   } else {
-    errors.push(`Comisiones error: ${comisionesResult.reason}`)
     console.error('[Asistente] Comisiones:', comisionesResult.reason)
   }
 
@@ -194,7 +188,6 @@ export async function POST(req: NextRequest) {
       }).join('\n')}`
     }
   } else {
-    errors.push(`Acciones error: ${accionesResult.reason}`)
     console.error('[Asistente] Acciones:', accionesResult.reason)
   }
 
@@ -203,7 +196,6 @@ export async function POST(req: NextRequest) {
   if (promptConfigResult.status === 'fulfilled') {
     if (promptConfigResult.value) promptSistema = promptConfigResult.value.system_prompt
   } else {
-    errors.push(`Prompt config error: ${promptConfigResult.reason}`)
     console.warn('[Asistente] Prompt config:', promptConfigResult.reason)
   }
 
@@ -217,7 +209,6 @@ export async function POST(req: NextRequest) {
       console.log(`[Asistente] Contexto RAG inyectado (nivel: ${nivel}, ${contexto.length} chars)`)
     }
   } else {
-    errors.push(`RAG cascade error: ${ragResult.reason}`)
     console.error('[Asistente] RAG cascade:', ragResult.reason)
   }
 
@@ -258,8 +249,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ 
       respuesta: resultadoAuditoria.respuestaFinal,
-      guardado: (esComandoGuardar || esAutoGuardar) ? true : undefined,
-      errors: errors.length > 0 ? errors : undefined
+      guardado: (esComandoGuardar || esAutoGuardar) ? true : undefined
     })
   } catch (error: any) {
     console.error('OpenRouter failed, trying HuggingFace fallback:', error)
@@ -287,10 +277,9 @@ export async function POST(req: NextRequest) {
         fallback: true
       })
     } catch (fallbackError: any) {
+      console.error('[Asistente] Both providers failed:', error, fallbackError)
       return NextResponse.json({
-        error: error.message || 'Error de IA',
-        detalle: fallbackError.message,
-        errors
+        error: 'Error al conectar con el servicio de IA'
       }, { status: 502 })
     }
   }

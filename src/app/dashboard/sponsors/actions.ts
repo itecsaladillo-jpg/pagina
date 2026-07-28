@@ -4,6 +4,16 @@ import { createClient } from '@/lib/supabase/server'
 import { getCurrentMember } from '@/services/auth'
 import { generateSponsorReport } from '@/services/sponsorReport'
 import { revalidatePath } from 'next/cache'
+import type { Sponsor, SponsorReport } from '@/types/database'
+
+type UpdateSponsorData = Partial<Omit<Sponsor, 'id' | 'created_at' | 'private_token'>>
+
+interface FondoComunDetalle {
+  viaticos: number
+  hoteleria: number
+  insumos: number
+  otros: number
+}
 
 // ─────────────────────────────────────────
 // CRUD: Acciones ITEC
@@ -54,7 +64,7 @@ export async function createReporteAction(data: {
   sponsor_id: string
   periodo: string
   acciones_ids: string[]
-  fondo_comun_detalle: any
+  fondo_comun_detalle: FondoComunDetalle
 }) {
   const admin = await getCurrentMember()
   if (!admin || admin.role !== 'admin') throw new Error('No autorizado')
@@ -139,7 +149,7 @@ export async function createReporteAction(data: {
   return { success: true, data: result }
 }
 
-export async function updateSponsorAction(id: string, formData: any) {
+export async function updateSponsorAction(id: string, formData: UpdateSponsorData) {
   const admin = await getCurrentMember()
   if (!admin || admin.role !== 'admin') throw new Error('No autorizado')
 
@@ -152,7 +162,7 @@ export async function updateSponsorAction(id: string, formData: any) {
   return { success: true }
 }
 
-export async function createSponsorAction(formData: any) {
+export async function createSponsorAction(formData: Record<string, unknown>) {
   const admin = await getCurrentMember()
   if (!admin || admin.role !== 'admin') throw new Error('No autorizado')
 

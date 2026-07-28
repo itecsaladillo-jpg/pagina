@@ -21,6 +21,7 @@ async function ensureAdmin() {
 
 export async function getPromptAction() {
   try {
+    await ensureAdmin()
     const supabase = await createClient()
     const { data } = await supabase
       .from('ai_prompt_settings')
@@ -67,11 +68,12 @@ export async function savePromptAction(formData: {
 
 export async function listDocsAction() {
   try {
+    await ensureAdmin()
     const supabase = await createClient()
     const { data, error } = await supabase.storage.from(BUCKET).list()
     if (error) return { success: false, error: error.message }
 
-    const files = (data || []).map((f: any) => ({
+    const files = (data || []).map((f) => ({
       name: f.name,
       size: f.metadata?.size || 0,
       modifiedAt: f.updated_at || f.created_at || new Date().toISOString(),

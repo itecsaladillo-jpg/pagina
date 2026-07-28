@@ -5,6 +5,8 @@ import { revalidatePath } from 'next/cache'
 import { getCurrentMember } from '@/services/auth'
 import { createClient } from '@/lib/supabase/server'
 
+type UpdateVideoData = Partial<CreateVideoData & { is_active: boolean }>
+
 
 /**
  * Acción para crear un video
@@ -30,7 +32,7 @@ export async function createVideoAction(data: CreateVideoData) {
 /**
  * Acción para actualizar un video (ej: activar/desactivar)
  */
-export async function updateVideoAction(id: string, updates: any) {
+export async function updateVideoAction(id: string, updates: UpdateVideoData) {
   try {
     const member = await getCurrentMember()
     if (!member || member.status !== 'activo' || !['admin', 'coordinador'].includes(member.role)) {
