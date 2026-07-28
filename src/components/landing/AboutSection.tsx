@@ -7,7 +7,6 @@ import { createClient } from '@/lib/supabase/client'
 interface Member {
   id: string;
   full_name: string;
-  email: string;
   role: string;
   avatar_url: string | null;
   frase_itec: string | null;
@@ -141,12 +140,6 @@ export function AboutSection() {
                   <span className="text-xs font-medium text-[var(--accent-warm)] bg-[var(--accent-warm)]/10 px-3 py-1 rounded-full mb-2 border border-[var(--accent-warm)]/20">
                     {member.role === 'admin' ? 'Administrador' : member.role === 'coordinador' ? 'Coordinador' : member.role === 'colaborador' ? 'Colaborador' : 'Miembro'}
                   </span>
-                  
-                  {member.email && (
-                    <a href={`mailto:${member.email}`} className="text-[11px] text-zinc-400 hover:text-[var(--accent-warm)] transition-colors mb-4 truncate w-full px-2" title={member.email}>
-                      {member.email}
-                    </a>
-                  )}
                   
                   {(member.frase_itec || member.bio) && (
                     <p className="text-[var(--text-secondary)] text-sm line-clamp-4 leading-relaxed flex-1 italic">

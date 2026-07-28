@@ -10,13 +10,11 @@ create or replace function public.obtener_miembros_publicos()
 returns table (
   id uuid,
   full_name text,
-  email text,
   role text,
   avatar_url text,
   frase_itec text,
   tareas_itec text,
-  bio text,
-  phone text
+  bio text
 )
 language plpgsql
 security definer -- Corre con privilegios de administrador para saltar RLS de forma segura
@@ -26,13 +24,11 @@ begin
   select
     m.id,
     m.full_name,
-    m.email,
     m.role,
     m.avatar_url,
     m.frase_itec,
     m.tareas_itec,
-    m.bio,
-    m.phone
+    m.bio
   from public.members m
   where m.status = 'activo'
     and m.full_name is not null;

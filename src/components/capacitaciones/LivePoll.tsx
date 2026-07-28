@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { motion, AnimatePresence } from 'framer-motion'
+import { voteLivePollAction } from './actions'
 
 interface PollOption {
   id: string
@@ -73,16 +74,10 @@ export function LivePoll({ trainingId }: { trainingId: string }) {
   }
 
   async function handleVote(optionId: string) {
-    if (hasVoted) return
+    if (hasVoted || !poll) return
 
-    // Actualizar conteo en Supabase (Lógica simple para demo, idealmente vía RPC o Trigger)
-    const option = poll?.options.find(o => o.id === optionId)
-    if (option) {
-      await supabase
-        .from('poll_options')
-        .update({ votes_count: (option.votes_count || 0) + 1 })
-        .eq('id', optionId)
-      
+    const result = await voteLivePollAction(poll.id, optionId)
+    if (result.success) {
       setHasVoted(true)
     }
   }

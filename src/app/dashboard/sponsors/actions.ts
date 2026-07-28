@@ -162,7 +162,20 @@ export async function updateSponsorAction(id: string, formData: UpdateSponsorDat
   return { success: true }
 }
 
-export async function createSponsorAction(formData: Record<string, unknown>) {
+export async function createSponsorAction(formData: {
+  name: string
+  nombre_empresa?: string
+  actividad?: string
+  zona_influencia?: string
+  nombre_contacto?: string
+  apellido_contacto?: string
+  telefono?: string
+  email?: string
+  logo_url?: string | null
+  website_url?: string | null
+  tier?: string
+  description?: string | null
+}) {
   const admin = await getCurrentMember()
   if (!admin || admin.role !== 'admin') throw new Error('No autorizado')
 

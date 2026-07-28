@@ -49,8 +49,8 @@ async function callOpenRouter(messages: { role: string; content: string }[]): Pr
   })
 
   if (!response.ok) {
-    const err = await response.text().catch(() => 'unknown error')
-    throw new Error(`OpenRouter API error: ${response.status} - ${err}`)
+    console.error(`[Asistente] OpenRouter error: ${response.status}`)
+    throw new Error('AI provider unavailable')
   }
   return response
 }
@@ -73,8 +73,8 @@ async function callHuggingFace(prompt: string): Promise<string> {
   })
 
   if (!response.ok) {
-    const err = await response.text().catch(() => 'unknown error')
-    throw new Error(`HuggingFace API error: ${response.status} - ${err}`)
+    console.error(`[Asistente] HuggingFace error: ${response.status}`)
+    throw new Error('AI fallback provider unavailable')
   }
   const data = await response.json()
   return data?.generated_text || data?.[0]?.generated_text || ''
@@ -277,7 +277,7 @@ export async function POST(req: NextRequest) {
         fallback: true
       })
     } catch (fallbackError: any) {
-      console.error('[Asistente] Both providers failed:', error, fallbackError)
+      console.error('[Asistente] Both AI providers failed:', error?.message, fallbackError?.message)
       return NextResponse.json({
         error: 'Error al conectar con el servicio de IA'
       }, { status: 502 })
