@@ -48,23 +48,3 @@ export async function listFolderFiles(folderId: string) {
     return []
   }
 }
-
-/**
- * Busca archivos recientes en la unidad raíz configurada.
- */
-export async function getRecentFiles(rootFolderId: string) {
-  try {
-    const drive = await getDriveClient()
-    const res = await drive.files.list({
-      q: `'${rootFolderId}' in parents and trashed = false`,
-      pageSize: 5,
-      fields: 'files(id, name, mimeType, webViewLink, iconLink, modifiedTime)',
-      orderBy: 'modifiedTime desc',
-    })
-
-    return res.data.files || []
-  } catch (err: any) {
-    console.error('[DriveService] Error al obtener archivos recientes:', err.message)
-    return []
-  }
-}

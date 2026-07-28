@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Globe, Users, Building2, Newspaper, ChevronLeft, ChevronRight, Download } from 'lucide-react'
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
-import type { NewsFlashMulticanal } from '@/services/news-multicanal'
+import type { NewsFlashMulticanal } from '@/services/news'
 
 interface NewsWallMulticanalProps {
   publicFlashes: NewsFlashMulticanal[]

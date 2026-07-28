@@ -64,24 +64,6 @@ export function FloatingLanguageSelector() {
         </div>
       )}
 
-      <style dangerouslySetInnerHTML={{__html: `
-        .itec-lang-btn {
-          background: #0f1729;
-          border: 1px solid rgba(99, 179, 237, 0.08);
-          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), inset 0 0 15px rgba(59, 130, 246, 0.3);
-          transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s, border-color 0.3s;
-          backdrop-filter: blur(12px);
-          -webkit-backdrop-filter: blur(12px);
-        }
-        .itec-lang-btn:hover {
-          transform: scale(1.1);
-          box-shadow: 0 6px 28px rgba(0, 0, 0, 0.6), inset 0 0 25px rgba(59, 130, 246, 0.5);
-          border-color: #3b82f6;
-        }
-        .itec-lang-btn:active {
-          transform: scale(0.95);
-        }
-      `}} />
       {/* Floating Action Button (FAB) */}
       <button
         onClick={() => setOpen(!open)}

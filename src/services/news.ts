@@ -25,74 +25,7 @@ export interface NewsFlashMulticanal {
   media_urls?: string[]
 }
 
-export interface NewsFlash {
-  id: string
-  created_at: string
-  updated_at: string
-  commission_id: string | null
-  author_id: string | null
-  title: string
-  original_text: string
-  summary: string
-  action_items: string[]
-  flash_text: string
-  source_type: 'meet' | 'capacitacion' | 'reunion' | 'manual'
-  is_published: boolean
-  titulo?: string
-}
-
-export interface NotaPublico {
-  id: string
-  created_at: string
-  updated_at: string
-  news_flash_id: string | null
-  titulo: string
-  contenido: string
-  autor_id: string | null
-  is_published: boolean
-  media_urls: string[]
-  slug: string
-}
-
-export interface NotaMiembro {
-  id: string
-  created_at: string
-  updated_at: string
-  news_flash_id: string | null
-  titulo: string
-  contenido: string
-  autor_id: string | null
-  is_published: boolean
-  media_urls: string[]
-}
-
-export interface NotaSponsor {
-  id: string
-  created_at: string
-  updated_at: string
-  news_flash_id: string | null
-  titulo: string
-  contenido: string
-  autor_id: string | null
-  is_published: boolean
-  media_urls: string[]
-  sponsor_ids: string[]
-}
-
-export interface NotaMedio {
-  id: string
-  created_at: string
-  updated_at: string
-  news_flash_id: string | null
-  titulo: string
-  contenido: string
-  autor_id: string | null
-  is_published: boolean
-  media_urls: string[]
-  contacto_prensa: any
-}
-
-export interface RelatedVideo {
+interface RelatedVideo {
   id: string
   title: string
   youtube_url: string
@@ -162,29 +95,6 @@ export async function getPublicArticles(): Promise<PublicArticle[]> {
   }
 
   return articles as PublicArticle[]
-}
-
-export async function getAllArticles(): Promise<PublicArticle[]> {
-  const supabase = await createClient()
-  const { data, error } = await supabase
-    .from('public_articles')
-    .select('*, news_flashes(media_urls)')
-    .order('created_at', { ascending: false })
-
-  if (error) {
-    console.error('[newsService] getAllArticles error:', error.message)
-    return []
-  }
-  return (data ?? []).map((art: any) => {
-    const media = art.media_urls
-    let mediaArr = Array.isArray(media) ? media : (typeof media === 'string' ? (() => { try { return JSON.parse(media) } catch { return [] } })() : [])
-    if (mediaArr.length === 0 && art.news_flashes) {
-      const nfMedia = art.news_flashes.media_urls
-      mediaArr = Array.isArray(nfMedia) ? nfMedia : (typeof nfMedia === 'string' ? (() => { try { return JSON.parse(nfMedia) } catch { return [] } })() : [])
-    }
-    art.media_urls = mediaArr
-    return art as PublicArticle
-  })
 }
 
 export async function getArticleBySlug(slug: string): Promise<PublicArticle | null> {
@@ -281,66 +191,6 @@ export async function getArticleBySlug(slug: string): Promise<PublicArticle | nu
   }
 
   return article as PublicArticle
-}
-
-export async function getPublicNotas(): Promise<NotaPublico[]> {
-  const supabase = await createClient()
-  const { data, error } = await supabase
-    .from('notas_publico')
-    .select('*')
-    .eq('is_published', true)
-    .order('created_at', { ascending: false })
-
-  if (error) {
-    console.error('[newsService] getPublicNotas error:', error.message)
-    return []
-  }
-  return (data ?? []) as NotaPublico[]
-}
-
-export async function getMemberNotas(): Promise<NotaMiembro[]> {
-  const supabase = await createClient()
-  const { data, error } = await supabase
-    .from('notas_miembros')
-    .select('*')
-    .eq('is_published', true)
-    .order('created_at', { ascending: false })
-
-  if (error) {
-    console.error('[newsService] getMemberNotas error:', error.message)
-    return []
-  }
-  return (data ?? []) as NotaMiembro[]
-}
-
-export async function getSponsorNotas(): Promise<NotaSponsor[]> {
-  const supabase = await createClient()
-  const { data, error } = await supabase
-    .from('notas_sponsors')
-    .select('*')
-    .eq('is_published', true)
-    .order('created_at', { ascending: false })
-
-  if (error) {
-    console.error('[newsService] getSponsorNotas error:', error.message)
-    return []
-  }
-  return (data ?? []) as NotaSponsor[]
-}
-
-export async function getPressNotas(): Promise<NotaMedio[]> {
-  const supabase = await createClient()
-  const { data, error } = await supabase
-    .from('notas_medios')
-    .select('*')
-    .eq('is_published', true)
-    .order('created_at', { ascending: false })
-
-  if (error) {
-    console.error('[newsService] getPressNotas error:', error.message)
-    return []
-  }
-  return (data ?? []) as NotaMedio[]
 }
 
 export async function getAllMulticanalNewsFlashes(): Promise<NewsFlashMulticanal[]> {
@@ -447,93 +297,4 @@ export async function getAllMulticanalNewsFlashes(): Promise<NewsFlashMulticanal
   result.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
 
   return result
-}
-
-// Legacy: mantener funciones viejas para retrocompatibilidad
-export async function getPublicNewsFlashes(): Promise<NewsFlashMulticanal[]> {
-  const supabase = await createClient()
-  const { data, error } = await supabase
-    .from('news_flashes')
-    .select('*')
-    .eq('para_publico', true)
-    .eq('is_published', true)
-    .order('created_at', { ascending: false })
-
-  if (error) {
-    console.error('[newsService] getPublicNewsFlashes error:', error.message)
-    return []
-  }
-  return (data ?? []) as NewsFlashMulticanal[]
-}
-
-export async function getMemberNewsFlashes(): Promise<NewsFlashMulticanal[]> {
-  const supabase = await createClient()
-  const { data, error } = await supabase
-    .from('news_flashes')
-    .select('*')
-    .eq('para_miembros', true)
-    .eq('is_published', true)
-    .order('created_at', { ascending: false })
-
-  if (error) {
-    console.error('[newsService] getMemberNewsFlashes error:', error.message)
-    return []
-  }
-  return (data ?? []) as NewsFlashMulticanal[]
-}
-
-export async function getSponsorNewsFlashes(): Promise<NewsFlashMulticanal[]> {
-  const supabase = await createClient()
-  const { data, error } = await supabase
-    .from('news_flashes')
-    .select('*')
-    .eq('para_sponsors', true)
-    .eq('is_published', true)
-    .order('created_at', { ascending: false })
-
-  if (error) {
-    console.error('[newsService] getSponsorNewsFlashes error:', error.message)
-    return []
-  }
-  return (data ?? []) as NewsFlashMulticanal[]
-}
-
-export async function getPressNewsFlashes(): Promise<NewsFlashMulticanal[]> {
-  const supabase = await createClient()
-  const { data, error } = await supabase
-    .from('news_flashes')
-    .select('*')
-    .eq('para_medios', true)
-    .eq('is_published', true)
-    .order('created_at', { ascending: false })
-
-  if (error) {
-    console.error('[newsService] getPressNewsFlashes error:', error.message)
-    return []
-  }
-  return (data ?? []) as NewsFlashMulticanal[]
-}
-
-export async function createMulticanalNewsFlash(
-  flash: Omit<NewsFlashMulticanal, 'id' | 'created_at' | 'updated_at'>
-): Promise<NewsFlashMulticanal | null> {
-  const supabase = await createClient()
-  const { data, error } = await supabase
-    .from('news_flashes')
-    .insert({
-      ...flash,
-      original_text: '',
-      summary: '',
-      action_items: [],
-      flash_text: '',
-      source_type: 'manual'
-    })
-    .select()
-    .single()
-
-  if (error) {
-    console.error('[newsService] createMulticanalNewsFlash error:', error.message)
-    return null
-  }
-  return data as NewsFlashMulticanal
 }

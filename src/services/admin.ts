@@ -1,5 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
-import type { Member, Commission } from '@/types/database'
+import type { Member } from '@/types/database'
 import { unstable_cache, revalidateTag } from 'next/cache'
 
 /**
@@ -160,23 +160,6 @@ export async function updatePreApprovedCommission(email: string, commissionId: s
 }
 
 /**
- * Cambia el nombre de un correo pre-aprobado.
- */
-export async function updatePreApprovedName(email: string, fullName: string) {
-  const supabase = await createClient()
-  const { error } = await supabase
-    .from('allowed_emails')
-    .update({ full_name: fullName })
-    .eq('email', email)
-
-  if (error) {
-    console.error('[adminService] updatePreApprovedName error:', error.message)
-    return { success: false, error: error.message }
-  }
-  return { success: true }
-}
-
-/**
  * Cambia el teléfono de un miembro registrado.
  */
 export async function updateMemberPhone(memberId: string, phone: string) {
@@ -301,41 +284,6 @@ export async function getAllMembersWithCommissions() {
   return results
 }
 
-/**
- * Crea una nueva comisión.
- */
-export async function createCommission(commission: Omit<Commission, 'id' | 'created_at' | 'updated_at'>) {
-  const supabase = await createClient()
-  const { data, error } = await supabase
-    .from('commissions')
-    .insert(commission)
-    .select()
-    .single()
-
-  if (error) {
-    console.error('[adminService] createCommission error:', error.message)
-    return { success: false, error: error.message }
-  }
-  return { success: true, data }
-}
-
-/**
- * Actualiza una comisión existente.
- */
-export async function updateCommission(id: string, updates: Partial<Commission>) {
-  const supabase = await createClient()
-  const { error } = await supabase
-    .from('commissions')
-    .update(updates)
-    .eq('id', id)
-
-  if (error) {
-    console.error('[adminService] updateCommission error:', error.message)
-    return { success: false, error: error.message }
-  }
-  return { success: true }
-}
-
 export interface AIPromptSetting {
   system_prompt: string
   temperature: number
@@ -371,67 +319,4 @@ export const getAIPrompt = unstable_cache(
   ['ai-prompt-settings'],
   { revalidate: 600, tags: ['ai-prompt-settings'] }
 )
-
-/**
- * Modifica un prompt del sistema en Supabase.
- * Solo accesible por miembros autenticados con rol de administrador en la ONG.
- */
-export async function updateAIPrompt(
-  clavePrompt: string,
-  updates: {
-    system_prompt: string
-    temperature?: number
-    max_tokens?: number
-    descripcion?: string
-  }
-) {
-  try {
-    const supabase = await createClient()
-
-    // 1. Obtener y validar el usuario actualmente autenticado
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
-    if (authError || !user) {
-      return { success: false, error: 'No autorizado. Debés iniciar sesión.' }
-    }
-
-    // 2. Validar que el usuario es un administrador
-    const { data: member, error: memberError } = await supabase
-      .from('members')
-      .select('role')
-      .eq('id', user.id)
-      .single()
-
-    if (memberError || !member || member.role !== 'admin') {
-      return { success: false, error: 'No autorizado. Se requieren privilegios de administrador.' }
-    }
-
-    // 3. Ejecutar la actualización en base de datos
-    const { data, error } = await supabase
-      .from('ai_prompt_settings')
-      .update({
-        ...updates,
-        updated_by: user.id,
-        updated_at: new Date().toISOString()
-      })
-      .eq('clave_prompt', clavePrompt)
-      .select()
-
-    if (error) {
-      console.error('[adminService] Error al actualizar prompt:', error.message)
-      return { success: false, error: error.message }
-    }
-
-    // 4. Revalidar la caché de etiquetas para propagar el cambio
-    try {
-      revalidateTag('ai-prompt-settings', 'max')
-    } catch (cacheErr) {
-      console.warn('[adminService] No se pudo revalidar la tag de caché:', cacheErr)
-    }
-
-    return { success: true, data: data?.[0] || null }
-  } catch (err: any) {
-    console.error('[adminService] Error inesperado en updateAIPrompt:', err)
-    return { success: false, error: err?.message || 'Error interno del servidor.' }
-  }
-}
 

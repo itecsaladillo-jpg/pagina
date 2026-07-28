@@ -2,7 +2,9 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import { LanguageProvider } from '@/contexts/LanguageContext'
 import './globals.css'
-import ChatWidgetWrapper from '@/components/chat/ChatWidgetWrapper'
+import dynamic from 'next/dynamic'
+
+const ChatWidgetWrapper = dynamic(() => import('@/components/chat/ChatWidgetWrapper'), { ssr: false })
 
 const inter = Inter({
   subsets: ['latin'],
@@ -33,7 +35,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="es" className={inter.variable} data-scroll-behavior="smooth">
+    <html lang="es" className={inter.variable}>
       <body className="font-[var(--font-inter)]">
         <LanguageProvider>
           {children}

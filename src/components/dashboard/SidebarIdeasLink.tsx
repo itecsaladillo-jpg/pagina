@@ -1,7 +1,6 @@
 'use client'
 
 import { Lightbulb } from 'lucide-react'
-import { motion } from 'framer-motion'
 import Link from 'next/link'
 
 interface Props {
@@ -16,12 +15,9 @@ export function SidebarIdeasLink({ hasPendingIdeas, pendingCount }: Props) {
       className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[var(--text-secondary)] hover:text-white hover:bg-white/5 transition-all text-sm font-medium group"
     >
       {hasPendingIdeas ? (
-        <motion.div
-          animate={{ opacity: [1, 0.4, 1] }}
-          transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
-        >
+        <div className="animate-pulse-glow-light">
           <Lightbulb className="w-4 h-4 text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.8)]" />
-        </motion.div>
+        </div>
       ) : (
         <Lightbulb className="w-4 h-4 group-hover:text-[var(--accent-primary-2)] transition-colors" />
       )}

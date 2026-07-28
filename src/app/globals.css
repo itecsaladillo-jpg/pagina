@@ -69,19 +69,9 @@ body {
   100% { background-position: 0% 50%; }
 }
 
-@keyframes grid-move {
-  0%   { transform: translateY(0); }
-  100% { transform: translateY(60px); }
-}
-
 @keyframes fade-up {
   from { opacity: 0; transform: translateY(30px); }
   to   { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes scanline {
-  0%   { transform: translateY(-100%); }
-  100% { transform: translateY(100vh); }
 }
 
 @keyframes fade-in-out {
@@ -212,11 +202,8 @@ body {
 }
 
 /* ─── Delay de animaciones ─── */
-.delay-100 { animation-delay: 0.1s; }
 .delay-200 { animation-delay: 0.2s; }
 .delay-300 { animation-delay: 0.3s; }
-.delay-400 { animation-delay: 0.4s; }
-.delay-500 { animation-delay: 0.5s; }
 
 /* ─── Efecto spotlight ITEC ─── */
 .spotlight-text {
@@ -278,4 +265,31 @@ body {
 }
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: var(--accent-warm-2);
+}
+
+/* ─── Sidebar lightbulb pulse ─── */
+@keyframes pulse-glow-light {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+.animate-pulse-glow-light {
+  animation: pulse-glow-light 1.5s ease-in-out infinite;
+}
+
+/* ─── Floating Language Selector ─── */
+.itec-lang-btn {
+  background: #0f1729;
+  border: 1px solid rgba(99, 179, 237, 0.08);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), inset 0 0 15px rgba(59, 130, 246, 0.3);
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s, border-color 0.3s;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+.itec-lang-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 28px rgba(0, 0, 0, 0.6), inset 0 0 25px rgba(59, 130, 246, 0.5);
+  border-color: #3b82f6;
+}
+.itec-lang-btn:active {
+  transform: scale(0.95);
 }

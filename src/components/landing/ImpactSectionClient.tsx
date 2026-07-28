@@ -6,7 +6,6 @@ import { Sparkles, Calendar, Zap, ChevronRight, PlayCircle } from 'lucide-react'
 import { format } from 'date-fns'
 import { es, enUS, pt } from 'date-fns/locale'
 import Link from 'next/link'
-import { getYouTubeID } from '@/services/videos'
 import { useLanguage } from '@/contexts/LanguageContext'
 
 interface ImpactCardProps {

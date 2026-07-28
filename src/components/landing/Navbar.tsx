@@ -8,16 +8,6 @@ import { createClient } from '@/lib/supabase/client'
 import { useLanguage } from '@/contexts/LanguageContext'
 import { MembersAccessButton } from '@/components/auth/MembersAccessButton'
 
-const navLinks = [
-  { label: 'Acciones', href: '/#acciones' },
-  { label: 'Videoteca', href: '/#videoteca' },
-  { label: 'Nosotros', href: '/#nosotros' },
-  { label: 'Sponsors', href: '/#sponsors' },
-  { label: 'Buzón de Ideas', href: '/#ideas' },
-  { label: 'Mapa Productivo', href: '/mapa-productivo', highlight: true },
-  { label: 'Acceso Miembros', href: '/login' },
-]
-
 export function Navbar() {
   const { language, dict } = useLanguage()
   const [scrolled, setScrolled] = useState(false)

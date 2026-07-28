@@ -3,7 +3,18 @@ import { getCurrentMember } from '@/services/auth'
 import { redirect } from 'next/navigation'
 import { NewsWallMulticanal } from '@/components/comunicacion/NewsWallMulticanal'
 import { createClient } from '@/lib/supabase/server'
-import type { NotaMiembro } from '@/services/news'
+
+interface NotaMiembro {
+  id: string
+  created_at: string
+  updated_at: string
+  news_flash_id: string | null
+  titulo: string
+  contenido: string
+  autor_id: string | null
+  is_published: boolean
+  media_urls: string[]
+}
 
 export const metadata: Metadata = {
   title: 'Muro de Noticias — ITEC',

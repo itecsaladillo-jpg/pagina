@@ -62,10 +62,3 @@ export function getDriveFolderBySlug(slug: string | null): DriveFolder {
   const folder = DRIVE_FOLDERS.find((f) => f.commissionSlug === slug)
   return folder ?? DRIVE_FOLDERS.find((f) => f.commissionSlug === 'general')!
 }
-
-/**
- * Obtiene todas las carpetas de Drive disponibles.
- */
-export function getAllDriveFolders(): DriveFolder[] {
-  return DRIVE_FOLDERS
-}

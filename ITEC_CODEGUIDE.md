@@ -10,7 +10,7 @@ Plataforma web full-stack de **ITEC Saladillo** (Asociación Civil de Ciencia y 
 - **React:** 19.2.4
 - **Lenguaje:** TypeScript (strict)
 - **Estilos:** Tailwind CSS v4 + CSS custom properties (tema oscuro)
-- **Base de datos:** Supabase PostgreSQL (55+ migraciones)
+- **Base de datos:** Supabase PostgreSQL (56 migraciones)
 - **Auth:** Supabase Auth + Google OAuth
 - **Despliegue:** Vercel
 - **Path alias:** `@/` → `./src/`
@@ -21,7 +21,7 @@ Plataforma web full-stack de **ITEC Saladillo** (Asociación Civil de Ciencia y 
 - `framer-motion` 12.38.0, `lucide-react` 1.14.0, `recharts` 3.8.1
 - `react-hook-form` 7.81.0, `zod`, `@hookform/resolvers`
 - `resend` 6.12.3 (emails), `date-fns` 4.1.0
-- `pdf-parse`, `dotenv`, `react-qr-code`
+- `pdf-parse`, `react-qr-code`
 
 ## Estructura del Proyecto
 ```
@@ -36,7 +36,7 @@ D:\ITEC\
 ├── src/
 │   ├── app/                    # App Router (rutas públicas + dashboard + API)
 │   │   ├── page.tsx            # Landing page
-│   │   ├── layout.tsx          # Root layout (Navbar + Footer + ChatWidgetWrapper condicional)
+│   │   ├── layout.tsx          # Root layout (LanguageProvider + ChatWidgetWrapper lazy-loaded)
 │   │   ├── globals.css         # Estilos globales y sistema de diseño
 │   │   ├── acceso-pendiente/   # Página de acceso pendiente
 │   │   ├── login/              # Login (Google OAuth)
@@ -108,8 +108,7 @@ D:\ITEC\
 │   │       ├── sponsors-news/  # Feed sponsors (GET)
 │   │       ├── eventos/registro/ # Registro a eventos presenciales
 │   │       ├── ideas/          # Envío de ideas (formulario público)
-│   │       ├── test-grok/      # Endpoint test Groq
-│   │       └── test-gemini/    # Endpoint test Gemini/Ollama
+│   │       └── news/           # Procesamiento de noticias
 │   ├── auth/                   # Auth routes
 │   │   ├── callback/           # Intercambio código OAuth por sesión
 │   │   └── signout/            # Cerrar sesión
@@ -152,12 +151,11 @@ D:\ITEC\
 │   │       ├── SendGacetillaModal.tsx   # Modal envío gacetillas por email
 │   │       └── PrensaEnviosHistoryModal.tsx # Historial de envíos
 │   ├── services/
-│   │   ├── auth.ts             # getCurrentMember(), signInWithGoogle(), isAdmin()
+│   │   ├── auth.ts             # getCurrentMember(), isAdmin()
 │   │   ├── ai.ts               # Procesamiento con IA (OpenRouter), embeddings (Gemini), auditoría
-│   │   ├── admin.ts            # CRUD de miembros, comisiones, prompts IA
+│   │   ├── admin.ts            # CRUD de miembros, prompts IA
 │   │   ├── news.ts             # News multicanal (getAllMulticanalNewsFlashes, etc.)
-│   │   ├── news-multicanal.ts  # Tipos: NewsFlashMulticanal, NewsComment
-│   │   ├── drive.ts            # Google Drive: listFolderFiles(), getRecentFiles()
+│   │   ├── drive.ts            # Google Drive: listFolderFiles()
 │   │   ├── videos.ts           # CRUD de videos
 │   │   ├── actions.ts          # Acciones públicas
 │   │   ├── sponsorReport.ts    # Generación de reportes de impacto con IA
@@ -173,8 +171,6 @@ D:\ITEC\
 │   │   └── database.ts         # Tipos completos de la DB
 │   ├── locales/
 │   │   └── dictionary.ts       # Traducciones ES/EN/PT (context-based i18n)
-│   ├── config/
-│   │   └── aiConfig.json       # Config del modelo IA
 │   ├── contexts/
 │   │   └── LanguageContext.tsx  # Contexto de idioma
 │   └── proxy.ts                # Next.js middleware (auth, protección de rutas)
@@ -242,6 +238,7 @@ D:\ITEC\
 - Todas las tablas críticas usan políticas RLS de Supabase.
 - Las políticas filtran por `auth.uid()` y el rol del miembro en `members`.
 - Las tablas de eventos presenciales (`evento_semaforo_votos`, `eventos_asistentes`, etc.) permiten INSERT anónimo (sin login) pero restringen DELETE/UPDATE a admins.
+- **Migración 056:** Corrige políticas excesivamente permisivas en `clases_virtuales`, `clase_interacciones`, `certificados_digitales` (antes `USING (true)` permitía CRUD anónimo). Ahora escritura restringida a admin/coordinador.
 
 ### Datos Anónimos en Eventos
 - **Identificación por dispositivo:** `localStorage` almacena un `dispositivo_id` UUID sin login.
@@ -439,10 +436,6 @@ El flujo de creación de noticias funciona así:
 | `generateFlash()` | Crea flashes noticiosos cortos para el muro interno |
 | `generateExecutiveSummary()` | Resúmenes ejecutivos a partir de notas |
 | `generateActionItems()` | Extrae items de acción de textos |
-| `generatePublicArticle()` | Transforma datos crudos en artículos publicables usando IA |
-| `generateActionSuccessStory()` | Crea historias de éxito de acciones completadas |
-| `transcribirAudio()` | Transcripción de audio a texto |
-| `generateMinutesFromSummary()` | Genera actas formales a partir de resúmenes |
 | `generateMulticanalNews()` | Genera contenido para 4 audiencias (público, miembros, sponsors, medios) |
 | `generateVideoSummary()` | Resume videos de YouTube |
 | `generarEmbedding()` | Genera embeddings vía Gemini o HuggingFace |
@@ -655,15 +648,13 @@ Formulario para crear nuevas acciones de impacto (capacitaciones, eventos social
 | `/api/sponsors-news` | GET | Obtener notas publicadas para sponsors | → `notas_sponsors[]` |
 | `/api/press-news` | GET | Obtener gacetillas para prensa | → `notas_medios[]` |
 | `/api/eventos/registro` | POST | Registrar asistente a evento + email bienvenida | `{ evento_id, nombre, email }` |
-| `/api/test-grok` | POST | Test endpoint para Groq | `{ prompt }` → `{ response }` |
-| `/api/test-gemini` | POST | Test endpoint para Gemini/Ollama | `{ prompt }` → `{ response }` |
 
 ---
 
 ## Integraciones Externas
 
 ### Supabase
-- **Database:** PostgreSQL con 55+ migraciones, RLS policies
+- **Database:** PostgreSQL con 56 migraciones, RLS policies
 - **Auth:** Supabase Auth con Google OAuth, manejo de sesiones via cookies SSR
 - **Storage:** 3 buckets: `article-media` (imágenes artículos), `avatars` (fotos perfil), `training-docs` (PDFs entrenamiento IA)
 - **Realtime:** Suscripciones `postgres_changes` para:
@@ -763,7 +754,6 @@ Formulario para crear nuevas acciones de impacto (capacitaciones, eventos social
 | `HF_API_KEY` | API key de HuggingFace |
 | `NEXT_PUBLIC_SITE_URL` | URL pública del sitio |
 | `NEXT_PUBLIC_MEET_LINK` | Link default de Google Meet para reuniones y streaming |
-| `OPENAI_API_KEY` | API key de OpenAI (usada en endpoint test-grok) |
 
 ---
 
@@ -857,3 +847,6 @@ Server Action     →  getCurrentMember()  →  validate Zod  →  mutate DB  �
 - **Semáforo de Comprensión:** Sistema de alertas anónimas. El denominator para el cálculo de porcentaje usa `Math.max(totalAcreditados, votosNegativos, 1)` para evitar división por cero cuando no hay acreditados. Suscripciones Realtime manejan INSERT y DELETE de `eventos_asistentes`.
 - **Concepto de Nube Dinámico:** Campo `nube_concepto` en tabla `eventos`. Se actualiza vía Server Action `actualizarConceptoNube()` (requiere rol admin/coordinador). Se propaga en tiempo real a celulares y pantalla gigante via suscripción Realtime a tabla `eventos`.
 - **Migración 055_nube_concepto.sql:** Agrega columna `nube_concepto TEXT DEFAULT ''` a tabla `eventos`. Debe ejecutarse en Supabase después del deploy.
+- **Migración 056_fix_rls_critical.sql:** Corrige políticas RLS en `clases_virtuales`, `clase_interacciones`, `certificados_digitales`, `saved_conversations`. Debe ejecutarse en Supabase.
+- **ChatWidget lazy-loaded:** Se carga con `next/dynamic({ ssr: false })` para no impactar carga inicial de páginas.
+- **Dead code cleanup:** Eliminados archivos huérfanos (`test-grok`, `test-gemini`, `news-multicanal.ts`, `aiConfig.json`), 22+ funciones nunca importadas, dependencia `dotenv` innecesaria, assets públicos default de Next.js.

@@ -26,38 +26,6 @@ export async function getCurrentMember(): Promise<Member | null> {
 }
 
 /**
- * Inicia sesión con Google OAuth.
- * Usar en Client Components con el cliente browser.
- */
-export async function signInWithGoogle(redirectTo?: string) {
-  const { createClient: createBrowserClient } = await import('@/lib/supabase/client')
-  const supabase = createBrowserClient()
-
-  const callbackUrl = `${window.location.origin}/auth/callback${
-    redirectTo ? `?next=${encodeURIComponent(redirectTo)}` : ''
-  }`
-
-  return supabase.auth.signInWithOAuth({
-    provider: 'google',
-    options: {
-      redirectTo: callbackUrl,
-      queryParams: {
-        access_type: 'offline',
-      },
-    },
-  })
-}
-
-/**
- * Cierra la sesión del usuario actual.
- */
-export async function signOut() {
-  const { createClient: createBrowserClient } = await import('@/lib/supabase/client')
-  const supabase = createBrowserClient()
-  return supabase.auth.signOut()
-}
-
-/**
  * Verifica si el miembro tiene un rol específico.
  */
 export function hasRole(member: Member | null, roles: Member['role'][]): boolean {
@@ -70,11 +38,4 @@ export function hasRole(member: Member | null, roles: Member['role'][]): boolean
  */
 export function isAdmin(member: Member | null): boolean {
   return hasRole(member, ['admin'])
-}
-
-/**
- * Verifica si el miembro tiene acceso (activo).
- */
-export function isActiveMember(member: Member | null): boolean {
-  return member?.status === 'activo'
 }
