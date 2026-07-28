@@ -2,9 +2,7 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import { LanguageProvider } from '@/contexts/LanguageContext'
 import './globals.css'
-import dynamic from 'next/dynamic'
-
-const ChatWidgetWrapper = dynamic(() => import('@/components/chat/ChatWidgetWrapper'), { ssr: false })
+import ChatWidgetWrapper from '@/components/chat/ChatWidgetWrapper'
 
 const inter = Inter({
   subsets: ['latin'],
