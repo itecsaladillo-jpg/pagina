@@ -27,7 +27,7 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
-import { registrarVotoNegativo } from "@/app/dashboard/eventos-presenciales/semaforoActions";
+import { registrarVotoNegativo, verificarVotoDispositivo } from "@/app/dashboard/eventos-presenciales/semaforoActions";
 
 interface HerramientasActivas {
   encuestas: boolean;
@@ -136,6 +136,7 @@ export default function EventoPage({ params }: { params: Promise<{ id: string }>
   const [semaforoPct, setSemaforoPct] = useState(0);
   const [semaforoVotosNegativos, setSemaforoVotosNegativos] = useState(0);
   const [semaforoLastReset, setSemaforoLastReset] = useState<string | null>(null);
+  const [semaforoYaVoto, setSemaforoYaVoto] = useState(false);
   const [cooldown, setCooldown] = useState(0);
 
   const toolColors = {
@@ -642,6 +643,12 @@ export default function EventoPage({ params }: { params: Promise<{ id: string }>
       const reset = data?.semaforo_last_reset_at ?? new Date(0).toISOString();
       setSemaforoLastReset(reset);
       recalcularEstado(reset);
+
+      // Re-verificar si el dispositivo ya votó en el nuevo ciclo
+      if (dispositivoId) {
+        const { yaVoto } = await verificarVotoDispositivo(evento.id, dispositivoId);
+        setSemaforoYaVoto(yaVoto);
+      }
     };
 
     cargarReset();
@@ -657,7 +664,6 @@ export default function EventoPage({ params }: { params: Promise<{ id: string }>
           filter: `evento_id=eq.${evento.id}`,
         },
         () => {
-          // Si llega un voto, recalculamos estado completo (se podría optimizar, pero esto asegura precisión)
           if (semaforoLastReset) {
             recalcularEstado(semaforoLastReset);
           } else {
@@ -682,6 +688,13 @@ export default function EventoPage({ params }: { params: Promise<{ id: string }>
           if (newData?.semaforo_last_reset_at && newData.semaforo_last_reset_at !== semaforoLastReset) {
             setSemaforoLastReset(newData.semaforo_last_reset_at);
             recalcularEstado(newData.semaforo_last_reset_at);
+
+            // Al detectar reset, re-verificar si el dispositivo ya votó en el nuevo ciclo
+            if (dispositivoId) {
+              verificarVotoDispositivo(evento.id, dispositivoId).then(({ yaVoto }) => {
+                setSemaforoYaVoto(yaVoto);
+              });
+            }
           }
         }
       )
@@ -691,7 +704,7 @@ export default function EventoPage({ params }: { params: Promise<{ id: string }>
       supabase.removeChannel(semaforoVotosChannel);
       supabase.removeChannel(semaforoResetChannel);
     };
-  }, [evento?.id, semaforoLastReset, supabase]);
+  }, [evento?.id, semaforoLastReset, dispositivoId, supabase]);
 
   // Manejo de Cooldown
   useEffect(() => {
@@ -705,15 +718,20 @@ export default function EventoPage({ params }: { params: Promise<{ id: string }>
   }, [cooldown]);
 
   const handleVotoSemaforo = async () => {
-    if (!evento || cooldown > 0) return;
+    if (!evento || cooldown > 0 || semaforoYaVoto || !dispositivoId) return;
     
     // Iniciar cooldown de 5s inmediatamente para UI local
     setCooldown(5);
     
-    // Enviar voto al servidor
-    const res = await registrarVotoNegativo(evento.id);
-    if (!res.success) {
+    // Enviar voto al servidor con identificación de dispositivo
+    const res = await registrarVotoNegativo(evento.id, dispositivoId);
+    if (res.success) {
+      setSemaforoYaVoto(true);
+    } else if (res.yaVoto) {
+      setSemaforoYaVoto(true);
+    } else {
       console.error(res.error);
+      setCooldown(0);
     }
   };
 
@@ -1160,14 +1178,19 @@ export default function EventoPage({ params }: { params: Promise<{ id: string }>
         <div className="max-w-md mx-auto px-4 mt-4 relative z-10">
           <button
             onClick={handleVotoSemaforo}
-            disabled={cooldown > 0}
+            disabled={cooldown > 0 || semaforoYaVoto || !dispositivoId}
             className={`w-full p-4 rounded-2xl flex items-center justify-center gap-3 transition-all cursor-pointer font-black text-xs uppercase tracking-wider ${
-              cooldown > 0
+              cooldown > 0 || semaforoYaVoto
                 ? 'bg-zinc-900 border border-zinc-800 text-zinc-500 shadow-inner'
                 : 'bg-rose-500 hover:bg-rose-600 border border-rose-400/50 text-white shadow-[0_0_20px_rgba(244,63,94,0.3)] hover:shadow-[0_0_30px_rgba(244,63,94,0.5)]'
             }`}
           >
-            {cooldown > 0 ? (
+            {semaforoYaVoto ? (
+              <>
+                <CheckCircle2 size={18} />
+                <span>Voto registrado en esta ronda</span>
+              </>
+            ) : cooldown > 0 ? (
               <>
                 <AlertCircle size={18} />
                 <span>Enviado ({cooldown}s)</span>
