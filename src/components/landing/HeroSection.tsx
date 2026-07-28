@@ -12,9 +12,9 @@ export function HeroSection() {
   const [claseEnVivo, setClaseEnVivo] = useState(false)
   const [fraseHero] = useState(() => {
     const FRASES_HERO = [
-      "Construimos futuro desde la raíz: potenciando saberes, impulsando pymes y abriendo horizontes en Saladillo. Si logramos encender la chispa de los grandes inventores de mañana, nuestro viaje habrá valido la pena.",
-      "Aportamos valor al trabajo diario y al motor pyme de Saladillo. Cada joven capacitado es una promesa viva; si descubrimos a tiempo al próximo gran creador local, habremos cumplido nuestra misión.",
-      "Impulsar el desarrollo productivo y guiar a las nuevas generaciones es nuestra razón de ser en Saladillo. Si en ese camino descubrimos al genio que marcará el mañana, todo el esfuerzo cobra sentido."
+      "Construimos futuro desde la raíz: potenciando saberes, impulsando pymes y abriendo horizontes en Saladillo. Si logramos encender la chispa de los grandes inventores de mañana, todo este viaje habrá valido la pena.",
+      "Aportamos valor al trabajo diario y al motor pyme de Saladillo. Cada joven capacitado es una promesa viva; si descubrimos a tiempo al próximo gran creador local, habremos cumplido nuestra misión y allí estaremos para acompañar su camino.",
+      "Impulsar el desarrollo productivo y guiar a las nuevas generaciones es nuestra razón de ser en Saladillo. Si en ese camino descubrimos al genio que marcará el mañana, todo el esfuerzo cobra aún más sentido."
     ]
     return FRASES_HERO[Math.floor(Math.random() * FRASES_HERO.length)]
   })
