@@ -8,8 +8,6 @@ export const metadata: Metadata = {
   title: 'Sala de Reuniones General — ITEC',
 }
 
-const MEET_LINK = process.env.NEXT_PUBLIC_MEET_LINK ?? 'https://meet.google.com/itec-general'
-
 export default async function ReunionesPage() {
   const member = await getCurrentMember()
   if (!member || member.status !== 'activo') redirect('/acceso-pendiente')
@@ -47,7 +45,6 @@ export default async function ReunionesPage() {
       <GeneralMeetingRoom
         member={member}
         initialContent={notes?.content || ''}
-        meetLink={MEET_LINK}
         history={history || []}
       />
     </div>

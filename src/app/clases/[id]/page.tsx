@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { 
   createClient 
 } from '@/lib/supabase/client'
+import { JitsiMeetingEmbed } from '@/components/video/JitsiMeetingEmbed'
 import { 
   Tv, 
   Users, 
@@ -77,6 +78,10 @@ export default function AulaVirtualPage() {
   const [isRegistrado, setIsRegistrado] = useState(false)
   const [registrationModalOpen, setRegistrationModalOpen] = useState(false)
 
+  // Perfil del miembro autenticado (para Jitsi)
+  const [memberName, setMemberName] = useState('Asistente ITEC')
+  const [memberEmail, setMemberEmail] = useState('')
+
   // Estados de interacción del Alumno
   const [votoActual, setVotoActual] = useState<'bien' | 'perdido' | 'rapido' | null>(null)
   const [dudaModalOpen, setDudaModalOpen] = useState(false)
@@ -116,7 +121,29 @@ export default function AulaVirtualPage() {
       setRegistrationModalOpen(true)
     }
 
-    // 2. Fetch inicial de la clase virtual
+    // 2. Obtener perfil del miembro autenticado para Jitsi
+    async function loadMemberProfile() {
+      try {
+        const { data: { user } } = await supabase.auth.getUser()
+        if (user) {
+          const { data: member } = await supabase
+            .from('members')
+            .select('full_name, email')
+            .eq('id', user.id)
+            .single()
+
+          if (member) {
+            setMemberName(member.full_name || member.email || 'Asistente ITEC')
+            setMemberEmail(member.email || '')
+          }
+        }
+      } catch {
+        // Usuario no autenticado, se usa el valor por defecto
+      }
+    }
+    loadMemberProfile()
+
+    // 3. Fetch inicial de la clase virtual
     async function loadClase() {
       try {
         const { data, error } = await supabase
@@ -576,69 +603,27 @@ export default function AulaVirtualPage() {
         {/* COLUMNA IZQUIERDA: REPRODUCTOR DE STREAMING (PANTALLA DIVIDIDA) */}
         <div className="flex-1 flex flex-col p-4 md:p-6 justify-between gap-4 overflow-y-auto">
           
-          {/* Contenedor del Reproductor Premium */}
+          {/* Contenedor del Reproductor Jitsi */}
           <div className="w-full flex-1 flex flex-col justify-center">
-            <div className="w-full aspect-video bg-black rounded-2xl border border-slate-900 relative overflow-hidden group shadow-[0_10px_40px_rgba(0,0,0,0.7)] max-w-4xl mx-auto">
+            <div className="w-full aspect-video bg-black rounded-2xl border border-slate-900 relative overflow-hidden shadow-[0_10px_40px_rgba(0,0,0,0.7)] max-w-4xl mx-auto">
               
-              {/* Controles de Simulación de Streaming */}
-              <div className="absolute inset-0 flex items-center justify-center bg-[#070b13]/85 group-hover:bg-[#070b13]/60 transition-all duration-300">
-                
-                {/* Indicador EN VIVO pulsante en el video */}
-                <div className="absolute top-4 left-4 bg-red-600 text-white text-[10px] font-extrabold px-2.5 py-1 rounded-full flex items-center gap-1.5 shadow-md tracking-wider">
-                  <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
-                  EN VIVO
-                </div>
-
-                <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-md text-slate-300 text-[10px] font-bold px-2.5 py-1 rounded-full flex items-center gap-1.5">
-                  <Users className="w-3.5 h-3.5 text-emerald-400" />
-                  <span>{espectadores} viendo</span>
-                </div>
-
-                <div className="flex flex-col items-center gap-4 text-center px-6">
-                  <motion.div 
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => setIsPlaying(!isPlaying)}
-                    className="w-16 h-16 rounded-full bg-emerald-500 text-slate-950 flex items-center justify-center cursor-pointer shadow-lg hover:bg-emerald-400 transition-colors"
-                  >
-                    {isPlaying ? <Volume2 className="w-8 h-8" /> : <Play className="w-8 h-8 pl-1" />}
-                  </motion.div>
-                  <div>
-                    <h4 className="text-sm font-bold text-slate-200">
-                      {isPlaying ? 'Audio de la transmisión activado' : 'Hacé clic para reproducir el stream en vivo'}
-                    </h4>
-                    <p className="text-xs text-slate-400 mt-1 max-w-xs">
-                      Simulación interactiva de clase por streaming. Modificá el volumen y los controles.
-                    </p>
-                  </div>
-                </div>
-
-                {/* Barra de Controles Inferior del Player */}
-                <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black via-black/80 to-transparent p-4 flex justify-between items-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <div className="flex items-center gap-3">
-                    <button onClick={() => setIsPlaying(!isPlaying)} className="text-slate-300 hover:text-white transition-colors">
-                      {isPlaying ? <span className="w-2.5 h-2.5 bg-emerald-400 rounded-sm inline-block" /> : <Play className="w-4 h-4 fill-slate-300" />}
-                    </button>
-                    
-                    <button onClick={() => setIsMuted(!isMuted)} className="text-slate-300 hover:text-white transition-colors">
-                      {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
-                    </button>
-
-                    {/* Timeline ficticia */}
-                    <div className="w-48 md:w-80 h-1 bg-slate-800 rounded-full overflow-hidden relative">
-                      <div className="absolute top-0 left-0 bottom-0 bg-emerald-500 rounded-full" style={{ width: `${progress}%` }} />
-                    </div>
-
-                    <span className="text-[10px] text-slate-400 font-mono">1:24:32</span>
-                  </div>
-
-                  <button className="text-slate-300 hover:text-white transition-colors">
-                    <Maximize2 className="w-4 h-4" />
-                  </button>
-                </div>
-
+              {/* Indicador EN VIVO pulsante */}
+              <div className="absolute top-4 left-4 z-10 bg-red-600 text-white text-[10px] font-extrabold px-2.5 py-1 rounded-full flex items-center gap-1.5 shadow-md tracking-wider">
+                <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
+                EN VIVO
               </div>
 
+              <div className="absolute top-4 right-4 z-10 bg-black/60 backdrop-blur-md text-slate-300 text-[10px] font-bold px-2.5 py-1 rounded-full flex items-center gap-1.5">
+                <Users className="w-3.5 h-3.5 text-emerald-400" />
+                <span>{espectadores} viendo</span>
+              </div>
+
+              <JitsiMeetingEmbed
+                roomName={`itec-clase-${claseId}`}
+                displayName={memberName}
+                email={memberEmail}
+                className="w-full h-full"
+              />
             </div>
           </div>
 

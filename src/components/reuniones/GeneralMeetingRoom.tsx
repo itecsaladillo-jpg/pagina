@@ -1,44 +1,46 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { useState, useRef } from 'react'
 import { 
   Video, 
   ListChecks, 
   History, 
   Sparkles, 
-  Mic, 
-  MicOff, 
-  VideoOff, 
-  Settings,
   Users,
-  ExternalLink,
   FileText,
-  CheckCircle2,
   Loader2,
   Clock
 } from 'lucide-react'
-import { createClient } from '@/lib/supabase/client'
 import { saveNotesAction, finalizeAndPublishAction } from '@/app/dashboard/reuniones/actions'
+import { JitsiMeetingEmbed } from '@/components/video/JitsiMeetingEmbed'
 
-interface Props {
-  member: any
-  initialContent: string
-  meetLink: string
-  history: any[]
+interface Member {
+  full_name: string
+  email: string
+  role: string
 }
 
-export function GeneralMeetingRoom({ member, initialContent, meetLink, history }: Props) {
+interface MeetingHistory {
+  id: string
+  content: string
+  session_date: string
+  created_at: string
+}
+
+interface Props {
+  member: Member
+  initialContent: string
+  history: MeetingHistory[]
+}
+
+export function GeneralMeetingRoom({ member, initialContent, history }: Props) {
   const [content, setContent] = useState(initialContent)
   const [isSaving, setIsSaving] = useState(false)
   const [isFinalizing, setIsFinalizing] = useState(false)
   const [lastSaved, setLastSaved] = useState<Date | null>(null)
-  const [micOn, setMicOn] = useState(true)
-  const [camOn, setCamOn] = useState(true)
-  const [onlineCount, setOnlineCount] = useState(1)
+  const [meetingActive, setMeetingActive] = useState(false)
   
   const saveTimer = useRef<NodeJS.Timeout>(undefined)
-  const supabase = createClient()
   
   const canEdit = ['admin', 'coordinador'].includes(member.role)
 
@@ -73,68 +75,71 @@ export function GeneralMeetingRoom({ member, initialContent, meetLink, history }
 
   return (
     <div className="space-y-10 animate-fade-in">
-      {/* ─── LOBBY ESTILO MEET ─── */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-        {/* Lado Izquierdo: Cámara */}
+      {/* ─── JITSI EMBED O LOBBY ─── */}
+      {meetingActive ? (
         <div className="space-y-4">
-          <div className="relative aspect-video bg-[#0a0f1e] rounded-3xl border border-white/5 overflow-hidden flex items-center justify-center shadow-2xl">
-            {camOn ? (
+          <div className="relative aspect-video bg-black rounded-3xl border border-white/5 overflow-hidden shadow-2xl">
+            <div className="absolute top-4 left-4 z-10 bg-red-600 text-white text-[10px] font-extrabold px-2.5 py-1 rounded-full flex items-center gap-1.5 shadow-md tracking-wider">
+              <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
+              EN VIVO
+            </div>
+            <JitsiMeetingEmbed
+              roomName="itec-reunion-general"
+              displayName={member.full_name || 'Asistente ITEC'}
+              email={member.email || ''}
+              className="w-full h-full"
+            />
+          </div>
+          <button
+            onClick={() => setMeetingActive(false)}
+            className="w-full py-3 rounded-2xl bg-red-600/20 border border-red-500/30 text-red-400 font-bold text-sm flex items-center justify-center gap-2 hover:bg-red-600/30 transition-all"
+          >
+            Salir de la reunión
+          </button>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+          {/* Lado Izquierdo: Preview */}
+          <div className="space-y-4">
+            <div className="relative aspect-video bg-[#0a0f1e] rounded-3xl border border-white/5 overflow-hidden flex items-center justify-center shadow-2xl">
               <div className="flex flex-col items-center gap-4">
                 <div className="w-20 h-20 rounded-full bg-blue-500/20 border border-blue-500/40 flex items-center justify-center text-3xl font-bold text-white shadow-lg">
-                  {member.full_name.charAt(0)}
+                  {member.full_name?.charAt(0) || 'A'}
                 </div>
                 <div className="flex items-center gap-2 px-3 py-1 bg-green-500/10 border border-green-500/20 rounded-full">
                   <div className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
                   <span className="text-green-400 text-[10px] font-bold uppercase tracking-widest">Listo para unirte</span>
                 </div>
               </div>
-            ) : (
-              <VideoOff className="w-12 h-12 text-white/10" />
-            )}
-            
-            {/* Controles flotantes simulados */}
-            <div className="absolute bottom-6 flex items-center gap-3">
-              <button onClick={() => setMicOn(!micOn)} className={`p-3 rounded-full border transition-all ${micOn ? 'bg-white/5 border-white/10 text-white' : 'bg-red-500/20 border-red-500/40 text-red-400'}`}>
-                {micOn ? <Mic size={20} /> : <MicOff size={20} />}
-              </button>
-              <button onClick={() => setCamOn(!camOn)} className={`p-3 rounded-full border transition-all ${camOn ? 'bg-white/5 border-white/10 text-white' : 'bg-red-500/20 border-red-500/40 text-red-400'}`}>
-                {camOn ? <Video size={20} /> : <VideoOff size={20} />}
-              </button>
-              <button className="p-3 rounded-full bg-white/5 border border-white/10 text-white hover:bg-white/10 transition-all">
-                <Settings size={20} />
+            </div>
+          </div>
+
+          {/* Lado Derecho: Info y Acceso */}
+          <div className="space-y-6 lg:pl-6">
+            <div className="space-y-2">
+              <h1 className="text-4xl font-black text-white tracking-tight">Reunión General ITEC</h1>
+              <p className="text-[var(--text-secondary)] text-sm flex items-center gap-2">
+                <Users size={14} className="text-blue-400" />
+                <span>Espacio abierto para todo el staff</span>
+              </p>
+            </div>
+
+            <div className="p-5 rounded-2xl bg-white/[0.02] border border-white/5 space-y-4">
+              <div className="flex items-center justify-between text-xs uppercase tracking-widest text-[var(--text-muted)]">
+                <span>Estado de la sala</span>
+                <span className="text-green-400 font-bold">Disponible</span>
+              </div>
+              <button
+                onClick={() => setMeetingActive(true)}
+                className="w-full py-4 px-6 rounded-2xl bg-green-600 hover:bg-green-500 text-white font-bold text-lg flex items-center justify-center gap-3 transition-all shadow-xl shadow-green-900/20 group"
+              >
+                <Video size={20} />
+                Unirse ahora
               </button>
             </div>
           </div>
         </div>
-
-        {/* Lado Derecho: Info y Acceso */}
-        <div className="space-y-6 lg:pl-6">
-          <div className="space-y-2">
-            <h1 className="text-4xl font-black text-white tracking-tight">Reunión General ITEC</h1>
-            <p className="text-[var(--text-secondary)] text-sm flex items-center gap-2">
-              <Users size={14} className="text-blue-400" />
-              <span>Espacio abierto para todo el staff</span>
-            </p>
-          </div>
-
-          <div className="p-5 rounded-2xl bg-white/[0.02] border border-white/5 space-y-4">
-            <div className="flex items-center justify-between text-xs uppercase tracking-widest text-[var(--text-muted)]">
-              <span>Estado de la sala</span>
-              <span className="text-green-400 font-bold">Disponible</span>
-            </div>
-            <a 
-              href={meetLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full py-4 px-6 rounded-2xl bg-green-600 hover:bg-green-500 text-white font-bold text-lg flex items-center justify-center gap-3 transition-all shadow-xl shadow-green-900/20 group"
-            >
-              <ExternalLink size={20} />
-              Unirse ahora
-              <Video className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity" />
-            </a>
-          </div>
-        </div>
-      </div>
+      )}
 
       <div className="section-divider" />
 
@@ -207,7 +212,7 @@ export function GeneralMeetingRoom({ member, initialContent, meetLink, history }
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {history.length > 0 ? (
-            history.map((item: any) => (
+            history.map((item) => (
               <div key={item.id} className="glass border border-white/5 rounded-2xl p-5 hover:border-white/10 transition-all group">
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center gap-2 text-blue-400">
@@ -218,9 +223,11 @@ export function GeneralMeetingRoom({ member, initialContent, meetLink, history }
                   </div>
                   <FileText size={16} className="text-[var(--text-muted)] group-hover:text-white transition-colors" />
                 </div>
-                <h3 className="text-white font-semibold text-sm mb-2 line-clamp-1">{item.title}</h3>
+                <h3 className="text-white font-semibold text-sm mb-2 line-clamp-1">
+                  Reunión — {new Date(item.session_date).toLocaleDateString('es-AR')}
+                </h3>
                 <p className="text-[var(--text-muted)] text-xs line-clamp-2 leading-relaxed">
-                  {item.summary || 'Ver contenido completo'}
+                  {item.content?.slice(0, 120) || 'Ver contenido completo'}...
                 </p>
               </div>
             ))
