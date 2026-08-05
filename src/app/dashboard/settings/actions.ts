@@ -67,7 +67,7 @@ export async function getSettingsAction(): Promise<Record<string, string>> {
 
   const supabase = await createClient()
   const { data } = await supabase
-    .from('site_settings')
+    .from('api_settings')
     .select('key, value')
 
   const map: Record<string, string> = {}
@@ -107,14 +107,14 @@ export async function updateSettingAction(
   const now = new Date().toISOString()
 
   const { data: existing } = await supabase
-    .from('site_settings')
+    .from('api_settings')
     .select('id')
     .eq('key', key)
     .maybeSingle()
 
   if (existing) {
     const { error } = await supabase
-      .from('site_settings')
+      .from('api_settings')
       .update({ value, updated_at: now })
       .eq('key', key)
 
@@ -124,7 +124,7 @@ export async function updateSettingAction(
     }
   } else {
     const { error } = await supabase
-      .from('site_settings')
+      .from('api_settings')
       .insert({ key, value, updated_at: now })
 
     if (error) {

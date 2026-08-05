@@ -34,7 +34,7 @@ export async function getSettingValue(
   try {
     const supabase = await createClient()
     const { data, error } = await supabase
-      .from('site_settings')
+      .from('api_settings')
       .select('key, value')
       .eq('key', key)
       .single()
@@ -76,7 +76,7 @@ export async function getSettingValues(
       const supabase = await createClient()
       const keyNames = missingFromCache.map((e) => e.key)
       const { data, error } = await supabase
-        .from('site_settings')
+        .from('api_settings')
         .select('key, value')
         .in('key', keyNames)
 
