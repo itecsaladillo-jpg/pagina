@@ -7,6 +7,7 @@ const EVENT_ROUTES = [
   '/eventos',
   '/dashboard/eventos-presenciales',
   '/dashboard/eventos',
+  '/clases',
 ]
 
 export default function ChatWidgetWrapper() {
