@@ -55,7 +55,7 @@ export async function updateSiteSettingsAction(formData: {
 
 const ENV_FALLBACKS: Record<string, string> = {
   openrouter_api_key: 'OPENROUTER_API_KEY',
-  gemini_api_key: 'GEMINI_API_KEY',
+  gemini_api_key: 'GEMINI_APY_KEY',
   resend_api_key: 'RESEND_API_KEY',
   groq_api_key: 'GROQ_API_KEY',
   hf_api_key: 'HF_API_KEY',

@@ -31,7 +31,7 @@ async function callAI(messages: { role: string; content: string }[], temperature
 
   const callGemini = async (): Promise<string | null> => {
     const keys = await Promise.all([
-      getSettingValue('gemini_api_key', 'GEMINI_API_KEY'),
+      getSettingValue('gemini_api_key', 'GEMINI_APY_KEY'),
       getSettingValue('gemini_api_key_2', 'GEMINI_API_KEY_2'),
       getSettingValue('gemini_api_key_3', 'GEMINI_API_KEY_3'),
       getSettingValue('gemini_api_key_4', 'GEMINI_API_KEY_4'),
@@ -331,7 +331,7 @@ export async function generateVideoSummary(title: string, description: string): 
 
 export async function generarEmbedding(texto: string): Promise<number[]> {
   const [geminiKey1, geminiKey2, geminiKey3, geminiKey4, hfKey] = await Promise.all([
-    getSettingValue('gemini_api_key', 'GEMINI_API_KEY'),
+    getSettingValue('gemini_api_key', 'GEMINI_APY_KEY'),
     getSettingValue('gemini_api_key_2', 'GEMINI_API_KEY_2'),
     getSettingValue('gemini_api_key_3', 'GEMINI_API_KEY_3'),
     getSettingValue('gemini_api_key_4', 'GEMINI_API_KEY_4'),
