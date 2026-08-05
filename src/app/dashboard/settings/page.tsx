@@ -1,6 +1,7 @@
 import { getCurrentMember } from '@/services/auth'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
+import { getSettingsAction } from './actions'
 import { SettingsForm } from './SettingsForm'
 import { ApiKeysSettingsForm } from './ApiKeysSettingsForm'
 import { Cog, Key } from 'lucide-react'
@@ -14,6 +15,8 @@ export default async function SettingsPage() {
     .from('site_settings')
     .select('*')
     .single()
+
+  const apiSettings = await getSettingsAction()
 
   return (
     <div className="space-y-8 animate-fade-in">
@@ -39,7 +42,7 @@ export default async function SettingsPage() {
         <p className="text-[var(--text-muted)] text-xs mb-6">
           Gestioná las credenciales de servicios externos. Los valores se guardan en la base de datos y tienen prioridad sobre las variables de entorno.
         </p>
-        <ApiKeysSettingsForm />
+        <ApiKeysSettingsForm settings={apiSettings} />
       </div>
     </div>
   )

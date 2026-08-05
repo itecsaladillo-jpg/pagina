@@ -1,186 +1,156 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
-import { getApiKeysAction, updateApiKeyAction, type ApiKeyInfo } from './actions'
-import { Key, Brain, Mail, Eye, EyeOff, Save, Loader2, CheckCircle2, AlertCircle, RefreshCw } from 'lucide-react'
+import { useState, useTransition, useCallback } from 'react'
+import { updateSettingAction } from './actions'
+import { Eye, EyeOff, Save, Loader2, CheckCircle2 } from 'lucide-react'
 
-export function ApiKeysSettingsForm() {
-  const [keys, setKeys] = useState<ApiKeyInfo[]>([])
-  const [loading, setLoading] = useState(true)
-  const [saving, setSaving] = useState<string | null>(null)
-  const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
-  const [visibleKeys, setVisibleKeys] = useState<Set<string>>(new Set())
-  const [editedValues, setEditedValues] = useState<Record<string, string>>({})
+interface Props {
+  settings: Record<string, string>
+}
 
-  const fetchKeys = useCallback(async () => {
-    setLoading(true)
-    const res = await getApiKeysAction()
-    if (res.success && res.keys) {
-      setKeys(res.keys)
-    } else {
-      setMessage({ type: 'error', text: res.error || 'Error al cargar las API keys.' })
-    }
-    setLoading(false)
-  }, [])
+interface KeyDef {
+  key: string
+  label: string
+  description: string
+}
 
-  useEffect(() => {
-    let cancelled = false
-    const load = async () => {
-      setLoading(true)
-      const res = await getApiKeysAction()
-      if (!cancelled) {
-        if (res.success && res.keys) {
-          setKeys(res.keys)
-        } else {
-          setMessage({ type: 'error', text: res.error || 'Error al cargar las API keys.' })
-        }
-        setLoading(false)
+const API_KEYS: KeyDef[] = [
+  {
+    key: 'openrouter_api_key',
+    label: 'OpenRouter API Key',
+    description: 'Gateway unificado a múltiples modelos de IA (DeepSeek, Claude, GPT, etc.)',
+  },
+  {
+    key: 'gemini_api_key',
+    label: 'Gemini API Key',
+    description: 'Modelos de Google para generación de texto y embeddings',
+  },
+  {
+    key: 'resend_api_key',
+    label: 'Resend API Key',
+    description: 'Servicio de envío de emails transaccionales',
+  },
+  {
+    key: 'groq_api_key',
+    label: 'Groq API Key',
+    description: ' Inferencia ultrarrápida con modelos open-source (Llama, Mixtral)',
+  },
+  {
+    key: 'hf_api_key',
+    label: 'HuggingFace API Key',
+    description: 'Embeddings y modelos open-source vía Inference API',
+  },
+]
+
+export function ApiKeysSettingsForm({ settings }: Props) {
+  return (
+    <div className="space-y-1">
+      {API_KEYS.map((def) => (
+        <ApiKeyRow key={def.key} def={def} initialValue={settings[def.key] || ''} />
+      ))}
+    </div>
+  )
+}
+
+function ApiKeyRow({ def, initialValue }: { def: KeyDef; initialValue: string }) {
+  const [value, setValue] = useState('')
+  const [showValue, setShowValue] = useState(false)
+  const [hasValue] = useState(() => initialValue.length > 0)
+  const [saved, setSaved] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [isPending, startTransition] = useTransition()
+
+  const masked = hasValue
+    ? initialValue.slice(0, 4) + '•'.repeat(Math.min(initialValue.length - 7, 20)) + initialValue.slice(-3)
+    : ''
+
+  const handleSave = useCallback(() => {
+    setError(null)
+    setSaved(false)
+
+    startTransition(async () => {
+      const res = await updateSettingAction(def.key, value.trim())
+      if (res.success) {
+        setSaved(true)
+        setValue('')
+        setShowValue(false)
+        setTimeout(() => setSaved(false), 3000)
+      } else {
+        setError(res.error || 'Error al guardar.')
+        setTimeout(() => setError(null), 4000)
       }
-    }
-    load()
-    return () => { cancelled = true }
-  }, [])
-
-  const toggleVisibility = (key: string) => {
-    setVisibleKeys(prev => {
-      const next = new Set(prev)
-      if (next.has(key)) next.delete(key)
-      else next.add(key)
-      return next
     })
-  }
+  }, [def.key, value, startTransition])
 
-  const handleSave = async (key: string) => {
-    const value = editedValues[key]
-    if (value === undefined) return
-
-    setSaving(key)
-    setMessage(null)
-
-    const res = await updateApiKeyAction(key, value)
-
-    if (res.success) {
-      setMessage({ type: 'success', text: `${key} actualizada correctamente.` })
-      setEditedValues(prev => {
-        const next = { ...prev }
-        delete next[key]
-        return next
-      })
-      setVisibleKeys(prev => {
-        const next = new Set(prev)
-        next.delete(key)
-        return next
-      })
-      await fetchKeys()
-    } else {
-      setMessage({ type: 'error', text: res.error || 'Error al guardar.' })
-    }
-    setSaving(null)
-  }
-
-  const aiKeys = keys.filter(k => k.category === 'ai')
-  const emailKeys = keys.filter(k => k.category === 'email')
-
-  const renderKeyRow = (keyInfo: ApiKeyInfo) => {
-    const isVisible = visibleKeys.has(keyInfo.key)
-    const isEditing = keyInfo.key in editedValues
-    const isSaving = saving === keyInfo.key
-
-    return (
-      <div key={keyInfo.key} className="space-y-2">
-        <div className="flex items-center justify-between">
-          <label className="text-[var(--text-secondary)] text-[10px] uppercase font-bold tracking-widest ml-1">
-            {keyInfo.label}
-          </label>
-          <span className={`text-[9px] px-2 py-0.5 rounded-full font-medium ${
-            keyInfo.source === 'database'
-              ? 'bg-green-500/10 text-green-400 border border-green-500/20'
-              : 'bg-blue-500/10 text-blue-400 border border-blue-500/20'
-          }`}>
-            {keyInfo.source === 'database' ? 'BD' : '.env'}
-          </span>
-        </div>
-
-        <div className="flex gap-2">
-          <div className="relative flex-1">
-            <Key className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" size={14} />
-            <input
-              type={isVisible ? 'text' : 'password'}
-              placeholder={keyInfo.hasValue ? keyInfo.maskedValue : 'No configurado'}
-              value={editedValues[keyInfo.key] ?? ''}
-              onChange={(e) => setEditedValues(prev => ({ ...prev, [keyInfo.key]: e.target.value }))}
-              className="w-full bg-white/5 border border-[var(--border-subtle)] rounded-xl pl-10 pr-12 py-3 text-white text-sm focus:border-[var(--accent-primary)] outline-none transition-all font-mono"
-            />
-            <button
-              type="button"
-              onClick={() => toggleVisibility(keyInfo.key)}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)] hover:text-white transition-colors"
-            >
-              {isVisible ? <EyeOff size={14} /> : <Eye size={14} />}
-            </button>
-          </div>
-
-          {isEditing && (
-            <button
-              type="button"
-              onClick={() => handleSave(keyInfo.key)}
-              disabled={isSaving}
-              className="btn-primary px-4 py-3 rounded-xl flex items-center gap-2 text-xs font-medium disabled:opacity-50 whitespace-nowrap"
-            >
-              {isSaving ? <Loader2 className="animate-spin" size={14} /> : <Save size={14} />}
-              Guardar
-            </button>
-          )}
-        </div>
-      </div>
-    )
-  }
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center py-12">
-        <Loader2 className="animate-spin text-[var(--accent-primary)]" size={24} />
-      </div>
-    )
-  }
+  const hasEdited = value.length > 0
 
   return (
-    <div className="space-y-8">
-      {message && (
-        <div className={`p-4 rounded-xl flex items-center gap-3 animate-fade-in ${
-          message.type === 'success'
-            ? 'bg-green-500/10 text-green-400 border border-green-500/20'
-            : 'bg-red-500/10 text-red-400 border border-red-500/20'
-        }`}>
-          {message.type === 'success' ? <CheckCircle2 size={18} /> : <AlertCircle size={18} />}
-          <span className="text-sm font-medium">{message.text}</span>
+    <div className="flex items-center gap-3 py-3 border-b border-[var(--border-subtle)]/50 last:border-0">
+      <div className="flex-1 min-w-0">
+        <div className="flex items-baseline gap-2 mb-0.5">
+          <span className="text-white text-sm font-medium">{def.label}</span>
+          {hasValue && !hasEdited && (
+            <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 font-medium">
+              {initialValue.slice(0, 4)}••••{initialValue.slice(-3)}
+            </span>
+          )}
         </div>
-      )}
+        <p className="text-[var(--text-muted)] text-[11px] leading-snug">{def.description}</p>
+      </div>
 
-      <div className="flex items-center gap-3 border-b border-[var(--border-subtle)] pb-2">
-        <Brain size={18} className="text-[var(--accent-primary-2)]" />
-        <h3 className="text-white font-bold text-sm uppercase tracking-wider">Inteligencia Artificial</h3>
+      <div className="flex items-center gap-2 shrink-0">
+        <div className="relative">
+          <input
+            type={showValue ? 'text' : 'password'}
+            placeholder={hasValue ? masked : 'No configurado'}
+            value={value}
+            onChange={(e) => { setValue(e.target.value); setError(null) }}
+            onKeyDown={(e) => { if (e.key === 'Enter' && hasEdited) handleSave() }}
+            className="w-64 bg-white/5 border border-[var(--border-subtle)] rounded-lg px-3 pr-9 py-2 text-white text-sm font-mono placeholder:text-[var(--text-muted)]/50 focus:border-[var(--accent-primary)] outline-none transition-all"
+          />
+          <button
+            type="button"
+            onClick={() => setShowValue(!showValue)}
+            className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[var(--text-muted)] hover:text-white transition-colors"
+          >
+            {showValue ? <EyeOff size={14} /> : <Eye size={14} />}
+          </button>
+        </div>
+
         <button
           type="button"
-          onClick={fetchKeys}
-          className="ml-auto text-[var(--text-muted)] hover:text-white transition-colors"
-          title="Recargar"
+          onClick={handleSave}
+          disabled={!hasEdited || isPending}
+          className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+          style={{
+            backgroundColor: saved
+              ? 'rgba(34, 197, 94, 0.15)'
+              : error
+              ? 'rgba(239, 68, 68, 0.15)'
+              : 'rgba(59, 130, 246, 0.15)',
+            color: saved
+              ? '#4ade80'
+              : error
+              ? '#f87171'
+              : '#60a5fa',
+            border: `1px solid ${
+              saved
+                ? 'rgba(34, 197, 94, 0.2)'
+                : error
+                ? 'rgba(239, 68, 68, 0.2)'
+                : 'rgba(59, 130, 246, 0.2)'
+            }`,
+          }}
         >
-          <RefreshCw size={14} />
+          {isPending ? (
+            <Loader2 size={13} className="animate-spin" />
+          ) : saved ? (
+            <CheckCircle2 size={13} />
+          ) : (
+            <Save size={13} />
+          )}
+          {isPending ? 'Guardando...' : saved ? '¡Guardado!' : error ? 'Error' : 'Guardar'}
         </button>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {aiKeys.map(renderKeyRow)}
-      </div>
-
-      <div className="flex items-center gap-3 border-b border-[var(--border-subtle)] pb-2 mt-8">
-        <Mail size={18} className="text-purple-400" />
-        <h3 className="text-white font-bold text-sm uppercase tracking-wider">Comunicaciones & Email</h3>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {emailKeys.map(renderKeyRow)}
       </div>
     </div>
   )
