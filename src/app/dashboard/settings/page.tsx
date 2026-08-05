@@ -2,6 +2,7 @@ import { getCurrentMember } from '@/services/auth'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { SettingsForm } from './SettingsForm'
+import { ApiKeysSettingsForm } from './ApiKeysSettingsForm'
 import { Cog } from 'lucide-react'
 
 export default async function SettingsPage() {
@@ -26,7 +27,19 @@ export default async function SettingsPage() {
         </p>
       </div>
 
+      {/* Sección: API Keys */}
+      <div className="glass border border-violet-500/10 rounded-2xl p-8">
+        <ApiKeysSettingsForm />
+      </div>
+
+      {/* Sección: Configuración General */}
       <div className="glass border border-[var(--border-subtle)] rounded-2xl p-8">
+        <div className="flex items-center gap-3 border-b border-[var(--border-subtle)] pb-4 mb-6">
+          <Cog size={18} className="text-[var(--accent-primary-2)]" />
+          <h2 className="text-white font-bold text-sm uppercase tracking-wider">
+            Configuración General
+          </h2>
+        </div>
         <SettingsForm settings={settings || {}} />
       </div>
     </div>

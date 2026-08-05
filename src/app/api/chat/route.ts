@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import Groq from 'groq-sdk';
 import type { ChatCompletionMessageParam } from 'groq-sdk/resources/chat/completions';
 import { createClient } from '@/lib/supabase/server';
+import { getSettingValue } from '@/lib/settings';
 import staticDocsContext from '@/lib/docsContext.json';
 
 async function fetchDocsContext(): Promise<string> {
@@ -18,10 +19,6 @@ async function fetchDocsContext(): Promise<string> {
   }
   return staticDocsContext.text;
 }
-
-const groq = new Groq({
-  apiKey: process.env.GROQ_API_KEY,
-});
 
 async function searchWeb(query: string): Promise<string> {
   try {
@@ -167,6 +164,12 @@ export async function POST(request: Request) {
     if (!userMessage) {
       return NextResponse.json({ error: 'Mensaje requerido' }, { status: 400 });
     }
+
+    const groqKey = await getSettingValue('GROQ_API_KEY', 'GROQ_API_KEY');
+    if (!groqKey) {
+      return NextResponse.json({ error: 'Groq API key no configurada' }, { status: 503 });
+    }
+    const groq = new Groq({ apiKey: groqKey });
 
     let internetContext = '';
 

@@ -6,6 +6,7 @@ import { getCurrentMember } from '@/services/auth'
 import { revalidatePath } from 'next/cache'
 import { Resend } from 'resend'
 import { generatePrensaEmailHtml } from '@/lib/email-templates/prensa'
+import { getSettingValue } from '@/lib/settings'
 
 const medioSchema = z.object({
   nombre_medio: z.string().min(1, 'Nombre del medio requerido'),
@@ -112,7 +113,7 @@ export async function sendGacetillaToMedios(payload: SendGacetillaPayload) {
     fecha,
   })
 
-  const apiKey = process.env.RESEND_API_KEY
+  const apiKey = await getSettingValue('RESEND_API_KEY', 'RESEND_API_KEY')
   if (!apiKey || apiKey === 're_123456789...') {
     console.warn('[sendGacetillaToMedios] RESEND_API_KEY no configurada. Simulando envíos.')
   }
@@ -127,7 +128,8 @@ export async function sendGacetillaToMedios(payload: SendGacetillaPayload) {
 
     if (resend) {
       try {
-        const fromAddress = process.env.RESEND_FROM_PRENSA || 'ITEC Saladillo <prensa@resend.dev>'
+        const fromAddress = await getSettingValue('RESEND_FROM_EMAIL', 'RESEND_FROM_PRENSA')
+          .then(v => v || 'ITEC Saladillo <prensa@resend.dev>')
         const { error: sendError } = await resend.emails.send({
           from: fromAddress,
           to: [medio.email],

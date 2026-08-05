@@ -9,21 +9,34 @@
  */
 
 import { getAIPrompt } from './admin'
+import { getSettingValue } from '@/lib/settings'
 
-const OLLAMA_BASE_URL = process.env.OLLAMA_API_BASE_URL || 'https://ai.itecsaladillo.org.ar'
-const OLLAMA_MODEL = 'llama3.2:latest'
+let _ollamaBaseUrl: string | null = null
+let _ollamaModel: string | null = null
+
+async function getOllamaConfig() {
+  if (_ollamaBaseUrl === null) {
+    _ollamaBaseUrl = await getSettingValue('OLLAMA_API_BASE_URL', 'OLLAMA_API_BASE_URL')
+      .then(v => v || 'https://ai.itecsaladillo.org.ar')
+    _ollamaModel = await getSettingValue('OLLAMA_MODEL', 'OLLAMA_MODEL')
+      .then(v => v || 'llama3.2:latest')
+  }
+  return { baseUrl: _ollamaBaseUrl, model: _ollamaModel! }
+}
 
 async function chatWithOllama(messages: { role: string; content: string }[], temperature = 0.7): Promise<string> {
   const timeout = 98000
   const controller = new AbortController()
   const timer = setTimeout(() => controller.abort(), timeout)
 
+  const config = await getOllamaConfig()
+
   try {
-    const response = await fetch(`${OLLAMA_BASE_URL}/api/chat`, {
+    const response = await fetch(`${config.baseUrl}/api/chat`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: OLLAMA_MODEL,
+        model: config.model,
         messages,
         stream: false,
         temperature,

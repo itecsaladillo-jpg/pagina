@@ -1,4 +1,5 @@
 import { Resend } from 'resend'
+import { getSettingValue } from '@/lib/settings'
 
 /**
  * Envía un correo de bienvenida y acceso al asistente de un evento presencial.
@@ -9,7 +10,7 @@ export async function sendEventWelcomeEmail(
   eventName: string,
   eventSlug: string
 ) {
-  const apiKey = process.env.RESEND_API_KEY
+  const apiKey = await getSettingValue('RESEND_API_KEY', 'RESEND_API_KEY')
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://pagina-eight-alpha.vercel.app'
   const eventLink = `${siteUrl}/eventos/${eventSlug}`
 

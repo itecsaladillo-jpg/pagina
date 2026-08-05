@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 import { getAIPrompt } from '@/services/admin'
 import { recuperarContextoRAG } from '@/lib/rag/ragCascade'
 import { detectarComandoGuardar, debeAutoGuardar, guardarConversacion } from '@/lib/rag/conversacionesGuardadas'
+import { getSettingValue } from '@/lib/settings'
 
 export const runtime = 'edge'
 
@@ -31,10 +32,11 @@ Siempre escribís en español rioplatense formal, con vos y sus conjugaciones co
 Nunca utilizás lenguaje informal ni regionalismos fuera de los autorizados.`
 
 async function callOpenRouter(messages: { role: string; content: string }[]): Promise<Response> {
+  const key = await getSettingValue('OPENROUTER_API_KEY', 'OPENROUTER_API_KEY')
   const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
     method: 'POST',
     headers: {
-      'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY}`,
+      'Authorization': `Bearer ${key}`,
       'Content-Type': 'application/json',
       'HTTP-Referer': 'https://itecsaladillo.org.ar',
       'X-Title': 'ITEC Asistente'
@@ -56,10 +58,11 @@ async function callOpenRouter(messages: { role: string; content: string }[]): Pr
 }
 
 async function callHuggingFace(prompt: string): Promise<string> {
+  const key = await getSettingValue('HF_API_KEY', 'HF_API_KEY')
   const response = await fetch('https://api-inference.huggingface.co/models/meta-llama/Llama-3.1-8B-Instruct', {
     method: 'POST',
     headers: {
-      'Authorization': `Bearer ${process.env.HF_API_KEY}`,
+      'Authorization': `Bearer ${key}`,
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({

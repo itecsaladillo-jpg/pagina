@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server';
 import { generarEmbedding } from '@/services/ai';
+import { getSettingValue } from '@/lib/settings';
 import type { NextRequest } from 'next/server';
 
 // ─────────────────────────────────────────────
@@ -17,8 +18,18 @@ interface CuerpoSolicitudFeedback {
 }
 
 // Configuración Ollama
-const OLLAMA_BASE_URL = process.env.OLLAMA_API_BASE_URL || 'https://ai.itecsaladillo.org.ar'
-const OLLAMA_MODEL = 'llama3.2:latest'
+let _ollamaBaseUrl: string | null = null
+let _ollamaModel: string | null = null
+
+async function getOllamaConfig() {
+  if (_ollamaBaseUrl === null) {
+    _ollamaBaseUrl = await getSettingValue('OLLAMA_API_BASE_URL', 'OLLAMA_API_BASE_URL')
+      .then(v => v || 'https://ai.itecsaladillo.org.ar')
+    _ollamaModel = await getSettingValue('OLLAMA_MODEL', 'OLLAMA_MODEL')
+      .then(v => v || 'llama3.2:latest')
+  }
+  return { baseUrl: _ollamaBaseUrl, model: _ollamaModel! }
+}
 
 // ─────────────────────────────────────────────
 // POST /api/asistente/feedback
@@ -80,13 +91,15 @@ ${historial
         const controller = new AbortController()
         const timer = setTimeout(() => controller.abort(), timeout)
 
+        const ollamaConfig = await getOllamaConfig()
+
         let data: any
         try {
-          const ollamaResponse = await fetch(`${OLLAMA_BASE_URL}/api/chat`, {
+          const ollamaResponse = await fetch(`${ollamaConfig.baseUrl}/api/chat`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-              model: OLLAMA_MODEL,
+              model: ollamaConfig.model,
               messages: [
                 { 
                   role: 'system', 
