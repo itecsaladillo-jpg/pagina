@@ -2,7 +2,8 @@ import { getCurrentMember } from '@/services/auth'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { SettingsForm } from './SettingsForm'
-import { Cog } from 'lucide-react'
+import { ApiKeysSettingsForm } from './ApiKeysSettingsForm'
+import { Cog, Key } from 'lucide-react'
 
 export default async function SettingsPage() {
   const admin = await getCurrentMember()
@@ -28,6 +29,17 @@ export default async function SettingsPage() {
 
       <div className="glass border border-[var(--border-subtle)] rounded-2xl p-8">
         <SettingsForm settings={settings || {}} />
+      </div>
+
+      <div className="glass border border-[var(--border-subtle)] rounded-2xl p-8">
+        <div className="flex items-center gap-3 border-b border-[var(--border-subtle)] pb-4 mb-6">
+          <Key size={18} className="text-[var(--accent-primary-2)]" />
+          <h2 className="text-white font-bold text-lg">API Keys y Proveedores</h2>
+        </div>
+        <p className="text-[var(--text-muted)] text-xs mb-6">
+          Gestioná las credenciales de servicios externos. Los valores se guardan en la base de datos y tienen prioridad sobre las variables de entorno.
+        </p>
+        <ApiKeysSettingsForm />
       </div>
     </div>
   )

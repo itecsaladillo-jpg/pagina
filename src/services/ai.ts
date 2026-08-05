@@ -1,18 +1,23 @@
 import { createClient } from '@/lib/supabase/server'
-
-const OLLAMA_BASE_URL = process.env.OLLAMA_API_BASE_URL || 'https://ai.itecsaladillo.org.ar'
-const OLLAMA_MODEL = process.env.OLLAMA_MODEL || 'llama3.2:latest'
+import { getSettingValue } from '@/lib/settings'
 
 async function callAI(messages: { role: string; content: string }[], temperature = 0.7): Promise<string> {
   const errors: string[] = []
 
+  const [ollamaBaseUrl, ollamaModel] = await Promise.all([
+    getSettingValue('ollama_base_url', 'OLLAMA_API_BASE_URL'),
+    getSettingValue('ollama_model', 'OLLAMA_MODEL'),
+  ])
+
   const callOllama = async (): Promise<string | null> => {
+    const baseUrl = ollamaBaseUrl || 'https://ai.itecsaladillo.org.ar'
+    const model = ollamaModel || 'llama3.2:latest'
     try {
-      const res = await fetch(`${OLLAMA_BASE_URL}/api/chat`, {
+      const res = await fetch(`${baseUrl}/api/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          model: OLLAMA_MODEL,
+          model,
           messages,
           stream: false,
           options: { temperature },
@@ -25,7 +30,13 @@ async function callAI(messages: { role: string; content: string }[], temperature
   }
 
   const callGemini = async (): Promise<string | null> => {
-    const key = process.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY_2 || process.env.GEMINI_API_KEY_3 || process.env.GEMINI_API_KEY_4 || process.env.GOOGLE_GENERATIVE_AI_API_KEY
+    const keys = await Promise.all([
+      getSettingValue('gemini_api_key', 'GEMINI_API_KEY'),
+      getSettingValue('gemini_api_key_2', 'GEMINI_API_KEY_2'),
+      getSettingValue('gemini_api_key_3', 'GEMINI_API_KEY_3'),
+      getSettingValue('gemini_api_key_4', 'GEMINI_API_KEY_4'),
+    ])
+    const key = keys.find(k => k) || process.env.GOOGLE_GENERATIVE_AI_API_KEY || ''
     if (!key) { errors.push('[Gemini] no API key'); return null }
     try {
       const systemMsg = messages.find(m => m.role === 'system')?.content || ''
@@ -49,7 +60,7 @@ async function callAI(messages: { role: string; content: string }[], temperature
   }
 
   const callOpenRouter = async (): Promise<string | null> => {
-    const key = process.env.OPENROUTER_API_KEY
+    const key = await getSettingValue('openrouter_api_key', 'OPENROUTER_API_KEY')
     if (!key) { errors.push('[OpenRouter] no API key'); return null }
     try {
       const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
@@ -319,7 +330,14 @@ export async function generateVideoSummary(title: string, description: string): 
 }
 
 export async function generarEmbedding(texto: string): Promise<number[]> {
-  const geminiKey = process.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY_2 || process.env.GEMINI_API_KEY_3 || process.env.GEMINI_API_KEY_4 || process.env.GOOGLE_GENERATIVE_AI_API_KEY || ''
+  const [geminiKey1, geminiKey2, geminiKey3, geminiKey4, hfKey] = await Promise.all([
+    getSettingValue('gemini_api_key', 'GEMINI_API_KEY'),
+    getSettingValue('gemini_api_key_2', 'GEMINI_API_KEY_2'),
+    getSettingValue('gemini_api_key_3', 'GEMINI_API_KEY_3'),
+    getSettingValue('gemini_api_key_4', 'GEMINI_API_KEY_4'),
+    getSettingValue('hf_api_key', 'HF_API_KEY'),
+  ])
+  const geminiKey = geminiKey1 || geminiKey2 || geminiKey3 || geminiKey4 || process.env.GOOGLE_GENERATIVE_AI_API_KEY || ''
   
   if (geminiKey) {
     try {
@@ -345,7 +363,6 @@ export async function generarEmbedding(texto: string): Promise<number[]> {
   }
 
   try {
-    const hfKey = process.env.HF_API_KEY
     if (!hfKey) throw new Error('No HF_API_KEY configured')
     
     const response = await fetch('https://api-inference.huggingface.co/models/sentence-transformers/all-MiniLM-L6-v2', {

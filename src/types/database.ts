@@ -206,6 +206,37 @@ export interface Evento {
 }
 
 // ─────────────────────────────────────────
+// TABLA: site_settings (genérica clave/valor)
+// ─────────────────────────────────────────
+
+export interface SiteSetting {
+  id: string
+  key: string
+  value: string
+  updated_at: string
+}
+
+export type SiteSettingKey =
+  | 'hero_title'
+  | 'hero_subtitle'
+  | 'contact_email'
+  | 'google_drive_email'
+  | 'google_drive_password'
+  | 'google_drive_root_id'
+  | 'google_service_account_json'
+  | 'openrouter_api_key'
+  | 'gemini_api_key'
+  | 'gemini_api_key_2'
+  | 'gemini_api_key_3'
+  | 'gemini_api_key_4'
+  | 'groq_api_key'
+  | 'hf_api_key'
+  | 'ollama_base_url'
+  | 'ollama_model'
+  | 'resend_api_key'
+  | 'resend_from_email'
+
+// ─────────────────────────────────────────
 // DATABASE TYPE (para generics de Supabase)
 // ─────────────────────────────────────────
 
@@ -261,6 +292,11 @@ export interface Database {
         Row: Evento
         Insert: Omit<Evento, 'id' | 'created_at' | 'updated_at'>
         Update: Partial<Omit<Evento, 'id' | 'created_at'>>
+      }
+      site_settings: {
+        Row: SiteSetting
+        Insert: Omit<SiteSetting, 'id' | 'updated_at'>
+        Update: Partial<Omit<SiteSetting, 'id' | 'updated_at'>>
       }
     }
   }
