@@ -53,6 +53,14 @@ export async function updateSiteSettingsAction(formData: {
   }
 }
 
+const ENV_FALLBACKS: Record<string, string> = {
+  openrouter_api_key: 'OPENROUTER_API_KEY',
+  gemini_api_key: 'GEMINI_API_KEY',
+  resend_api_key: 'RESEND_API_KEY',
+  groq_api_key: 'GROQ_API_KEY',
+  hf_api_key: 'HF_API_KEY',
+}
+
 export async function getSettingsAction(): Promise<Record<string, string>> {
   const admin = await getCurrentMember()
   if (!admin || admin.role !== 'admin') return {}
@@ -62,14 +70,15 @@ export async function getSettingsAction(): Promise<Record<string, string>> {
     .from('site_settings')
     .select('key, value')
 
-  if (!data) return {}
-
   const map: Record<string, string> = {}
-  for (const row of data) {
-    if (row.key && row.value) {
-      map[row.key] = row.value
-    }
+
+  for (const [settingKey, envVar] of Object.entries(ENV_FALLBACKS)) {
+    const dbRow = data?.find((r) => r.key === settingKey)
+    const dbValue = dbRow?.value?.trim() || ''
+    const envValue = process.env[envVar] || ''
+    map[settingKey] = dbValue || envValue
   }
+
   return map
 }
 
