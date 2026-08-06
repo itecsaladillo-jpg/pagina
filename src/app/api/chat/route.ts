@@ -10,16 +10,31 @@ import { recuperarContextoRAG } from '@/lib/rag/ragCascade';
 
 const FALLBACK_PROMPT = `Sos el asistente virtual oficial de ITEC (Instituto Tecnológico de Saladillo), experto en Augusto Cicaré y su obra.
 
-REGLAS:
+IDENTIDAD:
+- Nombre: Asistente ITEC
+- Institución: Instituto Tecnológico de Saladillo (ITEC)
+- Especialización: Augusto Cicaré, Expo ITEC, actividad institucional
+
+REGLAS GENERALES:
 - Respondé en español rioplatense formal (con "vos").
-- Priorizá la información de los documentos institucionales.
-- No inventes datos. Si no sabés la respuesta, dilo claramente y sugerí contactar a la institución.
-- Sé directo, conciso y útil.`;
+- Sé directo, conciso y útil.
+- Si no sabés la respuesta, indicá de forma amable y sugerí contactar a la institución.`;
+
+const ANTI_HALLUCINATION_RULES = `
+REGLAS OBLIGATORIAS DE CONTEXTO (RAG):
+1. Respondé ÚNICAMENTE utilizando la información provista dentro del bloque <retrieved_context>.
+2. Si la respuesta a la pregunta del usuario NO se encuentra contenida en <retrieved_context>, respondé de forma amable: "No dispongo de esa información específica en los documentos oficiales cargados. Por favor, consultá directamente con la administración del ITEC."
+3. Queda estrictamente PROHIBIDO inventar fechas, requisitos, programas o normativas que no figuren explícitamente en el contexto.`;
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
 // ============================================================
-// Obtener Prompt Maestro desde Supabase
+// 1. Obtener Prompt Maestro desde Supabase (ai_prompt_settings)
+// ============================================================
+// Tabla: ai_prompt_settings
+// Columna: system_prompt
+// Filtro: clave_prompt = 'asistente_global'
+// Editable desde: /dashboard/entrenamiento-asistente
 // ============================================================
 
 async function fetchPromptMaestro(): Promise<string> {
@@ -27,7 +42,7 @@ async function fetchPromptMaestro(): Promise<string> {
     const supabase = await createClient();
     const { data, error } = await supabase
       .from('ai_prompt_settings')
-      .select('system_prompt, temperature, max_tokens')
+      .select('system_prompt')
       .eq('clave_prompt', 'asistente_global')
       .maybeSingle();
 
@@ -49,7 +64,7 @@ async function fetchPromptMaestro(): Promise<string> {
 }
 
 // ============================================================
-// Obtener datos dinámicos de Supabase
+// 2. Obtener datos dinámicos de Supabase
 // ============================================================
 
 async function fetchDynamicContext(): Promise<string> {
@@ -155,29 +170,33 @@ export async function POST(request: NextRequest) {
       return new Response(JSON.stringify({ error: 'Mensaje requerido' }), { status: 400 });
     }
 
-    // 1. Obtener Prompt Maestro + Datos dinámicos en paralelo
+    // ── 1. Obtener Prompt Maestro + Datos dinámicos en paralelo ──
     const [promptMaestro, datosDinamicos] = await Promise.all([
       fetchPromptMaestro(),
       fetchDynamicContext(),
     ]);
 
-    // 2. Obtener contexto RAG desde pgvector
+    // ── 2. Obtener contexto RAG desde pgvector ──
     const supabase = await createClient();
     const ragResult = await recuperarContextoRAG(userMessage, supabase, sessionId);
 
-    // 3. Construir el system prompt combinado
-    const ragSection = ragResult.contexto
-      ? `\n<retrieved_context>\n${ragResult.contexto}\n</retrieved_context>\n`
-      : '';
-
-    const dynamicSection = datosDinamicos
-      ? `\n--- DATOS EN VIVO ---\n${datosDinamicos}\n--------------------\n`
-      : '';
+    // ── 3. Ensamblar System Prompt con RAG + Anti-Alucinación ──
+    const retrievedContext = ragResult.contexto
+      || 'No se encontraron fragmentos específicos en la base vectorial para esta consulta.';
 
     const systemPrompt = `${promptMaestro}
-${ragSection}${dynamicSection}`;
 
-    // 4. Preparar mensajes para Groq
+${ANTI_HALLUCINATION_RULES}
+
+<retrieved_context>
+${retrievedContext}
+</retrieved_context>
+
+--- DATOS EN VIVO ---
+${datosDinamicos || '(No hay datos dinámicos disponibles en este momento)'}
+--------------------`;
+
+    // ── 4. Preparar mensajes para Groq ──
     const messages: ChatCompletionMessageParam[] = [
       { role: 'system', content: systemPrompt },
       ...historial.slice(-20).map(m => ({
@@ -187,16 +206,23 @@ ${ragSection}${dynamicSection}`;
       { role: 'user', content: userMessage },
     ];
 
-    // 5. Streaming con Groq llama-3.3-70b-versatile
+    // ── DEBUG RAG ──
+    console.log('=== DEBUG RAG START ===');
+    console.log('Pregunta:', userMessage);
+    console.log('RAG Level:', ragResult.nivel, '| Score:', ragResult.score.toFixed(3));
+    console.log('Contexto Recuperado:\n', ragResult.contexto || '⚠️ VACIO');
+    console.log('=== DEBUG RAG END ===');
+
+    // ── 5. Streaming con Groq llama-3.3-70b-versatile ──
     const stream = await groq.chat.completions.create({
       messages,
       model: 'llama-3.3-70b-versatile',
-      temperature: 0.4,
+      temperature: 0.2,
       max_tokens: 1024,
       stream: true,
     });
 
-    // 6. Convertir a ReadableStream para streaming nativo
+    // ── 6. Convertir a ReadableStream para streaming nativo ──
     const encoder = new TextEncoder();
     const readable = new ReadableStream({
       async start(controller) {

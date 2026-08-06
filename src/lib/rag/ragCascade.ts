@@ -2,7 +2,7 @@
  * ragCascade.ts
  * Módulo de Recuperación de Contexto con Cascada de Prioridades — Asistente ITEC
  *
- *   P1 (score ≥ 0.45) → pgvector: búsqueda semántica en document_embeddings (Gemini text-embedding-004)
+ *   P1 (score ≥ 0.20) → pgvector: búsqueda semántica en documents (Gemini text-embedding-004)
  *   P2 (score ≥ 0.40) → Documentos locales pre-parseados (DOCS_CONTEXT en memoria, keyword scoring)
  *   P3 (score ≥ 0.35) → Bucket Supabase Storage "training-docs"
  *   P4              → Conversaciones Guardadas (historial previo relevante)
@@ -21,7 +21,7 @@ import { buscarConversacionesSimilares } from './conversacionesGuardadas'
 // Configuración y thresholds
 // ============================================================
 
-const THRESHOLD_VECTOR    = 0.45   // Umbral para búsqueda semántica pgvector
+const THRESHOLD_VECTOR    = 0.20   // Umbral bajo para no descartar info relevante (calibrado)
 const THRESHOLD_LOCAL     = 0.40   // Umbral de confianza para docs locales (keyword)
 const THRESHOLD_SUPABASE  = 0.35   // Umbral de confianza para bucket Supabase
 const CHUNK_SIZE          = 900    // Tamaño de chunk en caracteres para scoring
@@ -107,11 +107,11 @@ function encontrarMejoresChunks(query: string, texto: string, topK: number = 3):
 }
 
 // ============================================================
-// P1 — Búsqueda Semántica pgvector (document_embeddings)
+// P1 — Búsqueda Semántica pgvector (documents)
 // ============================================================
 
 /**
- * Busca contexto en la tabla document_embeddings usando pgvector.
+ * Busca contexto en la tabla documents usando pgvector.
  * Genera embedding de la query con Gemini text-embedding-004 y ejecuta
  * match_documents RPC para encontrar chunks similares por coseno.
  * Compatible con Edge Runtime (fetch nativo a Supabase REST + Gemini API).

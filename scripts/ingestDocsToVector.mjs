@@ -99,7 +99,7 @@ async function insertChunks(chunks) {
 
   for (let i = 0; i < chunks.length; i += batchSize) {
     const batch = chunks.slice(i, i + batchSize);
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/document_embeddings`, {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/documents`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -123,7 +123,7 @@ async function insertChunks(chunks) {
 /** Elimina embeddings existentes de un archivo específico */
 async function deleteExistingEmbeddings(filePath) {
   const encoded = encodeURIComponent(filePath);
-  await fetch(`${SUPABASE_URL}/rest/v1/document_embeddings?file_path=eq.${encoded}`, {
+  await fetch(`${SUPABASE_URL}/rest/v1/documents?file_path=eq.${encoded}`, {
     method: 'DELETE',
     headers: {
       'apikey': SUPABASE_KEY,
@@ -150,7 +150,7 @@ async function main() {
 
   // Limpiar embeddings existentes
   console.log('🗑  Limpiando embeddings existentes...');
-  const deleteRes = await fetch(`${SUPABASE_URL}/rest/v1/document_embeddings?file_path=like.*`, {
+  const deleteRes = await fetch(`${SUPABASE_URL}/rest/v1/documents?file_path=like.*`, {
     method: 'DELETE',
     headers: {
       'apikey': SUPABASE_KEY,
