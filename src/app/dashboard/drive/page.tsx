@@ -2,8 +2,8 @@ import { Metadata } from 'next'
 import { getCurrentMember } from '@/services/auth'
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
-import { DRIVE_FOLDERS, getDriveFolderBySlug } from '@/lib/drive'
-import { Folder, ExternalLink, Cloud, ShieldCheck, Clock, Share2, FileCode } from 'lucide-react'
+import { getDriveFolderBySlug } from '@/lib/drive'
+import { Folder, ExternalLink, Cloud, ShieldCheck, Clock, Share2 } from 'lucide-react'
 import { FileList } from './FileList'
 
 export const metadata: Metadata = {

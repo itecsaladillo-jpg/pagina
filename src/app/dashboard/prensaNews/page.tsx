@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Mail, Send, Clock, Download, Plus } from 'lucide-react'
+import { Send, Clock, Download, Plus } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale'

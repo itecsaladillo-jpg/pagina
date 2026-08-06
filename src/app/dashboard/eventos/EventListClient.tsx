@@ -2,9 +2,10 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { MessageSquare, Tv, UserPlus, ShieldAlert, QrCode, Copy, Check, Printer, X, Sparkles, Trash2, Plus, Loader2, ExternalLink, Download } from "lucide-react";
+import { MessageSquare, Tv, UserPlus, ShieldAlert, QrCode, Copy, Check, Printer, X, Sparkles, Trash2, Plus, Loader2, Download } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import QRCode from "react-qr-code";
+import dynamic from "next/dynamic";
+const QRCode = dynamic(() => import("react-qr-code"), { ssr: false });
 import type { ItecAction } from "@/types/database";
 import { createClient } from "@/lib/supabase/client";
 

@@ -13,7 +13,6 @@ import {
   CheckCircle2, 
   MessageSquare, 
   Award, 
-  BarChart2, 
   Cloud, 
   Vote, 
   Phone, 
@@ -21,13 +20,12 @@ import {
   Mail,
   ChevronRight,
   AlertCircle,
-  X,
-  Activity,
   AlertTriangle
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { registrarVotoNegativo, verificarVotoDispositivo } from "@/app/dashboard/eventos-presenciales/semaforoActions";
+
 
 interface HerramientasActivas {
   encuestas: boolean;
@@ -44,6 +42,8 @@ interface Evento {
   fecha: string;
   slug_qr: string;
   estado_activo: boolean;
+  modalidad: "presencial" | "virtual" | null;
+  meet_url: string | null;
   herramienta_activa: "encuestas" | "preguntas" | "nube_ideas";
   encuesta_activa_id: string | null;
   nube_activa_id: string | null;
@@ -1104,7 +1104,7 @@ export default function EventoPage({ params }: { params: Promise<{ id: string }>
       </header>
 
       {/* Sub-header con info del evento */}
-      <div className="max-w-md mx-auto px-4 mt-3">
+      <div className={`mx-auto px-4 mt-3 ${evento.modalidad === 'virtual' ? 'max-w-6xl' : 'max-w-md'}`}>
         <div className="bg-zinc-900/30 border border-zinc-850 rounded-2xl p-3 flex items-center justify-between gap-3">
           <div className="min-w-0 flex-1">
             <h2 className="text-sm font-bold text-white truncate">{evento.nombre_evento}</h2>
@@ -1112,100 +1112,109 @@ export default function EventoPage({ params }: { params: Promise<{ id: string }>
               {asistente.nombre_completo}
             </p>
           </div>
+          {evento.modalidad === 'virtual' && (
+            <span className="text-[8px] font-black uppercase tracking-widest text-cyan-400 bg-cyan-950/40 border border-cyan-900/50 px-2 py-1 rounded shrink-0">
+              Virtual
+            </span>
+          )}
         </div>
       </div>
 
-      {(() => {
-        const tabsDisponibles = [
-          { key: "encuestas" as const, icon: Vote, label: dict.eventos.panel.tabEncuestas },
-          { key: "preguntas" as const, icon: MessageSquare, label: dict.eventos.panel.tabPreguntas },
-          { key: "nube_ideas" as const, icon: Cloud, label: dict.eventos.panel.tabNube },
-        ].filter(t => {
-          const ha = evento.herramientas_activas;
-          if (!ha) return false;
-          if (t.key === "encuestas") return ha.encuestas;
-          if (t.key === "preguntas") return ha.preguntas;
-          if (t.key === "nube_ideas") return ha.nube;
-          return false;
-        });
+      {/* --- MAIN LAYOUT WRAPPER --- */}
+      <div className="max-w-md mx-auto px-4 mt-4 relative z-10 space-y-3">
+            {/* --- TABS NAV --- */}
+            {(() => {
+              const tabsDisponibles = [
+                { key: "encuestas" as const, icon: Vote, label: dict.eventos.panel.tabEncuestas },
+                { key: "preguntas" as const, icon: MessageSquare, label: dict.eventos.panel.tabPreguntas },
+                { key: "nube_ideas" as const, icon: Cloud, label: dict.eventos.panel.tabNube },
+              ].filter(t => {
+                const ha = evento.herramientas_activas;
+                if (!ha) return false;
+                if (t.key === "encuestas") return ha.encuestas;
+                if (t.key === "preguntas") return ha.preguntas;
+                if (t.key === "nube_ideas") return ha.nube;
+                return false;
+              });
 
-        const tabCount = tabsDisponibles.length;
-        const tabWidth = tabCount > 0 ? `calc(${100 / tabCount}% - 4px)` : '0px';
+              const tabCount = tabsDisponibles.length;
+              const tabWidth = tabCount > 0 ? `calc(${100 / tabCount}% - 4px)` : '0px';
 
-        const getLeftPosition = () => {
-          const idx = tabsDisponibles.findIndex(t => t.key === activeTab);
-          if (idx === -1) return '4px';
-          return `calc(${(idx / tabCount) * 100}% + 4px)`;
-        };
+              const getLeftPosition = () => {
+                const idx = tabsDisponibles.findIndex(t => t.key === activeTab);
+                if (idx === -1) return '4px';
+                return `calc(${(idx / tabCount) * 100}% + 4px)`;
+              };
 
-        if (tabCount === 0) return null;
+              if (tabCount === 0) return null;
 
-        return (
-          <nav className="max-w-md mx-auto px-4 mt-3">
-            <div className="flex bg-zinc-900/50 border border-zinc-850 p-1 rounded-2xl backdrop-blur-sm relative">
-              {tabsDisponibles.map(({ key, icon: Icon, label }) => (
+              return (
+                <nav>
+                  <div className="flex bg-zinc-900/50 border border-zinc-850 p-1 rounded-2xl backdrop-blur-sm relative">
+                    {tabsDisponibles.map(({ key, icon: Icon, label }) => (
+                      <button
+                        key={key}
+                        onClick={() => setActiveTab(key)}
+                        className={`flex-1 flex items-center justify-center gap-2 py-3 px-2 rounded-xl text-xs font-extrabold uppercase tracking-wider transition-all cursor-pointer relative z-10 ${
+                          activeTab === key
+                            ? "text-white"
+                            : "text-zinc-500 hover:text-zinc-300"
+                        }`}
+                      >
+                        <Icon size={15} />
+                        {label}
+                        {evento.herramienta_activa === key && (
+                          <span className="w-1.5 h-1.5 bg-cyan-400 rounded-full absolute top-2.5 right-2.5 animate-pulse" />
+                        )}
+                      </button>
+                    ))}
+
+                    <div
+                      className={`absolute top-1 bottom-1 rounded-xl transition-all duration-300 pointer-events-none ${tabColorMap[activeTab]?.active || 'from-blue-600 to-indigo-600'} bg-gradient-to-r`}
+                      style={{
+                        width: tabWidth,
+                        left: getLeftPosition(),
+                      }}
+                    />
+                  </div>
+                </nav>
+              );
+            })()}
+
+            {/* --- BOTÓN SEMÁFORO (presencial only — virtual has it in sidebar) --- */}
+            {evento.modalidad !== 'virtual' && evento.herramientas_activas?.semaforo && (
+              <div className="relative z-10">
                 <button
-                  key={key}
-                  onClick={() => setActiveTab(key)}
-                  className={`flex-1 flex items-center justify-center gap-2 py-3 px-2 rounded-xl text-xs font-extrabold uppercase tracking-wider transition-all cursor-pointer relative z-10 ${
-                    activeTab === key
-                      ? "text-white"
-                      : "text-zinc-500 hover:text-zinc-300"
+                  onClick={handleVotoSemaforo}
+                  disabled={cooldown > 0 || semaforoYaVoto || !dispositivoId}
+                  className={`w-full p-4 rounded-2xl flex items-center justify-center gap-3 transition-all cursor-pointer font-black text-xs uppercase tracking-wider ${
+                    cooldown > 0 || semaforoYaVoto
+                      ? 'bg-zinc-900 border border-zinc-800 text-zinc-500 shadow-inner'
+                      : 'bg-rose-500 hover:bg-rose-600 border border-rose-400/50 text-white shadow-[0_0_20px_rgba(244,63,94,0.3)] hover:shadow-[0_0_30px_rgba(244,63,94,0.5)]'
                   }`}
                 >
-                  <Icon size={15} />
-                  {label}
-                  {evento.herramienta_activa === key && (
-                    <span className="w-1.5 h-1.5 bg-cyan-400 rounded-full absolute top-2.5 right-2.5 animate-pulse" />
+                  {semaforoYaVoto ? (
+                    <>
+                      <CheckCircle2 size={18} />
+                      <span>Voto registrado en esta ronda</span>
+                    </>
+                  ) : cooldown > 0 ? (
+                    <>
+                      <AlertCircle size={18} />
+                      <span>Enviado ({cooldown}s)</span>
+                    </>
+                  ) : (
+                    <>
+                      <AlertTriangle size={18} className="animate-pulse" />
+                      <span>NO ENTIENDO, ME PERDÍ (Anonimo)</span>
+                    </>
                   )}
                 </button>
-              ))}
-
-              <div
-                className={`absolute top-1 bottom-1 rounded-xl transition-all duration-300 pointer-events-none ${tabColorMap[activeTab]?.active || 'from-blue-600 to-indigo-600'} bg-gradient-to-r`}
-                style={{
-                  width: tabWidth,
-                  left: getLeftPosition(),
-                }}
-              />
-            </div>
-          </nav>
-        );
-      })()}
-
-      {/* --- BOTÓN SEMÁFORO (Visible en cualquier tab si está activo) --- */}
-      {evento.herramientas_activas?.semaforo && (
-        <div className="max-w-md mx-auto px-4 mt-4 relative z-10">
-          <button
-            onClick={handleVotoSemaforo}
-            disabled={cooldown > 0 || semaforoYaVoto || !dispositivoId}
-            className={`w-full p-4 rounded-2xl flex items-center justify-center gap-3 transition-all cursor-pointer font-black text-xs uppercase tracking-wider ${
-              cooldown > 0 || semaforoYaVoto
-                ? 'bg-zinc-900 border border-zinc-800 text-zinc-500 shadow-inner'
-                : 'bg-rose-500 hover:bg-rose-600 border border-rose-400/50 text-white shadow-[0_0_20px_rgba(244,63,94,0.3)] hover:shadow-[0_0_30px_rgba(244,63,94,0.5)]'
-            }`}
-          >
-            {semaforoYaVoto ? (
-              <>
-                <CheckCircle2 size={18} />
-                <span>Voto registrado en esta ronda</span>
-              </>
-            ) : cooldown > 0 ? (
-              <>
-                <AlertCircle size={18} />
-                <span>Enviado ({cooldown}s)</span>
-              </>
-            ) : (
-              <>
-                <AlertTriangle size={18} className="animate-pulse" />
-                <span>NO ENTIENDO, ME PERDÍ (Anonimo)</span>
-              </>
+              </div>
             )}
-          </button>
-        </div>
-      )}
 
-      <main className="max-w-md mx-auto px-4 mt-4 space-y-4 relative z-10">
+            {/* --- MAIN CONTENT --- */}
+            <main className="space-y-4 relative z-10">
         
         {/* --- PESTAÑA 1: ENCUESTAS --- */}
         {activeTab === "encuestas" && (
@@ -1535,6 +1544,7 @@ export default function EventoPage({ params }: { params: Promise<{ id: string }>
           </div>
         )}
       </main>
+      </div>
 
       <AnimatePresence>
         {showNotification && (

@@ -4,7 +4,8 @@ import { useState, useEffect, use } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { ThumbsUp, QrCode, Sparkles, Smartphone, Award, MessageCircle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import QRCode from "react-qr-code";
+import dynamic from "next/dynamic";
+const QRCode = dynamic(() => import("react-qr-code"), { ssr: false });
 import Image from "next/image";
 
 interface Pregunta {

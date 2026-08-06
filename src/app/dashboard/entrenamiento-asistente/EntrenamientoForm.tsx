@@ -18,7 +18,6 @@ import {
   Upload,
   Trash2,
   RefreshCw,
-  FileDown,
   Brain,
   BookOpen,
 } from 'lucide-react'

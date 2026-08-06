@@ -2,11 +2,10 @@
 
 import { useState, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Calendar, Zap, Sparkles, ChevronRight, Search, SlidersHorizontal, BookOpen, Film } from 'lucide-react'
+import { Calendar, Zap, ChevronRight, Search, SlidersHorizontal, Film } from 'lucide-react'
 import { format } from 'date-fns'
 import { es, enUS, pt } from 'date-fns/locale'
 import Link from 'next/link'
-import { getYouTubeID } from '@/services/videos'
 import { useLanguage } from '@/contexts/LanguageContext'
 
 interface AccionesClientProps {

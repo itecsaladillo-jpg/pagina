@@ -17,8 +17,6 @@ import {
   X,
   CheckCircle,
   Upload,
-  Video,
-  ImageIcon
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import type { NewsFlashMulticanal } from '@/services/news'

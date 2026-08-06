@@ -11,12 +11,10 @@ export default async function SettingsPage() {
   if (!admin || admin.role !== 'admin') redirect('/dashboard')
 
   const supabase = await createClient()
-  const { data: settings } = await supabase
-    .from('site_settings')
-    .select('*')
-    .single()
-
-  const apiSettings = await getSettingsAction()
+  const [{ data: settings }, apiSettings] = await Promise.all([
+    supabase.from('site_settings').select('*').single(),
+    getSettingsAction()
+  ])
 
   return (
     <div className="space-y-8 animate-fade-in">

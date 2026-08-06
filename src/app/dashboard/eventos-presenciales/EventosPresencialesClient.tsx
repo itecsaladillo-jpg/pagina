@@ -10,7 +10,6 @@ import {
   Copy, 
   Trash2, 
   Play, 
-  Eye, 
   Check, 
   AlertTriangle,
   X,
@@ -26,6 +25,7 @@ interface Evento {
   slug_qr: string;
   estado_activo: boolean;
   modalidad: "presencial" | "virtual";
+  meet_url: string | null;
   herramienta_activa: string;
   created_at: string;
 }
@@ -45,6 +45,7 @@ export default function EventosPresencialesClient({ initialEventos }: { initialE
   const [fechaTime, setFechaTime] = useState("");
   const [slugQr, setSlugQr] = useState("");
   const [modalidad, setModalidad] = useState<"presencial" | "virtual">("presencial");
+  const [meetUrl, setMeetUrl] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -142,12 +143,14 @@ export default function EventosPresencialesClient({ initialEventos }: { initialE
       return;
     }
     const anioCompleto = anio.length === 2 ? `20${anio}` : anio;
-    const fechaISO = new Date(`${anioCompleto}-${mes}-${dia}T${fechaTime}:00`).toISOString();
+    const fechaDateObj = new Date(`${anioCompleto}-${mes}-${dia}T${fechaTime}:00`);
 
-    if (isNaN(new Date(fechaISO).getTime())) {
+    if (isNaN(fechaDateObj.getTime())) {
       setError("La fecha ingresada no es válida.");
       return;
     }
+
+    const fechaISO = fechaDateObj.toISOString();
 
     setLoading(true);
     setError("");
@@ -161,6 +164,7 @@ export default function EventosPresencialesClient({ initialEventos }: { initialE
           fecha: fechaISO,
           estado_activo: true,
           modalidad: modalidad,
+          meet_url: modalidad === 'virtual' ? meetUrl.trim() || null : null,
           herramienta_activa: "encuestas"
         })
         .select()
@@ -179,6 +183,7 @@ export default function EventosPresencialesClient({ initialEventos }: { initialE
         setFechaDate("");
         setFechaTime("");
         setSlugQr("");
+        setMeetUrl("");
       }
     } catch (err) {
       console.error(err);
@@ -452,6 +457,25 @@ export default function EventosPresencialesClient({ initialEventos }: { initialE
                   </button>
                 </div>
               </div>
+
+              {/* Campo Meet URL (solo virtual) */}
+              {modalidad === "virtual" && (
+                <div className="space-y-1">
+                  <label className="text-[10px] uppercase font-bold tracking-wider text-zinc-400 block px-1">
+                    Enlace Google Meet (opcional)
+                  </label>
+                  <input
+                    type="url"
+                    placeholder="https://meet.google.com/xxx-xxxx-xxx"
+                    value={meetUrl}
+                    onChange={(e) => setMeetUrl(e.target.value)}
+                    className="w-full px-4 py-3 bg-zinc-900 border border-zinc-800 focus:border-indigo-500/50 rounded-2xl text-white placeholder-zinc-650 focus:outline-none transition-colors text-sm h-[48px]"
+                  />
+                  <p className="text-[10px] text-zinc-600 px-1">
+                    Podés completarlo después desde la consola del evento.
+                  </p>
+                </div>
+              )}
 
               <div className="space-y-1">
                 <label className="text-[10px] uppercase font-bold tracking-wider text-zinc-400 block px-1">

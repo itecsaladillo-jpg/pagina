@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { getFolderFilesAction } from './actions'
-import { FileText, Folder, ExternalLink, Loader2, File as FileIcon, Clock } from 'lucide-react'
+import { Folder, ExternalLink, Loader2, File as FileIcon, Clock } from 'lucide-react'
 
 interface Props {
   folderId: string

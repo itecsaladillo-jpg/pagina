@@ -21,7 +21,8 @@ import {
   ExternalLink,
   ChevronRight
 } from 'lucide-react'
-import QRCode from 'react-qr-code'
+import dynamic from 'next/dynamic'
+const QRCode = dynamic(() => import('react-qr-code'), { ssr: false })
 
 interface Certificado {
   codigo: string

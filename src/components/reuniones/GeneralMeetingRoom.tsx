@@ -1,18 +1,13 @@
 'use client'
 
 import { useState, useRef } from 'react'
-import { 
-  Video, 
-  ListChecks, 
-  History, 
-  Sparkles, 
-  Users,
-  FileText,
-  Loader2,
-  Clock
+import {
+  Video, VideoOff, ListChecks, History, Sparkles,
+  Users, FileText, Loader2, Clock, ExternalLink,
+  Copy, Hand, MessageSquare, Vote, Circle
 } from 'lucide-react'
 import { saveNotesAction, finalizeAndPublishAction } from '@/app/dashboard/reuniones/actions'
-import { JitsiMeetingEmbed } from '@/components/video/JitsiMeetingEmbed'
+
 
 interface Member {
   full_name: string
@@ -31,29 +26,29 @@ interface Props {
   member: Member
   initialContent: string
   history: MeetingHistory[]
+  meetUrl?: string | null
 }
 
-export function GeneralMeetingRoom({ member, initialContent, history }: Props) {
+export function GeneralMeetingRoom({ member, initialContent, history, meetUrl }: Props) {
   const [content, setContent] = useState(initialContent)
   const [isSaving, setIsSaving] = useState(false)
   const [isFinalizing, setIsFinalizing] = useState(false)
   const [lastSaved, setLastSaved] = useState<Date | null>(null)
   const [meetingActive, setMeetingActive] = useState(false)
-  
+  const [copiedName, setCopiedName] = useState(false)
+
   const saveTimer = useRef<NodeJS.Timeout>(undefined)
-  
+
   const canEdit = ['admin', 'coordinador'].includes(member.role)
 
-  // Auto-guardado
   const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     if (!canEdit) return
     const newContent = e.target.value
     setContent(newContent)
-    
+
     clearTimeout(saveTimer.current)
     saveTimer.current = setTimeout(async () => {
       setIsSaving(true)
-      // Usamos 'general' como ID especial o null si el action lo permite
       await saveNotesAction('general', newContent)
       setLastSaved(new Date())
       setIsSaving(false)
@@ -73,75 +68,84 @@ export function GeneralMeetingRoom({ member, initialContent, history }: Props) {
     setIsFinalizing(false)
   }
 
+  const copiarNombre = () => {
+    navigator.clipboard.writeText(member.full_name)
+    setCopiedName(true)
+    setTimeout(() => setCopiedName(false), 2000)
+  }
+
   return (
     <div className="space-y-10 animate-fade-in">
-      {/* ─── JITSI EMBED O LOBBY ─── */}
-      {meetingActive ? (
-        <div className="space-y-4">
-          <div className="relative aspect-video bg-black rounded-3xl border border-white/5 overflow-hidden shadow-2xl">
-            <div className="absolute top-4 left-4 z-10 bg-red-600 text-white text-[10px] font-extrabold px-2.5 py-1 rounded-full flex items-center gap-1.5 shadow-md tracking-wider">
-              <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
-              EN VIVO
-            </div>
-            <JitsiMeetingEmbed
-              roomName="itec-reunion-general"
-              displayName={member.full_name || 'Asistente ITEC'}
-              email={member.email || ''}
-              className="w-full h-full"
-            />
-          </div>
-          <button
-            onClick={() => setMeetingActive(false)}
-            className="w-full py-3 rounded-2xl bg-red-600/20 border border-red-500/30 text-red-400 font-bold text-sm flex items-center justify-center gap-2 hover:bg-red-600/30 transition-all"
-          >
-            Salir de la reunión
-          </button>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-          {/* Lado Izquierdo: Preview */}
-          <div className="space-y-4">
-            <div className="relative aspect-video bg-[#0a0f1e] rounded-3xl border border-white/5 overflow-hidden flex items-center justify-center shadow-2xl">
-              <div className="flex flex-col items-center gap-4">
-                <div className="w-20 h-20 rounded-full bg-blue-500/20 border border-blue-500/40 flex items-center justify-center text-3xl font-bold text-white shadow-lg">
-                  {member.full_name?.charAt(0) || 'A'}
+
+      {/* ─── BANNER GOOGLE MEET HÍBRIDO ─── */}
+      <div className="space-y-4">
+        {meetUrl ? (
+          <div className="bg-gradient-to-r from-emerald-950/60 to-cyan-950/40 border border-emerald-500/20 rounded-3xl p-6">
+            <div className="flex flex-col sm:flex-row items-center gap-4">
+              <div className="flex-1 flex items-center gap-4">
+                <div className="w-14 h-14 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center shrink-0">
+                  <Video className="w-7 h-7 text-emerald-400" />
                 </div>
-                <div className="flex items-center gap-2 px-3 py-1 bg-green-500/10 border border-green-500/20 rounded-full">
-                  <div className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
-                  <span className="text-green-400 text-[10px] font-bold uppercase tracking-widest">Listo para unirte</span>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+                    <span className="text-[10px] font-extrabold text-red-400 uppercase tracking-widest">Reunión en Vivo</span>
+                  </div>
+                  <h3 className="text-lg font-bold text-white mt-1">Google Meet — Reunión General</h3>
+                  <p className="text-xs text-emerald-300/70 mt-0.5">Videollamada abierta para todo el staff</p>
                 </div>
               </div>
+              <div className="flex items-center gap-2 shrink-0">
+                <a href={meetUrl} target="_blank" rel="noopener noreferrer"
+                  className="py-3 px-6 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm flex items-center gap-2 transition-all duration-200 shadow-lg hover:shadow-emerald-600/20">
+                  <ExternalLink className="w-4 h-4" />
+                  Unirse a Meet
+                </a>
+              </div>
             </div>
-          </div>
 
-          {/* Lado Derecho: Info y Acceso */}
-          <div className="space-y-6 lg:pl-6">
-            <div className="space-y-2">
-              <h1 className="text-4xl font-black text-white tracking-tight">Reunión General ITEC</h1>
-              <p className="text-[var(--text-secondary)] text-sm flex items-center gap-2">
-                <Users size={14} className="text-blue-400" />
-                <span>Espacio abierto para todo el staff</span>
+            {/* Módulo de ayuda */}
+            <div className="mt-4 pt-4 border-t border-emerald-500/10 flex flex-wrap items-center gap-4 text-xs">
+              <div className="flex items-center gap-2">
+                <Users className="w-3.5 h-3.5 text-emerald-400" />
+                <span className="text-emerald-300/70">Tu nombre:</span>
+                <span className="font-bold text-white">{member.full_name}</span>
+                <button onClick={copiarNombre}
+                  className="text-emerald-400/60 hover:text-emerald-400 transition-colors" title="Copiar nombre">
+                  <Copy className="w-3 h-3" />
+                </button>
+                {copiedName && <span className="text-[9px] text-emerald-400 font-bold">¡Copiado!</span>}
+              </div>
+              <span className="text-emerald-500/30 hidden sm:inline">|</span>
+              <p className="text-[10px] text-emerald-300/50 italic">
+                Tip: Mantén esta pestaña de ITEC abierta junto a Google Meet para usar las herramientas interactivas.
               </p>
             </div>
-
-            <div className="p-5 rounded-2xl bg-white/[0.02] border border-white/5 space-y-4">
-              <div className="flex items-center justify-between text-xs uppercase tracking-widest text-[var(--text-muted)]">
-                <span>Estado de la sala</span>
-                <span className="text-green-400 font-bold">Disponible</span>
+          </div>
+        ) : (
+          <div className="relative aspect-video bg-[#0a0f1e] rounded-3xl border border-white/5 overflow-hidden shadow-2xl flex items-center justify-center">
+            <div className="absolute top-4 left-4 z-10 bg-slate-700 text-white text-[10px] font-extrabold px-2.5 py-1 rounded-full flex items-center gap-1.5 shadow-md tracking-wider">
+              <VideoOff className="w-3 h-3" />
+              EN ESPERA
+            </div>
+            <div className="flex flex-col items-center gap-4 text-center px-6">
+              <div className="w-16 h-16 rounded-full bg-blue-500/10 border border-blue-500/30 flex items-center justify-center">
+                <Video className="w-7 h-7 text-blue-400" />
               </div>
-              <button
-                onClick={() => setMeetingActive(true)}
-                className="w-full py-4 px-6 rounded-2xl bg-green-600 hover:bg-green-500 text-white font-bold text-lg flex items-center justify-center gap-3 transition-all shadow-xl shadow-green-900/20 group"
-              >
-                <Video size={20} />
-                Unirse ahora
-              </button>
+              <div className="space-y-1.5">
+                <h3 className="text-sm font-bold text-white uppercase tracking-wider">Sala de Reunión</h3>
+                <p className="text-xs text-[var(--text-muted)] leading-relaxed max-w-[280px]">
+                  El enlace de Google Meet se activará cuando el coordinador lo configure.
+                </p>
+              </div>
+              <div className="flex items-center gap-2 px-3 py-1.5 bg-amber-500/10 border border-amber-500/20 rounded-full">
+                <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
+                <span className="text-[10px] font-bold text-amber-400 uppercase tracking-widest">En espera</span>
+              </div>
             </div>
           </div>
-        </div>
-      )}
-
-      <div className="section-divider" />
+        )}
+      </div>
 
       {/* ─── PANEL DE MINUTA ─── */}
       <div className="space-y-6">
@@ -155,7 +159,7 @@ export function GeneralMeetingRoom({ member, initialContent, history }: Props) {
               <p className="text-[var(--text-muted)] text-xs uppercase tracking-widest">Memoria Institucional</p>
             </div>
           </div>
-          
+
           <div className="flex items-center gap-4 text-[10px] uppercase tracking-widest">
             {isSaving ? (
               <span className="text-amber-400 flex items-center gap-2">

@@ -36,10 +36,11 @@ async function getMemberNotas() {
 }
 
 export default async function MuroPage() {
-  const member = await getCurrentMember()
+  const [member, notas] = await Promise.all([
+    getCurrentMember(),
+    getMemberNotas()
+  ])
   if (!member || member.status !== 'activo') redirect('/acceso-pendiente')
-
-  const notas = await getMemberNotas()
   const memberFlashes = notas.map((n) => ({
     id: n.news_flash_id ?? n.id,
     created_at: n.created_at,

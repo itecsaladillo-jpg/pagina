@@ -3,7 +3,8 @@
 import { useState, useEffect, use } from "react"
 import { createClient } from "@/lib/supabase/client"
 import Image from "next/image"
-import { QRCode } from "react-qr-code"
+import dynamic from "next/dynamic";
+const QRCode = dynamic(() => import("react-qr-code").then(m => m.QRCode), { ssr: false });
 import { AlertCircle, Cloud, Vote, MessageSquare, Users, ThumbsUp, Sparkles, ChevronRight, Activity } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 

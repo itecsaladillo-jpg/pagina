@@ -5,7 +5,8 @@ import { createClient } from "@/lib/supabase/client";
 import { Sparkles, CloudLightning, Activity, Award, QrCode, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
-import QRCode from "react-qr-code";
+import dynamic from "next/dynamic";
+const QRCode = dynamic(() => import("react-qr-code"), { ssr: false });
 
 interface PalabrasConteo {
   [key: string]: number;

@@ -196,6 +196,7 @@ export interface Evento {
   fecha: string
   estado_activo: boolean
   modalidad: 'presencial' | 'virtual' | null
+  meet_url: string | null
   herramienta_activa: 'encuestas' | 'preguntas' | 'nube_ideas'
   encuesta_activa_id: string | null
   nube_activa_id: string | null
@@ -203,6 +204,92 @@ export interface Evento {
   modo_pantalla_gigante: ModoPantallaGigante
   semaforo_last_reset_at: string | null
   nube_concepto: string | null
+}
+
+// ─────────────────────────────────────────
+// TABLAS DE INTERACCIÓN REALTIME (Esquema Híbrido)
+// ─────────────────────────────────────────
+
+export interface ClaseVirtual {
+  id: string
+  titulo: string
+  url_stream: string
+  estado_sidebar: 'chat' | 'modometro'
+  modalidad: 'presencial' | 'virtual'
+  meet_url: string | null
+  en_vivo?: boolean
+  created_at: string
+}
+
+export type ModometroEstado = 'voy_bien' | 'me_perdi' | 'muy_rapido'
+
+export interface ClaseModometroVoto {
+  id: string
+  clase_id: string
+  member_id: string | null
+  nombre_completo: string
+  estado: ModometroEstado
+  created_at: string
+  updated_at: string
+}
+
+export type ManoAlzadaEstado = 'esperando' | 'atendido'
+
+export interface ClaseManoAlzada {
+  id: string
+  clase_id: string
+  member_id: string | null
+  nombre_completo: string
+  estado: ManoAlzadaEstado
+  created_at: string
+}
+
+export interface ClasePregunta {
+  id: string
+  clase_id: string
+  member_id: string | null
+  nombre_completo: string
+  pregunta: string
+  votos_count: number
+  resuelta: boolean
+  created_at: string
+}
+
+export interface ClasePreguntaVoto {
+  id: string
+  pregunta_id: string
+  member_id: string
+  created_at: string
+}
+
+export interface ClaseEncuesta {
+  id: string
+  clase_id: string
+  pregunta: string
+  opciones: string[]
+  activa: boolean
+  created_at: string
+}
+
+export interface ClaseEncuestaRespuesta {
+  id: string
+  encuesta_id: string
+  member_id: string
+  nombre_completo: string
+  opcion_index: number
+  created_at: string
+}
+
+export type SemaforoColor = 'verde' | 'amarillo' | 'rojo'
+
+export interface ClaseSemaforoVoto {
+  id: string
+  clase_id: string
+  member_id: string | null
+  nombre_completo: string
+  color: SemaforoColor
+  created_at: string
+  updated_at: string
 }
 
 // ─────────────────────────────────────────
@@ -284,6 +371,46 @@ export interface Database {
         Row: ApiSetting
         Insert: Omit<ApiSetting, 'id' | 'updated_at'>
         Update: Partial<Omit<ApiSetting, 'id' | 'updated_at'>>
+      }
+      clases_virtuales: {
+        Row: ClaseVirtual
+        Insert: Omit<ClaseVirtual, 'id' | 'created_at'>
+        Update: Partial<Omit<ClaseVirtual, 'id' | 'created_at'>>
+      }
+      clase_modometro_votos: {
+        Row: ClaseModometroVoto
+        Insert: Omit<ClaseModometroVoto, 'id' | 'created_at' | 'updated_at'>
+        Update: Partial<Omit<ClaseModometroVoto, 'id' | 'created_at'>>
+      }
+      clase_mano_alzada: {
+        Row: ClaseManoAlzada
+        Insert: Omit<ClaseManoAlzada, 'id' | 'created_at'>
+        Update: Partial<Omit<ClaseManoAlzada, 'id' | 'created_at'>>
+      }
+      clase_preguntas: {
+        Row: ClasePregunta
+        Insert: Omit<ClasePregunta, 'id' | 'created_at' | 'votos_count' | 'resuelta'>
+        Update: Partial<Omit<ClasePregunta, 'id' | 'created_at'>>
+      }
+      clase_pregunta_votos: {
+        Row: ClasePreguntaVoto
+        Insert: Omit<ClasePreguntaVoto, 'id' | 'created_at'>
+        Update: Partial<Omit<ClasePreguntaVoto, 'id' | 'created_at'>>
+      }
+      clase_encuestas: {
+        Row: ClaseEncuesta
+        Insert: Omit<ClaseEncuesta, 'id' | 'created_at' | 'activa'>
+        Update: Partial<Omit<ClaseEncuesta, 'id' | 'created_at'>>
+      }
+      clase_encuesta_respuestas: {
+        Row: ClaseEncuestaRespuesta
+        Insert: Omit<ClaseEncuestaRespuesta, 'id' | 'created_at'>
+        Update: Partial<Omit<ClaseEncuestaRespuesta, 'id' | 'created_at'>>
+      }
+      clase_semaforo_votos: {
+        Row: ClaseSemaforoVoto
+        Insert: Omit<ClaseSemaforoVoto, 'id' | 'created_at' | 'updated_at'>
+        Update: Partial<Omit<ClaseSemaforoVoto, 'id' | 'created_at'>>
       }
     }
   }

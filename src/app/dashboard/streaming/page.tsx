@@ -4,13 +4,10 @@ import {
   Tv, 
   Radio, 
   Settings, 
-  AlertCircle, 
   ExternalLink,
   Laptop,
-  Users,
   Video,
   Monitor,
-  Heart
 } from 'lucide-react'
 import Link from 'next/link'
 
