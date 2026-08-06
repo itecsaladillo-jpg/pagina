@@ -1,83 +1,86 @@
-import { NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import Groq from 'groq-sdk';
 import type { ChatCompletionMessageParam } from 'groq-sdk/resources/chat/completions';
 import { createClient } from '@/lib/supabase/server';
-import staticDocsContext from '@/lib/docsContext.json';
+import { recuperarContextoRAG } from '@/lib/rag/ragCascade';
 
-async function fetchDocsContext(): Promise<string> {
+// ============================================================
+// Configuración
+// ============================================================
+
+const FALLBACK_PROMPT = `Sos el asistente virtual oficial de ITEC (Instituto Tecnológico de Saladillo), experto en Augusto Cicaré y su obra.
+
+REGLAS:
+- Respondé en español rioplatense formal (con "vos").
+- Priorizá la información de los documentos institucionales.
+- No inventes datos. Si no sabés la respuesta, dilo claramente y sugerí contactar a la institución.
+- Sé directo, conciso y útil.`;
+
+const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+
+// ============================================================
+// Obtener Prompt Maestro desde Supabase
+// ============================================================
+
+async function fetchPromptMaestro(): Promise<string> {
   try {
     const supabase = await createClient();
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from('ai_prompt_settings')
-      .select('system_prompt')
-      .eq('clave_prompt', 'docs_context')
+      .select('system_prompt, temperature, max_tokens')
+      .eq('clave_prompt', 'asistente_global')
       .maybeSingle();
-    if (data?.system_prompt) return data.system_prompt;
-  } catch (err) {
-    console.warn('[chat] Error fetching docs context from DB:', err);
-  }
-  return staticDocsContext.text;
-}
 
-const groq = new Groq({
-  apiKey: process.env.GROQ_API_KEY,
-});
-
-async function searchWeb(query: string): Promise<string> {
-  try {
-    const resp = await fetch(`https://html.duckduckgo.com/html/?q=${encodeURIComponent(query)}`, {
-      signal: AbortSignal.timeout(8000),
-      headers: { 'User-Agent': 'Mozilla/5.0' },
-    });
-    const html = await resp.text();
-    const results: string[] = [];
-    const regex = /<a[^>]*class="result__a"[^>]*href="([^"]*)"[^>]*>([\s\S]*?)<\/a>/g;
-    let match: RegExpExecArray | null;
-    let i = 0;
-    while ((match = regex.exec(html)) !== null && i < 3) {
-      const title = match[2].replace(/<[^>]*>/g, '').trim();
-      results.push(`${title} (${match[1]})`);
-      i++;
+    if (error) {
+      console.warn('[chat] Error fetching prompt maestro:', error.message);
+      return FALLBACK_PROMPT;
     }
-    return results.length ? results.join('\n') : '';
-  } catch {
-    return '';
+
+    if (!data?.system_prompt) {
+      console.warn('[chat] Prompt maestro vacío, usando fallback');
+      return FALLBACK_PROMPT;
+    }
+
+    return data.system_prompt;
+  } catch (err) {
+    console.error('[chat] Excepción fetching prompt maestro:', err);
+    return FALLBACK_PROMPT;
   }
 }
 
-function extractKeywords(message: string): string {
-  const cleaned = message.replace(/[^\w\s]/g, ' ').trim();
-  const words = cleaned.split(/\s+/).filter(w => w.length > 3);
-  return words.slice(0, 6).join(' ');
-}
+// ============================================================
+// Obtener datos dinámicos de Supabase
+// ============================================================
 
-async function fetchDynamicContext() {
+async function fetchDynamicContext(): Promise<string> {
   const supabase = await createClient();
   const sections: string[] = [];
 
+  // Comisiones activas
   try {
-    const { data: commissions } = await supabase
+    const { data } = await supabase
       .from('commissions')
-      .select('name, description, color')
+      .select('name, description')
       .eq('is_active', true)
       .order('name');
 
-    if (commissions?.length) {
+    if (data?.length) {
       sections.push(
         '## Comisiones / Áreas de ITEC\n' +
-        commissions.map((c) => `- ${c.name}${c.description ? `: ${c.description}` : ''}`).join('\n')
+        data.map((c) => `- ${c.name}${c.description ? `: ${c.description}` : ''}`).join('\n')
       );
     }
   } catch (err) {
     console.warn('[chat] Error fetching commissions:', err);
   }
 
+  // Staff
   try {
-    const { data: miembros } = await supabase.rpc('obtener_miembros_publicos');
-    if (miembros?.length) {
+    const { data } = await supabase.rpc('obtener_miembros_publicos');
+    if (data?.length) {
       sections.push(
         '## Staff de ITEC\n' +
-        miembros
+        data
           .filter((m: any) => m.role !== 'asistente')
           .map((m: any) => `- ${m.full_name} (${m.role})${m.frase_itec ? ` — "${m.frase_itec}"` : ''}`)
           .join('\n')
@@ -87,18 +90,19 @@ async function fetchDynamicContext() {
     console.warn('[chat] Error fetching members:', err);
   }
 
+  // Próximas actividades
   try {
-    const { data: actions } = await supabase
+    const { data } = await supabase
       .from('itec_actions')
-      .select('title, type, status, start_date, end_date, description, location, target_audience')
+      .select('title, type, status, start_date, description')
       .in('status', ['planificacion', 'en_curso'])
       .order('start_date', { ascending: true })
       .limit(10);
 
-    if (actions?.length) {
+    if (data?.length) {
       sections.push(
         '## Próximas actividades / Eventos\n' +
-        actions.map((a) => {
+        data.map((a) => {
           const fecha = a.start_date
             ? new Date(a.start_date).toLocaleDateString('es-AR')
             : 'fecha a confirmar';
@@ -110,119 +114,119 @@ async function fetchDynamicContext() {
     console.warn('[chat] Error fetching actions:', err);
   }
 
+  // Noticias recientes
   try {
-    const { data: notas } = await supabase
+    const { data } = await supabase
       .from('notas_publico')
       .select('titulo, contenido, created_at')
       .eq('is_published', true)
       .order('created_at', { ascending: false })
-      .limit(10);
+      .limit(5);
 
-    if (notas?.length) {
+    if (data?.length) {
       sections.push(
         '## Noticias recientes\n' +
-        notas.map((n) => {
+        data.map((n) => {
           const fecha = n.created_at ? new Date(n.created_at).toLocaleDateString('es-AR') : '';
-          const preview = n.contenido.length > 300 ? n.contenido.slice(0, 300) + '\u2026' : n.contenido;
+          const preview = n.contenido.length > 300 ? n.contenido.slice(0, 300) + '…' : n.contenido;
           return `- [${fecha}] ${n.titulo}: ${preview}`;
         }).join('\n')
       );
     }
   } catch (err) {
-    console.warn('[chat] Error fetching notas:', err);
-  }
-
-  try {
-    const { data: conversaciones } = await supabase
-      .from('chat_conocimiento')
-      .select('historial, tipo')
-      .order('created_at', { ascending: false })
-      .limit(5);
-
-    if (conversaciones?.length) {
-      sections.push(
-        '## Conversaciones relevantes guardadas\n' +
-        conversaciones.map((c: any) => {
-          const msgs = (c.historial || []) as { rol: string; texto: string }[];
-          const resumen = msgs.slice(0, 4).map(m =>
-            `${m.rol === 'user' ? 'Usuario' : 'Asistente'}: ${m.texto.slice(0, 150)}`
-          ).join('\n');
-          return `[${c.tipo === 'manual' ? 'Guardada manualmente' : 'Conversación relevante'}]\n${resumen}`;
-        }).join('\n---\n')
-      );
-    }
-  } catch (err) {
-    console.warn('[chat] Error fetching saved conversations:', err);
+    console.warn('[chat] Error fetching noticias:', err);
   }
 
   return sections.join('\n\n');
 }
 
-export async function POST(request: Request) {
+// ============================================================
+// POST /api/chat — Streaming con Groq llama-3.3-70b-versatile
+// ============================================================
+
+export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const userMessage = body.message;
+    const userMessage = body.message as string;
     const historial: { rol: string; texto: string }[] = body.historial || [];
+    const sessionId = body.sessionId as string | undefined;
 
-    if (!userMessage) {
-      return NextResponse.json({ error: 'Mensaje requerido' }, { status: 400 });
+    if (!userMessage?.trim()) {
+      return new Response(JSON.stringify({ error: 'Mensaje requerido' }), { status: 400 });
     }
 
-    let internetContext = '';
-
-    const keywords = extractKeywords(userMessage);
-    if (keywords) {
-      internetContext = await searchWeb(`ITEC Saladillo ${keywords}`);
-    }
-
-    const [baseDocs, datosDinamicos] = await Promise.all([
-      fetchDocsContext(),
+    // 1. Obtener Prompt Maestro + Datos dinámicos en paralelo
+    const [promptMaestro, datosDinamicos] = await Promise.all([
+      fetchPromptMaestro(),
       fetchDynamicContext(),
     ]);
 
-    const webSection = internetContext
-      ? `\n--- INFORMACIÓN DE INTERNET (usar solo si no se encuentra en las fuentes anteriores) ---\n${internetContext}\n----------------------------\n`
+    // 2. Obtener contexto RAG desde pgvector
+    const supabase = await createClient();
+    const ragResult = await recuperarContextoRAG(userMessage, supabase, sessionId);
+
+    // 3. Construir el system prompt combinado
+    const ragSection = ragResult.contexto
+      ? `\n<retrieved_context>\n${ragResult.contexto}\n</retrieved_context>\n`
       : '';
 
-    const systemPrompt = `Eres el asistente virtual oficial de ITEC, experto en Augusto Cicaré.
+    const dynamicSection = datosDinamicos
+      ? `\n--- DATOS EN VIVO ---\n${datosDinamicos}\n--------------------\n`
+      : '';
 
-ORDEN DE PRIORIDAD DE FUENTES:
-1. INFORMACIÓN DE BASE (documentos institucionales de ITEC): usá esta como fuente principal y más confiable.
-2. DATOS EN VIVO (comisiones, staff, actividades, noticias de ITEC): usá esta como fuente secundaria.
-3. CONVERSACIONES GUARDADAS (interacciones previas consideradas relevantes): usá esta como fuente terciaria.
-4. INFORMACIÓN DE INTERNET: solo si no encontraste respuesta en las fuentes anteriores, podés consultar datos de internet. En ese caso, indicá que la información proviene de búsqueda web.
+    const systemPrompt = `${promptMaestro}
+${ragSection}${dynamicSection}`;
 
-Respondé de forma directa, concisa y sin rodeos. Priorizá la información útil en pocas líneas.
-Si no sabes la respuesta, indícalo de manera cortés y sugiere contactar a la institución.
+    // 4. Preparar mensajes para Groq
+    const messages: ChatCompletionMessageParam[] = [
+      { role: 'system', content: systemPrompt },
+      ...historial.slice(-20).map(m => ({
+        role: m.rol === 'assistant' ? 'assistant' as const : 'user' as const,
+        content: m.texto,
+      })),
+      { role: 'user', content: userMessage },
+    ];
 
---- INFORMACIÓN DE BASE ---
-${baseDocs}
----------------------------
-
---- DATOS EN VIVO ---
-${datosDinamicos || '(No hay datos dinámicos disponibles en este momento)'}
----------------------------
-${webSection}--- REGLAS DE RESPUESTA ---
-- Responde siempre en español rioplatense formal (con "vos").
-- Si usaste información de internet (fuente 4), comienza tu respuesta con "Según información disponible en internet:".
-- No inventes datos. Si no hay suficiente información de ninguna fuente, dilo claramente.`;
-
-    const chatCompletion = await groq.chat.completions.create({
-      messages: [
-        { role: 'system', content: systemPrompt },
-        ...historial.slice(-20).map(m => ({ role: m.rol === 'assistant' ? 'assistant' : 'user', content: m.texto })),
-        { role: 'user', content: userMessage },
-      ] as ChatCompletionMessageParam[],
-      model: 'llama-3.1-8b-instant',
+    // 5. Streaming con Groq llama-3.3-70b-versatile
+    const stream = await groq.chat.completions.create({
+      messages,
+      model: 'llama-3.3-70b-versatile',
       temperature: 0.4,
-      max_tokens: 300,
+      max_tokens: 1024,
+      stream: true,
     });
 
-    const reply = chatCompletion.choices[0]?.message?.content || 'Sin respuesta.';
+    // 6. Convertir a ReadableStream para streaming nativo
+    const encoder = new TextEncoder();
+    const readable = new ReadableStream({
+      async start(controller) {
+        try {
+          for await (const chunk of stream) {
+            const content = chunk.choices[0]?.delta?.content;
+            if (content) {
+              controller.enqueue(encoder.encode(content));
+            }
+          }
+          controller.close();
+        } catch (err) {
+          controller.error(err);
+        }
+      },
+    });
 
-    return NextResponse.json({ reply });
+    return new Response(readable, {
+      headers: {
+        'Content-Type': 'text/plain; charset=utf-8',
+        'Cache-Control': 'no-cache',
+        'X-RAG-Level': ragResult.nivel,
+        'X-RAG-Score': ragResult.score.toFixed(3),
+      },
+    });
   } catch (error: any) {
-    console.error('Error en API route:', error);
-    return NextResponse.json({ error: error.message || 'Error del servidor' }, { status: 500 });
+    console.error('[chat] Error:', error);
+    return new Response(
+      JSON.stringify({ error: error.message || 'Error del servidor' }),
+      { status: 500, headers: { 'Content-Type': 'application/json' } }
+    );
   }
 }
