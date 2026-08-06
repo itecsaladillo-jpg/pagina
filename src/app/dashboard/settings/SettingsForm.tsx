@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { updateSiteSettingsAction } from './actions'
-import { Save, Loader2, CheckCircle2, AlertCircle, Mail, Lock, Layout, Cloud, Eye, EyeOff, Folder, FileCode } from 'lucide-react'
+import { Save, Loader2, CheckCircle2, AlertCircle, Mail, Lock, Layout, Cloud, Eye, EyeOff, Folder, FileCode, Video } from 'lucide-react'
 
 interface Props {
   settings: any
@@ -17,6 +17,7 @@ export function SettingsForm({ settings }: Props) {
     hero_title: settings.hero_title || '',
     hero_subtitle: settings.hero_subtitle || '',
     contact_email: settings.contact_email || '',
+    general_meet_url: settings.general_meet_url || '',
     google_drive_email: settings.google_drive_email || '',
     google_drive_password: settings.google_drive_password || '',
     google_drive_root_id: settings.google_drive_root_id || '',
@@ -76,6 +77,28 @@ export function SettingsForm({ settings }: Props) {
               className="w-full bg-white/5 border border-[var(--border-subtle)] rounded-xl px-4 py-3 text-white text-sm focus:border-[var(--accent-primary)] outline-none transition-all resize-none"
             />
           </div>
+        </div>
+      </div>
+
+      {/* Sección Sala de Reuniones */}
+      <div className="space-y-6">
+        <div className="flex items-center gap-3 border-b border-[var(--border-subtle)] pb-2">
+          <Video size={18} className="text-cyan-400" />
+          <h3 className="text-white font-bold text-sm uppercase tracking-wider">Sala de Reuniones</h3>
+        </div>
+
+        <div className="space-y-2">
+          <label className="text-[var(--text-secondary)] text-[10px] uppercase font-bold tracking-widest ml-1">URL de Google Meet</label>
+          <input
+            type="url"
+            placeholder="https://meet.google.com/xxx-xxxx-xxx"
+            value={formData.general_meet_url}
+            onChange={(e) => setFormData({ ...formData, general_meet_url: e.target.value })}
+            className="w-full bg-white/5 border border-[var(--border-subtle)] rounded-xl px-4 py-3 text-white text-sm focus:border-cyan-500/50 outline-none transition-all"
+          />
+          <p className="text-[10px] text-[var(--text-muted)] ml-1">
+            * Link fijo de la sala de reuniones. Se muestra en /dashboard/reuniones.
+          </p>
         </div>
       </div>
 

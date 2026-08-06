@@ -8,6 +8,7 @@ export async function updateSiteSettingsAction(formData: {
   hero_title: string
   hero_subtitle: string
   contact_email: string
+  general_meet_url?: string
   google_drive_email?: string
   google_drive_password?: string
   google_drive_root_id?: string
@@ -44,6 +45,7 @@ export async function updateSiteSettingsAction(formData: {
     }
 
     revalidatePath('/dashboard/settings')
+    revalidatePath('/dashboard/reuniones')
     revalidatePath('/dashboard/drive')
     revalidatePath('/')
     

@@ -22,44 +22,6 @@ export async function getGeneralMeetUrlAction(): Promise<string | null> {
 }
 
 /**
- * Actualiza la URL del enlace general de la Sala de Reuniones (solo admins).
- */
-export async function updateGeneralMeetUrlAction(meetUrl: string) {
-  try {
-    const admin = await getCurrentMember()
-    if (!admin || admin.role !== 'admin') {
-      return { success: false, error: 'Solo administradores pueden modificar el enlace de la sala.' }
-    }
-
-    const supabase = await createClient()
-    const { data: settings } = await supabase
-      .from('site_settings')
-      .select('id')
-      .single()
-
-    if (!settings) {
-      return { success: false, error: 'No se encontró la configuración del sitio.' }
-    }
-
-    const { error } = await supabase
-      .from('site_settings')
-      .update({ general_meet_url: meetUrl.trim() || null, updated_at: new Date().toISOString() })
-      .eq('id', settings.id)
-
-    if (error) {
-      console.error('[updateGeneralMeetUrl] Error:', error.message)
-      return { success: false, error: 'Error al actualizar el enlace.' }
-    }
-
-    revalidatePath('/dashboard/reuniones')
-    return { success: true }
-  } catch (e) {
-    console.error('[updateGeneralMeetUrl] Excepción:', e)
-    return { success: false, error: 'Error inesperado.' }
-  }
-}
-
-/**
  * Guarda o actualiza las notas activas de una sesión de reunión.
  */
 export async function saveNotesAction(commissionId: string, content: string) {
