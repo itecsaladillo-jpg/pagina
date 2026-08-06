@@ -104,7 +104,7 @@ const adminNavItems = [
     icon: 'M9.348 14.651a3.75 3.75 0 010-5.303m5.304 0a3.75 3.75 0 010 5.303m-7.425 2.122a6.75 6.75 0 010-9.546m9.546 0a6.75 6.75 0 010 9.546M10.5 12a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0z',
   },
   {
-    label: 'Gestión de Eventos',
+    label: 'Crear Evento',
     href: '/dashboard/eventos-presenciales',
     icon: 'M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z',
   },
