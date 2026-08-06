@@ -3,9 +3,10 @@ import { getCurrentMember } from '@/services/auth'
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { GeneralMeetingRoom } from '@/components/reuniones/GeneralMeetingRoom'
+import { getGeneralMeetUrlAction } from './actions'
 
 export const metadata: Metadata = {
-  title: 'Sala de Reuniones General — ITEC',
+  title: 'Sala de Reuniones — ITEC',
 }
 
 export default async function ReunionesPage() {
@@ -15,7 +16,10 @@ export default async function ReunionesPage() {
   const supabase = await createClient()
   const today = new Date().toISOString().split('T')[0]
 
-  // 1. Cargar nota activa (General)
+  // 1. Obtener enlace Meet general
+  const meetUrl = await getGeneralMeetUrlAction()
+
+  // 2. Cargar nota activa (General)
   const { data: notes } = await supabase
     .from('meeting_notes')
     .select('content')
@@ -24,7 +28,7 @@ export default async function ReunionesPage() {
     .eq('is_active', true)
     .single()
 
-  // 2. Cargar historial de reuniones (General) - desde meeting_notes
+  // 3. Cargar historial de reuniones (General)
   const { data: history } = await supabase
     .from('meeting_notes')
     .select('id, content, session_date, created_at')
@@ -46,6 +50,7 @@ export default async function ReunionesPage() {
         member={member}
         initialContent={notes?.content || ''}
         history={history || []}
+        meetUrl={meetUrl}
       />
     </div>
   )
