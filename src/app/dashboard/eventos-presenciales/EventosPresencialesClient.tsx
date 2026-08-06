@@ -401,13 +401,14 @@ export default function EventosPresencialesClient({ initialEventos }: { initialE
 
       {/* MODAL DE CREACIÓN */}
       {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-          <div className="bg-zinc-950 border border-zinc-850 w-full max-w-md max-h-[85vh] rounded-3xl shadow-2xl relative flex flex-col m-4">
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm overflow-y-auto">
+          <div className="min-h-full flex items-end sm:items-center justify-center p-4">
+          <div className="bg-zinc-950 border border-zinc-850 w-full max-w-md rounded-3xl shadow-2xl relative flex flex-col mt-auto sm:mt-0 mb-0">
             {/* Header fijo */}
-            <div className="p-6 pb-0 flex-shrink-0">
+            <div className="p-6 pb-0 flex-shrink-0 relative">
               <button
                 onClick={() => { setShowModal(false); setError(""); }}
-                className="absolute top-4 right-4 text-zinc-500 hover:text-white p-1 rounded-xl bg-white/[0.03] border border-white/[0.05] cursor-pointer"
+                className="absolute top-4 right-4 text-zinc-500 hover:text-white p-1 rounded-xl bg-white/[0.03] border border-white/[0.05] cursor-pointer z-10"
               >
                 <X size={16} />
               </button>
@@ -423,7 +424,7 @@ export default function EventosPresencialesClient({ initialEventos }: { initialE
             </div>
 
             {/* Body scrolleable */}
-            <div className="px-6 pb-6 pt-4 overflow-y-auto flex-1 min-h-0">
+            <div className="p-6 pt-4 overflow-y-auto max-h-[60vh] min-h-0">
               <form id="form-crear-evento" onSubmit={handleCreateEvento} className="space-y-4">
               {error && (
                 <div className="p-3.5 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs font-semibold flex items-center gap-2.5">
@@ -562,6 +563,7 @@ export default function EventosPresencialesClient({ initialEventos }: { initialE
                 )}
               </button>
             </div>
+          </div>
           </div>
         </div>
       )}
