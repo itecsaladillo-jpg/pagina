@@ -27,8 +27,6 @@ export function Footer() {
           {/* Links */}
           <div className="flex items-center gap-6 text-sm text-[var(--text-muted)]">
             <a href="#nosotros" className="hover:text-[var(--accent-cyan-2)] transition-colors">{dict.navbar.nosotros}</a>
-            <a href="#comisiones" className="hover:text-[var(--accent-cyan-2)] transition-colors">{dict.navbar.acciones}</a>
-            <a href="#acciones" className="hover:text-[var(--accent-cyan-2)] transition-colors">{dict.navbar.acciones}</a>
             <a href="#ideas" className="hover:text-[var(--accent-cyan-2)] transition-colors">{dict.navbar.ideas}</a>
             <Link href="/mapa-productivo" className="hover:text-blue-300 transition-colors font-medium">{dict.navbar.mapa}</Link>
           </div>

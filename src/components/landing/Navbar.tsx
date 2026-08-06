@@ -16,7 +16,6 @@ export function Navbar() {
   const pathname = usePathname()
 
   const dynamicLinks = [
-    { label: dict.navbar.acciones, href: '/#acciones' },
     { label: dict.navbar.videoteca, href: '/#videoteca' },
     { label: dict.navbar.nosotros, href: '/#nosotros' },
     { label: dict.navbar.sponsors, href: '/#sponsors' },
@@ -167,7 +166,7 @@ export function Navbar() {
           <MembersAccessButton
             className="text-[9px] uppercase tracking-wider px-1.5 opacity-75 hover:opacity-100 hover:text-blue-400 transition-all flex items-center justify-center text-center w-auto whitespace-normal leading-[1.15] shrink-0 bg-transparent border-none cursor-pointer"
           >
-            <span>{dynamicLinks[6].label}</span>
+            <span>{dynamicLinks[5].label}</span>
           </MembersAccessButton>
         </div>
 
@@ -238,7 +237,7 @@ export function Navbar() {
           <MembersAccessButton
             className="btn-outline text-xs py-2 px-4 w-fit justify-end text-right leading-tight bg-transparent cursor-pointer"
           >
-            <span>{dynamicLinks[6].label}</span>
+            <span>{dynamicLinks[5].label}</span>
           </MembersAccessButton>
         </div>
       )}

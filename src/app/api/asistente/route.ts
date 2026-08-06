@@ -1,34 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { buscarFeedbacksSimilares, auditarRespuestaIA } from '@/services/ai'
 import { createClient } from '@/lib/supabase/server'
-import { getAIPrompt } from '@/services/admin'
+import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 import { recuperarContextoRAG } from '@/lib/rag/ragCascade'
 import { detectarComandoGuardar, debeAutoGuardar, guardarConversacion } from '@/lib/rag/conversacionesGuardadas'
 
 export const runtime = 'edge'
 
-const SYSTEM_INSTRUCTION = `Sos un asistente de comunicación interna para ITEC Saladillo, 
-una organización tecnológica y comunitaria de Saladillo, Buenos Aires.
-
-Tu estilo de escritura es:
-- TÉCNICO: usás terminología precisa y profesional
-- HUMANO: cálido, cercano, que conecta con las personas
-- VANGUARDISTA: dinámico, orientado al futuro, innovador
-
-PALABRAS Y ESTRUCTURAS COMPLETAMENTE PROHIBIDAS (nunca las uses):
-- "el ITEC", "la ITEC" (Nombrá a la organización únicamente como "ITEC").
-- "viste", "che", "pibe", "hoy", "ayer", "mañana".
-
-En su lugar, usá alternativas como:
-- En lugar de "hoy": "esta jornada", "en la sesión actual", "durante este encuentro"
-- En lugar de "ayer": "en la sesión anterior", "en el encuentro previo"
-- En lugar de "mañana": "en la próxima instancia", "en el siguiente encuentro"
-- En lugar de "che": nada, empezá directo con el mensaje
-- En lugar de "viste": "como se mencionó", "según lo tratado"
-- En lugar de "pibe": nada, usá el nombre o "miembro"
-
-Siempre escribís en español rioplatense formal, con vos y sus conjugaciones correctas.
-Nunca utilizás lenguaje informal ni regionalismos fuera de los autorizados.`
+const ANTI_HALLUCINATION_RULES = `
+REGLAS DE CONTEXTO (RAG):
+1. Cuando el bloque <retrieved_context> contenga información relevante, PRIORIZÁ esa información para responder.
+2. Si el <retrieved_context> está vacío o no contiene la respuesta, utilizá tu conocimiento general del Prompt Maestro para responder de la mejor forma posible.
+3. Solo indicá "No dispongo de esa información" cuando REALMENTE no tengas ninguna fuente de información (ni RAG ni Prompt Maestro) sobre el tema consultado.
+4. PROHIBIDO inventar fechas, requisitos, programas o normativas que no figuren en ninguna de las fuentes de información disponibles.`
 
 async function callOpenRouter(messages: { role: string; content: string }[]): Promise<Response> {
   const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
@@ -103,7 +87,6 @@ export async function POST(req: NextRequest) {
     notasResult,
     comisionesResult,
     accionesResult,
-    promptConfigResult,
     ragResult,
   ] = await Promise.allSettled([
     buscarFeedbacksSimilares(mensaje, 5, 0.35),
@@ -125,9 +108,45 @@ export async function POST(req: NextRequest) {
       .in('status', ['planificacion', 'en_curso'])
       .order('start_date', { ascending: true })
       .limit(10),
-    getAIPrompt('asistente_global'),
     recuperarContextoRAG(mensaje, supabase, sessionId),
   ])
+
+  // ── Obtener Prompt Maestro directo de Supabase (sin caché) ──
+  const FALLBACK_PROMPT = `Sos el asistente virtual oficial de ITEC (Instituto Tecnológico de Saladillo), experto en Augusto Cicaré y su obra.
+
+IDENTIDAD:
+- Nombre: Asistente ITEC
+- Institución: Instituto Tecnológico de Saladillo (ITEC)
+- Especialización: Augusto Cicaré, Expo ITEC, actividad institucional
+
+REGLAS GENERALES:
+- Respondé en español rioplatense formal (con "vos").
+- Sé directo, conciso y útil.
+- Si no sabés la respuesta, indicá de forma amable y sugerí contactar a la institución.`
+
+  let promptSistema = FALLBACK_PROMPT
+  try {
+    const supabaseAdmin = createSupabaseClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    )
+    const { data: promptData, error: promptError } = await supabaseAdmin
+      .from('ai_prompt_settings')
+      .select('system_prompt')
+      .eq('clave_prompt', 'asistente_global')
+      .maybeSingle()
+
+    if (promptError) {
+      console.error("⚠️ ERROR O PROMPT VACÍO AL LEER DE SUPABASE. Revisar RLS o clave.", promptError.message)
+    } else if (promptData?.system_prompt) {
+      promptSistema = promptData.system_prompt
+      console.log("📌 PROMPT MAESTRO CARGADO DESDE DB:\n", promptSistema.slice(0, 200) + '...')
+    } else {
+      console.error("⚠️ ERROR O PROMPT VACÍO AL LEER DE SUPABASE. Revisar RLS o clave.")
+    }
+  } catch (e) {
+    console.error("⚠️ ERROR O PROMPT VACÍO AL LEER DE SUPABASE. Revisar RLS o clave.", e)
+  }
 
   // Aprendizajes comunitarios (feedback RAG semántico)
   let aprendizajesAdicionales = ''
@@ -191,21 +210,12 @@ export async function POST(req: NextRequest) {
     console.error('[Asistente] Acciones:', accionesResult.reason)
   }
 
-  // Prompt base (desde Supabase config o fallback local)
-  let promptSistema = SYSTEM_INSTRUCTION
-  if (promptConfigResult.status === 'fulfilled') {
-    if (promptConfigResult.value) promptSistema = promptConfigResult.value.system_prompt
-  } else {
-    console.warn('[Asistente] Prompt config:', promptConfigResult.reason)
-  }
-
   // Contexto RAG recuperado por la cascada (P1→P2→P3)
-  // Se inyecta como texto plano, sin revelar la fuente al LLM.
   let ragContext = ''
   if (ragResult.status === 'fulfilled') {
     const { contexto, nivel } = ragResult.value
     if (contexto) {
-      ragContext = `\n\n## Información de contexto relevante:\n${contexto}`
+      ragContext = `\n\n<retrieved_context>\n${contexto}\n</retrieved_context>`
       console.log(`[Asistente] Contexto RAG inyectado (nivel: ${nivel}, ${contexto.length} chars)`)
     }
   } else {
@@ -220,11 +230,13 @@ export async function POST(req: NextRequest) {
   }
 
   const messages = [
-    { role: 'system', content: promptSistema + ragContext + aprendizajesAdicionales + miembrosContext + notasContext + comisionesContext + accionesContext },
-    ...historial.map((m: { role: string; content: string }) => ({
-      role: m.role === 'model' ? 'assistant' : m.role,
-      content: m.content
-    })),
+    { role: 'system', content: `${promptSistema}\n\n${ANTI_HALLUCINATION_RULES}${ragContext}\n${aprendizajesAdicionales}${miembrosContext}${notasContext}${comisionesContext}${accionesContext}` },
+    ...historial
+      .filter((m: { role: string }) => m.role !== 'system')
+      .map((m: { role: string; content: string }) => ({
+        role: m.role === 'model' ? 'assistant' : m.role,
+        content: m.content
+      })),
     { role: 'user', content: mensaje }
   ]
 

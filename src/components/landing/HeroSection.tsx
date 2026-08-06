@@ -10,14 +10,17 @@ import { MembersAccessButton } from '@/components/auth/MembersAccessButton'
 export function HeroSection() {
   const { dict } = useLanguage()
   const [claseEnVivo, setClaseEnVivo] = useState(false)
-  const [fraseHero] = useState(() => {
+  const [fraseHero, setFraseHero] = useState("Construimos futuro desde la raíz: potenciando saberes, impulsando pymes y abriendo horizontes en Saladillo. Si logramos encender la chispa de los grandes inventores de mañana, todo este viaje habrá valido la pena.")
+
+  useEffect(() => {
     const FRASES_HERO = [
       "Construimos futuro desde la raíz: potenciando saberes, impulsando pymes y abriendo horizontes en Saladillo. Si logramos encender la chispa de los grandes inventores de mañana, todo este viaje habrá valido la pena.",
       "Aportamos valor al trabajo diario y al motor pyme de Saladillo. Cada joven capacitado es una promesa viva; si descubrimos a tiempo al próximo gran creador local, habremos cumplido nuestra misión y allí estaremos para acompañar su camino.",
       "Impulsar el desarrollo productivo y guiar a las nuevas generaciones es nuestra razón de ser en Saladillo. Si en ese camino descubrimos al genio que marcará el mañana, todo el esfuerzo cobra aún más sentido."
     ]
-    return FRASES_HERO[Math.floor(Math.random() * FRASES_HERO.length)]
-  })
+    const idx = Math.floor(Math.random() * FRASES_HERO.length)
+    setFraseHero(FRASES_HERO[idx])
+  }, [])
 
   useEffect(() => {
     const supabase = createClient()
@@ -132,9 +135,6 @@ export function HeroSection() {
 
             {/* Botones de Secciones (Mismos que el Header) */}
             <div className="flex flex-wrap items-center justify-start gap-2 mt-6 animate-fade-up delay-300 relative z-10" style={{ animationFillMode: 'both' }}>
-              <a href="#acciones" className="btn-outline text-[10px] uppercase tracking-wider py-1.5 px-4 border-dashed opacity-70 hover:opacity-100 transition-all">
-                {dict.navbar.acciones}
-              </a>
               <a href="#videoteca" className="btn-outline text-[10px] uppercase tracking-wider py-1.5 px-4 border-dashed opacity-70 hover:opacity-100 transition-all">
                 {dict.navbar.videoteca}
               </a>

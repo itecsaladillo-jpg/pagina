@@ -140,6 +140,48 @@ export function NewsFlashMulticanalEditor({ onSave, onCancel }: NewsFlashMultica
     }
   }
 
+  const handlePublishRaw = async () => {
+    setErrorBanner(null)
+    if (!rawFacts.trim() || rawFacts.length < 20) {
+      alert('Ingresá al menos 20 caracteres en las notas crudas')
+      return
+    }
+
+    setIsSaving(true)
+    setErrorBanner(null)
+    
+    try {
+      const titulo = rawFacts.split('\n')[0].slice(0, 100) || 'Noticia sin título'
+      const res = await onSave({
+        titulo,
+        datos_crudos: rawFacts,
+        texto_publico: rawFacts,
+        texto_miembros: rawFacts,
+        texto_sponsors: rawFacts,
+        texto_medios: rawFacts,
+        para_publico: paraPublico,
+        para_miembros: paraMiembros,
+        para_sponsors: paraSponsors,
+        para_medios: paraMedios,
+        media_urls: media.map(m => m.url)
+      })
+
+      if (res?.error) {
+        setErrorBanner(res.error)
+      } else {
+        setSuccessBanner('Noticia publicada textualmente en los muros')
+        setTimeout(() => {
+          setSuccessBanner(null)
+          onCancel?.()
+        }, 3000)
+      }
+    } catch (err: any) {
+      setErrorBanner('Error al guardar en base de datos: ' + (err.message || 'Error desconocido'))
+    } finally {
+      setIsSaving(false)
+    }
+  }
+
   const handleFiles = async (files: FileList | null) => {
     if (!files) return
     
@@ -328,6 +370,24 @@ export function NewsFlashMulticanalEditor({ onSave, onCancel }: NewsFlashMultica
             <>
               <Sparkles size={18} />
               Procesar con IA
+            </>
+          )}
+        </button>
+
+        <button
+          onClick={handlePublishRaw}
+          disabled={isSaving || rawFacts.length < 20}
+          className="w-full py-3 rounded-2xl bg-green-600 hover:bg-green-500 text-white font-bold text-xs uppercase tracking-widest flex items-center justify-center gap-3 transition-all disabled:opacity-30 shadow-lg"
+        >
+          {isSaving ? (
+            <>
+              <Loader2 size={14} className="animate-spin" />
+              Publicando...
+            </>
+          ) : (
+            <>
+              <Send size={14} />
+              Publicar sin procesar
             </>
           )}
         </button>

@@ -50,7 +50,7 @@ export async function getPublicArticles(): Promise<PublicArticle[]> {
   const supabase = await createClient()
   const { data, error } = await supabase
     .from('public_articles')
-    .select('*, news_flashes(media_urls)')
+    .select('*')
     .eq('is_published', true)
     .order('created_at', { ascending: false })
 
@@ -60,13 +60,9 @@ export async function getPublicArticles(): Promise<PublicArticle[]> {
   }
 
   const articles = (data ?? []).map((art: any) => {
-    // Resolver media_urls con fallback a news_flashes
+    // Resolver media_urls
     const media = art.media_urls
     let mediaArr = Array.isArray(media) ? media : (typeof media === 'string' ? (() => { try { return JSON.parse(media) } catch { return [] } })() : [])
-    if (mediaArr.length === 0 && art.news_flashes) {
-      const nfMedia = art.news_flashes.media_urls
-      mediaArr = Array.isArray(nfMedia) ? nfMedia : (typeof nfMedia === 'string' ? (() => { try { return JSON.parse(nfMedia) } catch { return [] } })() : [])
-    }
     art.media_urls = mediaArr
     return art
   })
@@ -105,7 +101,7 @@ export async function getArticleBySlug(slug: string): Promise<PublicArticle | nu
   
   let query = supabase
     .from('public_articles')
-    .select('*, news_flashes(media_urls)')
+    .select('*')
   
   if (isUUID) {
     query = query.or(`slug.eq.${slug},id.eq.${slug}`)
@@ -126,7 +122,7 @@ export async function getArticleBySlug(slug: string): Promise<PublicArticle | nu
     // Buscar en notas_publico
     const { data: notaData } = await supabase
       .from('notas_publico')
-      .select('*, news_flashes(media_urls)')
+      .select('*')
       .eq('news_flash_id', slug)
       .eq('is_published', true)
       .maybeSingle()
@@ -211,7 +207,7 @@ export async function getAllMulticanalNewsFlashes(): Promise<NewsFlashMulticanal
   // 2. Obtener de notas_publico (acceso público irrestricto si is_published=true)
   const { data: notasPublico } = await supabase
     .from('notas_publico')
-    .select('*, news_flashes(media_urls)')
+    .select('*')
     .eq('is_published', true)
 
   if (notasPublico) {
@@ -242,7 +238,7 @@ export async function getAllMulticanalNewsFlashes(): Promise<NewsFlashMulticanal
   if (user) {
     const { data: notasMiembros } = await supabase
       .from('notas_miembros')
-      .select('*, news_flashes(media_urls)')
+      .select('*')
       .eq('is_published', true)
       
     if (notasMiembros) {
