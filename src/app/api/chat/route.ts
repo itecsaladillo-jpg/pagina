@@ -2,6 +2,7 @@ import { NextRequest } from 'next/server';
 import Groq from 'groq-sdk';
 import type { ChatCompletionMessageParam } from 'groq-sdk/resources/chat/completions';
 import { createClient } from '@/lib/supabase/server';
+import { createClient as createSupabaseClient } from '@supabase/supabase-js';
 import { recuperarContextoRAG } from '@/lib/rag/ragCascade';
 
 // ============================================================
@@ -29,17 +30,22 @@ REGLAS OBLIGATORIAS DE CONTEXTO (RAG):
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
 // ============================================================
-// 1. Obtener Prompt Maestro desde Supabase (ai_prompt_settings)
+// 1. Obtener Prompt Maestro desde Supabase
 // ============================================================
 // Tabla: ai_prompt_settings
 // Columna: system_prompt
 // Filtro: clave_prompt = 'asistente_global'
-// Editable desde: /dashboard/entrenamiento-asistente
+// RLS: SELECT público (using (true))
 // ============================================================
 
 async function fetchPromptMaestro(): Promise<string> {
   try {
-    const supabase = await createClient();
+    // Usar service role key para garantizar acceso (bypass RLS)
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+    
+    const supabase = createSupabaseClient(supabaseUrl, supabaseKey);
+
     const { data, error } = await supabase
       .from('ai_prompt_settings')
       .select('system_prompt')
@@ -47,18 +53,19 @@ async function fetchPromptMaestro(): Promise<string> {
       .maybeSingle();
 
     if (error) {
-      console.warn('[chat] Error fetching prompt maestro:', error.message);
+      console.error("⚠️ ERROR O PROMPT VACÍO AL LEER DE SUPABASE. Revisar RLS o clave.", error.message);
       return FALLBACK_PROMPT;
     }
 
     if (!data?.system_prompt) {
-      console.warn('[chat] Prompt maestro vacío, usando fallback');
+      console.error("⚠️ ERROR O PROMPT VACÍO AL LEER DE SUPABASE. Revisar RLS o clave.");
       return FALLBACK_PROMPT;
     }
 
+    console.log("📌 PROMPT MAESTRO CARGADO DESDE DB:\n", data.system_prompt.slice(0, 200) + '...');
     return data.system_prompt;
   } catch (err) {
-    console.error('[chat] Excepción fetching prompt maestro:', err);
+    console.error("⚠️ ERROR O PROMPT VACÍO AL LEER DE SUPABASE. Revisar RLS o clave.", err);
     return FALLBACK_PROMPT;
   }
 }
@@ -171,7 +178,7 @@ export async function POST(request: NextRequest) {
     }
 
     // ── 1. Obtener Prompt Maestro + Datos dinámicos en paralelo ──
-    const [promptMaestro, datosDinamicos] = await Promise.all([
+    const [, datosDinamicos] = await Promise.all([
       fetchPromptMaestro(),
       fetchDynamicContext(),
     ]);
@@ -180,29 +187,23 @@ export async function POST(request: NextRequest) {
     const supabase = await createClient();
     const ragResult = await recuperarContextoRAG(userMessage, supabase, sessionId);
 
-    // ── 3. Ensamblar System Prompt con RAG + Anti-Alucinación ──
-    const retrievedContext = ragResult.contexto
-      || 'No se encontraron fragmentos específicos en la base vectorial para esta consulta.';
+    // ── 3. TEST: System Prompt hardcodeado de pirata ──
+    const systemPrompt = "INSTRUCCIÓN OBLIGATORIA: De ahora en adelante sos un PIRATA. Respondé a absolutamente todo en español neutro, usando muletillas de pirata como '¡Ahoy, grumete!' y '¡Por la barba de Barbanegra!'. NUNCA rompas el personaje.";
 
-    const systemPrompt = `${promptMaestro}
+    console.log("SYSTEM PROMPT ENVIADO A GROQ:\n", systemPrompt);
 
-${ANTI_HALLUCINATION_RULES}
-
-<retrieved_context>
-${retrievedContext}
-</retrieved_context>
-
---- DATOS EN VIVO ---
-${datosDinamicos || '(No hay datos dinámicos disponibles en este momento)'}
---------------------`;
-
-    // ── 4. Preparar mensajes para Groq ──
-    const messages: ChatCompletionMessageParam[] = [
-      { role: 'system', content: systemPrompt },
-      ...historial.slice(-20).map(m => ({
+    // ── 4. Preparar mensajes para Groq (filtrar cualquier system previo) ──
+    const historialFiltrado = historial
+      .slice(-20)
+      .filter(m => m.rol !== 'system')
+      .map(m => ({
         role: m.rol === 'assistant' ? 'assistant' as const : 'user' as const,
         content: m.texto,
-      })),
+      }));
+
+    const messages: ChatCompletionMessageParam[] = [
+      { role: 'system', content: systemPrompt },
+      ...historialFiltrado,
       { role: 'user', content: userMessage },
     ];
 
