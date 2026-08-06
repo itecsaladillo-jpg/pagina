@@ -169,42 +169,52 @@ async function fetchDynamicContext(): Promise<string> {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
+    const rawMessages = body.messages as Array<{ role: string; content: string }> || [];
     const userMessage = body.message as string;
-    const historial: { rol: string; texto: string }[] = body.historial || [];
     const sessionId = body.sessionId as string | undefined;
 
     if (!userMessage?.trim()) {
       return new Response(JSON.stringify({ error: 'Mensaje requerido' }), { status: 400 });
     }
 
-    // ── 1. Obtener Prompt Maestro + Datos dinámicos en paralelo ──
-    const [, datosDinamicos] = await Promise.all([
+    // ── 1. Limpiar mensajes del cliente: eliminar CUALQUIER role === 'system' ──
+    const userMessages = rawMessages.filter((m: { role: string }) => m.role !== 'system');
+
+    // ── 2. Obtener Prompt Maestro + Datos dinámicos en paralelo ──
+    const [promptMaestro, datosDinamicos] = await Promise.all([
       fetchPromptMaestro(),
       fetchDynamicContext(),
     ]);
 
-    // ── 2. Obtener contexto RAG desde pgvector ──
+    // ── 3. Obtener contexto RAG desde pgvector ──
     const supabase = await createClient();
     const ragResult = await recuperarContextoRAG(userMessage, supabase, sessionId);
 
-    // ── 3. TEST: System Prompt hardcodeado de pirata ──
-    const systemPrompt = "INSTRUCCIÓN OBLIGATORIA: De ahora en adelante sos un PIRATA. Respondé a absolutamente todo en español neutro, usando muletillas de pirata como '¡Ahoy, grumete!' y '¡Por la barba de Barbanegra!'. NUNCA rompas el personaje.";
+    // ── 4. Ensamblar System Prompt: Prompt Maestro + Anti-Alucinación + RAG ──
+    const retrievedContext = ragResult.contexto
+      || 'No se encontraron fragmentos específicos en la base vectorial para esta consulta.';
 
-    console.log("SYSTEM PROMPT ENVIADO A GROQ:\n", systemPrompt);
+    const systemPrompt = `${promptMaestro}
 
-    // ── 4. Preparar mensajes para Groq (filtrar cualquier system previo) ──
-    const historialFiltrado = historial
-      .slice(-20)
-      .filter(m => m.rol !== 'system')
-      .map(m => ({
-        role: m.rol === 'assistant' ? 'assistant' as const : 'user' as const,
-        content: m.texto,
-      }));
+${ANTI_HALLUCINATION_RULES}
 
+<retrieved_context>
+${retrievedContext}
+</retrieved_context>
+
+--- DATOS EN VIVO ---
+${datosDinamicos || '(No hay datos dinámicos disponibles en este momento)'}
+--------------------`;
+
+    console.log("SYSTEM PROMPT ENVIADO A GROQ:\n", systemPrompt.slice(0, 500) + '...');
+
+    // ── 5. Construir array final: UN solo system + historial limpio + último mensaje ──
     const messages: ChatCompletionMessageParam[] = [
       { role: 'system', content: systemPrompt },
-      ...historialFiltrado,
-      { role: 'user', content: userMessage },
+      ...userMessages.map(m => ({
+        role: m.role === 'assistant' ? 'assistant' as const : 'user' as const,
+        content: m.content,
+      })),
     ];
 
     // ── DEBUG RAG ──
@@ -214,7 +224,7 @@ export async function POST(request: NextRequest) {
     console.log('Contexto Recuperado:\n', ragResult.contexto || '⚠️ VACIO');
     console.log('=== DEBUG RAG END ===');
 
-    // ── 5. Streaming con Groq llama-3.3-70b-versatile ──
+    // ── 6. Streaming con Groq llama-3.3-70b-versatile ──
     const stream = await groq.chat.completions.create({
       messages,
       model: 'llama-3.3-70b-versatile',
