@@ -401,25 +401,30 @@ export default function EventosPresencialesClient({ initialEventos }: { initialE
 
       {/* MODAL DE CREACIÓN */}
       {showModal && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-zinc-950 border border-zinc-850 w-full max-w-md max-h-[90vh] rounded-3xl p-6 shadow-2xl space-y-5 relative my-auto overflow-y-auto">
-            <button
-              onClick={() => { setShowModal(false); setError(""); }}
-              className="absolute top-4 right-4 text-zinc-500 hover:text-white p-1 rounded-xl bg-white/[0.03] border border-white/[0.05] cursor-pointer"
-            >
-              <X size={16} />
-            </button>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+          <div className="bg-zinc-950 border border-zinc-850 w-full max-w-md max-h-[85vh] rounded-3xl shadow-2xl relative flex flex-col m-4">
+            {/* Header fijo */}
+            <div className="p-6 pb-0 flex-shrink-0">
+              <button
+                onClick={() => { setShowModal(false); setError(""); }}
+                className="absolute top-4 right-4 text-zinc-500 hover:text-white p-1 rounded-xl bg-white/[0.03] border border-white/[0.05] cursor-pointer"
+              >
+                <X size={16} />
+              </button>
 
-            <div className="space-y-1">
-              <h3 className="text-lg font-black text-white uppercase tracking-tight">
-                Crear Nuevo Evento
-              </h3>
-              <p className="text-xs text-zinc-500">
-                Define los datos del evento presencial o virtual para habilitar tu código QR e interactividad en vivo.
-              </p>
+              <div className="space-y-1 pr-8">
+                <h3 className="text-lg font-black text-white uppercase tracking-tight">
+                  Crear Nuevo Evento
+                </h3>
+                <p className="text-xs text-zinc-500">
+                  Define los datos del evento presencial o virtual para habilitar tu código QR e interactividad en vivo.
+                </p>
+              </div>
             </div>
 
-            <form onSubmit={handleCreateEvento} className="space-y-4 overflow-y-auto max-h-[calc(90vh-120px)] pr-1">
+            {/* Body scrolleable */}
+            <div className="px-6 pb-6 pt-4 overflow-y-auto flex-1 min-h-0">
+              <form id="form-crear-evento" onSubmit={handleCreateEvento} className="space-y-4">
               {error && (
                 <div className="p-3.5 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs font-semibold flex items-center gap-2.5">
                   <AlertTriangle size={16} className="shrink-0" />
@@ -536,10 +541,16 @@ export default function EventosPresencialesClient({ initialEventos }: { initialE
                 </div>
               </div>
 
+              </form>
+            </div>
+
+            {/* Footer fijo con botón */}
+            <div className="px-6 pb-6 pt-2 flex-shrink-0 border-t border-zinc-850">
               <button
                 type="submit"
+                form="form-crear-evento"
                 disabled={loading}
-                className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 disabled:from-zinc-900 disabled:to-zinc-900 disabled:text-zinc-600 text-white font-extrabold text-xs uppercase tracking-wider py-4 px-6 rounded-2xl transition-all shadow-lg active:scale-[0.97] cursor-pointer h-[50px] mt-3"
+                className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 disabled:from-zinc-900 disabled:to-zinc-900 disabled:text-zinc-600 text-white font-extrabold text-xs uppercase tracking-wider py-4 px-6 rounded-2xl transition-all shadow-lg active:scale-[0.97] cursor-pointer h-[50px]"
               >
                 {loading ? (
                   <span className="animate-pulse">Insertando Evento...</span>
@@ -550,7 +561,7 @@ export default function EventosPresencialesClient({ initialEventos }: { initialE
                   </>
                 )}
               </button>
-            </form>
+            </div>
           </div>
         </div>
       )}
