@@ -401,8 +401,8 @@ export default function EventosPresencialesClient({ initialEventos }: { initialE
 
       {/* MODAL DE CREACIÓN */}
       {showModal && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-zinc-950 border border-zinc-850 w-full max-w-md rounded-3xl p-6 shadow-2xl space-y-5 relative">
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto">
+          <div className="bg-zinc-950 border border-zinc-850 w-full max-w-md max-h-[90vh] rounded-3xl p-6 shadow-2xl space-y-5 relative my-auto overflow-y-auto">
             <button
               onClick={() => { setShowModal(false); setError(""); }}
               className="absolute top-4 right-4 text-zinc-500 hover:text-white p-1 rounded-xl bg-white/[0.03] border border-white/[0.05] cursor-pointer"
@@ -419,7 +419,7 @@ export default function EventosPresencialesClient({ initialEventos }: { initialE
               </p>
             </div>
 
-            <form onSubmit={handleCreateEvento} className="space-y-4">
+            <form onSubmit={handleCreateEvento} className="space-y-4 overflow-y-auto max-h-[calc(90vh-120px)] pr-1">
               {error && (
                 <div className="p-3.5 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs font-semibold flex items-center gap-2.5">
                   <AlertTriangle size={16} className="shrink-0" />
