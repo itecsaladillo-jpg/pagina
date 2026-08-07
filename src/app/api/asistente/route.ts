@@ -6,10 +6,35 @@ import { recuperarContextoRAG } from '@/lib/rag/ragCascade'
 import { detectarComandoGuardar, debeAutoGuardar, guardarConversacion } from '@/lib/rag/conversacionesGuardadas'
 import { FALLBACK_PROMPT, ANTI_HALLUCINATION_RULES_FLEXIBLE } from '@/lib/ai/constants'
 
-async function callOpenRouter(messages: { role: string; content: string }[]): Promise<Response> {
-  const apiKey = process.env.OPENROUTER_API_KEY
+/**
+ * Resuelve un valor de configuración leyendo de Supabase `api_settings`
+ * con fallback a `process.env`. Compatible con Node.js runtime.
+ */
+async function resolveSetting(supabaseUrl: string, anonKey: string, key: string, envFallback: string = ''): Promise<string> {
+  try {
+    const res = await fetch(`${supabaseUrl}/rest/v1/api_settings?key=eq.${encodeURIComponent(key)}&select=value`, {
+      headers: {
+        'apikey': anonKey,
+        'Authorization': `Bearer ${anonKey}`,
+        'Content-Type': 'application/json',
+      },
+      signal: AbortSignal.timeout(5000),
+    })
+    if (res.ok) {
+      const rows = await res.json() as Array<{ value: string }>
+      const val = rows?.[0]?.value
+      if (val && val.trim()) return val
+    }
+  } catch (e) {
+    console.warn(`[Asistente] No se pudo leer ${key} de api_settings:`, e)
+  }
+  return envFallback
+}
+
+async function callOpenRouter(messages: { role: string; content: string }[], supabaseUrl: string, anonKey: string): Promise<Response> {
+  const apiKey = await resolveSetting(supabaseUrl, anonKey, 'openrouter_api_key', process.env.OPENROUTER_API_KEY || '')
   if (!apiKey) {
-    console.error('[Asistente] OPENROUTER_API_KEY no está configurada en variables de entorno')
+    console.error('[Asistente] No hay OPENROUTER_API_KEY (ni en api_settings ni en env)')
     throw new Error('No OpenRouter API key configured')
   }
 
@@ -38,10 +63,10 @@ async function callOpenRouter(messages: { role: string; content: string }[]): Pr
   return response
 }
 
-async function callHuggingFace(prompt: string): Promise<string> {
-  const apiKey = process.env.HF_API_KEY
+async function callHuggingFace(prompt: string, supabaseUrl: string, anonKey: string): Promise<string> {
+  const apiKey = await resolveSetting(supabaseUrl, anonKey, 'hf_api_key', process.env.HF_API_KEY || '')
   if (!apiKey) {
-    console.error('[Asistente] HF_API_KEY no está configurada en variables de entorno')
+    console.error('[Asistente] No hay HF_API_KEY (ni en api_settings ni en env)')
     throw new Error('No HuggingFace API key configured')
   }
 
@@ -93,6 +118,9 @@ export async function POST(req: NextRequest) {
     SUPABASE_ANON: !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
     SERVICE_ROLE: !!process.env.SUPABASE_SERVICE_ROLE_KEY,
   })
+
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
+  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
 
   const supabase = await createClient()
 
@@ -264,7 +292,7 @@ export async function POST(req: NextRequest) {
   ]
 
   try {
-    const aiResponse = await callOpenRouter(messages)
+    const aiResponse = await callOpenRouter(messages, supabaseUrl, anonKey)
     const data = await aiResponse.json()
     const textoRespuesta = data.choices?.[0]?.message?.content || ''
 
@@ -291,7 +319,7 @@ export async function POST(req: NextRequest) {
 
     try {
       const fallbackPrompt = `${promptSistema}\n\n${ragContext}\n\n${aprendizajesAdicionales}\n\n${miembrosContext}\n\n${notasContext}\n\n${comisionesContext}\n\n${accionesContext}\n\n${articulosContext}\n\nUsuario: ${mensaje}`
-      const respuestaCompleta = await callHuggingFace(fallbackPrompt)
+      const respuestaCompleta = await callHuggingFace(fallbackPrompt, supabaseUrl, anonKey)
       const resultadoAuditoria = await auditarRespuestaIA(mensaje, respuestaCompleta)
 
       if (sessionId && (esComandoGuardar || esAutoGuardar)) {
@@ -316,7 +344,8 @@ export async function POST(req: NextRequest) {
 
       // Fallback 3: Gemini
       try {
-        const geminiKey = process.env.GEMINI_API_KEY || process.env.GEMINI_APY_KEY || process.env.GOOGLE_GENERATIVE_AI_API_KEY || ''
+        const geminiKey = await resolveSetting(supabaseUrl, anonKey, 'gemini_api_key',
+          process.env.GEMINI_API_KEY || process.env.GEMINI_APY_KEY || process.env.GOOGLE_GENERATIVE_AI_API_KEY || '')
         if (!geminiKey) throw new Error('No Gemini API key')
 
         const geminiRes = await fetch(
