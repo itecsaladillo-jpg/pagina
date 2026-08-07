@@ -9,11 +9,36 @@ interface Mensaje {
   texto: string;
 }
 
+const STORAGE_KEY = 'itec_chat_mensajes';
+const MAX_STORAGE_MENSAJES = 50;
+
+function cargarMensajesStorage(): Mensaje[] {
+  if (typeof window === 'undefined') return [];
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+  } catch { /* ignore */ }
+  return [];
+}
+
+function guardarMensajesStorage(mensajes: Mensaje[]) {
+  if (typeof window === 'undefined') return;
+  try {
+    const aGuardar = mensajes.slice(-MAX_STORAGE_MENSAJES);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(aGuardar));
+  } catch { /* quota exceeded — ignore */ }
+}
+
 export default function ChatWidget() {
   const [abierto, setAbierto] = useState(false);
-  const [mensajes, setMensajes] = useState<Mensaje[]>([
-    { rol: 'bot', texto: '¡Hola! Soy el Asistente Virtual del ITEC. ¿En qué puedo ayudarte hoy?' }
-  ]);
+  const [mensajes, setMensajes] = useState<Mensaje[]>(() => {
+    const guardados = cargarMensajesStorage();
+    return guardados.length > 0 ? guardados : [
+      { rol: 'bot', texto: '¡Hola! Soy el Asistente Virtual del ITEC. ¿En qué puedo ayudarte hoy?' }
+    ];
+  });
   const [input, setInput] = useState('');
   const [cargando, setCargando] = useState(false);
   const [avatarUrl, setAvatarUrl] = useState<string>('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><rect width="40" height="40" rx="20" fill="%233b82f6"/><text x="20" y="26" text-anchor="middle" fill="white" font-size="18" font-weight="bold">IT</text></svg>');
@@ -50,6 +75,11 @@ export default function ChatWidget() {
     }
     fetchAvatar();
   }, []);
+
+  // Persistir mensajes en localStorage cuando cambian
+  useEffect(() => {
+    guardarMensajesStorage(mensajes);
+  }, [mensajes]);
 
   // Auto-scroll logic
   useEffect(() => {
