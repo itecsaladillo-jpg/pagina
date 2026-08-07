@@ -77,11 +77,11 @@ export function HeroSection() {
         
         {/* Contenedor de imágenes apiladas (imágenes disponibles) */}
         <div className="relative w-full h-full flex items-center justify-center">
-          {[2, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15].map((num, i) => (
+          {[2, 5, 7, 10, 13, 15].map((num, i) => (
             <div 
               key={num} 
               className="absolute inset-0 animate-fade-cycle"
-              style={{ animationDelay: `-${i * 15}s` }}
+              style={{ animationDelay: `-${i * 35}s` }}
             >
               <Image
                 src={`/cicare/cicare-${num}.jpg`}
@@ -90,6 +90,7 @@ export function HeroSection() {
                 sizes="(max-width: 768px) 100vw, 50vw"
                 className="object-cover grayscale brightness-50 contrast-125"
                 priority={i === 0}
+                loading={i === 0 ? 'eager' : 'lazy'}
               />
             </div>
           ))}
