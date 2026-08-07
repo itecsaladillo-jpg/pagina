@@ -1,6 +1,7 @@
 'use server'
 
 import { createClient } from '@/lib/supabase/server'
+import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 import { getCurrentMember } from '@/services/auth'
 import { revalidatePath } from 'next/cache'
 
@@ -235,10 +236,19 @@ export async function deleteNotaAction(newsFlashId: string) {
 
   const supabase = await createClient()
 
-  // Borrar de tablas secundarias primero
+  // Usar service-role para eliminar de tablas hijas (bypass RLS)
+  const supabaseAdmin = createSupabaseClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  )
+
   const tables = ['public_articles', 'notas_publico', 'notas_miembros', 'notas_sponsors', 'notas_medios']
   for (const table of tables) {
-    await supabase.from(table).delete().eq('news_flash_id', newsFlashId)
+    const { error } = await supabaseAdmin.from(table).delete().eq('news_flash_id', newsFlashId)
+    if (error) {
+      console.error(`[deleteNotaAction] Error eliminando de ${table}:`, error.message)
+      return { success: false, error: `Error eliminando de ${table}: ${error.message}` }
+    }
   }
 
   // Borrar de tabla principal
