@@ -181,18 +181,33 @@ export function NotasMulticanalList({ notas: initialNotas }: NotasMulticanalList
     setSaving(selected.id)
     setSuccessMsg(null)
 
-    const content = getCurrentContent(selected)
+    const variants = ['publico', 'miembros', 'sponsors', 'medios'] as const
+    let hasError = false
 
-    const res = await updateNotaAction({
-      newsFlashId: selected.id,
-      variant: activeVariant,
-      contenido: content,
-      media_urls: allMediaUrls,
-    })
+    for (const variant of variants) {
+      const key = getTextKey(selected.id, variant)
+      const content = editContent[key] !== undefined
+        ? editContent[key]
+        : variant === 'publico' ? selected.texto_publico
+        : variant === 'miembros' ? selected.texto_miembros
+        : variant === 'sponsors' ? selected.texto_sponsors
+        : selected.texto_medios
+
+      const res = await updateNotaAction({
+        newsFlashId: selected.id,
+        variant,
+        contenido: content,
+        media_urls: variant === 'publico' ? allMediaUrls : undefined,
+      })
+
+      if (res && !res.success) {
+        hasError = true
+      }
+    }
 
     setSaving(null)
-    if (res.success) {
-      setSuccessMsg(`"${getVariantInfo(selected).find(v => v.key === activeVariant)?.label}" guardada`)
+    if (!hasError) {
+      setSuccessMsg('Las 4 versiones fueron guardadas')
       setTimeout(() => setSuccessMsg(null), 3000)
     }
   }
