@@ -48,7 +48,6 @@ const ESCUELAS = [
   'Instituto Superior de Formación Técnica N° 135 "Ing. Mario Deraldo Michelini"',
   'E.E.S. N° 2 "Manuel Pardal" (Ex Colegio Nacional) - Saladillo',
   'Instituto Niño Jesús (INJ) - Saladillo',
-  'Otra escuela técnica',
 ]
 
 const ESPECIALIDADES = [
