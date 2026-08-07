@@ -66,7 +66,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'JSON inválido' }, { status: 400 })
   }
 
-  const { mensaje, historial = [], sessionId } = cuerpo
+  const { mensaje, historial = [], sessionId: clientSessionId } = cuerpo
+  // Auto-generate sessionId if client doesn't provide one (enables P4 conversation memory)
+  const sessionId = clientSessionId || crypto.randomUUID()
 
   if (!mensaje || typeof mensaje !== 'string') {
     return NextResponse.json({ error: 'Mensaje requerido' }, { status: 400 })

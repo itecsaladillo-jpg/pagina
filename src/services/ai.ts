@@ -377,7 +377,22 @@ export async function generarEmbedding(texto: string): Promise<number[]> {
     if (!response.ok) throw new Error(`HF embedding error: ${response.status}`)
     
     const data = await response.json()
-    return data[0]?.embedding || []
+    const hfEmbedding: number[] = data[0]?.embedding || []
+    
+    if (hfEmbedding.length === 0) return []
+    
+    // HuggingFace all-MiniLM-L6-v2 produces 384-dim vectors, but our DB expects 768.
+    // Pad with zeros to maintain compatibility with pgvector vector(768).
+    const TARGET_DIM = 768
+    if (hfEmbedding.length < TARGET_DIM) {
+      const padded = new Array(TARGET_DIM).fill(0)
+      for (let i = 0; i < hfEmbedding.length; i++) {
+        padded[i] = hfEmbedding[i]
+      }
+      return padded
+    }
+    
+    return hfEmbedding
   } catch (error) {
     console.error('[AI Service] All embedding providers failed:', error)
     return []

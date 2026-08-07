@@ -13,11 +13,38 @@ async function extractTextFromPdf(filePath) {
   const dataBuffer = fs.readFileSync(filePath);
   try {
     const data = await pdfParse(dataBuffer);
-    return data.text;
+    return cleanExtractedText(data.text || '');
   } catch (error) {
     console.error(`Error parsing PDF ${filePath}:`, error);
     return '';
   }
+}
+
+/**
+ * Limpia texto extraído de PDFs para mejorar el keyword matching del RAG.
+ * - Normaliza whitespace (múltiples espacios/saltos → uno solo)
+ * - Elimina caracteres de control
+ * - Corrige artefactos comunes de extracción PDF
+ */
+function cleanExtractedText(text) {
+  if (!text) return '';
+  
+  return text
+    // Eliminar caracteres de control (excepto tab, newline, carriage return)
+    .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, '')
+    // Colapsar múltiples espacios en uno solo
+    .replace(/[ \t]+/g, ' ')
+    // Colapsar múltiples líneas vacías en máximo 2
+    .replace(/\n{3,}/g, '\n\n')
+    // Eliminar espacios al final de líneas
+    .replace(/[ \t]+$/gm, '')
+    // Eliminar espacios al inicio de líneas (excepto listas)
+    .replace(/^(?![•\-\*]) +/gm, '')
+    // Unir palabras cortadas por salto de línea (patrón común en PDFs)
+    .replace(/(\w)-\n(\w)/g, '$1$2')
+    // Unir líneas que terminan en minúscula (párrafos partidos)
+    .replace(/([a-záéíóúñ,;:])\n([a-záéíóúñ])/g, '$1 $2')
+    .trim();
 }
 
 async function generateDocsContext() {
@@ -41,7 +68,7 @@ async function generateDocsContext() {
         text = await extractTextFromPdf(filePath);
       } else if (file.toLowerCase().endsWith('.txt') || file.toLowerCase().endsWith('.md')) {
         console.log(`Procesando Texto: ${file}`);
-        text = fs.readFileSync(filePath, 'utf8');
+        text = cleanExtractedText(fs.readFileSync(filePath, 'utf8'));
       }
 
       if (text.trim()) {
