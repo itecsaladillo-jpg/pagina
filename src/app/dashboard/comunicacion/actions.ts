@@ -234,9 +234,7 @@ export async function deleteNotaAction(newsFlashId: string) {
   const member = await getCurrentMember()
   if (!member || !['admin', 'coordinador'].includes(member.role)) throw new Error('No autorizado')
 
-  const supabase = await createClient()
-
-  // Usar service-role para eliminar de tablas hijas (bypass RLS)
+  // Usar service-role para eliminar de todas las tablas (bypass RLS)
   const supabaseAdmin = createSupabaseClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
@@ -252,7 +250,7 @@ export async function deleteNotaAction(newsFlashId: string) {
   }
 
   // Borrar de tabla principal
-  const { error } = await supabase.from('news_flashes').delete().eq('id', newsFlashId)
+  const { error } = await supabaseAdmin.from('news_flashes').delete().eq('id', newsFlashId)
 
   if (error) {
     console.error('[deleteNotaAction] Error:', error.message)
