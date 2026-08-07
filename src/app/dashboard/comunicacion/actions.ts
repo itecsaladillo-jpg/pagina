@@ -242,7 +242,7 @@ export async function deleteNotaAction(newsFlashId: string) {
     process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
   )
 
-  const tables = ['public_articles', 'notas_publico', 'notas_miembros', 'notas_sponsors', 'notas_medios']
+  const tables = ['notas_publico', 'notas_miembros', 'notas_sponsors', 'notas_medios']
   for (const table of tables) {
     const { error } = await supabaseAdmin.from(table).delete().eq('news_flash_id', newsFlashId)
     if (error) {
