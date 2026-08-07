@@ -83,6 +83,7 @@ export async function POST(req: NextRequest) {
     notasResult,
     comisionesResult,
     accionesResult,
+    articulosResult,
     ragResult,
   ] = await Promise.allSettled([
     buscarFeedbacksSimilares(mensaje, 5, 0.35),
@@ -104,6 +105,12 @@ export async function POST(req: NextRequest) {
       .in('status', ['planificacion', 'en_curso'])
       .order('start_date', { ascending: true })
       .limit(10),
+    supabase
+      .from('public_articles')
+      .select('title, slug, excerpt, content')
+      .eq('is_published', true)
+      .order('created_at', { ascending: false })
+      .limit(15),
     recuperarContextoRAG(mensaje, supabase, sessionId),
   ])
 
@@ -193,6 +200,20 @@ export async function POST(req: NextRequest) {
     console.error('[Asistente] Acciones:', accionesResult.reason)
   }
 
+  // Artículos publicados (para responder consultas que no están en RAG)
+  let articulosContext = ''
+  if (articulosResult.status === 'fulfilled') {
+    const articulos = articulosResult.value?.data
+    if (articulos && articulos.length > 0) {
+      articulosContext = `\n\n## Artículos Publicados en ITEC:\n${articulos.map((a: any) => {
+        const preview = a.excerpt || (a.content ? a.content.slice(0, 200) + '…' : '')
+        return `- "${a.title}" (${a.slug}): ${preview}`
+      }).join('\n')}`
+    }
+  } else {
+    console.error('[Asistente] Artículos:', articulosResult.reason)
+  }
+
   // Contexto RAG recuperado por la cascada (P1→P2→P3)
   let ragContext = ''
   if (ragResult.status === 'fulfilled') {
@@ -212,7 +233,7 @@ export async function POST(req: NextRequest) {
   }
 
   const messages = [
-    { role: 'system', content: `${promptSistema}\n\n${ANTI_HALLUCINATION_RULES_FLEXIBLE}${ragContext}\n${aprendizajesAdicionales}${miembrosContext}${notasContext}${comisionesContext}${accionesContext}` },
+    { role: 'system', content: `${promptSistema}\n\n${ANTI_HALLUCINATION_RULES_FLEXIBLE}${ragContext}\n${aprendizajesAdicionales}${miembrosContext}${notasContext}${comisionesContext}${accionesContext}${articulosContext}` },
     ...historial
       .filter((m: { role: string }) => m.role !== 'system')
       .map((m: { role: string; content: string }) => ({
@@ -249,7 +270,7 @@ export async function POST(req: NextRequest) {
     console.error('OpenRouter failed, trying HuggingFace fallback:', error)
 
     try {
-      const fallbackPrompt = `${promptSistema}\n\n${ragContext}\n\n${aprendizajesAdicionales}\n\n${miembrosContext}\n\n${notasContext}\n\n${comisionesContext}\n\n${accionesContext}\n\nUsuario: ${mensaje}`
+      const fallbackPrompt = `${promptSistema}\n\n${ragContext}\n\n${aprendizajesAdicionales}\n\n${miembrosContext}\n\n${notasContext}\n\n${comisionesContext}\n\n${accionesContext}\n\n${articulosContext}\n\nUsuario: ${mensaje}`
       const respuestaCompleta = await callHuggingFace(fallbackPrompt)
       const resultadoAuditoria = await auditarRespuestaIA(mensaje, respuestaCompleta)
 
