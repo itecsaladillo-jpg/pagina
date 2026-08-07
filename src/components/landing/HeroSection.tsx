@@ -133,52 +133,71 @@ export function HeroSection() {
               </span>
             </div>
 
-            {/* Botones de Secciones (Mismos que el Header) */}
-            <div className="flex flex-wrap items-center justify-start gap-2 mt-6 animate-fade-up delay-300 relative z-10" style={{ animationFillMode: 'both' }}>
-              <a href="#videoteca" className="btn-outline text-[10px] uppercase tracking-wider py-1.5 px-4 border-dashed opacity-70 hover:opacity-100 transition-all">
-                {dict.navbar.videoteca}
-              </a>
-              <a href="#nosotros" className="btn-outline text-[10px] uppercase tracking-wider py-1.5 px-4 border-dashed opacity-70 hover:opacity-100 transition-all">
-                {dict.navbar.nosotros}
-              </a>
-              <a href="#sponsors" className="btn-outline text-[10px] uppercase tracking-wider py-1.5 px-4 border-dashed opacity-70 hover:opacity-100 transition-all">
-                {dict.navbar.sponsors}
-              </a>
-              <a href="#ideas" className="btn-outline text-[10px] uppercase tracking-wider py-1.5 px-4 border-dashed opacity-70 hover:opacity-100 transition-all">
-                {dict.navbar.ideas}
-              </a>
-              <Link
-                href="/mapa-productivo"
-                className="text-[10px] uppercase tracking-wider py-1.5 px-4 rounded-full font-bold
-                  bg-gradient-to-r from-blue-600/30 to-cyan-600/20 border border-blue-500/40
-                  text-blue-300 hover:text-white hover:border-blue-400 hover:from-blue-600/50 hover:to-cyan-600/30
-                  transition-all duration-200 flex items-center gap-1.5"
-              >
-                <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />
-                {dict.navbar.mapa}
-              </Link>
-              {claseEnVivo ? (
+            {/* Botones de Secciones — Diseño jerárquico */}
+            <div className="flex flex-col gap-3 mt-6 animate-fade-up delay-300 relative z-10" style={{ animationFillMode: 'both' }}>
+
+              {/* Fila principal: Aula Virtual + Mapa Productivo (destacados) */}
+              <div className="flex flex-wrap items-center gap-3">
                 <Link
                   href="/clases/demostracion"
-                  className="text-[10px] uppercase tracking-wider py-1.5 px-4 rounded-full font-bold
-                    bg-gradient-to-r from-red-600/30 to-rose-600/20 border border-red-500/40
-                    text-red-300 hover:text-white hover:border-red-400 hover:from-red-600/50 hover:to-rose-600/30
-                    transition-all duration-200 flex items-center gap-1.5 animate-pulse"
+                  className={`group relative text-xs uppercase tracking-wider font-bold py-2.5 px-6 rounded-full
+                    transition-all duration-300 flex items-center gap-2 overflow-hidden
+                    ${claseEnVivo
+                      ? 'bg-gradient-to-r from-red-600 to-rose-600 border-2 border-red-400 text-white shadow-[0_0_20px_rgba(239,68,68,0.4)] animate-pulse'
+                      : 'bg-gradient-to-r from-blue-600/20 to-cyan-600/10 border border-blue-500/30 text-blue-300 hover:text-white hover:border-blue-400 hover:from-blue-600/40 hover:to-cyan-600/20 hover:shadow-[0_0_15px_rgba(59,130,246,0.3)]'
+                    }`}
                 >
-                  <span className="w-1.5 h-1.5 rounded-full bg-red-400 animate-pulse" />
-                  {dict.navbar.aulaEnVivo}
+                  {claseEnVivo && <span className="w-2 h-2 rounded-full bg-white animate-pulse" />}
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 10.5l4.72-4.72a.75.75 0 011.28.53v11.38a.75.75 0 01-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25h-9A2.25 2.25 0 002.25 7.5v9a2.25 2.25 0 002.25 2.25z" />
+                  </svg>
+                  {claseEnVivo ? dict.navbar.aulaEnVivo : dict.navbar.aula}
                 </Link>
-              ) : (
+
                 <Link
-                  href="/clases/demostracion"
-                  className="btn-outline text-[10px] uppercase tracking-wider py-1.5 px-4 border-dashed opacity-70 hover:opacity-100 transition-all"
+                  href="/mapa-productivo"
+                  className="group relative text-xs uppercase tracking-wider font-bold py-2.5 px-6 rounded-full
+                    bg-gradient-to-r from-blue-600/20 to-cyan-600/10 border border-blue-500/30
+                    text-blue-300 hover:text-white hover:border-cyan-400
+                    hover:from-blue-600/40 hover:to-cyan-600/20 hover:shadow-[0_0_15px_rgba(6,182,212,0.3)]
+                    transition-all duration-300 flex items-center gap-2"
                 >
-                  {dict.navbar.aula}
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 6.75V15m6-6v8.25m.503 3.498l4.875-2.437c.381-.19.622-.58.622-1.006V4.82c0-.836-.88-1.38-1.628-1.006l-3.869 1.934c-.317.159-.69.159-1.006 0L9.503 3.252a1.125 1.125 0 00-1.006 0L3.622 5.689C3.24 5.88 3 6.27 3 6.695V19.18c0 .836.88 1.38 1.628 1.006l3.869-1.934c.317-.159.69-.159 1.006 0l4.994 2.497c.317.158.69.158 1.006 0z" />
+                  </svg>
+                  {dict.navbar.mapa}
                 </Link>
-              )}
-              <MembersAccessButton className="btn-outline text-[10px] uppercase tracking-wider py-1.5 px-4 border-dashed opacity-70 hover:opacity-100 transition-all cursor-pointer bg-transparent">
-                {dict.navbar.miembros}
-              </MembersAccessButton>
+              </div>
+
+              {/* Fila secundaria: Videoteca, Sponsors, Nosotros, Buzón de Ideas */}
+              <div className="flex flex-wrap items-center gap-2">
+                <a href="#videoteca" className="btn-outline text-[10px] uppercase tracking-wider py-1.5 px-4 border-dashed opacity-70 hover:opacity-100 transition-all">
+                  {dict.navbar.videoteca}
+                </a>
+                <a href="#nosotros" className="btn-outline text-[10px] uppercase tracking-wider py-1.5 px-4 border-dashed opacity-70 hover:opacity-100 transition-all">
+                  {dict.navbar.nosotros}
+                </a>
+                <a href="#sponsors" className="btn-outline text-[10px] uppercase tracking-wider py-1.5 px-4 border-dashed opacity-70 hover:opacity-100 transition-all">
+                  {dict.navbar.sponsors}
+                </a>
+                <a href="#ideas" className="btn-outline text-[10px] uppercase tracking-wider py-1.5 px-4 border-dashed opacity-70 hover:opacity-100 transition-all">
+                  {dict.navbar.ideas}
+                </a>
+              </div>
+
+              {/* Separador visual + Acceso Miembros */}
+              <div className="flex items-center gap-3 mt-1 pt-3 border-t border-white/5">
+                <MembersAccessButton className="text-[10px] uppercase tracking-wider py-1.5 px-4 rounded-full font-semibold
+                  bg-white/5 border border-white/10 text-[var(--text-secondary)]
+                  hover:bg-white/10 hover:border-white/20 hover:text-white
+                  transition-all duration-300 flex items-center gap-2 cursor-pointer">
+                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" />
+                  </svg>
+                  {dict.navbar.miembros}
+                </MembersAccessButton>
+              </div>
+
             </div>
           </div>
 
