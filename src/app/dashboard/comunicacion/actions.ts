@@ -207,7 +207,7 @@ export async function updateNotaAction(data: {
     console.error('[updateNotaAction] Error en news_flashes:', newsError.message)
   }
 
-  // 3. Actualizar public_articles si es la variante público
+  // 3. Actualizar public_articles (variante público)
   if (data.variant === 'publico') {
     const { error: articleError } = await supabase
       .from('public_articles')
