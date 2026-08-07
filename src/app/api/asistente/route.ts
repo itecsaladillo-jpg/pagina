@@ -4,15 +4,9 @@ import { createClient } from '@/lib/supabase/server'
 import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 import { recuperarContextoRAG } from '@/lib/rag/ragCascade'
 import { detectarComandoGuardar, debeAutoGuardar, guardarConversacion } from '@/lib/rag/conversacionesGuardadas'
+import { FALLBACK_PROMPT, ANTI_HALLUCINATION_RULES_FLEXIBLE } from '@/lib/ai/constants'
 
 export const runtime = 'edge'
-
-const ANTI_HALLUCINATION_RULES = `
-REGLAS DE CONTEXTO (RAG):
-1. Cuando el bloque <retrieved_context> contenga información relevante, PRIORIZÁ esa información para responder.
-2. Si el <retrieved_context> está vacío o no contiene la respuesta, utilizá tu conocimiento general del Prompt Maestro para responder de la mejor forma posible.
-3. Solo indicá "No dispongo de esa información" cuando REALMENTE no tengas ninguna fuente de información (ni RAG ni Prompt Maestro) sobre el tema consultado.
-4. PROHIBIDO inventar fechas, requisitos, programas o normativas que no figuren en ninguna de las fuentes de información disponibles.`
 
 async function callOpenRouter(messages: { role: string; content: string }[]): Promise<Response> {
   const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
@@ -112,18 +106,6 @@ export async function POST(req: NextRequest) {
   ])
 
   // ── Obtener Prompt Maestro directo de Supabase (sin caché) ──
-  const FALLBACK_PROMPT = `Sos el asistente virtual oficial de ITEC (Instituto Tecnológico de Saladillo), experto en Augusto Cicaré y su obra.
-
-IDENTIDAD:
-- Nombre: Asistente ITEC
-- Institución: Instituto Tecnológico de Saladillo (ITEC)
-- Especialización: Augusto Cicaré, Expo ITEC, actividad institucional
-
-REGLAS GENERALES:
-- Respondé en español rioplatense formal (con "vos").
-- Sé directo, conciso y útil.
-- Si no sabés la respuesta, indicá de forma amable y sugerí contactar a la institución.`
-
   let promptSistema = FALLBACK_PROMPT
   try {
     const supabaseAdmin = createSupabaseClient(
@@ -140,7 +122,6 @@ REGLAS GENERALES:
       console.error("⚠️ ERROR O PROMPT VACÍO AL LEER DE SUPABASE. Revisar RLS o clave.", promptError.message)
     } else if (promptData?.system_prompt) {
       promptSistema = promptData.system_prompt
-      console.log("📌 PROMPT MAESTRO CARGADO DESDE DB:\n", promptSistema.slice(0, 200) + '...')
     } else {
       console.error("⚠️ ERROR O PROMPT VACÍO AL LEER DE SUPABASE. Revisar RLS o clave.")
     }
@@ -216,7 +197,6 @@ REGLAS GENERALES:
     const { contexto, nivel } = ragResult.value
     if (contexto) {
       ragContext = `\n\n<retrieved_context>\n${contexto}\n</retrieved_context>`
-      console.log(`[Asistente] Contexto RAG inyectado (nivel: ${nivel}, ${contexto.length} chars)`)
     }
   } else {
     console.error('[Asistente] RAG cascade:', ragResult.reason)
@@ -230,7 +210,7 @@ REGLAS GENERALES:
   }
 
   const messages = [
-    { role: 'system', content: `${promptSistema}\n\n${ANTI_HALLUCINATION_RULES}${ragContext}\n${aprendizajesAdicionales}${miembrosContext}${notasContext}${comisionesContext}${accionesContext}` },
+    { role: 'system', content: `${promptSistema}\n\n${ANTI_HALLUCINATION_RULES_FLEXIBLE}${ragContext}\n${aprendizajesAdicionales}${miembrosContext}${notasContext}${comisionesContext}${accionesContext}` },
     ...historial
       .filter((m: { role: string }) => m.role !== 'system')
       .map((m: { role: string; content: string }) => ({

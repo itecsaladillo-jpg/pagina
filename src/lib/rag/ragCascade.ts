@@ -146,7 +146,6 @@ async function buscarEnVectorStore(
     }
 
     if (!data || data.length === 0) {
-      console.log('[RAG P1] Sin resultados del vector store')
       return { contexto: '', score: 0 }
     }
 
@@ -157,7 +156,6 @@ async function buscarEnVectorStore(
       .slice(0, MAX_CONTEXT_CHARS)
 
     const maxScore = Math.max(...data.map((r: any) => r.similarity))
-    console.log(`[RAG P1] ${data.length} chunks, score=${maxScore.toFixed(3)}`)
 
     return { contexto, score: maxScore }
   } catch (err) {
@@ -331,7 +329,6 @@ export async function recuperarContextoRAG(
   // ── P1: Búsqueda Semántica pgvector ─────────────────────────
   try {
     const p1 = await buscarEnVectorStore(query, supabase)
-    console.log(`[RAG P1-vector] score=${p1.score.toFixed(3)} threshold=${THRESHOLD_VECTOR}`)
 
     if (p1.score >= THRESHOLD_VECTOR && p1.contexto) {
       return { contexto: p1.contexto, nivel: 'vector', score: p1.score }
@@ -346,7 +343,6 @@ export async function recuperarContextoRAG(
 
   // ── P2: Documentos Locales (keyword scoring) ────────────────
   const p2 = buscarEnDocsLocales(query)
-  console.log(`[RAG P2-local] score=${p2.score.toFixed(3)} threshold=${THRESHOLD_LOCAL}`)
 
   if (p2.score >= THRESHOLD_LOCAL && p2.contexto) {
     return { contexto: p2.contexto, nivel: 'local', score: p2.score }
@@ -359,7 +355,6 @@ export async function recuperarContextoRAG(
   // ── P3: Supabase Storage Bucket ────────────────────────────
   try {
     const p3 = await buscarEnSupabaseBucket(query, supabase)
-    console.log(`[RAG P3-supabase] score=${p3.score.toFixed(3)} threshold=${THRESHOLD_SUPABASE}`)
 
     if (p3.score >= THRESHOLD_SUPABASE && p3.contexto) {
       return { contexto: p3.contexto, nivel: 'supabase', score: p3.score }
@@ -376,7 +371,6 @@ export async function recuperarContextoRAG(
   if (sessionId) {
     try {
       const p4_conv = await buscarConversacionesSimilares(query, sessionId, supabase)
-      console.log(`[RAG P4-conv] score=${p4_conv.score.toFixed(3)} (threshold=0.35)`)
 
       if (p4_conv.contexto) {
         return { contexto: p4_conv.contexto, nivel: 'conversaciones', score: p4_conv.score }
@@ -393,7 +387,6 @@ export async function recuperarContextoRAG(
   // ── P5: Web Search Fallback ────────────────────────────────
   try {
     const webContexto = await buscarEnWeb(query)
-    console.log(`[RAG P5-web] ${webContexto ? `${webContexto.length} chars recuperados` : 'sin resultados'}`)
 
     if (webContexto) {
       return { contexto: webContexto, nivel: 'web', score: 0 }

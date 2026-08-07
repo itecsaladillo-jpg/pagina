@@ -9,7 +9,6 @@ import {
   User, 
   FileCheck, 
   ShieldAlert, 
-  Download, 
   Share2, 
   Cpu, 
   Code, 
@@ -19,7 +18,6 @@ import {
   Workflow,
   Smartphone,
   ExternalLink,
-  ChevronRight
 } from 'lucide-react'
 import dynamic from 'next/dynamic'
 const QRCode = dynamic(() => import('react-qr-code'), { ssr: false })

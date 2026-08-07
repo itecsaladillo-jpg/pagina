@@ -4,28 +4,11 @@ import type { ChatCompletionMessageParam } from 'groq-sdk/resources/chat/complet
 import { createClient } from '@/lib/supabase/server';
 import { createClient as createSupabaseClient } from '@supabase/supabase-js';
 import { recuperarContextoRAG } from '@/lib/rag/ragCascade';
+import { FALLBACK_PROMPT, ANTI_HALLUCINATION_RULES_STRICT } from '@/lib/ai/constants';
 
 // ============================================================
 // Configuración
 // ============================================================
-
-const FALLBACK_PROMPT = `Sos el asistente virtual oficial de ITEC (Instituto Tecnológico de Saladillo), experto en Augusto Cicaré y su obra.
-
-IDENTIDAD:
-- Nombre: Asistente ITEC
-- Institución: Instituto Tecnológico de Saladillo (ITEC)
-- Especialización: Augusto Cicaré, Expo ITEC, actividad institucional
-
-REGLAS GENERALES:
-- Respondé en español rioplatense formal (con "vos").
-- Sé directo, conciso y útil.
-- Si no sabés la respuesta, indicá de forma amable y sugerí contactar a la institución.`;
-
-const ANTI_HALLUCINATION_RULES = `
-REGLAS OBLIGATORIAS DE CONTEXTO (RAG):
-1. Respondé ÚNICAMENTE utilizando la información provista dentro del bloque <retrieved_context>.
-2. Si la respuesta a la pregunta del usuario NO se encuentra contenida en <retrieved_context>, respondé de forma amable: "No dispongo de esa información específica en los documentos oficiales cargados. Por favor, consultá directamente con la administración del ITEC."
-3. Queda estrictamente PROHIBIDO inventar fechas, requisitos, programas o normativas que no figuren explícitamente en el contexto.`;
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
@@ -62,7 +45,6 @@ async function fetchPromptMaestro(): Promise<string> {
       return FALLBACK_PROMPT;
     }
 
-    console.log("📌 PROMPT MAESTRO CARGADO DESDE DB:\n", data.system_prompt.slice(0, 200) + '...');
     return data.system_prompt;
   } catch (err) {
     console.error("⚠️ ERROR O PROMPT VACÍO AL LEER DE SUPABASE. Revisar RLS o clave.", err);
@@ -196,7 +178,7 @@ export async function POST(request: NextRequest) {
 
     const systemPrompt = `${promptMaestro}
 
-${ANTI_HALLUCINATION_RULES}
+${ANTI_HALLUCINATION_RULES_STRICT}
 
 <retrieved_context>
 ${retrievedContext}
@@ -206,8 +188,6 @@ ${retrievedContext}
 ${datosDinamicos || '(No hay datos dinámicos disponibles en este momento)'}
 --------------------`;
 
-    console.log("SYSTEM PROMPT ENVIADO A GROQ:\n", systemPrompt.slice(0, 500) + '...');
-
     // ── 5. Construir array final: UN solo system + historial limpio + último mensaje ──
     const messages: ChatCompletionMessageParam[] = [
       { role: 'system', content: systemPrompt },
@@ -216,13 +196,6 @@ ${datosDinamicos || '(No hay datos dinámicos disponibles en este momento)'}
         content: m.content,
       })),
     ];
-
-    // ── DEBUG RAG ──
-    console.log('=== DEBUG RAG START ===');
-    console.log('Pregunta:', userMessage);
-    console.log('RAG Level:', ragResult.nivel, '| Score:', ragResult.score.toFixed(3));
-    console.log('Contexto Recuperado:\n', ragResult.contexto || '⚠️ VACIO');
-    console.log('=== DEBUG RAG END ===');
 
     // ── 6. Streaming con Groq llama-3.3-70b-versatile ──
     const stream = await groq.chat.completions.create({

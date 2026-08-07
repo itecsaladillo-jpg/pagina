@@ -21,7 +21,6 @@ import {
   TrendingUp,
   ToggleLeft,
   Monitor,
-  RefreshCw,
   BarChart3,
   Activity,
   RotateCcw,
@@ -93,9 +92,6 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
   const supabase = createClient();
 
   // Estados principales
-  console.log("[INIT] initialEvento keys:", Object.keys(initialEvento));
-  console.log("[INIT] herramientas_activas from DB:", (initialEvento as any).herramientas_activas);
-
   const [evento, setEvento] = useState<Evento>(() => ({
     ...initialEvento,
     herramientas_activas: (initialEvento as any).herramientas_activas ?? { encuestas: false, preguntas: false, nube: false, semaforo: false },
@@ -596,8 +592,6 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
   // --- LÓGICA DE CONTROL DEL ORADOR (SWITCHES + MODO PROYECCIÓN) ---
 
   const handleToggleHerramienta = async (key: keyof HerramientasActivas & string) => {
-    console.log("[TOGGLE] clicked", key, "current ha:", JSON.stringify(evento.herramientas_activas));
-
     if (!evento.id) {
       console.error("[TOGGLE] evento.id is falsy");
       return;
@@ -607,8 +601,6 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
       ...evento.herramientas_activas,
       [key]: !evento.herramientas_activas[key],
     }
-
-    console.log("[TOGGLE] nuevas:", JSON.stringify(nuevas));
 
     const { error } = await supabase
       .from("eventos")
