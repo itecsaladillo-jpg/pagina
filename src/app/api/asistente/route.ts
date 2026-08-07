@@ -6,7 +6,7 @@ import { recuperarContextoRAG } from '@/lib/rag/ragCascade'
 import { detectarComandoGuardar, debeAutoGuardar, guardarConversacion } from '@/lib/rag/conversacionesGuardadas'
 import { FALLBACK_PROMPT, ANTI_HALLUCINATION_RULES_FLEXIBLE } from '@/lib/ai/constants'
 
-export const runtime = 'edge'
+// Node.js runtime (no Edge) — necesario para que @supabase/ssr y cookies() funcionen correctamente
 
 /**
  * Lee un valor de api_settings en Supabase (compatible Edge Runtime).
