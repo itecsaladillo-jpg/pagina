@@ -6,38 +6,12 @@ import { recuperarContextoRAG } from '@/lib/rag/ragCascade'
 import { detectarComandoGuardar, debeAutoGuardar, guardarConversacion } from '@/lib/rag/conversacionesGuardadas'
 import { FALLBACK_PROMPT, ANTI_HALLUCINATION_RULES_FLEXIBLE } from '@/lib/ai/constants'
 
-// Node.js runtime (no Edge) — necesario para que @supabase/ssr y cookies() funcionen correctamente
-
-/**
- * Lee un valor de api_settings en Supabase (compatible Edge Runtime).
- * Usa fetch nativo + anon key, sin dependencias de @supabase/ssr.
- */
-async function getEdgeSetting(key: string, envFallback: string = ''): Promise<string> {
-  try {
-    const url = process.env.NEXT_PUBLIC_SUPABASE_URL
-    const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-    if (!url || !anonKey) return envFallback
-
-    const res = await fetch(`${url}/rest/v1/api_settings?key=eq.${encodeURIComponent(key)}&select=value`, {
-      headers: {
-        'apikey': anonKey,
-        'Authorization': `Bearer ${anonKey}`,
-        'Content-Type': 'application/json',
-      },
-      signal: AbortSignal.timeout(3000),
-    })
-    if (!res.ok) return envFallback
-    const rows = await res.json() as Array<{ value: string }>
-    const val = rows?.[0]?.value
-    return val && val.trim() ? val : envFallback
-  } catch {
-    return envFallback
-  }
-}
-
 async function callOpenRouter(messages: { role: string; content: string }[]): Promise<Response> {
-  const apiKey = await getEdgeSetting('openrouter_api_key', process.env.OPENROUTER_API_KEY || '')
-  if (!apiKey) throw new Error('No OpenRouter API key configured')
+  const apiKey = process.env.OPENROUTER_API_KEY
+  if (!apiKey) {
+    console.error('[Asistente] OPENROUTER_API_KEY no está configurada en variables de entorno')
+    throw new Error('No OpenRouter API key configured')
+  }
 
   const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
     method: 'POST',
@@ -57,15 +31,19 @@ async function callOpenRouter(messages: { role: string; content: string }[]): Pr
   })
 
   if (!response.ok) {
-    console.error(`[Asistente] OpenRouter error: ${response.status}`)
-    throw new Error('AI provider unavailable')
+    const errorBody = await response.text().catch(() => 'no body')
+    console.error(`[Asistente] OpenRouter error: ${response.status} - ${errorBody}`)
+    throw new Error(`AI provider unavailable (${response.status})`)
   }
   return response
 }
 
 async function callHuggingFace(prompt: string): Promise<string> {
-  const apiKey = await getEdgeSetting('hf_api_key', process.env.HF_API_KEY || '')
-  if (!apiKey) throw new Error('No HuggingFace API key configured')
+  const apiKey = process.env.HF_API_KEY
+  if (!apiKey) {
+    console.error('[Asistente] HF_API_KEY no está configurada en variables de entorno')
+    throw new Error('No HuggingFace API key configured')
+  }
 
   const response = await fetch('https://api-inference.huggingface.co/models/meta-llama/Llama-3.1-8B-Instruct', {
     method: 'POST',
@@ -84,8 +62,9 @@ async function callHuggingFace(prompt: string): Promise<string> {
   })
 
   if (!response.ok) {
-    console.error(`[Asistente] HuggingFace error: ${response.status}`)
-    throw new Error('AI fallback provider unavailable')
+    const errorBody = await response.text().catch(() => 'no body')
+    console.error(`[Asistente] HuggingFace error: ${response.status} - ${errorBody}`)
+    throw new Error(`AI fallback provider unavailable (${response.status})`)
   }
   const data = await response.json()
   return data?.generated_text || data?.[0]?.generated_text || ''
@@ -100,12 +79,20 @@ export async function POST(req: NextRequest) {
   }
 
   const { mensaje, historial = [], sessionId: clientSessionId } = cuerpo
-  // Auto-generate sessionId if client doesn't provide one (enables P4 conversation memory)
   const sessionId = clientSessionId || crypto.randomUUID()
 
   if (!mensaje || typeof mensaje !== 'string') {
     return NextResponse.json({ error: 'Mensaje requerido' }, { status: 400 })
   }
+
+  console.log('[Asistente] Env keys presentes:', {
+    OPENROUTER: !!process.env.OPENROUTER_API_KEY,
+    HF: !!process.env.HF_API_KEY,
+    GEMINI: !!(process.env.GEMINI_API_KEY || process.env.GEMINI_APY_KEY || process.env.GOOGLE_GENERATIVE_AI_API_KEY),
+    SUPABASE_URL: !!process.env.NEXT_PUBLIC_SUPABASE_URL,
+    SUPABASE_ANON: !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+    SERVICE_ROLE: !!process.env.SUPABASE_SERVICE_ROLE_KEY,
+  })
 
   const supabase = await createClient()
 
@@ -325,7 +312,42 @@ export async function POST(req: NextRequest) {
         fallback: true
       })
     } catch (fallbackError: any) {
-      console.error('[Asistente] Both AI providers failed:', error?.message, fallbackError?.message)
+      console.error('[Asistente] Both OpenRouter and HuggingFace failed:', error?.message, fallbackError?.message)
+
+      // Fallback 3: Gemini
+      try {
+        const geminiKey = process.env.GEMINI_API_KEY || process.env.GEMINI_APY_KEY || process.env.GOOGLE_GENERATIVE_AI_API_KEY || ''
+        if (!geminiKey) throw new Error('No Gemini API key')
+
+        const geminiRes = await fetch(
+          `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${geminiKey}`,
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              systemInstruction: { parts: [{ text: messages[0].content }] },
+              contents: [{ parts: [{ text: mensaje }] }],
+              generationConfig: { temperature: 0.7, maxOutputTokens: 4096 },
+            }),
+          }
+        )
+
+        if (!geminiRes.ok) throw new Error(`Gemini error: ${geminiRes.status}`)
+        const geminiData = await geminiRes.json()
+        const geminiText = geminiData.candidates?.[0]?.content?.parts?.[0]?.text || ''
+        if (!geminiText) throw new Error('Gemini returned empty')
+
+        const resultadoAuditoria = await auditarRespuestaIA(mensaje, geminiText)
+        return NextResponse.json({
+          respuesta: resultadoAuditoria.respuestaFinal,
+          guardado: (esComandoGuardar || esAutoGuardar) ? true : undefined,
+          modelo: 'gemini-2.0-flash',
+          fallback: true
+        })
+      } catch (geminiError: any) {
+        console.error('[Asistente] All 3 AI providers failed:', geminiError?.message)
+      }
+
       return NextResponse.json({
         error: 'Error al conectar con el servicio de IA'
       }, { status: 502 })
