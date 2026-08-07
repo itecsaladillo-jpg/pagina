@@ -57,7 +57,7 @@ const beneficiosAlumno = [
 
 const estadisticas = [
   { valor: '60+', label: 'Empresas del partido' },
-  { valor: '3',   label: 'Escuelas técnicas' },
+  { valor: '5',   label: 'Instituciones educativas' },
   { valor: '∞',   label: 'Proyectos posibles' },
 ]
 

@@ -41,9 +41,11 @@ const CATEGORIAS_DEMANDA = [
 ]
 
 const ESCUELAS = [
-  'E.E.S.T. N°1 - Saladillo',
-  'E.E.S.T. N°2 - Saladillo',
-  'Instituto Técnico Municipal',
+  'E.E.S.T. N° 1 "General Savio" - Saladillo',
+  'E.E.S.A. N° 1 "Ing. Horacio Giberti" - Saladillo',
+  'Centro Universitario Regional Saladillo (CURS)',
+  'Centro de Formación Rural (CFR) Saladillo - Fundación Marzano',
+  'Instituto Superior de Formación Técnica N° 135 "Ing. Mario Deraldo Michelini"',
   'Otra escuela técnica',
 ]
 
