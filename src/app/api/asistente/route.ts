@@ -10,6 +10,9 @@ async function callOpenRouter(messages: { role: string; content: string }[]): Pr
   const apiKey = process.env.OPENROUTER_API_KEY
   if (!apiKey) throw new Error('OPENROUTER_API_KEY not set')
 
+  const totalChars = messages.reduce((sum, m) => sum + m.content.length, 0)
+  console.log(`[Asistente] OpenRouter payload: ${messages.length} messages, ${totalChars} chars`)
+
   const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
     method: 'POST',
     headers: {
@@ -24,7 +27,8 @@ async function callOpenRouter(messages: { role: string; content: string }[]): Pr
       stream: false,
       temperature: 0.7,
       max_tokens: 4096
-    })
+    }),
+    signal: AbortSignal.timeout(25000),
   })
 
   if (!response.ok) {
