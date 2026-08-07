@@ -117,19 +117,19 @@ export async function POST(req: NextRequest) {
         promptSistema = promptResult.value.data.system_prompt
       }
 
-      const miembrosContext = miembrosResult.status === 'fulfilled' && miembrosResult.value.data?.length > 0
-        ? `\n\n## Staff ITEC:\n${miembrosResult.value.data.map((m: any) => `- ${m.full_name}: ${m.role}`).join('\n')}` : ''
+      const miembrosContext = miembrosResult.status === 'fulfilled' && (miembrosResult.value.data as any[])?.length
+        ? `\n\n## Staff ITEC:\n${(miembrosResult.value.data as any[]).map((m: any) => `- ${m.full_name}: ${m.role}`).join('\n')}` : ''
 
-      const notasContext = notasResult.status === 'fulfilled' && notasResult.value.data?.length > 0
+      const notasContext = notasResult.status === 'fulfilled' && notasResult.value.data?.length
         ? `\n\n## Noticias Recientes:\n${notasResult.value.data.map((n: any) => `- ${n.titulo}: ${(n.contenido || '').slice(0, 200)}`).join('\n')}` : ''
 
-      const comisionesContext = comisionesResult.status === 'fulfilled' && comisionesResult.value.data?.length > 0
+      const comisionesContext = comisionesResult.status === 'fulfilled' && comisionesResult.value.data?.length
         ? `\n\n## Comisiones:\n${comisionesResult.value.data.map((c: any) => `- ${c.name}`).join('\n')}` : ''
 
-      const accionesContext = accionesResult.status === 'fulfilled' && accionesResult.value.data?.length > 0
+      const accionesContext = accionesResult.status === 'fulfilled' && accionesResult.value.data?.length
         ? `\n\n## Próximas actividades:\n${accionesResult.value.data.map((a: any) => `- ${a.title} (${a.type})`).join('\n')}` : ''
 
-      const articulosContext = articulosResult.status === 'fulfilled' && articulosResult.value.data?.length > 0
+      const articulosContext = articulosResult.status === 'fulfilled' && articulosResult.value.data?.length
         ? `\n\n## Artículos:\n${articulosResult.value.data.map((a: any) => `- "${a.title}": ${(a.excerpt || '').slice(0, 150)}`).join('\n')}` : ''
 
       promptSistema += `\n\n${ANTI_HALLUCINATION_RULES_FLEXIBLE}${miembrosContext}${notasContext}${comisionesContext}${accionesContext}${articulosContext}`
