@@ -99,6 +99,8 @@ export async function POST(req: NextRequest) {
     console.log('[Asistente] Using admin client as fallback')
   }
 
+  console.log('[Asistente] Starting parallel context queries...')
+
   // ── Contexto enriquecido: ejecutar en paralelo todo lo que no depende de RAG ──
   const [
     feedbacksResult,
