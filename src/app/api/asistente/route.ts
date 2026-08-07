@@ -8,11 +8,41 @@ import { FALLBACK_PROMPT, ANTI_HALLUCINATION_RULES_FLEXIBLE } from '@/lib/ai/con
 
 export const runtime = 'edge'
 
+/**
+ * Lee un valor de api_settings en Supabase (compatible Edge Runtime).
+ * Usa fetch nativo + anon key, sin dependencias de @supabase/ssr.
+ */
+async function getEdgeSetting(key: string, envFallback: string = ''): Promise<string> {
+  try {
+    const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+    const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+    if (!url || !anonKey) return envFallback
+
+    const res = await fetch(`${url}/rest/v1/api_settings?key=eq.${encodeURIComponent(key)}&select=value`, {
+      headers: {
+        'apikey': anonKey,
+        'Authorization': `Bearer ${anonKey}`,
+        'Content-Type': 'application/json',
+      },
+      signal: AbortSignal.timeout(3000),
+    })
+    if (!res.ok) return envFallback
+    const rows = await res.json() as Array<{ value: string }>
+    const val = rows?.[0]?.value
+    return val && val.trim() ? val : envFallback
+  } catch {
+    return envFallback
+  }
+}
+
 async function callOpenRouter(messages: { role: string; content: string }[]): Promise<Response> {
+  const apiKey = await getEdgeSetting('openrouter_api_key', process.env.OPENROUTER_API_KEY || '')
+  if (!apiKey) throw new Error('No OpenRouter API key configured')
+
   const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
     method: 'POST',
     headers: {
-      'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY}`,
+      'Authorization': `Bearer ${apiKey}`,
       'Content-Type': 'application/json',
       'HTTP-Referer': 'https://itecsaladillo.org.ar',
       'X-Title': 'ITEC Asistente'
@@ -34,10 +64,13 @@ async function callOpenRouter(messages: { role: string; content: string }[]): Pr
 }
 
 async function callHuggingFace(prompt: string): Promise<string> {
+  const apiKey = await getEdgeSetting('hf_api_key', process.env.HF_API_KEY || '')
+  if (!apiKey) throw new Error('No HuggingFace API key configured')
+
   const response = await fetch('https://api-inference.huggingface.co/models/meta-llama/Llama-3.1-8B-Instruct', {
     method: 'POST',
     headers: {
-      'Authorization': `Bearer ${process.env.HF_API_KEY}`,
+      'Authorization': `Bearer ${apiKey}`,
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
