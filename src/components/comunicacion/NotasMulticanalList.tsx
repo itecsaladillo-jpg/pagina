@@ -292,7 +292,6 @@ export function NotasMulticanalList({ notas: initialNotas }: NotasMulticanalList
               <div className="flex flex-wrap gap-2">
                 {getVariantInfo(selected).map((v) => {
                   const Icon = v.icon
-                  if (!v.enabled) return null
                   return (
                     <button
                       key={v.key}
