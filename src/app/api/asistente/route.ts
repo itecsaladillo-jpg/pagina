@@ -85,7 +85,19 @@ export async function POST(req: NextRequest) {
     SERVICE_ROLE: !!process.env.SUPABASE_SERVICE_ROLE_KEY,
   })
 
-  const supabase = await createClient()
+  let supabase: any
+  try {
+    supabase = await createClient()
+    console.log('[Asistente] Supabase client created OK')
+  } catch (e: any) {
+    console.error('[Asistente] createClient() FAILED:', e?.message)
+    // Continue without supabase context - AI call should still work
+    supabase = createSupabaseClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    )
+    console.log('[Asistente] Using admin client as fallback')
+  }
 
   // ── Contexto enriquecido: ejecutar en paralelo todo lo que no depende de RAG ──
   const [
