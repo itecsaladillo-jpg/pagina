@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { auditarRespuestaIA } from '@/services/ai'
 import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 import { detectarComandoGuardar, debeAutoGuardar } from '@/lib/rag/conversacionesGuardadas'
+import { recuperarContextoRAG } from '@/lib/rag/ragCascade'
 import { FALLBACK_PROMPT, ANTI_HALLUCINATION_RULES_FLEXIBLE } from '@/lib/ai/constants'
 
 async function callOpenRouter(messages: { role: string; content: string }[]): Promise<Response> {
@@ -133,6 +134,19 @@ export async function POST(req: NextRequest) {
         ? `\n\n## Artículos:\n${articulosResult.value.data.map((a: any) => `- "${a.title}": ${(a.excerpt || '').slice(0, 150)}`).join('\n')}` : ''
 
       promptSistema += `\n\n${ANTI_HALLUCINATION_RULES_FLEXIBLE}${miembrosContext}${notasContext}${comisionesContext}${accionesContext}${articulosContext}`
+
+      // RAG Cascade: búsqueda semántica en documentos, docs locales, bucket, conversaciones y web
+      try {
+        const ragResult = await recuperarContextoRAG(mensaje, adminClient, sessionId)
+        if (ragResult.contexto) {
+          promptSistema += `\n\n## Contexto recuperado por RAG (nivel: ${ragResult.nivel}, score: ${ragResult.score.toFixed(2)}):\n${ragResult.contexto}`
+          console.log(`[Asistente] RAG: nivel=${ragResult.nivel}, score=${ragResult.score.toFixed(3)}`)
+        } else {
+          console.log('[Asistente] RAG: sin contexto recuperado')
+        }
+      } catch (ragErr: any) {
+        console.error('[Asistente] Error en RAG cascade:', ragErr?.message)
+      }
     } catch (e: any) {
       console.error('[Asistente] Error cargando contexto:', e?.message)
     }
