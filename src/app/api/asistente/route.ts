@@ -20,7 +20,7 @@ async function callOpenRouter(messages: { role: string; content: string }[]): Pr
       'X-Title': 'ITEC Asistente'
     },
     body: JSON.stringify({
-      model: 'deepseek/deepseek-chat',
+      model: 'google/gemma-3-27b-it:free',
       messages,
       stream: false,
       temperature: 0.7,
