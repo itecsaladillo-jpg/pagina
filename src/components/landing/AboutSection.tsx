@@ -3,6 +3,8 @@
 import { useLanguage } from '@/contexts/LanguageContext'
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
+import { motion, AnimatePresence } from 'framer-motion'
+import { X, Mail, Phone, ExternalLink, Calendar } from 'lucide-react'
 
 interface Member {
   id: string;
@@ -12,12 +14,18 @@ interface Member {
   frase_itec: string | null;
   tareas_itec: string | null;
   bio: string | null;
+  email: string | null;
+  phone: string | null;
+  linkedin_url: string | null;
+  join_date: string | null;
+  status: string | null;
 }
 
 export function AboutSection() {
   const { dict } = useLanguage()
   const [members, setMembers] = useState<Member[]>([])
   const [loading, setLoading] = useState(true)
+  const [selectedMember, setSelectedMember] = useState<Member | null>(null)
 
   useEffect(() => {
     const fetchMembers = async () => {
@@ -122,7 +130,7 @@ export function AboutSection() {
           ) : members.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {members.map((member, index) => (
-                <div key={member.id || `member-${index}`} className="glass rounded-2xl p-6 flex flex-col items-center text-center card-hover border border-[var(--border-subtle)] relative overflow-hidden group">
+                <div key={member.id || `member-${index}`} onClick={() => setSelectedMember(member)} className="glass rounded-2xl p-6 flex flex-col items-center text-center card-hover border border-[var(--border-subtle)] relative overflow-hidden group cursor-pointer">
                   <div className="absolute inset-0 bg-gradient-to-b from-[var(--accent-warm)]/0 to-[var(--accent-warm)]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   
                   <div className="w-24 h-24 rounded-full overflow-hidden mb-5 border-2 border-[var(--border-subtle)] group-hover:border-[var(--accent-warm)]/50 transition-colors shadow-lg shadow-black/20">
@@ -143,7 +151,7 @@ export function AboutSection() {
                   
                   {(member.frase_itec || member.bio) && (
                     <p className="text-[var(--text-secondary)] text-sm line-clamp-4 leading-relaxed flex-1 italic">
-                      "{member.frase_itec || member.bio}"
+                      &quot;{member.frase_itec || member.bio}&quot;
                     </p>
                   )}
                 </div>
@@ -156,6 +164,122 @@ export function AboutSection() {
           )}
         </div>
       </div>
+
+      {/* Modal de Perfil del Miembro */}
+      <AnimatePresence>
+        {selectedMember && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              transition={{ duration: 0.2 }}
+              className="bg-[#0a0f1e] border border-white/10 rounded-3xl w-full max-w-lg overflow-hidden shadow-2xl"
+            >
+              {/* Header con imagen de fondo */}
+              <div className="relative h-32 bg-gradient-to-r from-[var(--accent-warm)]/20 to-violet-600/20">
+                <button
+                  onClick={() => setSelectedMember(null)}
+                  className="absolute top-4 right-4 w-8 h-8 bg-black/40 backdrop-blur-sm rounded-full flex items-center justify-center text-white/70 hover:text-white hover:bg-black/60 transition-colors"
+                >
+                  <X size={16} />
+                </button>
+              </div>
+
+              {/* Avatar centrado */}
+              <div className="flex justify-center -mt-16">
+                <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-[#0a0f1e] shadow-xl">
+                  {selectedMember.avatar_url ? (
+                    <img
+                      src={selectedMember.avatar_url}
+                      alt={selectedMember.full_name}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-white/10 flex items-center justify-center text-white text-4xl font-bold">
+                      {selectedMember.full_name.charAt(0).toUpperCase()}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Contenido */}
+              <div className="px-6 pt-4 pb-6">
+                {/* Nombre y Rol */}
+                <div className="text-center mb-4">
+                  <h3 className="text-2xl font-bold text-white mb-2">{selectedMember.full_name}</h3>
+                  <span className="text-xs font-medium text-[var(--accent-warm)] bg-[var(--accent-warm)]/10 px-4 py-1.5 rounded-full border border-[var(--accent-warm)]/20">
+                    {selectedMember.role === 'admin' ? 'Administrador' : selectedMember.role === 'coordinador' ? 'Coordinador' : selectedMember.role === 'colaborador' ? 'Colaborador' : 'Miembro'}
+                  </span>
+                </div>
+
+                {/* Bio / Frase */}
+                {(selectedMember.frase_itec || selectedMember.bio) && (
+                  <div className="mb-4 p-4 bg-white/5 rounded-xl border border-white/5">
+                    <p className="text-[var(--text-secondary)] text-sm leading-relaxed italic">
+                      &quot;{selectedMember.frase_itec || selectedMember.bio}&quot;
+                    </p>
+                  </div>
+                )}
+
+                {/* Tareas ITEC */}
+                {selectedMember.tareas_itec && (
+                  <div className="mb-4 p-4 bg-white/5 rounded-xl border border-white/5">
+                    <h4 className="text-white text-sm font-semibold mb-2">Tareas en ITEC</h4>
+                    <p className="text-[var(--text-secondary)] text-sm leading-relaxed">
+                      {selectedMember.tareas_itec}
+                    </p>
+                  </div>
+                )}
+
+                {/* Información de contacto */}
+                <div className="space-y-3">
+                  {selectedMember.email && (
+                    <div className="flex items-center gap-3 text-sm">
+                      <Mail size={16} className="text-[var(--accent-warm)]" />
+                      <a href={`mailto:${selectedMember.email}`} className="text-[var(--text-secondary)] hover:text-white transition-colors">
+                        {selectedMember.email}
+                      </a>
+                    </div>
+                  )}
+
+                  {selectedMember.phone && (
+                    <div className="flex items-center gap-3 text-sm">
+                      <Phone size={16} className="text-[var(--accent-warm)]" />
+                      <a href={`tel:${selectedMember.phone}`} className="text-[var(--text-secondary)] hover:text-white transition-colors">
+                        {selectedMember.phone}
+                      </a>
+                    </div>
+                  )}
+
+                  {selectedMember.linkedin_url && (
+                    <div className="flex items-center gap-3 text-sm">
+                      <ExternalLink size={16} className="text-[var(--accent-warm)]" />
+                      <a
+                        href={selectedMember.linkedin_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-[var(--text-secondary)] hover:text-white transition-colors"
+                      >
+                        LinkedIn
+                      </a>
+                    </div>
+                  )}
+
+                  {selectedMember.join_date && (
+                    <div className="flex items-center gap-3 text-sm">
+                      <Calendar size={16} className="text-[var(--accent-warm)]" />
+                      <span className="text-[var(--text-secondary)]">
+                        Ingreso: {new Date(selectedMember.join_date).toLocaleDateString('es-AR', { month: 'long', year: 'numeric' })}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </section>
   )
 }
