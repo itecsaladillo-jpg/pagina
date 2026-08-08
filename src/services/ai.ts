@@ -72,7 +72,7 @@ async function callAI(messages: { role: string; content: string }[], temperature
           'X-Title': 'ITEC AI',
         },
         body: JSON.stringify({
-          model: 'deepseek/deepseek-chat',
+          model: 'openrouter/free',
           messages,
           stream: false,
           temperature,

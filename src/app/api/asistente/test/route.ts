@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
         'X-Title': 'ITEC Test'
       },
       body: JSON.stringify({
-        model: 'deepseek/deepseek-chat',
+        model: 'openrouter/free',
         messages,
         stream: false,
         temperature: 0.7,
