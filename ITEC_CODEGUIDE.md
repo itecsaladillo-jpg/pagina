@@ -6,13 +6,13 @@ Plataforma web full-stack de **ITEC Saladillo** (Asociación Civil de Ciencia y 
 ---
 
 ## Stack Tecnológico
-- **Framework:** Next.js 16.2.6 (App Router, Turbopack)
+- **Framework:** Next.js 16.3.0 (App Router, Turbopack)
 - **React:** 19.2.4
 - **Lenguaje:** TypeScript (strict)
 - **Estilos:** Tailwind CSS v4 + CSS custom properties (tema oscuro)
-- **Base de datos:** Supabase PostgreSQL (61 migraciones)
+- **Base de datos:** Supabase PostgreSQL (63 migraciones, pgvector para RAG)
 - **Auth:** Supabase Auth + Google OAuth
-- **Despliegue:** Vercel
+- **Despliegue:** Vercel (auto-deploy desde `main`)
 - **Path alias:** `@/` → `./src/`
 
 ## Dependencias Clave
@@ -22,6 +22,16 @@ Plataforma web full-stack de **ITEC Saladillo** (Asociación Civil de Ciencia y 
 - `react-hook-form` 7.81.0, `zod`, `@hookform/resolvers`
 - `resend` 6.12.3 (emails), `date-fns` 4.1.0
 - `pdf-parse`, `react-qr-code`
+
+## Scripts Disponibles
+| Script | Comando | Descripción |
+|--------|---------|-------------|
+| `dev` | `next dev` | Dev server con Turbopack |
+| `build` | `next build` | Build de producción |
+| `lint` | `eslint` | Linting |
+| `sync-docs` | `node scripts/generateDocsContext.mjs` | PDFs → docsContext.ts (RAG keyword) |
+| `extract-docs` | `node scripts/extractPdfText.js` | Extraer texto de PDFs a JSON |
+| `ingest-vector` | `node --dns-result-order=ipv4first --env-file=.env.local scripts/ingestDocsToVector.mjs` | PDFs → pgvector embeddings (Gemini) |
 
 ## Estructura del Proyecto
 ```
@@ -176,7 +186,7 @@ D:\ITEC\
 │   │   └── LanguageContext.tsx  # Contexto de idioma
 │   └── proxy.ts                # Next.js middleware (auth, protección de rutas)
 ├── supabase/
-│   └── migrations/             # 55 migraciones de base de datos
+│   └── migrations/             # 63 migraciones de base de datos (001-063)
 ├── AGENTS.md                   # Instrucciones para agentes IA (Next.js)
 ├── CLAUDE.md                   # Instrucciones para Claude
 ├── ITEC_CODEGUIDE.md           # Esta guía
@@ -338,13 +348,15 @@ D:\ITEC\
 | Tabla | Descripción |
 |-------|-------------|
 | `ai_prompt_settings` | System prompts dinámicos para modelos IA (keyed por `clave_prompt`) |
-| `ai_auditoria_violaciones` | Registro de violaciones en respuestas IA (palabras prohibidas, exposición de rutas, etc.) |
-| `asistente_feedback` | Feedback de usuarios sobre respuestas del asistente (con embeddings) |
+| `ai_auditoria_violaciones` | Registro de violaciones en respuestas IA (4 categorías regex) |
+| `asistente_feedback` | Feedback de usuarios con embeddings para búsqueda semántica |
 | `asistente_aprendizajes` | Patrones aprendidos de interacciones |
 | `asistente_embeddings` | Embeddings vectoriales para RAG |
-| `saved_conversations` | Conversaciones guardadas (con embeddings para búsqueda semántica) |
+| `saved_conversations` | Conversaciones guardadas con embeddings (búsqueda semántica P4) |
 | `chat_conocimiento` | Base de conocimiento de interacciones |
 | `training_docs` | Documentos de entrenamiento del asistente (en Storage bucket) |
+| `documents` | **pgvector** — Chunks de documentos con embeddings para búsqueda semántica P1. Schema: `id(uuid)`, `content(text)`, `embedding(vector(768))`, `metadata(jsonb)`. RPC: `match_documents(query_embedding, match_threshold, match_count)` |
+| `api_settings` | Configuración de API keys rotatable sin redeploy (key/value) |
 
 ### Aula Virtual
 | Tabla | Descripción |
@@ -426,14 +438,19 @@ El flujo de creación de noticias funciona así:
 
 ## Sistema de IA — Proveedores y Servicios
 
+### REGLA DE ORO: Modelos Gratuitos
+> **Todos los endpoints del asistente ITEC DEBEN usar modelos FREE de OpenRouter.**
+> Nunca usar modelos de pago (deepseek/deepseek-chat, etc.) en producción.
+> El modelo `openrouter/free` es un router automático que selecciona entre 14+ modelos gratuitos disponibles.
+
 ### Proveedores de IA
 | Proveedor | Modelo | Uso |
 |-----------|--------|-----|
-| **OpenRouter** | DeepSeek Chat / DeepSeek R1 | Provider principal del asistente (`/api/asistente`) y procesamiento de noticias |
-| **Ollama** (self-hosted) | llama3.2:latest | Generación de reportes de sponsors, consolidación de feedback |
-| **Google Gemini** | gemini-2.0-flash / text-embedding-004 | Fallback para servicios IA, embeddings vectoriales primarios |
-| **Groq** | LLaMA 3.3 70B / LLaMA 3.1 8B | Chat legacy (`/api/chat`), endpoints de test |
-| **HuggingFace** | Llama 3.1 8B / all-MiniLM-L6-v2 | Fallback del asistente + embeddings secundarios |
+| **OpenRouter** | `openrouter/free` (auto-router free) | Provider principal del asistente (`/api/asistente`), debug, test, y servicios AI (`services/ai.ts`) |
+| **Google Gemini** | `gemini-2.0-flash` / `text-embedding-004` | Fallback del asistente + embeddings vectoriales primarios (768-dim) |
+| **Groq** | `llama-3.3-70b-versatile` | Chat legacy (`/api/chat`), con lazy initialization |
+| **Ollama** (self-hosted) | `llama3.2:latest` en `ai.itecsaladillo.org.ar` | Generación de reportes de sponsors, consolidación de feedback |
+| **HuggingFace** | `all-MiniLM-L6-v2` | Embeddings fallback (384-dim, zero-padded a 768) |
 
 ### Servicios de IA (`src/services/ai.ts`)
 | Función | Propósito |
@@ -449,32 +466,43 @@ El flujo de creación de noticias funciona así:
 | `auditarRespuestaIA()` | Audita respuestas por violaciones de policy (4 categorías) |
 
 ### RAG Cascade (`src/lib/rag/ragCascade.ts`)
-Sistema de recuperación de 4 niveles con scoring por solapamiento de tokens (estilo Jaccard):
-1. **P1** (score >= 0.45) — Documentos locales pre-parseados (`DOCS_CONTEXT` generado por `npm run sync-docs`)
-2. **P2** (score >= 0.40) — Supabase Storage bucket `training-docs`
-3. **P3** — Conversaciones guardadas (búsqueda semántica por embeddings vectoriales)
-4. **P4** — Web search (DuckDuckGo como fallback externo)
-- **Soft fallback:** Retorna el mejor resultado incluso si no alcanza thresholds
+Sistema de recuperación de **5 niveles** con scoring por solapamiento de tokens (estilo Jaccard):
+
+| Nivel | Fuente | Threshold | Método |
+|-------|--------|-----------|--------|
+| **P1** | pgvector `documents` | >= 0.20 | Gemini embedding + cosine similarity via `match_documents` RPC |
+| **P2** | Documentos locales (`DOCS_CONTEXT`) | >= 0.40 | Token overlap scoring (Jaccard-style) |
+| **P3** | Supabase Storage `training-docs` | >= 0.35 | Token overlap on downloaded .txt/.md/.json |
+| **P4** | Conversaciones guardadas | any | Semantic search via `buscar_conversaciones_similares` RPC |
+| **P5** | DuckDuckGo web search | any | Instant Answer API (sin API key) |
+| **Soft fallback** | Mejor resultado | any | Retorna el mejor aunque esté bajo thresholds |
+
+- **Chunk size:** 900 chars, **overlap:** 120 chars, **max context:** 3200 chars
 - Compatible con Edge Runtime (sin dependencias Node pesadas)
+- **Integrado en `/api/asistente`**: Se ejecuta después de las queries de DB y se inyecta al system prompt
+- **Ingesta de documentos:**
+  - `npm run sync-docs` → PDFs → `docsContext.ts` (keyword RAG, nivel P2)
+  - `npm run ingest-vector` → PDFs → chunking → Gemini embeddings → tabla `documents` (pgvector, nivel P1)
 
 ### Asistente IA (`/api/asistente`)
-- Edge runtime
-- Obtiene contexto dinámico (comisiones, staff, actividades recientes, news, feedbacks)
-- Inyecta contexto RAG del cascade
-- Detecta comandos explícitos de guardado y auto-guarda conversaciones largas (umbral de mensajes)
+- **Provider:** OpenRouter (`openrouter/free`) → Gemini fallback
+- **RAG integrado:** Llama a `recuperarContextoRAG()` para inyectar contexto semántico
+- **Contexto dinámico de DB en paralelo:** prompt maestro, staff, noticias, comisiones, actividades, artículos
+- **Timeout:** 60s (modelos gratuitos pueden ser más lentos)
+- Detecta comandos explícitos de guardado y auto-guarda cada 10 mensajes
 - System prompt: enforce estilo ITEC (técnico, humano, vanguardista)
-- Palabras prohibidas: "hoy", "ayer", "mañana", "che", "viste", "pibe"
 - **Auditoría de IA** (`auditarRespuestaIA()`) — 4 categorías de detección vía regex:
-  1. Menciones prohibidas (palabras bloqueadas)
+  1. Menciones prohibidas (palabras bloqueadas → reemplaza respuesta)
   2. Exposición de rutas internas del sistema
   3. Lenguaje informal o fuera de tono
   4. Uso de palabras temporales relativas
-  Las violaciones se registran en `ai_auditoria_violaciones`
+- Violaciones se registran en `ai_auditoria_violaciones`
 - **Sistema de Feedback** (`/api/asistente/feedback`):
-  - Usuarios califican respuestas (rating + comentario)
-  - Se guardan en `asistente_feedback` con embeddings generados
-  - Búsqueda semántica de feedbacks similares via `buscarFeedbacksSimilares()` (Gemini + HuggingFace)
-- Fallback: OpenRouter → HuggingFace
+  - Usuarios califican respuestas (muy_util, util, no_util, error)
+  - Ollama sintetiza tema_principal y lo_mas_util
+  - Genera embeddings para búsqueda semántica
+  - Guarda en `asistente_feedback`
+- **Lazy Groq:** El cliente Groq en `/api/chat` usa lazy initialization para evitar error de build cuando falta `GROQ_API_KEY`
 
 ---
 
@@ -554,7 +582,7 @@ Widget flotante visible en todas las páginas públicas EXCEPTO en herramientas 
 - `/dashboard/eventos-presenciales/*` (Consola ITEC)
 - `/dashboard/eventos/*` (administración de eventos)
 
-El wrapper usa el endpoint `/api/asistente` con RAG cascade completo. Interfaz tipo chat con historial.
+El wrapper usa el endpoint `/api/asistente` que integra **RAG cascade completo** (5 niveles) + contexto dinámico de DB (staff, noticias, comisiones, artículos). Interfaz tipo chat con historial, ID de sesión persistente, y avatar del asistente desde la DB.
 
 ### Soporte Multi-idioma
 Sistema i18n basado en contexto React (`LanguageContext`) con diccionario en `src/locales/dictionary.ts`. Idiomas: Español, English, Português.
@@ -653,17 +681,18 @@ Formulario para crear nuevas acciones de impacto (capacitaciones, eventos social
 
 | Ruta | Método | Propósito | Input/Output |
 |------|--------|-----------|--------------|
-| `/api/ideas` | POST | Enviar idea al buzón | `{ nombre, email, mensaje }` |
-| `/api/chat` | POST | Chat IA via Groq con contexto dinámico + web search | `{ message, history[] }` → `{ response }` |
+| `/api/asistente` | POST | Chat IA principal con RAG cascade + contexto DB | `{ mensaje, historial[], sessionId }` → `{ respuesta, guardado? }` |
+| `/api/asistente/debug` | GET | Debug: verifica env vars + testea OpenRouter y Gemini | → `{ env, openRouter, gemini }` |
+| `/api/asistente/test` | GET/POST | Test de OpenRouter directo | GET: env check. POST: `{ messages[] }` → `{ status, body }` |
+| `/api/asistente/feedback` | POST | Feedback sobre respuestas del asistente | `{ message, response, rating, comment }` |
+| `/api/chat` | POST | Chat legacy streaming via Groq + RAG cascade | `{ message, history[] }` → ReadableStream (SSE) |
 | `/api/chat/guardar` | POST | Guardar conversación en base de conocimiento | `{ conversation[] }` |
-| `/api/asistente` | POST | Chat IA principal con RAG cascade | `{ message, history[] }` → `{ response, sources[] }` |
-| `/api/asistente/feedback` | POST | Enviar feedback sobre respuesta del asistente | `{ message, response, rating, feedback }` |
-| `/api/news/process` | POST | Procesar texto crudo con IA para generar 4 versiones | `{ titulo, texto, commission_id, canales[] }` |
-| `/api/news-comments` | GET | Listar comentarios de noticia | `?newsFlashId=` |
-| `/api/news-comments` | POST | Agregar comentario | `{ news_flash_id, content, author_name }` |
-| `/api/sponsors-news` | GET | Obtener notas publicadas para sponsors | → `notas_sponsors[]` |
-| `/api/press-news` | GET | Obtener gacetillas para prensa | → `notas_medios[]` |
-| `/api/eventos/registro` | POST | Registrar asistente a evento + email bienvenida | `{ evento_id, nombre, email }` |
+| `/api/news/process` | POST | IA genera 4 versiones multicanal | `{ titulo, texto, commission_id }` |
+| `/api/news-comments` | GET/POST | Comentarios en noticias | GET: `?newsFlashId=`. POST: `{ news_flash_id, content }` |
+| `/api/ideas` | POST | Envío de ideas (formulario público) | `{ nombre, email, mensaje }` |
+| `/api/press-news` | GET | Feed de gacetillas para prensa | → `notas_medios[]` |
+| `/api/sponsors-news` | GET | Feed de notas para sponsors | → `notas_sponsors[]` |
+| `/api/eventos/registro` | POST | Registro a evento + email bienvenida | `{ evento_id, nombre, email, telefono?, organizacion? }` |
 
 ---
 
@@ -758,19 +787,19 @@ Formulario para crear nuevas acciones de impacto (capacitaciones, eventos social
 |----------|-----------|
 | `NEXT_PUBLIC_SUPABASE_URL` | URL del proyecto Supabase |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Key anónima de Supabase |
-| `SUPABASE_SERVICE_ROLE_KEY` | Service role key (admin) |
-| `GROQ_API_KEY` | API key de Groq |
-| `RESEND_API_KEY` | API key de Resend |
-| `RESEND_FROM_PRENSA` | Email remitente para prensa |
-| `OPENROUTER_API_KEY` | API key de OpenRouter |
-| `GEMINI_APY_KEY` | API key de Google Gemini (nota: typo intencional en el nombre real) |
-| `GEMINI_API_KEY_2`, `GEMINI_API_KEY_3`, `GEMINI_API_KEY_4` | API keys adicionales de Gemini (fallback chain) |
+| `SUPABASE_SERVICE_ROLE_KEY` | Service role key (admin, server-side only) |
+| `OPENROUTER_API_KEY` | API key de OpenRouter (**solo modelos FREE**) |
+| `GEMINI_API_KEY` / `GEMINI_APY_KEY` | API key de Google Gemini (typo intencional) |
 | `GOOGLE_GENERATIVE_AI_API_KEY` | API key alternativa de Gemini |
-| `OLLAMA_API_BASE_URL` | URL del servidor Ollama self-hosted |
-| `OLLAMA_MODEL` | Nombre del modelo Ollama |
-| `HF_API_KEY` | API key de HuggingFace |
+| `GROQ_API_KEY` | API key de Groq (lazy-init, no crítico) |
+| `HF_API_KEY` | API key de HuggingFace (embeddings fallback) |
+| `OLLAMA_API_BASE_URL` | URL Ollama self-hosted (`https://ai.itecsaladillo.org.ar`) |
+| `OLLAMA_MODEL` | Modelo Ollama (default: `llama3.2:latest`) |
+| `RESEND_API_KEY` | API key de Resend (emails) |
+| `RESEND_FROM_PRENSA` | Email remitente para prensa |
 | `NEXT_PUBLIC_SITE_URL` | URL pública del sitio |
-| `NEXT_PUBLIC_MEET_LINK` | Link default de Google Meet para reuniones y streaming |
+| `SEMAFORO_PORT` | Puerto configuración semáforo |
+| `NEXT_PUBLIC_SOCKET_URL` | URL de socket (futuro uso) |
 
 ---
 
@@ -778,11 +807,13 @@ Formulario para crear nuevas acciones de impacto (capacitaciones, eventos social
 
 | Script | Comando |
 |--------|---------|
-| `dev` | `next dev --turbopack` |
+| `dev` | `next dev` |
 | `build` | `next build` |
 | `start` | `next start` |
-| `lint` | `next lint` |
-| `sync-docs` | `npx tsx scripts/generate-docs-context.ts` (sincroniza documentos de entrenamiento al contexto del asistente) |
+| `lint` | `eslint` |
+| `sync-docs` | `node scripts/generateDocsContext.mjs` (PDFs → docsContext.ts) |
+| `extract-docs` | `node scripts/extractPdfText.js` (PDFs → JSON) |
+| `ingest-vector` | `node --dns-result-order=ipv4first --env-file=.env.local scripts/ingestDocsToVector.mjs` (PDFs → pgvector) |
 
 ---
 
@@ -869,3 +900,7 @@ Server Action     →  getCurrentMember()  →  validate Zod  →  mutate DB  �
 - **ChatWidget lazy-loaded:** Se carga con `next/dynamic({ ssr: false })` para no impactar carga inicial de páginas.
 - **Dead code cleanup:** Eliminados archivos huérfanos (`test-grok`, `test-gemini`, `news-multicanal.ts`, `aiConfig.json`), 22+ funciones nunca importadas, dependencia `dotenv` innecesaria, assets públicos default de Next.js.
 - **Security hardening (jul 2026):** RPC `obtener_miembros_publicos` ya no retorna `email` ni `phone` (PII leak). LivePoll usa server action con cookie dedup en vez de update client-side directo. Errores de providers IA sanitizados (no exponen detalles internos). `createSponsorAction` tipado explícito en vez de `Record<string, unknown>`.
+- **RAG cascade integrado (ago 2026):** `/api/asistente` ahora llama a `recuperarContextoRAG()` para inyectar contexto semántico de 5 niveles (pgvector, docs locales, bucket, conversaciones, web). El asistente tiene acceso a RAG + DB en paralelo.
+- **Modelos gratuitos (ago 2026):** Regla de oro — todos los endpoints del asistente usan `openrouter/free` (router automático de 14+ modelos free). Eliminados todos los `deepseek/deepseek-chat` del codebase.
+- **Lazy Groq init (ago 2026):** Cliente Groq en `/api/chat` usa `getGroq()` con lazy initialization para evitar error de build cuando falta `GROQ_API_KEY`.
+- **pgvector RAG (migraciones 062-063):** Tabla `documents` con `vector(768)` para búsqueda semántica. RPC `match_documents` para cosine similarity. Ingesta vía `npm run ingest-vector` (PDFs → chunking 900 chars → Gemini embeddings → Supabase).
