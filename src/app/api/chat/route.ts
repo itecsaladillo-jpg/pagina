@@ -10,7 +10,9 @@ import { FALLBACK_PROMPT, ANTI_HALLUCINATION_RULES_STRICT } from '@/lib/ai/const
 // Configuración
 // ============================================================
 
-const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+function getGroq() {
+  return new Groq({ apiKey: process.env.GROQ_API_KEY });
+}
 
 // ============================================================
 // 1. Obtener Prompt Maestro desde Supabase
@@ -198,7 +200,7 @@ ${datosDinamicos || '(No hay datos dinámicos disponibles en este momento)'}
     ];
 
     // ── 6. Streaming con Groq llama-3.3-70b-versatile ──
-    const stream = await groq.chat.completions.create({
+    const stream = await getGroq().chat.completions.create({
       messages,
       model: 'llama-3.3-70b-versatile',
       temperature: 0.2,
