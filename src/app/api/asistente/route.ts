@@ -20,13 +20,13 @@ async function callOpenRouter(messages: { role: string; content: string }[]): Pr
       'X-Title': 'ITEC Asistente'
     },
     body: JSON.stringify({
-      model: 'google/gemma-4-31b-it:free',
+      model: 'openrouter/free',
       messages,
       stream: false,
       temperature: 0.7,
       max_tokens: 4096
     }),
-    signal: AbortSignal.timeout(25000),
+    signal: AbortSignal.timeout(60000),
   })
 
   if (!response.ok) {

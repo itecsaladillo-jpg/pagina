@@ -25,7 +25,7 @@ export async function GET() {
           'X-Title': 'ITEC Debug'
         },
         body: JSON.stringify({
-          model: 'deepseek/deepseek-chat',
+          model: 'openrouter/free',
           messages: [{ role: 'user', content: 'Say hi in 3 words' }],
           max_tokens: 50
         }),
