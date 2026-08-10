@@ -459,10 +459,10 @@ export function ProfileForm({ member }: Props) {
               <span>LinkedIn</span>
             </label>
             <input
-              type="url"
+              type="text"
               value={formData.linkedin_url}
               onChange={(e) => setFormData({ ...formData, linkedin_url: e.target.value })}
-              placeholder="Ej: https://linkedin.com/in/usuario"
+              placeholder="https://linkedin.com/in/usuario"
               className="w-full bg-white/5 border border-[var(--border-subtle)] rounded-xl px-4 py-3 text-white text-sm focus:border-[var(--accent-primary)] outline-none transition-all"
             />
           </div>
@@ -473,13 +473,13 @@ export function ProfileForm({ member }: Props) {
           <label className="text-[var(--text-secondary)] text-xs uppercase tracking-wider font-bold ml-1 flex items-center gap-1.5">
             <Camera size={12} className="text-zinc-550" /> Enlace de la Foto de Perfil (Opcional)
           </label>
-          <input
-            type="url"
-            value={formData.avatar_url}
-            onChange={(e) => setFormData({ ...formData, avatar_url: e.target.value })}
-            placeholder="Ej: https://ejemplo.com/mi-foto.jpg (o cargá una foto desde la credencial de la izquierda)"
-            className="w-full bg-white/5 border border-[var(--border-subtle)] rounded-xl px-4 py-3 text-white text-sm focus:border-[var(--accent-primary)] outline-none transition-all"
-          />
+            <input
+              type="text"
+              value={formData.avatar_url}
+              onChange={(e) => setFormData({ ...formData, avatar_url: e.target.value })}
+              placeholder="https://ejemplo.com/mi-foto.jpg (o cargá una foto desde la credencial de la izquierda)"
+              className="w-full bg-white/5 border border-[var(--border-subtle)] rounded-xl px-4 py-3 text-white text-sm focus:border-[var(--accent-primary)] outline-none transition-all"
+            />
         </div>
 
         {/* Frase personal ITEC */}
