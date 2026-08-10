@@ -27,7 +27,7 @@ async function callOpenRouter(messages: { role: string; content: string }[]): Pr
       temperature: 0.7,
       max_tokens: 4096
     }),
-    signal: AbortSignal.timeout(60000),
+    signal: AbortSignal.timeout(25000),
   })
 
   if (!response.ok) {
@@ -52,6 +52,7 @@ async function callGemini(mensaje: string, systemPrompt: string): Promise<string
         contents: [{ parts: [{ text: mensaje }] }],
         generationConfig: { temperature: 0.7, maxOutputTokens: 4096 },
       }),
+      signal: AbortSignal.timeout(20000),
     }
   )
 
@@ -105,6 +106,7 @@ export async function POST(req: NextRequest) {
         comisionesResult,
         accionesResult,
         articulosResult,
+        ragResult,
       ] = await Promise.allSettled([
         adminClient.from('ai_prompt_settings').select('system_prompt').eq('clave_prompt', 'asistente_global').maybeSingle(),
         adminClient.rpc('obtener_miembros_publicos'),
@@ -112,6 +114,7 @@ export async function POST(req: NextRequest) {
         adminClient.from('commissions').select('name, description').eq('is_active', true).order('name'),
         adminClient.from('itec_actions').select('title, type, status, start_date, description').in('status', ['planificacion', 'en_curso']).order('start_date', { ascending: true }).limit(10),
         adminClient.from('public_articles').select('title, slug, excerpt, content').eq('is_published', true).order('created_at', { ascending: false }).limit(15),
+        recuperarContextoRAG(mensaje, adminClient, sessionId),
       ])
 
       if (promptResult.status === 'fulfilled' && promptResult.value.data?.system_prompt) {
@@ -135,17 +138,14 @@ export async function POST(req: NextRequest) {
 
       promptSistema += `\n\n${ANTI_HALLUCINATION_RULES_FLEXIBLE}${miembrosContext}${notasContext}${comisionesContext}${accionesContext}${articulosContext}`
 
-      // RAG Cascade: búsqueda semántica en documentos, docs locales, bucket, conversaciones y web
-      try {
-        const ragResult = await recuperarContextoRAG(mensaje, adminClient, sessionId)
-        if (ragResult.contexto) {
-          promptSistema += `\n\n## Contexto recuperado por RAG (nivel: ${ragResult.nivel}, score: ${ragResult.score.toFixed(2)}):\n${ragResult.contexto}`
-          console.log(`[Asistente] RAG: nivel=${ragResult.nivel}, score=${ragResult.score.toFixed(3)}`)
-        } else {
-          console.log('[Asistente] RAG: sin contexto recuperado')
-        }
-      } catch (ragErr: any) {
-        console.error('[Asistente] Error en RAG cascade:', ragErr?.message)
+      // RAG ya ejecutado en paralelo con las queries
+      if (ragResult.status === 'fulfilled' && ragResult.value.contexto) {
+        promptSistema += `\n\n## Contexto recuperado por RAG (nivel: ${ragResult.value.nivel}, score: ${ragResult.value.score.toFixed(2)}):\n${ragResult.value.contexto}`
+        console.log(`[Asistente] RAG: nivel=${ragResult.value.nivel}, score=${ragResult.value.score.toFixed(3)}`)
+      } else if (ragResult.status === 'rejected') {
+        console.error('[Asistente] Error en RAG cascade:', ragResult.reason?.message)
+      } else {
+        console.log('[Asistente] RAG: sin contexto recuperado')
       }
     } catch (e: any) {
       console.error('[Asistente] Error cargando contexto:', e?.message)
