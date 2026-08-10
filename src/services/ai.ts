@@ -72,7 +72,7 @@ async function callAI(messages: { role: string; content: string }[], temperature
           'X-Title': 'ITEC AI',
         },
         body: JSON.stringify({
-          model: 'openrouter/free',
+          model: 'meta-llama/llama-3.1-8b-instant:free',
           messages,
           stream: false,
           temperature,

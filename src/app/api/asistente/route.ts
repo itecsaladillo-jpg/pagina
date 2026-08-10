@@ -21,7 +21,7 @@ async function callOpenRouter(messages: { role: string; content: string }[]): Pr
       'X-Title': 'ITEC Asistente'
     },
     body: JSON.stringify({
-      model: 'openrouter/free',
+      model: 'meta-llama/llama-3.1-8b-instant:free',
       messages,
       stream: false,
       temperature: 0.7,
@@ -167,9 +167,12 @@ export async function POST(req: NextRequest) {
     const data = await aiResponse.json()
     const textoRespuesta = data.choices?.[0]?.message?.content || ''
 
-    if (!textoRespuesta) {
-      console.error('[Asistente] OpenRouter devolvió respuesta vacía:', JSON.stringify(data).slice(0, 500))
-      throw new Error('Empty response from OpenRouter')
+    // Filtrar respuestas que son metadata de seguridad en vez de respuesta real
+    const esMetadataSeguridad = /^(User Safety|Response Safety|Safety|safe|unsafe)/i.test(textoRespuesta.trim())
+
+    if (!textoRespuesta || esMetadataSeguridad) {
+      console.error('[Asistente] OpenRouter devolvió respuesta inválida:', textoRespuesta.slice(0, 200))
+      throw new Error('Invalid response from OpenRouter')
     }
 
     const resultadoAuditoria = await auditarRespuestaIA(mensaje, textoRespuesta)
