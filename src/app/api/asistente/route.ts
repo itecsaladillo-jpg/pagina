@@ -5,6 +5,8 @@ import { detectarComandoGuardar, debeAutoGuardar } from '@/lib/rag/conversacione
 import { recuperarContextoRAG } from '@/lib/rag/ragCascade'
 import { FALLBACK_PROMPT, ANTI_HALLUCINATION_RULES_FLEXIBLE } from '@/lib/ai/constants'
 
+export const maxDuration = 60
+
 async function callOpenRouter(messages: { role: string; content: string }[]): Promise<Response> {
   const apiKey = process.env.OPENROUTER_API_KEY
   if (!apiKey) throw new Error('OPENROUTER_API_KEY not set')
@@ -150,6 +152,12 @@ export async function POST(req: NextRequest) {
     } catch (e: any) {
       console.error('[Asistente] Error cargando contexto:', e?.message)
     }
+  }
+
+  // Limitar el system prompt para evitar payloads enormes
+  if (promptSistema.length > 6000) {
+    promptSistema = promptSistema.slice(0, 6000) + '\n\n[Contexto truncado por límite de tokens]'
+    console.log(`[Asistente] System prompt truncado a ${promptSistema.length} chars`)
   }
 
   const messages = [
