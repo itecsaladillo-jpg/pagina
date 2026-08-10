@@ -29,7 +29,7 @@ async function callOpenRouter(messages: { role: string; content: string }[]): Pr
       temperature: 0.7,
       max_tokens: 4096
     }),
-    signal: AbortSignal.timeout(25000),
+    signal: AbortSignal.timeout(20000),
   })
 
   if (!response.ok) {
@@ -155,17 +155,23 @@ export async function POST(req: NextRequest) {
   }
 
   // Limitar el system prompt para evitar payloads enormes
-  if (promptSistema.length > 6000) {
-    promptSistema = promptSistema.slice(0, 6000) + '\n\n[Contexto truncado por límite de tokens]'
+  if (promptSistema.length > 4000) {
+    promptSistema = promptSistema.slice(0, 4000) + '\n\n[Contexto truncado por límite de tokens]'
     console.log(`[Asistente] System prompt truncado a ${promptSistema.length} chars`)
   }
 
+  // Limitar historial a últimos 10 mensajes para no exceder tokens
+  const historialLimitado = historial
+    .filter((m: { role: string }) => m.role !== 'system')
+    .slice(-10)
+    .map((m: { role: string; content: string }) => ({
+      role: m.role === 'model' ? 'assistant' as const : m.role as 'user' | 'assistant',
+      content: m.content.slice(0, 500)
+    }))
+
   const messages = [
     { role: 'system', content: promptSistema },
-    ...historial.filter((m: { role: string }) => m.role !== 'system').map((m: { role: string; content: string }) => ({
-      role: m.role === 'model' ? 'assistant' : m.role,
-      content: m.content
-    })),
+    ...historialLimitado,
     { role: 'user', content: mensaje }
   ]
 
