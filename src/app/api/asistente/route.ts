@@ -23,7 +23,7 @@ async function callOpenRouter(messages: { role: string; content: string }[]): Pr
       'X-Title': 'ITEC Asistente'
     },
     body: JSON.stringify({
-      model: 'openai/gpt-oss-20b:free',
+      model: 'nvidia/nemotron-nano-9b-v2:free',
       messages,
       stream: false,
       temperature: 0.7,
@@ -54,7 +54,7 @@ async function callGemini(mensaje: string, systemPrompt: string): Promise<string
         contents: [{ parts: [{ text: mensaje }] }],
         generationConfig: { temperature: 0.7, maxOutputTokens: 4096 },
       }),
-    signal: AbortSignal.timeout(45000),
+    signal: AbortSignal.timeout(25000),
     }
   )
 
@@ -155,7 +155,7 @@ export async function POST(req: NextRequest) {
   }
 
   // Limitar el system prompt
-  const MAX_PROMPT_CHARS = 6000
+  const MAX_PROMPT_CHARS = 4000
   if (promptSistema.length > MAX_PROMPT_CHARS) {
     promptSistema = promptSistema.slice(0, MAX_PROMPT_CHARS) + '\n\n[Contexto truncado]'
   }
