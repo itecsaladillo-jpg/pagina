@@ -23,7 +23,7 @@ async function callOpenRouter(messages: { role: string; content: string }[]): Pr
       'X-Title': 'ITEC Asistente'
     },
     body: JSON.stringify({
-      model: 'openrouter/free',
+      model: 'nvidia/nemotron-3-nano-30b-a3b:free',
       messages,
       stream: false,
       temperature: 0.7,
