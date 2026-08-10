@@ -202,7 +202,7 @@ ${datosDinamicos || '(No hay datos dinámicos disponibles en este momento)'}
     // ── 6. Streaming con Groq llama-3.3-70b-versatile ──
     const stream = await getGroq().chat.completions.create({
       messages,
-      model: 'llama-3.3-70b-versatile',
+      model: 'openai/gpt-oss-20b',
       temperature: 0.2,
       max_tokens: 1024,
       stream: true,
