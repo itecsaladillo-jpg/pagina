@@ -191,11 +191,13 @@ export async function POST(req: NextRequest) {
     const esMuyCorta = respLimpia.length < 10
 
     if (!textoRespuesta || esMetadataSeguridad || esMuyCorta) {
-      console.error('[Asistente] OpenRouter devolvió respuesta inválida:', respLimpia.slice(0, 200))
+      console.error('[Asistente] OpenRouter respuesta inválida:', respLimpia.slice(0, 300))
       throw new Error('Invalid response from OpenRouter')
     }
 
+    console.log('[Asistente] Respuesta antes de auditoría:', respLimpia.slice(0, 200))
     const resultadoAuditoria = await auditarRespuestaIA(mensaje, textoRespuesta)
+    console.log('[Asistente] Auditoría:', resultadoAuditoria.tieneViolacion ? 'VIOLACIÓN' : 'OK')
 
     return NextResponse.json({
       respuesta: resultadoAuditoria.respuestaFinal,
