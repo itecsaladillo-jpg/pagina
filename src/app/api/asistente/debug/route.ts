@@ -25,7 +25,7 @@ export async function GET() {
           'X-Title': 'ITEC Debug'
         },
         body: JSON.stringify({
-          model: 'openrouter/free',
+          model: 'meta-llama/llama-3.1-8b-instant:free',
           messages: [{ role: 'user', content: 'Say hi in 3 words' }],
           max_tokens: 50
         }),

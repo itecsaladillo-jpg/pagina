@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
         'X-Title': 'ITEC Test'
       },
       body: JSON.stringify({
-        model: 'openrouter/free',
+        model: 'meta-llama/llama-3.1-8b-instant:free',
         messages,
         stream: false,
         temperature: 0.7,

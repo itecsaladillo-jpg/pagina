@@ -461,7 +461,7 @@ export async function auditarRespuestaIA(
       },
       {
         nombre: 'Exposición de rutas internas del código',
-        regex: /\B\/[a-zA-Z0-9_-]+(?:\/[a-zA-Z0-9_-]+)*/,
+        regex: /(?:src\/|components\/|app\/|lib\/|pages\/|api\/|services\/|contexts\/)[a-zA-Z0-9_/-]+\.(?:ts|tsx|js|jsx)/i,
         gravedad: 'alto' as const,
         fallback: 'Disculpame, pero no puedo revelar enlaces o rutas técnicas de la plataforma. Podés recorrer las secciones principales del sitio desde el menú de navegación.'
       },
