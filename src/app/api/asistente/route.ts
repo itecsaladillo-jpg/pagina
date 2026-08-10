@@ -154,10 +154,13 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  // Limitar el system prompt
-  const MAX_PROMPT_CHARS = 4000
+  // Limitar el system prompt (preservar prompt maestro de DB completo)
+  const MAX_PROMPT_CHARS = 10000
   if (promptSistema.length > MAX_PROMPT_CHARS) {
-    promptSistema = promptSistema.slice(0, MAX_PROMPT_CHARS) + '\n\n[Contexto truncado]'
+    // Preservar los primeros 7000 chars (prompt maestro) y truncar contexto después
+    const partePrompt = promptSistema.slice(0, 7000)
+    const parteContexto = promptSistema.slice(7000, MAX_PROMPT_CHARS)
+    promptSistema = partePrompt + parteContexto + '\n\n[Contexto adicional truncado]'
   }
   console.log(`[Asistente] Prompt final: ${promptSistema.length} chars, historial: ${historial.length} msgs`)
 
