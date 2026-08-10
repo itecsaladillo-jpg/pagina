@@ -12,7 +12,7 @@ async function callOpenRouter(messages: { role: string; content: string }[]): Pr
   if (!apiKey) throw new Error('OPENROUTER_API_KEY not set')
 
   const totalChars = messages.reduce((sum, m) => sum + m.content.length, 0)
-  console.log(`[Asistente] OpenRouter payload: ${messages.length} messages, ${totalChars} chars`)
+  console.log(`[Asistente] OpenRouter: ${messages.length} msgs, ${totalChars} chars`)
 
   const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
     method: 'POST',
@@ -155,10 +155,11 @@ export async function POST(req: NextRequest) {
   }
 
   // Limitar el system prompt para evitar payloads enormes
-  if (promptSistema.length > 4000) {
-    promptSistema = promptSistema.slice(0, 4000) + '\n\n[Contexto truncado por límite de tokens]'
-    console.log(`[Asistente] System prompt truncado a ${promptSistema.length} chars`)
+  const MAX_PROMPT_CHARS = 4000
+  if (promptSistema.length > MAX_PROMPT_CHARS) {
+    promptSistema = promptSistema.slice(0, MAX_PROMPT_CHARS) + '\n\n[Contexto truncado]'
   }
+  console.log(`[Asistente] Prompt final: ${promptSistema.length} chars, historial: ${historial.length} msgs`)
 
   // Limitar historial a últimos 10 mensajes para no exceder tokens
   const historialLimitado = historial
