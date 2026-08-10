@@ -1,7 +1,5 @@
 {
   "framework": "nextjs",
-  "buildCommand": "npm run build",
-  "outputDirectory": ".next",
   "functions": {
     "src/app/api/asistente/route.ts": {
       "maxDuration": 60

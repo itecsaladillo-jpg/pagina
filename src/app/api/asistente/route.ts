@@ -23,7 +23,7 @@ async function callOpenRouter(messages: { role: string; content: string }[]): Pr
       'X-Title': 'ITEC Asistente'
     },
     body: JSON.stringify({
-      model: 'meta-llama/llama-3.1-8b-instant:free',
+      model: 'openrouter/free',
       messages,
       stream: false,
       temperature: 0.7,
@@ -183,10 +183,12 @@ export async function POST(req: NextRequest) {
     const textoRespuesta = data.choices?.[0]?.message?.content || ''
 
     // Filtrar respuestas que son metadata de seguridad en vez de respuesta real
-    const esMetadataSeguridad = /^(User Safety|Response Safety|Safety|safe|unsafe)/i.test(textoRespuesta.trim())
+    const respLimpia = textoRespuesta.trim()
+    const esMetadataSeguridad = /^(User Safety|Response Safety|Safety|safe|unsafe|Content [Aa]nalysis)/i.test(respLimpia)
+    const esMuyCorta = respLimpia.length < 10
 
-    if (!textoRespuesta || esMetadataSeguridad) {
-      console.error('[Asistente] OpenRouter devolvió respuesta inválida:', textoRespuesta.slice(0, 200))
+    if (!textoRespuesta || esMetadataSeguridad || esMuyCorta) {
+      console.error('[Asistente] OpenRouter devolvió respuesta inválida:', respLimpia.slice(0, 200))
       throw new Error('Invalid response from OpenRouter')
     }
 
