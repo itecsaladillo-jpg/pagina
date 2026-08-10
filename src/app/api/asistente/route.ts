@@ -23,7 +23,7 @@ async function callOpenRouter(messages: { role: string; content: string }[]): Pr
       'X-Title': 'ITEC Asistente'
     },
     body: JSON.stringify({
-      model: 'nvidia/nemotron-3-nano-30b-a3b:free',
+      model: 'nvidia/nemotron-3-super-120b-a12b:free',
       messages,
       stream: false,
       temperature: 0.7,
@@ -54,7 +54,7 @@ async function callGemini(mensaje: string, systemPrompt: string): Promise<string
         contents: [{ parts: [{ text: mensaje }] }],
         generationConfig: { temperature: 0.7, maxOutputTokens: 4096 },
       }),
-      signal: AbortSignal.timeout(20000),
+    signal: AbortSignal.timeout(45000),
     }
   )
 
@@ -154,8 +154,8 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  // Limitar el system prompt para evitar payloads enormes
-  const MAX_PROMPT_CHARS = 4000
+  // Limitar el system prompt (modelo soporta 262K context)
+  const MAX_PROMPT_CHARS = 12000
   if (promptSistema.length > MAX_PROMPT_CHARS) {
     promptSistema = promptSistema.slice(0, MAX_PROMPT_CHARS) + '\n\n[Contexto truncado]'
   }
