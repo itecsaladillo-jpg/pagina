@@ -45,7 +45,7 @@ async function callGemini(mensaje: string, systemPrompt: string): Promise<string
   if (!apiKey) throw new Error('No Gemini API key')
 
   const res = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key=${apiKey}`,
     {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -214,7 +214,7 @@ export async function POST(req: NextRequest) {
       const resultadoAuditoria = await auditarRespuestaIA(mensaje, geminiText)
       return NextResponse.json({
         respuesta: resultadoAuditoria.respuestaFinal,
-        modelo: 'gemini-2.0-flash',
+        modelo: 'gemini-2.0-flash-lite',
         fallback: true
       })
     } catch (geminiError: any) {

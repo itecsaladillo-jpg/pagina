@@ -1,18 +1,54 @@
 import { NextResponse } from 'next/server'
+import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 
 export async function GET() {
   const result: Record<string, any> = {}
 
-  // 1. Env vars
+  // 1. Env vars summary
   result.env = {
     OPENROUTER: !!process.env.OPENROUTER_API_KEY,
+    OPENROUTER_KEY_PREFIX: process.env.OPENROUTER_API_KEY?.slice(0, 12) + '...',
     HF: !!process.env.HF_API_KEY,
     GEMINI: !!(process.env.GEMINI_API_KEY || process.env.GEMINI_APY_KEY || process.env.GOOGLE_GENERATIVE_AI_API_KEY),
+    OLLAMA_URL: process.env.OLLAMA_API_BASE_URL?.slice(0, 40) + '...' || 'not set',
     SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL?.slice(0, 30) + '...',
     SERVICE_ROLE: !!process.env.SUPABASE_SERVICE_ROLE_KEY,
   }
 
-  // 2. Test OpenRouter directly
+  // 2. Check Supabase api_settings for overridden keys
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || ''
+  if (supabaseUrl && serviceKey) {
+    try {
+      const adminClient = createSupabaseClient(supabaseUrl, serviceKey)
+      const { data } = await adminClient
+        .from('api_settings')
+        .select('key, value')
+
+      result.supabaseSettings = data?.map(r => ({
+        key: r.key,
+        hasValue: !!r.value && r.value.trim() !== '',
+        prefix: r.value ? r.value.slice(0, 8) + '...' : '(empty)'
+      })) || []
+    } catch (e: any) {
+      result.supabaseSettings = { error: e.message }
+    }
+  }
+
+  // 3. Test Ollama
+  const ollamaUrl = process.env.OLLAMA_API_BASE_URL || 'https://ai.itecsaladillo.org.ar'
+  try {
+    const res = await fetch(`${ollamaUrl}/api/tags`, {
+      method: 'GET',
+      signal: AbortSignal.timeout(8000),
+    })
+    const body = await res.text()
+    result.ollama = { url: ollamaUrl, status: res.status, ok: res.ok, body: body.slice(0, 300) }
+  } catch (e: any) {
+    result.ollama = { url: ollamaUrl, error: e.message }
+  }
+
+  // 4. Test OpenRouter
   const orKey = process.env.OPENROUTER_API_KEY
   if (orKey) {
     try {
@@ -40,12 +76,12 @@ export async function GET() {
     result.openRouter = { error: 'No OPENROUTER_API_KEY' }
   }
 
-  // 3. Test Gemini directly
+  // 5. Test Gemini (gemini-2.0-flash-lite)
   const gKey = process.env.GEMINI_API_KEY || process.env.GEMINI_APY_KEY || process.env.GOOGLE_GENERATIVE_AI_API_KEY || ''
   if (gKey) {
     try {
       const res = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${gKey}`,
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key=${gKey}`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
