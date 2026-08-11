@@ -4,31 +4,6 @@ import { getSettingValue } from '@/lib/settings'
 async function callAI(messages: { role: string; content: string }[], temperature = 0.7): Promise<string> {
   const errors: string[] = []
 
-  const [ollamaBaseUrl, ollamaModel] = await Promise.all([
-    getSettingValue('ollama_base_url', 'OLLAMA_API_BASE_URL'),
-    getSettingValue('ollama_model', 'OLLAMA_MODEL'),
-  ])
-
-  const callOllama = async (): Promise<string | null> => {
-    const baseUrl = ollamaBaseUrl || 'https://ai.itecsaladillo.org.ar'
-    const model = ollamaModel || 'llama3.2:latest'
-    try {
-      const res = await fetch(`${baseUrl}/api/chat`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model,
-          messages,
-          stream: false,
-          options: { temperature },
-        }),
-      })
-      if (!res.ok) { errors.push(`[Ollama] ${res.status}`); return null }
-      const data = await res.json()
-      return data.message?.content || ''
-    } catch (e: any) { errors.push(`[Ollama] ${e.message}`); return null }
-  }
-
   const callGemini = async (): Promise<string | null> => {
     const keys = await Promise.all([
       getSettingValue('gemini_api_key', 'GEMINI_APY_KEY'),
@@ -110,7 +85,32 @@ async function callAI(messages: { role: string; content: string }[], temperature
     } catch (e: any) { errors.push(`[Groq] ${e.message}`); return null }
   }
 
-  for (const fn of [callOllama, callGemini, callOpenRouter, callGroq]) {
+  const [ollamaBaseUrl, ollamaModel] = await Promise.all([
+    getSettingValue('ollama_base_url', 'OLLAMA_API_BASE_URL'),
+    getSettingValue('ollama_model', 'OLLAMA_MODEL'),
+  ])
+
+  const callOllama = async (): Promise<string | null> => {
+    const baseUrl = ollamaBaseUrl || 'https://ai.itecsaladillo.org.ar'
+    const model = ollamaModel || 'llama3.2:latest'
+    try {
+      const res = await fetch(`${baseUrl}/api/chat`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model,
+          messages,
+          stream: false,
+          options: { temperature },
+        }),
+      })
+      if (!res.ok) { errors.push(`[Ollama] ${res.status}`); return null }
+      const data = await res.json()
+      return data.message?.content || ''
+    } catch (e: any) { errors.push(`[Ollama] ${e.message}`); return null }
+  }
+
+  for (const fn of [callGemini, callOpenRouter, callGroq, callOllama]) {
     const result = await fn()
     if (result) return result
   }

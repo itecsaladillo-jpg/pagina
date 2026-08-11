@@ -446,11 +446,15 @@ El flujo de creación de noticias funciona así:
 ### Proveedores de IA
 | Proveedor | Modelo | Uso |
 |-----------|--------|-----|
-| **OpenRouter** | `openrouter/free` (auto-router free) | Provider principal del asistente (`/api/asistente`), debug, test, y servicios AI (`services/ai.ts`) |
-| **Google Gemini** | `gemini-flash-latest` / `gemini-embedding-001` | Fallback del asistente + embeddings vectoriales primarios (768-dim) |
-| **Groq** | `llama-3.3-70b-versatile` | Chat legacy (`/api/chat`) + fallback #4 en `services/ai.ts` |
-| **Ollama** (self-hosted) | `llama3.2:latest` en `ai.itecsaladillo.org.ar` | Generación de reportes de sponsors, consolidación de feedback |
+| **Google Gemini** | `gemini-flash-latest` / `gemini-embedding-001` | Fallback #1 del `services/ai.ts` + embeddings vectoriales primarios (768-dim). Tier gratuito. |
+| **OpenRouter** | `nvidia/nemotron-3-nano-30b-a3b:free` | Fallback #2 del `services/ai.ts`, provider principal del asistente (`/api/asistente`). Tier gratuito. |
+| **Groq** | `llama-3.3-70b-versatile` | Fallback #3 del `services/ai.ts`, chat legacy (`/api/chat`). Tier gratuito. |
+| **Ollama** (self-hosted) | `llama3.2:latest` en `ai.itecsaladillo.org.ar` | Fallback #4 del `services/ai.ts` (último recurso). Self-hosted = gratuito. |
 | **HuggingFace** | `all-MiniLM-L6-v2` | Embeddings fallback (384-dim, zero-padded a 768) |
+
+### Cascada de fallback (`services/ai.ts` — `callAI()`)
+Orden de prioridad: **Gemini → OpenRouter → Groq → Ollama**
+Todos los proveedores usan modelos de tier gratuito (FREE).
 
 ### Servicios de IA (`src/services/ai.ts`)
 | Función | Propósito |
