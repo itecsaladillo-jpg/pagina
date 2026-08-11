@@ -8,9 +8,11 @@ export async function GET() {
   result.env = {
     OPENROUTER: !!process.env.OPENROUTER_API_KEY,
     OPENROUTER_KEY_PREFIX: process.env.OPENROUTER_API_KEY?.slice(0, 12) + '...',
+    GROQ: !!process.env.GROQ_API_KEY,
+    GROQ_KEY_PREFIX: process.env.GROQ_API_KEY?.slice(0, 12) + '...',
     HF: !!process.env.HF_API_KEY,
     GEMINI: !!(process.env.GEMINI_API_KEY || process.env.GEMINI_APY_KEY || process.env.GOOGLE_GENERATIVE_AI_API_KEY),
-    OLLAMA_URL: process.env.OLLAMA_API_BASE_URL?.slice(0, 40) + '...' || 'not set',
+    OLLAMA_URL: (process.env.OLLAMA_API_BASE_URL || 'https://ai.itecsaladillo.org.ar').slice(0, 40) + '...',
     SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL?.slice(0, 30) + '...',
     SERVICE_ROLE: !!process.env.SUPABASE_SERVICE_ROLE_KEY,
   }
@@ -76,7 +78,33 @@ export async function GET() {
     result.openRouter = { error: 'No OPENROUTER_API_KEY' }
   }
 
-  // 5. Test Gemini (gemini-2.0-flash-lite)
+  // 5. Test Groq
+  const groqKey = process.env.GROQ_API_KEY
+  if (groqKey) {
+    try {
+      const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${groqKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: 'llama-3.3-70b-versatile',
+          messages: [{ role: 'user', content: 'Say hi in 3 words' }],
+          max_tokens: 50
+        }),
+        signal: AbortSignal.timeout(15000),
+      })
+      const body = await res.text()
+      result.groq = { status: res.status, ok: res.ok, body: body.slice(0, 500) }
+    } catch (e: any) {
+      result.groq = { error: e.message }
+    }
+  } else {
+    result.groq = { error: 'No GROQ_API_KEY' }
+  }
+
+  // 6. Test Gemini (gemini-2.5-flash)
   const gKey = process.env.GEMINI_API_KEY || process.env.GEMINI_APY_KEY || process.env.GOOGLE_GENERATIVE_AI_API_KEY || ''
   if (gKey) {
     try {

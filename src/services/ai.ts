@@ -85,7 +85,32 @@ async function callAI(messages: { role: string; content: string }[], temperature
     } catch (e: any) { errors.push(`[OpenRouter] ${e.message}`); return null }
   }
 
-  for (const fn of [callOllama, callGemini, callOpenRouter]) {
+  const callGroq = async (): Promise<string | null> => {
+    const key = await getSettingValue('groq_api_key', 'GROQ_API_KEY')
+    if (!key) { errors.push('[Groq] no API key'); return null }
+    try {
+      const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${key}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: 'llama-3.3-70b-versatile',
+          messages,
+          stream: false,
+          temperature,
+          max_tokens: 8192,
+        }),
+        signal: AbortSignal.timeout(20000),
+      })
+      if (!res.ok) { errors.push(`[Groq] ${res.status}`); return null }
+      const data = await res.json()
+      return data.choices?.[0]?.message?.content || ''
+    } catch (e: any) { errors.push(`[Groq] ${e.message}`); return null }
+  }
+
+  for (const fn of [callOllama, callGemini, callOpenRouter, callGroq]) {
     const result = await fn()
     if (result) return result
   }

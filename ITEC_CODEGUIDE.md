@@ -448,7 +448,7 @@ El flujo de creación de noticias funciona así:
 |-----------|--------|-----|
 | **OpenRouter** | `openrouter/free` (auto-router free) | Provider principal del asistente (`/api/asistente`), debug, test, y servicios AI (`services/ai.ts`) |
 | **Google Gemini** | `gemini-2.5-flash` / `gemini-embedding-001` | Fallback del asistente + embeddings vectoriales primarios (768-dim) |
-| **Groq** | `llama-3.3-70b-versatile` | Chat legacy (`/api/chat`), con lazy initialization |
+| **Groq** | `llama-3.3-70b-versatile` | Chat legacy (`/api/chat`) + fallback #4 en `services/ai.ts` |
 | **Ollama** (self-hosted) | `llama3.2:latest` en `ai.itecsaladillo.org.ar` | Generación de reportes de sponsors, consolidación de feedback |
 | **HuggingFace** | `all-MiniLM-L6-v2` | Embeddings fallback (384-dim, zero-padded a 768) |
 
