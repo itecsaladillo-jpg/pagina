@@ -4,118 +4,38 @@ import { getSettingValue } from '@/lib/settings'
 async function callAI(messages: { role: string; content: string }[], temperature = 0.7): Promise<string> {
   const errors: string[] = []
 
-  const callGemini = async (): Promise<string | null> => {
-    const keys = await Promise.all([
-      getSettingValue('gemini_api_key', 'GEMINI_APY_KEY'),
-      getSettingValue('gemini_api_key_2', 'GEMINI_API_KEY_2'),
-      getSettingValue('gemini_api_key_3', 'GEMINI_API_KEY_3'),
-      getSettingValue('gemini_api_key_4', 'GEMINI_API_KEY_4'),
-    ])
-    const key = keys.find(k => k) || process.env.GOOGLE_GENERATIVE_AI_API_KEY || ''
-    if (!key) { errors.push('[Gemini] no API key'); return null }
-    try {
-      const systemMsg = messages.find(m => m.role === 'system')?.content || ''
-      const userMsg = messages.filter(m => m.role === 'user').map(m => m.content).join('\n')
-      const res = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${key}`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            systemInstruction: systemMsg ? { parts: [{ text: systemMsg }] } : undefined,
-            contents: [{ parts: [{ text: userMsg }] }],
-            generationConfig: { temperature, maxOutputTokens: 8192 },
-          }),
-        },
-      )
-      if (!res.ok) { errors.push(`[Gemini] ${res.status}`); return null }
-      const data = await res.json()
-      return data.candidates?.[0]?.content?.parts?.[0]?.text || ''
-    } catch (e: any) { errors.push(`[Gemini] ${e.message}`); return null }
-  }
-
-  const callOpenRouter = async (): Promise<string | null> => {
-    const key = await getSettingValue('openrouter_api_key', 'OPENROUTER_API_KEY')
-    if (!key) { errors.push('[OpenRouter] no API key'); return null }
-    try {
-      const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${key}`,
-          'Content-Type': 'application/json',
-          'HTTP-Referer': 'https://itecsaladillo.org.ar',
-          'X-Title': 'ITEC AI',
-        },
-        body: JSON.stringify({
-          model: 'nvidia/nemotron-3-nano-30b-a3b:free',
-          messages,
-          stream: false,
-          temperature,
-          max_tokens: 8192,
-        }),
-      })
-      if (!res.ok) { errors.push(`[OpenRouter] ${res.status}`); return null }
-      const data = await res.json()
-      return data.choices?.[0]?.message?.content || ''
-    } catch (e: any) { errors.push(`[OpenRouter] ${e.message}`); return null }
-  }
-
-  const callGroq = async (): Promise<string | null> => {
-    const key = await getSettingValue('groq_api_key', 'GROQ_API_KEY')
-    if (!key) { errors.push('[Groq] no API key'); return null }
-    try {
-      const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${key}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          model: 'llama-3.3-70b-versatile',
-          messages,
-          stream: false,
-          temperature,
-          max_tokens: 8192,
-        }),
-        signal: AbortSignal.timeout(20000),
-      })
-      if (!res.ok) { errors.push(`[Groq] ${res.status}`); return null }
-      const data = await res.json()
-      return data.choices?.[0]?.message?.content || ''
-    } catch (e: any) { errors.push(`[Groq] ${e.message}`); return null }
-  }
-
-  const [ollamaBaseUrl, ollamaModel] = await Promise.all([
-    getSettingValue('ollama_base_url', 'OLLAMA_API_BASE_URL'),
-    getSettingValue('ollama_model', 'OLLAMA_MODEL'),
+  const keys = await Promise.all([
+    getSettingValue('gemini_api_key', 'GEMINI_APY_KEY'),
+    getSettingValue('gemini_api_key_2', 'GEMINI_API_KEY_2'),
+    getSettingValue('gemini_api_key_3', 'GEMINI_API_KEY_3'),
+    getSettingValue('gemini_api_key_4', 'GEMINI_API_KEY_4'),
   ])
+  const key = keys.find(k => k) || process.env.GOOGLE_GENERATIVE_AI_API_KEY || ''
+  if (!key) throw new Error('[Gemini] no API key configurada')
 
-  const callOllama = async (): Promise<string | null> => {
-    const baseUrl = ollamaBaseUrl || 'https://ai.itecsaladillo.org.ar'
-    const model = ollamaModel || 'llama3.2:latest'
-    try {
-      const res = await fetch(`${baseUrl}/api/chat`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model,
-          messages,
-          stream: false,
-          options: { temperature },
-        }),
-      })
-      if (!res.ok) { errors.push(`[Ollama] ${res.status}`); return null }
-      const data = await res.json()
-      return data.message?.content || ''
-    } catch (e: any) { errors.push(`[Ollama] ${e.message}`); return null }
+  const systemMsg = messages.find(m => m.role === 'system')?.content || ''
+  const userMsg = messages.filter(m => m.role === 'user').map(m => m.content).join('\n')
+
+  const res = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${key}`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        systemInstruction: systemMsg ? { parts: [{ text: systemMsg }] } : undefined,
+        contents: [{ parts: [{ text: userMsg }] }],
+        generationConfig: { temperature, maxOutputTokens: 8192 },
+      }),
+    },
+  )
+
+  if (!res.ok) {
+    const err = await res.text().catch(() => '')
+    throw new Error(`[Gemini] ${res.status}: ${err.slice(0, 200)}`)
   }
 
-  for (const fn of [callGemini, callOpenRouter, callGroq, callOllama]) {
-    const result = await fn()
-    if (result) return result
-  }
-
-  throw new Error(`Todos los proveedores de IA fallaron:\n${errors.join('\n')}`)
+  const data = await res.json()
+  return data.candidates?.[0]?.content?.parts?.[0]?.text || ''
 }
 
 /**

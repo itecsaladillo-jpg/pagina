@@ -7,12 +7,43 @@ import { FALLBACK_PROMPT, ANTI_HALLUCINATION_RULES_FLEXIBLE } from '@/lib/ai/con
 
 export const maxDuration = 60
 
+async function callGroq(messages: { role: string; content: string }[]): Promise<Response> {
+  const apiKey = process.env.GROQ_API_KEY
+  if (!apiKey) throw new Error('GROQ_API_KEY not set')
+
+  const totalChars = messages.reduce((sum, m) => sum + m.content.length, 0)
+  console.log(`[Asistente] Groq: ${messages.length} msgs, ${totalChars} chars`)
+
+  const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      model: 'llama-3.3-70b-versatile',
+      messages,
+      stream: false,
+      temperature: 0.7,
+      max_tokens: 4096
+    }),
+    signal: AbortSignal.timeout(20000),
+  })
+
+  if (!response.ok) {
+    const errorBody = await response.text().catch(() => 'no body')
+    console.error(`[Asistente] Groq ${response.status}:`, errorBody.slice(0, 500))
+    throw new Error(`Groq ${response.status}`)
+  }
+  return response
+}
+
 async function callOpenRouter(messages: { role: string; content: string }[]): Promise<Response> {
   const apiKey = process.env.OPENROUTER_API_KEY
   if (!apiKey) throw new Error('OPENROUTER_API_KEY not set')
 
   const totalChars = messages.reduce((sum, m) => sum + m.content.length, 0)
-  console.log(`[Asistente] OpenRouter: ${messages.length} msgs, ${totalChars} chars`)
+  console.log(`[Asistente] OpenRouter (fallback): ${messages.length} msgs, ${totalChars} chars`)
 
   const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
     method: 'POST',
@@ -40,33 +71,6 @@ async function callOpenRouter(messages: { role: string; content: string }[]): Pr
   return response
 }
 
-async function callGemini(mensaje: string, systemPrompt: string): Promise<string> {
-  const apiKey = process.env.GEMINI_API_KEY || process.env.GEMINI_APY_KEY || process.env.GOOGLE_GENERATIVE_AI_API_KEY || ''
-  if (!apiKey) throw new Error('No Gemini API key')
-
-  const res = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${apiKey}`,
-    {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        systemInstruction: { parts: [{ text: systemPrompt }] },
-        contents: [{ parts: [{ text: mensaje }] }],
-        generationConfig: { temperature: 0.7, maxOutputTokens: 4096 },
-      }),
-    signal: AbortSignal.timeout(25000),
-    }
-  )
-
-  if (!res.ok) {
-    const err = await res.text().catch(() => '')
-    console.error(`[Asistente] Gemini ${res.status}:`, err.slice(0, 500))
-    throw new Error(`Gemini ${res.status}`)
-  }
-  const data = await res.json()
-  return data.candidates?.[0]?.content?.parts?.[0]?.text || ''
-}
-
 export async function POST(req: NextRequest) {
   let cuerpo: { mensaje?: string; historial?: { role: string; content: string }[]; idioma?: string; sessionId?: string }
   try {
@@ -82,11 +86,12 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Mensaje requerido' }, { status: 400 })
   }
 
-  // Paso 1: Probar OpenRouter directo antes de todo lo demás
-  const apiKey = process.env.OPENROUTER_API_KEY
-  if (!apiKey) {
-    console.error('[Asistente] OPENROUTER_API_KEY no definida')
-    return NextResponse.json({ error: 'API key no configurada', detail: 'OPENROUTER_API_KEY missing' }, { status: 500 })
+  // Verificar que al menos una API key esté configurada
+  const groqKey = process.env.GROQ_API_KEY
+  const orKey = process.env.OPENROUTER_API_KEY
+  if (!groqKey && !orKey) {
+    console.error('[Asistente] Ninguna API key configurada (GROQ ni OPENROUTER)')
+    return NextResponse.json({ error: 'API keys no configuradas' }, { status: 500 })
   }
 
   // Construir un system prompt mínimo funcional
@@ -96,7 +101,7 @@ export async function POST(req: NextRequest) {
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
   const hasSupabase = !!supabaseUrl && !!serviceKey
 
-  // Paso 2: Contexto enriquecido (con admin client, sin cookies)
+  // Contexto enriquecido (con admin client, sin cookies)
   if (hasSupabase) {
     try {
       const adminClient = createSupabaseClient(supabaseUrl, serviceKey)
@@ -157,7 +162,6 @@ export async function POST(req: NextRequest) {
   // Limitar el system prompt (preservar prompt maestro de DB completo)
   const MAX_PROMPT_CHARS = 10000
   if (promptSistema.length > MAX_PROMPT_CHARS) {
-    // Preservar los primeros 7000 chars (prompt maestro) y truncar contexto después
     const partePrompt = promptSistema.slice(0, 7000)
     const parteContexto = promptSistema.slice(7000, MAX_PROMPT_CHARS)
     promptSistema = partePrompt + parteContexto + '\n\n[Contexto adicional truncado]'
@@ -179,20 +183,19 @@ export async function POST(req: NextRequest) {
     { role: 'user', content: mensaje }
   ]
 
-  // Paso 3: Llamar a OpenRouter
+  // Provider primario: Groq
   try {
-    const aiResponse = await callOpenRouter(messages)
+    const aiResponse = await callGroq(messages)
     const data = await aiResponse.json()
     const textoRespuesta = data.choices?.[0]?.message?.content || ''
 
-    // Filtrar respuestas que son metadata de seguridad en vez de respuesta real
     const respLimpia = textoRespuesta.trim()
     const esMetadataSeguridad = /^(User Safety|Response Safety|Safety|safe|unsafe|Content [Aa]nalysis)/i.test(respLimpia)
     const esMuyCorta = respLimpia.length < 10
 
     if (!textoRespuesta || esMetadataSeguridad || esMuyCorta) {
-      console.error('[Asistente] OpenRouter respuesta inválida:', respLimpia.slice(0, 300))
-      throw new Error('Invalid response from OpenRouter')
+      console.error('[Asistente] Groq respuesta inválida:', respLimpia.slice(0, 300))
+      throw new Error('Invalid response from Groq')
     }
 
     console.log('[Asistente] Respuesta antes de auditoría:', respLimpia.slice(0, 200))
@@ -201,28 +204,45 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({
       respuesta: resultadoAuditoria.respuestaFinal,
+      modelo: 'llama-3.3-70b-versatile',
       guardado: detectarComandoGuardar(mensaje) || debeAutoGuardar(historial.length + 1) ? true : undefined
     })
   } catch (error: any) {
-    console.error('[Asistente] OpenRouter FAILED:', error?.message)
+    console.error('[Asistente] Groq FAILED:', error?.message)
 
-    // Fallback: Gemini
+    // Fallback: OpenRouter
+    if (!orKey) {
+      return NextResponse.json({
+        error: 'Groq falló y OpenRouter no está configurado',
+        groq: error?.message,
+      }, { status: 502 })
+    }
+
     try {
-      const geminiText = await callGemini(mensaje, messages[0].content)
-      if (!geminiText) throw new Error('Gemini empty response')
+      const orResponse = await callOpenRouter(messages)
+      const data = await orResponse.json()
+      const textoRespuesta = data.choices?.[0]?.message?.content || ''
 
-      const resultadoAuditoria = await auditarRespuestaIA(mensaje, geminiText)
+      const respLimpia = textoRespuesta.trim()
+      const esMetadataSeguridad = /^(User Safety|Response Safety|Safety|safe|unsafe|Content [Aa]nalysis)/i.test(respLimpia)
+      const esMuyCorta = respLimpia.length < 10
+
+      if (!textoRespuesta || esMetadataSeguridad || esMuyCorta) {
+        throw new Error('Invalid response from OpenRouter')
+      }
+
+      const resultadoAuditoria = await auditarRespuestaIA(mensaje, textoRespuesta)
       return NextResponse.json({
         respuesta: resultadoAuditoria.respuestaFinal,
-        modelo: 'gemini-flash-latest',
+        modelo: 'nvidia/nemotron-nano-9b-v2:free',
         fallback: true
       })
-    } catch (geminiError: any) {
-      console.error('[Asistente] Gemini FAILED:', geminiError?.message)
+    } catch (orError: any) {
+      console.error('[Asistente] OpenRouter FAILED:', orError?.message)
       return NextResponse.json({
         error: 'Todos los providers fallaron',
-        openrouter: error?.message,
-        gemini: geminiError?.message,
+        groq: error?.message,
+        openrouter: orError?.message,
       }, { status: 502 })
     }
   }
