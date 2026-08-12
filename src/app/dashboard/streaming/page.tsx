@@ -1,7 +1,6 @@
 import { getCurrentMember, isAdmin } from '@/services/auth'
 import { redirect } from 'next/navigation'
 import { 
-  Tv, 
   Radio, 
   Settings, 
   ExternalLink,
@@ -9,7 +8,8 @@ import {
   Video,
   Monitor,
 } from 'lucide-react'
-import Link from 'next/link'
+import { getStreamingStatus } from './actions'
+import { StreamingControls } from './StreamingControls'
 
 export default async function StreamingPage() {
   const member = await getCurrentMember()
@@ -22,6 +22,9 @@ export default async function StreamingPage() {
 
   // Enlace fijo a Google Meet configurado en .env
   const meetLink = process.env.NEXT_PUBLIC_MEET_LINK ?? 'https://meet.google.com/itec-reunion'
+
+  // Obtener estado del streaming
+  const streamingStatus = await getStreamingStatus()
 
   return (
     <div className="space-y-8 animate-fade-in text-slate-100 pb-16">
@@ -93,6 +96,12 @@ export default async function StreamingPage() {
         {/* Columna Derecha: Controles Rápidos y Overlays */}
         <div className="space-y-6">
           
+          {/* Control de Transmisión Abierta (YouTube) */}
+          <StreamingControls 
+            initialIsActive={streamingStatus.isActive}
+            initialYoutubeUrl={streamingStatus.youtubeUrl || ''}
+          />
+
           {/* Sala Principal Google Meet */}
           <div className="bg-gradient-to-br from-blue-900/20 to-zinc-900/40 border border-blue-500/10 p-6 rounded-3xl space-y-4 shadow-lg">
             <div className="flex items-center gap-3">

@@ -285,7 +285,7 @@ D:\ITEC\
 - **`HerramientasActivas` type incompleto:** `database.ts` no incluye `semaforo: boolean`. Los componentes usan `(evento as any).herramientas_activas` como workaround.
 
 ### Recomendaciones para Nuevos Desarrollos
-1. **Nunca**放置 API keys o secrets en el cliente o en `localStorage`.
+1. **Nunca** exponer API keys o secrets en el cliente o en `localStorage`.
 2. **Siempre** usar `getCurrentMember()` en Server Actions antes de mutar datos.
 3. **Usar RLS** en todas las tablas nuevas. No confiar solo en la validación de la aplicación.
 4. **Auditar** cualquier endpoint público que acepte datos del usuario.
@@ -411,7 +411,7 @@ D:\ITEC\
 
 El flujo de creación de noticias funciona así:
 1. **`NewsFlashMulticanalEditor`** — Editor que recibe datos crudos y los envía al backend.
-2. **`/api/news/process`** — Llama a `generateMulticanalNews()` en `services/ai.ts` que usa OpenRouter (DeepSeek Chat) para generar 4 textos diferentes para 4 canales (público, miembros, sponsors, medios) usando un prompt de agente de prensa.
+2. **`/api/news/process`** — Llama a `generateMulticanalNews()` en `services/ai.ts` que usa Gemini (`gemini-flash-latest`) para generar 4 textos diferentes para 4 canales (público, miembros, sponsors, medios) usando un prompt de agente de prensa.
 3. Los textos generados se guardan en `news_flashes` con los campos `texto_publico`, `texto_miembros`, `texto_sponsors`, `texto_medios`.
 4. También se crean registros en `notas_publico`, `notas_miembros`, `notas_sponsors`, `notas_medios`.
 5. **`NewsWallMulticanal`** — Componente de visualización con tabs: Público, Muro Noticias (interno), Muro Sponsors, Prensa.
@@ -507,7 +507,7 @@ Sistema de recuperación de **5 niveles** con scoring por solapamiento de tokens
   - `npm run ingest-vector` → PDFs → chunking → Gemini embeddings → tabla `documents` (pgvector, nivel P1)
 
 ### Asistente IA (`/api/asistente`)
-- **Provider:** OpenRouter (`openrouter/free`) → Gemini fallback
+- **Provider:** Groq (`llama-3.3-70b-versatile`) → OpenRouter (`nvidia/nemotron-nano-9b-v2:free`) fallback
 - **RAG integrado:** Llama a `recuperarContextoRAG()` para inyectar contexto semántico
 - **Contexto dinámico de DB en paralelo:** prompt maestro, staff, noticias, comisiones, actividades, artículos
 - **Timeout:** 60s (modelos gratuitos pueden ser más lentos)
@@ -525,6 +525,17 @@ Sistema de recuperación de **5 niveles** con scoring por solapamiento de tokens
   - Genera embeddings para búsqueda semántica
   - Guarda en `asistente_feedback`
 - **Lazy Groq:** El cliente Groq en `/api/chat` usa lazy initialization para evitar error de build cuando falta `GROQ_API_KEY`
+
+### Constantes de IA (`src/lib/ai/constants.ts`)
+- **`FALLBACK_PROMPT`**: System prompt por defecto del asistente cuando no hay configuración en DB. Define identidad, conocimiento sobre ITEC/Cicaré, y reglas de comportamiento.
+- **`ANTI_HALLUCINATION_RULES_STRICT`**: Reglas estrictas para RAG — solo responder con información del contexto recuperado.
+- **`ANTI_HALLUCINATION_RULES_FLEXIBLE`**: Reglas flexibles — priorizar contexto RAG, luego artículos, luego conocimiento general.
+
+### Conversaciones Guardadas (`src/lib/rag/conversacionesGuardadas.ts`)
+- **Detección de comandos:** Patrones regex en español para detectar "guardar conversación", "guardar esto", etc.
+- **Auto-guardado:** Se activa después de 10 mensajes y se repite cada 10 mensajes.
+- **Persistencia:** Genera embedding del historial y guarda en `saved_conversations`.
+- **Recuperación (P4):** Busca conversaciones pasadas similares a la query actual usando similitud coseno.
 
 ---
 
@@ -563,7 +574,7 @@ Verificación pública de certificados digitales mediante código QR único. Mue
 
 ### Eventos Presenciales (`/eventos/[id]`)
 Sistema completo de interacción en vivo:
-- **QR de acreditación** — Los asistentes se acreditan escaneando QR o completan formulario con nombre, email, teléfono, organización
+- **QR de acreditación** — Los asistentes se acreditaban escaneando QR o completan formulario con nombre, email, teléfono, organización
 - **Credencial por dispositivo** — Identificación por localStorage (sin login requerido)
 - **Preguntas al orador** (`/preguntar`) — Los asistentes envían preguntas con sistema de likes, opción de anonimato
 - **Pantalla de preguntas** (`/pantalla-preguntas`) — Moderador muestra preguntas aprobadas en pantalla grande
@@ -721,7 +732,7 @@ Formulario para crear nuevas acciones de impacto (capacitaciones, eventos social
 ## Integraciones Externas
 
 ### Supabase
-- **Database:** PostgreSQL con 56 migraciones, RLS policies
+- **Database:** PostgreSQL con 63 migraciones, RLS policies
 - **Auth:** Supabase Auth con Google OAuth, manejo de sesiones via cookies SSR
 - **Storage:** 3 buckets: `article-media` (imágenes artículos), `avatars` (fotos perfil), `training-docs` (PDFs entrenamiento IA)
 - **Realtime:** Suscripciones `postgres_changes` para:
@@ -740,8 +751,8 @@ Formulario para crear nuevas acciones de impacto (capacitaciones, eventos social
 
 ### Google Gemini
 - API para embeddings (`text-embedding-004`) — primario para RAG
-- API para generación de texto (`gemini-flash-latest`) — fallback del asistente
-- Múltiples API keys configuradas como fallback chain
+- API para generación de texto (`gemini-flash-latest`) — edición de texto exclusiva
+- Múltiples API keys configuradas como fallback chain (4 keys en `site_settings`)
 
 ### Resend (Emails)
 - Email de bienvenida al aprobar membresía
@@ -926,3 +937,5 @@ Server Action     →  getCurrentMember()  →  validate Zod  →  mutate DB  �
 - **Modelos gratuitos (ago 2026):** Regla de oro — todos los endpoints del asistente usan `openrouter/free` (router automático de 14+ modelos free). Eliminados todos los `deepseek/deepseek-chat` del codebase.
 - **Lazy Groq init (ago 2026):** Cliente Groq en `/api/chat` usa `getGroq()` con lazy initialization para evitar error de build cuando falta `GROQ_API_KEY`.
 - **pgvector RAG (migraciones 062-063):** Tabla `documents` con `vector(768)` para búsqueda semántica. RPC `match_documents` para cosine similarity. Ingesta vía `npm run ingest-vector` (PDFs → chunking 900 chars → Gemini embeddings → Supabase).
+- **Constantes de IA (sept 2026):** `FALLBACK_PROMPT` define el system prompt por defecto del asistente. `ANTI_HALLUCINATION_RULES_FLEXIBLE` controla el comportamiento RAG cuando no hay contexto recuperado.
+- **Conversaciones Guardadas (sept 2026):** Auto-guardado cada 10 mensajes después del umbral inicial. Detección de comandos explícitos en español. Recuperación semántica P4 con threshold 0.35.

@@ -6,21 +6,21 @@ import Image from 'next/image'
 import { createClient } from '@/lib/supabase/client'
 import { useLanguage } from '@/contexts/LanguageContext'
 import { MembersAccessButton } from '@/components/auth/MembersAccessButton'
+import { StreamingPlayer } from '@/components/landing/StreamingPlayer'
 
 export function HeroSection() {
   const { dict } = useLanguage()
   const [claseEnVivo, setClaseEnVivo] = useState(false)
-  const [fraseHero, setFraseHero] = useState("Construimos futuro desde la raíz: potenciando saberes, impulsando pymes y abriendo horizontes en Saladillo. Si logramos encender la chispa de los grandes inventores de mañana, todo este viaje habrá valido la pena.")
-
-  useEffect(() => {
+  const [fraseHero] = useState(() => {
     const FRASES_HERO = [
       "Construimos futuro desde la raíz: potenciando saberes, impulsando pymes y abriendo horizontes en Saladillo. Si logramos encender la chispa de los grandes inventores de mañana, todo este viaje habrá valido la pena.",
       "Aportamos valor al trabajo diario y al motor pyme de Saladillo. Cada joven capacitado es una promesa viva; si descubrimos a tiempo al próximo gran creador local, habremos cumplido nuestra misión y allí estaremos para acompañar su camino.",
       "Impulsar el desarrollo productivo y guiar a las nuevas generaciones es nuestra razón de ser en Saladillo. Si en ese camino descubrimos al genio que marcará el mañana, todo el esfuerzo cobra aún más sentido."
     ]
-    const idx = Math.floor(Math.random() * FRASES_HERO.length)
-    setFraseHero(FRASES_HERO[idx])
-  }, [])
+    return FRASES_HERO[Math.floor(Math.random() * FRASES_HERO.length)]
+  })
+  const [streamingActive, setStreamingActive] = useState(false)
+  const [streamingUrl, setStreamingUrl] = useState<string | null>(null)
 
   useEffect(() => {
     const supabase = createClient()
@@ -63,6 +63,22 @@ export function HeroSection() {
     return () => {
       supabase.removeChannel(channel)
     }
+  }, [])
+
+  // Fetch streaming status
+  useEffect(() => {
+    const fetchStreamingStatus = async () => {
+      try {
+        const response = await fetch('/api/streaming/status')
+        const data = await response.json()
+        setStreamingActive(data.isActive)
+        setStreamingUrl(data.youtubeUrl)
+      } catch (err) {
+        console.error('Error fetching streaming status:', err)
+      }
+    }
+
+    fetchStreamingStatus()
   }, [])
 
   return (
@@ -202,22 +218,28 @@ export function HeroSection() {
             </div>
           </div>
 
-          {/* DERECHA — Palabras iluminadas */}
+          {/* DERECHA — Streaming Player o Palabras iluminadas */}
           <div className="relative flex flex-col items-start animate-fade-up delay-200" style={{ animationFillMode: 'both' }}>
             
-            <div className="relative py-8">
-              {/* Palabras (Capa superior) */}
-              <h1 className="relative z-10 flex flex-col items-start gap-2">
-                <span className="spotlight-text spotlight-i">{dict.about.pilares.innovacion.title}</span>
-                <span className="spotlight-text spotlight-t">{dict.about.pilares.tecnologia.title}</span>
-                <span className="spotlight-text spotlight-emprendedurismo spotlight-e">{dict.about.pilares.emprendedurismo.title}</span>
-                <span className="spotlight-text spotlight-c">{dict.about.pilares.ciencia.title}</span>
-              </h1>
-            </div>
+            {streamingActive && streamingUrl ? (
+              <StreamingPlayer youtubeUrl={streamingUrl} />
+            ) : (
+              <>
+                <div className="relative py-8">
+                  {/* Palabras (Capa superior) */}
+                  <h1 className="relative z-10 flex flex-col items-start gap-2">
+                    <span className="spotlight-text spotlight-i">{dict.about.pilares.innovacion.title}</span>
+                    <span className="spotlight-text spotlight-t">{dict.about.pilares.tecnologia.title}</span>
+                    <span className="spotlight-text spotlight-emprendedurismo spotlight-e">{dict.about.pilares.emprendedurismo.title}</span>
+                    <span className="spotlight-text spotlight-c">{dict.about.pilares.ciencia.title}</span>
+                  </h1>
+                </div>
 
-            <p className="relative z-10 text-[var(--text-secondary)] text-sm md:text-base max-w-sm text-left mt-8 leading-relaxed">
-              {fraseHero}
-            </p>
+                <p className="relative z-10 text-[var(--text-secondary)] text-sm md:text-base max-w-sm text-left mt-8 leading-relaxed">
+                  {fraseHero}
+                </p>
+              </>
+            )}
           </div>
 
         </div>
