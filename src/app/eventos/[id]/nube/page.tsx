@@ -10,16 +10,11 @@ export default function NubeParticipantePage({ params }: { params: Promise<{ id:
   const resolvedParams = use(params);
   const eventoId = resolvedParams.id;
   
-  // Leer nubeId del URL en la inicialización del estado para evitar flash de pantalla de selección
-  const [nubeId, setNubeId] = useState<string | null>(() => {
-    if (typeof window !== "undefined") {
-      return new URLSearchParams(window.location.search).get("nubeId");
-    }
-    return null;
-  });
+  const [nubeId, setNubeId] = useState<string | null>(null);
   const [nubeNombre, setNubeNombre] = useState<string | null>(null);
   const [loadingNube, setLoadingNube] = useState(true);
   const [eventNubesList, setEventNubesList] = useState<any[]>([]);
+  const [enviadasMap, setEnviadasMap] = useState<Record<string, boolean>>({});
 
   const [palabra, setPalabra] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -31,7 +26,15 @@ export default function NubeParticipantePage({ params }: { params: Promise<{ id:
   const supabase = createClient();
   const MAX_CARACTERES = 20;
 
-  // 1. Inicializar dispositivoId (el nubeId ya se lee en la init del estado arriba)
+  // 1. Leer nubeId del URL en el cliente (evita hidratación incorrecta)
+  useEffect(() => {
+    const urlNubeId = new URLSearchParams(window.location.search).get("nubeId");
+    if (urlNubeId) {
+      setNubeId(urlNubeId);
+    }
+  }, []);
+
+  // 2. Inicializar dispositivoId
   useEffect(() => {
     if (typeof window !== "undefined") {
       // Generar o recuperar identificador único de dispositivo
@@ -46,7 +49,7 @@ export default function NubeParticipantePage({ params }: { params: Promise<{ id:
     }
   }, []);
 
-  // 2. Comprobar si ya envió una palabra para esta nube/evento
+  // 3. Comprobar si ya envió una palabra para esta nube/evento
   useEffect(() => {
     const key = nubeId ? `nube_enviada_${nubeId}` : `nube_enviada_${eventoId}`;
     const yaEnviado = localStorage.getItem(key);
@@ -56,6 +59,17 @@ export default function NubeParticipantePage({ params }: { params: Promise<{ id:
       setEnviado(false);
     }
   }, [nubeId, eventoId]);
+
+  // 4. Poblar enviadasMap cuando se carga la lista de nubes
+  useEffect(() => {
+    if (eventNubesList.length > 0) {
+      const map: Record<string, boolean> = {};
+      for (const nube of eventNubesList) {
+        map[nube.id] = localStorage.getItem(`nube_enviada_${nube.id}`) === "true";
+      }
+      setEnviadasMap(map);
+    }
+  }, [eventNubesList]);
 
   // 3. Cargar información de la nube o listado general
   useEffect(() => {
@@ -269,7 +283,7 @@ export default function NubeParticipantePage({ params }: { params: Promise<{ id:
                   </div>
                 ) : (
                   eventNubesList.map((nube) => {
-                    const yaEnviada = localStorage.getItem(`nube_enviada_${nube.id}`) === "true";
+                    const yaEnviada = enviadasMap[nube.id] || false;
                     return (
                       <button
                         key={nube.id}
