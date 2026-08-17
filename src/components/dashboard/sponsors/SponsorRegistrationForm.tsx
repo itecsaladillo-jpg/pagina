@@ -108,8 +108,14 @@ export default function SponsorRegistrationForm() {
       <input {...register('contact_phone')} placeholder="Teléfono" className="w-full p-2 bg-gray-800 rounded" />
       <input {...register('contact_email')} placeholder="Email" className="w-full p-2 bg-gray-800 rounded" />
       
-      <input type="file" {...register('logo_monocromo')} className="w-full" />
-      <input type="file" {...register('logo_color')} className="w-full" />
+      <div className="space-y-2">
+        <label className="block text-[10px] uppercase tracking-widest text-white/60">CARGAR LOGO BLANCO</label>
+        <input type="file" {...register('logo_monocromo')} className="w-full p-2 bg-gray-800 rounded border border-white/10 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-500" accept="image/*" />
+      </div>
+      <div className="space-y-2">
+        <label className="block text-[10px] uppercase tracking-widest text-white/60">CARGAR LOGO COLOR</label>
+        <input type="file" {...register('logo_color')} className="w-full p-2 bg-gray-800 rounded border border-white/10 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-500" accept="image/*" />
+      </div>
       
       <button type="submit" disabled={loading} className="w-full p-2 bg-blue-600 rounded">
         {loading ? 'Guardando...' : 'Registrar Sponsor'}
