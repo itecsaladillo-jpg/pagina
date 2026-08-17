@@ -96,37 +96,51 @@ export default function SponsorRegistrationForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 p-6 bg-gray-900 rounded-lg text-white">
-      <input {...register('name')} placeholder="Nombre del Sponsor" className="w-full p-2 bg-gray-800 rounded" />
-      {errors.name && <p className="text-red-500">{errors.name.message}</p>}
-      
-      <select {...register('tier')} className="w-full p-2 bg-gray-800 rounded">
-        <option value="platino">Platinum</option>
-        <option value="oro">Oro</option>
-        <option value="plata">Plata</option>
-        <option value="bronce">Bronce</option>
-        <option value="standard">Standard</option>
-      </select>
+    <div className="space-y-6">
+      <div className="flex items-center gap-4">
+        <button 
+          onClick={() => window.history.back()}
+          className="p-2 hover:bg-gray-800 rounded-full text-white transition-colors"
+        >
+          <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
+        <h2 className="text-2xl font-bold text-white uppercase tracking-wider">Alta de Sponsors</h2>
+      </div>
 
-      <input {...register('rubro')} placeholder="Rubro" className="w-full p-2 bg-gray-800 rounded" />
-      <textarea {...register('resena')} placeholder="Reseña" className="w-full p-2 bg-gray-800 rounded" />
-      <input {...register('website_url')} placeholder="Página Web" className="w-full p-2 bg-gray-800 rounded" />
-      <input {...register('contact_name')} placeholder="Contacto" className="w-full p-2 bg-gray-800 rounded" />
-      <input {...register('contact_phone')} placeholder="Teléfono" className="w-full p-2 bg-gray-800 rounded" />
-      <input {...register('contact_email')} placeholder="Email" className="w-full p-2 bg-gray-800 rounded" />
-      
-      <div className="space-y-2">
-        <label className="block text-[10px] uppercase tracking-widest text-white/60">CARGAR LOGO BLANCO</label>
-        <input type="file" {...register('logo_monocromo')} className="w-full p-2 bg-gray-800 rounded border border-white/10 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-500" accept="image/*" />
-      </div>
-      <div className="space-y-2">
-        <label className="block text-[10px] uppercase tracking-widest text-white/60">CARGAR LOGO COLOR</label>
-        <input type="file" {...register('logo_color')} className="w-full p-2 bg-gray-800 rounded border border-white/10 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-500" accept="image/*" />
-      </div>
-      
-      <button type="submit" disabled={loading} className="w-full p-2 bg-blue-600 rounded">
-        {loading ? 'Guardando...' : 'Registrar Sponsor'}
-      </button>
-    </form>
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 p-6 bg-gray-900 rounded-lg text-white">
+        <input {...register('name')} placeholder="Nombre del Sponsor" className="w-full p-2 bg-gray-800 rounded" />
+        {errors.name && <p className="text-red-500">{errors.name.message}</p>}
+        
+        <select {...register('tier')} className="w-full p-2 bg-gray-800 rounded">
+          <option value="platino">Platinum</option>
+          <option value="oro">Oro</option>
+          <option value="plata">Plata</option>
+          <option value="bronce">Bronce</option>
+          <option value="standard">Standard</option>
+        </select>
+
+        <input {...register('rubro')} placeholder="Rubro" className="w-full p-2 bg-gray-800 rounded" />
+        <textarea {...register('resena')} placeholder="Reseña" className="w-full p-2 bg-gray-800 rounded" />
+        <input {...register('website_url')} placeholder="Página Web" className="w-full p-2 bg-gray-800 rounded" />
+        <input {...register('contact_name')} placeholder="Contacto" className="w-full p-2 bg-gray-800 rounded" />
+        <input {...register('contact_phone')} placeholder="Teléfono" className="w-full p-2 bg-gray-800 rounded" />
+        <input {...register('contact_email')} placeholder="Email" className="w-full p-2 bg-gray-800 rounded" />
+        
+        <div className="space-y-2">
+          <label className="block text-[10px] uppercase tracking-widest text-white/60">CARGAR LOGO BLANCO</label>
+          <input type="file" {...register('logo_monocromo')} className="w-full p-2 bg-gray-800 rounded border border-white/10 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-500" accept="image/*" />
+        </div>
+        <div className="space-y-2">
+          <label className="block text-[10px] uppercase tracking-widest text-white/60">CARGAR LOGO COLOR</label>
+          <input type="file" {...register('logo_color')} className="w-full p-2 bg-gray-800 rounded border border-white/10 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-500" accept="image/*" />
+        </div>
+        
+        <button type="submit" disabled={loading} className="w-full p-2 bg-blue-600 rounded">
+          {loading ? 'Guardando...' : 'Registrar Sponsor'}
+        </button>
+      </form>
+    </div>
   )
 }
