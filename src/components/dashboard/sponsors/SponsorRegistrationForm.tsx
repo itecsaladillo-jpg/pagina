@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -26,10 +26,17 @@ const fullSponsorSchema = sponsorSchema.extend({
 type SponsorFormValues = z.infer<typeof fullSponsorSchema>
 
 export default function SponsorRegistrationForm() {
+  const [isMounted, setIsMounted] = useState(false)
   const [loading, setLoading] = useState(false)
   const { register, handleSubmit, formState: { errors } } = useForm<SponsorFormValues>({
     resolver: zodResolver(fullSponsorSchema)
   })
+
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
+
+  if (!isMounted) return null
 
   const onSubmit = async (data: SponsorFormValues) => {
     setLoading(true)
