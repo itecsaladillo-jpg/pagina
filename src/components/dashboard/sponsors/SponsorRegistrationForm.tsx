@@ -26,7 +26,10 @@ type SponsorFormValues = z.infer<typeof sponsorSchema> & {
 export default function SponsorRegistrationForm() {
   const [loading, setLoading] = useState(false)
   const { register, handleSubmit, formState: { errors } } = useForm<SponsorFormValues>({
-    resolver: zodResolver(sponsorSchema)
+    resolver: zodResolver(sponsorSchema.extend({
+      logo_monocromo: z.any().optional(),
+      logo_color: z.any().optional(),
+    }))
   })
 
   const onSubmit = async (data: SponsorFormValues) => {
