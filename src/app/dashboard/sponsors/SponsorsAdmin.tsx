@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import SponsorRegistrationForm from './SponsorRegistrationForm'
+import SponsorRegistrationForm from '@/components/dashboard/sponsors/SponsorRegistrationForm'
 import { createAccionAction, deleteAccionAction, deleteSponsorAction, createReporteAction } from './actions'
 import { generateInvitationAction } from '../actions/invitations'
 
