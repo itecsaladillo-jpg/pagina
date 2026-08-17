@@ -33,6 +33,14 @@ Plataforma web full-stack de **ITEC Saladillo** (Asociación Civil de Ciencia y 
 | `extract-docs` | `node scripts/extractPdfText.js` | Extraer texto de PDFs a JSON |
 | `ingest-vector` | `node --dns-result-order=ipv4first --env-file=.env.local scripts/ingestDocsToVector.mjs` | PDFs → pgvector embeddings (Gemini) |
 
+## Herramientas de Desarrollo y Diagnóstico (scratch)
+El directorio `scratch/` contiene scripts temporales para:
+- **Diagnóstico:** `diagnose-qa.js` (QA), `diagnose-feedback.js` (feedback), `test-db.js`.
+- **Migraciones/Testing:** Scripts `test-*.js` (ej. `test-column-existence.js`, `test-skills-columns.js`) para verificar esquemas de DB.
+- **Gestión de Datos:** `analyze_videos.mjs`, `update_latest_videos.js`.
+
+Estos scripts son fundamentales para validar cambios en el esquema de base de datos antes de aplicar migraciones.
+
 ## Estructura del Proyecto
 ```
 D:\ITEC\

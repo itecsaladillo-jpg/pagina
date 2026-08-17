@@ -12,7 +12,7 @@ export type MemberRole = 'admin' | 'coordinador' | 'miembro' | 'colaborador'
 export type MemberStatus = 'activo' | 'inactivo' | 'pendiente'
 export type TrainingStatus = 'planificada' | 'en_curso' | 'finalizada' | 'cancelada'
 export type IdeaStatus = 'pendiente' | 'en_revision' | 'aprobada' | 'descartada'
-export type SponsorTier = 'platino' | 'oro' | 'plata' | 'bronce'
+export type SponsorTier = 'platino' | 'oro' | 'plata' | 'bronce' | 'standard'
 export type ActionType = 'capacitacion' | 'evento_social' | 'divulgacion'
 export type ActionStatus = 'planificacion' | 'en_curso' | 'finalizada' | 'cancelada'
 
@@ -131,6 +131,25 @@ export interface Sponsor {
   is_active: boolean
   description: string | null
   private_token: string
+  rubro: string | null
+  resena: string | null
+  contacto_nombre: string | null
+  contacto_telefono: string | null
+  logo_monocromo_url: string | null
+  logo_color_url: string | null
+}
+
+export interface SponsorFormData {
+  name: string
+  tier: SponsorTier
+  rubro: string
+  resena: string
+  website_url?: string
+  contact_name: string
+  contact_phone: string
+  contact_email: string
+  logo_monocromo?: File
+  logo_color?: File
 }
 
 // ─────────────────────────────────────────

@@ -164,16 +164,16 @@ export async function updateSponsorAction(id: string, formData: UpdateSponsorDat
 
 export async function createSponsorAction(formData: {
   name: string
-  nombre_empresa?: string
-  actividad?: string
-  zona_influencia?: string
-  nombre_contacto?: string
-  apellido_contacto?: string
-  telefono?: string
-  email?: string
-  logo_url?: string | null
+  tier: string
+  rubro?: string
+  resena?: string
   website_url?: string | null
-  tier?: string
+  contacto_nombre?: string
+  contacto_telefono?: string
+  email?: string
+  logo_monocromo_url?: string
+  logo_color_url?: string
+  is_active?: boolean
   description?: string | null
 }) {
   const admin = await getCurrentMember()

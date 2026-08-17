@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { SponsorForm } from './SponsorForm'
+import SponsorRegistrationForm from './SponsorRegistrationForm'
 import { createAccionAction, deleteAccionAction, deleteSponsorAction, createReporteAction } from './actions'
 import { generateInvitationAction } from '../actions/invitations'
 
@@ -165,7 +165,14 @@ export function SponsorsAdmin({ initialSponsors, initialAcciones }: Props) {
               </div>
             ))}
           </div>
-          {showSponsorForm && <SponsorForm sponsor={editingSponsor} onClose={() => setShowSponsorForm(false)} />}
+          {showSponsorForm && (
+            <div className='fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4'>
+              <div className='glass border border-white/10 rounded-2xl p-8 max-w-xl w-full shadow-2xl max-h-[90vh] overflow-y-auto'>
+                <SponsorRegistrationForm />
+                <button onClick={() => setShowSponsorForm(false)} className='w-full mt-4 p-2 bg-gray-700 rounded'>Cerrar</button>
+              </div>
+            </div>
+          )}
         </div>
       )}
 

@@ -1,6 +1,23 @@
 import { createClient } from '@/lib/supabase/server'
-import type { Member } from '@/types/database'
+import type { Member, Sponsor } from '@/types/database'
 import { unstable_cache, revalidateTag } from 'next/cache'
+
+/**
+ * Crea un nuevo sponsor en la base de datos.
+ */
+export async function createSponsor(sponsorData: Omit<Sponsor, 'id' | 'created_at' | 'updated_at' | 'private_token'>) {
+  const supabase = await createClient()
+  const { data, error } = await supabase
+    .from('sponsors')
+    .insert(sponsorData)
+    .select()
+
+  if (error) {
+    console.error('[adminService] createSponsor error:', error.message)
+    return { success: false, error: error.message }
+  }
+  return { success: true, data: data?.[0] }
+}
 
 /**
  * Aprueba a un miembro pendiente cambiándole el estado a 'activo'.
