@@ -52,8 +52,18 @@ const [formData, setFormData] = useState<SponsorFormData>({
     setErrors({})
     try {
       const payload = {
-        ...formData,
         name: formData.nombre_empresa,
+        tier: 'standard' as const, // Default value, should be handled by UI if needed
+        rubro: formData.actividad,
+        resena: '', // Need to add resena field to SponsorForm if it's required
+        website_url: null,
+        contacto_nombre: formData.nombre_contacto,
+        contacto_telefono: formData.telefono,
+        email: formData.email,
+        logo_monocromo_url: '',
+        logo_color_url: '',
+        is_active: true,
+        description: null,
       }
       if (sponsor) {
         await updateSponsorAction(sponsor.id, payload)

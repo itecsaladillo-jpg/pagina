@@ -52,7 +52,7 @@ export default function SponsorRegistrationForm() {
       const logoColorUrl = await upload(data.logo_color[0], 'color')
 
       // Insert Sponsor
-      const { success, error } = await createSponsorAction({
+      const result = await createSponsorAction({
         name: data.name,
         tier: data.tier,
         rubro: data.rubro,
@@ -67,7 +67,7 @@ export default function SponsorRegistrationForm() {
         description: null,
       })
 
-      if (!success) throw new Error(error)
+      if (!result.success) throw new Error('Error al guardar sponsor')
       alert('Sponsor registrado exitosamente')
     } catch (err: any) {
       alert('Error al registrar sponsor: ' + err.message)
