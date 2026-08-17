@@ -10,12 +10,12 @@ import { createSponsorAction } from '@/app/dashboard/sponsors/actions'
 const sponsorSchema = z.object({
   name: z.string().min(1, 'Nombre es requerido'),
   tier: z.enum(['platino', 'oro', 'plata', 'bronce', 'standard']),
-  rubro: z.string().min(1, 'Rubro es requerido'),
-  resena: z.string().min(1, 'Reseña es requerida'),
+  rubro: z.string().optional(),
+  resena: z.string().optional(),
   website_url: z.string().url().optional().or(z.literal('')),
-  contact_name: z.string().min(1, 'Nombre de contacto es requerido'),
-  contact_phone: z.string().min(1, 'Teléfono es requerido'),
-  contact_email: z.string().email('Email inválido'),
+  contact_name: z.string().optional(),
+  contact_phone: z.string().optional(),
+  contact_email: z.string().email('Email inválido').optional().or(z.literal('')),
 })
 
 type SponsorFormValues = z.infer<typeof sponsorSchema> & {
@@ -26,10 +26,7 @@ type SponsorFormValues = z.infer<typeof sponsorSchema> & {
 export default function SponsorRegistrationForm() {
   const [loading, setLoading] = useState(false)
   const { register, handleSubmit, formState: { errors } } = useForm<SponsorFormValues>({
-    resolver: zodResolver(sponsorSchema.extend({
-      logo_monocromo: z.any().refine((files) => files?.length > 0, 'Logo monocromo es requerido'),
-      logo_color: z.any().refine((files) => files?.length > 0, 'Logo color es requerido'),
-    }))
+    resolver: zodResolver(sponsorSchema)
   })
 
   const onSubmit = async (data: SponsorFormValues) => {
@@ -38,7 +35,8 @@ export default function SponsorRegistrationForm() {
 
     try {
       // Upload files
-      const upload = async (file: File, folder: string) => {
+      const upload = async (file: File | undefined, folder: string) => {
+        if (!file) return 'https://placeholder.url'
         const fileExt = file.name.split('.').pop()
         const fileName = `${Date.now()}-${Math.random()}.${fileExt}`
         const { error } = await supabase.storage
@@ -48,19 +46,19 @@ export default function SponsorRegistrationForm() {
         return supabase.storage.from('sponsors-logos').getPublicUrl(`${folder}/${fileName}`).data.publicUrl
       }
 
-      const logoMonocromoUrl = await upload(data.logo_monocromo[0], 'monocromo')
-      const logoColorUrl = await upload(data.logo_color[0], 'color')
+      const logoMonocromoUrl = await upload(data.logo_monocromo?.[0], 'monocromo')
+      const logoColorUrl = await upload(data.logo_color?.[0], 'color')
 
       // Insert Sponsor
       const result = await createSponsorAction({
         name: data.name,
         tier: data.tier,
-        rubro: data.rubro,
-        resena: data.resena,
+        rubro: data.rubro || '-',
+        resena: data.resena || '-',
         website_url: data.website_url || null,
-        email: data.contact_email,
-        contacto_nombre: data.contact_name,
-        contacto_telefono: data.contact_phone,
+        email: data.contact_email || '-',
+        contacto_nombre: data.contact_name || '-',
+        contacto_telefono: data.contact_phone || '-',
         logo_monocromo_url: logoMonocromoUrl,
         logo_color_url: logoColorUrl,
         is_active: true,
