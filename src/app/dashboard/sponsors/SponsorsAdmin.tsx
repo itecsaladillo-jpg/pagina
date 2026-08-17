@@ -112,7 +112,7 @@ export function SponsorsAdmin({ initialSponsors, initialAcciones }: Props) {
         <div className="space-y-6">
           <div className="flex justify-end">
             <button onClick={() => { setEditingSponsor(null); setShowSponsorForm(true) }}
-              className="btn-primary text-xs py-2 px-6 rounded-xl">+ Nuevo Socio</button>
+              className="btn-primary text-xs py-2 px-6 rounded-xl">+ NUEVO SPONSOR</button>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {sponsors.map(s => (
