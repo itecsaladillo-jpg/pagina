@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { createClient } from '@/lib/supabase/client'
-import { createSponsor } from '@/services/admin'
+import { createSponsorAction } from '@/app/dashboard/sponsors/actions'
 
 const sponsorSchema = z.object({
   name: z.string().min(1, 'Nombre es requerido'),
@@ -52,20 +52,19 @@ export default function SponsorRegistrationForm() {
       const logoColorUrl = await upload(data.logo_color[0], 'color')
 
       // Insert Sponsor
-      const { success, error } = await createSponsor({
+      const { success, error } = await createSponsorAction({
         name: data.name,
         tier: data.tier,
         rubro: data.rubro,
         resena: data.resena,
         website_url: data.website_url || null,
-        contact_email: data.contact_email,
+        email: data.contact_email,
         contacto_nombre: data.contact_name,
         contacto_telefono: data.contact_phone,
         logo_monocromo_url: logoMonocromoUrl,
         logo_color_url: logoColorUrl,
         is_active: true,
-        description: null, // old field
-        logo_url: logoColorUrl, // old field fallback
+        description: null,
       })
 
       if (!success) throw new Error(error)
