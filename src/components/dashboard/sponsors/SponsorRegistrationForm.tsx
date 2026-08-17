@@ -18,18 +18,17 @@ const sponsorSchema = z.object({
   contact_email: z.string().email('Email inválido').optional().or(z.literal('')),
 })
 
-type SponsorFormValues = z.infer<typeof sponsorSchema> & {
-  logo_monocromo: FileList
-  logo_color: FileList
-}
+const fullSponsorSchema = sponsorSchema.extend({
+  logo_monocromo: z.any().optional(),
+  logo_color: z.any().optional(),
+})
+
+type SponsorFormValues = z.infer<typeof fullSponsorSchema>
 
 export default function SponsorRegistrationForm() {
   const [loading, setLoading] = useState(false)
   const { register, handleSubmit, formState: { errors } } = useForm<SponsorFormValues>({
-    resolver: zodResolver(sponsorSchema.extend({
-      logo_monocromo: z.any().optional(),
-      logo_color: z.any().optional(),
-    }))
+    resolver: zodResolver(fullSponsorSchema)
   })
 
   const onSubmit = async (data: SponsorFormValues) => {
