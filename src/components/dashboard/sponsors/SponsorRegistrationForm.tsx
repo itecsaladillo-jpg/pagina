@@ -39,13 +39,25 @@ export default function SponsorRegistrationForm() {
       // Upload files
       const upload = async (file: File | undefined, folder: string) => {
         if (!file) return 'https://placeholder.url'
-        const fileExt = file.name.split('.').pop()
-        const fileName = `${Date.now()}-${Math.random()}.${fileExt}`
+        
+        // Sanitizar nombre de archivo
+        const cleanName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_')
+        const fileExt = cleanName.split('.').pop()
+        const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`
+        const filePath = `${folder}/${fileName}`
+        
         const { error } = await supabase.storage
           .from('sponsors-logos')
-          .upload(`${folder}/${fileName}`, file)
-        if (error) throw error
-        return supabase.storage.from('sponsors-logos').getPublicUrl(`${folder}/${fileName}`).data.publicUrl
+          .upload(filePath, file, {
+            cacheControl: '3600',
+            upsert: false
+          })
+          
+        if (error) {
+          console.error('Upload error:', error)
+          throw error
+        }
+        return supabase.storage.from('sponsors-logos').getPublicUrl(filePath).data.publicUrl
       }
 
       const logoMonocromoUrl = await upload(data.logo_monocromo?.[0], 'monocromo')
