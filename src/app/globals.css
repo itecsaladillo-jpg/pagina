@@ -53,15 +53,15 @@ body {
 ::-webkit-scrollbar-thumb { background: var(--accent-primary); border-radius: 3px; }
 
 /* ─── Animaciones globales ─── */
-@keyframes marquee {
+@keyframes marquee-left {
   0% { transform: translateX(0%); }
   100% { transform: translateX(-50%); }
 }
 
 .animate-marquee-infinite {
-  display: flex;
-  width: max-content;
-  animation: marquee 40s linear infinite;
+  display: flex !important;
+  width: max-content !important;
+  animation: marquee-left 55s linear infinite; /* 40% más lento */
 }
 
 .animate-marquee-infinite:hover {

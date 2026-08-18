@@ -35,23 +35,24 @@ export function SponsorHeaderBar({ logos = [] }: SponsorHeaderBarProps) {
   const duplicatedLogos = [...displayLogos, ...displayLogos];
 
   return (
-    <div className="relative z-30 w-full min-h-[64px] overflow-hidden bg-black/50 backdrop-blur-md py-3 border-y border-white/10">
+    <div className="absolute top-0 left-0 w-full overflow-hidden bg-transparent py-3 border-y border-white/5 z-50">
       <div className="animate-marquee-infinite flex items-center gap-10 w-max">
         {duplicatedLogos.map((logo, index) => (
           <div 
-            key={`${logo.url}-${index}`} 
-            className="flex-shrink-0 flex items-center justify-center px-4"
+            key={`${logo.logo_monocromo_url}-${index}`} 
+            className="flex-shrink-0 flex items-center justify-center px-6"
           >
             <img 
-              src={logo.url} 
-              alt={logo.nombre || `Sponsor ${index + 1}`}
-              className="h-10 sm:h-12 w-auto max-w-none object-contain opacity-90 hover:opacity-100 transition-opacity filter brightness-200"
+              src={logo.logo_monocromo_url || ''} 
+              alt={logo.name || `Sponsor ${index + 1}`}
+              className="h-8 sm:h-10 w-auto max-w-none object-contain opacity-90 hover:opacity-100 transition-opacity filter brightness-200"
             />
           </div>
         ))}
       </div>
     </div>
-  );
+  )
 }
+
 
 export default SponsorHeaderBar;
