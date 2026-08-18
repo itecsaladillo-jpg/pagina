@@ -19,9 +19,9 @@ const VideotecaSection = nextDynamic(() => import('@/components/landing/Videotec
 export default async function HomePage() {
   const supabase = await createClient()
   
-  // 1. Obtener la lista de archivos de la carpeta 'blanco'
+  // 1. Obtener la lista de archivos de la carpeta 'monocromo'
   const BUCKET_NAME = 'sponsors-logos';
-  const FOLDER_NAME = 'blanco';
+  const FOLDER_NAME = 'monocromo';
 
   const { data: files, error } = await supabase.storage
     .from(BUCKET_NAME)
