@@ -4,10 +4,8 @@ import { HeroSection } from '@/components/landing/HeroSection'
 import { Footer } from '@/components/landing/Footer'
 import { FloatingLanguageSelector } from '@/components/landing/FloatingLanguageSelector'
 
-const SponsorMarqueeWrapper = dynamic(
-  () => import('@/components/home/SponsorMarqueeWrapper').then(mod => mod.SponsorMarqueeWrapper),
-  { ssr: false }
-)
+import { SponsorMarqueeWrapper } from '@/components/home/SponsorMarqueeWrapper'
+
 const AboutSection = dynamic(() => import('@/components/landing/AboutSection').then(m => m.AboutSection))
 const ComisionesSection = dynamic(() => import('@/components/landing/ComisionesSection').then(m => m.ComisionesSection))
 const IdeasSection = dynamic(() => import('@/components/landing/IdeasSection').then(m => m.IdeasSection))
