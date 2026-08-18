@@ -1,4 +1,4 @@
-import dynamic from 'next/dynamic'
+import nextDynamic from 'next/dynamic'
 import { Navbar } from '@/components/landing/Navbar'
 import { HeroSection } from '@/components/landing/HeroSection'
 import { Footer } from '@/components/landing/Footer'
@@ -10,11 +10,11 @@ import { createClient } from '@/lib/supabase/server'
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
-const AboutSection = dynamic(() => import('@/components/landing/AboutSection').then(m => m.AboutSection))
-const ComisionesSection = dynamic(() => import('@/components/landing/ComisionesSection').then(m => m.ComisionesSection))
-const IdeasSection = dynamic(() => import('@/components/landing/IdeasSection').then(m => m.IdeasSection))
-const ImpactSection = dynamic(() => import('@/components/landing/ImpactSection').then(m => m.ImpactSection))
-const VideotecaSection = dynamic(() => import('@/components/landing/VideotecaSection').then(m => m.VideotecaSection))
+const AboutSection = nextDynamic(() => import('@/components/landing/AboutSection').then(m => m.AboutSection))
+const ComisionesSection = nextDynamic(() => import('@/components/landing/ComisionesSection').then(m => m.ComisionesSection))
+const IdeasSection = nextDynamic(() => import('@/components/landing/IdeasSection').then(m => m.IdeasSection))
+const ImpactSection = nextDynamic(() => import('@/components/landing/ImpactSection').then(m => m.ImpactSection))
+const VideotecaSection = nextDynamic(() => import('@/components/landing/VideotecaSection').then(m => m.VideotecaSection))
 
 export default async function HomePage() {
   const supabase = await createClient()
