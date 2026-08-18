@@ -1,21 +1,40 @@
-import { createClient } from '@/lib/supabase/server'
+'use client'
 
-export async function SponsorHeaderBar() {
-  const supabase = await createClient()
+import { useState, useEffect } from 'react'
+import { createClient } from '@/lib/supabase/client'
+
+interface Sponsor {
+  name: string
+  logo_monocromo_url: string | null
+}
+
+export function SponsorHeaderBar() {
+  const [isMounted, setIsMounted] = useState(false)
+  const [sponsors, setSponsors] = useState<Sponsor[]>([])
   
-  // Fetch only active sponsors with monocromo logos
-  const { data: sponsors } = await supabase
-    .from('sponsors')
-    .select('name, logo_monocromo_url')
-    .eq('is_active', true)
-    .not('logo_monocromo_url', 'is', null)
+  useEffect(() => {
+    setIsMounted(true)
+    
+    const fetchSponsors = async () => {
+      const supabase = createClient()
+      const { data } = await supabase
+        .from('sponsors')
+        .select('name, logo_monocromo_url')
+        .eq('is_active', true)
+        .not('logo_monocromo_url', 'is', null)
+      
+      if (data) setSponsors(data)
+    }
+    
+    fetchSponsors()
+  }, [])
 
-  if (!sponsors || sponsors.length === 0) {
-    return <div className="absolute top-0 w-full p-4 bg-red-900/50 text-white text-xs z-50">Sponsors: No hay sponsors activos encontrados.</div>
+  if (!isMounted || sponsors.length === 0) {
+    return <div className="w-full h-16 bg-black/40 backdrop-blur-md" />
   }
-  
+
   // Duplicamos la lista para crear el loop infinito fluido
-  const duplicatedLogos = [...sponsors, ...sponsors];
+  const duplicatedLogos = [...sponsors, ...sponsors]
 
   return (
     <div className="absolute top-0 left-0 w-full overflow-hidden bg-black/40 backdrop-blur-md py-3 border-b border-white/10 z-50">
