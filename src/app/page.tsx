@@ -1,10 +1,13 @@
 import dynamic from 'next/dynamic'
 import { Navbar } from '@/components/landing/Navbar'
 import { HeroSection } from '@/components/landing/HeroSection'
-import { SponsorHeaderBar } from '@/components/home/SponsorHeaderBar'
 import { Footer } from '@/components/landing/Footer'
 import { FloatingLanguageSelector } from '@/components/landing/FloatingLanguageSelector'
 
+const SponsorMarqueeWrapper = dynamic(
+  () => import('@/components/home/SponsorMarqueeWrapper').then(mod => mod.SponsorMarqueeWrapper),
+  { ssr: false }
+)
 const AboutSection = dynamic(() => import('@/components/landing/AboutSection').then(m => m.AboutSection))
 const ComisionesSection = dynamic(() => import('@/components/landing/ComisionesSection').then(m => m.ComisionesSection))
 const IdeasSection = dynamic(() => import('@/components/landing/IdeasSection').then(m => m.IdeasSection))
@@ -14,7 +17,7 @@ const VideotecaSection = dynamic(() => import('@/components/landing/VideotecaSec
 export default function HomePage() {
   return (
     <main className="relative">
-      <SponsorHeaderBar />
+      <SponsorMarqueeWrapper />
       <HeroSection />
       <Navbar />
 

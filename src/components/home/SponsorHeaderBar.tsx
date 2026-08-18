@@ -9,12 +9,9 @@ interface Sponsor {
 }
 
 export function SponsorHeaderBar() {
-  const [isMounted, setIsMounted] = useState(false)
   const [sponsors, setSponsors] = useState<Sponsor[]>([])
   
   useEffect(() => {
-    setIsMounted(true)
-    
     const fetchSponsors = async () => {
       const supabase = createClient()
       const { data } = await supabase
@@ -29,9 +26,7 @@ export function SponsorHeaderBar() {
     fetchSponsors()
   }, [])
 
-  if (!isMounted || sponsors.length === 0) {
-    return <div className="w-full h-16 bg-black/40 backdrop-blur-md" />
-  }
+  if (sponsors.length === 0) return null
 
   // Duplicamos la lista para crear el loop infinito fluido
   const duplicatedLogos = [...sponsors, ...sponsors]
@@ -42,7 +37,7 @@ export function SponsorHeaderBar() {
         {duplicatedLogos.map((logo, index) => (
           <div 
             key={`${logo.logo_monocromo_url}-${index}`} 
-            className="flex-shrink-0 flex items-center justify-center px-4"
+            className="flex-shrink-0 flex items-center justify-center px-6"
           >
             <img 
               src={logo.logo_monocromo_url || ''} 
