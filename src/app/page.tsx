@@ -44,31 +44,34 @@ export default async function HomePage() {
 
   return (
     <main className="relative min-h-screen bg-black text-white pb-16">
-      {/* Pasar array como variable JS (sin comillas) — barra visible al tope y con fade al scrollear */}
+      {/* SponsorHeaderBar fuera del wrapper: fixed se ancla al viewport y NO se mueve */}
       <SponsorHeaderBar logos={sponsorLogos} />
 
-      <HeroSection />
-      <Navbar />
+      {/* Todo lo demás sube 30px */}
+      <div className="-translate-y-[30px]">
+        <HeroSection />
+        <Navbar />
 
-      <div className="section-divider" />
-      <ImpactSection />
+        <div className="section-divider" />
+        <ImpactSection />
 
-      <div className="section-divider" />
-      <VideotecaSection />
+        <div className="section-divider" />
+        <VideotecaSection />
 
-      <div className="section-divider" />
-      <AboutSection />
+        <div className="section-divider" />
+        <AboutSection />
 
-      <div className="section-divider" />
-      <ComisionesSection />
+        <div className="section-divider" />
+        <ComisionesSection />
 
-      <div className="section-divider" />
-      <IdeasSection />
+        <div className="section-divider" />
+        <IdeasSection />
 
-      <Footer />
+        <Footer />
 
-      {/* Selector de Idiomas flotante premium (der) */}
-      <FloatingLanguageSelector />
+        {/* Selector de Idiomas flotante premium (der) */}
+        <FloatingLanguageSelector />
+      </div>
     </main>
   )
 }
