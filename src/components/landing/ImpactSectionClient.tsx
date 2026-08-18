@@ -182,7 +182,7 @@ export function ImpactSectionClient({ actions, articles }: any) {
   ].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
 
   return (
-    <section id="itec-en-movimiento" className="pt-7 pb-14 relative overflow-hidden bg-black scroll-mt-16">
+    <section id="seccion-impacto" className="pt-7 pb-14 relative overflow-hidden bg-black scroll-mt-16">
       <div className="max-w-7xl mx-auto w-full px-6 relative z-10">
         
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 items-start">

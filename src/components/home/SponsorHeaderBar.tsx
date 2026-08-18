@@ -21,7 +21,7 @@ export function SponsorHeaderBar({ logos = [] }: { logos?: SponsorLogo[] }) {
       { threshold: 0.1 }
     );
 
-    const target = document.getElementById('itec-en-movimiento');
+    const target = document.getElementById('seccion-impacto');
     if (target) {
       observer.observe(target);
     }
