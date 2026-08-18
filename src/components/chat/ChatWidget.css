@@ -5,7 +5,7 @@
 
 .itec-chat-btn {
   position: fixed;
-  bottom: 44px;
+  bottom: 59px;
   right: 150px;
   width: 60px;
   height: 60px;
@@ -18,7 +18,7 @@
   align-items: center;
   justify-content: center;
   z-index: 9999;
-  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s;
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s, opacity 0.3s;
 }
 .itec-chat-btn:hover {
   transform: scale(1.1);
@@ -33,6 +33,11 @@
 }
 .itec-chat-btn:hover svg {
   fill: var(--accent-cyan, #06b6d4);
+}
+.itec-chat-btn--hidden {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(15px);
 }
 
 .itec-chat-window {
@@ -310,7 +315,7 @@
 /* Responsivo */
 @media (max-width: 480px) {
   .itec-chat-btn {
-    bottom: 40px;
+    bottom: 55px;
     right: 140px;
     width: 54px;
     height: 54px;

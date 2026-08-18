@@ -44,6 +44,7 @@ export default function ChatWidget() {
   const [avatarUrl, setAvatarUrl] = useState<string>('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><rect width="40" height="40" rx="20" fill="%233b82f6"/><text x="20" y="26" text-anchor="middle" fill="white" font-size="18" font-weight="bold">IT</text></svg>');
   const [conversacionGuardada, setConversacionGuardada] = useState(false);
   const [sessionId, setSessionId] = useState<string>('');
+  const [scrollOculto, setScrollOculto] = useState(false);
   const mensajesRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const intercambiosRef = useRef(0);
@@ -99,6 +100,16 @@ export default function ChatWidget() {
       }
     }
   }, [mensajes, cargando]);
+
+  // Fade out al hacer scroll
+  useEffect(() => {
+    function onScroll() {
+      setScrollOculto(window.scrollY > 10);
+    }
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   // Foco al abrir
   useEffect(() => {
@@ -156,7 +167,7 @@ export default function ChatWidget() {
       {/* Botón flotante */}
       <button
         id="itec-chat-btn"
-        className="itec-chat-btn"
+        className={`itec-chat-btn${!abierto && scrollOculto ? ' itec-chat-btn--hidden' : ''}`}
         onClick={() => setAbierto(v => !v)}
         aria-label="Abrir asistente ITEC"
       >

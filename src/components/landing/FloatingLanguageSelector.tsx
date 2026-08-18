@@ -7,6 +7,7 @@ import { Globe, Check } from 'lucide-react';
 export function FloatingLanguageSelector() {
   const { language, setLanguage } = useLanguage();
   const [open, setOpen] = useState(false);
+  const [scrollOculto, setScrollOculto] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const languages: { code: Language; name: string; flag: string }[] = [
@@ -28,8 +29,23 @@ export function FloatingLanguageSelector() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  // Fade out al hacer scroll
+  useEffect(() => {
+    function onScroll() {
+      setScrollOculto(window.scrollY > 10);
+    }
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
   return (
-    <div ref={containerRef} className="fixed bottom-[44px] right-6 z-50 flex flex-col items-end gap-2">
+    <div
+      ref={containerRef}
+      className={`fixed bottom-[59px] right-6 z-50 flex flex-col items-end gap-2 transition-all duration-300${
+        scrollOculto ? ' opacity-0 pointer-events-none translate-y-3' : ''
+      }`}
+    >
       {/* Dropup Menu */}
       {open && (
         <div 
