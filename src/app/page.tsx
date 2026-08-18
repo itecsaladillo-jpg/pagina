@@ -23,7 +23,7 @@ export default async function HomePage() {
   const BUCKET_NAME = 'sponsors-logos';
   const FOLDER_NAME = 'blanco';
 
-  const { data: files } = await supabase.storage
+  const { data: files, error } = await supabase.storage
     .from(BUCKET_NAME)
     .list(FOLDER_NAME, { 
       limit: 100,
@@ -35,8 +35,6 @@ export default async function HomePage() {
   if (error) {
     console.error('❌ Error Supabase Storage:', error.message);
   }
-
-  let sponsorLogos: { url: string; nombre: string }[] = [];
 
   if (files && files.length > 0) {
     // 2. Generar las URLs públicas de cada logo con cache-buster
