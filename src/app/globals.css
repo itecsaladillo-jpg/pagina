@@ -61,7 +61,7 @@ body {
 .animate-marquee-infinite {
   display: flex !important;
   width: max-content !important;
-  animation: marquee-left 55s linear infinite; /* 40% más lento */
+  animation: marquee-left 63s linear infinite; /* 15% más lento */
 }
 
 .animate-marquee-infinite:hover {
