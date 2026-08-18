@@ -3,6 +3,7 @@ import { Navbar } from '@/components/landing/Navbar'
 import { HeroSection } from '@/components/landing/HeroSection'
 import { Footer } from '@/components/landing/Footer'
 import { FloatingLanguageSelector } from '@/components/landing/FloatingLanguageSelector'
+import { SponsorHeaderBar } from '@/components/home/SponsorHeaderBar'
 import { createClient } from '@/lib/supabase/server'
 
 
