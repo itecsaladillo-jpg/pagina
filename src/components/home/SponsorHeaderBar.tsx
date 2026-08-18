@@ -14,15 +14,36 @@ export async function SponsorHeaderBar() {
     return null
   }
   
+  // Duplicamos la lista para crear el loop infinito fluido
+  const duplicatedLogos = [...sponsors, ...sponsors];
+
   return (
-    <div className="w-full overflow-hidden py-2 px-2 bg-black/30 backdrop-blur-sm z-20">
-      <div className="flex flex-row items-center justify-between w-full gap-1 sm:gap-2">
-        {sponsors.map((logo, index) => (
-          <div key={index} className="flex-1 min-w-0 flex items-center justify-center p-0.5">
+    <div className="w-full overflow-hidden bg-black/40 backdrop-blur-md py-3 border-y border-white/10 z-20">
+      <style>{`
+        @keyframes marquee {
+          0% { transform: translateX(0%); }
+          100% { transform: translateX(-50%); }
+        }
+        .animate-marquee-infinite {
+          display: flex;
+          width: max-content;
+          animation: marquee 40s linear infinite;
+        }
+        .animate-marquee-infinite:hover {
+          animation-play-state: paused;
+        }
+      `}</style>
+      
+      <div className="animate-marquee-infinite flex items-center gap-10">
+        {duplicatedLogos.map((logo, index) => (
+          <div 
+            key={`${logo.logo_monocromo_url}-${index}`} 
+            className="flex-shrink-0 flex items-center justify-center px-4"
+          >
             <img 
               src={logo.logo_monocromo_url || ''} 
               alt={logo.name || `Sponsor ${index + 1}`}
-              className="max-h-6 sm:max-h-8 w-auto max-w-full object-contain opacity-85 hover:opacity-100 transition-opacity"
+              className="h-10 sm:h-12 w-auto max-w-none object-contain opacity-85 hover:opacity-100 transition-opacity filter brightness-200"
             />
           </div>
         ))}
