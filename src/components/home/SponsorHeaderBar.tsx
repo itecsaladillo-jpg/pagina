@@ -11,7 +11,8 @@ export async function SponsorHeaderBar() {
     .not('logo_monocromo_url', 'is', null)
 
   if (!sponsors || sponsors.length === 0) {
-    return null
+    // return null // Temporarily show nothing for debugging
+    return <div className="p-4 bg-red-500 text-white text-xs">Debug: No sponsors found (Active + Logos)</div>
   }
   
   // Duplicamos la lista para crear el loop infinito fluido
