@@ -15,7 +15,8 @@ export function SponsorHeaderBar({ logos = [] }: { logos?: SponsorLogo[] }) {
     setIsMounted(true);
 
     const handleScroll = () => {
-      if (window.scrollY > 10) {
+      // Ocultar solo si el usuario hace un scroll explícito mayor a 20px
+      if (window.scrollY > 20) {
         setIsScrolled(true);
       } else {
         setIsScrolled(false);
@@ -24,10 +25,19 @@ export function SponsorHeaderBar({ logos = [] }: { logos?: SponsorLogo[] }) {
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     
+    // Verificación inicial de posición
+    handleScroll();
+
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   const validLogos = Array.isArray(logos) ? logos : [];
+
+  useEffect(() => {
+    if (isMounted && validLogos.length === 0) {
+      console.warn('⚠️ SponsorHeaderBar: El listado de logos recibido está vacío.');
+    }
+  }, [isMounted, validLogos]);
 
   if (!isMounted) {
     return (
@@ -39,7 +49,7 @@ export function SponsorHeaderBar({ logos = [] }: { logos?: SponsorLogo[] }) {
     return null;
   }
 
-  const duplicatedLogos = [...validLogos, ...validLogos, ...validLogos];
+  const duplicatedLogos = [...validLogos, ...validLogos, ...validLogos, ...validLogos];
 
   return (
     <div 
@@ -52,7 +62,7 @@ export function SponsorHeaderBar({ logos = [] }: { logos?: SponsorLogo[] }) {
     >
       <div 
         className="animate-marquee-infinite flex items-center gap-10 w-max"
-        style={{ animationDuration: '42s' }} /* Duración ajustada a 42s (20% más lento) */
+        style={{ animationDuration: '42s' }}
       >
         {duplicatedLogos.map((logo, index) => (
           <div 
