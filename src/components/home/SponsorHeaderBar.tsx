@@ -39,12 +39,12 @@ export function SponsorHeaderBar({ logos = [] }: SponsorHeaderBarProps) {
       <div className="animate-marquee-infinite flex items-center gap-10 w-max">
         {duplicatedLogos.map((logo, index) => (
           <div 
-            key={`${logo.logo_monocromo_url}-${index}`} 
+            key={`${logo.url}-${index}`} 
             className="flex-shrink-0 flex items-center justify-center px-6"
           >
             <img 
-              src={logo.logo_monocromo_url || ''} 
-              alt={logo.name || `Sponsor ${index + 1}`}
+              src={logo.url || ''} 
+              alt={logo.nombre || `Sponsor ${index + 1}`}
               className="h-8 sm:h-10 w-auto max-w-none object-contain opacity-90 hover:opacity-100 transition-opacity filter brightness-200"
             />
           </div>
