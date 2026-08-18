@@ -11,15 +11,14 @@ export async function SponsorHeaderBar() {
     .not('logo_monocromo_url', 'is', null)
 
   if (!sponsors || sponsors.length === 0) {
-    // return null // Temporarily show nothing for debugging
-    return <div className="p-4 bg-red-500 text-white text-xs">Debug: No sponsors found (Active + Logos)</div>
+    return <div className="absolute top-0 w-full p-4 bg-red-900/50 text-white text-xs z-50">Sponsors: No hay sponsors activos encontrados.</div>
   }
   
   // Duplicamos la lista para crear el loop infinito fluido
   const duplicatedLogos = [...sponsors, ...sponsors];
 
   return (
-    <div className="w-full overflow-hidden bg-black/40 backdrop-blur-md py-3 border-y border-white/10 z-20">
+    <div className="absolute top-0 left-0 w-full overflow-hidden bg-black/40 backdrop-blur-md py-3 border-b border-white/10 z-50">
       <style>{`
         @keyframes marquee {
           0% { transform: translateX(0%); }

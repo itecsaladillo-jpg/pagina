@@ -7,6 +7,7 @@ import { createClient } from '@/lib/supabase/client'
 import { useLanguage } from '@/contexts/LanguageContext'
 import { MembersAccessButton } from '@/components/auth/MembersAccessButton'
 import { StreamingPlayer } from '@/components/landing/StreamingPlayer'
+import { SponsorHeaderBar } from '@/components/home/SponsorHeaderBar'
 
 export function HeroSection() {
   const { dict } = useLanguage()
@@ -17,12 +18,16 @@ export function HeroSection() {
   ]
   const [claseEnVivo, setClaseEnVivo] = useState(false)
   const [fraseIndex, setFraseIndex] = useState(0)
+  const [isMounted, setIsMounted] = useState(false)
   const [streamingActive, setStreamingActive] = useState(false)
   const [streamingUrl, setStreamingUrl] = useState<string | null>(null)
 
   useEffect(() => {
+    setIsMounted(true)
     setFraseIndex(Math.floor(Math.random() * FRASES_HERO.length))
   }, [])
+  
+  const displayPhrase = isMounted ? FRASES_HERO[fraseIndex] : FRASES_HERO[0]
 
   useEffect(() => {
     const supabase = createClient()
@@ -238,7 +243,7 @@ export function HeroSection() {
                 </div>
 
                 <p className="relative z-10 text-[var(--text-secondary)] text-sm md:text-base max-w-sm text-left mt-8 leading-relaxed">
-                  {FRASES_HERO[fraseIndex]}
+                  {displayPhrase}
                 </p>
               </>
             )}
