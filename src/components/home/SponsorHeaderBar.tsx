@@ -7,35 +7,27 @@ export interface SponsorLogo {
   nombre?: string;
 }
 
-interface SponsorHeaderBarProps {
-  logos?: SponsorLogo[];
-}
-
-export function SponsorHeaderBar({ logos = [] }: SponsorHeaderBarProps) {
+export function SponsorHeaderBar({ logos = [] }: { logos?: SponsorLogo[] }) {
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
     setIsMounted(true);
   }, []);
 
-  // Render inicial para SSR (evita hydration mismatch)
-  if (!isMounted) {
+  // Normalizar array de logos sin placeholders externos
+  const validLogos = Array.isArray(logos) ? logos : [];
+
+  // Si no se ha montado o no hay logos válidos, renderizar contenedor neutro identico en SSR y Cliente
+  if (!isMounted || validLogos.length === 0) {
     return (
-      <div className="w-full h-16 min-h-[64px] bg-black/60 border-y border-white/10" />
+      <div className="fixed bottom-0 left-0 right-0 z-40 w-full min-h-[48px] bg-transparent py-2 border-t border-white/5" />
     );
   }
 
-  // Si no hay logos reales cargados, mostramos logos de prueba
-  const displayLogos = logos.length > 0 ? logos : [
-    { url: 'https://via.placeholder.com/150x50/ffffff/000000?text=Sponsor+1', nombre: 'Sponsor 1' },
-    { url: 'https://via.placeholder.com/150x50/ffffff/000000?text=Sponsor+2', nombre: 'Sponsor 2' },
-    { url: 'https://via.placeholder.com/150x50/ffffff/000000?text=Sponsor+3', nombre: 'Sponsor 3' },
-  ];
-
-  const duplicatedLogos = [...displayLogos, ...displayLogos];
+  const duplicatedLogos = [...validLogos, ...validLogos];
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-40 w-full overflow-hidden bg-transparent py-2 border-t border-white/5">
+    <div className="fixed bottom-0 left-0 right-0 z-40 w-full overflow-hidden bg-transparent py-2 border-t border-white/5 min-h-[48px]">
       <div className="animate-marquee-infinite flex items-center gap-10 w-max">
         {duplicatedLogos.map((logo, index) => (
           <div 
@@ -43,7 +35,7 @@ export function SponsorHeaderBar({ logos = [] }: SponsorHeaderBarProps) {
             className="flex-shrink-0 flex items-center justify-center px-4"
           >
             <img 
-              src={logo.url || ''} 
+              src={logo.url} 
               alt={logo.nombre || `Sponsor ${index + 1}`}
               className="h-8 sm:h-9 w-auto max-w-none object-contain opacity-75 hover:opacity-100 transition-opacity filter brightness-200"
             />
@@ -51,8 +43,7 @@ export function SponsorHeaderBar({ logos = [] }: SponsorHeaderBarProps) {
         ))}
       </div>
     </div>
-  )
+  );
 }
-
 
 export default SponsorHeaderBar;
