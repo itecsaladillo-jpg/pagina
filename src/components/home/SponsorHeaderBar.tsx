@@ -9,33 +9,32 @@ export interface SponsorLogo {
 
 export function SponsorHeaderBar({ logos = [] }: { logos?: SponsorLogo[] }) {
   const [isMounted, setIsMounted] = useState(false);
-  const [isVisible, setIsVisible] = useState(true);
+  const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
     setIsMounted(true);
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsVisible(!entry.isIntersecting);
-      },
-      { threshold: 0.1 }
-    );
-
-    const target = document.getElementById('seccion-impacto');
-    if (target) {
-      observer.observe(target);
-    }
-
-    return () => {
-      if (target) observer.unobserve(target);
+    const handleScroll = () => {
+      // Ocultar tan pronto como el scroll sea mayor a 0 (al iniciar el movimiento)
+      if (window.scrollY > 0) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
     };
+
+    // Escucha de scroll optimizada
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll(); // Comprobación inicial
+
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   const validLogos = Array.isArray(logos) ? logos : [];
 
   if (!isMounted || validLogos.length === 0) {
     return (
-      <div className="fixed bottom-0 left-0 right-0 z-40 w-full min-h-[44px] bg-black/60 py-2 border-t border-white/10" />
+      <div className="relative w-full min-h-[44px] bg-black/60 py-2 border-b border-white/10" />
     );
   }
 
@@ -44,11 +43,15 @@ export function SponsorHeaderBar({ logos = [] }: { logos?: SponsorLogo[] }) {
   return (
     <div 
       suppressHydrationWarning
-      className={`fixed bottom-0 left-0 right-0 z-40 w-full overflow-hidden bg-black/60 backdrop-blur-sm py-2 border-t border-white/10 min-h-[44px] transition-opacity duration-500 ${isVisible ? 'opacity-100' : 'opacity-0'}`}
+      className={`relative w-full overflow-hidden bg-black/60 backdrop-blur-sm py-2 border-b border-white/10 min-h-[44px] z-30 transition-all duration-500 ease-in-out ${
+        isScrolled 
+          ? 'opacity-0 pointer-events-none max-h-0 min-h-0 py-0 border-transparent overflow-hidden' 
+          : 'opacity-100 max-h-[60px] min-h-[44px]'
+      }`}
     >
       <div 
         className="animate-marquee-infinite flex items-center gap-10 w-max"
-        style={{ animationDuration: '40s' }}
+        style={{ animationDuration: '35s' }}
       >
         {duplicatedLogos.map((logo, index) => (
           <div 
