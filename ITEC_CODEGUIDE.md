@@ -33,6 +33,8 @@ Plataforma web full-stack de **ITEC Saladillo** (Asociación Civil de Ciencia y 
 | `extract-docs` | `node scripts/extractPdfText.js` | Extraer texto de PDFs a JSON |
 | `ingest-vector` | `node --dns-result-order=ipv4first --env-file=.env.local scripts/ingestDocsToVector.mjs` | PDFs → pgvector embeddings (Gemini) |
 
+(Nota: Se recomienda ejecutar las migraciones de BD 064-065 tras actualizaciones de schema)
+
 ## Herramientas de Desarrollo y Diagnóstico (scratch)
 El directorio `scratch/` contiene scripts temporales para:
 - **Diagnóstico:** `diagnose-qa.js` (QA), `diagnose-feedback.js` (feedback), `test-db.js`.
@@ -163,6 +165,8 @@ D:\ITEC\
 │   │   │   ├── LoginClientContent.tsx  # Login Google OAuth
 │   │   │   └── MembersAccessButton.tsx # Botón de acceso en navbar
 │   │   ├── dashboard/           # Sidebar del dashboard
+│   │   │   ├── sponsors/
+│   │   │   │   └── SponsorRegistrationForm.tsx # Formulario alta sponsors
 │   │   │   └── SidebarIdeasLink.tsx    # Link con badge de ideas pendientes
 │   │   ├── ideas/               # Formulario público de ideas
 │   │   │   └── PublicIdeasForm.tsx
@@ -194,7 +198,10 @@ D:\ITEC\
 │   │   └── LanguageContext.tsx  # Contexto de idioma
 │   └── proxy.ts                # Next.js middleware (auth, protección de rutas)
 ├── supabase/
-│   └── migrations/             # 63 migraciones de base de datos (001-063)
+│   ├── .temp/                                  # Configuración de agentes IA
+│   └── migrations/                             # Migraciones de base de datos
+│       ├── 065_update_sponsors_table.sql       # Schema sponsors actualizado
+│       └── fix_storage_policies.sql            # Políticas RLS Storage
 ├── AGENTS.md                   # Instrucciones para agentes IA (Next.js)
 ├── CLAUDE.md                   # Instrucciones para Claude
 ├── ITEC_CODEGUIDE.md           # Esta guía
@@ -258,6 +265,12 @@ D:\ITEC\
 - Las políticas filtran por `auth.uid()` y el rol del miembro en `members`.
 - Las tablas de eventos presenciales (`evento_semaforo_votos`, `eventos_asistentes`, etc.) permiten INSERT anónimo (sin login) pero restringen DELETE/UPDATE a admins.
 - **Migración 056:** Corrige políticas excesivamente permisivas en `clases_virtuales`, `clase_interacciones`, `certificados_digitales` (antes `USING (true)` permitía CRUD anónimo). Ahora escritura restringida a admin/coordinador.
+
+### Storage (sponsors-logos)
+- **Bucket:** `sponsors-logos` (público)
+- **Políticas RLS:**
+  - `SELECT`: Lectura pública (`USING bucket_id = 'sponsors-logos'`)
+  - `INSERT`: Escritura autenticada para administradores/coordinadores (`WITH CHECK` + rol check)
 
 ### Datos Anónimos en Eventos
 - **Identificación por dispositivo:** `localStorage` almacena un `dispositivo_id` UUID sin login.
@@ -338,11 +351,11 @@ D:\ITEC\
 | `evento_preguntas_likes` | Likes en preguntas de eventos |
 
 ### Sponsors
-| Tabla | Descripción |
-|-------|-------------|
-| `sponsors` | Organizaciones sponsor con `tier`(platino\|oro\|plata\|bronce), `private_token(uuid UNIQUE)`, `nombre_empresa`, `actividad`, `zona_influencia`, `nombre_contacto`, `apellido_contacto`, `telefono` |
-| `sponsor_reports` | Reportes de impacto generados por IA para sponsors |
-| `sponsors_medios` | Medios/sponsors para distribución de prensa |
+| Tabla | Descripción | Campos clave |
+|-------|-------------|--------------|
+| `sponsors` | Organizaciones sponsor | `id(PK)`, `name`, `tier`(platino\|oro\|plata\|bronce\|standard), `rubro`, `resena`, `website_url`, `contacto_nombre`, `contacto_telefono`, `email`, `logo_monocromo_url`, `logo_color_url`, `is_active`, `private_token(UNIQUE)` |
+| `sponsor_reports` | Reportes de impacto generados por IA para sponsors | |
+| `sponsors_medios` | Medios/sponsors para distribución de prensa | |
 
 ### Encuestas
 | Tabla | Descripción |
@@ -708,7 +721,9 @@ CRUD de medios de prensa registrados. Envío de gacetillas por email via Resend.
 Creación y gestión de gacetillas. Distribución segmentada a medios registrados.
 
 ### Gestión de Sponsors (`/dashboard/sponsors`)
-CRUD de sponsors con niveles (platino, oro, plata, bronce). Generación de reportes de impacto con IA (Ollama). Tokens privados únicos.
+- CRUD completo de sponsors con niveles (platino, oro, plata, bronce, standard). 
+- **Módulo de Alta:** Formulario integrado (`SponsorRegistrationForm`) para registro de nuevos socios con carga de logos, categorización, validaciones y navegación de retorno.
+- Generación de reportes de impacto con IA (Ollama). Tokens privados únicos.
 
 ### Muro Sponsors (`/dashboard/sponsorsNews`)
 Gestión de contenido exclusivo para sponsors. Noticias visibles en portal del sponsor.
@@ -740,9 +755,9 @@ Formulario para crear nuevas acciones de impacto (capacitaciones, eventos social
 ## Integraciones Externas
 
 ### Supabase
-- **Database:** PostgreSQL con 63 migraciones, RLS policies
+- **Database:** PostgreSQL con 65+ migraciones, RLS policies
 - **Auth:** Supabase Auth con Google OAuth, manejo de sesiones via cookies SSR
-- **Storage:** 3 buckets: `article-media` (imágenes artículos), `avatars` (fotos perfil), `training-docs` (PDFs entrenamiento IA)
+- **Storage:** 4 buckets: `article-media`, `avatars`, `training-docs`, `sponsors-logos`
 - **Realtime:** Suscripciones `postgres_changes` para:
   - Estado de clases virtuales en vivo
   - Votos de encuestas, preguntas y nubes de palabras en eventos

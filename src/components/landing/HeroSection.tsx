@@ -7,7 +7,6 @@ import { createClient } from '@/lib/supabase/client'
 import { useLanguage } from '@/contexts/LanguageContext'
 import { MembersAccessButton } from '@/components/auth/MembersAccessButton'
 import { StreamingPlayer } from '@/components/landing/StreamingPlayer'
-import { SponsorHeaderBar } from '@/components/home/SponsorHeaderBar'
 
 export function HeroSection() {
   const { dict } = useLanguage()
