@@ -15,35 +15,46 @@ export function SponsorHeaderBar({ logos = [] }: { logos?: SponsorLogo[] }) {
     setIsMounted(true);
 
     const handleScroll = () => {
-      // Ocultar tan pronto como el scroll sea mayor a 0
-      setIsScrolled(window.scrollY > 0);
+      if (window.scrollY > 10) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
     };
 
-    // Escucha de scroll optimizada
     window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll(); // Comprobación inicial
-
+    
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   const validLogos = Array.isArray(logos) ? logos : [];
 
-  // Render inicial consistente para SSR y Cliente
-  // Usamos clases que definen el espacio para evitar saltos de layout
+  if (!isMounted) {
+    return (
+      <div className="relative w-full h-[44px] bg-transparent border-b border-white/10" />
+    );
+  }
+
+  if (validLogos.length === 0) {
+    return null;
+  }
+
+  const duplicatedLogos = [...validLogos, ...validLogos, ...validLogos];
+
   return (
     <div 
       suppressHydrationWarning
-      className={`fixed bottom-0 left-0 right-0 z-40 w-full overflow-hidden bg-black/60 backdrop-blur-sm py-2 border-t border-white/10 min-h-[44px] transition-all duration-500 ease-in-out ${
-        isMounted && isScrolled 
-          ? 'opacity-0 pointer-events-none' 
-          : 'opacity-100'
+      className={`relative w-full overflow-hidden bg-transparent transition-all duration-500 ease-in-out z-30 ${
+        isScrolled 
+          ? 'opacity-0 max-h-0 min-h-0 py-0 border-transparent pointer-events-none' 
+          : 'opacity-100 max-h-[60px] min-h-[44px] py-2 border-b border-white/10'
       }`}
     >
       <div 
         className="animate-marquee-infinite flex items-center gap-10 w-max"
-        style={{ animationDuration: '35s' }}
+        style={{ animationDuration: '42s' }} /* Duración ajustada a 42s (20% más lento) */
       >
-        {duplicatedLogos(validLogos).map((logo, index) => (
+        {duplicatedLogos.map((logo, index) => (
           <div 
             key={`${logo.url}-${index}`} 
             className="flex-shrink-0 flex items-center justify-center px-4"
@@ -58,11 +69,6 @@ export function SponsorHeaderBar({ logos = [] }: { logos?: SponsorLogo[] }) {
       </div>
     </div>
   );
-}
-
-// Helper para duplicar logos
-function duplicatedLogos(logos: SponsorLogo[]) {
-  return [...logos, ...logos];
 }
 
 export default SponsorHeaderBar;
