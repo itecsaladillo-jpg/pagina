@@ -10,6 +10,7 @@ import { getGacetillaEnviosHistory } from '@/app/dashboard/prensa/actions'
 import { SendGacetillaModal } from '@/components/prensa/SendGacetillaModal'
 import { PrensaEnviosHistoryModal } from '@/components/prensa/PrensaEnviosHistoryModal'
 import type { PrensaEnvioLog } from '@/types/database'
+import { toUtcLocalDate } from '@/lib/dates'
 
 interface PressFlash {
   id: string
@@ -57,7 +58,7 @@ export default function PressNewsPage() {
   }, [pressFlashes])
 
   const formatDate = (dateStr: string) => {
-    return format(new Date(dateStr), "d MMMM, yyyy '·' HH:mm", { locale: es })
+    return format(toUtcLocalDate(dateStr), "d MMMM, yyyy '·' HH:mm", { locale: es })
   }
 
   const isVideoUrl = (u: string) => /\.(mp4|webm|mov)/i.test(u.split('?')[0])
@@ -100,7 +101,7 @@ export default function PressNewsPage() {
                   <div className="flex-1 min-w-0">
                     <h2 className="text-base font-bold text-white mb-0.5">{flash.titulo}</h2>
                     <span className="text-[10px] text-white/40">
-                      {format(new Date(flash.created_at), 'd MMMM, yyyy', { locale: es })}
+                      {format(toUtcLocalDate(flash.created_at), 'd MMMM, yyyy', { locale: es })}
                     </span>
                     <p className="text-white/70 text-sm leading-snug whitespace-pre-wrap mt-2 line-clamp-4">
                       {flash.texto_medios}

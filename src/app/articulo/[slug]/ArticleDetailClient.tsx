@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { format } from 'date-fns'
 import { es, enUS, pt } from 'date-fns/locale'
 import { getYouTubeThumbnail } from '@/services/videos'
+import { toUtcLocalDate } from '@/lib/dates'
 
 interface ArticleDetailClientProps {
   article: any
@@ -52,7 +53,7 @@ export function ArticleDetailClient({ article }: ArticleDetailClientProps) {
           <div className="flex items-center gap-4 text-xs font-bold text-[var(--text-muted)] uppercase tracking-widest">
             <Calendar size={16} className="text-blue-400" />
             <span>
-              {format(new Date(article.created_at), language === 'en' ? "MMMM d, yyyy" : "d 'de' MMMM, yyyy", { 
+              {format(toUtcLocalDate(article.created_at), language === 'en' ? "MMMM d, yyyy" : "d 'de' MMMM, yyyy", { 
                 locale: language === 'en' ? enUS : language === 'pt' ? pt : es 
               })}
             </span>

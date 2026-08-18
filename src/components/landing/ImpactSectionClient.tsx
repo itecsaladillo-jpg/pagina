@@ -7,6 +7,7 @@ import { format } from 'date-fns'
 import { es, enUS, pt } from 'date-fns/locale'
 import Link from 'next/link'
 import { useLanguage } from '@/contexts/LanguageContext'
+import { toUtcLocalDate } from '@/lib/dates'
 
 interface ImpactCardProps {
   item: any
@@ -120,7 +121,7 @@ function ImpactCard({ item, idx }: ImpactCardProps) {
       {/* Text Content */}
       <div className="p-6 flex-1 flex flex-col">
         <div className="text-[10px] text-[var(--text-muted)] font-black uppercase tracking-[0.2em] mb-1">
-          {format(new Date(item.date), language === 'en' ? "MMMM d, yyyy" : "d 'de' MMMM, yyyy", { 
+          {format(toUtcLocalDate(item.date), language === 'en' ? "MMMM d, yyyy" : "d 'de' MMMM, yyyy", { 
             locale: language === 'en' ? enUS : language === 'pt' ? pt : es 
           })}
         </div>

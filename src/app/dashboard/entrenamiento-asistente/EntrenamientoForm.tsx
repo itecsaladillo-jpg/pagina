@@ -203,7 +203,7 @@ export function EntrenamientoForm() {
           <form onSubmit={handleSavePrompt} className="space-y-6">
             {prompt?.updated_at && (
               <p className="text-[10px] text-[var(--text-muted)]">
-                Última modificación: {new Date(prompt.updated_at).toLocaleString('es-AR')}
+                Última modificación: {new Date(prompt.updated_at).toLocaleString('es-AR', { timeZone: 'UTC' })}
               </p>
             )}
 
@@ -322,7 +322,7 @@ export function EntrenamientoForm() {
                   <div className="min-w-0">
                     <p className="text-white text-sm font-medium truncate">{doc.name}</p>
                     <p className="text-[var(--text-muted)] text-[10px]">
-                      {formatSize(doc.size)} &middot; {new Date(doc.modifiedAt).toLocaleDateString('es-AR')}
+                      {formatSize(doc.size)} &middot; {new Date(doc.modifiedAt).toLocaleDateString('es-AR', { timeZone: 'UTC' })}
                     </p>
                   </div>
                 </div>

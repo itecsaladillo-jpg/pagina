@@ -6,6 +6,7 @@ import { Globe, Users, Building2, Newspaper, ChevronLeft, ChevronRight, Download
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
 import type { NewsFlashMulticanal } from '@/services/news'
+import { toUtcLocalDate } from '@/lib/dates'
 
 interface NewsWallMulticanalProps {
   publicFlashes: NewsFlashMulticanal[]
@@ -115,7 +116,7 @@ export function NewsWallMulticanal({
   }
 
   const formatDate = (dateString: string) => {
-    return format(new Date(dateString), 'd MMMM, yyyy', { locale: es })
+    return format(toUtcLocalDate(dateString), 'd MMMM, yyyy', { locale: es })
   }
 
   const getEmptyMessage = () => {

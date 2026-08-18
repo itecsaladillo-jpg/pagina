@@ -278,7 +278,7 @@ export default function EventListClient({ initialActions, mode = 'preguntas' }: 
                   </span>
                   
                   <span className="text-xs text-zinc-500 font-medium">
-                    {action.start_date ? new Date(action.start_date).toLocaleDateString('es-AR') : 'Sin fecha'}
+                    {action.start_date ? new Date(action.start_date).toLocaleDateString('es-AR', { timeZone: 'UTC' }) : 'Sin fecha'}
                   </span>
                 </div>
 
@@ -579,7 +579,7 @@ export default function EventListClient({ initialActions, mode = 'preguntas' }: 
                           <div className="min-w-0 flex-1">
                             <h4 className="text-sm font-bold text-white truncate">{nube.nombre}</h4>
                             <p className="text-[10px] text-zinc-500 font-medium mt-0.5">
-                              Creado: {new Date(nube.created_at).toLocaleDateString('es-AR')} {new Date(nube.created_at).toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' })}
+                              Creado: {new Date(nube.created_at).toLocaleDateString('es-AR', { timeZone: 'UTC' })} {new Date(nube.created_at).toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit', timeZone: 'UTC' })}
                             </p>
                           </div>
 

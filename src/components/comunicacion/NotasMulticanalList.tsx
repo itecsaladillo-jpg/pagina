@@ -8,6 +8,7 @@ import { es } from 'date-fns/locale'
 import { createClient } from '@/lib/supabase/client'
 import { updateNotaAction, deleteNotaAction, swapNotasOrderAction } from '@/app/dashboard/comunicacion/actions'
 import type { NewsFlashMulticanal } from '@/services/news'
+import { toUtcLocalDate } from '@/lib/dates'
 
 interface NotasMulticanalListProps {
   notas: NewsFlashMulticanal[]
@@ -246,7 +247,7 @@ export function NotasMulticanalList({ notas: initialNotas }: NotasMulticanalList
                     <p className="text-sm font-semibold text-white truncate">{nota.titulo}</p>
                     <p className="text-[10px] text-white/40 mt-0.5 flex items-center gap-1">
                       <Calendar size={10} />
-                      {format(new Date(nota.created_at), 'd MMM yyyy', { locale: es })}
+                      {format(toUtcLocalDate(nota.created_at), 'd MMM yyyy', { locale: es })}
                     </p>
                   </div>
                   

@@ -101,7 +101,7 @@ export function IdeasManagementClient({ ideas, isAdmin }: { ideas: Idea[], isAdm
                         <span className="text-[10px] text-[var(--text-muted)]">Anónimo</span>
                       )}
                       <span className="text-[10px] text-[var(--text-muted)]">
-                        {new Date(idea.created_at).toLocaleDateString('es-AR', { day: 'numeric', month: 'short', year: 'numeric' })}
+                        {new Date(idea.created_at).toLocaleDateString('es-AR', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' })}
                       </span>
                     </div>
                     <p className="text-white text-sm whitespace-pre-wrap">{idea.idea_text}</p>
