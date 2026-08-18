@@ -6,6 +6,9 @@ import { FloatingLanguageSelector } from '@/components/landing/FloatingLanguageS
 import { SponsorHeaderBar } from '@/components/home/SponsorHeaderBar'
 import { createClient } from '@/lib/supabase/server'
 
+// Forzar renderizado dinámico en cada request (desactiva cache estático de Vercel/Next.js)
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 const AboutSection = dynamic(() => import('@/components/landing/AboutSection').then(m => m.AboutSection))
 const ComisionesSection = dynamic(() => import('@/components/landing/ComisionesSection').then(m => m.ComisionesSection))
@@ -16,24 +19,35 @@ const VideotecaSection = dynamic(() => import('@/components/landing/VideotecaSec
 export default async function HomePage() {
   const supabase = await createClient()
   
-  // 1. Obtener la lista de archivos de la carpeta 'monocromo'
+  // 1. Obtener la lista de archivos de la carpeta 'blanco'
+  const BUCKET_NAME = 'sponsors-logos';
+  const FOLDER_NAME = 'blanco';
+
   const { data: files } = await supabase.storage
-    .from('sponsors-logos')
-    .list('monocromo', { limit: 100 });
+    .from(BUCKET_NAME)
+    .list(FOLDER_NAME, { 
+      limit: 100,
+      sortBy: { column: 'name', order: 'asc' }
+    });
 
   let sponsorLogos: { url: string; nombre: string }[] = [];
 
   if (files && files.length > 0) {
-    // 2. Generar las URLs públicas de cada logo
+    // 2. Generar las URLs públicas de cada logo con cache-buster
     sponsorLogos = files
-      .filter((file) => file.name !== '.emptyFolderPlaceholder')
+      .filter((file) => file.name !== '.emptyFolderPlaceholder' && !file.name.startsWith('.'))
       .map((file) => {
         const { data } = supabase.storage
-          .from('sponsors-logos')
-          .getPublicUrl(`monocromo/${file.name}`);
+          .from(BUCKET_NAME)
+          .getPublicUrl(`${FOLDER_NAME}/${file.name}`);
+
+        // Romper caché de CDN/Navegador agregando timestamp
+        const lastUpdated = (file as any).updated_at 
+          ? new Date((file as any).updated_at).getTime() 
+          : Date.now();
 
         return {
-          url: data.publicUrl,
+          url: `${data.publicUrl}?t=${lastUpdated}`,
           nombre: file.name.split('.')[0] || 'Sponsor ITEC',
         };
       });
