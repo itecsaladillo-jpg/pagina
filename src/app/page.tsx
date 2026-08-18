@@ -1,10 +1,10 @@
 import dynamic from 'next/dynamic'
 import { Navbar } from '@/components/landing/Navbar'
 import { HeroSection } from '@/components/landing/HeroSection'
+import { SponsorHeaderBar } from '@/components/home/SponsorHeaderBar'
 import { Footer } from '@/components/landing/Footer'
 import { FloatingLanguageSelector } from '@/components/landing/FloatingLanguageSelector'
-
-import { SponsorMarqueeWrapper } from '@/components/home/SponsorMarqueeWrapper'
+import { createClient } from '@/lib/supabase/server'
 
 const AboutSection = dynamic(() => import('@/components/landing/AboutSection').then(m => m.AboutSection))
 const ComisionesSection = dynamic(() => import('@/components/landing/ComisionesSection').then(m => m.ComisionesSection))
@@ -12,10 +12,23 @@ const IdeasSection = dynamic(() => import('@/components/landing/IdeasSection').t
 const ImpactSection = dynamic(() => import('@/components/landing/ImpactSection').then(m => m.ImpactSection))
 const VideotecaSection = dynamic(() => import('@/components/landing/VideotecaSection').then(m => m.VideotecaSection))
 
-export default function HomePage() {
+export default async function HomePage() {
+  const supabase = await createClient()
+  
+  const { data: sponsors } = await supabase
+    .from('sponsors')
+    .select('name, logo_monocromo_url')
+    .eq('is_active', true)
+    .not('logo_monocromo_url', 'is', null)
+
+  const logos = sponsors?.map(s => ({
+    url: s.logo_monocromo_url || '',
+    nombre: s.name
+  })) || []
+
   return (
     <main className="relative">
-      <SponsorMarqueeWrapper />
+      <SponsorHeaderBar logos={logos} />
       <HeroSection />
       <Navbar />
 

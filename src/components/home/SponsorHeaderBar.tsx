@@ -1,52 +1,64 @@
-'use client'
+'use client';
 
-import { useState, useEffect } from 'react'
-import { createClient } from '@/lib/supabase/client'
+import React, { useState, useEffect } from 'react';
 
-interface Sponsor {
-  name: string
-  logo_monocromo_url: string | null
+export interface SponsorLogo {
+  url: string;
+  nombre?: string;
 }
 
-export function SponsorHeaderBar() {
-  const [sponsors, setSponsors] = useState<Sponsor[]>([])
-  
+interface SponsorHeaderBarProps {
+  logos?: SponsorLogo[];
+}
+
+export function SponsorHeaderBar({ logos = [] }: SponsorHeaderBarProps) {
+  const [isMounted, setIsMounted] = useState(false);
+
   useEffect(() => {
-    const fetchSponsors = async () => {
-      const supabase = createClient()
-      const { data } = await supabase
-        .from('sponsors')
-        .select('name, logo_monocromo_url')
-        .eq('is_active', true)
-        .not('logo_monocromo_url', 'is', null)
-      
-      if (data) setSponsors(data)
+    setIsMounted(true);
+  }, []);
+
+  // Log de depuración para verificar en consola cuántos logos están llegando
+  useEffect(() => {
+    if (isMounted) {
+      console.log('🔍 [SponsorHeaderBar] Logos recibidos:', logos.length, logos);
     }
-    
-    fetchSponsors()
-  }, [])
+  }, [isMounted, logos]);
 
-  if (sponsors.length === 0) return null
+  // Render inicial para SSR (evita hydration mismatch)
+  if (!isMounted) {
+    return (
+      <div className="w-full h-16 min-h-[64px] bg-black/40 backdrop-blur-md border-y border-white/10" />
+    );
+  }
 
-  // Duplicamos la lista para crear el loop infinito fluido
-  const duplicatedLogos = [...sponsors, ...sponsors]
+  // Si no hay logos reales cargados, mostramos logos de prueba
+  const displayLogos = logos.length > 0 ? logos : [
+    { url: 'https://via.placeholder.com/150x50/ffffff/000000?text=Sponsor+1', nombre: 'Sponsor 1' },
+    { url: 'https://via.placeholder.com/150x50/ffffff/000000?text=Sponsor+2', nombre: 'Sponsor 2' },
+    { url: 'https://via.placeholder.com/150x50/ffffff/000000?text=Sponsor+3', nombre: 'Sponsor 3' },
+  ];
+
+  const duplicatedLogos = [...displayLogos, ...displayLogos];
 
   return (
-    <div className="absolute top-0 left-0 w-full overflow-hidden bg-black/40 backdrop-blur-md py-3 border-b border-white/10 z-50">
-      <div className="animate-marquee-infinite flex items-center gap-10">
+    <div className="relative z-30 w-full min-h-[64px] overflow-hidden bg-black/50 backdrop-blur-md py-3 border-y border-white/10">
+      <div className="animate-marquee-infinite flex items-center gap-10 w-max">
         {duplicatedLogos.map((logo, index) => (
           <div 
-            key={`${logo.logo_monocromo_url}-${index}`} 
-            className="flex-shrink-0 flex items-center justify-center px-6"
+            key={`${logo.url}-${index}`} 
+            className="flex-shrink-0 flex items-center justify-center px-4"
           >
             <img 
-              src={logo.logo_monocromo_url || ''} 
-              alt={logo.name || `Sponsor ${index + 1}`}
-              className="h-10 sm:h-12 w-auto max-w-none object-contain opacity-85 hover:opacity-100 transition-opacity filter brightness-200"
+              src={logo.url} 
+              alt={logo.nombre || `Sponsor ${index + 1}`}
+              className="h-10 sm:h-12 w-auto max-w-none object-contain opacity-90 hover:opacity-100 transition-opacity filter brightness-200"
             />
           </div>
         ))}
       </div>
     </div>
-  )
+  );
 }
+
+export default SponsorHeaderBar;
