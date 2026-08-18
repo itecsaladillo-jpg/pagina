@@ -1,6 +1,7 @@
 import dynamic from 'next/dynamic'
 import { Navbar } from '@/components/landing/Navbar'
 import { HeroSection } from '@/components/landing/HeroSection'
+import { SponsorHeaderBar } from '@/components/home/SponsorHeaderBar'
 import { Footer } from '@/components/landing/Footer'
 import { FloatingLanguageSelector } from '@/components/landing/FloatingLanguageSelector'
 
@@ -13,6 +14,7 @@ const VideotecaSection = dynamic(() => import('@/components/landing/VideotecaSec
 export default function HomePage() {
   return (
     <main className="relative">
+      <SponsorHeaderBar />
       <HeroSection />
       <Navbar />
 
