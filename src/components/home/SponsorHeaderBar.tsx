@@ -9,9 +9,26 @@ export interface SponsorLogo {
 
 export function SponsorHeaderBar({ logos = [] }: { logos?: SponsorLogo[] }) {
   const [isMounted, setIsMounted] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
     setIsMounted(true);
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsVisible(!entry.isIntersecting);
+      },
+      { threshold: 0.1 }
+    );
+
+    const target = document.getElementById('itec-en-movimiento');
+    if (target) {
+      observer.observe(target);
+    }
+
+    return () => {
+      if (target) observer.unobserve(target);
+    };
   }, []);
 
   const validLogos = Array.isArray(logos) ? logos : [];
@@ -27,7 +44,7 @@ export function SponsorHeaderBar({ logos = [] }: { logos?: SponsorLogo[] }) {
   return (
     <div 
       suppressHydrationWarning
-      className="fixed bottom-0 left-0 right-0 z-40 w-full overflow-hidden bg-black/60 backdrop-blur-sm py-2 border-t border-white/10 min-h-[44px]"
+      className={`fixed bottom-0 left-0 right-0 z-40 w-full overflow-hidden bg-black/60 backdrop-blur-sm py-2 border-t border-white/10 min-h-[44px] transition-opacity duration-500 ${isVisible ? 'opacity-100' : 'opacity-0'}`}
     >
       <div 
         className="animate-marquee-infinite flex items-center gap-10 w-max"
