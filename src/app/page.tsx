@@ -5,13 +5,6 @@ import { Footer } from '@/components/landing/Footer'
 import { FloatingLanguageSelector } from '@/components/landing/FloatingLanguageSelector'
 import { createClient } from '@/lib/supabase/server'
 
-const SponsorHeaderBar = dynamic(
-  () => import('@/components/home/SponsorHeaderBar'),
-  { 
-    ssr: false,
-    loading: () => <div className="w-full h-16 min-h-[64px] bg-black/60 border-y border-white/10" />
-  }
-);
 
 const AboutSection = dynamic(() => import('@/components/landing/AboutSection').then(m => m.AboutSection))
 const ComisionesSection = dynamic(() => import('@/components/landing/ComisionesSection').then(m => m.ComisionesSection))
