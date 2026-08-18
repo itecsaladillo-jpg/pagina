@@ -1,10 +1,17 @@
 import dynamic from 'next/dynamic'
 import { Navbar } from '@/components/landing/Navbar'
 import { HeroSection } from '@/components/landing/HeroSection'
-import { SponsorHeaderBar } from '@/components/home/SponsorHeaderBar'
 import { Footer } from '@/components/landing/Footer'
 import { FloatingLanguageSelector } from '@/components/landing/FloatingLanguageSelector'
 import { createClient } from '@/lib/supabase/server'
+
+const SponsorHeaderBar = dynamic(
+  () => import('@/components/home/SponsorHeaderBar'),
+  { 
+    ssr: false,
+    loading: () => <div className="w-full h-16 min-h-[64px] bg-black/60 border-y border-white/10" />
+  }
+);
 
 const AboutSection = dynamic(() => import('@/components/landing/AboutSection').then(m => m.AboutSection))
 const ComisionesSection = dynamic(() => import('@/components/landing/ComisionesSection').then(m => m.ComisionesSection))
@@ -15,20 +22,32 @@ const VideotecaSection = dynamic(() => import('@/components/landing/VideotecaSec
 export default async function HomePage() {
   const supabase = await createClient()
   
-  const { data: sponsors } = await supabase
-    .from('sponsors')
-    .select('name, logo_monocromo_url')
-    .eq('is_active', true)
-    .not('logo_monocromo_url', 'is', null)
+  // 1. Obtener la lista de archivos de la carpeta 'monocromo'
+  const { data: files } = await supabase.storage
+    .from('sponsors-logos')
+    .list('monocromo', { limit: 100 });
 
-  const logos = sponsors?.map(s => ({
-    url: s.logo_monocromo_url || '',
-    nombre: s.name
-  })) || []
+  let sponsorLogos: { url: string; nombre: string }[] = [];
+
+  if (files && files.length > 0) {
+    // 2. Generar las URLs públicas de cada logo
+    sponsorLogos = files
+      .filter((file) => file.name !== '.emptyFolderPlaceholder')
+      .map((file) => {
+        const { data } = supabase.storage
+          .from('sponsors-logos')
+          .getPublicUrl(`monocromo/${file.name}`);
+
+        return {
+          url: data.publicUrl,
+          nombre: file.name.split('.')[0] || 'Sponsor ITEC',
+        };
+      });
+  }
 
   return (
     <main className="relative">
-      <SponsorHeaderBar logos={logos} />
+      <SponsorHeaderBar logos={sponsorLogos} />
       <HeroSection />
       <Navbar />
 

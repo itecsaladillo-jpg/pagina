@@ -18,17 +18,10 @@ export function SponsorHeaderBar({ logos = [] }: SponsorHeaderBarProps) {
     setIsMounted(true);
   }, []);
 
-  // Log de depuración para verificar en consola cuántos logos están llegando
-  useEffect(() => {
-    if (isMounted) {
-      console.log('🔍 [SponsorHeaderBar] Logos recibidos:', logos.length, logos);
-    }
-  }, [isMounted, logos]);
-
   // Render inicial para SSR (evita hydration mismatch)
   if (!isMounted) {
     return (
-      <div className="w-full h-16 min-h-[64px] bg-black/40 backdrop-blur-md border-y border-white/10" />
+      <div className="w-full h-16 min-h-[64px] bg-black/60 border-y border-white/10" />
     );
   }
 
