@@ -32,6 +32,12 @@ export default async function HomePage() {
 
   let sponsorLogos: { url: string; nombre: string }[] = [];
 
+  if (error) {
+    console.error('❌ Error Supabase Storage:', error.message);
+  }
+
+  let sponsorLogos: { url: string; nombre: string }[] = [];
+
   if (files && files.length > 0) {
     // 2. Generar las URLs públicas de cada logo con cache-buster
     sponsorLogos = files
@@ -52,6 +58,8 @@ export default async function HomePage() {
         };
       });
   }
+
+  console.log(`✅ Logos encontrados (${sponsorLogos.length}):`, sponsorLogos);
 
   return (
     <main className="relative">
