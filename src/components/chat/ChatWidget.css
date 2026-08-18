@@ -5,7 +5,7 @@
 
 .itec-chat-btn {
   position: fixed;
-  bottom: 24px;
+  bottom: 44px;
   right: 150px;
   width: 60px;
   height: 60px;
@@ -310,7 +310,7 @@
 /* Responsivo */
 @media (max-width: 480px) {
   .itec-chat-btn {
-    bottom: 20px;
+    bottom: 40px;
     right: 140px;
     width: 54px;
     height: 54px;

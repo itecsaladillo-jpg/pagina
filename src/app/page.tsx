@@ -68,10 +68,10 @@ export default async function HomePage() {
         <IdeasSection />
 
         <Footer />
-
-        {/* Selector de Idiomas flotante premium (der) */}
-        <FloatingLanguageSelector />
       </div>
+
+      {/* Selector de Idiomas: fuera del wrapper para anclarse al viewport, junto al asistente */}
+      <FloatingLanguageSelector />
     </main>
   )
 }

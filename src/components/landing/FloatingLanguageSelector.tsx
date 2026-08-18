@@ -29,7 +29,7 @@ export function FloatingLanguageSelector() {
   }, []);
 
   return (
-    <div ref={containerRef} className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-2">
+    <div ref={containerRef} className="fixed bottom-[44px] right-6 z-50 flex flex-col items-end gap-2">
       {/* Dropup Menu */}
       {open && (
         <div 

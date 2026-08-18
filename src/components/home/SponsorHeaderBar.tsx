@@ -53,7 +53,7 @@ export function SponsorHeaderBar({ logos = [] }: { logos?: SponsorLogo[] }) {
     >
       <div
         className="animate-marquee-infinite flex items-center gap-10 w-max"
-        style={{ animationDuration: '84s' }} /* Velocidad reducida al 50% (84s en vez de 42s) */
+        style={{ animationDuration: '140s' }} /* Velocidad reducida 40% (140s en vez de 84s) */
       >
         {duplicatedLogos.map((logo, index) => (
           <div
