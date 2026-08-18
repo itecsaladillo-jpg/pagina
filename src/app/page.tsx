@@ -44,6 +44,9 @@ export default async function HomePage() {
 
   return (
     <main className="relative min-h-screen bg-black text-white pb-16">
+      {/* Pasar array como variable JS (sin comillas) — barra visible al tope y con fade al scrollear */}
+      <SponsorHeaderBar logos={sponsorLogos} />
+
       <HeroSection />
       <Navbar />
 
@@ -63,9 +66,6 @@ export default async function HomePage() {
       <IdeasSection />
 
       <Footer />
-
-      {/* Pasar array como variable JS */}
-      <SponsorHeaderBar logos={sponsorLogos} />
 
       {/* Selector de Idiomas flotante premium (der) */}
       <FloatingLanguageSelector />
