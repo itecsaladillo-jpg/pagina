@@ -19,21 +19,6 @@ export async function SponsorHeaderBar() {
 
   return (
     <div className="absolute top-0 left-0 w-full overflow-hidden bg-black/40 backdrop-blur-md py-3 border-b border-white/10 z-50">
-      <style>{`
-        @keyframes marquee {
-          0% { transform: translateX(0%); }
-          100% { transform: translateX(-50%); }
-        }
-        .animate-marquee-infinite {
-          display: flex;
-          width: max-content;
-          animation: marquee 40s linear infinite;
-        }
-        .animate-marquee-infinite:hover {
-          animation-play-state: paused;
-        }
-      `}</style>
-      
       <div className="animate-marquee-infinite flex items-center gap-10">
         {duplicatedLogos.map((logo, index) => (
           <div 
