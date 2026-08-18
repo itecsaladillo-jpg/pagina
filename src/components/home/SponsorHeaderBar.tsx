@@ -18,7 +18,7 @@ export function SponsorHeaderBar({ logos = [] }: { logos?: SponsorLogo[] }) {
 
   if (!isMounted || validLogos.length === 0) {
     return (
-      <div className="relative w-full min-h-[44px] bg-black/60 py-2 border-b border-white/10" />
+      <div className="fixed bottom-0 left-0 right-0 z-40 w-full min-h-[44px] bg-black/60 py-2 border-t border-white/10" />
     );
   }
 
@@ -27,11 +27,11 @@ export function SponsorHeaderBar({ logos = [] }: { logos?: SponsorLogo[] }) {
   return (
     <div 
       suppressHydrationWarning
-      className="relative w-full overflow-hidden bg-black/60 backdrop-blur-sm py-2 border-b border-white/10 min-h-[44px] z-30"
+      className="fixed bottom-0 left-0 right-0 z-40 w-full overflow-hidden bg-black/60 backdrop-blur-sm py-2 border-t border-white/10 min-h-[44px]"
     >
       <div 
         className="animate-marquee-infinite flex items-center gap-10 w-max"
-        style={{ animationDuration: '40s' }} /* Duración incrementada para hacerlo 15% más lento (era 35s, lo subo un poco más para asegurar suavidad) */
+        style={{ animationDuration: '40s' }}
       >
         {duplicatedLogos.map((logo, index) => (
           <div 
