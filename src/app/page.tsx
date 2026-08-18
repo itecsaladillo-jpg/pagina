@@ -1,10 +1,11 @@
+import fs from 'fs';
+import path from 'path';
 import nextDynamic from 'next/dynamic'
 import { Navbar } from '@/components/landing/Navbar'
 import { HeroSection } from '@/components/landing/HeroSection'
 import { Footer } from '@/components/landing/Footer'
 import { FloatingLanguageSelector } from '@/components/landing/FloatingLanguageSelector'
 import { SponsorHeaderBar } from '@/components/home/SponsorHeaderBar'
-import { createClient } from '@/lib/supabase/server'
 
 // Forzar renderizado dinámico en cada request (desactiva cache estático de Vercel/Next.js)
 export const dynamic = 'force-dynamic';
@@ -17,50 +18,32 @@ const ImpactSection = nextDynamic(() => import('@/components/landing/ImpactSecti
 const VideotecaSection = nextDynamic(() => import('@/components/landing/VideotecaSection').then(m => m.VideotecaSection))
 
 export default async function HomePage() {
-  const supabase = await createClient()
+  // Ruta absoluta hacia la carpeta public/sponsors/blanco
+  const sponsorsDir = path.join(process.cwd(), 'public', 'sponsors', 'blanco');
   
-  // 1. Obtener la lista de archivos de la carpeta 'monocromo'
-  const BUCKET_NAME = 'sponsors-logos';
-  const FOLDER_NAME = 'monocromo';
-
-  const { data: files, error } = await supabase.storage
-    .from(BUCKET_NAME)
-    .list(FOLDER_NAME, { 
-      limit: 100,
-      sortBy: { column: 'name', order: 'asc' }
-    });
-
   let sponsorLogos: { url: string; nombre: string }[] = [];
 
-  if (error) {
-    console.error('❌ Error Supabase Storage:', error.message);
-  }
+  if (fs.existsSync(sponsorsDir)) {
+    const files = fs.readdirSync(sponsorsDir);
 
-  if (files && files.length > 0) {
-    // 2. Generar las URLs públicas de cada logo con cache-buster
     sponsorLogos = files
-      .filter((file) => file.name !== '.emptyFolderPlaceholder' && !file.name.startsWith('.'))
+      .filter((file) => !file.startsWith('.') && /\.(png|jpe?g|svg|webp)$/i.test(file))
       .map((file) => {
-        const { data } = supabase.storage
-          .from(BUCKET_NAME)
-          .getPublicUrl(`${FOLDER_NAME}/${file.name}`);
-
-        // Romper caché de CDN/Navegador agregando timestamp
-        const version = (file as any).updated_at 
-          ? new Date((file as any).updated_at).getTime() 
-          : 1;
+        const filePath = path.join(sponsorsDir, file);
+        const stats = fs.statSync(filePath);
 
         return {
-          url: `${data.publicUrl}?v=${version}`,
-          nombre: file.name.split('.')[0] || 'Sponsor ITEC',
+          // URL relativa accesible desde Next.js + timestamp para romper cache
+          url: `/sponsors/blanco/${file}?v=${stats.mtimeMs}`,
+          nombre: file.replace(/\.[^/.]+$/, ''),
         };
       });
   }
 
-  console.log(`✅ Logos encontrados (${sponsorLogos.length}):`, sponsorLogos);
+  console.log(`✅ Logos locales cargados (${sponsorLogos.length}):`, sponsorLogos.map(s => s.nombre));
 
   return (
-    <main className="relative min-h-screen bg-black text-white">
+    <main className="relative min-h-screen bg-black text-white pb-16">
       <HeroSection />
       <Navbar />
 
@@ -81,7 +64,7 @@ export default async function HomePage() {
 
       <Footer />
       
-      {/* Pasar array como variable JS */}
+      {/* Pasar el array de logos locales */}
       <SponsorHeaderBar logos={sponsorLogos} />
 
       {/* Selector de Idiomas flotante premium (der) */}
