@@ -18,29 +18,29 @@ const ImpactSection = nextDynamic(() => import('@/components/landing/ImpactSecti
 const VideotecaSection = nextDynamic(() => import('@/components/landing/VideotecaSection').then(m => m.VideotecaSection))
 
 export default async function HomePage() {
-  // Ruta absoluta hacia la carpeta public/sponsors/blanco
-  const sponsorsDir = path.join(process.cwd(), 'public', 'sponsors', 'blanco');
-  
   let sponsorLogos: { url: string; nombre: string }[] = [];
 
-  if (fs.existsSync(sponsorsDir)) {
-    const files = fs.readdirSync(sponsorsDir);
+  try {
+    const sponsorsDir = path.join(process.cwd(), 'public', 'sponsors', 'blanco');
+    
+    if (fs.existsSync(sponsorsDir)) {
+      const files = fs.readdirSync(sponsorsDir);
 
-    sponsorLogos = files
-      .filter((file) => !file.startsWith('.') && /\.(png|jpe?g|svg|webp)$/i.test(file))
-      .map((file) => {
-        const filePath = path.join(sponsorsDir, file);
-        const stats = fs.statSync(filePath);
+      sponsorLogos = files
+        .filter((file) => !file.startsWith('.') && /\.(png|jpe?g|svg|webp)$/i.test(file))
+        .map((file) => {
+          const filePath = path.join(sponsorsDir, file);
+          const stats = fs.statSync(filePath);
 
-        return {
-          // URL relativa accesible desde Next.js + timestamp para romper cache
-          url: `/sponsors/blanco/${file}?v=${stats.mtimeMs}`,
-          nombre: file.replace(/\.[^/.]+$/, ''),
-        };
-      });
+          return {
+            url: `/sponsors/blanco/${file}?v=${stats.mtimeMs}`,
+            nombre: file.replace(/\.[^/.]+$/, ''),
+          };
+        });
+    }
+  } catch (error) {
+    console.error('Error leyendo la carpeta de sponsors:', error);
   }
-
-  console.log(`✅ Logos locales cargados (${sponsorLogos.length}):`, sponsorLogos.map(s => s.nombre));
 
   return (
     <main className="relative min-h-screen bg-black text-white pb-16">
@@ -64,7 +64,7 @@ export default async function HomePage() {
 
       <Footer />
 
-      {/* Pasar el array de logos locales */}
+      {/* Pasar array como variable JS */}
       <SponsorHeaderBar logos={sponsorLogos} />
 
       {/* Selector de Idiomas flotante premium (der) */}
