@@ -46,12 +46,12 @@ export default async function HomePage() {
           .getPublicUrl(`${FOLDER_NAME}/${file.name}`);
 
         // Romper caché de CDN/Navegador agregando timestamp
-        const lastUpdated = (file as any).updated_at 
+        const version = (file as any).updated_at 
           ? new Date((file as any).updated_at).getTime() 
-          : Date.now();
+          : 1;
 
         return {
-          url: `${data.publicUrl}?t=${lastUpdated}`,
+          url: `${data.publicUrl}?v=${version}`,
           nombre: file.name.split('.')[0] || 'Sponsor ITEC',
         };
       });
@@ -60,7 +60,7 @@ export default async function HomePage() {
   console.log(`✅ Logos encontrados (${sponsorLogos.length}):`, sponsorLogos);
 
   return (
-    <main className="relative">
+    <main className="relative min-h-screen bg-black text-white">
       <HeroSection />
       <Navbar />
 
@@ -81,6 +81,7 @@ export default async function HomePage() {
 
       <Footer />
       
+      {/* Pasar array como variable JS */}
       <SponsorHeaderBar logos={sponsorLogos} />
 
       {/* Selector de Idiomas flotante premium (der) */}
