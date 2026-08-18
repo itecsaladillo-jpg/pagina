@@ -44,6 +44,9 @@ export default async function HomePage() {
 
   return (
     <main className="relative min-h-screen bg-black text-white pb-16">
+      {/* Pasar el array de logos locales */}
+      <SponsorHeaderBar logos={sponsorLogos} />
+
       <HeroSection />
       <Navbar />
 
@@ -63,9 +66,6 @@ export default async function HomePage() {
       <IdeasSection />
 
       <Footer />
-      
-      {/* Pasar el array de logos locales */}
-      <SponsorHeaderBar logos={sponsorLogos} />
 
       {/* Selector de Idiomas flotante premium (der) */}
       <FloatingLanguageSelector />
