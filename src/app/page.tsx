@@ -1,13 +1,10 @@
 import dynamic from 'next/dynamic'
 import { Navbar } from '@/components/landing/Navbar'
 import { HeroSection } from '@/components/landing/HeroSection'
+import { SponsorHeaderBar } from '@/components/home/SponsorHeaderBar'
 import { Footer } from '@/components/landing/Footer'
 import { FloatingLanguageSelector } from '@/components/landing/FloatingLanguageSelector'
 
-const SponsorHeaderBar = dynamic(
-  () => import('@/components/home/SponsorHeaderBar').then(mod => mod.SponsorHeaderBar),
-  { ssr: false }
-)
 const AboutSection = dynamic(() => import('@/components/landing/AboutSection').then(m => m.AboutSection))
 const ComisionesSection = dynamic(() => import('@/components/landing/ComisionesSection').then(m => m.ComisionesSection))
 const IdeasSection = dynamic(() => import('@/components/landing/IdeasSection').then(m => m.IdeasSection))
