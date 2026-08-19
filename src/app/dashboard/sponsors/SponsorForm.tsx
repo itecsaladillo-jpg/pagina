@@ -81,7 +81,8 @@ export function SponsorForm({ sponsor, onClose }: Props) {
         website_url: sponsor?.website_url ?? null,
         contacto_nombre: formData.nombre_contacto,
         contacto_telefono: formData.telefono,
-        email: formData.email,
+        // Email vacío → null: la columna email es UNIQUE y NULL no colisiona con otros vacíos
+        email: formData.email.trim() || null,
         logo_monocromo_url: sponsor?.logo_monocromo_url ?? '',
         logo_color_url: sponsor?.logo_color_url ?? '',
         is_active: sponsor?.is_active ?? true,

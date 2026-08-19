@@ -175,7 +175,7 @@ export async function createSponsorAction(formData: {
   website_url?: string | null
   contacto_nombre?: string
   contacto_telefono?: string
-  email?: string
+  email?: string | null
   logo_monocromo_url?: string
   logo_color_url?: string
   is_active?: boolean
