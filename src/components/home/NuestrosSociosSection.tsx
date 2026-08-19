@@ -20,34 +20,24 @@ const COLS_CLASS: Record<number, string> = {
 }
 
 // preferred: columnas de referencia del nivel; max: tope de columnas
-// minH es la altura base de la ficha con las columnas "preferred"
-const TIER_BASE: Record<string, { label: string; preferred: number; max: number; minH: number; glow: boolean }> = {
-  platino: { label: 'Platinum', preferred: 3, max: 5, minH: 110, glow: true },
-  oro: { label: 'Oro', preferred: 4, max: 6, minH: 114, glow: false },
-  plata: { label: 'Plata', preferred: 5, max: 7, minH: 94, glow: false },
-  bronce: { label: 'Bronce', preferred: 6, max: 8, minH: 75, glow: false },
-  standard: { label: 'Standard', preferred: 8, max: 10, minH: 65, glow: false },
+// pct: altura del contenedor relativa al nivel (platino 100%, oro 80%, plata 55%, bronce 35%, standard 10%)
+const TIER_BASE: Record<string, { label: string; preferred: number; max: number; pct: number; glow: boolean }> = {
+  platino: { label: 'Platinum', preferred: 3, max: 5, pct: 1.0, glow: true },
+  oro: { label: 'Oro', preferred: 4, max: 6, pct: 0.8, glow: false },
+  plata: { label: 'Plata', preferred: 5, max: 7, pct: 0.55, glow: false },
+  bronce: { label: 'Bronce', preferred: 6, max: 8, pct: 0.35, glow: false },
+  standard: { label: 'Standard', preferred: 8, max: 10, pct: 0.1, glow: false },
 }
 
-// El alto del contenedor se adapta al formato (aspect ratio) del logo:
-// logos cuadrados → contenedores más altos; logos muy anchos → más bajos.
-// La jerarquía por nivel se mantiene con los límites min/max por nivel.
-const ASPECT_REF = 2.4
-const ASPECT_MIN_FACTOR = 0.7
-const ASPECT_MAX_FACTOR = 1.6
+const BASE_H = 120
 
-function SponsorCard({ sponsor, baseH, glow, onOpen }: {
+// Altura estándar por nivel de sponsoreo: platinum 100%, oro 80%, plata 55%, bronce 35%, standard 10%
+function SponsorCard({ sponsor, cardH, glow, onOpen }: {
   sponsor: PublicSponsor
-  baseH: number
+  cardH: number
   glow: boolean
   onOpen: () => void
 }) {
-  const [aspect, setAspect] = useState(ASPECT_REF)
-
-  const cardH = Math.round(
-    Math.min(baseH * ASPECT_MAX_FACTOR, Math.max(baseH * ASPECT_MIN_FACTOR, (baseH * ASPECT_REF) / aspect))
-  )
-
   return (
     <button
       onClick={onOpen}
@@ -58,11 +48,6 @@ function SponsorCard({ sponsor, baseH, glow, onOpen }: {
         <img
           src={sponsor.logo_color_url}
           alt={sponsor.name}
-          onLoad={(e) => {
-            const w = e.currentTarget.naturalWidth
-            const h = e.currentTarget.naturalHeight
-            if (w && h) setAspect(w / h)
-          }}
           className="w-full h-full object-contain"
           loading="lazy"
           decoding="async"
@@ -107,8 +92,7 @@ export function NuestrosSociosSection() {
 
   const renderGroup = ({ tier, config, list }: (typeof grouped)[number]) => {
     const cols = Math.min(config.max, Math.max(2, Math.round(list.length * 0.9)))
-    const scale = config.preferred / cols
-    const baseH = Math.round(config.minH * scale)
+    const cardH = Math.round(BASE_H * config.pct)
 
     return (
       <div key={tier} className="mb-8 last:mb-0">
@@ -117,7 +101,7 @@ export function NuestrosSociosSection() {
             <SponsorCard
               key={s.id}
               sponsor={s}
-              baseH={baseH}
+              cardH={cardH}
               glow={config.glow}
               onOpen={() => setSelectedSponsor(s)}
             />
