@@ -161,24 +161,24 @@ export function SponsorForm({ sponsor, onClose }: Props) {
     setUploadingLogos(false)
   }
 
-  const inputClass = "w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-blue-500 outline-none"
+  const inputClass = "w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:border-blue-500 outline-none"
 
   return (
     <div className='fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4' style={{ colorScheme: 'dark' }}>
-      <div className='glass border border-white/10 rounded-2xl p-8 max-w-xl w-full shadow-2xl max-h-[90vh] overflow-y-auto'>
-        <div className='flex items-center justify-between mb-6'>
-          <div className='flex items-center gap-3'>
+      <div className='glass border border-white/10 rounded-2xl p-5 max-w-2xl w-full shadow-2xl max-h-[90vh] overflow-y-auto'>
+        <div className='flex items-center justify-between mb-4'>
+          <div className='flex items-center gap-2'>
             <button
               type='button'
               onClick={() => onClose()}
-              className='p-2 hover:bg-white/5 rounded-full text-white/70 hover:text-white transition-colors'
+              className='p-1.5 hover:bg-white/5 rounded-full text-white/70 hover:text-white transition-colors'
               title='Volver'
             >
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
               </svg>
             </button>
-            <h3 className='text-2xl font-bold text-white'>
+            <h3 className='text-xl font-bold text-white'>
               {sponsor ? 'Editar Sponsor' : 'Nuevo Sponsor'}
             </h3>
           </div>
@@ -190,41 +190,74 @@ export function SponsorForm({ sponsor, onClose }: Props) {
           )}
         </div>
 
-        <form onSubmit={handleSubmit} className='space-y-5'>
-          <div>
-            <label className='block text-[10px] uppercase tracking-widest text-white/60 mb-2'>Nombre Empresa</label>
-            <input className={`${inputClass} ${errors.nombre_empresa ? 'border-red-500' : ''}`}
-              value={formData.nombre_empresa}
-              onChange={e => setFormData({ ...formData, nombre_empresa: e.target.value })} />
-            {errors.nombre_empresa && <p className='text-red-400 text-xs mt-1'>{errors.nombre_empresa}</p>}
+        <form onSubmit={handleSubmit} className='space-y-3'>
+          <div className='grid grid-cols-1 sm:grid-cols-2 gap-3'>
+            <div>
+              <label className='block text-[10px] uppercase tracking-widest text-white/60 mb-1'>Nombre Empresa</label>
+              <input className={`${inputClass} ${errors.nombre_empresa ? 'border-red-500' : ''}`}
+                value={formData.nombre_empresa}
+                onChange={e => setFormData({ ...formData, nombre_empresa: e.target.value })} />
+              {errors.nombre_empresa && <p className='text-red-400 text-xs mt-1'>{errors.nombre_empresa}</p>}
+            </div>
+
+            <div>
+              <label className='block text-[10px] uppercase tracking-widest text-white/60 mb-1'>Categoría de Sponsoreo</label>
+              <select className={`${inputClass} sponsor-form-select`} value={formData.tier}
+                onChange={e => setFormData({ ...formData, tier: e.target.value as SponsorFormData['tier'] })}>
+                {TIERS.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
+              </select>
+            </div>
+
+            <div>
+              <label className='block text-[10px] uppercase tracking-widest text-white/60 mb-1'>Actividad</label>
+              <input className={inputClass}
+                placeholder='Ej: tecnología, agroindustria, salud'
+                value={formData.actividad}
+                onChange={e => setFormData({ ...formData, actividad: e.target.value })} />
+            </div>
+
+            <div>
+              <label className='block text-[10px] uppercase tracking-widest text-white/60 mb-1'>Zona de Influencia</label>
+              <input className={inputClass}
+                placeholder='Ej: regional, nacional, sector salud'
+                value={formData.zona_influencia}
+                onChange={e => setFormData({ ...formData, zona_influencia: e.target.value })} />
+            </div>
+
+            <div>
+              <label className='block text-[10px] uppercase tracking-widest text-white/60 mb-1'>Nombre Contacto</label>
+              <input className={`${inputClass} ${errors.nombre_contacto ? 'border-red-500' : ''}`}
+                value={formData.nombre_contacto}
+                onChange={e => setFormData({ ...formData, nombre_contacto: e.target.value })} />
+              {errors.nombre_contacto && <p className='text-red-400 text-xs mt-1'>{errors.nombre_contacto}</p>}
+            </div>
+
+            <div>
+              <label className='block text-[10px] uppercase tracking-widest text-white/60 mb-1'>Apellido Contacto</label>
+              <input className={`${inputClass} ${errors.apellido_contacto ? 'border-red-500' : ''}`}
+                value={formData.apellido_contacto}
+                onChange={e => setFormData({ ...formData, apellido_contacto: e.target.value })} />
+              {errors.apellido_contacto && <p className='text-red-400 text-xs mt-1'>{errors.apellido_contacto}</p>}
+            </div>
+
+            <div>
+              <label className='block text-[10px] uppercase tracking-widest text-white/60 mb-1'>Teléfono</label>
+              <input className={inputClass} type='tel'
+                value={formData.telefono}
+                onChange={e => setFormData({ ...formData, telefono: e.target.value })} />
+            </div>
+
+            <div>
+              <label className='block text-[10px] uppercase tracking-widest text-white/60 mb-1'>Email</label>
+              <input type='email' className={`${inputClass} ${errors.email ? 'border-red-500' : ''}`}
+                value={formData.email}
+                onChange={e => setFormData({ ...formData, email: e.target.value })} />
+              {errors.email && <p className='text-red-400 text-xs mt-1'>{errors.email}</p>}
+            </div>
           </div>
 
           <div>
-            <label className='block text-[10px] uppercase tracking-widest text-white/60 mb-2'>Categoría de Sponsoreo</label>
-            <select className={`${inputClass} sponsor-form-select`} value={formData.tier}
-              onChange={e => setFormData({ ...formData, tier: e.target.value as SponsorFormData['tier'] })}>
-              {TIERS.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
-            </select>
-          </div>
-
-          <div>
-            <label className='block text-[10px] uppercase tracking-widest text-white/60 mb-2'>Actividad</label>
-            <input className={inputClass}
-              placeholder='Ej: tecnología, agroindustria, salud'
-              value={formData.actividad}
-              onChange={e => setFormData({ ...formData, actividad: e.target.value })} />
-          </div>
-
-          <div>
-            <label className='block text-[10px] uppercase tracking-widest text-white/60 mb-2'>Zona de Influencia</label>
-            <input className={inputClass}
-              placeholder='Ej: regional, nacional, sector salud'
-              value={formData.zona_influencia}
-              onChange={e => setFormData({ ...formData, zona_influencia: e.target.value })} />
-          </div>
-
-          <div>
-            <label className='block text-[10px] uppercase tracking-widest text-white/60 mb-2'>Página Web</label>
+            <label className='block text-[10px] uppercase tracking-widest text-white/60 mb-1'>Página Web</label>
             <input type='url' className={`${inputClass} ${errors.website_url ? 'border-red-500' : ''}`}
               placeholder='https://www.ejemplo.com'
               value={formData.website_url}
@@ -232,73 +265,38 @@ export function SponsorForm({ sponsor, onClose }: Props) {
             {errors.website_url && <p className='text-red-400 text-xs mt-1'>{errors.website_url}</p>}
           </div>
 
-          <div className='grid grid-cols-2 gap-4'>
+          <div className='grid grid-cols-1 sm:grid-cols-2 gap-3'>
             <div>
-              <label className='block text-[10px] uppercase tracking-widest text-white/60 mb-2'>Nombre Contacto</label>
-              <input className={`${inputClass} ${errors.nombre_contacto ? 'border-red-500' : ''}`}
-                value={formData.nombre_contacto}
-                onChange={e => setFormData({ ...formData, nombre_contacto: e.target.value })} />
-              {errors.nombre_contacto && <p className='text-red-400 text-xs mt-1'>{errors.nombre_contacto}</p>}
-            </div>
-            <div>
-              <label className='block text-[10px] uppercase tracking-widest text-white/60 mb-2'>Apellido Contacto</label>
-              <input className={`${inputClass} ${errors.apellido_contacto ? 'border-red-500' : ''}`}
-                value={formData.apellido_contacto}
-                onChange={e => setFormData({ ...formData, apellido_contacto: e.target.value })} />
-              {errors.apellido_contacto && <p className='text-red-400 text-xs mt-1'>{errors.apellido_contacto}</p>}
-            </div>
-          </div>
-
-          <div>
-            <label className='block text-[10px] uppercase tracking-widest text-white/60 mb-2'>Teléfono</label>
-            <input className={inputClass} type='tel'
-              value={formData.telefono}
-              onChange={e => setFormData({ ...formData, telefono: e.target.value })} />
-          </div>
-
-          <div>
-            <label className='block text-[10px] uppercase tracking-widest text-white/60 mb-2'>Email</label>
-            <input type='email' className={`${inputClass} ${errors.email ? 'border-red-500' : ''}`}
-              value={formData.email}
-              onChange={e => setFormData({ ...formData, email: e.target.value })} />
-            {errors.email && <p className='text-red-400 text-xs mt-1'>{errors.email}</p>}
-            <p className='text-[10px] text-white/40 mt-1'>Se usará para envío de links de comunicación</p>
-          </div>
-
-          <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
-            <div>
-              <label className='block text-[10px] uppercase tracking-widest text-white/60 mb-2'>Logo Blanco</label>
+              <label className='block text-[10px] uppercase tracking-widest text-white/60 mb-1'>Logo Blanco</label>
               {logoMonocromoPreview && (
-                <div className='mb-2 rounded-xl border border-white/10 bg-white/5 p-3 flex items-center justify-center min-h-[64px]'>
+                <div className='mb-1.5 rounded-lg border border-white/10 bg-white/5 p-2 flex items-center justify-center min-h-[56px]'>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={logoMonocromoPreview} alt='Logo blanco' className='max-h-12 max-w-full object-contain' />
+                  <img src={logoMonocromoPreview} alt='Logo blanco' className='max-h-10 max-w-full object-contain' />
                 </div>
               )}
-              <input type='file' accept='image/*' className='w-full text-xs text-white/60 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-500 cursor-pointer'
+              <input type='file' accept='image/*' className='w-full text-xs text-white/60 file:mr-3 file:py-1.5 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-500 cursor-pointer'
                 onChange={e => handleLogoChange(e.target.files?.[0] || null, 'monocromo')} />
-              <p className='text-[10px] text-white/40 mt-1'>Subí una imagen para reemplazar el logo actual</p>
             </div>
             <div>
-              <label className='block text-[10px] uppercase tracking-widest text-white/60 mb-2'>Logo Color</label>
+              <label className='block text-[10px] uppercase tracking-widest text-white/60 mb-1'>Logo Color</label>
               {logoColorPreview && (
-                <div className='mb-2 rounded-xl border border-white/10 bg-white/5 p-3 flex items-center justify-center min-h-[64px]'>
+                <div className='mb-1.5 rounded-lg border border-white/10 bg-white/5 p-2 flex items-center justify-center min-h-[56px]'>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={logoColorPreview} alt='Logo color' className='max-h-12 max-w-full object-contain' />
+                  <img src={logoColorPreview} alt='Logo color' className='max-h-10 max-w-full object-contain' />
                 </div>
               )}
-              <input type='file' accept='image/*' className='w-full text-xs text-white/60 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-500 cursor-pointer'
+              <input type='file' accept='image/*' className='w-full text-xs text-white/60 file:mr-3 file:py-1.5 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-500 cursor-pointer'
                 onChange={e => handleLogoChange(e.target.files?.[0] || null, 'color')} />
-              <p className='text-[10px] text-white/40 mt-1'>Subí una imagen para reemplazar el logo actual</p>
             </div>
           </div>
 
-          <div className='flex gap-4 pt-2'>
+          <div className='flex gap-3 pt-1'>
             <button type='button' onClick={() => onClose()}
-              className='flex-1 px-6 py-3 rounded-xl border border-white/10 text-white hover:bg-white/5 transition-all text-sm'>
+              className='flex-1 px-6 py-2 rounded-lg border border-white/10 text-white hover:bg-white/5 transition-all text-sm'>
               Cancelar
             </button>
             <button type='submit' disabled={loading || uploadingLogos}
-              className='flex-1 px-8 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-sm font-black'>
+              className='flex-1 px-8 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-sm font-black'>
               {loading || uploadingLogos ? 'Guardando...' : 'Guardar'}
             </button>
           </div>
