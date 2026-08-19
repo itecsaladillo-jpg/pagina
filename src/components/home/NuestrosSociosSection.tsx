@@ -29,6 +29,54 @@ const TIER_BASE: Record<string, { label: string; preferred: number; max: number;
   standard: { label: 'Standard', preferred: 8, max: 10, minH: 65, glow: false },
 }
 
+// El alto del contenedor se adapta al formato (aspect ratio) del logo:
+// logos cuadrados → contenedores más altos; logos muy anchos → más bajos.
+// La jerarquía por nivel se mantiene con los límites min/max por nivel.
+const ASPECT_REF = 2.4
+const ASPECT_MIN_FACTOR = 0.7
+const ASPECT_MAX_FACTOR = 1.6
+
+function SponsorCard({ sponsor, baseH, glow, onOpen }: {
+  sponsor: PublicSponsor
+  baseH: number
+  glow: boolean
+  onOpen: () => void
+}) {
+  const [aspect, setAspect] = useState(ASPECT_REF)
+
+  const cardH = Math.round(
+    Math.min(baseH * ASPECT_MAX_FACTOR, Math.max(baseH * ASPECT_MIN_FACTOR, (baseH * ASPECT_REF) / aspect))
+  )
+
+  return (
+    <button
+      onClick={onOpen}
+      style={{ height: cardH }}
+      className={`bg-white rounded-2xl border border-[var(--border-subtle)] flex items-center justify-center overflow-hidden transition-all duration-300 hover:scale-105 hover:border-[var(--accent-warm)]/40 cursor-pointer ${glow ? 'ring-2 ring-amber-300/20 shadow-[0_0_40px_-10px_rgba(251,191,36,0.25)]' : ''}`}
+    >
+      {sponsor.logo_color_url ? (
+        <img
+          src={sponsor.logo_color_url}
+          alt={sponsor.name}
+          onLoad={(e) => {
+            const w = e.currentTarget.naturalWidth
+            const h = e.currentTarget.naturalHeight
+            if (w && h) setAspect(w / h)
+          }}
+          className="w-full h-full object-contain"
+          loading="lazy"
+          decoding="async"
+          draggable={false}
+        />
+      ) : (
+        <span className="text-black/70 text-sm font-semibold text-center px-2">
+          {sponsor.name}
+        </span>
+      )}
+    </button>
+  )
+}
+
 export function NuestrosSociosSection() {
   const [sponsors, setSponsors] = useState<PublicSponsor[]>([])
   const [loading, setLoading] = useState(true)
@@ -60,33 +108,19 @@ export function NuestrosSociosSection() {
   const renderGroup = ({ tier, config, list }: (typeof grouped)[number]) => {
     const cols = Math.min(config.max, Math.max(2, Math.round(list.length * 0.9)))
     const scale = config.preferred / cols
-    const cardH = Math.round(config.minH * scale)
+    const baseH = Math.round(config.minH * scale)
 
     return (
       <div key={tier} className="mb-8 last:mb-0">
         <div className={`grid ${COLS_CLASS[cols]} gap-3`}>
           {list.map((s) => (
-            <button
+            <SponsorCard
               key={s.id}
-              onClick={() => setSelectedSponsor(s)}
-              style={{ height: cardH }}
-              className={`bg-white rounded-2xl border border-[var(--border-subtle)] flex items-center justify-center overflow-hidden transition-all duration-300 hover:scale-105 hover:border-[var(--accent-warm)]/40 cursor-pointer ${config.glow ? 'ring-2 ring-amber-300/20 shadow-[0_0_40px_-10px_rgba(251,191,36,0.25)]' : ''}`}
-            >
-              {s.logo_color_url ? (
-                <img
-                  src={s.logo_color_url}
-                  alt={s.name}
-                  className="w-full h-full object-contain"
-                  loading="lazy"
-                  decoding="async"
-                  draggable={false}
-                />
-              ) : (
-                <span className="text-black/70 text-sm font-semibold text-center px-2">
-                  {s.name}
-                </span>
-              )}
-            </button>
+              sponsor={s}
+              baseH={baseH}
+              glow={config.glow}
+              onOpen={() => setSelectedSponsor(s)}
+            />
           ))}
         </div>
       </div>
