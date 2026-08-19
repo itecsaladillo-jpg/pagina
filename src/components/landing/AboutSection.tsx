@@ -83,7 +83,7 @@ export function AboutSection() {
             <span className="inline-block text-xs font-bold tracking-[0.2em] text-[var(--accent-warm)] uppercase mb-4 px-4 py-1.5 rounded-full border border-[var(--accent-warm)]/20 bg-[var(--accent-warm)]/5">
               {dict.about.badge}
             </span>
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-white mb-6 leading-[1.1] tracking-tighter">
               {dict.about.headingStart}{' '}
               <span className="text-gradient">{dict.about.headingGradient}</span>
             </h2>
@@ -122,7 +122,9 @@ export function AboutSection() {
         {/* Sección de Miembros ITEC */}
         <div className="mt-24">
           <div className="text-center mb-12">
-            <h3 className="text-3xl font-bold text-white mb-4">Nuestro Equipo</h3>
+            <h3 className="text-4xl md:text-5xl lg:text-6xl font-black text-white mb-4 leading-[1.1] tracking-tighter">
+              Nuestro <span className="text-gradient">Equipo</span>
+            </h3>
             <p className="text-[var(--text-secondary)] max-w-2xl mx-auto">
               Conoce a los miembros que hacen posible el ITEC Augusto Cicaré. Personas apasionadas por la tecnología, la innovación y la educación.
             </p>

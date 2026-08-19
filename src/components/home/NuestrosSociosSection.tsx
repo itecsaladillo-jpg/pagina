@@ -114,7 +114,7 @@ export function NuestrosSociosSection() {
   return (
     <section id="socios" className="py-16 relative">
       <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-[minmax(0,340px)_1fr] gap-10 lg:gap-14 items-start">
-        <div className="lg:sticky lg:top-8 text-left">
+        <div className="text-left">
           <span className="inline-block text-xs font-bold tracking-[0.2em] text-[var(--accent-warm)] uppercase px-4 py-1.5 rounded-full border border-[var(--accent-warm)]/20 bg-[var(--accent-warm)]/5 mb-4">
             Institucional
           </span>
