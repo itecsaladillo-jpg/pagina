@@ -6,37 +6,27 @@ import { SponsorModal, PublicSponsor } from './SponsorModal'
 
 const TIER_ORDER = ['platino', 'oro', 'plata', 'bronce', 'standard']
 
-const TIER_CONFIG: Record<string, { label: string; grid: string; card: string; logo: string }> = {
-  platino: {
-    label: 'Platinum',
-    grid: 'grid-cols-2 lg:grid-cols-3',
-    card: 'p-6 min-h-[120px] ring-2 ring-amber-300/20 shadow-[0_0_40px_-10px_rgba(251,191,36,0.25)]',
-    logo: 'max-h-14 sm:max-h-16',
-  },
-  oro: {
-    label: 'Oro',
-    grid: 'grid-cols-2 lg:grid-cols-4',
-    card: 'p-5 min-h-[100px]',
-    logo: 'max-h-12 sm:max-h-14',
-  },
-  plata: {
-    label: 'Plata',
-    grid: 'grid-cols-3 lg:grid-cols-5',
-    card: 'p-4 min-h-[90px]',
-    logo: 'max-h-11',
-  },
-  bronce: {
-    label: 'Bronce',
-    grid: 'grid-cols-3 lg:grid-cols-6',
-    card: 'p-4 min-h-[80px]',
-    logo: 'max-h-10',
-  },
-  standard: {
-    label: 'Standard',
-    grid: 'grid-cols-4 lg:grid-cols-8',
-    card: 'p-3 min-h-[70px]',
-    logo: 'max-h-9',
-  },
+// Columnas dinámicas según cantidad de logos (2 a 10 columnas)
+const COLS_CLASS: Record<number, string> = {
+  2: 'grid-cols-2',
+  3: 'grid-cols-3',
+  4: 'grid-cols-4',
+  5: 'grid-cols-5',
+  6: 'grid-cols-6',
+  7: 'grid-cols-7',
+  8: 'grid-cols-8',
+  9: 'grid-cols-9',
+  10: 'grid-cols-10',
+}
+
+// preferred: columnas de referencia del nivel; max: tope de columnas
+// minH/logoH son los tamaños base con las columnas "preferred"
+const TIER_BASE: Record<string, { label: string; preferred: number; max: number; minH: number; logoH: number; glow: boolean }> = {
+  platino: { label: 'Platinum', preferred: 3, max: 5, minH: 110, logoH: 64, glow: true },
+  oro: { label: 'Oro', preferred: 4, max: 6, minH: 95, logoH: 56, glow: false },
+  plata: { label: 'Plata', preferred: 5, max: 7, minH: 85, logoH: 48, glow: false },
+  bronce: { label: 'Bronce', preferred: 6, max: 8, minH: 75, logoH: 42, glow: false },
+  standard: { label: 'Standard', preferred: 8, max: 10, minH: 65, logoH: 36, glow: false },
 }
 
 export function NuestrosSociosSection() {
@@ -61,7 +51,7 @@ export function NuestrosSociosSection() {
   }, [])
 
   const grouped = TIER_ORDER
-    .map((tier) => ({ tier, config: TIER_CONFIG[tier], list: sponsors.filter((s) => s.tier === tier) }))
+    .map((tier) => ({ tier, config: TIER_BASE[tier], list: sponsors.filter((s) => s.tier === tier) }))
     .filter((g) => g.list.length > 0)
 
   return (
@@ -85,41 +75,50 @@ export function NuestrosSociosSection() {
           </div>
         ) : grouped.length > 0 ? (
           <div>
-            {grouped.map(({ tier, config, list }) => (
-              <div key={tier} className="mb-8 last:mb-0">
-                <div className="flex items-center gap-3 mb-4">
-                  <h3 className="text-xs font-bold tracking-[0.2em] uppercase text-[var(--text-muted)]">
-                    {config.label}
-                  </h3>
-                  <div className="h-px flex-1 bg-gradient-to-r from-[var(--border-glow)] to-transparent" />
-                </div>
+            {grouped.map(({ tier, config, list }) => {
+              const cols = Math.min(config.max, Math.max(2, Math.round(list.length * 0.9)))
+              const scale = config.preferred / cols
+              const cardMinH = Math.round(config.minH * scale)
+              const logoH = Math.min(96, Math.round(config.logoH * scale))
 
-                <div className={`grid ${config.grid} gap-3`}>
-                  {list.map((s) => (
-                    <button
-                      key={s.id}
-                      onClick={() => setSelectedSponsor(s)}
-                      className={`glass rounded-2xl border border-[var(--border-subtle)] flex items-center justify-center transition-all duration-300 hover:scale-105 hover:border-[var(--accent-warm)]/40 cursor-pointer ${config.card}`}
-                    >
-                      {s.logo_color_url ? (
-                        <img
-                          src={s.logo_color_url}
-                          alt={s.name}
-                          className={`${config.logo} max-w-full w-auto object-contain`}
-                          loading="lazy"
-                          decoding="async"
-                          draggable={false}
-                        />
-                      ) : (
-                        <span className="text-white/70 text-sm font-semibold text-center px-2">
-                          {s.name}
-                        </span>
-                      )}
-                    </button>
-                  ))}
+              return (
+                <div key={tier} className="mb-8 last:mb-0">
+                  <div className="flex items-center gap-3 mb-4">
+                    <h3 className="text-xs font-bold tracking-[0.2em] uppercase text-[var(--text-muted)]">
+                      {config.label}
+                    </h3>
+                    <div className="h-px flex-1 bg-gradient-to-r from-[var(--border-glow)] to-transparent" />
+                  </div>
+
+                  <div className={`grid ${COLS_CLASS[cols]} gap-3`}>
+                    {list.map((s) => (
+                      <button
+                        key={s.id}
+                        onClick={() => setSelectedSponsor(s)}
+                        style={{ minHeight: cardMinH }}
+                        className={`glass rounded-2xl border border-[var(--border-subtle)] p-3 sm:p-4 flex items-center justify-center transition-all duration-300 hover:scale-105 hover:border-[var(--accent-warm)]/40 cursor-pointer ${config.glow ? 'ring-2 ring-amber-300/20 shadow-[0_0_40px_-10px_rgba(251,191,36,0.25)]' : ''}`}
+                      >
+                        {s.logo_color_url ? (
+                          <img
+                            src={s.logo_color_url}
+                            alt={s.name}
+                            style={{ maxHeight: logoH }}
+                            className="max-w-full w-auto object-contain"
+                            loading="lazy"
+                            decoding="async"
+                            draggable={false}
+                          />
+                        ) : (
+                          <span className="text-white/70 text-sm font-semibold text-center px-2">
+                            {s.name}
+                          </span>
+                        )}
+                      </button>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            ))}
+              )
+            })}
           </div>
         ) : (
           <div className="text-center text-[var(--text-secondary)] py-12 glass rounded-2xl border border-[var(--border-subtle)]">
