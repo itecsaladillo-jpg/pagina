@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, Mail, Phone, ExternalLink, Calendar } from 'lucide-react'
+import { NuestrosSociosSection } from '@/components/home/NuestrosSociosSection'
 
 interface Member {
   id: string;
@@ -113,6 +114,10 @@ export function AboutSection() {
             ))}
           </div>
         </div>
+
+        {/* Sección NUESTROS SOCIOS: entre NUESTRA IDENTIDAD y NUESTRO EQUIPO */}
+        <div className="section-divider" />
+        <NuestrosSociosSection />
 
         {/* Sección de Miembros ITEC */}
         <div className="mt-24">
