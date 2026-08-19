@@ -62,7 +62,7 @@ function SponsorCard({ sponsor, cardH, glow, onOpen }: {
   )
 }
 
-export function NuestrosSociosSection() {
+export function NuestrosSociosSection({ rightTop }: { rightTop?: React.ReactNode }) {
   const [sponsors, setSponsors] = useState<PublicSponsor[]>([])
   const [loading, setLoading] = useState(true)
   const [selectedSponsor, setSelectedSponsor] = useState<PublicSponsor | null>(null)
@@ -134,6 +134,7 @@ export function NuestrosSociosSection() {
         ) : grouped.length > 0 ? (
           <>
             <div className="space-y-8">
+              {rightTop && <div className="mb-2">{rightTop}</div>}
               {upperTiers.map(renderGroup)}
             </div>
 
