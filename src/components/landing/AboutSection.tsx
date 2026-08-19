@@ -110,16 +110,6 @@ export function AboutSection() {
       <div className="absolute right-0 top-1/2 -translate-y-1/2 w-96 h-96 bg-violet-600/10 rounded-full blur-[120px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-6">
-        {/* Nuestro Equipo: rincón superior derecho */}
-        <div className="text-right mb-14">
-          <h3 className="text-4xl md:text-5xl lg:text-6xl font-black text-white mb-4 leading-[1.1] tracking-tighter">
-            Nuestro <span className="text-gradient">Equipo</span>
-          </h3>
-          <p className="text-[var(--text-secondary)] text-lg max-w-md ml-auto">
-            Conoce a los miembros que hacen posible el ITEC Augusto Cicaré. Personas apasionadas por la tecnología, la innovación y la educación.
-          </p>
-        </div>
-
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           {/* Texto */}
           <div>
@@ -163,25 +153,36 @@ export function AboutSection() {
         <NuestrosSociosSection />
 
         {/* Sección de Miembros ITEC */}
-        {loading ? (
-          <div className="flex justify-center py-12 mt-12">
-            <div className="w-10 h-10 border-4 border-[var(--accent-warm)] border-t-transparent rounded-full animate-spin"></div>
+        <div className="mt-16">
+          <div className="text-right mb-12">
+            <h3 className="text-4xl md:text-5xl lg:text-6xl font-black text-white mb-4 leading-[1.1] tracking-tighter">
+              Nuestro <span className="text-gradient">Equipo</span>
+            </h3>
+            <p className="text-[var(--text-secondary)] text-lg max-w-md ml-auto">
+              Conoce a los miembros que hacen posible el ITEC Augusto Cicaré. Personas apasionadas por la tecnología, la innovación y la educación.
+            </p>
           </div>
-        ) : members.length === 0 ? (
-          <div className="text-center text-[var(--text-secondary)] py-12 mt-12 glass rounded-2xl border border-[var(--border-subtle)]">
-            No hay miembros públicos disponibles en este momento.
+
+          {loading ? (
+            <div className="flex justify-center py-12">
+              <div className="w-10 h-10 border-4 border-[var(--accent-warm)] border-t-transparent rounded-full animate-spin"></div>
+            </div>
+          ) : members.length === 0 ? (
+            <div className="text-center text-[var(--text-secondary)] py-12 glass rounded-2xl border border-[var(--border-subtle)]">
+              No hay miembros públicos disponibles en este momento.
+            </div>
+          ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {members.map((member, index) => (
+              <MemberCard
+                key={member.id || `member-${index}`}
+                member={member}
+                onOpen={() => setSelectedMember(member)}
+              />
+            ))}
           </div>
-        ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {members.map((member, index) => (
-            <MemberCard
-              key={member.id || `member-${index}`}
-              member={member}
-              onOpen={() => setSelectedMember(member)}
-            />
-          ))}
+          )}
         </div>
-        )}
       </div>
 
       {/* Modal de Perfil del Miembro */}
