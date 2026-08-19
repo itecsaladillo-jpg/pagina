@@ -120,58 +120,60 @@ export function AboutSection() {
         <NuestrosSociosSection />
 
         {/* Sección de Miembros ITEC */}
-        <div className="mt-24">
-          <div className="text-right mb-12">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_minmax(0,440px)] gap-10 lg:gap-14 items-start">
+          <div className="lg:order-1">
+            {loading ? (
+              <div className="flex justify-center py-12">
+                <div className="w-10 h-10 border-4 border-[var(--accent-warm)] border-t-transparent rounded-full animate-spin"></div>
+              </div>
+            ) : members.length > 0 ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                {members.map((member, index) => (
+                  <div key={member.id || `member-${index}`} onClick={() => setSelectedMember(member)} className="glass rounded-2xl p-5 flex items-center gap-5 card-hover border border-[var(--border-subtle)] relative overflow-hidden group cursor-pointer">
+                    <div className="absolute inset-0 bg-gradient-to-r from-[var(--accent-warm)]/0 to-[var(--accent-warm)]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+                    <div className="w-20 h-20 rounded-full overflow-hidden flex-shrink-0 border-2 border-[var(--border-subtle)] group-hover:border-[var(--accent-warm)]/50 transition-colors shadow-lg shadow-black/20">
+                      {member.avatar_url ? (
+                        <img src={member.avatar_url} alt={member.full_name} className="w-full h-full object-cover" />
+                      ) : (
+                        <div className="w-full h-full bg-white/5 flex items-center justify-center text-white text-2xl font-bold">
+                          {member.full_name.charAt(0).toUpperCase()}
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap mb-1">
+                        <h4 className="text-white font-semibold text-lg">{member.full_name}</h4>
+                        <span className="text-[10px] font-medium text-[var(--accent-warm)] bg-[var(--accent-warm)]/10 px-2.5 py-0.5 rounded-full border border-[var(--accent-warm)]/20">
+                          {member.role === 'admin' ? 'Administrador' : member.role === 'coordinador' ? 'Coordinador' : member.role === 'colaborador' ? 'Colaborador' : 'Miembro'}
+                        </span>
+                      </div>
+
+                      {(member.frase_itec || member.bio) && (
+                        <p className="text-[var(--text-secondary)] text-sm line-clamp-2 leading-relaxed italic">
+                          &quot;{member.frase_itec || member.bio}&quot;
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center text-[var(--text-secondary)] py-12 glass rounded-2xl border border-[var(--border-subtle)]">
+                No hay miembros públicos disponibles en este momento.
+              </div>
+            )}
+          </div>
+
+          <div className="text-right lg:order-2 lg:mt-24">
             <h3 className="text-4xl md:text-5xl lg:text-6xl font-black text-white mb-4 leading-[1.1] tracking-tighter">
               Nuestro <span className="text-gradient">Equipo</span>
             </h3>
-            <p className="text-[var(--text-secondary)] max-w-2xl ml-auto">
+            <p className="text-[var(--text-secondary)] max-w-md ml-auto">
               Conoce a los miembros que hacen posible el ITEC Augusto Cicaré. Personas apasionadas por la tecnología, la innovación y la educación.
             </p>
           </div>
-          
-          {loading ? (
-            <div className="flex justify-center py-12">
-              <div className="w-10 h-10 border-4 border-[var(--accent-warm)] border-t-transparent rounded-full animate-spin"></div>
-            </div>
-          ) : members.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              {members.map((member, index) => (
-                <div key={member.id || `member-${index}`} onClick={() => setSelectedMember(member)} className="glass rounded-2xl p-5 flex items-center gap-5 card-hover border border-[var(--border-subtle)] relative overflow-hidden group cursor-pointer">
-                  <div className="absolute inset-0 bg-gradient-to-r from-[var(--accent-warm)]/0 to-[var(--accent-warm)]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
-                  <div className="w-20 h-20 rounded-full overflow-hidden flex-shrink-0 border-2 border-[var(--border-subtle)] group-hover:border-[var(--accent-warm)]/50 transition-colors shadow-lg shadow-black/20">
-                    {member.avatar_url ? (
-                      <img src={member.avatar_url} alt={member.full_name} className="w-full h-full object-cover" />
-                    ) : (
-                      <div className="w-full h-full bg-white/5 flex items-center justify-center text-white text-2xl font-bold">
-                        {member.full_name.charAt(0).toUpperCase()}
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="min-w-0">
-                    <div className="flex items-center gap-2 flex-wrap mb-1">
-                      <h4 className="text-white font-semibold text-lg">{member.full_name}</h4>
-                      <span className="text-[10px] font-medium text-[var(--accent-warm)] bg-[var(--accent-warm)]/10 px-2.5 py-0.5 rounded-full border border-[var(--accent-warm)]/20">
-                        {member.role === 'admin' ? 'Administrador' : member.role === 'coordinador' ? 'Coordinador' : member.role === 'colaborador' ? 'Colaborador' : 'Miembro'}
-                      </span>
-                    </div>
-
-                    {(member.frase_itec || member.bio) && (
-                      <p className="text-[var(--text-secondary)] text-sm line-clamp-2 leading-relaxed italic">
-                        &quot;{member.frase_itec || member.bio}&quot;
-                      </p>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center text-[var(--text-secondary)] py-12 glass rounded-2xl border border-[var(--border-subtle)]">
-              No hay miembros públicos disponibles en este momento.
-            </div>
-          )}
         </div>
       </div>
 
