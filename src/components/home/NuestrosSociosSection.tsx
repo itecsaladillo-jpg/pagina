@@ -104,8 +104,8 @@ export function NuestrosSociosSection() {
             Nuestros <br />
             <span className="text-gradient">Socios</span>
           </h2>
-          <p className="text-[var(--text-secondary)] leading-relaxed">
-            Con estas empresas compartimos el sueño de un Saladillo de avanzada en un país mejor
+          <p className="text-[var(--text-secondary)] text-2xl leading-snug max-w-[280px]">
+            Con ellos compartimos el sueño de un Saladillo de avanzada en un país mejor
           </p>
         </div>
 
