@@ -170,11 +170,11 @@ export async function updateSponsorAction(id: string, formData: UpdateSponsorDat
 export async function createSponsorAction(formData: {
   name: string
   tier: string
-  rubro?: string
+  rubro?: string | null
   resena?: string
   website_url?: string | null
-  contacto_nombre?: string
-  contacto_telefono?: string
+  contacto_nombre?: string | null
+  contacto_telefono?: string | null
   email?: string | null
   logo_monocromo_url?: string
   logo_color_url?: string
@@ -182,11 +182,11 @@ export async function createSponsorAction(formData: {
   description?: string | null
   // Columnas legacy (migración 036) — para consistencia con la ficha del admin
   nombre_empresa?: string
-  actividad?: string
-  zona_influencia?: string
-  nombre_contacto?: string
-  apellido_contacto?: string
-  telefono?: string
+  actividad?: string | null
+  zona_influencia?: string | null
+  nombre_contacto?: string | null
+  apellido_contacto?: string | null
+  telefono?: string | null
 }) {
   const admin = await getCurrentMember()
   if (!admin || admin.role !== 'admin') throw new Error('No autorizado')

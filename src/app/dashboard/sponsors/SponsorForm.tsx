@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { createSponsorAction, updateSponsorAction } from './actions'
+import { createClient } from '@/lib/supabase/client'
 import { z } from 'zod'
 
 const sponsorSchema = z.object({
@@ -45,17 +46,19 @@ interface Props {
 }
 
 export function SponsorForm({ sponsor, onClose }: Props) {
+  // Trata '-' como vacío (placeholders guardados por versiones anteriores del form)
+  const clean = (v?: string | null) => (v && v !== '-' ? v : '')
   const [loading, setLoading] = useState(false)
   const [errors, setErrors] = useState<Partial<Record<keyof SponsorFormData, string>>>({})
   const [formData, setFormData] = useState<SponsorFormData>({
     nombre_empresa: sponsor?.nombre_empresa || sponsor?.name || '',
     tier: sponsor?.tier || 'standard',
-    actividad: sponsor?.actividad || sponsor?.rubro || '',
-    zona_influencia: sponsor?.zona_influencia || '',
+    actividad: clean(sponsor?.actividad) || clean(sponsor?.rubro),
+    zona_influencia: clean(sponsor?.zona_influencia),
     website_url: sponsor?.website_url || '',
-    nombre_contacto: sponsor?.nombre_contacto || sponsor?.contacto_nombre || '',
-    apellido_contacto: sponsor?.apellido_contacto || '',
-    telefono: sponsor?.telefono || sponsor?.contacto_telefono || '',
+    nombre_contacto: clean(sponsor?.nombre_contacto) || clean(sponsor?.contacto_nombre),
+    apellido_contacto: clean(sponsor?.apellido_contacto),
+    telefono: clean(sponsor?.telefono) || clean(sponsor?.contacto_telefono),
     email: sponsor?.email || sponsor?.contact_email || '',
   })
 
@@ -64,6 +67,37 @@ export function SponsorForm({ sponsor, onClose }: Props) {
     document.documentElement.classList.add('sponsor-form-open')
     return () => document.documentElement.classList.remove('sponsor-form-open')
   }, [])
+
+  // Logos: miniatura del actual + archivo nuevo que lo reemplaza
+  const [logoMonocromo, setLogoMonocromo] = useState<File | null>(null)
+  const [logoColor, setLogoColor] = useState<File | null>(null)
+  const [logoMonocromoPreview, setLogoMonocromoPreview] = useState<string | null>(sponsor?.logo_monocromo_url || null)
+  const [logoColorPreview, setLogoColorPreview] = useState<string | null>(sponsor?.logo_color_url || null)
+  const [uploadingLogos, setUploadingLogos] = useState(false)
+
+  const handleLogoChange = (file: File | null, tipo: 'monocromo' | 'color') => {
+    if (tipo === 'monocromo') {
+      setLogoMonocromo(file)
+      setLogoMonocromoPreview(file ? URL.createObjectURL(file) : (sponsor?.logo_monocromo_url || null))
+    } else {
+      setLogoColor(file)
+      setLogoColorPreview(file ? URL.createObjectURL(file) : (sponsor?.logo_color_url || null))
+    }
+  }
+
+  const uploadLogo = async (file: File, folder: string): Promise<string> => {
+    const cleanName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_')
+    const fileExt = cleanName.split('.').pop()
+    const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`
+    const filePath = `${folder}/${fileName}`
+
+    const supabase = createClient()
+    const { error } = await supabase.storage
+      .from('sponsors-logos')
+      .upload(filePath, file, { cacheControl: '3600', upsert: false })
+    if (error) throw error
+    return supabase.storage.from('sponsors-logos').getPublicUrl(filePath).data.publicUrl
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -82,27 +116,36 @@ export function SponsorForm({ sponsor, onClose }: Props) {
     setLoading(true)
     setErrors({})
     try {
+      // Subir logos nuevos (si se eligieron) — reemplazan los actuales
+      setUploadingLogos(true)
+      const logoMonocromoUrl = logoMonocromo
+        ? await uploadLogo(logoMonocromo, 'monocromo')
+        : (sponsor?.logo_monocromo_url ?? null)
+      const logoColorUrl = logoColor
+        ? await uploadLogo(logoColor, 'color')
+        : (sponsor?.logo_color_url ?? null)
+
       const payload = {
         name: formData.nombre_empresa,
         tier: formData.tier,
-        rubro: formData.actividad || '-',
+        rubro: formData.actividad || null,
         resena: sponsor?.resena ?? '',
         website_url: (formData.website_url || '').trim() || null,
-        contacto_nombre: formData.nombre_contacto,
-        contacto_telefono: formData.telefono,
+        contacto_nombre: formData.nombre_contacto || null,
+        contacto_telefono: formData.telefono || null,
         // Email vacío → null: la columna email es UNIQUE y NULL no colisiona con otros vacíos
         email: formData.email.trim() || null,
-        logo_monocromo_url: sponsor?.logo_monocromo_url ?? '',
-        logo_color_url: sponsor?.logo_color_url ?? '',
+        logo_monocromo_url: logoMonocromoUrl,
+        logo_color_url: logoColorUrl,
         is_active: sponsor?.is_active ?? true,
         description: sponsor?.description ?? null,
         // Columnas legacy (migración 036) — las fichas del admin leen de acá
         nombre_empresa: formData.nombre_empresa,
-        actividad: formData.actividad || '-',
-        zona_influencia: formData.zona_influencia || '-',
-        nombre_contacto: formData.nombre_contacto,
-        apellido_contacto: formData.apellido_contacto || '-',
-        telefono: formData.telefono || '-',
+        actividad: formData.actividad || null,
+        zona_influencia: formData.zona_influencia || null,
+        nombre_contacto: formData.nombre_contacto || null,
+        apellido_contacto: formData.apellido_contacto || null,
+        telefono: formData.telefono || null,
       }
       if (sponsor) {
         const res = await updateSponsorAction(sponsor.id, payload)
@@ -115,6 +158,7 @@ export function SponsorForm({ sponsor, onClose }: Props) {
       alert('Error: ' + err.message)
     }
     setLoading(false)
+    setUploadingLogos(false)
   }
 
   const inputClass = "w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-blue-500 outline-none"
@@ -221,14 +265,41 @@ export function SponsorForm({ sponsor, onClose }: Props) {
             <p className='text-[10px] text-white/40 mt-1'>Se usará para envío de links de comunicación</p>
           </div>
 
+          <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
+            <div>
+              <label className='block text-[10px] uppercase tracking-widest text-white/60 mb-2'>Logo Blanco</label>
+              {logoMonocromoPreview && (
+                <div className='mb-2 rounded-xl border border-white/10 bg-white/5 p-3 flex items-center justify-center min-h-[64px]'>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={logoMonocromoPreview} alt='Logo blanco' className='max-h-12 max-w-full object-contain' />
+                </div>
+              )}
+              <input type='file' accept='image/*' className='w-full text-xs text-white/60 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-500 cursor-pointer'
+                onChange={e => handleLogoChange(e.target.files?.[0] || null, 'monocromo')} />
+              <p className='text-[10px] text-white/40 mt-1'>Subí una imagen para reemplazar el logo actual</p>
+            </div>
+            <div>
+              <label className='block text-[10px] uppercase tracking-widest text-white/60 mb-2'>Logo Color</label>
+              {logoColorPreview && (
+                <div className='mb-2 rounded-xl border border-white/10 bg-white/5 p-3 flex items-center justify-center min-h-[64px]'>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={logoColorPreview} alt='Logo color' className='max-h-12 max-w-full object-contain' />
+                </div>
+              )}
+              <input type='file' accept='image/*' className='w-full text-xs text-white/60 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-500 cursor-pointer'
+                onChange={e => handleLogoChange(e.target.files?.[0] || null, 'color')} />
+              <p className='text-[10px] text-white/40 mt-1'>Subí una imagen para reemplazar el logo actual</p>
+            </div>
+          </div>
+
           <div className='flex gap-4 pt-2'>
             <button type='button' onClick={() => onClose()}
               className='flex-1 px-6 py-3 rounded-xl border border-white/10 text-white hover:bg-white/5 transition-all text-sm'>
               Cancelar
             </button>
-            <button type='submit' disabled={loading}
+            <button type='submit' disabled={loading || uploadingLogos}
               className='flex-1 px-8 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-sm font-black'>
-              {loading ? 'Guardando...' : 'Guardar'}
+              {loading || uploadingLogos ? 'Guardando...' : 'Guardar'}
             </button>
           </div>
         </form>
