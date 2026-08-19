@@ -15,6 +15,18 @@ const sponsorSchema = z.object({
   email: z.string().email('Email inválido').min(1, 'Email requerido'),
 })
 
+// Al editar se permite guardar con campos vacíos
+const editSchema = z.object({
+  nombre_empresa: z.string().optional(),
+  tier: z.enum(['platino', 'oro', 'plata', 'bronce', 'standard']),
+  actividad: z.string().optional(),
+  zona_influencia: z.string().optional(),
+  nombre_contacto: z.string().optional(),
+  apellido_contacto: z.string().optional(),
+  telefono: z.string().optional(),
+  email: z.union([z.string().email('Email inválido'), z.literal('')]).optional(),
+})
+
 type SponsorFormData = z.infer<typeof sponsorSchema>
 
 const TIERS: { value: SponsorFormData['tier']; label: string }[] = [
@@ -47,7 +59,7 @@ export function SponsorForm({ sponsor, onClose }: Props) {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
 
-    const result = sponsorSchema.safeParse(formData)
+    const result = (sponsor ? editSchema : sponsorSchema).safeParse(formData)
     if (!result.success) {
       const fieldErrors: Record<string, string> = {}
       result.error.issues.forEach(issue => {
@@ -98,7 +110,7 @@ export function SponsorForm({ sponsor, onClose }: Props) {
   const inputClass = "w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-blue-500 outline-none"
 
   return (
-    <div className='fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4'>
+    <div className='fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4' style={{ colorScheme: 'dark' }}>
       <div className='glass border border-white/10 rounded-2xl p-8 max-w-xl w-full shadow-2xl max-h-[90vh] overflow-y-auto'>
         <div className='flex items-center justify-between mb-6'>
           <div className='flex items-center gap-3'>
@@ -126,8 +138,8 @@ export function SponsorForm({ sponsor, onClose }: Props) {
 
         <form onSubmit={handleSubmit} className='space-y-5'>
           <div>
-            <label className='block text-[10px] uppercase tracking-widest text-white/60 mb-2'>Nombre Empresa *</label>
-            <input required className={`${inputClass} ${errors.nombre_empresa ? 'border-red-500' : ''}`}
+            <label className='block text-[10px] uppercase tracking-widest text-white/60 mb-2'>Nombre Empresa</label>
+            <input className={`${inputClass} ${errors.nombre_empresa ? 'border-red-500' : ''}`}
               value={formData.nombre_empresa}
               onChange={e => setFormData({ ...formData, nombre_empresa: e.target.value })} />
             {errors.nombre_empresa && <p className='text-red-400 text-xs mt-1'>{errors.nombre_empresa}</p>}
@@ -135,7 +147,7 @@ export function SponsorForm({ sponsor, onClose }: Props) {
 
           <div>
             <label className='block text-[10px] uppercase tracking-widest text-white/60 mb-2'>Categoría de Sponsoreo</label>
-            <select className={inputClass} value={formData.tier}
+            <select className={`${inputClass} sponsor-form-select`} value={formData.tier}
               onChange={e => setFormData({ ...formData, tier: e.target.value as SponsorFormData['tier'] })}>
               {TIERS.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
             </select>
@@ -159,8 +171,8 @@ export function SponsorForm({ sponsor, onClose }: Props) {
 
           <div className='grid grid-cols-2 gap-4'>
             <div>
-              <label className='block text-[10px] uppercase tracking-widest text-white/60 mb-2'>Nombre Contacto *</label>
-              <input required className={`${inputClass} ${errors.nombre_contacto ? 'border-red-500' : ''}`}
+              <label className='block text-[10px] uppercase tracking-widest text-white/60 mb-2'>Nombre Contacto</label>
+              <input className={`${inputClass} ${errors.nombre_contacto ? 'border-red-500' : ''}`}
                 value={formData.nombre_contacto}
                 onChange={e => setFormData({ ...formData, nombre_contacto: e.target.value })} />
               {errors.nombre_contacto && <p className='text-red-400 text-xs mt-1'>{errors.nombre_contacto}</p>}
@@ -182,8 +194,8 @@ export function SponsorForm({ sponsor, onClose }: Props) {
           </div>
 
           <div>
-            <label className='block text-[10px] uppercase tracking-widest text-white/60 mb-2'>Email *</label>
-            <input required type='email' className={`${inputClass} ${errors.email ? 'border-red-500' : ''}`}
+            <label className='block text-[10px] uppercase tracking-widest text-white/60 mb-2'>Email</label>
+            <input type='email' className={`${inputClass} ${errors.email ? 'border-red-500' : ''}`}
               value={formData.email}
               onChange={e => setFormData({ ...formData, email: e.target.value })} />
             {errors.email && <p className='text-red-400 text-xs mt-1'>{errors.email}</p>}
@@ -201,6 +213,23 @@ export function SponsorForm({ sponsor, onClose }: Props) {
             </button>
           </div>
         </form>
+
+        <style jsx global>{`
+          .sponsor-form-select {
+            color-scheme: dark;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23ffffff88' stroke-width='2'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            background-size: 1rem;
+            padding-right: 2.5rem;
+            cursor: pointer;
+          }
+          .sponsor-form-select option {
+            background: #1a1a1a;
+            color: #ffffff;
+          }
+        `}</style>
       </div>
     </div>
   )
