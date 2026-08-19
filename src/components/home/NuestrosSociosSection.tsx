@@ -77,7 +77,7 @@ export function NuestrosSociosSection() {
               key={s.id}
               onClick={() => setSelectedSponsor(s)}
               style={{ height: cardH }}
-              className={`glass rounded-2xl border border-[var(--border-subtle)] p-3 sm:p-4 flex items-center justify-center overflow-hidden transition-all duration-300 hover:scale-105 hover:border-[var(--accent-warm)]/40 cursor-pointer ${config.glow ? 'ring-2 ring-amber-300/20 shadow-[0_0_40px_-10px_rgba(251,191,36,0.25)]' : ''}`}
+              className={`bg-white rounded-2xl border border-[var(--border-subtle)] flex items-center justify-center overflow-hidden transition-all duration-300 hover:scale-105 hover:border-[var(--accent-warm)]/40 cursor-pointer ${config.glow ? 'ring-2 ring-amber-300/20 shadow-[0_0_40px_-10px_rgba(251,191,36,0.25)]' : ''}`}
             >
               {s.logo_color_url ? (
                 <img
@@ -89,7 +89,7 @@ export function NuestrosSociosSection() {
                   draggable={false}
                 />
               ) : (
-                <span className="text-white/70 text-sm font-semibold text-center px-2">
+                <span className="text-black/70 text-sm font-semibold text-center px-2">
                   {s.name}
                 </span>
               )}
