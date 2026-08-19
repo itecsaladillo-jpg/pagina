@@ -6,6 +6,7 @@ import { z } from 'zod'
 
 const sponsorSchema = z.object({
   nombre_empresa: z.string().min(1, 'Nombre empresa requerido'),
+  tier: z.enum(['platino', 'oro', 'plata', 'bronce', 'standard']),
   actividad: z.string().optional(),
   zona_influencia: z.string().optional(),
   nombre_contacto: z.string().min(1, 'Nombre contacto requerido'),
@@ -15,6 +16,14 @@ const sponsorSchema = z.object({
 })
 
 type SponsorFormData = z.infer<typeof sponsorSchema>
+
+const TIERS: { value: SponsorFormData['tier']; label: string }[] = [
+  { value: 'platino', label: 'Platino' },
+  { value: 'oro', label: 'Oro' },
+  { value: 'plata', label: 'Plata' },
+  { value: 'bronce', label: 'Bronce' },
+  { value: 'standard', label: 'Standard' },
+]
 
 interface Props {
   sponsor?: any
@@ -26,6 +35,7 @@ export function SponsorForm({ sponsor, onClose }: Props) {
   const [errors, setErrors] = useState<Partial<Record<keyof SponsorFormData, string>>>({})
   const [formData, setFormData] = useState<SponsorFormData>({
     nombre_empresa: sponsor?.nombre_empresa || sponsor?.name || '',
+    tier: sponsor?.tier || 'standard',
     actividad: sponsor?.actividad || sponsor?.rubro || '',
     zona_influencia: sponsor?.zona_influencia || '',
     nombre_contacto: sponsor?.nombre_contacto || sponsor?.contacto_nombre || '',
@@ -53,7 +63,7 @@ export function SponsorForm({ sponsor, onClose }: Props) {
     try {
       const payload = {
         name: formData.nombre_empresa,
-        tier: sponsor?.tier ?? ('standard' as const),
+        tier: formData.tier,
         rubro: formData.actividad || '-',
         resena: sponsor?.resena ?? '',
         website_url: sponsor?.website_url ?? null,
@@ -90,9 +100,29 @@ export function SponsorForm({ sponsor, onClose }: Props) {
   return (
     <div className='fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4'>
       <div className='glass border border-white/10 rounded-2xl p-8 max-w-xl w-full shadow-2xl max-h-[90vh] overflow-y-auto'>
-        <h3 className='text-2xl font-bold text-white mb-6'>
-          {sponsor ? 'Editar Sponsor' : 'Nuevo Sponsor'}
-        </h3>
+        <div className='flex items-center justify-between mb-6'>
+          <div className='flex items-center gap-3'>
+            <button
+              type='button'
+              onClick={() => onClose()}
+              className='p-2 hover:bg-white/5 rounded-full text-white/70 hover:text-white transition-colors'
+              title='Volver'
+            >
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+            <h3 className='text-2xl font-bold text-white'>
+              {sponsor ? 'Editar Sponsor' : 'Nuevo Sponsor'}
+            </h3>
+          </div>
+          {sponsor && (
+            <a href={`/sponsors/${sponsor.id}`} target="_blank"
+              className='text-[10px] text-blue-400 hover:text-blue-300 uppercase tracking-widest transition-all'>
+              Ver portal →
+            </a>
+          )}
+        </div>
 
         <form onSubmit={handleSubmit} className='space-y-5'>
           <div>
@@ -101,6 +131,14 @@ export function SponsorForm({ sponsor, onClose }: Props) {
               value={formData.nombre_empresa}
               onChange={e => setFormData({ ...formData, nombre_empresa: e.target.value })} />
             {errors.nombre_empresa && <p className='text-red-400 text-xs mt-1'>{errors.nombre_empresa}</p>}
+          </div>
+
+          <div>
+            <label className='block text-[10px] uppercase tracking-widest text-white/60 mb-2'>Categoría de Sponsoreo</label>
+            <select className={inputClass} value={formData.tier}
+              onChange={e => setFormData({ ...formData, tier: e.target.value as SponsorFormData['tier'] })}>
+              {TIERS.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
+            </select>
           </div>
 
           <div>
