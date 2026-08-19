@@ -9,33 +9,33 @@ const TIER_ORDER = ['platino', 'oro', 'plata', 'bronce', 'standard']
 const TIER_CONFIG: Record<string, { label: string; grid: string; card: string; logo: string }> = {
   platino: {
     label: 'Platinum',
-    grid: 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3',
-    card: 'p-8 min-h-[110px] ring-2 ring-amber-300/20 shadow-[0_0_40px_-10px_rgba(251,191,36,0.25)]',
-    logo: 'max-h-10 sm:max-h-12',
+    grid: 'grid-cols-2 lg:grid-cols-3',
+    card: 'p-6 min-h-[120px] ring-2 ring-amber-300/20 shadow-[0_0_40px_-10px_rgba(251,191,36,0.25)]',
+    logo: 'max-h-14 sm:max-h-16',
   },
   oro: {
     label: 'Oro',
-    grid: 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4',
-    card: 'p-6 min-h-[90px]',
-    logo: 'max-h-9 sm:max-h-10',
+    grid: 'grid-cols-2 lg:grid-cols-4',
+    card: 'p-5 min-h-[100px]',
+    logo: 'max-h-12 sm:max-h-14',
   },
   plata: {
     label: 'Plata',
-    grid: 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-5',
-    card: 'p-5 min-h-[80px]',
-    logo: 'max-h-8',
+    grid: 'grid-cols-3 lg:grid-cols-5',
+    card: 'p-4 min-h-[90px]',
+    logo: 'max-h-11',
   },
   bronce: {
     label: 'Bronce',
-    grid: 'grid-cols-3 sm:grid-cols-4 lg:grid-cols-6',
-    card: 'p-4 min-h-[70px]',
-    logo: 'max-h-7',
+    grid: 'grid-cols-3 lg:grid-cols-6',
+    card: 'p-4 min-h-[80px]',
+    logo: 'max-h-10',
   },
   standard: {
     label: 'Standard',
-    grid: 'grid-cols-3 sm:grid-cols-5 lg:grid-cols-8',
-    card: 'p-3 min-h-[60px]',
-    logo: 'max-h-6',
+    grid: 'grid-cols-4 lg:grid-cols-8',
+    card: 'p-3 min-h-[70px]',
+    logo: 'max-h-9',
   },
 }
 
@@ -66,15 +66,15 @@ export function NuestrosSociosSection() {
 
   return (
     <section id="socios" className="py-16 relative">
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="text-center mb-12">
+      <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-[minmax(0,340px)_1fr] gap-10 lg:gap-14 items-start">
+        <div className="lg:sticky lg:top-8 text-left">
           <span className="inline-block text-xs font-bold tracking-[0.2em] text-[var(--accent-warm)] uppercase mb-4 px-4 py-1.5 rounded-full border border-[var(--accent-warm)]/20 bg-[var(--accent-warm)]/5">
             Institucional
           </span>
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">
             NUESTROS <span className="text-gradient">SOCIOS</span>
           </h2>
-          <p className="text-[var(--text-secondary)] max-w-2xl mx-auto">
+          <p className="text-[var(--text-secondary)] leading-relaxed">
             Con estas empresas compartimos el sueño de un Saladillo de avanzada en un país mejor
           </p>
         </div>
@@ -86,15 +86,15 @@ export function NuestrosSociosSection() {
         ) : grouped.length > 0 ? (
           <div>
             {grouped.map(({ tier, config, list }) => (
-              <div key={tier} className="mb-10 last:mb-0">
-                <div className="flex items-center gap-3 mb-5">
+              <div key={tier} className="mb-8 last:mb-0">
+                <div className="flex items-center gap-3 mb-4">
                   <h3 className="text-xs font-bold tracking-[0.2em] uppercase text-[var(--text-muted)]">
                     {config.label}
                   </h3>
                   <div className="h-px flex-1 bg-gradient-to-r from-[var(--border-glow)] to-transparent" />
                 </div>
 
-                <div className={`grid ${config.grid} gap-3 sm:gap-4`}>
+                <div className={`grid ${config.grid} gap-3`}>
                   {list.map((s) => (
                     <button
                       key={s.id}
