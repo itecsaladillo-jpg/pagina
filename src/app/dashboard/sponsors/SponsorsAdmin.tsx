@@ -15,6 +15,14 @@ const CATEGORIAS = [
   { value: 'general', label: '⚡ General' },
 ]
 
+const TIER_BADGES: Record<string, { label: string; className: string }> = {
+  platino: { label: 'Platino', className: 'bg-slate-300/10 text-slate-200 border-slate-300/30' },
+  oro: { label: 'Oro', className: 'bg-amber-400/10 text-amber-300 border-amber-400/30' },
+  plata: { label: 'Plata', className: 'bg-gray-400/10 text-gray-300 border-gray-400/30' },
+  bronce: { label: 'Bronce', className: 'bg-orange-500/10 text-orange-300 border-orange-500/30' },
+  standard: { label: 'Standard', className: 'bg-blue-400/10 text-blue-300 border-blue-400/30' },
+}
+
 interface Props {
   initialSponsors: any[]
   initialAcciones: any[]
@@ -120,7 +128,14 @@ export function SponsorsAdmin({ initialSponsors, initialAcciones }: Props) {
               <div key={s.id} className="glass border border-white/5 rounded-2xl p-6 hover:border-white/10 transition-all">
                 <div className="flex justify-between items-start mb-4">
                   <div>
-                    <h3 className="text-lg font-bold text-white">{s.name}</h3>
+                    <div className="flex items-center gap-2">
+                      <h3 className="text-lg font-bold text-white">{s.name}</h3>
+                      {TIER_BADGES[s.tier] && (
+                        <span className={`text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full border ${TIER_BADGES[s.tier].className}`}>
+                          {TIER_BADGES[s.tier].label}
+                        </span>
+                      )}
+                    </div>
                     {s.actividad && <p className="text-[10px] text-[var(--text-muted)] uppercase tracking-widest mt-0.5">Rubro: {s.actividad}</p>}
                   </div>
                   <div className="flex gap-2">

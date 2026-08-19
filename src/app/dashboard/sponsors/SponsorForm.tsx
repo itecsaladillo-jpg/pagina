@@ -1,6 +1,6 @@
 ﻿'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { createSponsorAction, updateSponsorAction } from './actions'
 import { z } from 'zod'
 
@@ -58,6 +58,12 @@ export function SponsorForm({ sponsor, onClose }: Props) {
     telefono: sponsor?.telefono || sponsor?.contacto_telefono || '',
     email: sponsor?.email || sponsor?.contact_email || '',
   })
+
+  // Oculta el Vercel Toolbar mientras el modal está abierto (lo restaura al cerrar)
+  useEffect(() => {
+    document.documentElement.classList.add('sponsor-form-open')
+    return () => document.documentElement.classList.remove('sponsor-form-open')
+  }, [])
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -241,6 +247,9 @@ export function SponsorForm({ sponsor, onClose }: Props) {
           .sponsor-form-select option {
             background: #1a1a1a;
             color: #ffffff;
+          }
+          .sponsor-form-open vercel-toolbar {
+            display: none !important;
           }
         `}</style>
       </div>
