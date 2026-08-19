@@ -171,13 +171,13 @@ export async function createSponsorAction(formData: {
   name: string
   tier: string
   rubro?: string | null
-  resena?: string
+  resena?: string | null
   website_url?: string | null
   contacto_nombre?: string | null
   contacto_telefono?: string | null
   email?: string | null
-  logo_monocromo_url?: string
-  logo_color_url?: string
+  logo_monocromo_url?: string | null
+  logo_color_url?: string | null
   is_active?: boolean
   description?: string | null
   // Columnas legacy (migración 036) — para consistencia con la ficha del admin

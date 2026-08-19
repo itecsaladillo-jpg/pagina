@@ -194,12 +194,10 @@ export function SponsorsAdmin({ initialSponsors, initialAcciones }: Props) {
             />
           )}
           {showSponsorForm && !editingSponsor && (
-            <div className='fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4'>
-              <div className='glass border border-white/10 rounded-2xl p-8 max-w-xl w-full shadow-2xl max-h-[90vh] overflow-y-auto'>
-                <SponsorRegistrationForm />
-                <button onClick={() => setShowSponsorForm(false)} className='w-full mt-4 p-2 bg-gray-700 rounded'>Cerrar</button>
-              </div>
-            </div>
+            <SponsorRegistrationForm
+              onClose={() => setShowSponsorForm(false)}
+              onCreated={(s) => setSponsors(prev => [s, ...prev])}
+            />
           )}
         </div>
       )}

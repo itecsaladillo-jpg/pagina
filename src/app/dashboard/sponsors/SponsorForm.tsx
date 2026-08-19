@@ -11,6 +11,7 @@ const sponsorSchema = z.object({
   actividad: z.string().optional(),
   zona_influencia: z.string().optional(),
   website_url: z.union([z.string().url('URL inválida'), z.literal('')]).optional(),
+  resena: z.string().optional(),
   nombre_contacto: z.string().min(1, 'Nombre contacto requerido'),
   apellido_contacto: z.string().optional(),
   telefono: z.string().optional(),
@@ -24,6 +25,7 @@ const editSchema = z.object({
   actividad: z.string().optional(),
   zona_influencia: z.string().optional(),
   website_url: z.union([z.string().url('URL inválida'), z.literal('')]).optional(),
+  resena: z.string().optional(),
   nombre_contacto: z.string().optional(),
   apellido_contacto: z.string().optional(),
   telefono: z.string().optional(),
@@ -56,6 +58,7 @@ export function SponsorForm({ sponsor, onClose }: Props) {
     actividad: clean(sponsor?.actividad) || clean(sponsor?.rubro),
     zona_influencia: clean(sponsor?.zona_influencia),
     website_url: sponsor?.website_url || '',
+    resena: clean(sponsor?.resena),
     nombre_contacto: clean(sponsor?.nombre_contacto) || clean(sponsor?.contacto_nombre),
     apellido_contacto: clean(sponsor?.apellido_contacto),
     telefono: clean(sponsor?.telefono) || clean(sponsor?.contacto_telefono),
@@ -129,7 +132,7 @@ export function SponsorForm({ sponsor, onClose }: Props) {
         name: formData.nombre_empresa,
         tier: formData.tier,
         rubro: formData.actividad || null,
-        resena: sponsor?.resena ?? '',
+        resena: formData.resena || null,
         website_url: (formData.website_url || '').trim() || null,
         contacto_nombre: formData.nombre_contacto || null,
         contacto_telefono: formData.telefono || null,
@@ -263,6 +266,13 @@ export function SponsorForm({ sponsor, onClose }: Props) {
               value={formData.website_url}
               onChange={e => setFormData({ ...formData, website_url: e.target.value })} />
             {errors.website_url && <p className='text-red-400 text-xs mt-1'>{errors.website_url}</p>}
+          </div>
+
+          <div>
+            <label className='block text-[10px] uppercase tracking-widest text-white/60 mb-1'>Reseña</label>
+            <textarea rows={2} className={inputClass} placeholder='Breve reseña del sponsor'
+              value={formData.resena}
+              onChange={e => setFormData({ ...formData, resena: e.target.value })} />
           </div>
 
           <div className='grid grid-cols-1 sm:grid-cols-2 gap-3'>
