@@ -153,12 +153,12 @@ export function AboutSection() {
         <NuestrosSociosSection />
 
         {/* Sección de Miembros ITEC */}
-        <div className="mt-16">
-          <div className="text-right mb-12">
+        <div className="mt-16 grid grid-cols-1 lg:grid-cols-[minmax(0,340px)_1fr] gap-10 lg:gap-14 items-start">
+          <div className="text-left">
             <h3 className="text-4xl md:text-5xl lg:text-6xl font-black text-white mb-4 leading-[1.1] tracking-tighter">
               Nuestro <span className="text-gradient">Equipo</span>
             </h3>
-            <p className="text-[var(--text-secondary)] text-lg max-w-md ml-auto">
+            <p className="text-[var(--text-secondary)] text-2xl leading-snug max-w-[280px]">
               Conoce a los miembros que hacen posible el ITEC Augusto Cicaré. Personas apasionadas por la tecnología, la innovación y la educación.
             </p>
           </div>
@@ -172,7 +172,7 @@ export function AboutSection() {
               No hay miembros públicos disponibles en este momento.
             </div>
           ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
             {members.map((member, index) => (
               <MemberCard
                 key={member.id || `member-${index}`}
