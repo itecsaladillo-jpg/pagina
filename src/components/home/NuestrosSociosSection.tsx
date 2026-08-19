@@ -20,13 +20,13 @@ const COLS_CLASS: Record<number, string> = {
 }
 
 // preferred: columnas de referencia del nivel; max: tope de columnas
-// minH/logoH son los tamaños base con las columnas "preferred"
-const TIER_BASE: Record<string, { label: string; preferred: number; max: number; minH: number; logoH: number; glow: boolean }> = {
-  platino: { label: 'Platinum', preferred: 3, max: 5, minH: 110, logoH: 64, glow: true },
-  oro: { label: 'Oro', preferred: 4, max: 6, minH: 95, logoH: 56, glow: false },
-  plata: { label: 'Plata', preferred: 5, max: 7, minH: 85, logoH: 48, glow: false },
-  bronce: { label: 'Bronce', preferred: 6, max: 8, minH: 75, logoH: 42, glow: false },
-  standard: { label: 'Standard', preferred: 8, max: 10, minH: 65, logoH: 36, glow: false },
+// minH es la altura base de la ficha con las columnas "preferred"
+const TIER_BASE: Record<string, { label: string; preferred: number; max: number; minH: number; glow: boolean }> = {
+  platino: { label: 'Platinum', preferred: 3, max: 5, minH: 110, glow: true },
+  oro: { label: 'Oro', preferred: 4, max: 6, minH: 95, glow: false },
+  plata: { label: 'Plata', preferred: 5, max: 7, minH: 85, glow: false },
+  bronce: { label: 'Bronce', preferred: 6, max: 8, minH: 75, glow: false },
+  standard: { label: 'Standard', preferred: 8, max: 10, minH: 65, glow: false },
 }
 
 export function NuestrosSociosSection() {
@@ -60,8 +60,7 @@ export function NuestrosSociosSection() {
   const renderGroup = ({ tier, config, list }: (typeof grouped)[number]) => {
     const cols = Math.min(config.max, Math.max(2, Math.round(list.length * 0.9)))
     const scale = config.preferred / cols
-    const cardMinH = Math.round(config.minH * scale)
-    const logoH = Math.min(96, Math.round(config.logoH * scale))
+    const cardH = Math.round(config.minH * scale)
 
     return (
       <div key={tier} className="mb-8 last:mb-0">
@@ -77,15 +76,14 @@ export function NuestrosSociosSection() {
             <button
               key={s.id}
               onClick={() => setSelectedSponsor(s)}
-              style={{ minHeight: cardMinH }}
-              className={`glass rounded-2xl border border-[var(--border-subtle)] p-3 sm:p-4 flex items-center justify-center transition-all duration-300 hover:scale-105 hover:border-[var(--accent-warm)]/40 cursor-pointer ${config.glow ? 'ring-2 ring-amber-300/20 shadow-[0_0_40px_-10px_rgba(251,191,36,0.25)]' : ''}`}
+              style={{ height: cardH }}
+              className={`glass rounded-2xl border border-[var(--border-subtle)] p-3 sm:p-4 flex items-center justify-center overflow-hidden transition-all duration-300 hover:scale-105 hover:border-[var(--accent-warm)]/40 cursor-pointer ${config.glow ? 'ring-2 ring-amber-300/20 shadow-[0_0_40px_-10px_rgba(251,191,36,0.25)]' : ''}`}
             >
               {s.logo_color_url ? (
                 <img
                   src={s.logo_color_url}
                   alt={s.name}
-                  style={{ maxHeight: logoH }}
-                  className="max-w-full w-auto object-contain"
+                  className="w-full h-full object-contain"
                   loading="lazy"
                   decoding="async"
                   draggable={false}
