@@ -23,8 +23,8 @@ const COLS_CLASS: Record<number, string> = {
 // minH es la altura base de la ficha con las columnas "preferred"
 const TIER_BASE: Record<string, { label: string; preferred: number; max: number; minH: number; glow: boolean }> = {
   platino: { label: 'Platinum', preferred: 3, max: 5, minH: 110, glow: true },
-  oro: { label: 'Oro', preferred: 4, max: 6, minH: 95, glow: false },
-  plata: { label: 'Plata', preferred: 5, max: 7, minH: 85, glow: false },
+  oro: { label: 'Oro', preferred: 4, max: 6, minH: 114, glow: false },
+  plata: { label: 'Plata', preferred: 5, max: 7, minH: 94, glow: false },
   bronce: { label: 'Bronce', preferred: 6, max: 8, minH: 75, glow: false },
   standard: { label: 'Standard', preferred: 8, max: 10, minH: 65, glow: false },
 }
@@ -64,13 +64,6 @@ export function NuestrosSociosSection() {
 
     return (
       <div key={tier} className="mb-8 last:mb-0">
-        <div className="flex items-center gap-3 mb-4">
-          <h3 className="text-xs font-bold tracking-[0.2em] uppercase text-[var(--text-muted)]">
-            {config.label}
-          </h3>
-          <div className="h-px flex-1 bg-gradient-to-r from-[var(--border-glow)] to-transparent" />
-        </div>
-
         <div className={`grid ${COLS_CLASS[cols]} gap-3`}>
           {list.map((s) => (
             <button
