@@ -7,15 +7,8 @@ import dynamic from "next/dynamic";
 const QRCode = dynamic(() => import("react-qr-code").then(m => m.QRCode), { ssr: false });
 import { AlertCircle, Cloud, Vote, MessageSquare, Users, ThumbsUp, Sparkles, ChevronRight, Activity } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
-
-interface HerramientasActivas {
-  encuestas: boolean
-  preguntas: boolean
-  nube: boolean
-  semaforo: boolean
-}
-
-type EstadoSemaforo = 'verde' | 'amarillo' | 'rojo'
+import type { HerramientasActivas } from "@/types/database"
+import { calcularEstadoSemaforo, type EstadoSemaforo } from "@/lib/eventos/semaforo"
 
 type ModoPantalla = 'bienvenida' | 'nube' | 'encuestas' | 'preguntas'
 
@@ -85,7 +78,7 @@ export default function PantallaGigantePage({ params }: { params: Promise<{ id: 
   const [asistentesCount, setAsistentesCount] = useState(0)
 
   // Estados del Semáforo
-  const [semaforoEstado, setSemaforoEstado] = useState<EstadoSemaforo>('verde')
+  const [semaforoEstado, setSemaforoEstado] = useState<EstadoSemaforo>('VERDE')
   const [semaforoPct, setSemaforoPct] = useState(0)
   const [semaforoVotosNegativos, setSemaforoVotosNegativos] = useState(0)
   const [semaforoLastReset, setSemaforoLastReset] = useState<string | null>(null)
@@ -116,8 +109,8 @@ export default function PantallaGigantePage({ params }: { params: Promise<{ id: 
 
         const ev = {
           ...data,
-          herramientas_activas: (data as any).herramientas_activas ?? { encuestas: false, preguntas: false, nube: false, semaforo: false },
-          modo_pantalla_gigante: (data as any).modo_pantalla_gigante ?? 'bienvenida',
+          herramientas_activas: data.herramientas_activas ?? { encuestas: false, preguntas: false, nube: false, semaforo: false },
+          modo_pantalla_gigante: data.modo_pantalla_gigante ?? 'bienvenida',
         } as Evento
 
         setEvento(ev)
@@ -338,13 +331,9 @@ export default function PantallaGigantePage({ params }: { params: Promise<{ id: 
       const neg = votos || 0;
       setSemaforoVotosNegativos(neg);
 
-      const denominadorEfectivo = Math.max(total, neg, 1);
-      const pct = Math.round((neg / denominadorEfectivo) * 100);
-      setSemaforoPct(pct);
-
-      if (pct >= 50) setSemaforoEstado('rojo');
-      else if (pct >= 30) setSemaforoEstado('amarillo');
-      else setSemaforoEstado('verde');
+      const { porcentaje, estado } = calcularEstadoSemaforo(neg, total);
+      setSemaforoPct(porcentaje);
+      setSemaforoEstado(estado);
     };
 
     const cargarReset = async () => {
@@ -441,8 +430,8 @@ export default function PantallaGigantePage({ params }: { params: Promise<{ id: 
       if (data) {
         const refreshed = {
           ...data,
-          herramientas_activas: (data as any).herramientas_activas ?? evento.herramientas_activas,
-          modo_pantalla_gigante: (data as any).modo_pantalla_gigante ?? evento.modo_pantalla_gigante,
+          herramientas_activas: data.herramientas_activas ?? evento.herramientas_activas,
+          modo_pantalla_gigante: data.modo_pantalla_gigante ?? evento.modo_pantalla_gigante,
         }
         setEvento(prev => prev ? { ...prev, ...refreshed } : prev)
       }
@@ -586,12 +575,12 @@ export default function PantallaGigantePage({ params }: { params: Promise<{ id: 
           <div className="w-[1px] h-12 bg-white/10" />
 
           <div className="flex flex-col items-center gap-1.5">
-            {semaforoEstado === 'rojo' && <span className="w-10 h-10 rounded-full bg-rose-500 animate-pulse shadow-[0_0_30px_rgba(244,63,94,0.6)]" />}
-            {semaforoEstado === 'amarillo' && <span className="w-10 h-10 rounded-full bg-amber-400 shadow-[0_0_20px_rgba(251,191,36,0.5)]" />}
-            {semaforoEstado === 'verde' && <span className="w-10 h-10 rounded-full bg-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.5)]" />}
+            {semaforoEstado === 'ROJO' && <span className="w-10 h-10 rounded-full bg-rose-500 animate-pulse shadow-[0_0_30px_rgba(244,63,94,0.6)]" />}
+            {semaforoEstado === 'AMARILLO' && <span className="w-10 h-10 rounded-full bg-amber-400 shadow-[0_0_20px_rgba(251,191,36,0.5)]" />}
+            {semaforoEstado === 'VERDE' && <span className="w-10 h-10 rounded-full bg-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.5)]" />}
             <span className={`text-[9px] font-black uppercase tracking-[0.1em] ${
-              semaforoEstado === 'rojo' ? 'text-rose-400' :
-              semaforoEstado === 'amarillo' ? 'text-amber-400' :
+              semaforoEstado === 'ROJO' ? 'text-rose-400' :
+              semaforoEstado === 'AMARILLO' ? 'text-amber-400' :
               'text-emerald-400'
             }`}>
               {semaforoEstado}

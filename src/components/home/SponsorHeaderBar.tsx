@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 
 export interface SponsorLogo {
   url: string;
@@ -15,6 +15,9 @@ const DEFAULT_LOGOS: SponsorLogo[] = [
   { url: 'https://placehold.co/180x50/transparent/FFF?text=Sponsor+4', nombre: 'Sponsor 4' },
 ];
 
+// 2 copias son suficientes para el loop seamless de translateX(-50%)
+const MARQUEE_COPIES = 2;
+
 export function SponsorHeaderBar({ logos = [] }: { logos?: SponsorLogo[] }) {
   const [isMounted, setIsMounted] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -24,11 +27,7 @@ export function SponsorHeaderBar({ logos = [] }: { logos?: SponsorLogo[] }) {
 
     const handleScroll = () => {
       // Activa el fade out cuando el usuario desplaza más de 10px
-      if (window.scrollY > 10) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
+      setIsScrolled(window.scrollY > 10);
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
@@ -37,8 +36,16 @@ export function SponsorHeaderBar({ logos = [] }: { logos?: SponsorLogo[] }) {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const activeLogos = Array.isArray(logos) && logos.length > 0 ? logos : DEFAULT_LOGOS;
-  const duplicatedLogos = [...activeLogos, ...activeLogos, ...activeLogos, ...activeLogos];
+  const activeLogos = useMemo(
+    () => (Array.isArray(logos) && logos.length > 0 ? logos : DEFAULT_LOGOS),
+    [logos]
+  );
+
+  // Memoizado: evita recrear el array duplicado en cada re-render (scroll, hover)
+  const duplicatedLogos = useMemo(
+    () => Array.from({ length: MARQUEE_COPIES }, () => activeLogos).flat(),
+    [activeLogos]
+  );
 
   if (!isMounted) return null;
 
@@ -52,8 +59,8 @@ export function SponsorHeaderBar({ logos = [] }: { logos?: SponsorLogo[] }) {
       }`}
     >
       <div
-        className="animate-marquee-infinite flex items-center gap-10 w-max"
-        style={{ animationDuration: '140s' }} /* Velocidad reducida 40% (140s en vez de 84s) */
+        className="animate-marquee-infinite flex items-center gap-10 w-max will-change-transform"
+        style={{ animationDuration: '70s' }} /* 2 copias = mitad de distancia que con 4; 70s mantiene la velocidad visual previa (140s con 4 copias) */
       >
         {duplicatedLogos.map((logo, index) => (
           <div
@@ -64,6 +71,9 @@ export function SponsorHeaderBar({ logos = [] }: { logos?: SponsorLogo[] }) {
               src={logo.url}
               alt={logo.nombre || `Sponsor ${index + 1}`}
               className="h-7 sm:h-8 w-auto max-w-none object-contain opacity-80 hover:opacity-100 transition-opacity filter brightness-200"
+              loading="lazy"
+              decoding="async"
+              draggable={false}
             />
           </div>
         ))}

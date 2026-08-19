@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import { unstable_cache } from 'next/cache';
 import nextDynamic from 'next/dynamic'
 import { Navbar } from '@/components/landing/Navbar'
 import { HeroSection } from '@/components/landing/HeroSection'
@@ -17,16 +18,18 @@ const IdeasSection = nextDynamic(() => import('@/components/landing/IdeasSection
 const ImpactSection = nextDynamic(() => import('@/components/landing/ImpactSection').then(m => m.ImpactSection))
 const VideotecaSection = nextDynamic(() => import('@/components/landing/VideotecaSection').then(m => m.VideotecaSection))
 
-export default async function HomePage() {
-  let sponsorLogos: { url: string; nombre: string }[] = [];
+// Cachear la lectura del filesystem por 1 hora (3600s):
+// evita fs.readdirSync/fs.statSync en cada request (I/O síncrono en serverless).
+// El cache-buster ?v=mtimeMs es determinístico (sin Date.now() en SSR → sin errores de hidratación).
+const getSponsorLogos = unstable_cache(
+  async () => {
+    try {
+      const sponsorsDir = path.join(process.cwd(), 'public', 'sponsors', 'blanco');
+      if (!fs.existsSync(sponsorsDir)) return [];
 
-  try {
-    const sponsorsDir = path.join(process.cwd(), 'public', 'sponsors', 'blanco');
-    
-    if (fs.existsSync(sponsorsDir)) {
       const files = fs.readdirSync(sponsorsDir);
 
-      sponsorLogos = files
+      return files
         .filter((file) => !file.startsWith('.') && /\.(png|jpe?g|svg|webp)$/i.test(file))
         .map((file) => {
           const filePath = path.join(sponsorsDir, file);
@@ -37,10 +40,17 @@ export default async function HomePage() {
             nombre: file.replace(/\.[^/.]+$/, ''),
           };
         });
+    } catch (error) {
+      console.error('Error leyendo logos de sponsors:', error);
+      return [];
     }
-  } catch (error) {
-    console.error('Error leyendo la carpeta de sponsors:', error);
-  }
+  },
+  ['sponsor-logos-landing'],
+  { revalidate: 3600 }
+);
+
+export default async function HomePage() {
+  const sponsorLogos = await getSponsorLogos();
 
   return (
     <main className="relative min-h-screen bg-black text-white pb-16">

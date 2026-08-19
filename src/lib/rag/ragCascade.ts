@@ -29,6 +29,14 @@ const CHUNK_OVERLAP       = 120    // Solapamiento entre chunks
 const MAX_CONTEXT_CHARS   = 3200   // Máximo de chars inyectados al prompt
 const WEB_QUERY_SUFFIX    = 'itec saladillo Cicaré expo itec'
 
+// ── Cache nivel P3 (bucket training-docs) ──────────────────────
+// Los documentos del bucket cambian raramente: cachear el texto combinado
+// evita N descargas de storage en cada request del asistente.
+const P3_CACHE_TTL_MS = 5 * 60 * 1000 // 5 minutos
+
+let p3Cache: { texto: string; timestamp: number } | null = null
+let p3FetchPromise: Promise<string> | null = null
+
 // ============================================================
 // Scoring de relevancia — Overlap de tokens (estilo Jaccard)
 // Compatible con Edge Runtime (sin dependencias Node.js)
@@ -194,46 +202,70 @@ function buscarEnDocsLocales(query: string): { contexto: string; score: number }
  * Lista y descarga los documentos de texto del bucket "training-docs".
  * Solo descarga .txt, .md y .json — ignora PDFs y binarios.
  * Implementado con fetch nativo para compatibilidad con Edge Runtime.
+ *
+ * Con caché en memoria (TTL 5 min) + deduplicación de descargas concurrentes:
+ * el bucket solo se consulta una vez por ventana de tiempo, no por request.
  */
 async function obtenerTextoDesupabaseBucket(supabase: SupabaseClient): Promise<string> {
-  const { data: archivos, error } = await supabase.storage
-    .from('training-docs')
-    .list('', { limit: 30, sortBy: { column: 'updated_at', order: 'desc' } })
+  const ahora = Date.now()
 
-  if (error || !archivos || archivos.length === 0) {
-    if (error) console.warn('[RAG P2] Error al listar bucket training-docs:', error.message)
-    return ''
+  // 1. Cache válido → devolver sin I/O
+  if (p3Cache && ahora - p3Cache.timestamp < P3_CACHE_TTL_MS) {
+    return p3Cache.texto
   }
 
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? ''
-  
-  const fetchPromises = archivos
-    .filter(archivo => archivo.name.match(/\.(txt|md|json)$/i))
-    .map(async (archivo) => {
-      const publicUrl = `${supabaseUrl}/storage/v1/object/public/training-docs/${encodeURIComponent(archivo.name)}`
-      try {
-        const res = await fetch(publicUrl, { signal: AbortSignal.timeout(4000) })
-        if (!res.ok) return ''
+  // 2. Descarga en curso → reutilizar la misma promesa (evita stampede)
+  if (p3FetchPromise) {
+    return p3FetchPromise
+  }
 
-        const texto = await res.text()
+  p3FetchPromise = (async () => {
+    const { data: archivos, error } = await supabase.storage
+      .from('training-docs')
+      .list('', { limit: 30, sortBy: { column: 'updated_at', order: 'desc' } })
 
-        if (archivo.name.endsWith('.json')) {
-          try {
-            const parsed = JSON.parse(texto) as Record<string, unknown>
-            return typeof parsed.text === 'string' ? parsed.text : JSON.stringify(parsed)
-          } catch {
-            return texto
+    if (error || !archivos || archivos.length === 0) {
+      if (error) console.warn('[RAG P2] Error al listar bucket training-docs:', error.message)
+      return ''
+    }
+
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? ''
+
+    const fetchPromises = archivos
+      .filter(archivo => archivo.name.match(/\.(txt|md|json)$/i))
+      .map(async (archivo) => {
+        const publicUrl = `${supabaseUrl}/storage/v1/object/public/training-docs/${encodeURIComponent(archivo.name)}`
+        try {
+          const res = await fetch(publicUrl, { signal: AbortSignal.timeout(4000) })
+          if (!res.ok) return ''
+
+          const texto = await res.text()
+
+          if (archivo.name.endsWith('.json')) {
+            try {
+              const parsed = JSON.parse(texto) as Record<string, unknown>
+              return typeof parsed.text === 'string' ? parsed.text : JSON.stringify(parsed)
+            } catch {
+              return texto
+            }
           }
+          return texto
+        } catch (err) {
+          console.warn(`[RAG P2] No se pudo descargar "${archivo.name}":`, err)
+          return ''
         }
-        return texto
-      } catch (err) {
-        console.warn(`[RAG P2] No se pudo descargar "${archivo.name}":`, err)
-        return ''
-      }
-    })
+      })
 
-  const textosArray = await Promise.all(fetchPromises)
-  return textosArray.filter(t => t.length > 0).join('\n\n')
+    const textosArray = await Promise.all(fetchPromises)
+    const textoTotal = textosArray.filter(t => t.length > 0).join('\n\n')
+
+    p3Cache = { texto: textoTotal, timestamp: Date.now() }
+    return textoTotal
+  })().finally(() => {
+    p3FetchPromise = null
+  })
+
+  return p3FetchPromise
 }
 
 /**

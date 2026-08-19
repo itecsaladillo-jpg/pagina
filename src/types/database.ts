@@ -202,6 +202,7 @@ export type HerramientasActivas = {
   encuestas: boolean
   preguntas: boolean
   nube: boolean
+  semaforo: boolean
 }
 
 export type ModoPantallaGigante = 'bienvenida' | 'nube' | 'encuestas' | 'preguntas'

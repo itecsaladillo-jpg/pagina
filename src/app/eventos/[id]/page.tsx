@@ -25,16 +25,8 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { registrarVotoNegativo, verificarVotoDispositivo } from "@/app/dashboard/eventos-presenciales/semaforoActions";
-
-
-interface HerramientasActivas {
-  encuestas: boolean;
-  preguntas: boolean;
-  nube: boolean;
-  semaforo: boolean;
-}
-
-type EstadoSemaforo = 'verde' | 'amarillo' | 'rojo';
+import type { HerramientasActivas } from "@/types/database";
+import { calcularEstadoSemaforo, type EstadoSemaforo } from "@/lib/eventos/semaforo";
 
 interface Evento {
   id: string;
@@ -132,7 +124,7 @@ export default function EventoPage({ params }: { params: Promise<{ id: string }>
   const [nubeSuccess, setNubeSuccess] = useState("");
 
   // Estados del Semáforo (UI Flotante)
-  const [semaforoEstado, setSemaforoEstado] = useState<EstadoSemaforo>('verde');
+  const [semaforoEstado, setSemaforoEstado] = useState<EstadoSemaforo>('VERDE');
   const [semaforoPct, setSemaforoPct] = useState(0);
   const [semaforoVotosNegativos, setSemaforoVotosNegativos] = useState(0);
   const [semaforoLastReset, setSemaforoLastReset] = useState<string | null>(null);
@@ -194,8 +186,8 @@ export default function EventoPage({ params }: { params: Promise<{ id: string }>
 
         const currentEvent = {
           ...eventData,
-          herramientas_activas: (eventData as any).herramientas_activas ?? { encuestas: false, preguntas: false, nube: false },
-          modo_pantalla_gigante: (eventData as any).modo_pantalla_gigante ?? 'bienvenida',
+          herramientas_activas: eventData.herramientas_activas ?? { encuestas: false, preguntas: false, nube: false, semaforo: false },
+          modo_pantalla_gigante: eventData.modo_pantalla_gigante ?? 'bienvenida',
         } as Evento;
         setEvento(currentEvent);
         lastToolRef.current = currentEvent.herramienta_activa;
@@ -625,13 +617,9 @@ export default function EventoPage({ params }: { params: Promise<{ id: string }>
       const neg = votos || 0;
       setSemaforoVotosNegativos(neg);
 
-      const denominadorEfectivo = Math.max(total, neg, 1);
-      const pct = Math.round((neg / denominadorEfectivo) * 100);
-      setSemaforoPct(pct);
-
-      if (pct >= 50) setSemaforoEstado('rojo');
-      else if (pct >= 30) setSemaforoEstado('amarillo');
-      else setSemaforoEstado('verde');
+      const { porcentaje, estado } = calcularEstadoSemaforo(neg, total);
+      setSemaforoPct(porcentaje);
+      setSemaforoEstado(estado);
     };
 
     const cargarReset = async () => {

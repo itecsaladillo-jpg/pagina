@@ -3,13 +3,9 @@
 import { createClient } from '@/lib/supabase/server'
 import { getCurrentMember } from '@/services/auth'
 import { revalidatePath } from 'next/cache'
+import type { HerramientasActivas } from '@/types/database'
 
-export type HerramientasActivas = {
-  encuestas: boolean
-  preguntas: boolean
-  nube: boolean
-  semaforo: boolean
-}
+export type { HerramientasActivas }
 
 export type ModoPantalla = 'bienvenida' | 'nube' | 'encuestas' | 'preguntas'
 

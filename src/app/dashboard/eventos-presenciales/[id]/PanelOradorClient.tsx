@@ -28,15 +28,8 @@ import {
 } from "lucide-react";
 import { resetearSemaforo } from "../semaforoActions";
 import { actualizarConceptoNube } from "../herramientasActions";
-
-interface HerramientasActivas {
-  encuestas: boolean;
-  preguntas: boolean;
-  nube: boolean;
-  semaforo: boolean;
-}
-
-type EstadoSemaforo = 'verde' | 'amarillo' | 'rojo';
+import type { HerramientasActivas } from "@/types/database";
+import { calcularEstadoSemaforo, type EstadoSemaforo } from "@/lib/eventos/semaforo";
 
 interface SemaforoState {
   totalAcreditados: number;
@@ -94,8 +87,8 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
   // Estados principales
   const [evento, setEvento] = useState<Evento>(() => ({
     ...initialEvento,
-    herramientas_activas: (initialEvento as any).herramientas_activas ?? { encuestas: false, preguntas: false, nube: false, semaforo: false },
-    modo_pantalla_gigante: (initialEvento as any).modo_pantalla_gigante ?? 'bienvenida',
+    herramientas_activas: initialEvento.herramientas_activas ?? { encuestas: false, preguntas: false, nube: false, semaforo: false },
+    modo_pantalla_gigante: initialEvento.modo_pantalla_gigante ?? 'bienvenida',
   }));
   const [panelTab, setPanelTab] = useState<"herramientas" | "moderacion" | "nube" | "semaforo">("herramientas");
 
@@ -104,7 +97,7 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
     totalAcreditados: 0,
     votosNegativos: 0,
     porcentajeNegativo: 0,
-    estado: 'verde',
+    estado: 'VERDE',
   });
   const [semaforoLastReset, setSemaforoLastReset] = useState<string | null>(null);
   const [semaforoResetting, setSemaforoResetting] = useState(false);
@@ -379,13 +372,12 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
         () => {
           setSemaforoState(prev => {
             const nuevosVotos = prev.votosNegativos + 1;
-            const denominadorEfectivo = Math.max(prev.totalAcreditados, nuevosVotos, 1);
-            const pct = Math.round((nuevosVotos / denominadorEfectivo) * 100);
+            const { porcentaje, estado } = calcularEstadoSemaforo(nuevosVotos, prev.totalAcreditados);
             return {
               ...prev,
               votosNegativos: nuevosVotos,
-              porcentajeNegativo: pct,
-              estado: calcularEstadoLocal(pct),
+              porcentajeNegativo: porcentaje,
+              estado,
             };
           });
         }
@@ -542,12 +534,6 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
 
   // --- HELPERS DEL SEMÁFORO ---
 
-  const calcularEstadoLocal = (pct: number): EstadoSemaforo => {
-    if (pct >= 50) return 'rojo';
-    if (pct >= 30) return 'amarillo';
-    return 'verde';
-  };
-
   const recalcularSemaforo = async (resetAt: string) => {
     const { count: totalDirecto } = await supabase
       .from('eventos_asistentes')
@@ -564,11 +550,9 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
       .gte('created_at', resetAt);
 
     const votosNegativos = votos ?? 0;
-    const denominadorEfectivo = Math.max(total, votosNegativos, 1);
-    const porcentajeNegativo = Math.round((votosNegativos / denominadorEfectivo) * 100);
-    const estado = calcularEstadoLocal(porcentajeNegativo);
+    const { porcentaje, estado } = calcularEstadoSemaforo(votosNegativos, total);
 
-    setSemaforoState({ totalAcreditados: total, votosNegativos, porcentajeNegativo, estado });
+    setSemaforoState({ totalAcreditados: total, votosNegativos, porcentajeNegativo: porcentaje, estado });
   };
 
   const handleResetearSemaforo = async () => {
@@ -1524,9 +1508,9 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
           const isSemaforoOn = evento.herramientas_activas.semaforo;
 
           const estadoConfig = {
-            verde:    { label: 'VERDE',    dot: 'bg-emerald-500',  ring: 'ring-emerald-500/30',  text: 'text-emerald-400',  border: 'border-emerald-500/20',  bg: 'bg-emerald-500/10',   glow: 'shadow-emerald-500/20' },
-            amarillo: { label: 'AMARILLO', dot: 'bg-amber-400',    ring: 'ring-amber-400/30',    text: 'text-amber-400',    border: 'border-amber-500/20',    bg: 'bg-amber-500/10',     glow: 'shadow-amber-500/20'   },
-            rojo:     { label: 'ROJO',     dot: 'bg-rose-500',     ring: 'ring-rose-500/30',     text: 'text-rose-400',     border: 'border-rose-500/20',     bg: 'bg-rose-500/10',      glow: 'shadow-rose-500/20'    },
+            VERDE:    { label: 'VERDE',    dot: 'bg-emerald-500',  ring: 'ring-emerald-500/30',  text: 'text-emerald-400',  border: 'border-emerald-500/20',  bg: 'bg-emerald-500/10',   glow: 'shadow-emerald-500/20' },
+            AMARILLO: { label: 'AMARILLO', dot: 'bg-amber-400',    ring: 'ring-amber-400/30',    text: 'text-amber-400',    border: 'border-amber-500/20',    bg: 'bg-amber-500/10',     glow: 'shadow-amber-500/20'   },
+            ROJO:     { label: 'ROJO',     dot: 'bg-rose-500',     ring: 'ring-rose-500/30',     text: 'text-rose-400',     border: 'border-rose-500/20',     bg: 'bg-rose-500/10',      glow: 'shadow-rose-500/20'    },
           };
           const ec = estadoConfig[estado];
 
@@ -1574,7 +1558,7 @@ export default function PanelOradorClient({ initialEvento }: { initialEvento: Ev
               {/* Estado principal — visión en 3 columnas */}
               {isSemaforoOn && (
                 <div className="grid grid-cols-3 gap-3">
-                  {(['verde', 'amarillo', 'rojo'] as const).map((e) => {
+                  {(['VERDE', 'AMARILLO', 'ROJO'] as const).map((e) => {
                     const c = estadoConfig[e];
                     const isActive = estado === e;
                     return (

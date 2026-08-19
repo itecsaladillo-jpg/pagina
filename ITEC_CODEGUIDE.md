@@ -1,7 +1,7 @@
 # ITEC Saladillo — Guía Técnica Integral para IA
 
 ## Descripción General
-Plataforma web full-stack de **ITEC Saladillo** (Asociación Civil de Ciencia y Tecnología "Augusto Cicaré", Saladillo, Buenos Aires, Argentina). Funciona como hub comunitario que conecta miembros, sponsors, prensa y público general mediante contenido educativo, gestión de eventos presenciales, interacción en vivo con audiencias, herramientas de comunicación impulsadas por IA y un Mapa Productivo de empresas locales y talento técnico.
+Plataforma web full-stack de **ITEC Saladillo** (Asociación Civil de Ciencia y Tecnología "Augusto Cicaré", Saladillo, Buenos Aires, Argentina). Funciona como hub comunitario que conecta miembros, sponsors, prensa y público general mediante contenido educativo, gestión de eventos presenciales, interacción en vivo con audiencias, herramientas de comunicación impulsadas por IA y un Mapa Productivo de empresas locales y talento técnico. La landing incluye streaming en vivo de YouTube y una barra inferior de sponsors con marquesina infinita.
 
 ---
 
@@ -10,7 +10,7 @@ Plataforma web full-stack de **ITEC Saladillo** (Asociación Civil de Ciencia y 
 - **React:** 19.2.4
 - **Lenguaje:** TypeScript (strict)
 - **Estilos:** Tailwind CSS v4 + CSS custom properties (tema oscuro)
-- **Base de datos:** Supabase PostgreSQL (63 migraciones, pgvector para RAG)
+- **Base de datos:** Supabase PostgreSQL (65 migraciones, pgvector para RAG)
 - **Auth:** Supabase Auth + Google OAuth
 - **Despliegue:** Vercel (auto-deploy desde `main`)
 - **Path alias:** `@/` → `./src/`
@@ -51,11 +51,12 @@ D:\ITEC\
 ├── .github/                    # GitHub workflows
 ├── docs/                       # Documentación interna
 ├── public/                     # Assets estáticos (imágenes, logos)
-│   └── cicare/                 # Colección de fotos de Augusto Cicaré
+│   ├── cicare/                 # Colección de fotos de Augusto Cicaré
+│   └── sponsors/blanco/        # Logos de sponsors monocromo (marquesina landing, carga local vía fs)
 ├── scripts/                    # Scripts utilitarios (extracción PDF, generación docs)
 ├── src/
 │   ├── app/                    # App Router (rutas públicas + dashboard + API)
-│   │   ├── page.tsx            # Landing page
+│   │   ├── page.tsx            # Landing page (force-dynamic, lee logos sponsors vía fs, wrapper -translate-y-30px)
 │   │   ├── layout.tsx          # Root layout (LanguageProvider + ChatWidgetWrapper lazy-loaded)
 │   │   ├── globals.css         # Estilos globales y sistema de diseño
 │   │   ├── acceso-pendiente/   # Página de acceso pendiente
@@ -127,6 +128,7 @@ D:\ITEC\
 │   │       ├── press-news/     # Feed gacetillas (GET)
 │   │       ├── sponsors-news/  # Feed sponsors (GET)
 │   │       ├── eventos/registro/ # Registro a eventos presenciales
+│   │       ├── streaming/status/ # Estado streaming en vivo (site_settings, cache 30s)
 │   │       ├── ideas/          # Envío de ideas (formulario público)
 │   │       └── news/           # Procesamiento de noticias
 │   ├── auth/                   # Auth routes
@@ -142,8 +144,11 @@ D:\ITEC\
 │   │   │   ├── ComisionesSection.tsx  # Grid de comisiones activas
 │   │   │   ├── IdeasSection.tsx # CTA del buzón de ideas
 │   │   │   ├── VideotecaSection.tsx   # Videoteca destacada
+│   │   │   ├── StreamingPlayer.tsx # Reproductor YouTube en vivo (Hero, convierte URL a embed)
 │   │   │   ├── Footer.tsx       # Footer del sitio
-│   │   │   └── FloatingLanguageSelector.tsx # Selector flotante ES/EN/PT
+│   │   │   └── FloatingLanguageSelector.tsx # Selector flotante ES/EN/PT (bottom 59px, fade out al scroll)
+│   │   ├── home/               # Componentes de la landing (server-driven)
+│   │   │   └── SponsorHeaderBar.tsx # Marquesina infinita de sponsors (fixed bottom, fade out al scroll)
 │   │   ├── comunicacion/        # Comunicación multicanal
 │   │   │   ├── NewsWallMulticanal.tsx       # Muro con tabs: Público/Miembros/Sponsors/Prensa
 │   │   │   ├── NewsFlashMulticanalEditor.tsx # Editor multicanal con IA
@@ -185,6 +190,8 @@ D:\ITEC\
 │   ├── lib/
 │   │   ├── supabase/           # Clientes Supabase (server, browser, admin)
 │   │   ├── rag/                # RAG cascade (P1-P4), conversaciones guardadas
+│   │   ├── eventos/            # Lógica compartida de eventos (semáforo de comprensión — DRY)
+│   │   │   └── semaforo.ts     # calcularEstadoSemaforo() + tipos EstadoSemaforo/SemaforoResultado
 │   │   ├── drive.ts            # Configuración de carpetas Drive por comisión
 │   │   ├── email.ts            # Servicio de emails con Resend
 │   │   ├── email/              # Templates HTML de emails
@@ -200,6 +207,7 @@ D:\ITEC\
 ├── supabase/
 │   ├── .temp/                                  # Configuración de agentes IA
 │   └── migrations/                             # Migraciones de base de datos
+│       ├── 064_streaming_config.sql            # Keys streaming_active / streaming_youtube_url en site_settings
 │       ├── 065_update_sponsors_table.sql       # Schema sponsors actualizado
 │       └── fix_storage_policies.sql            # Políticas RLS Storage
 ├── AGENTS.md                   # Instrucciones para agentes IA (Next.js)
@@ -303,7 +311,6 @@ D:\ITEC\
 - **localStorage como identidad:** Aceptado como trade-off para UX sin login. No se almacenan datos sensibles.
 - **Semáforo sin dedup server-side:** Por diseño v3 (anonimato total). Un usuario puede enviar múltiples votos cada 5s. Mitigado por el contexto del evento (presencial, corto alcance).
 - **ChatWidget en rutas de eventos:** Oculto condicionalmente via `ChatWidgetWrapper` para no interferir con herramientas de eventos en vivo.
-- **`HerramientasActivas` type incompleto:** `database.ts` no incluye `semaforo: boolean`. Los componentes usan `(evento as any).herramientas_activas` como workaround.
 
 ### Recomendaciones para Nuevos Desarrollos
 1. **Nunca** exponer API keys o secrets en el cliente o en `localStorage`.
@@ -515,7 +522,7 @@ Sistema de recuperación de **5 niveles** con scoring por solapamiento de tokens
 |-------|--------|-----------|--------|
 | **P1** | pgvector `documents` | >= 0.20 | Gemini embedding + cosine similarity via `match_documents` RPC |
 | **P2** | Documentos locales (`DOCS_CONTEXT`) | >= 0.40 | Token overlap scoring (Jaccard-style) |
-| **P3** | Supabase Storage `training-docs` | >= 0.35 | Token overlap on downloaded .txt/.md/.json |
+| **P3** | Supabase Storage `training-docs` | >= 0.35 | Token overlap on downloaded .txt/.md/.json (**caché en memoria 5 min + dedup de descargas concurrentes** — el bucket se consulta 1 vez por ventana, no por request) |
 | **P4** | Conversaciones guardadas | any | Semantic search via `buscar_conversaciones_similares` RPC |
 | **P5** | DuckDuckGo web search | any | Instant Answer API (sin API key) |
 | **Soft fallback** | Mejor resultado | any | Retorna el mejor aunque esté bajo thresholds |
@@ -565,6 +572,12 @@ Sistema de recuperación de **5 niveles** con scoring por solapamiento de tokens
 ### Landing Page (`/`)
 Secciones: Hero (logo + fotos Cicaré + frase aleatoria de 3 opciones que cambia en cada carga), Navbar con navegación completa, Métricas de Impacto (contadores animados), Videoteca (videos de YouTube con resúmenes IA), Sección "Acerca de", Comisiones (grid visual con colores), Buzón de Ideas (formulario), Footer completo.
 
+Características recientes de la landing:
+- **Streaming en vivo en Hero** — Si `streaming_active=true` y `streaming_youtube_url` están configurados en `site_settings`, el Hero muestra el reproductor YouTube en vivo (`StreamingPlayer.tsx`) en lugar de las palabras spotlight. Estado consultado via `/api/streaming/status` (público, cache 30s). El botón "Aula Virtual" también se enciende en rojo pulsante cuando hay una clase con `en_vivo=true` en `clases_virtuales` (Realtime).
+- **Barra de sponsors (marquesina)** — `SponsorHeaderBar.tsx`: barra `fixed` al borde inferior con logos monocromo de sponsors en loop infinito. Los logos se leen del filesystem (`public/sponsors/blanco/`) en el server component de `page.tsx` envuelto en `unstable_cache` (Next.js, `revalidate: 3600` — 1 hora) con timestamp de mtime como cache-buster (`?v=...`). Fade out al hacer scroll (> 10px), velocidad de animación 70s, pausa al hacer hover.
+- **Posicionamiento de elementos flotantes** — El contenido principal está desplazado `-translate-y-[30px]` para compensar la barra inferior. El widget del chat y el selector de idioma se anclan al viewport (`bottom: 59px`, selector en `right-6`), ambos con fade out al scroll.
+- **Hydration-safe** — `page.tsx` usa `force-dynamic` + `revalidate = 0`; `SponsorHeaderBar` usa `suppressHydrationWarning` + `isMounted` para evitar el error de hidratación #418 (timestamps determinísticos del server, sin `Date.now()` en SSR).
+
 ### Muro de Noticias (`/muro`)
 Muro público que muestra `notas_publico` publicadas. Incluye sistema de comentarios via `/api/news-comments`. Visualización con medios adjuntos (imágenes, videos).
 
@@ -610,7 +623,8 @@ Sistema completo de interacción en vivo:
     - VERDE: < 30% de alertas
     - AMARILLO: 30–49% de alertas
     - ROJO: >= 50% de alertas
-  - **Función `calcularEstado()`** duplicada idénticamente en 4 archivos: `semaforoActions.ts`, `PanelOradorClient.tsx`, `eventos/[id]/page.tsx`, `pantalla/page.tsx`.
+  - **Cálculo centralizado:** `calcularEstadoSemaforo()` en `src/lib/eventos/semaforo.ts` (DRY) — usado por los 4 consumidores (server action + 3 clientes). Los estados se manejan en mayúsculas (`'VERDE' | 'AMARILLO' | 'ROJO'`).
+  - **Función `calcularEstadoSemaforo()` centralizada en `src/lib/eventos/semaforo.ts`** (DRY, ago 2026): Fuente única de verdad con tipos (`EstadoSemaforo` = `'VERDE' | 'AMARILLO' | 'ROJO'`, `SemaforoResultado`), umbrales (VERDE < 30%, AMARILLO 30-49%, ROJO >= 50%) y cálculo con denominador seguro (`Math.max(total, votos, 1)` — previene división por cero y maneja más votos que acreditados). Retorna `{ estado, porcentaje, votosNegativos, totalAcreditados }`. Lo consumen: `semaforoActions.ts` (server), `PanelOradorClient.tsx`, `eventos/[id]/page.tsx` y `pantalla/page.tsx` (cliente). Módulo puro, compatible con Edge Runtime.
   - **Reset (`resetearSemaforo()`):** Requiere rol admin/coordinador. Actualiza `semaforo_last_reset_at` a `now()` en tabla `eventos`. NO borra votos — el COUNT filtra por `created_at >= resetAt`.
   - **3 suscripciones Realtime por cliente:**
     1. `evento_semaforo_votos` INSERT → incrementa contador optimista (consola) o recalcula desde DB (móvil/pantalla)
@@ -618,7 +632,7 @@ Sistema completo de interacción en vivo:
     3. `eventos_asistentes` INSERT/DELETE → actualiza denominator (solo consola y pantalla, NO móvil)
   - **Arquitectura:** 3 clientes independientes (móvil, consola orador, pantalla gigante) que suscriben los mismos canales Realtime y calculan estado localmente. El orador puede reiniciar desde `PanelOradorClient.tsx`.
   - **RLS:** SELECT e INSERT públicos (sin auth). Sin políticas UPDATE/DELETE (votos inmutables).
-  - **Nota de tipo:** `HerramientasActivas` en `database.ts` NO incluye `semaforo: boolean` — los componentes trabajan around this con `(evento as any).herramientas_activas.semaforo`.
+  - **Nota de tipo:** `HerramientasActivas` en `database.ts` incluye `semaforo: boolean` (junto a `encuestas`, `preguntas`, `nube`). `herramientasActions.ts` re-exporta el tipo canónico de `database.ts`; los componentes de eventos importan de `@/types/database` (sin interfaces locales duplicadas ni casts `as any`).
 - **Big Screen Display** (`/pantalla`) — Pantalla completa para proyector con múltiples modos:
   - **Modo Bienvenida** — Código QR + conteo de asistentes
   - **Modo Encuestas** — Barras animadas con resultados en vivo
@@ -636,7 +650,7 @@ Widget flotante visible en todas las páginas públicas EXCEPTO en herramientas 
 - `/dashboard/eventos-presenciales/*` (Consola ITEC)
 - `/dashboard/eventos/*` (administración de eventos)
 
-El wrapper usa el endpoint `/api/asistente` que integra **RAG cascade completo** (5 niveles) + contexto dinámico de DB (staff, noticias, comisiones, artículos). Interfaz tipo chat con historial, ID de sesión persistente, y avatar del asistente desde la DB.
+El wrapper usa el endpoint `/api/asistente` que integra **RAG cascade completo** (5 niveles) + contexto dinámico de DB (staff, noticias, comisiones, artículos). Interfaz tipo chat con historial, ID de sesión persistente, y avatar del asistente desde la DB. Posicionado a `bottom: 59px` (alineado con el selector de idioma), con fade out al hacer scroll.
 
 ### Soporte Multi-idioma
 Sistema i18n basado en contexto React (`LanguageContext`) con diccionario en `src/locales/dictionary.ts`. Idiomas: Español, English, Português.
@@ -670,7 +684,7 @@ Herramienta para pegar transcripciones de reuniones y generar automáticamente: 
 Gestión de documentos de entrenamiento para el asistente IA. Subida de PDFs al bucket `training-docs` de Supabase Storage. Sincronización de contexto con `npm run sync-docs`.
 
 ### Streaming (`/dashboard/streaming`)
-Gestión de transmisiones en vivo. Control de estado de aulas virtuales.
+Centro de Transmisión & Streaming (admin/coordinador). Controla el estado del streaming en vivo: activar/desactivar (`setStreamingActive`) y configurar la URL de YouTube (`updateStreamingUrl`), persistidas en `site_settings` (keys `streaming_active`, `streaming_youtube_url`). Incluye guía de configuración para software de streaming (RTMP `rtmp://streaming.itec.edu.ar/live`) y fuentes de navegador. El estado se consume públicamente desde el Hero de la landing via `/api/streaming/status`.
 
 ### Videoteca (`/dashboard/videoteca`)
 CRUD de videos de YouTube. Cada entrada incluye: título, descripción, URL, miniatura, resumen generado por IA.
@@ -749,6 +763,7 @@ Formulario para crear nuevas acciones de impacto (capacitaciones, eventos social
 | `/api/press-news` | GET | Feed de gacetillas para prensa | → `notas_medios[]` |
 | `/api/sponsors-news` | GET | Feed de notas para sponsors | → `notas_sponsors[]` |
 | `/api/eventos/registro` | POST | Registro a evento + email bienvenida | `{ evento_id, nombre, email, telefono?, organizacion? }` |
+| `/api/streaming/status` | GET | Estado del streaming en vivo (público, sin auth) | → `{ isActive, youtubeUrl }` desde `site_settings` (keys `streaming_active`, `streaming_youtube_url`). Cache: 30s |
 
 ---
 
@@ -764,6 +779,7 @@ Formulario para crear nuevas acciones de impacto (capacitaciones, eventos social
   - Semáforo de comprensión (`evento_semaforo_votos` INSERT, `eventos` UPDATE para reset, `eventos_asistentes` INSERT/DELETE para conteo)
   - Concepto de nube dinámico (cambios en tabla `eventos`)
   - Conteo de asistentes acreditados (INSERT/DELETE en `eventos_asistentes`)
+  - Badge "Aula en vivo" del Hero (cambios en `clases_virtuales`)
 - **Supabase Broadcast:** Chat en tiempo real en aula virtual (`/clases/[id]`)
 
 ### Google Drive API
@@ -962,3 +978,8 @@ Server Action     →  getCurrentMember()  →  validate Zod  →  mutate DB  �
 - **pgvector RAG (migraciones 062-063):** Tabla `documents` con `vector(768)` para búsqueda semántica. RPC `match_documents` para cosine similarity. Ingesta vía `npm run ingest-vector` (PDFs → chunking 900 chars → Gemini embeddings → Supabase).
 - **Constantes de IA (sept 2026):** `FALLBACK_PROMPT` define el system prompt por defecto del asistente. `ANTI_HALLUCINATION_RULES_FLEXIBLE` controla el comportamiento RAG cuando no hay contexto recuperado.
 - **Conversaciones Guardadas (sept 2026):** Auto-guardado cada 10 mensajes después del umbral inicial. Detección de comandos explícitos en español. Recuperación semántica P4 con threshold 0.35.
+- **SponsorHeaderBar (ago 2026):** Marquesina fija de sponsors en la landing. Logos monocromo en `public/sponsors/blanco/` (carga local vía fs en el server component — sin fetch a DB ni storage). Animación `marquee-left` en `globals.css` con duración inline (70s), pausa en hover, fade out al scroll > 10px. Logos de fallback (placehold.co) si la carpeta está vacía. `page.tsx` usa `force-dynamic` + `revalidate = 0` + `suppressHydrationWarning` para evitar el error de hidratación #418 (los `?v=mtimeMs` son determinísticos, no usan `Date.now()`).
+- **Optimización sponsors + marquesina (ago 2026):** `page.tsx` cachea la lectura del filesystem con `unstable_cache` de `next/cache` (`getSponsorLogos`, key `['sponsor-logos-landing']`, `revalidate: 3600`) — evita 27+ `readdirSync`/`statSync` por request y reduce el TTFB en serverless. `SponsorHeaderBar` reduce la duplicación del loop de 4x a 2x copias (`MARQUEE_COPIES = 2`, mínimo necesario para el loop seamless de `translateX(-50%)`; la duración se ajustó a 70s para preservar la velocidad visual) y memoiza el array duplicado con `useMemo` (no se recrea en cada re-render por scroll). Imágenes con `loading="lazy"`, `decoding="async"`, `draggable={false}` y `will-change-transform` en el contenedor animado.
+- **Streaming en vivo (ago 2026):** Migración `064_streaming_config.sql` + endpoint `/api/streaming/status` (público, cache 30s, `force-dynamic`). Keys de `site_settings`: `streaming_active` (`'true'`/`'false'`) y `streaming_youtube_url`. `StreamingPlayer.tsx` convierte URLs de YouTube (watch, youtu.be, embed, live) a formato embed con autoplay+mute. Se muestra en el Hero en reemplazo de las palabras spotlight.
+- **Elementos flotantes (ago 2026):** Chat widget (`ChatWidget.css`) y selector de idioma anclados a `bottom: 59px` (misma altura, lado a lado en desktop), ambos con fade out al scroll. El contenido de la landing usa `-translate-y-[30px]` (wrapper) y `pb-16` en `<main>` para no solaparse con la barra de sponsors.
+- **Estilos globales (ago 2026):** En `globals.css`, keyframes `marquee-left` + clase `.animate-marquee-infinite` para la marquesina de sponsors (63s default, sobreescrito inline según cantidad de copias). La clase `itec-lang-btn` estiliza el FAB del selector de idioma.
