@@ -9,6 +9,7 @@ const sponsorSchema = z.object({
   tier: z.enum(['platino', 'oro', 'plata', 'bronce', 'standard']),
   actividad: z.string().optional(),
   zona_influencia: z.string().optional(),
+  website_url: z.union([z.string().url('URL inválida'), z.literal('')]).optional(),
   nombre_contacto: z.string().min(1, 'Nombre contacto requerido'),
   apellido_contacto: z.string().optional(),
   telefono: z.string().optional(),
@@ -21,6 +22,7 @@ const editSchema = z.object({
   tier: z.enum(['platino', 'oro', 'plata', 'bronce', 'standard']),
   actividad: z.string().optional(),
   zona_influencia: z.string().optional(),
+  website_url: z.union([z.string().url('URL inválida'), z.literal('')]).optional(),
   nombre_contacto: z.string().optional(),
   apellido_contacto: z.string().optional(),
   telefono: z.string().optional(),
@@ -50,6 +52,7 @@ export function SponsorForm({ sponsor, onClose }: Props) {
     tier: sponsor?.tier || 'standard',
     actividad: sponsor?.actividad || sponsor?.rubro || '',
     zona_influencia: sponsor?.zona_influencia || '',
+    website_url: sponsor?.website_url || '',
     nombre_contacto: sponsor?.nombre_contacto || sponsor?.contacto_nombre || '',
     apellido_contacto: sponsor?.apellido_contacto || '',
     telefono: sponsor?.telefono || sponsor?.contacto_telefono || '',
@@ -78,7 +81,7 @@ export function SponsorForm({ sponsor, onClose }: Props) {
         tier: formData.tier,
         rubro: formData.actividad || '-',
         resena: sponsor?.resena ?? '',
-        website_url: sponsor?.website_url ?? null,
+        website_url: (formData.website_url || '').trim() || null,
         contacto_nombre: formData.nombre_contacto,
         contacto_telefono: formData.telefono,
         // Email vacío → null: la columna email es UNIQUE y NULL no colisiona con otros vacíos
@@ -168,6 +171,15 @@ export function SponsorForm({ sponsor, onClose }: Props) {
               placeholder='Ej: regional, nacional, sector salud'
               value={formData.zona_influencia}
               onChange={e => setFormData({ ...formData, zona_influencia: e.target.value })} />
+          </div>
+
+          <div>
+            <label className='block text-[10px] uppercase tracking-widest text-white/60 mb-2'>Página Web</label>
+            <input type='url' className={`${inputClass} ${errors.website_url ? 'border-red-500' : ''}`}
+              placeholder='https://www.ejemplo.com'
+              value={formData.website_url}
+              onChange={e => setFormData({ ...formData, website_url: e.target.value })} />
+            {errors.website_url && <p className='text-red-400 text-xs mt-1'>{errors.website_url}</p>}
           </div>
 
           <div className='grid grid-cols-2 gap-4'>
