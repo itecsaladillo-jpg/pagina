@@ -110,6 +110,16 @@ export function AboutSection() {
       <div className="absolute right-0 top-1/2 -translate-y-1/2 w-96 h-96 bg-violet-600/10 rounded-full blur-[120px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-6">
+        {/* Nuestro Equipo: rincón superior derecho */}
+        <div className="text-right mb-14">
+          <h3 className="text-4xl md:text-5xl lg:text-6xl font-black text-white mb-4 leading-[1.1] tracking-tighter">
+            Nuestro <span className="text-gradient">Equipo</span>
+          </h3>
+          <p className="text-[var(--text-secondary)] text-lg max-w-md ml-auto">
+            Conoce a los miembros que hacen posible el ITEC Augusto Cicaré. Personas apasionadas por la tecnología, la innovación y la educación.
+          </p>
+        </div>
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           {/* Texto */}
           <div>
@@ -162,38 +172,14 @@ export function AboutSection() {
             No hay miembros públicos disponibles en este momento.
           </div>
         ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-10 items-center">
-          {/* Columna izquierda de fichas */}
-          <div className="lg:order-1 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-6">
-            {members.slice(0, Math.ceil(members.length / 2)).map((member, index) => (
-              <MemberCard
-                key={member.id || `member-l-${index}`}
-                member={member}
-                onOpen={() => setSelectedMember(member)}
-              />
-            ))}
-          </div>
-
-          {/* Textos rodeados por las fichas */}
-          <div className="order-first lg:order-2 text-left lg:text-center px-2">
-            <h3 className="text-4xl md:text-5xl lg:text-6xl font-black text-white mb-4 leading-[1.1] tracking-tighter">
-              Nuestro <span className="text-gradient">Equipo</span>
-            </h3>
-            <p className="text-[var(--text-secondary)] text-lg max-w-md lg:mx-auto">
-              Conoce a los miembros que hacen posible el ITEC Augusto Cicaré. Personas apasionadas por la tecnología, la innovación y la educación.
-            </p>
-          </div>
-
-          {/* Columna derecha de fichas */}
-          <div className="lg:order-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-6">
-            {members.slice(Math.ceil(members.length / 2)).map((member, index) => (
-              <MemberCard
-                key={member.id || `member-r-${index}`}
-                member={member}
-                onOpen={() => setSelectedMember(member)}
-              />
-            ))}
-          </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {members.map((member, index) => (
+            <MemberCard
+              key={member.id || `member-${index}`}
+              member={member}
+              onOpen={() => setSelectedMember(member)}
+            />
+          ))}
         </div>
         )}
       </div>
