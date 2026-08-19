@@ -168,7 +168,7 @@ export function SponsorForm({ sponsor, onClose }: Props) {
 
   return (
     <div className='fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4' style={{ colorScheme: 'dark' }}>
-      <div className='glass border border-white/10 rounded-2xl p-5 max-w-2xl w-full shadow-2xl max-h-[90vh] overflow-y-auto'>
+      <div className='glass border border-white/10 rounded-2xl p-5 max-w-3xl w-full shadow-2xl max-h-[90vh] overflow-y-auto'>
         <div className='flex items-center justify-between mb-4'>
           <div className='flex items-center gap-2'>
             <button
@@ -194,7 +194,7 @@ export function SponsorForm({ sponsor, onClose }: Props) {
         </div>
 
         <form onSubmit={handleSubmit} className='space-y-3'>
-          <div className='grid grid-cols-1 sm:grid-cols-2 gap-3'>
+          <div className='grid grid-cols-1 sm:grid-cols-3 gap-3'>
             <div>
               <label className='block text-[10px] uppercase tracking-widest text-white/60 mb-1'>Nombre Empresa</label>
               <input className={`${inputClass} ${errors.nombre_empresa ? 'border-red-500' : ''}`}
@@ -257,15 +257,15 @@ export function SponsorForm({ sponsor, onClose }: Props) {
                 onChange={e => setFormData({ ...formData, email: e.target.value })} />
               {errors.email && <p className='text-red-400 text-xs mt-1'>{errors.email}</p>}
             </div>
-          </div>
 
-          <div>
-            <label className='block text-[10px] uppercase tracking-widest text-white/60 mb-1'>Página Web</label>
-            <input type='url' className={`${inputClass} ${errors.website_url ? 'border-red-500' : ''}`}
-              placeholder='https://www.ejemplo.com'
-              value={formData.website_url}
-              onChange={e => setFormData({ ...formData, website_url: e.target.value })} />
-            {errors.website_url && <p className='text-red-400 text-xs mt-1'>{errors.website_url}</p>}
+            <div>
+              <label className='block text-[10px] uppercase tracking-widest text-white/60 mb-1'>Página Web</label>
+              <input type='url' className={`${inputClass} ${errors.website_url ? 'border-red-500' : ''}`}
+                placeholder='https://www.ejemplo.com'
+                value={formData.website_url}
+                onChange={e => setFormData({ ...formData, website_url: e.target.value })} />
+              {errors.website_url && <p className='text-red-400 text-xs mt-1'>{errors.website_url}</p>}
+            </div>
           </div>
 
           <div>

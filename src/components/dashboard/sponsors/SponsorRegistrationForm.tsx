@@ -111,7 +111,7 @@ export default function SponsorRegistrationForm({ onClose, onCreated }: Props) {
 
   return (
     <div className='fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4' style={{ colorScheme: 'dark' }}>
-      <div className='glass border border-white/10 rounded-2xl p-5 max-w-2xl w-full shadow-2xl max-h-[90vh] overflow-y-auto'>
+      <div className='glass border border-white/10 rounded-2xl p-5 max-w-3xl w-full shadow-2xl max-h-[90vh] overflow-y-auto'>
         <div className='flex items-center gap-2 mb-4'>
           <button
             type='button'
@@ -127,7 +127,7 @@ export default function SponsorRegistrationForm({ onClose, onCreated }: Props) {
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className='space-y-3'>
-          <div className='grid grid-cols-1 sm:grid-cols-2 gap-3'>
+          <div className='grid grid-cols-1 sm:grid-cols-3 gap-3'>
             <div>
               <label className='block text-[10px] uppercase tracking-widest text-white/60 mb-1'>Nombre Empresa *</label>
               <input className={inputErr(errors.name?.message)} {...register('name')} placeholder='Nombre del sponsor' />
@@ -175,12 +175,12 @@ export default function SponsorRegistrationForm({ onClose, onCreated }: Props) {
               <input type='email' className={inputErr(errors.contact_email?.message)} {...register('contact_email')} placeholder='Email de contacto' />
               {errors.contact_email && <p className='text-red-400 text-xs mt-1'>{errors.contact_email.message}</p>}
             </div>
-          </div>
 
-          <div>
-            <label className='block text-[10px] uppercase tracking-widest text-white/60 mb-1'>Página Web</label>
-            <input type='url' className={inputErr(errors.website_url?.message)} {...register('website_url')} placeholder='https://www.ejemplo.com' />
-            {errors.website_url && <p className='text-red-400 text-xs mt-1'>{errors.website_url.message}</p>}
+            <div>
+              <label className='block text-[10px] uppercase tracking-widest text-white/60 mb-1'>Página Web</label>
+              <input type='url' className={inputErr(errors.website_url?.message)} {...register('website_url')} placeholder='https://www.ejemplo.com' />
+              {errors.website_url && <p className='text-red-400 text-xs mt-1'>{errors.website_url.message}</p>}
+            </div>
           </div>
 
           <div>
