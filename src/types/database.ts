@@ -137,6 +137,13 @@ export interface Sponsor {
   contacto_telefono: string | null
   logo_monocromo_url: string | null
   logo_color_url: string | null
+  // Columnas legacy (migración 036) — usadas por la ficha del admin y SponsorForm
+  nombre_empresa?: string | null
+  actividad?: string | null
+  zona_influencia?: string | null
+  nombre_contacto?: string | null
+  apellido_contacto?: string | null
+  telefono?: string | null
 }
 
 export interface SponsorFormData {

@@ -154,12 +154,17 @@ export async function updateSponsorAction(id: string, formData: UpdateSponsorDat
   if (!admin || admin.role !== 'admin') throw new Error('No autorizado')
 
   const supabase = await createClient()
-  const { error } = await supabase.from('sponsors').update(formData).eq('id', id)
+  const { data, error } = await supabase
+    .from('sponsors')
+    .update(formData)
+    .eq('id', id)
+    .select()
+    .single()
   if (error) throw new Error(error.message)
 
   revalidatePath('/dashboard/sponsors')
   revalidatePath('/dashboard/sponsorsNews')
-  return { success: true }
+  return { success: true, data }
 }
 
 export async function createSponsorAction(formData: {
@@ -175,6 +180,13 @@ export async function createSponsorAction(formData: {
   logo_color_url?: string
   is_active?: boolean
   description?: string | null
+  // Columnas legacy (migración 036) — para consistencia con la ficha del admin
+  nombre_empresa?: string
+  actividad?: string
+  zona_influencia?: string
+  nombre_contacto?: string
+  apellido_contacto?: string
+  telefono?: string
 }) {
   const admin = await getCurrentMember()
   if (!admin || admin.role !== 'admin') throw new Error('No autorizado')

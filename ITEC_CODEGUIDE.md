@@ -56,7 +56,7 @@ D:\ITEC\
 ├── scripts/                    # Scripts utilitarios (extracción PDF, generación docs)
 ├── src/
 │   ├── app/                    # App Router (rutas públicas + dashboard + API)
-│   │   ├── page.tsx            # Landing page (force-dynamic, lee logos sponsors vía fs, wrapper -translate-y-30px)
+│   │   ├── page.tsx            # Landing page (force-dynamic, logos sponsors vía fs con unstable_cache 1h, wrapper -translate-y-30px)
 │   │   ├── layout.tsx          # Root layout (LanguageProvider + ChatWidgetWrapper lazy-loaded)
 │   │   ├── globals.css         # Estilos globales y sistema de diseño
 │   │   ├── acceso-pendiente/   # Página de acceso pendiente
@@ -623,8 +623,7 @@ Sistema completo de interacción en vivo:
     - VERDE: < 30% de alertas
     - AMARILLO: 30–49% de alertas
     - ROJO: >= 50% de alertas
-  - **Cálculo centralizado:** `calcularEstadoSemaforo()` en `src/lib/eventos/semaforo.ts` (DRY) — usado por los 4 consumidores (server action + 3 clientes). Los estados se manejan en mayúsculas (`'VERDE' | 'AMARILLO' | 'ROJO'`).
-  - **Función `calcularEstadoSemaforo()` centralizada en `src/lib/eventos/semaforo.ts`** (DRY, ago 2026): Fuente única de verdad con tipos (`EstadoSemaforo` = `'VERDE' | 'AMARILLO' | 'ROJO'`, `SemaforoResultado`), umbrales (VERDE < 30%, AMARILLO 30-49%, ROJO >= 50%) y cálculo con denominador seguro (`Math.max(total, votos, 1)` — previene división por cero y maneja más votos que acreditados). Retorna `{ estado, porcentaje, votosNegativos, totalAcreditados }`. Lo consumen: `semaforoActions.ts` (server), `PanelOradorClient.tsx`, `eventos/[id]/page.tsx` y `pantalla/page.tsx` (cliente). Módulo puro, compatible con Edge Runtime.
+  - **Cálculo centralizado:** `calcularEstadoSemaforo()` en `src/lib/eventos/semaforo.ts` (DRY, ago 2026) — fuente única de verdad con tipos (`EstadoSemaforo` = `'VERDE' | 'AMARILLO' | 'ROJO'` en mayúsculas, `SemaforoResultado`), umbrales (VERDE < 30%, AMARILLO 30-49%, ROJO >= 50%) y cálculo con denominador seguro (`Math.max(total, votos, 1)` — previene división por cero y maneja más votos que acreditados). Retorna `{ estado, porcentaje, votosNegativos, totalAcreditados }`. Lo consumen: `semaforoActions.ts` (server), `PanelOradorClient.tsx`, `eventos/[id]/page.tsx` y `pantalla/page.tsx` (cliente). Módulo de funciones puras, compatible con Edge Runtime. Eliminadas las 4 copias duplicadas de `calcularEstadoLocal()`/`calcularEstado()` y los casts `(evento as any)`.
   - **Reset (`resetearSemaforo()`):** Requiere rol admin/coordinador. Actualiza `semaforo_last_reset_at` a `now()` en tabla `eventos`. NO borra votos — el COUNT filtra por `created_at >= resetAt`.
   - **3 suscripciones Realtime por cliente:**
     1. `evento_semaforo_votos` INSERT → incrementa contador optimista (consola) o recalcula desde DB (móvil/pantalla)
@@ -973,6 +972,7 @@ Server Action     →  getCurrentMember()  →  validate Zod  →  mutate DB  �
 - **Dead code cleanup:** Eliminados archivos huérfanos (`test-grok`, `test-gemini`, `news-multicanal.ts`, `aiConfig.json`), 22+ funciones nunca importadas, dependencia `dotenv` innecesaria, assets públicos default de Next.js.
 - **Security hardening (jul 2026):** RPC `obtener_miembros_publicos` ya no retorna `email` ni `phone` (PII leak). LivePoll usa server action con cookie dedup en vez de update client-side directo. Errores de providers IA sanitizados (no exponen detalles internos). `createSponsorAction` tipado explícito en vez de `Record<string, unknown>`.
 - **RAG cascade integrado (ago 2026):** `/api/asistente` ahora llama a `recuperarContextoRAG()` para inyectar contexto semántico de 5 niveles (pgvector, docs locales, bucket, conversaciones, web). El asistente tiene acceso a RAG + DB en paralelo.
+- **Cache P3 training-docs (ago 2026):** `ragCascade.ts` cachea el texto combinado del bucket `training-docs` en memoria (TTL 5 min, `P3_CACHE_TTL_MS`) con deduplicación de descargas concurrentes (`p3FetchPromise` compartida + `.finally()` para limpiar). El bucket se lista/descarga 1 vez por ventana de tiempo en vez de en cada request del asistente. Nivel P3 renombrado de P2 en los logs de warning.
 - **Modelos gratuitos (ago 2026):** Regla de oro — todos los endpoints del asistente usan `openrouter/free` (router automático de 14+ modelos free). Eliminados todos los `deepseek/deepseek-chat` del codebase.
 - **Lazy Groq init (ago 2026):** Cliente Groq en `/api/chat` usa `getGroq()` con lazy initialization para evitar error de build cuando falta `GROQ_API_KEY`.
 - **pgvector RAG (migraciones 062-063):** Tabla `documents` con `vector(768)` para búsqueda semántica. RPC `match_documents` para cosine similarity. Ingesta vía `npm run ingest-vector` (PDFs → chunking 900 chars → Gemini embeddings → Supabase).

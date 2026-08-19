@@ -18,25 +18,25 @@ type SponsorFormData = z.infer<typeof sponsorSchema>
 
 interface Props {
   sponsor?: any
-  onClose: () => void
+  onClose: (updated?: any) => void
 }
 
 export function SponsorForm({ sponsor, onClose }: Props) {
   const [loading, setLoading] = useState(false)
   const [errors, setErrors] = useState<Partial<Record<keyof SponsorFormData, string>>>({})
-const [formData, setFormData] = useState<SponsorFormData>({
+  const [formData, setFormData] = useState<SponsorFormData>({
     nombre_empresa: sponsor?.nombre_empresa || sponsor?.name || '',
-    actividad: sponsor?.actividad || '',
+    actividad: sponsor?.actividad || sponsor?.rubro || '',
     zona_influencia: sponsor?.zona_influencia || '',
-    nombre_contacto: sponsor?.nombre_contacto || '',
+    nombre_contacto: sponsor?.nombre_contacto || sponsor?.contacto_nombre || '',
     apellido_contacto: sponsor?.apellido_contacto || '',
-    telefono: sponsor?.telefono || '',
-    email: sponsor?.email || '',
+    telefono: sponsor?.telefono || sponsor?.contacto_telefono || '',
+    email: sponsor?.email || sponsor?.contact_email || '',
   })
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    
+
     const result = sponsorSchema.safeParse(formData)
     if (!result.success) {
       const fieldErrors: Record<string, string> = {}
@@ -47,30 +47,38 @@ const [formData, setFormData] = useState<SponsorFormData>({
       setErrors(fieldErrors)
       return
     }
-    
+
     setLoading(true)
     setErrors({})
     try {
       const payload = {
         name: formData.nombre_empresa,
-        tier: 'standard' as const, // Default value, should be handled by UI if needed
-        rubro: formData.actividad,
-        resena: '', // Need to add resena field to SponsorForm if it's required
-        website_url: null,
+        tier: sponsor?.tier ?? ('standard' as const),
+        rubro: formData.actividad || '-',
+        resena: sponsor?.resena ?? '',
+        website_url: sponsor?.website_url ?? null,
         contacto_nombre: formData.nombre_contacto,
         contacto_telefono: formData.telefono,
         email: formData.email,
-        logo_monocromo_url: '',
-        logo_color_url: '',
-        is_active: true,
-        description: null,
+        logo_monocromo_url: sponsor?.logo_monocromo_url ?? '',
+        logo_color_url: sponsor?.logo_color_url ?? '',
+        is_active: sponsor?.is_active ?? true,
+        description: sponsor?.description ?? null,
+        // Columnas legacy (migración 036) — las fichas del admin leen de acá
+        nombre_empresa: formData.nombre_empresa,
+        actividad: formData.actividad || '-',
+        zona_influencia: formData.zona_influencia || '-',
+        nombre_contacto: formData.nombre_contacto,
+        apellido_contacto: formData.apellido_contacto || '-',
+        telefono: formData.telefono || '-',
       }
       if (sponsor) {
-        await updateSponsorAction(sponsor.id, payload)
+        const res = await updateSponsorAction(sponsor.id, payload)
+        onClose(res.data ?? { ...sponsor, ...payload })
       } else {
         await createSponsorAction(payload)
+        onClose()
       }
-      onClose()
     } catch (err: any) {
       alert('Error: ' + err.message)
     }
@@ -120,7 +128,7 @@ const [formData, setFormData] = useState<SponsorFormData>({
               {errors.nombre_contacto && <p className='text-red-400 text-xs mt-1'>{errors.nombre_contacto}</p>}
             </div>
             <div>
-              <label className='block text-[10px] uppercase tracking-widest text-white/60 mb-2'>Apellido Contacto *</label>
+              <label className='block text-[10px] uppercase tracking-widest text-white/60 mb-2'>Apellido Contacto</label>
               <input className={`${inputClass} ${errors.apellido_contacto ? 'border-red-500' : ''}`}
                 value={formData.apellido_contacto}
                 onChange={e => setFormData({ ...formData, apellido_contacto: e.target.value })} />
@@ -145,7 +153,7 @@ const [formData, setFormData] = useState<SponsorFormData>({
           </div>
 
           <div className='flex gap-4 pt-2'>
-            <button type='button' onClick={onClose}
+            <button type='button' onClick={() => onClose()}
               className='flex-1 px-6 py-3 rounded-xl border border-white/10 text-white hover:bg-white/5 transition-all text-sm'>
               Cancelar
             </button>

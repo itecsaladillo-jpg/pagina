@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import SponsorRegistrationForm from '@/components/dashboard/sponsors/SponsorRegistrationForm'
+import { SponsorForm } from './SponsorForm'
 import { createAccionAction, deleteAccionAction, deleteSponsorAction, createReporteAction } from './actions'
 import { generateInvitationAction } from '../actions/invitations'
 
@@ -165,7 +166,19 @@ export function SponsorsAdmin({ initialSponsors, initialAcciones }: Props) {
               </div>
             ))}
           </div>
-          {showSponsorForm && (
+          {showSponsorForm && editingSponsor && (
+            <SponsorForm
+              sponsor={editingSponsor}
+              onClose={(updated) => {
+                setEditingSponsor(null)
+                setShowSponsorForm(false)
+                if (updated) {
+                  setSponsors(prev => prev.map(s => s.id === updated.id ? updated : s))
+                }
+              }}
+            />
+          )}
+          {showSponsorForm && !editingSponsor && (
             <div className='fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4'>
               <div className='glass border border-white/10 rounded-2xl p-8 max-w-xl w-full shadow-2xl max-h-[90vh] overflow-y-auto'>
                 <SponsorRegistrationForm />
