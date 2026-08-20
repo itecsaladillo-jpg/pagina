@@ -24,8 +24,10 @@ export function IdeasSection() {
           </span>
 
           <h2 className="text-4xl md:text-6xl font-black text-white mb-6 leading-tight">
-            {dict.ideas.headingStart}{' '}
-            <span className="text-gradient">{dict.ideas.headingGradient}</span>{' '}
+            {dict.ideas.headingStart}
+            <br />
+            <span className="text-gradient">{dict.ideas.headingGradient}</span>
+            <br />
             {dict.ideas.headingEnd}
           </h2>
 

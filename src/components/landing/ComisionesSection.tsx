@@ -65,7 +65,9 @@ export function ComisionesSection() {
             {dict.comisiones.badge}
           </span>
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-white mb-4 leading-[1.1] tracking-tighter">
-            {dict.comisiones.heading.split(' ')[0]} <span className="text-gradient">{dict.comisiones.heading.split(' ').slice(1).join(' ')}</span>
+            {dict.comisiones.heading.split(' ')[0]}
+            <br />
+            <span className="text-gradient">{dict.comisiones.heading.split(' ').slice(1).join(' ')}</span>
           </h2>
           <p className="text-[var(--text-secondary)] text-lg max-w-2xl ml-auto">
             {dict.comisiones.desc}
