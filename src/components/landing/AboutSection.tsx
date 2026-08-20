@@ -159,7 +159,7 @@ export function AboutSection() {
               Nuestro <span className="text-gradient">Equipo</span>
             </h3>
             <p className="text-[var(--text-secondary)] text-2xl leading-snug max-w-[280px]">
-              Conoce a los miembros que hacen posible el ITEC Augusto Cicaré. Personas apasionadas por la tecnología, la innovación y la educación.
+              Detrás de cada iniciativa del ITEC Saladillo hay un equipo comprometido con el conocimiento, la tecnología y la educación transformadora.
             </p>
           </div>
 
