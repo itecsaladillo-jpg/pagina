@@ -60,7 +60,7 @@ export function ComisionesSection() {
     <section id="comisiones" className="py-16 relative">
       <div className="max-w-7xl mx-auto px-6">
         {/* Header */}
-        <div className="text-right mb-10">
+        <div className="text-left mb-10">
           <span className="inline-block text-xs font-bold tracking-[0.2em] text-[var(--accent-cyan-2)] uppercase mb-4 px-4 py-1.5 rounded-full border border-[var(--accent-cyan-2)]/20 bg-[var(--accent-cyan-2)]/5">
             {dict.comisiones.badge}
           </span>
@@ -69,7 +69,7 @@ export function ComisionesSection() {
             <br />
             <span className="text-gradient">{dict.comisiones.heading.split(' ').slice(1).join(' ')}</span>
           </h2>
-          <p className="text-[var(--text-secondary)] text-lg max-w-2xl ml-auto whitespace-pre-line">
+          <p className="text-[var(--text-secondary)] text-lg max-w-2xl mr-auto whitespace-pre-line">
             {dict.comisiones.desc}
           </p>
         </div>

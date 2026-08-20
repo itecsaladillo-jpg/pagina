@@ -18,7 +18,7 @@ export function IdeasSection() {
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-600/10 rounded-full blur-[150px] pointer-events-none" />
 
       <div className="relative z-10 max-w-4xl mx-auto px-6">
-        <div className="text-right">
+        <div className="text-left">
           <span className="inline-block text-xs font-bold tracking-[0.2em] text-[var(--accent-primary-2)] uppercase mb-6 px-4 py-1.5 rounded-full border border-[var(--accent-primary-2)]/20 bg-[var(--accent-primary-2)]/5">
             {dict.ideas.badge}
           </span>
@@ -31,7 +31,7 @@ export function IdeasSection() {
             {dict.ideas.headingEnd}
           </h2>
 
-          <p className="text-[var(--text-secondary)] text-lg leading-relaxed mb-10 max-w-2xl ml-auto whitespace-pre-line">
+          <p className="text-[var(--text-secondary)] text-lg leading-relaxed mb-10 max-w-2xl mr-auto whitespace-pre-line">
             {dict.ideas.desc}
           </p>
         </div>
