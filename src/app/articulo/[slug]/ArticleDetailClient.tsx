@@ -1,15 +1,103 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import { useLanguage } from '@/contexts/LanguageContext'
-import { Calendar, ChevronLeft, Zap, MessageSquare, PlayCircle, ExternalLink } from 'lucide-react'
+import { Calendar, ChevronLeft, ChevronRight, Zap, MessageSquare, PlayCircle, ExternalLink, Play, Image as ImageIcon } from 'lucide-react'
 import Link from 'next/link'
 import { format } from 'date-fns'
 import { es, enUS, pt } from 'date-fns/locale'
+import { motion, AnimatePresence } from 'framer-motion'
 import { getYouTubeThumbnail } from '@/services/videos'
 import { toUtcLocalDate } from '@/lib/dates'
 
 interface ArticleDetailClientProps {
   article: any
+}
+
+const isVideoUrl = (u: string) => /\.(mp4|webm|mov)/i.test(u.split('?')[0])
+
+function MediaSlideshow({ mediaUrls, title }: { mediaUrls: string[]; title: string }) {
+  const [current, setCurrent] = useState(0)
+
+  const goPrev = () => setCurrent(c => (c === 0 ? mediaUrls.length - 1 : c - 1))
+  const goNext = () => setCurrent(c => (c === mediaUrls.length - 1 ? 0 : c + 1))
+
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowLeft') goPrev()
+      if (e.key === 'ArrowRight') goNext()
+    }
+    window.addEventListener('keydown', handleKey)
+    return () => window.removeEventListener('keydown', handleKey)
+  }, [mediaUrls.length])
+
+  const url = mediaUrls[current]
+  const isVideo = isVideoUrl(url)
+
+  return (
+    <div className="group relative rounded-3xl overflow-hidden border border-white/5 bg-black/40">
+      <div className="min-h-[220px] flex items-center justify-center p-4">
+        {isVideo ? (
+          <video
+            key={current}
+            src={url}
+            controls
+            className="max-w-full max-h-[65vh] w-auto h-auto object-contain rounded-xl"
+          />
+        ) : (
+          <AnimatePresence mode="wait">
+            <motion.img
+              key={current}
+              src={url}
+              alt={`${title} - Imagen ${current + 1}`}
+              initial={{ opacity: 0, scale: 0.98 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.25 }}
+              className="max-w-full max-h-[65vh] w-auto h-auto object-contain rounded-xl"
+              loading="lazy"
+              decoding="async"
+            />
+          </AnimatePresence>
+        )}
+      </div>
+
+      {mediaUrls.length > 1 && (
+        <>
+          <button
+            onClick={goPrev}
+            aria-label="Imagen anterior"
+            className="absolute left-3 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black/50 backdrop-blur-sm text-white opacity-0 group-hover:opacity-100 transition-opacity hover:bg-black/70 z-10"
+          >
+            <ChevronLeft size={20} />
+          </button>
+          <button
+            onClick={goNext}
+            aria-label="Imagen siguiente"
+            className="absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black/50 backdrop-blur-sm text-white opacity-0 group-hover:opacity-100 transition-opacity hover:bg-black/70 z-10"
+          >
+            <ChevronRight size={20} />
+          </button>
+
+          <div className="absolute top-3 right-3 z-10 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/50 backdrop-blur-sm text-[10px] font-bold text-white/80">
+            {isVideo ? <Play size={10} /> : <ImageIcon size={10} />}
+            {current + 1} / {mediaUrls.length}
+          </div>
+
+          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 z-10 bg-black/30 backdrop-blur-sm p-1.5 rounded-full border border-white/5">
+            {mediaUrls.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setCurrent(i)}
+                aria-label={`Ir a imagen ${i + 1}`}
+                className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${i === current ? 'bg-white w-4' : 'bg-white/30 hover:bg-white/60'}`}
+              />
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  )
 }
 
 export function ArticleDetailClient({ article }: ArticleDetailClientProps) {
@@ -60,7 +148,7 @@ export function ArticleDetailClient({ article }: ArticleDetailClientProps) {
           </div>
         </div>
 
-        {/* Multimedia Gallery/Slider */}
+        {/* Multimedia Gallery/Slider — todas las imágenes en slide con formato original */}
         {(() => {
           let mediaUrls = article.media_urls
           if (typeof mediaUrls === 'string') {
@@ -71,33 +159,7 @@ export function ArticleDetailClient({ article }: ArticleDetailClientProps) {
             }
           }
           if (!Array.isArray(mediaUrls) || mediaUrls.length === 0) return null
-
-          const isVideo = (u: string) => /\.(mp4|webm|mov)/i.test(u.split('?')[0])
-          const firstUrl = mediaUrls[0]
-          return (
-            <div className="grid grid-cols-1 gap-4">
-              <div className="rounded-3xl overflow-hidden border border-white/5 bg-white/[0.02] flex items-center justify-center">
-                {isVideo(firstUrl) ? (
-                  <video src={firstUrl} controls className="w-full h-auto max-h-[600px] object-contain" />
-                ) : (
-                  <img src={firstUrl} alt={displayTitle} className="w-full h-auto max-h-[600px] object-contain" />
-                )}
-              </div>
-              {mediaUrls.length > 1 && (
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                  {mediaUrls.slice(1).map((url: string, i: number) => (
-                    <div key={i} className="aspect-video rounded-2xl overflow-hidden border border-white/5 bg-white/[0.02] flex items-center justify-center">
-                      {isVideo(url) ? (
-                        <video src={url} controls className="w-full h-full object-contain" />
-                      ) : (
-                        <img src={url} alt="" className="w-full h-full object-contain" />
-                      )}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          )
+          return <MediaSlideshow mediaUrls={mediaUrls} title={displayTitle} />
         })()}
 
         {/* Content */}
