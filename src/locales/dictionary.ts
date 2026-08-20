@@ -149,7 +149,7 @@ export const dictionary = {
     comisiones: {
       badge: 'Equipos de Trabajo',
       heading: 'Comisiones de Innovación',
-      desc: 'Grupos especializados formados por docentes, alumnos y profesionales dedicados a resolver desafíos técnicos concretos.',
+      desc: 'Grupos especializados formados por docentes,\nalumnos y profesionales dedicados\na resolver desafíos técnicos concretos.',
       miembros: 'miembros activos',
       verMiembros: 'Ver perfiles',
       comisionesList: {
@@ -176,7 +176,7 @@ export const dictionary = {
       headingStart: 'Tu idea puede ser',
       headingGradient: 'el próximo proyecto',
       headingEnd: 'de ITEC',
-      desc: 'Tenemos un espacio abierto para que cualquier persona —miembro o no— pueda proponer proyectos, talleres, mejoras o cualquier idea que quiera ver hecha realidad.',
+      desc: 'Tenemos un espacio abierto para que\ncualquier persona —miembro o no— pueda proponer\nproyectos, talleres, mejoras o cualquier idea\nque quiera ver hecha realidad.',
       beneficios: [
         { title: 'Anónimo o con nombre', desc: 'Elegís cómo enviar tu propuesta' },
         { title: 'Sistema de votos', desc: 'La comunidad prioriza las mejores ideas' },
@@ -518,7 +518,7 @@ export const dictionary = {
     comisiones: {
       badge: 'Work Teams',
       heading: 'Innovation Commissions',
-      desc: 'Specialized groups made up of teachers, students and professionals dedicated to solving concrete technical challenges.',
+      desc: 'Specialized groups made up of teachers,\nstudents and professionals dedicated\nto solving concrete technical challenges.',
       miembros: 'active members',
       verMiembros: 'View profiles',
       comisionesList: {
@@ -545,7 +545,7 @@ export const dictionary = {
       headingStart: 'Your idea can be',
       headingGradient: 'the next project',
       headingEnd: 'of ITEC',
-      desc: 'We have an open space so that anyone —member or not— can propose projects, workshops, improvements or any idea they want to see come to life.',
+      desc: 'We have an open space so that anyone\n—member or not— can propose projects,\nworkshops, improvements or any idea\nthey want to see come to life.',
       beneficios: [
         { title: 'Anonymous or named', desc: 'You choose how to send your proposal' },
         { title: 'Voting system', desc: 'The community prioritizes the best ideas' },
@@ -887,7 +887,7 @@ export const dictionary = {
     comisiones: {
       badge: 'Equipes de Trabalho',
       heading: 'Comissões de Inovação',
-      desc: 'Grupos especializados formados por professores, alunos e profissionais dedicados a resolver desafios técnicos concretos.',
+      desc: 'Grupos especializados formados por professores,\nalunos e profissionais dedicados\na resolver desafios técnicos concretos.',
       miembros: 'membros ativos',
       verMiembros: 'Ver perfis',
       comisionesList: {
@@ -914,7 +914,7 @@ export const dictionary = {
       headingStart: 'Sua ideia pode ser',
       headingGradient: 'o próximo projeto',
       headingEnd: 'do ITEC',
-      desc: 'Temos um espaço aberto para que qualquer pessoa —membro ou não— possa propor projetos, oficinas, melhorias ou qualquer ideia que queira ver realizada.',
+      desc: 'Temos um espaço aberto para que\nqualquer pessoa —membro ou não— possa propor\nprojetos, oficinas, melhorias ou qualquer ideia\nque queira ver realizada.',
       beneficios: [
         { title: 'Anônimo ou com nome', desc: 'Você escolhe como enviar sua proposta' },
         { title: 'Sistema de votos', desc: 'A comunidade prioriza as melhores ideias' },

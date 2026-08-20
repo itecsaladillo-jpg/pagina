@@ -69,7 +69,7 @@ export function ComisionesSection() {
             <br />
             <span className="text-gradient">{dict.comisiones.heading.split(' ').slice(1).join(' ')}</span>
           </h2>
-          <p className="text-[var(--text-secondary)] text-lg max-w-2xl ml-auto">
+          <p className="text-[var(--text-secondary)] text-lg max-w-2xl ml-auto whitespace-pre-line">
             {dict.comisiones.desc}
           </p>
         </div>

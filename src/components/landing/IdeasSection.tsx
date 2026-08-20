@@ -31,7 +31,7 @@ export function IdeasSection() {
             {dict.ideas.headingEnd}
           </h2>
 
-          <p className="text-[var(--text-secondary)] text-lg leading-relaxed mb-10 max-w-2xl ml-auto">
+          <p className="text-[var(--text-secondary)] text-lg leading-relaxed mb-10 max-w-2xl ml-auto whitespace-pre-line">
             {dict.ideas.desc}
           </p>
         </div>
