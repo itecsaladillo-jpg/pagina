@@ -10,7 +10,7 @@ Plataforma web full-stack de **ITEC Saladillo** (Asociación Civil de Ciencia y 
 - **React:** 19.2.4
 - **Lenguaje:** TypeScript (strict)
 - **Estilos:** Tailwind CSS v4 + CSS custom properties (tema oscuro)
-- **Base de datos:** Supabase PostgreSQL (65 migraciones, pgvector para RAG)
+- **Base de datos:** Supabase PostgreSQL (66 migraciones, pgvector para RAG)
 - **Auth:** Supabase Auth + Google OAuth
 - **Despliegue:** Vercel (auto-deploy desde `main`)
 - **Path alias:** `@/` → `./src/`
@@ -33,7 +33,7 @@ Plataforma web full-stack de **ITEC Saladillo** (Asociación Civil de Ciencia y 
 | `extract-docs` | `node scripts/extractPdfText.js` | Extraer texto de PDFs a JSON |
 | `ingest-vector` | `node --dns-result-order=ipv4first --env-file=.env.local scripts/ingestDocsToVector.mjs` | PDFs → pgvector embeddings (Gemini) |
 
-(Nota: Se recomienda ejecutar las migraciones de BD 064-065 tras actualizaciones de schema)
+(Nota: Se recomienda ejecutar las migraciones de BD 064-066 tras actualizaciones de schema)
 
 ## Herramientas de Desarrollo y Diagnóstico (scratch)
 El directorio `scratch/` contiene scripts temporales para:
@@ -148,7 +148,9 @@ D:\ITEC\
 │   │   │   ├── Footer.tsx       # Footer del sitio
 │   │   │   └── FloatingLanguageSelector.tsx # Selector flotante ES/EN/PT (bottom 59px, fade out al scroll)
 │   │   ├── home/               # Componentes de la landing (server-driven)
-│   │   │   └── SponsorHeaderBar.tsx # Marquesina infinita de sponsors (fixed bottom, fade out al scroll)
+│   │   │   ├── SponsorHeaderBar.tsx # Marquesina infinita de sponsors (fixed bottom, fade out al scroll)
+│   │   │   ├── NuestrosSociosSection.tsx # Sección "NUESTROS SOCIOS" (client, grids dinámicas por tier + modal)
+│   │   │   └── SponsorModal.tsx  # Modal de detalle de sponsor (badge tier, reseña, email, web)
 │   │   ├── comunicacion/        # Comunicación multicanal
 │   │   │   ├── NewsWallMulticanal.tsx       # Muro con tabs: Público/Miembros/Sponsors/Prensa
 │   │   │   ├── NewsFlashMulticanalEditor.tsx # Editor multicanal con IA
@@ -209,6 +211,7 @@ D:\ITEC\
 │   └── migrations/                             # Migraciones de base de datos
 │       ├── 064_streaming_config.sql            # Keys streaming_active / streaming_youtube_url en site_settings
 │       ├── 065_update_sponsors_table.sql       # Schema sponsors actualizado
+│       ├── 066_sponsors_publicos_rpc.sql       # RPC obtener_sponsors_publicos (campos seguros, security definer)
 │       └── fix_storage_policies.sql            # Políticas RLS Storage
 ├── AGENTS.md                   # Instrucciones para agentes IA (Next.js)
 ├── CLAUDE.md                   # Instrucciones para Claude
@@ -573,6 +576,8 @@ Sistema de recuperación de **5 niveles** con scoring por solapamiento de tokens
 Secciones: Hero (logo + fotos Cicaré + frase aleatoria de 3 opciones que cambia en cada carga), Navbar con navegación completa, Métricas de Impacto (contadores animados), Videoteca (videos de YouTube con resúmenes IA), Sección "Acerca de", Comisiones (grid visual con colores), Buzón de Ideas (formulario), Footer completo.
 
 Características recientes de la landing:
+- **Sección "NUESTROS SOCIOS"** — `NuestrosSociosSection.tsx` (client): grillas dinámicas de logos agrupadas por nivel de sponsoreo (platino, oro, plata, bronce, standard), en columna derecha del título (estilo columna izquierda como Nuestro Equipo). Los datos vienen del RPC `obtener_sponsors_publicos` (solo sponsors activos, campos seguros — migración 066). Grillas dinámicas según cantidad de logos (2 a 10 columnas), alturas estandarizadas por nivel (`BASE_H=120` × pct: platino 100% con glow ámbar, oro 80%, plata 55%, bronce 35%, standard 10%). Tiers superiores (platino/oro) en columna derecha, inferiores (plata/bronce/standard) a ancho completo debajo. Click en un logo abre `SponsorModal.tsx` (Framer Motion, badge de nivel, reseña, email, link al sitio web, cierre con Escape). Título en tipografía Impact con "Socios" en gradient.
+- **Sección "NUESTRO EQUIPO"** — En `AboutSection.tsx`: título en columna izquierda (tipografía Impact, "Equipo" con text-gradient) y fichas horizontales de miembros rodeándolo (estilo espejo de Nuestros Socios). Primeras 9 fichas en grid 3 columnas; desde la cuarta fila las fichas van a ancho completo (`lg:grid-cols-4/5`). Cada `MemberCard` horizontal (avatar circular, nombre, badge de rol, frase/bio) abre el modal de perfil del miembro al hacer click.
 - **Streaming en vivo en Hero** — Si `streaming_active=true` y `streaming_youtube_url` están configurados en `site_settings`, el Hero muestra el reproductor YouTube en vivo (`StreamingPlayer.tsx`) en lugar de las palabras spotlight. Estado consultado via `/api/streaming/status` (público, cache 30s). El botón "Aula Virtual" también se enciende en rojo pulsante cuando hay una clase con `en_vivo=true` en `clases_virtuales` (Realtime).
 - **Barra de sponsors (marquesina)** — `SponsorHeaderBar.tsx`: barra `fixed` al borde inferior con logos monocromo de sponsors en loop infinito. Los logos se leen del filesystem (`public/sponsors/blanco/`) en el server component de `page.tsx` envuelto en `unstable_cache` (Next.js, `revalidate: 3600` — 1 hora) con timestamp de mtime como cache-buster (`?v=...`). Fade out al hacer scroll (> 10px), velocidad de animación 70s, pausa al hacer hover.
 - **Posicionamiento de elementos flotantes** — El contenido principal está desplazado `-translate-y-[30px]` para compensar la barra inferior. El widget del chat y el selector de idioma se anclan al viewport (`bottom: 59px`, selector en `right-6`), ambos con fade out al scroll.
@@ -735,7 +740,7 @@ Creación y gestión de gacetillas. Distribución segmentada a medios registrado
 
 ### Gestión de Sponsors (`/dashboard/sponsors`)
 - CRUD completo de sponsors con niveles (platino, oro, plata, bronce, standard). 
-- **Módulo de Alta:** Formulario integrado (`SponsorRegistrationForm`) para registro de nuevos socios con carga de logos, categorización, validaciones y navegación de retorno.
+- **Módulo de Alta:** Formulario integrado (`SponsorRegistrationForm`) para registro de nuevos socios con carga de logos, categorización, validaciones y navegación de retorno. Ahora se renderiza como modal controlado con props `onClose`/`onCreated` (evita el overlay manual en `SponsorsAdmin`); los campos opcionales del schema de `actions.ts` son `null`-ables explícitamente.
 - Generación de reportes de impacto con IA (Ollama). Tokens privados únicos.
 
 ### Muro Sponsors (`/dashboard/sponsorsNews`)
@@ -769,7 +774,7 @@ Formulario para crear nuevas acciones de impacto (capacitaciones, eventos social
 ## Integraciones Externas
 
 ### Supabase
-- **Database:** PostgreSQL con 65+ migraciones, RLS policies
+- **Database:** PostgreSQL con 66+ migraciones, RLS policies
 - **Auth:** Supabase Auth con Google OAuth, manejo de sesiones via cookies SSR
 - **Storage:** 4 buckets: `article-media`, `avatars`, `training-docs`, `sponsors-logos`
 - **Realtime:** Suscripciones `postgres_changes` para:
@@ -971,6 +976,10 @@ Server Action     →  getCurrentMember()  →  validate Zod  →  mutate DB  �
 - **ChatWidget lazy-loaded:** Se carga con `next/dynamic({ ssr: false })` para no impactar carga inicial de páginas.
 - **Dead code cleanup:** Eliminados archivos huérfanos (`test-grok`, `test-gemini`, `news-multicanal.ts`, `aiConfig.json`), 22+ funciones nunca importadas, dependencia `dotenv` innecesaria, assets públicos default de Next.js.
 - **Security hardening (jul 2026):** RPC `obtener_miembros_publicos` ya no retorna `email` ni `phone` (PII leak). LivePoll usa server action con cookie dedup en vez de update client-side directo. Errores de providers IA sanitizados (no exponen detalles internos). `createSponsorAction` tipado explícito en vez de `Record<string, unknown>`.
+- **Migración 066_sponsors_publicos_rpc.sql:** Crea el RPC `obtener_sponsors_publicos()` (`security definer`, `grant` a anon/authenticated/service_role) que expone solo campos seguros de sponsors activos (`id`, `name`, `tier`, `logo_color_url`, `resena`, `website_url`, `email`) — NO expone `private_token` ni `contacto_telefono`. Ordenado por `created_at`. Consumido por `NuestrosSociosSection.tsx` en la landing.
+- **Nuestros Socios (ago 2026):** Nueva sección de landing entre "Nuestra Identidad" y "Nuestro Equipo" (`AboutSection.tsx`). Grillas dinámicas por tier con columnas 2-10 y alturas estandarizadas (platino 100% con ring glow, oro 80%, plata 55%, bronce 35%, standard 10%). El título de la sección va en columna izquierda (estilo Impact con gradient) y los niveles superiores (platino/oro) en columna derecha; los inferiores a ancho completo debajo. Detalle de cada sponsor en `SponsorModal.tsx` (Framer Motion, cierre con Escape).
+- **Nuestro Equipo (ago 2026):** Sección restyleada en `AboutSection.tsx` con layout espejo de Nuestros Socios (título columna izquierda + fichas rodeándolo). Primeros 9 miembros en grid 3 columnas; desde la cuarta fila, fichas horizontales a ancho completo (`lg:grid-cols-4/5`). Fichas con avatar circular, badge de rol y frase/bio, que abren el modal de perfil del miembro.
+- **SponsorRegistrationForm modal (ago 2026):** El formulario de alta de sponsors se renderiza como modal controlado (`onClose`/`onCreated` props) en lugar del overlay manual, y el schema de `createSponsorAction` tipa campos opcionales como `string | null`.
 - **RAG cascade integrado (ago 2026):** `/api/asistente` ahora llama a `recuperarContextoRAG()` para inyectar contexto semántico de 5 niveles (pgvector, docs locales, bucket, conversaciones, web). El asistente tiene acceso a RAG + DB en paralelo.
 - **Cache P3 training-docs (ago 2026):** `ragCascade.ts` cachea el texto combinado del bucket `training-docs` en memoria (TTL 5 min, `P3_CACHE_TTL_MS`) con deduplicación de descargas concurrentes (`p3FetchPromise` compartida + `.finally()` para limpiar). El bucket se lista/descarga 1 vez por ventana de tiempo en vez de en cada request del asistente. Nivel P3 renombrado de P2 en los logs de warning.
 - **Modelos gratuitos (ago 2026):** Regla de oro — todos los endpoints del asistente usan `openrouter/free` (router automático de 14+ modelos free). Eliminados todos los `deepseek/deepseek-chat` del codebase.

@@ -76,21 +76,21 @@ export function ArticleDetailClient({ article }: ArticleDetailClientProps) {
           const firstUrl = mediaUrls[0]
           return (
             <div className="grid grid-cols-1 gap-4">
-              <div className="aspect-video rounded-3xl overflow-hidden border border-white/5 bg-white/[0.02]">
+              <div className="rounded-3xl overflow-hidden border border-white/5 bg-white/[0.02] flex items-center justify-center">
                 {isVideo(firstUrl) ? (
-                  <video src={firstUrl} controls className="w-full h-full object-cover" />
+                  <video src={firstUrl} controls className="w-full h-auto max-h-[600px] object-contain" />
                 ) : (
-                  <img src={firstUrl} alt={displayTitle} className="w-full h-full object-cover" />
+                  <img src={firstUrl} alt={displayTitle} className="w-full h-auto max-h-[600px] object-contain" />
                 )}
               </div>
               {mediaUrls.length > 1 && (
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                   {mediaUrls.slice(1).map((url: string, i: number) => (
-                    <div key={i} className="aspect-video rounded-2xl overflow-hidden border border-white/5 bg-white/[0.02]">
+                    <div key={i} className="aspect-video rounded-2xl overflow-hidden border border-white/5 bg-white/[0.02] flex items-center justify-center">
                       {isVideo(url) ? (
-                        <video src={url} controls className="w-full h-full object-cover" />
+                        <video src={url} controls className="w-full h-full object-contain" />
                       ) : (
-                        <img src={url} alt="" className="w-full h-full object-cover" />
+                        <img src={url} alt="" className="w-full h-full object-contain" />
                       )}
                     </div>
                   ))}

@@ -337,11 +337,11 @@ export function NewsFlashMulticanalEditor({ onSave, onCancel }: NewsFlashMultica
             {media.length > 0 && (
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-2">
                 {media.map((item, idx) => (
-                  <div key={idx} className="relative group rounded-lg overflow-hidden border border-white/10">
+                  <div key={idx} className="relative group rounded-lg overflow-hidden border border-white/10 bg-black/40">
                     {item.type === 'video' ? (
-                      <video src={item.url} className="w-full h-24 object-cover" />
+                      <video src={item.url} className="w-full h-24 object-contain" />
                     ) : (
-                      <img src={item.url} alt={item.name} className="w-full h-24 object-cover" />
+                      <img src={item.url} alt={item.name} className="w-full h-24 object-contain" />
                     )}
                     <button
                       onClick={() => removeMedia(idx)}

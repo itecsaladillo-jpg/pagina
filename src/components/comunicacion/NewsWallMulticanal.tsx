@@ -230,7 +230,7 @@ export function NewsWallMulticanal({
                         const isImage = /\.(jpg|jpeg|png|gif|webp|bmp|svg)/i.test(url.split('?')[0])
                         return isImage ? (
                           <div key={i} className='group relative w-24 h-24 rounded-lg overflow-hidden border border-white/10 bg-black/30'>
-                            <img src={url} alt={`Imagen ${i + 1}`} className='w-full h-full object-cover' />
+                            <img src={url} alt={`Imagen ${i + 1}`} className='w-full h-full object-contain' />
                             <button
                               onClick={() => {
                                 const a = document.createElement('a')

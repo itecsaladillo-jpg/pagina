@@ -340,14 +340,14 @@ export function NotasMulticanalList({ notas: initialNotas }: NotasMulticanalList
                   <p className="text-xs font-semibold text-white/40 uppercase tracking-widest">Imágenes de la noticia</p>
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                     {allMediaUrls.map((url, idx) => (
-                      <div key={idx} className="relative group rounded-xl overflow-hidden border border-white/10 bg-white/[0.02]">
+                      <div key={idx} className="relative group rounded-xl overflow-hidden border border-white/10 bg-black/40">
                         {/\.(mp4|webm|mov)$/i.test(url) ? (
-                          <video src={url} controls className="w-full h-32 object-cover" />
+                          <video src={url} controls className="w-full h-32 object-contain" />
                         ) : (
                           <img
                             src={url}
                             alt={`Imagen ${idx + 1}`}
-                            className="w-full h-32 object-cover transition-transform duration-300 group-hover:scale-105"
+                            className="w-full h-32 object-contain transition-transform duration-300 group-hover:scale-105"
                           />
                         )}
                         <button
