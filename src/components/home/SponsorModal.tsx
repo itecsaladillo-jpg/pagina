@@ -141,7 +141,7 @@ export function SponsorModal({ sponsor, onClose }: Props) {
               {actionsDesc && (
                 <div className="mb-5 p-4 rounded-xl bg-white/5 border border-white/5">
                   <p className="text-[10px] uppercase tracking-widest text-[var(--text-muted)] mb-2 font-bold">
-                    Acciones con ITEC
+                    Acciones conjuntas con ITEC
                   </p>
                   <p className="text-[var(--text-secondary)] text-sm leading-relaxed">
                     {actionsDesc}
