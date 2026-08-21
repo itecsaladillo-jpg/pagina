@@ -44,12 +44,12 @@ function MediaSlideshow({ mediaUrls }: { mediaUrls: string[] }) {
   const isVideo = current >= images.length
 
   return (
-    <div className="relative group rounded-xl overflow-hidden bg-black/20">
-      <div className="aspect-video max-h-[125px] flex items-center justify-center">
+    <div className="relative group rounded-xl overflow-hidden bg-black/40">
+      <div className="flex items-center justify-center min-h-[120px] max-h-[300px] p-2">
         {isVideo ? (
-          <video src={videos[current - images.length]} controls className="w-full h-full object-contain" />
+          <video src={videos[current - images.length]} controls className="max-w-full max-h-[280px] object-contain" />
         ) : (
-          <img src={images[current]} alt="" className="w-full h-full object-contain transition-opacity duration-500" />
+          <img src={images[current]} alt="" className="max-w-full max-h-[280px] object-contain transition-opacity duration-500" />
         )}
       </div>
       {allMedia.length > 1 && (

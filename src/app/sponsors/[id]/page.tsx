@@ -162,8 +162,8 @@ export default async function SponsorPortalPage({ params }: { params: { id: stri
                 <div key={accion.id} className="group border border-white/5 rounded-2xl overflow-hidden bg-white/[0.02] hover:bg-white/[0.04] hover:border-white/10 transition-all">
                   {/* Foto o placeholder */}
                   {accion.galeria_fotos?.[0] ? (
-                    <div className="aspect-video relative overflow-hidden">
-                      <img src={accion.galeria_fotos[0]} alt={accion.titulo} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                    <div className="aspect-video relative overflow-hidden bg-black/40 flex items-center justify-center p-2">
+                      <img src={accion.galeria_fotos[0]} alt={accion.titulo} className="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-500" />
                     </div>
                   ) : (
                     <div className="aspect-video flex items-center justify-center bg-white/5">
