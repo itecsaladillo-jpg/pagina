@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import { SponsorModal, PublicSponsor } from './SponsorModal'
+import { SponsorModal, PublicSponsor, ModalItem } from './SponsorModal'
 
 const TIER_ORDER = ['platino', 'oro', 'plata', 'bronce', 'standard']
 
@@ -64,9 +64,9 @@ function SponsorCard({ sponsor, cardH, glow, onOpen }: {
 
 export function NuestrosSociosSection() {
   const [sponsors, setSponsors] = useState<PublicSponsor[]>([])
-  const [partners, setPartners] = useState<{ id: string; name: string; logo_url: string; category: string | null }[]>([])
+  const [partners, setPartners] = useState<{ id: string; name: string; logo_url: string | null; category: string | null; resena: string | null; website_url: string | null; email: string | null }[]>([])
   const [loading, setLoading] = useState(true)
-  const [selectedSponsor, setSelectedSponsor] = useState<PublicSponsor | null>(null)
+  const [selectedItem, setSelectedItem] = useState<ModalItem | null>(null)
 
   useEffect(() => {
     let mounted = true
@@ -75,7 +75,7 @@ export function NuestrosSociosSection() {
       const supabase = createClient()
       const [{ data: sponsorsData }, { data: partnersData }] = await Promise.all([
         supabase.rpc('obtener_sponsors_publicos'),
-        supabase.from('strategic_partners').select('id, name, logo_url, category').eq('is_active', true).order('created_at', { ascending: false })
+        supabase.from('strategic_partners').select('id, name, logo_url, category, resena, website_url, email').eq('is_active', true).order('created_at', { ascending: false })
       ])
       if (mounted) {
         if (sponsorsData) setSponsors(sponsorsData as PublicSponsor[])
@@ -108,7 +108,7 @@ export function NuestrosSociosSection() {
               sponsor={s}
               cardH={cardH}
               glow={config.glow}
-              onOpen={() => setSelectedSponsor(s)}
+              onOpen={() => setSelectedItem(s)}
             />
           ))}
         </div>
@@ -157,9 +157,10 @@ export function NuestrosSociosSection() {
                 </div>
                 <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3">
                   {partners.map((p) => (
-                    <div
+                    <button
                       key={p.id}
-                      className="bg-white/5 border border-white/5 rounded-xl flex items-center justify-center p-4 h-20 hover:bg-white/10 hover:border-white/10 transition-all"
+                      onClick={() => setSelectedItem({ ...p, _kind: 'partner' })}
+                      className="bg-white/5 border border-white/5 rounded-xl flex items-center justify-center p-4 h-20 hover:bg-white/10 hover:border-white/10 transition-all cursor-pointer"
                       title={p.name}
                     >
                       {p.logo_url ? (
@@ -167,7 +168,7 @@ export function NuestrosSociosSection() {
                       ) : (
                         <span className="text-white/50 text-xs text-center leading-tight">{p.name}</span>
                       )}
-                    </div>
+                    </button>
                   ))}
                 </div>
               </div>
@@ -180,7 +181,7 @@ export function NuestrosSociosSection() {
         )}
       </div>
 
-      <SponsorModal sponsor={selectedSponsor} onClose={() => setSelectedSponsor(null)} />
+      <SponsorModal sponsor={selectedItem} onClose={() => setSelectedItem(null)} />
     </section>
   )
 }

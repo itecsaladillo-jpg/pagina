@@ -14,6 +14,26 @@ export interface PublicSponsor {
   email: string | null
 }
 
+export interface PartnerItem {
+  id: string
+  name: string
+  logo_url: string | null
+  category: string | null
+  resena: string | null
+  website_url: string | null
+  email: string | null
+}
+
+export type ModalItem = (PublicSponsor & { _kind?: 'sponsor' }) | (PartnerItem & { _kind: 'partner' })
+
+const CATEGORY_LABELS: Record<string, string> = {
+  institucion_educativa: 'Institución Educativa',
+  organismo_publico: 'Organismo Público',
+  ong: 'ONG / Asociación',
+  empresa_aliada: 'Empresa Aliada',
+  otro: 'Otro',
+}
+
 export const TIER_META: Record<string, { label: string; className: string }> = {
   platino: { label: 'Platinum', className: 'bg-slate-300/10 text-slate-200 border-slate-300/30' },
   oro: { label: 'Oro', className: 'bg-amber-400/10 text-amber-300 border-amber-400/30' },
@@ -23,7 +43,7 @@ export const TIER_META: Record<string, { label: string; className: string }> = {
 }
 
 interface Props {
-  sponsor: PublicSponsor | null
+  sponsor: ModalItem | null
   onClose: () => void
 }
 
@@ -44,7 +64,14 @@ export function SponsorModal({ sponsor, onClose }: Props) {
     }
   }, [sponsor, onClose])
 
-  const tierMeta = sponsor ? TIER_META[sponsor.tier] || TIER_META.standard : null
+  const tierMeta = sponsor && 'tier' in sponsor ? TIER_META[sponsor.tier] || TIER_META.standard : null
+  const categoryLabel = sponsor && 'category' in sponsor && sponsor.category
+    ? (CATEGORY_LABELS[sponsor.category] || sponsor.category)
+    : null
+
+  const logoUrl = sponsor
+    ? (('logo_color_url' in sponsor ? sponsor.logo_color_url : null) || ('logo_url' in sponsor ? (sponsor as PartnerItem).logo_url : null))
+    : null
 
   return (
     <AnimatePresence>
@@ -70,9 +97,9 @@ export function SponsorModal({ sponsor, onClose }: Props) {
               >
                 <X size={16} />
               </button>
-              {sponsor.logo_color_url ? (
+              {logoUrl ? (
                 <img
-                  src={sponsor.logo_color_url}
+                  src={logoUrl}
                   alt={sponsor.name}
                   className="max-h-16 max-w-[70%] object-contain"
                   loading="lazy"
@@ -91,6 +118,11 @@ export function SponsorModal({ sponsor, onClose }: Props) {
               {tierMeta && (
                 <span className={`inline-block text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full border ${tierMeta.className}`}>
                   {tierMeta.label}
+                </span>
+              )}
+              {categoryLabel && (
+                <span className="inline-block text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full border bg-white/5 text-white/60 border-white/10">
+                  {categoryLabel}
                 </span>
               )}
 
