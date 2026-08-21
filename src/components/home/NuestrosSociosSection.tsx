@@ -64,23 +64,28 @@ function SponsorCard({ sponsor, cardH, glow, onOpen }: {
 
 export function NuestrosSociosSection() {
   const [sponsors, setSponsors] = useState<PublicSponsor[]>([])
+  const [partners, setPartners] = useState<{ id: string; name: string; logo_url: string; category: string | null }[]>([])
   const [loading, setLoading] = useState(true)
   const [selectedSponsor, setSelectedSponsor] = useState<PublicSponsor | null>(null)
 
   useEffect(() => {
     let mounted = true
 
-    const fetchSponsors = async () => {
+    const fetchData = async () => {
       const supabase = createClient()
-      const { data } = await supabase.rpc('obtener_sponsors_publicos')
-      if (mounted && data) setSponsors(data as PublicSponsor[])
-      if (mounted) setLoading(false)
+      const [{ data: sponsorsData }, { data: partnersData }] = await Promise.all([
+        supabase.rpc('obtener_sponsors_publicos'),
+        supabase.from('strategic_partners').select('id, name, logo_url, category').eq('is_active', true).order('created_at', { ascending: false })
+      ])
+      if (mounted) {
+        if (sponsorsData) setSponsors(sponsorsData as PublicSponsor[])
+        if (partnersData) setPartners(partnersData)
+        setLoading(false)
+      }
     }
 
-    fetchSponsors()
-    return () => {
-      mounted = false
-    }
+    fetchData()
+    return () => { mounted = false }
   }, [])
 
   const grouped = TIER_ORDER
@@ -140,6 +145,31 @@ export function NuestrosSociosSection() {
             {lowerTiers.length > 0 && (
               <div className="lg:col-span-2 space-y-8">
                 {lowerTiers.map(renderGroup)}
+              </div>
+            )}
+
+            {partners.length > 0 && (
+              <div className="lg:col-span-2">
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="h-px flex-1 bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+                  <span className="text-[10px] font-bold tracking-[0.25em] uppercase text-white/30">Alianzas Estratégicas</span>
+                  <div className="h-px flex-1 bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+                </div>
+                <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3">
+                  {partners.map((p) => (
+                    <div
+                      key={p.id}
+                      className="bg-white/5 border border-white/5 rounded-xl flex items-center justify-center p-4 h-20 hover:bg-white/10 hover:border-white/10 transition-all"
+                      title={p.name}
+                    >
+                      {p.logo_url ? (
+                        <img src={p.logo_url} alt={p.name} className="max-h-full max-w-full object-contain" loading="lazy" decoding="async" draggable={false} />
+                      ) : (
+                        <span className="text-white/50 text-xs text-center leading-tight">{p.name}</span>
+                      )}
+                    </div>
+                  ))}
+                </div>
               </div>
             )}
           </>
