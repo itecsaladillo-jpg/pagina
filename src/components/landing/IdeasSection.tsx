@@ -28,7 +28,6 @@ export function IdeasSection() {
               {dict.ideas.headingStart}
               <br />
               <span className="text-gradient block">{dict.ideas.headingGradient}</span>
-              <br />
               {dict.ideas.headingEnd}
             </h2>
 
