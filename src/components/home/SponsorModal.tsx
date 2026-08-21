@@ -19,9 +19,7 @@ export interface PartnerItem {
   name: string
   logo_url: string | null
   category: string | null
-  resena: string | null
-  website_url: string | null
-  email: string | null
+  actions_description: string | null
 }
 
 export type ModalItem = (PublicSponsor & { _kind?: 'sponsor' }) | (PartnerItem & { _kind: 'partner' })
@@ -72,6 +70,12 @@ export function SponsorModal({ sponsor, onClose }: Props) {
   const logoUrl = sponsor
     ? (('logo_color_url' in sponsor ? sponsor.logo_color_url : null) || ('logo_url' in sponsor ? (sponsor as PartnerItem).logo_url : null))
     : null
+
+  const isSponsor = sponsor && 'tier' in sponsor
+  const resena = isSponsor ? sponsor.resena : null
+  const email = isSponsor ? sponsor.email : null
+  const websiteUrl = isSponsor ? sponsor.website_url : null
+  const actionsDesc = sponsor && 'actions_description' in sponsor ? sponsor.actions_description : null
 
   return (
     <AnimatePresence>
@@ -128,28 +132,39 @@ export function SponsorModal({ sponsor, onClose }: Props) {
 
               <h3 className="text-2xl font-bold text-white mt-3 mb-3">{sponsor.name}</h3>
 
-              {sponsor.resena && (
+              {resena && (
                 <p className="text-[var(--text-secondary)] text-sm leading-relaxed mb-5">
-                  {sponsor.resena}
+                  {resena}
                 </p>
               )}
 
+              {actionsDesc && (
+                <div className="mb-5 p-4 rounded-xl bg-white/5 border border-white/5">
+                  <p className="text-[10px] uppercase tracking-widest text-[var(--text-muted)] mb-2 font-bold">
+                    Acciones con ITEC
+                  </p>
+                  <p className="text-[var(--text-secondary)] text-sm leading-relaxed">
+                    {actionsDesc}
+                  </p>
+                </div>
+              )}
+
               <div className="space-y-3">
-                {sponsor.email && (
+                {email && (
                   <div className="flex items-center gap-3 text-sm">
                     <Mail size={16} className="text-[var(--accent-warm)]" />
                     <a
-                      href={`mailto:${sponsor.email}`}
+                      href={`mailto:${email}`}
                       className="text-[var(--text-secondary)] hover:text-white transition-colors"
                     >
-                      {sponsor.email}
+                      {email}
                     </a>
                   </div>
                 )}
 
-                {sponsor.website_url && (
+                {websiteUrl && (
                   <a
-                    href={sponsor.website_url}
+                    href={websiteUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[var(--accent-warm)] text-gray-900 text-sm font-semibold hover:opacity-90 transition-opacity"

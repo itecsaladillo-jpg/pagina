@@ -64,7 +64,7 @@ function SponsorCard({ sponsor, cardH, glow, onOpen }: {
 
 export function NuestrosSociosSection() {
   const [sponsors, setSponsors] = useState<PublicSponsor[]>([])
-  const [partners, setPartners] = useState<{ id: string; name: string; logo_url: string | null; category: string | null; resena: string | null; website_url: string | null; email: string | null }[]>([])
+  const [partners, setPartners] = useState<{ id: string; name: string; logo_url: string | null; category: string | null; actions_description: string | null }[]>([])
   const [loading, setLoading] = useState(true)
   const [selectedItem, setSelectedItem] = useState<ModalItem | null>(null)
 
@@ -75,7 +75,7 @@ export function NuestrosSociosSection() {
       const supabase = createClient()
       const [{ data: sponsorsData }, { data: partnersData }] = await Promise.all([
         supabase.rpc('obtener_sponsors_publicos'),
-        supabase.from('strategic_partners').select('id, name, logo_url, category, resena, website_url, email').eq('is_active', true).order('created_at', { ascending: false })
+        supabase.from('strategic_partners').select('id, name, logo_url, category, actions_description').eq('is_active', true).order('created_at', { ascending: false })
       ])
       if (mounted) {
         if (sponsorsData) setSponsors(sponsorsData as PublicSponsor[])
