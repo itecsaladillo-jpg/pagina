@@ -37,7 +37,7 @@ export function IdeasSection() {
             </p>
 
             <div className="flex flex-wrap gap-3">
-              {beneficios.map((item) => (
+              {beneficios.slice(0, 2).map((item) => (
                 <div key={item.title} className="glass rounded-2xl p-4 border border-[var(--border-subtle)] flex items-start gap-3 flex-1 min-w-[200px]">
                   <div className="text-2xl shrink-0 mt-0.5">{item.emoji}</div>
                   <div>
@@ -51,6 +51,14 @@ export function IdeasSection() {
 
           <div className="text-left">
             <PublicIdeasForm />
+
+            <div className="glass rounded-2xl p-4 border border-[var(--border-subtle)] flex items-start gap-3 mt-4">
+              <div className="text-2xl shrink-0 mt-0.5">{beneficios[2].emoji}</div>
+              <div>
+                <p className="text-white font-semibold text-sm mb-0.5">{beneficios[2].title}</p>
+                <p className="text-[var(--text-muted)] text-xs">{beneficios[2].desc}</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
