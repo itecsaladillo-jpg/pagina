@@ -3,16 +3,7 @@
 import { useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, Mail, ExternalLink } from 'lucide-react'
-
-export interface PublicSponsor {
-  id: string
-  name: string
-  tier: string
-  logo_color_url: string | null
-  resena: string | null
-  website_url: string | null
-  email: string | null
-}
+import type { PublicPartner } from '@/types/database'
 
 export const TIER_META: Record<string, { label: string; className: string }> = {
   platino: { label: 'Platinum', className: 'bg-slate-300/10 text-slate-200 border-slate-300/30' },
@@ -22,8 +13,22 @@ export const TIER_META: Record<string, { label: string; className: string }> = {
   standard: { label: 'Standard', className: 'bg-blue-400/10 text-blue-300 border-blue-400/30' },
 }
 
+const TYPE_META: Record<string, { label: string; className: string }> = {
+  SPONSOR: { label: 'Sponsor', className: 'bg-amber-500/10 text-amber-300 border-amber-500/30' },
+  STRATEGIC_ALLIANCE: { label: 'Alianza Estrategica', className: 'bg-blue-500/10 text-blue-300 border-blue-500/30' },
+  DIFFUSION_CHANNEL: { label: 'Canal de Difusion', className: 'bg-purple-500/10 text-purple-300 border-purple-500/30' },
+}
+
+const ALLIANCE_CATEGORY_LABELS: Record<string, string> = {
+  institucion_educativa: 'Institucion Educativa',
+  organismo_publico: 'Organismo Publico',
+  ong: 'ONG / Asociacion',
+  empresa_aliada: 'Empresa Aliada',
+  otro: 'Otro',
+}
+
 interface Props {
-  sponsor: PublicSponsor | null
+  sponsor: PublicPartner | null
   onClose: () => void
 }
 
@@ -44,7 +49,11 @@ export function SponsorModal({ sponsor, onClose }: Props) {
     }
   }, [sponsor, onClose])
 
-  const tierMeta = sponsor ? TIER_META[sponsor.tier] || TIER_META.standard : null
+  const tierMeta = sponsor?.tier ? TIER_META[sponsor.tier] || TIER_META.standard : null
+  const typeMeta = sponsor?.type ? TYPE_META[sponsor.type] : null
+  const categoryLabel = sponsor?.category
+    ? (ALLIANCE_CATEGORY_LABELS[sponsor.category] || sponsor.category)
+    : null
 
   return (
     <AnimatePresence>
@@ -61,7 +70,6 @@ export function SponsorModal({ sponsor, onClose }: Props) {
             onClick={(e) => e.stopPropagation()}
             className="bg-[#0a0f1e] border border-white/10 rounded-3xl w-full max-w-lg overflow-hidden shadow-2xl"
           >
-            {/* Header con logo */}
             <div className="relative h-36 bg-gradient-to-r from-[var(--accent-warm)]/20 to-violet-600/20 flex items-center justify-center">
               <button
                 onClick={onClose}
@@ -70,9 +78,9 @@ export function SponsorModal({ sponsor, onClose }: Props) {
               >
                 <X size={16} />
               </button>
-              {sponsor.logo_color_url ? (
+              {(sponsor.logo_color_url || sponsor.logo_url) ? (
                 <img
-                  src={sponsor.logo_color_url}
+                  src={sponsor.logo_color_url || sponsor.logo_url || ''}
                   alt={sponsor.name}
                   className="max-h-16 max-w-[70%] object-contain"
                   loading="lazy"
@@ -86,20 +94,42 @@ export function SponsorModal({ sponsor, onClose }: Props) {
               )}
             </div>
 
-            {/* Contenido */}
             <div className="px-6 pt-5 pb-6">
-              {tierMeta && (
-                <span className={`inline-block text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full border ${tierMeta.className}`}>
-                  {tierMeta.label}
-                </span>
-              )}
+              <div className="flex flex-wrap gap-2 mb-3">
+                {typeMeta && (
+                  <span className={`inline-block text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full border ${typeMeta.className}`}>
+                    {typeMeta.label}
+                  </span>
+                )}
+                {tierMeta && (
+                  <span className={`inline-block text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full border ${tierMeta.className}`}>
+                    {tierMeta.label}
+                  </span>
+                )}
+                {categoryLabel && (
+                  <span className="inline-block text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full border bg-white/5 text-white/60 border-white/10">
+                    {categoryLabel}
+                  </span>
+                )}
+              </div>
 
-              <h3 className="text-2xl font-bold text-white mt-3 mb-3">{sponsor.name}</h3>
+              <h3 className="text-2xl font-bold text-white mb-3">{sponsor.name}</h3>
 
               {sponsor.resena && (
                 <p className="text-[var(--text-secondary)] text-sm leading-relaxed mb-5">
                   {sponsor.resena}
                 </p>
+              )}
+
+              {sponsor.actions_description && (
+                <div className="mb-5 p-4 rounded-xl bg-white/5 border border-white/5">
+                  <p className="text-[10px] uppercase tracking-widest text-[var(--text-muted)] mb-2 font-bold">
+                    Acciones con ITEC
+                  </p>
+                  <p className="text-[var(--text-secondary)] text-sm leading-relaxed">
+                    {sponsor.actions_description}
+                  </p>
+                </div>
               )}
 
               <div className="space-y-3">

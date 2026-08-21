@@ -17,6 +17,26 @@ export type ActionType = 'capacitacion' | 'evento_social' | 'divulgacion'
 export type ActionStatus = 'planificacion' | 'en_curso' | 'finalizada' | 'cancelada'
 
 // ─────────────────────────────────────────
+// PARTNERS: Clasificación de socios
+// ─────────────────────────────────────────
+
+export type PartnerType = 'SPONSOR' | 'STRATEGIC_ALLIANCE' | 'DIFFUSION_CHANNEL'
+
+export interface PublicPartner {
+  id: string
+  name: string
+  type: PartnerType
+  tier: SponsorTier | null
+  logo_color_url: string | null
+  logo_url: string | null
+  resena: string | null
+  website_url: string | null
+  email: string | null
+  category: string | null
+  actions_description: string | null
+}
+
+// ─────────────────────────────────────────
 // TABLA: members
 // ─────────────────────────────────────────
 
