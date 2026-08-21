@@ -59,58 +59,60 @@ export function ComisionesSection() {
   return (
     <section id="comisiones" className="py-16 relative">
       <div className="max-w-7xl mx-auto px-6">
-        {/* Header */}
-        <div className="text-left mb-10">
-          <span className="inline-block text-xs font-bold tracking-[0.2em] text-[var(--accent-cyan-2)] uppercase mb-4 px-4 py-1.5 rounded-full border border-[var(--accent-cyan-2)]/20 bg-[var(--accent-cyan-2)]/5">
-            {dict.comisiones.badge}
-          </span>
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-white mb-4 leading-[1.1] tracking-tighter">
-            {dict.comisiones.heading.split(' ')[0]}
-            <br />
-            <span className="text-gradient">{dict.comisiones.heading.split(' ').slice(1).join(' ')}</span>
-          </h2>
-          <p className="text-[var(--text-secondary)] text-lg max-w-2xl mr-auto whitespace-pre-line">
-            {dict.comisiones.desc}
-          </p>
-        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,320px)_1fr] gap-10 lg:gap-14 items-start">
+          {/* Header — columna izquierda */}
+          <div className="text-left">
+            <span className="inline-block text-xs font-bold tracking-[0.2em] text-[var(--accent-cyan-2)] uppercase mb-4 px-4 py-1.5 rounded-full border border-[var(--accent-cyan-2)]/20 bg-[var(--accent-cyan-2)]/5">
+              {dict.comisiones.badge}
+            </span>
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-white mb-4 leading-[1.1] tracking-tighter">
+              {dict.comisiones.heading.split(' ')[0]}
+              <br />
+              <span className="text-gradient">{dict.comisiones.heading.split(' ').slice(1).join(' ')}</span>
+            </h2>
+            <p className="text-[var(--text-secondary)] text-lg leading-snug max-w-[320px] whitespace-pre-line">
+              {dict.comisiones.desc}
+            </p>
+          </div>
 
-        {/* Grid de comisiones */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {comisiones.map((com, i) => (
-            <div
-              key={i}
-              className="glass rounded-2xl p-7 card-hover group cursor-default border border-[var(--border-subtle)]"
-              style={{ animationDelay: `${i * 0.1}s` }}
-            >
-              <div className="flex items-start gap-5">
-                {/* Ícono */}
-                <div
-                  className={`w-14 h-14 rounded-xl bg-gradient-to-br ${com.color} flex items-center justify-center flex-shrink-0 text-white shadow-lg transition-shadow group-hover:shadow-xl`}
-                  style={{ '--glow': com.glow } as React.CSSProperties}
-                >
-                  {com.icon}
-                </div>
+          {/* Grid de comisiones — columna derecha */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            {comisiones.map((com, i) => (
+              <div
+                key={i}
+                className="glass rounded-2xl p-6 card-hover group cursor-default border border-[var(--border-subtle)]"
+                style={{ animationDelay: `${i * 0.1}s` }}
+              >
+                <div className="flex items-start gap-4">
+                  {/* Ícono */}
+                  <div
+                    className={`w-12 h-12 rounded-xl bg-gradient-to-br ${com.color} flex items-center justify-center flex-shrink-0 text-white shadow-lg transition-shadow group-hover:shadow-xl`}
+                    style={{ '--glow': com.glow } as React.CSSProperties}
+                  >
+                    {com.icon}
+                  </div>
 
-                <div className="flex-1 min-w-0">
-                  <h3 className="text-lg font-bold text-white mb-2">{com.title}</h3>
-                  <p className="text-[var(--text-secondary)] text-sm leading-relaxed mb-4">
-                    {com.description}
-                  </p>
-                  {/* Tags */}
-                  <div className="flex flex-wrap gap-2">
-                    {com.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="text-xs px-2.5 py-1 rounded-full bg-white/5 text-[var(--text-secondary)] border border-white/10"
-                      >
-                        {tag}
-                      </span>
-                    ))}
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-base font-bold text-white mb-1.5">{com.title}</h3>
+                    <p className="text-[var(--text-secondary)] text-xs leading-relaxed mb-3">
+                      {com.description}
+                    </p>
+                    {/* Tags */}
+                    <div className="flex flex-wrap gap-1.5">
+                      {com.tags.map((tag) => (
+                        <span
+                          key={tag}
+                          className="text-[10px] px-2 py-0.5 rounded-full bg-white/5 text-[var(--text-secondary)] border border-white/10"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     </section>
