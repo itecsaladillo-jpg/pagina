@@ -174,8 +174,8 @@ export const dictionary = {
     ideas: {
       badge: 'Buzón de Ideas',
       headingStart: 'Tu idea puede ser',
-      headingGradient: 'el próximo proyecto',
-      headingEnd: 'de ITEC',
+      headingGradient: 'el próximo',
+      headingEnd: 'proyecto de ITEC',
       desc: 'Tenemos un espacio abierto para que\ncualquier persona —miembro o no— pueda proponer\nproyectos, talleres, mejoras o cualquier idea\nque quiera ver hecha realidad.',
       beneficios: [
         { title: 'Anónimo o con nombre', desc: 'Elegís cómo enviar tu propuesta' },
@@ -543,8 +543,8 @@ export const dictionary = {
     ideas: {
       badge: 'Ideas Box',
       headingStart: 'Your idea can be',
-      headingGradient: 'the next project',
-      headingEnd: 'of ITEC',
+      headingGradient: 'the next',
+      headingEnd: 'project of ITEC',
       desc: 'We have an open space so that anyone\n—member or not— can propose projects,\nworkshops, improvements or any idea\nthey want to see come to life.',
       beneficios: [
         { title: 'Anonymous or named', desc: 'You choose how to send your proposal' },
@@ -912,8 +912,8 @@ export const dictionary = {
     ideas: {
       badge: 'Caixa de Ideias',
       headingStart: 'Sua ideia pode ser',
-      headingGradient: 'o próximo projeto',
-      headingEnd: 'do ITEC',
+      headingGradient: 'o próximo',
+      headingEnd: 'projeto do ITEC',
       desc: 'Temos um espaço aberto para que\nqualquer pessoa —membro ou não— possa propor\nprojetos, oficinas, melhorias ou qualquer ideia\nque queira ver realizada.',
       beneficios: [
         { title: 'Anônimo ou com nome', desc: 'Você escolhe como enviar sua proposta' },
