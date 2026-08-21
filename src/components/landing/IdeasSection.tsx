@@ -36,9 +36,9 @@ export function IdeasSection() {
               {dict.ideas.desc}
             </p>
 
-            <div className="space-y-3">
+            <div className="flex flex-wrap gap-3">
               {beneficios.map((item) => (
-                <div key={item.title} className="glass rounded-2xl p-4 border border-[var(--border-subtle)] flex items-start gap-4">
+                <div key={item.title} className="glass rounded-2xl p-4 border border-[var(--border-subtle)] flex items-start gap-3 flex-1 min-w-[200px]">
                   <div className="text-2xl shrink-0 mt-0.5">{item.emoji}</div>
                   <div>
                     <p className="text-white font-semibold text-sm mb-0.5">{item.title}</p>
