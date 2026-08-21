@@ -142,7 +142,7 @@ D:\ITEC\
 │   │   │   ├── ImpactSection.tsx # Métricas de impacto (server)
 │   │   │   ├── ImpactSectionClient.tsx # Métricas con animaciones cliente
 │   │   │   ├── ComisionesSection.tsx  # Grid de comisiones activas
-│   │   │   ├── IdeasSection.tsx # CTA del buzón de ideas
+│   │   │   ├── IdeasSection.tsx # Layout 2 columnas: título/desc/beneficios (izq) + formulario (der)
 │   │   │   ├── VideotecaSection.tsx   # Videoteca destacada
 │   │   │   ├── StreamingPlayer.tsx # Reproductor YouTube en vivo (Hero, convierte URL a embed)
 │   │   │   ├── Footer.tsx       # Footer del sitio
@@ -573,7 +573,7 @@ Sistema de recuperación de **5 niveles** con scoring por solapamiento de tokens
 ## Páginas Públicas — Detalle Funcional
 
 ### Landing Page (`/`)
-Secciones: Hero (logo + fotos Cicaré + frase aleatoria de 3 opciones que cambia en cada carga), Navbar con navegación completa, Métricas de Impacto (contadores animados), Videoteca (videos de YouTube con resúmenes IA), Sección "Acerca de", Comisiones (grid visual con colores), Buzón de Ideas (formulario), Footer completo.
+Secciones: Hero (logo + fotos Cicaré + frase aleatoria de 3 opciones que cambia en cada carga), Navbar con navegación completa, Métricas de Impacto (contadores animados), Videoteca (videos de YouTube con resúmenes IA), Sección "Acerca de", Comisiones (grid visual con colores), Buzón de Ideas, Footer completo.
 
 Características recientes de la landing:
 - **Sección "NUESTROS SOCIOS"** — `NuestrosSociosSection.tsx` (client): grillas dinámicas de logos agrupadas por nivel de sponsoreo (platino, oro, plata, bronce, standard), en columna derecha del título (estilo columna izquierda como Nuestro Equipo). Los datos vienen del RPC `obtener_sponsors_publicos` (solo sponsors activos, campos seguros — migración 066). Grillas dinámicas según cantidad de logos (2 a 10 columnas), alturas estandarizadas por nivel (`BASE_H=120` × pct: platino 100% con glow ámbar, oro 80%, plata 55%, bronce 35%, standard 10%). Tiers superiores (platino/oro) en columna derecha, inferiores (plata/bronce/standard) a ancho completo debajo. Click en un logo abre `SponsorModal.tsx` (Framer Motion, badge de nivel, reseña, email, link al sitio web, cierre con Escape). Título en tipografía Impact con "Socios" en gradient.
@@ -582,6 +582,7 @@ Características recientes de la landing:
 - **Barra de sponsors (marquesina)** — `SponsorHeaderBar.tsx`: barra `fixed` al borde inferior con logos monocromo de sponsors en loop infinito. Los logos se leen del filesystem (`public/sponsors/blanco/`) en el server component de `page.tsx` envuelto en `unstable_cache` (Next.js, `revalidate: 3600` — 1 hora) con timestamp de mtime como cache-buster (`?v=...`). Fade out al hacer scroll (> 10px), velocidad de animación 70s, pausa al hacer hover.
 - **Posicionamiento de elementos flotantes** — El contenido principal está desplazado `-translate-y-[30px]` para compensar la barra inferior. El widget del chat y el selector de idioma se anclan al viewport (`bottom: 59px`, selector en `right-6`), ambos con fade out al scroll.
 - **Hydration-safe** — `page.tsx` usa `force-dynamic` + `revalidate = 0`; `SponsorHeaderBar` usa `suppressHydrationWarning` + `isMounted` para evitar el error de hidratación #418 (timestamps determinísticos del server, sin `Date.now()` en SSR).
+- **Sección "Buzón de Ideas"** — `IdeasSection.tsx`: layout de 2 columnas en desktop (`lg:grid-cols-2`, 1 col en mobile). Columna izquierda: badge "Buzón de Ideas", título "Tu idea puede ser / el próximo / proyecto de ITEC" en 3 líneas (tipografía `text-3xl md:text-4xl`, gradient), descripción whitespace-pre-line, y 2 primeros beneficios (Anónimo o con nombre, Sistema de votos) en formato `flex` horizontal. Columna derecha: formulario `PublicIdeasForm.tsx` (textarea idea, checkbox anónimo, campos opcionales nombre/email/teléfono, botón envío) + tercer beneficio "Seguimiento real" debajo. Textos i18n en `dictionary.ts` (ES/EN/PT). Título ComisionesSection tipografía reducida `text-3xl md:text-4xl` para 2 líneas.
 
 ### Muro de Noticias (`/muro`)
 Muro público que muestra `notas_publico` publicadas. Incluye sistema de comentarios via `/api/news-comments`. Visualización con medios adjuntos (imágenes, videos).
