@@ -3,7 +3,9 @@
 import { useState } from 'react'
 import SponsorRegistrationForm from '@/components/dashboard/sponsors/SponsorRegistrationForm'
 import { SponsorForm } from './SponsorForm'
+import { StrategicPartnerModal } from '@/components/dashboard/sponsors/StrategicPartnerModal'
 import { createAccionAction, deleteAccionAction, deleteSponsorAction, createReporteAction } from './actions'
+import { deleteStrategicPartner } from './partner-actions'
 import { generateInvitationAction } from '../actions/invitations'
 
 const CATEGORIAS = [
@@ -23,14 +25,35 @@ const TIER_BADGES: Record<string, { label: string; className: string }> = {
   standard: { label: 'Standard', className: 'bg-blue-400/10 text-blue-300 border-blue-400/30' },
 }
 
+const PARTNER_CATEGORIES: Record<string, { label: string; className: string }> = {
+  institucion_educativa: { label: 'Institución Educativa', className: 'bg-blue-500/10 text-blue-300 border-blue-500/30' },
+  organismo_publico: { label: 'Organismo Público', className: 'bg-emerald-500/10 text-emerald-300 border-emerald-500/30' },
+  ong: { label: 'ONG / Asociación', className: 'bg-purple-500/10 text-purple-300 border-purple-500/30' },
+  empresa_aliada: { label: 'Empresa Aliada', className: 'bg-amber-500/10 text-amber-300 border-amber-500/30' },
+  otro: { label: 'Otro', className: 'bg-gray-500/10 text-gray-300 border-gray-500/30' },
+}
+
+interface StrategicPartner {
+  id: string
+  name: string
+  category: string | null
+  actions_description: string
+  logo_url: string
+  is_active: boolean
+  created_at: string
+  updated_at: string
+}
+
 interface Props {
   initialSponsors: any[]
   initialAcciones: any[]
+  initialPartners: StrategicPartner[]
 }
 
-export function SponsorsAdmin({ initialSponsors, initialAcciones }: Props) {
+export function SponsorsAdmin({ initialSponsors, initialAcciones, initialPartners }: Props) {
   const [sponsors, setSponsors] = useState(initialSponsors)
   const [acciones, setAcciones] = useState(initialAcciones)
+  const [partners, setPartners] = useState<StrategicPartner[]>(initialPartners)
   const [activeTab, setActiveTab] = useState<'sponsors' | 'acciones' | 'reportes'>('sponsors')
   const [showSponsorForm, setShowSponsorForm] = useState(false)
   const [editingSponsor, setEditingSponsor] = useState<any>(null)
@@ -53,10 +76,20 @@ export function SponsorsAdmin({ initialSponsors, initialAcciones }: Props) {
   const [loadingReporte, setLoadingReporte] = useState(false)
   const [reporteGenerado, setReporteGenerado] = useState<any>(null)
 
+  // Estado del modal de socios estratégicos
+  const [showPartnerModal, setShowPartnerModal] = useState(false)
+  const [editingPartner, setEditingPartner] = useState<StrategicPartner | null>(null)
+
   const handleDeleteAccion = async (id: string) => {
     if (!confirm('¿Eliminár esta acción?')) return
     await deleteAccionAction(id)
     setAcciones(acciones.filter(a => a.id !== id))
+  }
+
+  const handleDeletePartner = async (id: string) => {
+    if (!confirm('¿Eliminar esta institución/organismo?')) return
+    await deleteStrategicPartner(id)
+    setPartners(partners.filter(p => p.id !== id))
   }
 
   const handleCreateAccion = async (e: React.FormEvent) => {
@@ -118,69 +151,139 @@ export function SponsorsAdmin({ initialSponsors, initialAcciones }: Props) {
 
       {/* ─── TAB: SPONSORS ─── */}
       {activeTab === 'sponsors' && (
-        <div className="space-y-6">
-          <div className="flex justify-end">
-            <button onClick={() => { setEditingSponsor(null); setShowSponsorForm(true) }}
-              className="btn-primary text-xs py-2 px-6 rounded-xl">+ NUEVO SPONSOR</button>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {sponsors.map(s => (
-              <div key={s.id} className="glass border border-white/5 rounded-2xl p-6 hover:border-white/10 transition-all">
-                <div className="flex justify-between items-start mb-4">
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <h3 className="text-lg font-bold text-white">{s.name}</h3>
-                      {TIER_BADGES[s.tier] && (
-                        <span className={`text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full border ${TIER_BADGES[s.tier].className}`}>
-                          {TIER_BADGES[s.tier].label}
-                        </span>
-                      )}
-                    </div>
-                    {s.actividad && <p className="text-[10px] text-[var(--text-muted)] uppercase tracking-widest mt-0.5">Rubro: {s.actividad}</p>}
-                  </div>
-                  <div className="flex gap-2">
-                    <button onClick={() => { setEditingSponsor(s); setShowSponsorForm(true) }}
-                      className="p-2 hover:bg-white/5 rounded-lg text-white/40 hover:text-white transition-all">
-                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                      </svg>
-                    </button>
-                    <button onClick={() => deleteSponsorAction(s.id).then(() => setSponsors(sponsors.filter(x => x.id !== s.id)))}
-                      className="p-2 hover:bg-red-500/10 rounded-lg text-white/40 hover:text-red-400 transition-all">
-                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                      </svg>
-                    </button>
-                  </div>
-                </div>
-
-                {s.ai_summary && <p className="text-gray-400 text-xs italic mb-6 line-clamp-2">"{s.ai_summary}"</p>}
-
-                <div className="flex items-center justify-between pt-4 border-t border-white/5">
-                  <div className="flex flex-col gap-1">
-                    <span className="text-xs text-white">{s.nombre_contacto} {s.apellido_contacto}</span>
-                    <span className="text-[10px] text-white/40">{s.email}</span>
-                  </div>
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => navigator.clipboard.writeText(window.location.origin + '/sponsors/' + s.id)
-                        .then(() => alert('Link copiado al portapapeles'))}
-                      className="p-2 hover:bg-white/5 rounded-lg text-white/40 hover:text-white transition-all"
-                      title="Copiar link de comunicación"
-                    >
-                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                      </svg>
-                    </button>
-                    <a href={`/sponsors/${s.id}`} target="_blank"
-                      className="text-[10px] text-blue-400 hover:text-blue-300 uppercase tracking-widest transition-all self-center">
-                      Ver Portal →
-                    </a>
-                  </div>
-                </div>
+        <div className="space-y-10">
+          {/* Socios Estratégicos */}
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-lg font-bold text-white">Socios Estratégicos</h3>
+                <p className="text-[var(--text-muted)] text-xs">Instituciones y organismos aliados de ITEC</p>
               </div>
-            ))}
+              <button
+                onClick={() => { setEditingPartner(null); setShowPartnerModal(true) }}
+                className="btn-primary text-xs py-2 px-4 rounded-xl flex items-center gap-2"
+              >
+                <span className="text-base">+</span> Nueva Institución/Organismo
+              </button>
+            </div>
+
+            {partners.length === 0 ? (
+              <div className="glass border border-white/5 rounded-xl p-8 text-center">
+                <p className="text-[var(--text-muted)] text-sm">No hay instituciones registradas aún.</p>
+                <p className="text-[var(--text-muted)] text-xs mt-1">Hacé clic en &quot;Nueva Institución/Organismo&quot; para comenzar.</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {partners.map((partner) => (
+                  <div key={partner.id} className="glass border border-white/5 rounded-xl p-4 hover:border-white/10 transition-all">
+                    <div className="flex items-start gap-4">
+                      <div className="w-16 h-16 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center overflow-hidden shrink-0">
+                        <img src={partner.logo_url} alt={partner.name} className="w-full h-full object-contain p-1" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-1">
+                          <h4 className="text-white font-semibold text-sm truncate">{partner.name}</h4>
+                          {partner.category && PARTNER_CATEGORIES[partner.category] && (
+                            <span className={`text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full border shrink-0 ${PARTNER_CATEGORIES[partner.category].className}`}>
+                              {PARTNER_CATEGORIES[partner.category].label}
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-[var(--text-muted)] text-xs line-clamp-2">{partner.actions_description}</p>
+                      </div>
+                      <div className="flex gap-1 shrink-0">
+                        <button onClick={() => { setEditingPartner(partner); setShowPartnerModal(true) }}
+                          className="p-1.5 hover:bg-white/5 rounded-lg text-white/40 hover:text-white transition-all" title="Editar">
+                          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                          </svg>
+                        </button>
+                        <button onClick={() => handleDeletePartner(partner.id)}
+                          className="p-1.5 hover:bg-red-500/10 rounded-lg text-white/40 hover:text-red-400 transition-all" title="Eliminar">
+                          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
+
+          <div className="border-t border-[var(--border-subtle)]" />
+
+          {/* Sponsors */}
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-lg font-bold text-white">Sponsors</h3>
+                <p className="text-[var(--text-muted)] text-xs">Socios comerciales por nivel de patrocinio</p>
+              </div>
+              <button onClick={() => { setEditingSponsor(null); setShowSponsorForm(true) }}
+                className="btn-primary text-xs py-2 px-4 rounded-xl">+ NUEVO SPONSOR</button>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {sponsors.map(s => (
+                <div key={s.id} className="glass border border-white/5 rounded-2xl p-6 hover:border-white/10 transition-all">
+                  <div className="flex justify-between items-start mb-4">
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <h3 className="text-lg font-bold text-white">{s.name}</h3>
+                        {TIER_BADGES[s.tier] && (
+                          <span className={`text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full border ${TIER_BADGES[s.tier].className}`}>
+                            {TIER_BADGES[s.tier].label}
+                          </span>
+                        )}
+                      </div>
+                      {s.actividad && <p className="text-[10px] text-[var(--text-muted)] uppercase tracking-widest mt-0.5">Rubro: {s.actividad}</p>}
+                    </div>
+                    <div className="flex gap-2">
+                      <button onClick={() => { setEditingSponsor(s); setShowSponsorForm(true) }}
+                        className="p-2 hover:bg-white/5 rounded-lg text-white/40 hover:text-white transition-all">
+                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                        </svg>
+                      </button>
+                      <button onClick={() => deleteSponsorAction(s.id).then(() => setSponsors(sponsors.filter(x => x.id !== s.id)))}
+                        className="p-2 hover:bg-red-500/10 rounded-lg text-white/40 hover:text-red-400 transition-all">
+                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+
+                  {s.ai_summary && <p className="text-gray-400 text-xs italic mb-6 line-clamp-2">"{s.ai_summary}"</p>}
+
+                  <div className="flex items-center justify-between pt-4 border-t border-white/5">
+                    <div className="flex flex-col gap-1">
+                      <span className="text-xs text-white">{s.nombre_contacto} {s.apellido_contacto}</span>
+                      <span className="text-[10px] text-white/40">{s.email}</span>
+                    </div>
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => navigator.clipboard.writeText(window.location.origin + '/sponsors/' + s.id)
+                          .then(() => alert('Link copiado al portapapeles'))}
+                        className="p-2 hover:bg-white/5 rounded-lg text-white/40 hover:text-white transition-all"
+                        title="Copiar link de comunicación"
+                      >
+                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                        </svg>
+                      </button>
+                      <a href={`/sponsors/${s.id}`} target="_blank"
+                        className="text-[10px] text-blue-400 hover:text-blue-300 uppercase tracking-widest transition-all self-center">
+                        Ver Portal →
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
           {showSponsorForm && editingSponsor && (
             <SponsorForm
               sponsor={editingSponsor}
@@ -379,6 +482,16 @@ export function SponsorsAdmin({ initialSponsors, initialAcciones }: Props) {
             )}
           </div>
         </div>
+      )}
+
+      {/* Modal Socios Estratégicos */}
+      {showPartnerModal && (
+        <StrategicPartnerModal
+          partner={editingPartner}
+          onClose={() => { setShowPartnerModal(false); setEditingPartner(null) }}
+          onCreated={(p) => setPartners(prev => [p, ...prev])}
+          onUpdated={(p) => setPartners(prev => prev.map(x => x.id === p.id ? p : x))}
+        />
       )}
 
       <style jsx global>{`

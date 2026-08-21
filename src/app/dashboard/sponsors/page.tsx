@@ -9,9 +9,10 @@ export default async function SponsorsAdminPage() {
 
   const supabase = await createClient()
 
-  const [{ data: sponsors }, { data: acciones }] = await Promise.all([
+  const [{ data: sponsors }, { data: acciones }, { data: partners }] = await Promise.all([
     supabase.from('sponsors').select('*').order('created_at', { ascending: false }),
     supabase.from('acciones_itec').select('*').order('fecha', { ascending: false }),
+    supabase.from('strategic_partners').select('*').order('created_at', { ascending: false }),
   ])
 
   return (
@@ -26,6 +27,7 @@ export default async function SponsorsAdminPage() {
       <SponsorsAdmin
         initialSponsors={sponsors || []}
         initialAcciones={acciones || []}
+        initialPartners={partners || []}
       />
     </div>
   )
