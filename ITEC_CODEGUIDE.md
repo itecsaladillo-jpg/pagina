@@ -10,7 +10,7 @@ Plataforma web full-stack de **ITEC Saladillo** (Asociación Civil de Ciencia y 
 - **React:** 19.2.4
 - **Lenguaje:** TypeScript (strict)
 - **Estilos:** Tailwind CSS v4 + CSS custom properties (tema oscuro)
-- **Base de datos:** Supabase PostgreSQL (66 migraciones, pgvector para RAG)
+- **Base de datos:** Supabase PostgreSQL (67 migraciones, pgvector para RAG)
 - **Auth:** Supabase Auth + Google OAuth
 - **Despliegue:** Vercel (auto-deploy desde `main`)
 - **Path alias:** `@/` → `./src/`
@@ -33,7 +33,7 @@ Plataforma web full-stack de **ITEC Saladillo** (Asociación Civil de Ciencia y 
 | `extract-docs` | `node scripts/extractPdfText.js` | Extraer texto de PDFs a JSON |
 | `ingest-vector` | `node --dns-result-order=ipv4first --env-file=.env.local scripts/ingestDocsToVector.mjs` | PDFs → pgvector embeddings (Gemini) |
 
-(Nota: Se recomienda ejecutar las migraciones de BD 064-066 tras actualizaciones de schema)
+(Nota: Se recomienda ejecutar las migraciones de BD 064-067 tras actualizaciones de schema)
 
 ## Herramientas de Desarrollo y Diagnóstico (scratch)
 El directorio `scratch/` contiene scripts temporales para:
@@ -108,7 +108,7 @@ D:\ITEC\
 │   │   │   ├── nubes/          # Gestión de nubes de palabras (admin)
 │   │   │   ├── prensa/         # Gestión de medios de prensa (admin)
 │   │   │   ├── prensaNews/     # Gacetillas de prensa (admin)
-│   │   │   ├── sponsors/       # Gestión de sponsors (admin)
+│   │   │   ├── sponsors/       # Gestión de sponsors + socios estratégicos (admin, partner-actions.ts)
 │   │   │   ├── sponsorsNews/   # Muro sponsors (admin)
 │   │   │   ├── settings/       # Ajustes del sitio (admin)
 │   │   │   ├── entrenamiento-asistente/ # Entrenamiento del asistente IA (admin)
@@ -149,8 +149,8 @@ D:\ITEC\
 │   │   │   └── FloatingLanguageSelector.tsx # Selector flotante ES/EN/PT (bottom 59px, fade out al scroll)
 │   │   ├── home/               # Componentes de la landing (server-driven)
 │   │   │   ├── SponsorHeaderBar.tsx # Marquesina infinita de sponsors (fixed bottom, fade out al scroll)
-│   │   │   ├── NuestrosSociosSection.tsx # Sección "NUESTROS SOCIOS" (client, grids dinámicas por tier + modal)
-│   │   │   └── SponsorModal.tsx  # Modal de detalle de sponsor (badge tier, reseña, email, web)
+│   │   │   ├── NuestrosSociosSection.tsx # Sección "NUESTROS SOCIOS" (client, grids dinámicas por tier + Alianzas Estratégicas + modal)
+│   │   │   └── SponsorModal.tsx  # Modal unificado (ModalItem: sponsor con badge tier o partner con categoría y acciones conjuntas)
 │   │   ├── comunicacion/        # Comunicación multicanal
 │   │   │   ├── NewsWallMulticanal.tsx       # Muro con tabs: Público/Miembros/Sponsors/Prensa
 │   │   │   ├── NewsFlashMulticanalEditor.tsx # Editor multicanal con IA
@@ -173,7 +173,8 @@ D:\ITEC\
 │   │   │   └── MembersAccessButton.tsx # Botón de acceso en navbar
 │   │   ├── dashboard/           # Sidebar del dashboard
 │   │   │   ├── sponsors/
-│   │   │   │   └── SponsorRegistrationForm.tsx # Formulario alta sponsors
+│   │   │   │   ├── SponsorRegistrationForm.tsx # Formulario alta sponsors
+│   │   │   │   └── StrategicPartnerModal.tsx # Modal alta/edición socios estratégicos (logo → Storage sponsors-logos)
 │   │   │   └── SidebarIdeasLink.tsx    # Link con badge de ideas pendientes
 │   │   ├── ideas/               # Formulario público de ideas
 │   │   │   └── PublicIdeasForm.tsx
@@ -212,6 +213,7 @@ D:\ITEC\
 │       ├── 064_streaming_config.sql            # Keys streaming_active / streaming_youtube_url en site_settings
 │       ├── 065_update_sponsors_table.sql       # Schema sponsors actualizado
 │       ├── 066_sponsors_publicos_rpc.sql       # RPC obtener_sponsors_publicos (campos seguros, security definer)
+│       ├── 067_strategic_partners.sql          # Tabla strategic_partners (socios estratégicos, RLS lectura pública / escritura admin)
 │       └── fix_storage_policies.sql            # Políticas RLS Storage
 ├── AGENTS.md                   # Instrucciones para agentes IA (Next.js)
 ├── CLAUDE.md                   # Instrucciones para Claude
@@ -366,6 +368,7 @@ D:\ITEC\
 | `sponsors` | Organizaciones sponsor | `id(PK)`, `name`, `tier`(platino\|oro\|plata\|bronce\|standard), `rubro`, `resena`, `website_url`, `contacto_nombre`, `contacto_telefono`, `email`, `logo_monocromo_url`, `logo_color_url`, `is_active`, `private_token(UNIQUE)` |
 | `sponsor_reports` | Reportes de impacto generados por IA para sponsors | |
 | `sponsors_medios` | Medios/sponsors para distribución de prensa | |
+| `strategic_partners` | Socios estratégicos (instituciones y organismos aliados) — migración 067 | `name`, `category`(institucion_educativa\|organismo_publico\|ong\|empresa_aliada\|otro), `actions_description`, `logo_url`, `is_active`. RLS: SELECT público solo activos, INSERT/UPDATE/DELETE solo admin. Índices en `category` e `is_active`, trigger `updated_at` |
 
 ### Encuestas
 | Tabla | Descripción |
@@ -577,6 +580,7 @@ Secciones: Hero (logo + fotos Cicaré + frase aleatoria de 3 opciones que cambia
 
 Características recientes de la landing:
 - **Sección "NUESTROS SOCIOS"** — `NuestrosSociosSection.tsx` (client): grillas dinámicas de logos agrupadas por nivel de sponsoreo (platino, oro, plata, bronce, standard), en columna derecha del título (estilo columna izquierda como Nuestro Equipo). Los datos vienen del RPC `obtener_sponsors_publicos` (solo sponsors activos, campos seguros — migración 066). Grillas dinámicas según cantidad de logos (2 a 10 columnas), alturas estandarizadas por nivel (`BASE_H=120` × pct: platino 100% con glow ámbar, oro 80%, plata 55%, bronce 35%, standard 10%). Tiers superiores (platino/oro) en columna derecha, inferiores (plata/bronce/standard) a ancho completo debajo. Click en un logo abre `SponsorModal.tsx` (Framer Motion, badge de nivel, reseña, email, link al sitio web, cierre con Escape). Título en tipografía Impact con "Socios" en gradient.
+- **Sección "Alianzas Estratégicas"** (ago 2026) — Sub-sección dentro de `NuestrosSociosSection.tsx` debajo de las grillas de sponsors: divisor con label "ALIANZAS ESTRATÉGICAS" y grid responsive de logos (3-6 columnas según breakpoint, tarjetas `h-20` con logo `object-contain`, fallback al nombre en texto si no hay logo). Los datos vienen de `strategic_partners` (solo `is_active=true`, ordenados por `created_at` desc), consultados en paralelo con el RPC de sponsors vía `Promise.all`. Click en un logo abre el mismo `SponsorModal` unificado (tipo `ModalItem` con discriminador `_kind: 'partner'`), que muestra badge de categoría (`CATEGORY_LABELS`: Institución Educativa, Organismo Público, ONG / Asociación, Empresa Aliada, Otro) y bloque destacado "Acciones conjuntas con ITEC" con `actions_description`. La sección solo se renderiza si hay partners activos.
 - **Sección "NUESTRO EQUIPO"** — En `AboutSection.tsx`: título en columna izquierda (tipografía Impact, "Equipo" con text-gradient) y fichas horizontales de miembros rodeándolo (estilo espejo de Nuestros Socios). Primeras 9 fichas en grid 3 columnas; desde la cuarta fila las fichas van a ancho completo (`lg:grid-cols-4/5`). Cada `MemberCard` horizontal (avatar circular, nombre, badge de rol, frase/bio) abre el modal de perfil del miembro al hacer click.
 - **Streaming en vivo en Hero** — Si `streaming_active=true` y `streaming_youtube_url` están configurados en `site_settings`, el Hero muestra el reproductor YouTube en vivo (`StreamingPlayer.tsx`) en lugar de las palabras spotlight. Estado consultado via `/api/streaming/status` (público, cache 30s). El botón "Aula Virtual" también se enciende en rojo pulsante cuando hay una clase con `en_vivo=true` en `clases_virtuales` (Realtime).
 - **Barra de sponsors (marquesina)** — `SponsorHeaderBar.tsx`: barra `fixed` al borde inferior con logos monocromo de sponsors en loop infinito. Los logos se leen del filesystem (`public/sponsors/blanco/`) en el server component de `page.tsx` envuelto en `unstable_cache` (Next.js, `revalidate: 3600` — 1 hora) con timestamp de mtime como cache-buster (`?v=...`). Fade out al hacer scroll (> 10px), velocidad de animación 70s, pausa al hacer hover.
@@ -743,6 +747,7 @@ Creación y gestión de gacetillas. Distribución segmentada a medios registrado
 - CRUD completo de sponsors con niveles (platino, oro, plata, bronce, standard). 
 - **Módulo de Alta:** Formulario integrado (`SponsorRegistrationForm`) para registro de nuevos socios con carga de logos, categorización, validaciones y navegación de retorno. Ahora se renderiza como modal controlado con props `onClose`/`onCreated` (evita el overlay manual en `SponsorsAdmin`); los campos opcionales del schema de `actions.ts` son `null`-ables explícitamente.
 - Generación de reportes de impacto con IA (Ollama). Tokens privados únicos.
+- **Socios Estratégicos (ago 2026):** Sección superior del tab "Sponsors" en `SponsorsAdmin.tsx` separada de los sponsors comerciales por divisor ("Instituciones y organismos aliados de ITEC"). CRUD completo vía `partner-actions.ts`: `createStrategicPartner()`, `updateStrategicPartner()`, `deleteStrategicPartner()` (requieren rol `admin` estricto), `getStrategicPartners()` (público) y `getStrategicPartnersAdmin()`. Validación Zod (`name`, `category` enum, `actions_description` min 10 chars, `logo_url`). El modal `StrategicPartnerModal.tsx` soporta alta y edición con subida de logo al bucket Storage `sponsors-logos` (`cacheControl 3600`, URL pública firmada) — props controladas `onClose`/`onCreated`/`onUpdated`. La página server (`page.tsx`) carga sponsors, acciones y partners en paralelo vía `Promise.all`.
 
 ### Muro Sponsors (`/dashboard/sponsorsNews`)
 Gestión de contenido exclusivo para sponsors. Noticias visibles en portal del sponsor.
@@ -775,7 +780,7 @@ Formulario para crear nuevas acciones de impacto (capacitaciones, eventos social
 ## Integraciones Externas
 
 ### Supabase
-- **Database:** PostgreSQL con 66+ migraciones, RLS policies
+- **Database:** PostgreSQL con 67 migraciones, RLS policies
 - **Auth:** Supabase Auth con Google OAuth, manejo de sesiones via cookies SSR
 - **Storage:** 4 buckets: `article-media`, `avatars`, `training-docs`, `sponsors-logos`
 - **Realtime:** Suscripciones `postgres_changes` para:
@@ -993,3 +998,6 @@ Server Action     →  getCurrentMember()  →  validate Zod  →  mutate DB  �
 - **Streaming en vivo (ago 2026):** Migración `064_streaming_config.sql` + endpoint `/api/streaming/status` (público, cache 30s, `force-dynamic`). Keys de `site_settings`: `streaming_active` (`'true'`/`'false'`) y `streaming_youtube_url`. `StreamingPlayer.tsx` convierte URLs de YouTube (watch, youtu.be, embed, live) a formato embed con autoplay+mute. Se muestra en el Hero en reemplazo de las palabras spotlight.
 - **Elementos flotantes (ago 2026):** Chat widget (`ChatWidget.css`) y selector de idioma anclados a `bottom: 59px` (misma altura, lado a lado en desktop), ambos con fade out al scroll. El contenido de la landing usa `-translate-y-[30px]` (wrapper) y `pb-16` en `<main>` para no solaparse con la barra de sponsors.
 - **Estilos globales (ago 2026):** En `globals.css`, keyframes `marquee-left` + clase `.animate-marquee-infinite` para la marquesina de sponsors (63s default, sobreescrito inline según cantidad de copias). La clase `itec-lang-btn` estiliza el FAB del selector de idioma.
+- **Migración 067_strategic_partners.sql:** Crea la tabla `strategic_partners` para instituciones y organismos aliados. RLS: `SELECT` público limitado a `is_active = true`; `INSERT`/`UPDATE`/`DELETE` solo para `members.role = 'admin'`. Índices en `category` e `is_active`, trigger `strategic_partners_updated_at` mantiene `updated_at`. Debe ejecutarse en Supabase después del deploy.
+- **Alianzas Estratégicas + Socios Estratégicos (ago 2026):** Nueva entidad `strategic_partners` con CRUD admin (`partner-actions.ts` — rol `admin` estricto, no coordinadores) y sección pública "Alianzas Estratégicas" debajo de las grillas de sponsors en la landing. El modal público `SponsorModal.tsx` fue unificado con el tipo unión `ModalItem` (`_kind: 'sponsor' | 'partner'`) que renderiza badge de tier o de categoría según corresponda. Los logos de partners se suben al bucket Storage existente `sponsors-logos`. Nota: `strategic_partners` aún no está tipada en `src/types/database.ts`.
+- **Formato original de imágenes (ago 2026):** Los medios de comunicaciones preservan su aspect ratio original: `MediaSlideshow` en `NewsWallMulticanal.tsx` usa `object-contain` con `max-h-[280px]`/`min-h-[120px]` sobre fondo `bg-black/40` (en vez de recortar con `aspect-video object-cover`), tanto para imágenes como videos. Mismo criterio aplicado a la galería de acciones del portal del sponsor (`/sponsors/[id]`).

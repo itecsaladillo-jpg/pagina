@@ -1,187 +1,496 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState, type ReactNode } from 'react'
+import Image from 'next/image'
+import { motion } from 'framer-motion'
 import { createClient } from '@/lib/supabase/client'
-import { SponsorModal, PublicSponsor, ModalItem } from './SponsorModal'
+import { SponsorModal } from './SponsorModal'
+import type { PublicPartner, SponsorTier } from '@/types/database'
+import type { SocioAlianza, SocioCanalDifusion, SocioSponsor } from '@/lib/data/socios'
 
-const TIER_ORDER = ['platino', 'oro', 'plata', 'bronce', 'standard']
-
-// Columnas dinámicas según cantidad de logos (2 a 10 columnas)
-const COLS_CLASS: Record<number, string> = {
-  2: 'grid-cols-2',
-  3: 'grid-cols-3',
-  4: 'grid-cols-4',
-  5: 'grid-cols-5',
-  6: 'grid-cols-6',
-  7: 'grid-cols-7',
-  8: 'grid-cols-8',
-  9: 'grid-cols-9',
-  10: 'grid-cols-10',
+interface NuestrosSociosSectionProps {
+  sponsors?: SocioSponsor[]
+  alianzas?: SocioAlianza[]
+  canalesDifusion?: SocioCanalDifusion[]
 }
 
-// preferred: columnas de referencia del nivel; max: tope de columnas
-// pct: altura del contenedor relativa al nivel (platino 100%, oro 80%, plata 55%, bronce 35%, standard 10%)
-const TIER_BASE: Record<string, { label: string; preferred: number; max: number; pct: number; glow: boolean }> = {
-  platino: { label: 'Platinum', preferred: 3, max: 5, pct: 1.0, glow: true },
-  oro: { label: 'Oro', preferred: 4, max: 6, pct: 0.8, glow: false },
-  plata: { label: 'Plata', preferred: 5, max: 7, pct: 0.55, glow: false },
-  bronce: { label: 'Bronce', preferred: 6, max: 8, pct: 0.35, glow: false },
-  standard: { label: 'Standard', preferred: 8, max: 10, pct: 0.1, glow: false },
+const TIER_LAYOUT: Record<
+  SponsorTier,
+  { grid: string; cardH: number; pad: string; sizes: string; featured: boolean }
+> = {
+  platino: {
+    grid: 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3',
+    cardH: 120,
+    pad: 'p-5',
+    sizes: '(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw',
+    featured: true,
+  },
+  oro: {
+    grid: 'grid-cols-2 md:grid-cols-3 lg:grid-cols-4',
+    cardH: 88,
+    pad: 'p-3',
+    sizes: '(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw',
+    featured: false,
+  },
+  plata: { grid: '', cardH: 0, pad: '', sizes: '', featured: false },
+  bronce: { grid: '', cardH: 0, pad: '', sizes: '', featured: false },
+  standard: { grid: '', cardH: 0, pad: '', sizes: '', featured: false },
 }
 
-const BASE_H = 120
+const PREMIUM_TIERS: SponsorTier[] = ['platino', 'oro']
 
-// Altura estándar por nivel de sponsoreo: platinum 100%, oro 80%, plata 55%, bronce 35%, standard 10%
-function SponsorCard({ sponsor, cardH, glow, onOpen }: {
-  sponsor: PublicSponsor
-  cardH: number
-  glow: boolean
-  onOpen: () => void
-}) {
+const TIER_FULLWIDTH: Record<
+  Exclude<SponsorTier, 'platino' | 'oro'>,
+  { grid: string; cardH: number; pad: string; sizes: string }
+> = {
+  plata: {
+    grid: 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-4 md:gap-5',
+    cardH: 60,
+    pad: 'p-2',
+    sizes: '(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, 16vw',
+  },
+  bronce: {
+    grid: 'grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 gap-4 md:gap-5',
+    cardH: 52,
+    pad: 'p-2',
+    sizes: '(max-width: 640px) 33vw, (max-width: 768px) 25vw, (max-width: 1024px) 16vw, 12vw',
+  },
+  standard: {
+    grid: 'grid-cols-3 sm:grid-cols-5 md:grid-cols-7 lg:grid-cols-9 xl:grid-cols-11 gap-3 md:gap-4',
+    cardH: 46,
+    pad: 'p-1.5',
+    sizes: '(max-width: 640px) 33vw, (max-width: 768px) 20vw, (max-width: 1024px) 14vw, 10vw',
+  },
+}
+
+const ALLIANCES_GRID =
+  'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-4 md:gap-5'
+const ALLIANCES_CARD_H = 56
+const ALLIANCES_PAD = 'p-2'
+const ALLIANCES_SIZES =
+  '(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, 16vw'
+
+const MEDIA_GRID =
+  'grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 gap-4 md:gap-5'
+const MEDIA_CARD_H = 48
+const MEDIA_PAD = 'p-2'
+const MEDIA_SIZES =
+  '(max-width: 640px) 33vw, (max-width: 768px) 25vw, (max-width: 1024px) 16vw, 12vw'
+
+const FULL_BLEED =
+  'w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] px-4 md:px-12'
+
+function Reveal({ children, className }: { children: ReactNode; className?: string }) {
   return (
-    <button
-      onClick={onOpen}
-      style={{ height: cardH }}
-      className={`bg-white rounded-2xl border border-[var(--border-subtle)] flex items-center justify-center overflow-hidden transition-all duration-300 hover:scale-105 hover:border-[var(--accent-warm)]/40 cursor-pointer ${glow ? 'ring-2 ring-amber-300/20 shadow-[0_0_40px_-10px_rgba(251,191,36,0.25)]' : ''}`}
+    <motion.div
+      initial={{ opacity: 0, y: 28 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-60px' }}
+      transition={{ duration: 0.5, ease: 'easeOut' }}
+      className={className}
     >
-      {sponsor.logo_color_url ? (
-        <img
-          src={sponsor.logo_color_url}
-          alt={sponsor.name}
-          className="w-full h-full object-contain"
-          loading="lazy"
-          decoding="async"
-          draggable={false}
-        />
-      ) : (
-        <span className="text-black/70 text-sm font-semibold text-center px-2">
-          {sponsor.name}
-        </span>
-      )}
-    </button>
+      {children}
+    </motion.div>
   )
 }
 
-export function NuestrosSociosSection() {
-  const [sponsors, setSponsors] = useState<PublicSponsor[]>([])
-  const [partners, setPartners] = useState<{ id: string; name: string; logo_url: string | null; category: string | null; actions_description: string | null }[]>([])
-  const [loading, setLoading] = useState(true)
-  const [selectedItem, setSelectedItem] = useState<ModalItem | null>(null)
+function LogoImage({ src, alt, sizes }: { src: string; alt: string; sizes: string }) {
+  if (/\.svg($|\?)/i.test(src)) {
+    return (
+      <img
+        src={src}
+        alt={alt}
+        className="h-full w-full object-contain"
+        loading="lazy"
+        decoding="async"
+        draggable={false}
+      />
+    )
+  }
+  return (
+    <Image
+      src={src}
+      alt={alt}
+      fill
+      sizes={sizes}
+      className="object-contain"
+      draggable={false}
+    />
+  )
+}
+
+function PartnerCard({ partner, cardH, pad, sizes, featured, onOpen }: {
+  partner: PublicPartner
+  cardH: number
+  pad: string
+  sizes: string
+  featured?: boolean
+  onOpen: () => void
+}) {
+  const logo = partner.logo_color_url || partner.logo_url
+
+  return (
+    <motion.button
+      type="button"
+      onClick={onOpen}
+      style={{ height: cardH }}
+      whileHover={{ y: -4, scale: 1.03 }}
+      whileTap={{ scale: 0.97 }}
+      transition={{ type: 'spring', stiffness: 380, damping: 24 }}
+      aria-label={partner.name}
+      className={`relative flex items-center justify-center overflow-hidden rounded-2xl border bg-white cursor-pointer transition-colors duration-300 ${
+        featured
+          ? 'border-amber-300/50 ring-1 ring-amber-300/25 shadow-[0_0_45px_-10px_rgba(251,191,36,0.35)] hover:border-amber-300/70 hover:shadow-[0_0_60px_-8px_rgba(251,191,36,0.5)]'
+          : 'border-[var(--border-subtle)] hover:border-[var(--accent-warm)]/40'
+      }`}
+    >
+      {logo ? (
+        <div className={`absolute inset-0 ${pad}`}>
+          <LogoImage src={logo} alt={partner.name} sizes={sizes} />
+        </div>
+      ) : (
+        <span className="px-3 text-center text-sm font-semibold leading-tight text-black/70">
+          {partner.name}
+        </span>
+      )}
+    </motion.button>
+  )
+}
+
+function sponsorFromServer(s: SocioSponsor): PublicPartner {
+  return {
+    id: s.id,
+    name: s.name,
+    type: 'SPONSOR',
+    tier: s.tier,
+    logo_color_url: s.logo_color_url,
+    logo_url: s.logo_color_url,
+    resena: s.resena,
+    website_url: s.website_url,
+    email: s.email,
+    category: null,
+    actions_description: null,
+  }
+}
+
+function alianzaFromServer(a: SocioAlianza): PublicPartner {
+  return {
+    id: a.id,
+    name: a.name,
+    type: 'STRATEGIC_ALLIANCE',
+    tier: null,
+    logo_color_url: null,
+    logo_url: a.logo_url,
+    resena: null,
+    website_url: null,
+    email: null,
+    category: a.category,
+    actions_description: a.actions_description,
+  }
+}
+
+function canalFromServer(c: SocioCanalDifusion): PublicPartner {
+  return {
+    id: c.id,
+    name: c.nombre_medio,
+    type: 'DIFFUSION_CHANNEL',
+    tier: null,
+    logo_color_url: null,
+    logo_url: null,
+    resena: null,
+    website_url: c.url_web,
+    email: c.email,
+    category: c.tipo_medio,
+    actions_description: null,
+  }
+}
+
+export function NuestrosSociosSection({ sponsors, alianzas, canalesDifusion }: NuestrosSociosSectionProps) {
+  const serverPartners = useMemo(
+    () =>
+      sponsors !== undefined || alianzas !== undefined || canalesDifusion !== undefined
+        ? [
+            ...(sponsors ?? []).map(sponsorFromServer),
+            ...(alianzas ?? []).map(alianzaFromServer),
+            ...(canalesDifusion ?? []).map(canalFromServer),
+          ]
+        : null,
+    [sponsors, alianzas, canalesDifusion]
+  )
+
+  const [partners, setPartners] = useState<PublicPartner[]>(() => serverPartners ?? [])
+  const [loading, setLoading] = useState(() => serverPartners === null)
+  const [selected, setSelected] = useState<PublicPartner | null>(null)
 
   useEffect(() => {
+    if (serverPartners !== null) return
+
     let mounted = true
 
-    const fetchData = async () => {
+    const load = async () => {
       const supabase = createClient()
-      const [{ data: sponsorsData }, { data: partnersData }] = await Promise.all([
+
+      const { data: unified, error: rpcError } = await supabase.rpc('obtener_socios_publicos')
+      if (!rpcError && unified && unified.length > 0) {
+        if (mounted) {
+          setPartners(unified as PublicPartner[])
+          setLoading(false)
+        }
+        return
+      }
+
+      const [{ data: sponsorsData }, { data: alliancesData }] = await Promise.all([
         supabase.rpc('obtener_sponsors_publicos'),
-        supabase.from('strategic_partners').select('id, name, logo_url, category, actions_description').eq('is_active', true).order('created_at', { ascending: false })
+        supabase
+          .from('strategic_partners')
+          .select('id, name, logo_url, category, actions_description')
+          .eq('is_active', true)
+          .order('created_at', { ascending: false }),
       ])
+
       if (mounted) {
-        if (sponsorsData) setSponsors(sponsorsData as PublicSponsor[])
-        if (partnersData) setPartners(partnersData)
+        const legacy: PublicPartner[] = []
+        for (const s of (sponsorsData ?? []) as Array<{
+          id: string
+          name: string
+          tier: string
+          logo_color_url: string | null
+          resena: string | null
+          website_url: string | null
+          email: string | null
+        }>) {
+          legacy.push({
+            id: s.id,
+            name: s.name,
+            type: 'SPONSOR',
+            tier: s.tier as PublicPartner['tier'],
+            logo_color_url: s.logo_color_url,
+            logo_url: s.logo_color_url,
+            resena: s.resena,
+            website_url: s.website_url,
+            email: s.email,
+            category: null,
+            actions_description: null,
+          })
+        }
+        for (const p of alliancesData ?? []) {
+          legacy.push({
+            id: p.id,
+            name: p.name,
+            type: 'STRATEGIC_ALLIANCE',
+            tier: null,
+            logo_color_url: null,
+            logo_url: p.logo_url,
+            resena: null,
+            website_url: null,
+            email: null,
+            category: p.category,
+            actions_description: p.actions_description,
+          })
+        }
+        setPartners(legacy)
         setLoading(false)
       }
     }
 
-    fetchData()
-    return () => { mounted = false }
-  }, [])
+    load()
+    return () => {
+      mounted = false
+    }
+  }, [serverPartners])
 
-  const grouped = TIER_ORDER
-    .map((tier) => ({ tier, config: TIER_BASE[tier], list: sponsors.filter((s) => s.tier === tier) }))
-    .filter((g) => g.list.length > 0)
+  const sponsorsList = useMemo(() => partners.filter((p) => p.type === 'SPONSOR'), [partners])
+  const alliances = useMemo(() => partners.filter((p) => p.type === 'STRATEGIC_ALLIANCE'), [partners])
+  const media = useMemo(() => partners.filter((p) => p.type === 'DIFFUSION_CHANNEL'), [partners])
 
-  const upperTiers = grouped.filter((g) => g.tier === 'platino' || g.tier === 'oro')
-  const lowerTiers = grouped.filter((g) => g.tier === 'plata' || g.tier === 'bronce' || g.tier === 'standard')
-
-  const renderGroup = ({ tier, config, list }: (typeof grouped)[number]) => {
-    const cols = Math.min(config.max, Math.max(2, Math.round(list.length * 0.9)))
-    const cardH = Math.round(BASE_H * config.pct)
-
-    return (
-      <div key={tier} className="mb-8 last:mb-0">
-        <div className={`grid ${COLS_CLASS[cols]} gap-3`}>
-          {list.map((s) => (
-            <SponsorCard
-              key={s.id}
-              sponsor={s}
-              cardH={cardH}
-              glow={config.glow}
-              onOpen={() => setSelectedItem(s)}
-            />
-          ))}
-        </div>
-      </div>
-    )
-  }
+  const sponsorByTier = useMemo(() => {
+    const groups = new Map<SponsorTier, PublicPartner[]>()
+    for (const p of sponsorsList) {
+      const tier = p.tier as SponsorTier
+      const arr = groups.get(tier)
+      if (arr) arr.push(p)
+      else groups.set(tier, [p])
+    }
+    return groups
+  }, [sponsorsList])
 
   return (
     <section id="socios" className="py-16 relative">
-      <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-[minmax(0,340px)_1fr] gap-10 lg:gap-14 items-start">
-        <div className="text-left">
-          <span className="inline-block text-xs font-bold tracking-[0.2em] text-[var(--accent-warm)] uppercase px-4 py-1.5 rounded-full border border-[var(--accent-warm)]/20 bg-[var(--accent-warm)]/5 mb-4">
-            Institucional
-          </span>
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-white leading-[1.1] tracking-tighter">
-            Nuestros <br />
-            <span className="text-gradient">Socios</span>
-          </h2>
-          <p className="text-[var(--text-secondary)] text-2xl leading-snug max-w-[280px]">
-            Con ellos compartimos el sueño de un Saladillo de avanzada en un país mejor
-          </p>
-        </div>
-
-        {loading ? (
+      {loading ? (
+        <div className="max-w-7xl mx-auto px-4 md:px-8">
           <div className="flex justify-center py-12">
-            <div className="w-10 h-10 border-4 border-[var(--accent-warm)] border-t-transparent rounded-full animate-spin"></div>
+            <div className="w-10 h-10 border-4 border-[var(--accent-warm)] border-t-transparent rounded-full animate-spin" />
           </div>
-        ) : grouped.length > 0 ? (
-          <>
-            <div className="space-y-8">
-              {upperTiers.map(renderGroup)}
-            </div>
-
-            {lowerTiers.length > 0 && (
-              <div className="lg:col-span-2 space-y-8">
-                {lowerTiers.map(renderGroup)}
-              </div>
-            )}
-
-            {partners.length > 0 && (
-              <div className="lg:col-span-2">
-                <div className="flex items-center gap-4 mb-6">
-                  <div className="h-px flex-1 bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-                  <span className="text-[10px] font-bold tracking-[0.25em] uppercase text-white/30">Alianzas Estratégicas</span>
-                  <div className="h-px flex-1 bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-                </div>
-                <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3">
-                  {partners.map((p) => (
-                    <button
-                      key={p.id}
-                      onClick={() => setSelectedItem({ ...p, _kind: 'partner' })}
-                      className="bg-white/5 border border-white/5 rounded-xl flex items-center justify-center p-4 h-20 hover:bg-white/10 hover:border-white/10 transition-all cursor-pointer"
-                      title={p.name}
-                    >
-                      {p.logo_url ? (
-                        <img src={p.logo_url} alt={p.name} className="max-h-full max-w-full object-contain" loading="lazy" decoding="async" draggable={false} />
-                      ) : (
-                        <span className="text-white/50 text-xs text-center leading-tight">{p.name}</span>
-                      )}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-          </>
-        ) : (
+        </div>
+      ) : partners.length === 0 ? (
+        <div className="max-w-7xl mx-auto px-4 md:px-8">
           <div className="text-center text-[var(--text-secondary)] py-12 glass rounded-2xl border border-[var(--border-subtle)]">
             Conocé a las empresas que hacen posible el ITEC Augusto Cicaré.
           </div>
-        )}
-      </div>
+        </div>
+      ) : (
+        <>
+          {/* ─── ZONA CONTENIDA: Título + Platino + Oro ─── */}
+          <div className="max-w-7xl mx-auto px-4 md:px-8 grid grid-cols-1 lg:grid-cols-[minmax(0,340px)_1fr] gap-10 lg:gap-14 items-start">
+            <div className="text-left">
+              <span className="inline-block text-xs font-bold tracking-[0.2em] text-[var(--accent-warm)] uppercase px-4 py-1.5 rounded-full border border-[var(--accent-warm)]/20 bg-[var(--accent-warm)]/5 mb-4">
+                Institucional
+              </span>
+              <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-white leading-[1.1] tracking-tighter">
+                Nuestros <br />
+                <span className="text-gradient">Socios</span>
+              </h2>
+              <p className="text-[var(--text-secondary)] text-2xl leading-snug max-w-[280px]">
+                Con ellos compartimos el sueño de un Saladillo de avanzada en un país mejor
+              </p>
+            </div>
 
-      <SponsorModal sponsor={selectedItem} onClose={() => setSelectedItem(null)} />
+            <div className="lg:col-start-2 space-y-6">
+              {PREMIUM_TIERS.map((tier) => {
+                const list = sponsorByTier.get(tier)
+                if (!list || list.length === 0) return null
+                const layout = TIER_LAYOUT[tier]
+                return (
+                  <Reveal key={tier}>
+                    <div className={`grid ${layout.grid} gap-3`}>
+                      {list.map((p) => (
+                        <PartnerCard
+                          key={p.id}
+                          partner={p}
+                          cardH={layout.cardH}
+                          pad={layout.pad}
+                          sizes={layout.sizes}
+                          featured={layout.featured}
+                          onOpen={() => setSelected(p)}
+                        />
+                      ))}
+                    </div>
+                  </Reveal>
+                )
+              })}
+            </div>
+          </div>
+
+          {/* ─── BLOQUES FULL-BLEED INDEPENDIENTES ─── */}
+
+          {/* Plata */}
+          {(() => {
+            const list = sponsorByTier.get('plata')
+            if (!list || list.length === 0) return null
+            const cfg = TIER_FULLWIDTH.plata
+            return (
+              <div className={`${FULL_BLEED} my-12`}>
+                <Reveal>
+                  <div className={`grid ${cfg.grid}`}>
+                    {list.map((p) => (
+                      <PartnerCard
+                        key={p.id}
+                        partner={p}
+                        cardH={cfg.cardH}
+                        pad={cfg.pad}
+                        sizes={cfg.sizes}
+                        onOpen={() => setSelected(p)}
+                      />
+                    ))}
+                  </div>
+                </Reveal>
+              </div>
+            )
+          })()}
+
+          {/* Bronce */}
+          {(() => {
+            const list = sponsorByTier.get('bronce')
+            if (!list || list.length === 0) return null
+            const cfg = TIER_FULLWIDTH.bronce
+            return (
+              <div className={`${FULL_BLEED} my-12`}>
+                <Reveal>
+                  <div className={`grid ${cfg.grid}`}>
+                    {list.map((p) => (
+                      <PartnerCard
+                        key={p.id}
+                        partner={p}
+                        cardH={cfg.cardH}
+                        pad={cfg.pad}
+                        sizes={cfg.sizes}
+                        onOpen={() => setSelected(p)}
+                      />
+                    ))}
+                  </div>
+                </Reveal>
+              </div>
+            )
+          })()}
+
+          {/* Standard */}
+          {(() => {
+            const list = sponsorByTier.get('standard')
+            if (!list || list.length === 0) return null
+            const cfg = TIER_FULLWIDTH.standard
+            return (
+              <div className={`${FULL_BLEED} my-12`}>
+                <Reveal>
+                  <div className={`grid ${cfg.grid}`}>
+                    {list.map((p) => (
+                      <PartnerCard
+                        key={p.id}
+                        partner={p}
+                        cardH={cfg.cardH}
+                        pad={cfg.pad}
+                        sizes={cfg.sizes}
+                        onOpen={() => setSelected(p)}
+                      />
+                    ))}
+                  </div>
+                </Reveal>
+              </div>
+            )
+          })()}
+
+          {/* Alianzas Estratégicas */}
+          {alliances.length > 0 && (
+            <div className={`${FULL_BLEED} my-12`}>
+              <Reveal>
+                <div className={`grid ${ALLIANCES_GRID}`}>
+                  {alliances.map((p) => (
+                    <PartnerCard
+                      key={p.id}
+                      partner={p}
+                      cardH={ALLIANCES_CARD_H}
+                      pad={ALLIANCES_PAD}
+                      sizes={ALLIANCES_SIZES}
+                      onOpen={() => setSelected(p)}
+                    />
+                  ))}
+                </div>
+              </Reveal>
+            </div>
+          )}
+
+          {/* Canales de Comunicación / Prensa */}
+          {media.length > 0 && (
+            <div className={`${FULL_BLEED} my-12`}>
+              <Reveal>
+                <div className={`grid ${MEDIA_GRID}`}>
+                  {media.map((p) => (
+                    <PartnerCard
+                      key={p.id}
+                      partner={p}
+                      cardH={MEDIA_CARD_H}
+                      pad={MEDIA_PAD}
+                      sizes={MEDIA_SIZES}
+                      onOpen={() => setSelected(p)}
+                    />
+                  ))}
+                </div>
+              </Reveal>
+            </div>
+          )}
+        </>
+      )}
+
+      <SponsorModal isOpen={selected !== null} onClose={() => setSelected(null)} entity={selected} />
     </section>
   )
 }

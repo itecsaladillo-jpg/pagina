@@ -17,6 +17,55 @@ export type ActionType = 'capacitacion' | 'evento_social' | 'divulgacion'
 export type ActionStatus = 'planificacion' | 'en_curso' | 'finalizada' | 'cancelada'
 
 // ─────────────────────────────────────────
+// PARTNERS: Clasificación de socios
+// ─────────────────────────────────────────
+
+export type PartnerType = 'SPONSOR' | 'STRATEGIC_ALLIANCE' | 'DIFFUSION_CHANNEL'
+
+// Tipo de entidad para el modal público de la landing
+export type PartnerEntityType = 'sponsor' | 'alianza' | 'difusion'
+
+export interface PublicPartner {
+  id: string
+  name: string
+  type: PartnerType
+  tier: SponsorTier | null
+  logo_color_url: string | null
+  logo_url: string | null
+  resena: string | null
+  website_url: string | null
+  email: string | null
+  category: string | null
+  actions_description: string | null
+}
+
+// Entidades soportadas por el modal público unificado (SponsorModal).
+// Los campos de visualización son opcionales para aceptar tanto filas
+// crudas de las tablas como proyecciones normalizadas (ej. PublicPartner,
+// RPC obtener_socios_publicos).
+export type PartnerEntity = Sponsor | StrategicPartner | MediaChannel
+
+export interface StrategicPartner {
+  id: string
+  created_at?: string
+  updated_at?: string
+  name: string
+  category?: string | null
+  actions_description?: string | null
+  logo_url?: string | null
+  is_active?: boolean
+}
+
+export interface MediaChannel {
+  id: string
+  name?: string
+  nombre_medio?: string | null
+  tipo_medio?: string | null
+  url_web?: string | null
+  email?: string | null
+}
+
+// ─────────────────────────────────────────
 // TABLA: members
 // ─────────────────────────────────────────
 

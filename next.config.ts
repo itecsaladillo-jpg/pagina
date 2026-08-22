@@ -1,5 +1,15 @@
 import type { NextConfig } from "next";
 
+// Hostname de Supabase para optimización de imágenes (logos de sponsors/alianzas)
+const supabaseHostname = (() => {
+  try {
+    const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    return url ? new URL(url).hostname : null;
+  } catch {
+    return null;
+  }
+})();
+
 const nextConfig: NextConfig = {
   // Compresión gzip/brotli en servidor
   compress: true,
@@ -10,6 +20,13 @@ const nextConfig: NextConfig = {
     minimumCacheTTL: 60 * 60 * 24 * 30, // 30 días
     deviceSizes: [640, 750, 828, 1080, 1200, 1920],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    remotePatterns: [
+      ...(supabaseHostname
+        ? [{ protocol: 'https' as const, hostname: supabaseHostname }]
+        : []),
+      { protocol: 'https', hostname: '**.supabase.co' },
+      { protocol: 'https', hostname: '**.supabase.in' },
+    ],
   },
 
   // Headers de cache para assets estáticos
