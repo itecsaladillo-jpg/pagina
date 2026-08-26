@@ -80,7 +80,7 @@ export function Navbar() {
   return (
     <nav
       className={`sticky top-0 z-50 w-full transition-all duration-300 border-b border-[var(--border-subtle)] flex items-center ${
-        showSolidNavbar ? 'h-20' : 'h-24'
+        showSolidNavbar ? 'h-14' : 'h-16'
       }`}
       style={{
         background: showSolidNavbar 
@@ -93,7 +93,7 @@ export function Navbar() {
         {/* Logo */}
         <Link href="/" className="group relative shrink-0 block">
           {/* Iluminación puntual debajo del logo */}
-          <div className="absolute left-1/2 -translate-x-1/2 -bottom-2 w-20 h-8 bg-[#3b82f6] blur-[30px] opacity-40 -z-10 rounded-full" />
+          <div className="absolute left-1/2 -translate-x-1/2 -bottom-1.5 w-16 h-6 bg-[#3b82f6] blur-[24px] opacity-40 -z-10 rounded-full" />
           
           <Image
             src="/logoitectrans_v2.png"
@@ -101,7 +101,7 @@ export function Navbar() {
             width={200}
             height={76}
             className={`w-auto object-contain group-hover:opacity-90 transition-all duration-300 relative z-10 shrink-0 ${
-              showSolidNavbar ? 'h-[42px]' : 'h-[54px]'
+              showSolidNavbar ? 'h-[32px]' : 'h-[40px]'
             }`}
             priority
             loading="eager"
