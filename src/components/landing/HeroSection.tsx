@@ -151,7 +151,7 @@ export function HeroSection() {
             {/* Badge */}
             <div className="inline-flex items-center gap-2 glass rounded-full px-4 py-2 border border-[var(--border-glow)] relative z-10 max-w-full">
               <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse flex-shrink-0" />
-              <span className="text-[8px] sm:text-[9px] md:text-[10px] lg:text-xs font-medium text-[var(--text-secondary)] text-center leading-tight">
+              <span className="text-[8px] sm:text-[9px] md:text-[10px] lg:text-xs font-medium text-[var(--text-secondary)] text-center leading-tight whitespace-pre-line">
                 {dict.hero.badge}
               </span>
             </div>
