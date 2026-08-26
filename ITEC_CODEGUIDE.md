@@ -520,7 +520,8 @@ Recuperación de contexto en 5 niveles. **Orden de resolución:** P1 → P2 → 
 - `buscarConversacionesSimilares(...)`: recuperación semántica P4 restringida a la sesión propia.
 
 ### 9.7 Asistente IA (`POST /api/asistente`)
-- Cadena de 3 niveles: **Groq `openai/gpt-oss-120b` → OpenRouter `nvidia/nemotron-3-super-120b-a12b:free` → Gemini `gemini-flash-latest`** (timeouts 15s/15s/20s, peor caso ~50s < maxDuration 60; error sanitizado al cliente con detalle de cada provider solo en logs server).
+- **Cadena con reintentos multi-pasada (ago 2026):** los providers se recorren en orden **Groq `openai/gpt-oss-120b` → OpenRouter `nvidia/nemotron-3-super-120b-a12b:free` → Gemini `gemini-flash-latest`**, y si TODOS fallan se vuelve a recorrer la cadena (pasada 2, 3…) hasta agotar un presupuesto de **48s** (`DEADLINE_MS`) dentro del `maxDuration = 60`. Backoff de 1.2s entre fallos. Los errores transitorios (429/5xx/timeouts/red) se reintenta; los permanentes (**400/401/403/404/413**) deshabilitan al provider por el resto del request. Ante respuestas inválidas (vacías, <10 chars o metadata de seguridad) también se reintenta. La respuesta 502 incluye `{intentos, pasadas, groq, openrouter, gemini}` para diagnóstico.
+- Timeouts por intento: Groq/OpenRouter 13s, Gemini 18s — acotados además por el presupuesto restante (`MIN_PRESUPUESTO_INTENTO` 3s: no se arranca un intento que no pueda terminar dentro del deadline).
 - ⚠️ **Los modelos gratuitos rotan frecuentemente** (Groq apagó los Llama en ago 2026; OpenRouter retira slugs :free sin aviso). Si el asistente devuelve "Todos los providers fallaron", diagnosticar SIEMPRE con `GET /api/asistente/debug` (hace ping real a cada provider) y actualizar las constantes `GROQ_MODEL`/`OPENROUTER_MODEL`/`GEMINI_MODEL` al tope del route.
 - `maxDuration = 60` (route export + vercel.json).
 - Input: `{ mensaje, historial[], sessionId?, idioma? }`. sessionId default `crypto.randomUUID()`.
@@ -935,7 +936,7 @@ Server Action     →  getCurrentMember() → Zod → mutate → revalidatePath(
 17. **`scratch/` está gitignored:** los scripts de diagnóstico ahí no están versionados; no depender de ellos en CI.
 18. **CI/CD sin gates:** el workflow de deploy no corre lint/tests. Ejecutar `npm run lint` localmente antes de pushear.
 19. **Migraciones con números duplicados** y sin rollback: aplicar manualmente en Supabase en orden cronológico de nombre.
-20. **Timeouts IA:** cadena del asistente Groq 15s → OpenRouter 15s → Gemini 20s (peor caso ~50s, cubierto por maxDuration 60); Ollama 98s (reportes/feedback). Si un provider devuelve respuesta inválida/vacía (<10 chars o metadata de seguridad), la cadena pasa al siguiente automáticamente.
+20. **Timeouts y reintentos IA:** cadena del asistente con reintentos multi-pasada bajo deadline de 48s (Groq 13s → OR 13s → Gemini 18s por intento, backoff 1.2s; errores permanentes 400/401/403/404/413 deshabilitan al provider en el request). Ollama 98s (reportes/feedback). No subir `max_tokens` ni `MAX_PROMPT_CHARS` sin revisar §9.7 (riesgo 413 de Groq).
 21. **`docsContext.ts` es AUTOGENERADO** (~1366 líneas, "No editar"): regenerar con `npm run sync-docs`.
 22. **Embeddings mixtos:** pgvector almacena vectores de 768 dims; HuggingFace produce 384 (zero-padded). Mezclar orígenes de embeddings en la misma colección degrada precisión de la búsqueda.
 23. **`lib/drive.ts` tiene folder IDs placeholder** (`REEMPLAZAR_CON_ID_REAL`): el mapeo real vive en `commissions.drive_folder_id` / `site_settings`.

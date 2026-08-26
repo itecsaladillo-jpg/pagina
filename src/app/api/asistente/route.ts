@@ -9,9 +9,32 @@ export const maxDuration = 60
 
 const GROQ_MODEL = 'openai/gpt-oss-120b'
 
-async function callGroq(messages: { role: string; content: string }[]): Promise<Response> {
+/** Error de provider con status HTTP para detectar fallos permanentes. */
+type ErrorProvider = Error & { status?: number }
+
+function errorProvider(mensaje: string, status?: number): ErrorProvider {
+  const err = new Error(mensaje) as ErrorProvider
+  err.status = status
+  return err
+}
+
+/**
+ * Valida el texto de una respuesta de IA. Lanza error si viene vacía,
+ * es metadata de seguridad o es demasiado corta (cuenta como intento fallido).
+ */
+function validarTextoRespuesta(texto: string, provider: string): string {
+  const limpio = (texto || '').trim()
+  const esMetadataSeguridad = /^(User Safety|Response Safety|Safety|safe|unsafe|Content [Aa]nalysis)/i.test(limpio)
+  if (!limpio || esMetadataSeguridad || limpio.length < 10) {
+    console.error(`[Asistente] ${provider} respuesta inválida:`, limpio.slice(0, 200))
+    throw errorProvider(`Invalid response from ${provider}`)
+  }
+  return limpio
+}
+
+async function callGroq(messages: { role: string; content: string }[]): Promise<string> {
   const apiKey = process.env.GROQ_API_KEY
-  if (!apiKey) throw new Error('GROQ_API_KEY not set')
+  if (!apiKey) throw errorProvider('GROQ_API_KEY not set')
 
   const totalChars = messages.reduce((sum, m) => sum + m.content.length, 0)
   console.log(`[Asistente] Groq (${GROQ_MODEL}): ${messages.length} msgs, ${totalChars} chars`)
@@ -29,22 +52,24 @@ async function callGroq(messages: { role: string; content: string }[]): Promise<
       temperature: 0.7,
       max_tokens: 2048
     }),
-    signal: AbortSignal.timeout(15000),
+    signal: AbortSignal.timeout(13000),
   })
 
   if (!response.ok) {
     const errorBody = await response.text().catch(() => 'no body')
-    console.error(`[Asistente] Groq ${response.status}:`, errorBody.slice(0, 500))
-    throw new Error(`Groq ${response.status}`)
+    console.error(`[Asistente] Groq ${response.status}:`, errorBody.slice(0, 400))
+    throw errorProvider(`Groq ${response.status}`, response.status)
   }
-  return response
+
+  const data = await response.json()
+  return validarTextoRespuesta(data.choices?.[0]?.message?.content || '', 'Groq')
 }
 
 const OPENROUTER_MODEL = 'nvidia/nemotron-3-super-120b-a12b:free'
 
-async function callOpenRouter(messages: { role: string; content: string }[]): Promise<Response> {
+async function callOpenRouter(messages: { role: string; content: string }[]): Promise<string> {
   const apiKey = process.env.OPENROUTER_API_KEY
-  if (!apiKey) throw new Error('OPENROUTER_API_KEY not set')
+  if (!apiKey) throw errorProvider('OPENROUTER_API_KEY not set')
 
   const totalChars = messages.reduce((sum, m) => sum + m.content.length, 0)
   console.log(`[Asistente] OpenRouter (fallback) (${OPENROUTER_MODEL}): ${messages.length} msgs, ${totalChars} chars`)
@@ -64,22 +89,24 @@ async function callOpenRouter(messages: { role: string; content: string }[]): Pr
       temperature: 0.7,
       max_tokens: 2048
     }),
-    signal: AbortSignal.timeout(15000),
+    signal: AbortSignal.timeout(13000),
   })
 
   if (!response.ok) {
     const errorBody = await response.text().catch(() => 'no body')
-    console.error(`[Asistente] OpenRouter ${response.status}:`, errorBody.slice(0, 500))
-    throw new Error(`OpenRouter ${response.status}`)
+    console.error(`[Asistente] OpenRouter ${response.status}:`, errorBody.slice(0, 400))
+    throw errorProvider(`OpenRouter ${response.status}`, response.status)
   }
-  return response
+
+  const data = await response.json()
+  return validarTextoRespuesta(data.choices?.[0]?.message?.content || '', 'OpenRouter')
 }
 
 const GEMINI_MODEL = 'gemini-flash-latest'
 
-async function callGemini(messages: { role: string; content: string }[]): Promise<string> {
+async function callGemini(messages: { role: string; content: string }[], timeoutMs: number): Promise<string> {
   const apiKey = process.env.GEMINI_API_KEY || process.env.GEMINI_APY_KEY || process.env.GOOGLE_GENERATIVE_AI_API_KEY
-  if (!apiKey) throw new Error('No Gemini key configured')
+  if (!apiKey) throw errorProvider('No Gemini key configured')
 
   const systemInstruction = messages.find(m => m.role === 'system')?.content
   const contents = messages
@@ -101,24 +128,22 @@ async function callGemini(messages: { role: string; content: string }[]): Promis
         contents,
         generationConfig: { temperature: 0.7, maxOutputTokens: 2048 },
       }),
-      signal: AbortSignal.timeout(20000),
+      signal: AbortSignal.timeout(timeoutMs),
     }
   )
 
   if (!response.ok) {
     const errorBody = await response.text().catch(() => 'no body')
-    console.error(`[Asistente] Gemini ${response.status}:`, errorBody.slice(0, 500))
-    throw new Error(`Gemini ${response.status}`)
+    console.error(`[Asistente] Gemini ${response.status}:`, errorBody.slice(0, 400))
+    throw errorProvider(`Gemini ${response.status}`, response.status)
   }
 
   const data = await response.json()
   const texto = (data.candidates?.[0]?.content?.parts || [])
     .map((p: { text?: string }) => p.text || '')
     .join('')
-    .trim()
 
-  if (!texto) throw new Error('Gemini devolvió contenido vacío')
-  return texto
+  return validarTextoRespuesta(texto, 'Gemini')
 }
 
 export async function POST(req: NextRequest) {
@@ -252,89 +277,123 @@ export async function POST(req: NextRequest) {
     { role: 'user', content: mensaje }
   ]
 
-  // Provider primario: Groq
-  try {
-    const aiResponse = await callGroq(messages)
-    const data = await aiResponse.json()
-    const textoRespuesta = data.choices?.[0]?.message?.content || ''
+  // ── Cadena de providers con reintentos automáticos (ago 2026) ──
+  // Presupuesto total de ~48s dentro del maxDuration 60 (el resto lo consumen
+  // RAG/contexto/auditoría). Se recorren los providers en pasada tras pasada
+  // hasta agotar presupuesto: los fallos transitorios (429/5xx/timeouts) se
+  // reintenta en la siguiente pasada; los permanentes (401/404/413) deshabilitan
+  // al provider para el resto del request.
+  const DEADLINE_MS = 48000
+  const BACKOFF_MS = 1200
+  const MIN_PRESUPUESTO_INTENTO = 3000
+  const ESTADOS_PERMANENTES = new Set([400, 401, 403, 404, 413])
 
-    const respLimpia = textoRespuesta.trim()
-    const esMetadataSeguridad = /^(User Safety|Response Safety|Safety|safe|unsafe|Content [Aa]nalysis)/i.test(respLimpia)
-    const esMuyCorta = respLimpia.length < 10
+  interface ProveedorIA {
+    nombre: string
+    modelo: string
+    timeoutMs: number
+    disponible: () => boolean
+    ejecutar: (timeoutMs: number) => Promise<string>
+  }
 
-    if (!textoRespuesta || esMetadataSeguridad || esMuyCorta) {
-      console.error('[Asistente] Groq respuesta inválida:', respLimpia.slice(0, 300))
-      throw new Error('Invalid response from Groq')
-    }
-
-    console.log('[Asistente] Respuesta antes de auditoría:', respLimpia.slice(0, 200))
-    const resultadoAuditoria = await auditarRespuestaIA(mensaje, textoRespuesta)
-    console.log('[Asistente] Auditoría:', resultadoAuditoria.tieneViolacion ? 'VIOLACIÓN' : 'OK')
-
-    return NextResponse.json({
-      respuesta: resultadoAuditoria.respuestaFinal,
+  const proveedores: ProveedorIA[] = [
+    {
+      nombre: 'groq',
       modelo: GROQ_MODEL,
-      guardado: detectarComandoGuardar(mensaje) || debeAutoGuardar(historial.length + 1) ? true : undefined
-    })
-  } catch (error: any) {
-    console.error('[Asistente] Groq FAILED:', error?.message)
+      timeoutMs: 13000,
+      disponible: () => !!process.env.GROQ_API_KEY,
+      ejecutar: () => callGroq(messages),
+    },
+    {
+      nombre: 'openrouter',
+      modelo: OPENROUTER_MODEL,
+      timeoutMs: 13000,
+      disponible: () => !!process.env.OPENROUTER_API_KEY,
+      ejecutar: () => callOpenRouter(messages),
+    },
+    {
+      nombre: 'gemini',
+      modelo: GEMINI_MODEL,
+      timeoutMs: 18000,
+      disponible: () => !!(process.env.GEMINI_API_KEY || process.env.GEMINI_APY_KEY || process.env.GOOGLE_GENERATIVE_AI_API_KEY),
+      ejecutar: (timeoutMs) => callGemini(messages, timeoutMs),
+    },
+  ]
 
-    // Fallback: OpenRouter
-    if (!orKey && !geminiKey) {
-      return NextResponse.json({
-        error: 'Groq falló y no hay fallbacks configurados (OpenRouter ni Gemini)',
-        groq: error?.message,
-      }, { status: 502 })
+  const esperar = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
+
+  let textoRespuesta = ''
+  let modeloUsado = ''
+  let pasadaExitosa = 0
+  const erroresFinales: Record<string, string> = {}
+  const deshabilitados = new Set<string>()
+  const inicio = Date.now()
+  let pasada = 0
+  let intentosTotales = 0
+
+  while (Date.now() - inicio < DEADLINE_MS && !textoRespuesta) {
+    pasada++
+    let intentosEnPasada = 0
+
+    for (const proveedor of proveedores) {
+      if (textoRespuesta) break
+      if (deshabilitados.has(proveedor.nombre)) continue
+
+      if (!proveedor.disponible()) {
+        deshabilitados.add(proveedor.nombre)
+        erroresFinales[proveedor.nombre] = 'sin API key configurada'
+        continue
+      }
+
+      const restante = DEADLINE_MS - (Date.now() - inicio)
+      if (restante < MIN_PRESUPUESTO_INTENTO) break
+      const timeoutIntento = Math.min(proveedor.timeoutMs, restante)
+
+      intentosTotales++
+      intentosEnPasada++
+      try {
+        console.log(`[Asistente] Intento ${intentosTotales} → ${proveedor.nombre} (pasada ${pasada}, timeout ${timeoutIntento}ms)`)
+        textoRespuesta = await proveedor.ejecutar(timeoutIntento)
+        modeloUsado = proveedor.modelo
+        pasadaExitosa = pasada
+      } catch (errAny: any) {
+        const err = errAny as ErrorProvider
+        erroresFinales[proveedor.nombre] = err?.message || 'error desconocido'
+        console.error(`[Asistente] ${proveedor.nombre} FAILED (pasada ${pasada}):`, err?.message)
+        if (err?.status && ESTADOS_PERMANENTES.has(err.status)) {
+          deshabilitados.add(proveedor.nombre)
+          console.warn(`[Asistente] ${proveedor.nombre} deshabilitado por error permanente (${err.status})`)
+        }
+        await esperar(BACKOFF_MS)
+      }
     }
 
-    try {
-      const orResponse = await callOpenRouter(messages)
-      const data = await orResponse.json()
-      const textoRespuesta = data.choices?.[0]?.message?.content || ''
-
-      const respLimpia = textoRespuesta.trim()
-      const esMetadataSeguridad = /^(User Safety|Response Safety|Safety|safe|unsafe|Content [Aa]nalysis)/i.test(respLimpia)
-      const esMuyCorta = respLimpia.length < 10
-
-      if (!textoRespuesta || esMetadataSeguridad || esMuyCorta) {
-        throw new Error('Invalid response from OpenRouter')
-      }
-
-      const resultadoAuditoria = await auditarRespuestaIA(mensaje, textoRespuesta)
-      return NextResponse.json({
-        respuesta: resultadoAuditoria.respuestaFinal,
-        modelo: OPENROUTER_MODEL,
-        fallback: true
-      })
-    } catch (orError: any) {
-      console.error('[Asistente] OpenRouter FAILED:', orError?.message)
-
-      // Último recurso: Gemini
-      if (geminiKey) {
-        try {
-          const textoGemini = await callGemini(messages)
-          const resultadoAuditoria = await auditarRespuestaIA(mensaje, textoGemini)
-          return NextResponse.json({
-            respuesta: resultadoAuditoria.respuestaFinal,
-            modelo: GEMINI_MODEL,
-            fallback: true
-          })
-        } catch (gemError: any) {
-          console.error('[Asistente] Gemini FAILED:', gemError?.message)
-          return NextResponse.json({
-            error: 'Todos los providers fallaron',
-            groq: error?.message,
-            openrouter: orError?.message,
-            gemini: gemError?.message,
-          }, { status: 502 })
-        }
-      }
-
-      return NextResponse.json({
-        error: 'Todos los providers fallaron',
-        groq: error?.message,
-        openrouter: orError?.message,
-      }, { status: 502 })
+    // Si la pasada no pudo intentar nada (todo deshabilitado o sin presupuesto), cortar.
+    if (intentosEnPasada === 0 && !textoRespuesta) {
+      pasada--
+      break
     }
   }
+
+  if (!textoRespuesta) {
+    console.error(`[Asistente] Todos los providers fallaron tras ${intentosTotales} intentos en ${pasada} pasadas (${Date.now() - inicio}ms)`)
+    return NextResponse.json({
+      error: 'Todos los providers fallaron',
+      intentos: intentosTotales,
+      pasadas: pasada,
+      ...erroresFinales,
+    }, { status: 502 })
+  }
+
+  console.log(`[Asistente] Éxito vía ${modeloUsado} en pasada ${pasadaExitosa} (intento ${intentosTotales}, ${Date.now() - inicio}ms)`)
+  console.log('[Asistente] Respuesta antes de auditoría:', textoRespuesta.slice(0, 200))
+  const resultadoAuditoria = await auditarRespuestaIA(mensaje, textoRespuesta)
+  console.log('[Asistente] Auditoría:', resultadoAuditoria.tieneViolacion ? 'VIOLACIÓN' : 'OK')
+
+  return NextResponse.json({
+    respuesta: resultadoAuditoria.respuestaFinal,
+    modelo: modeloUsado,
+    fallback: pasadaExitosa > 1 || modeloUsado !== GROQ_MODEL ? true : undefined,
+    guardado: detectarComandoGuardar(mensaje) || debeAutoGuardar(historial.length + 1) ? true : undefined
+  })
 }
