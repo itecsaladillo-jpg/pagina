@@ -12,7 +12,7 @@ export const dictionary = {
       aulaEnVivo: 'Aula Virtual (En Vivo)',
     },
     hero: {
-      badge: 'ONG · Saladillo, Buenos Aires',
+      badge: 'INNOVACION TECNOLOGIA EMPRENDEDURISMO Y CIENCIA DE SALADILLO ASOCIACION CIVIL',
       headingStart: 'Ciencia y tecnología para',
       headingGradient: 'desarrollar el futuro',
       headingEnd: 'desde Saladillo',
@@ -750,7 +750,7 @@ export const dictionary = {
       aulaEnVivo: 'Aula Virtual (Ao Vivo)',
     },
     hero: {
-      badge: 'ONG · Saladillo, Buenos Aires',
+      badge: 'INNOVACION TECNOLOGIA EMPRENDEDURISMO Y CIENCIA DE SALADILLO ASOCIACION CIVIL',
       headingStart: 'Ciência e tecnologia para',
       headingGradient: 'desenvolver o futuro',
       headingEnd: 'desde Saladillo',
