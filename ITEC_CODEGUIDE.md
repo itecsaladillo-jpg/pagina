@@ -1,1003 +1,946 @@
-# ITEC Saladillo — Guía Técnica Integral para IA
+# ITEC Saladillo — Guía Técnica Integral para Agentes de Desarrollo
 
-## Descripción General
-Plataforma web full-stack de **ITEC Saladillo** (Asociación Civil de Ciencia y Tecnología "Augusto Cicaré", Saladillo, Buenos Aires, Argentina). Funciona como hub comunitario que conecta miembros, sponsors, prensa y público general mediante contenido educativo, gestión de eventos presenciales, interacción en vivo con audiencias, herramientas de comunicación impulsadas por IA y un Mapa Productivo de empresas locales y talento técnico. La landing incluye streaming en vivo de YouTube y una barra inferior de sponsors con marquesina infinita.
+> **Propósito:** Este documento es la fuente de verdad técnica del proyecto. Está diseñado para ser usado como contexto por agentes de IA que continúen el desarrollo. Describe el stack, la arquitectura, cada página, cada funcionalidad, las convenciones obligatorias y los quirks conocidos del codebase.
+>
+> **Regla previa a escribir código:** Este proyecto usa Next.js 16.3.0, que tiene breaking changes respecto a versiones conocidas. Leer las guías en `node_modules/next/dist/docs/` antes de implementar features nuevas (ver `AGENTS.md`).
 
 ---
 
-## Stack Tecnológico
-- **Framework:** Next.js 16.3.0 (App Router, Turbopack)
-- **React:** 19.2.4
-- **Lenguaje:** TypeScript (strict)
-- **Estilos:** Tailwind CSS v4 + CSS custom properties (tema oscuro)
-- **Base de datos:** Supabase PostgreSQL (67 migraciones, pgvector para RAG)
-- **Auth:** Supabase Auth + Google OAuth
-- **Despliegue:** Vercel (auto-deploy desde `main`)
-- **Path alias:** `@/` → `./src/`
+## Índice
 
-## Dependencias Clave
-- `@supabase/supabase-js` 2.105.4, `@supabase/ssr` 0.10.3
-- `groq-sdk` 1.3.0, `googleapis` 171.4.0 (Google Drive API), `@google/generative-ai`
-- `framer-motion` 12.38.0, `lucide-react` 1.14.0, `recharts` 3.8.1
-- `react-hook-form` 7.81.0, `zod`, `@hookform/resolvers`
-- `resend` 6.12.3 (emails), `date-fns` 4.1.0
-- `pdf-parse`, `react-qr-code`
+1. [Descripción General](#1-descripción-general)
+2. [Stack Tecnológico](#2-stack-tecnológico)
+3. [Scripts npm](#3-scripts-npm)
+4. [Estructura del Proyecto](#4-estructura-del-proyecto)
+5. [Configuración de Build y Despliegue](#5-configuración-de-build-y-despliegue)
+6. [Autenticación y Autorización](#6-autenticación-y-autorización)
+7. [Seguridad](#7-seguridad)
+8. [Base de Datos (Supabase)](#8-base-de-datos-supabase)
+9. [Sistema de IA](#9-sistema-de-ia)
+10. [Sistema de Noticias Multicanal](#10-sistema-de-noticias-multicanal)
+11. [Páginas Públicas — Detalle Funcional](#11-páginas-públicas--detalle-funcional)
+12. [Dashboard de Miembros](#12-dashboard-de-miembros)
+13. [Herramientas de Administrador](#13-herramientas-de-administrador)
+14. [Inventario de Server Actions](#14-inventario-de-server-actions)
+15. [Inventario de API Routes](#15-inventario-de-api-routes)
+16. [Inventario de Componentes](#16-inventario-de-componentes)
+17. [Sistema Multi-idioma (i18n)](#17-sistema-multi-idioma-i18n)
+18. [Integraciones Externas](#18-integraciones-externas)
+19. [Convenciones de Código](#19-convenciones-de-código)
+20. [Variables de Entorno](#20-variables-de-entorno)
+21. [Flujo de Datos y Patrones](#21-flujo-de-datos-y-patrones)
+22. [Quirks y Gotchas Conocidos](#22-quirks-y-gotchas-conocidos)
+23. [Stakeholders y sus Interfaces](#23-stakeholders-y-sus-interfaces)
 
-## Scripts Disponibles
+---
+
+## 1. Descripción General
+
+Plataforma web full-stack de **ITEC Saladillo** (Asociación Civil de Ciencia y Tecnología "Augusto Cicaré", Saladillo, Buenos Aires, Argentina). Funciona como hub comunitario que conecta miembros, sponsors, prensa y público general mediante:
+
+- Contenido educativo (noticias multicanal, artículos, videoteca, capacitaciones)
+- Gestión de eventos presenciales interactivos (QR, encuestas en vivo, nube de palabras, preguntas al orador, semáforo de comprensión)
+- Aula virtual en tiempo real (clases vía Google Meet + herramientas de interacción realtime)
+- Asistente virtual con IA (RAG cascade de 5 niveles sobre pgvector)
+- Comunicación estratégica multicanal (una noticia → 4 versiones para 4 audiencias, generadas por IA)
+- Mapa Productivo (directorio de empresas locales y talento estudiantil)
+- Portal exclusivo para sponsors con reportes de impacto generados por IA
+- Pasaporte Digital (certificados verificables por QR)
+
+La landing incluye streaming en vivo de YouTube y barra inferior de sponsors con marquesina infinita.
+
+---
+
+## 2. Stack Tecnológico
+
+| Capa | Tecnología | Versión |
+|------|-----------|---------|
+| Framework | Next.js (App Router, Turbopack dev) | ^16.3.0 |
+| UI | React + React DOM | 19.2.4 |
+| Lenguaje | TypeScript (`strict: true`) | ^5 |
+| Estilos | Tailwind CSS v4 (via PostCSS) + CSS custom properties | ^4 |
+| Animaciones | Framer Motion | ^12.38.0 |
+| Iconos | lucide-react | ^1.14.0 |
+| Gráficos | Recharts | ^3.8.1 |
+| Formularios | react-hook-form + @hookform/resolvers + Zod | ^7.81.0 |
+| DB | Supabase PostgreSQL (pgvector para RAG) | supabase-js ^2.105.4, ssr ^0.10.3 |
+| Auth | Supabase Auth + Google OAuth (único provider) | — |
+| Emails | Resend | ^6.12.3 |
+| Fechas | date-fns (con locales es/enUS/pt) | ^4.1.0 |
+| Drive API | googleapis | ^171.4.0 |
+| IA chat | groq-sdk 1.3.0 (SDK legacy), fetch directo a Groq/OpenRouter/Ollama | — |
+| IA genérica | @google/genai (Gemini) | latest |
+| Embeddings PDF | pdf-parse / pdf-parse-new | — |
+| QR | react-qr-code | ^2.0.21 |
+| Despliegue | Vercel (auto-deploy desde `main`) | — |
+| Fuente | Inter via `next/font/google` (variable CSS `--font-inter`) | — |
+
+**Path alias:** `@/*` → `./src/*` (configurado en `tsconfig.json`).
+
+---
+
+## 3. Scripts npm
+
 | Script | Comando | Descripción |
 |--------|---------|-------------|
-| `dev` | `next dev` | Dev server con Turbopack |
+| `dev` | `next dev` | Dev server (Turbopack) |
 | `build` | `next build` | Build de producción |
-| `lint` | `eslint` | Linting |
-| `sync-docs` | `node scripts/generateDocsContext.mjs` | PDFs → docsContext.ts (RAG keyword) |
-| `extract-docs` | `node scripts/extractPdfText.js` | Extraer texto de PDFs a JSON |
-| `ingest-vector` | `node --dns-result-order=ipv4first --env-file=.env.local scripts/ingestDocsToVector.mjs` | PDFs → pgvector embeddings (Gemini) |
+| `start` | `next start` | Servidor de producción |
+| `lint` | `eslint` | Linting (ESLint 9 flat config + eslint-config-next) |
+| `sync-docs` | `node scripts/generateDocsContext.mjs` | Lee PDF/TXT/MD de `/docs` → limpia texto → genera `src/lib/docsContext.ts` (constante `DOCS_CONTEXT`) + `docsContext.json`. Alimenta nivel P2 del RAG. Ejecutar después de subir documentos nuevos. |
+| `extract-docs` | `node scripts/extractPdfText.js` | Predecesor simple: extrae texto plano de PDFs a JSON (CommonJS, pdf-parse) |
+| `ingest-vector` | `node --dns-result-order=ipv4first --env-file=.env.local scripts/ingestDocsToVector.mjs` | Pipeline pgvector: limpia embeddings previos → chunking 900 chars/overlap 120 → embeddings Gemini `text-embedding-004` (batches de 20, task RETRIEVAL_DOCUMENT) → inserta en tabla `documents` vía REST con service_role |
 
-(Nota: Se recomienda ejecutar las migraciones de BD 064-067 tras actualizaciones de schema)
+---
 
-## Herramientas de Desarrollo y Diagnóstico (scratch)
-El directorio `scratch/` contiene scripts temporales para:
-- **Diagnóstico:** `diagnose-qa.js` (QA), `diagnose-feedback.js` (feedback), `test-db.js`.
-- **Migraciones/Testing:** Scripts `test-*.js` (ej. `test-column-existence.js`, `test-skills-columns.js`) para verificar esquemas de DB.
-- **Gestión de Datos:** `analyze_videos.mjs`, `update_latest_videos.js`.
+## 4. Estructura del Proyecto
 
-Estos scripts son fundamentales para validar cambios en el esquema de base de datos antes de aplicar migraciones.
-
-## Estructura del Proyecto
 ```
 D:\ITEC\
-├── .agents/                    # Configuración de agentes IA
-├── .env.local                  # Variables de entorno (API keys)
-├── .github/                    # GitHub workflows
-├── docs/                       # Documentación interna
-├── public/                     # Assets estáticos (imágenes, logos)
-│   ├── cicare/                 # Colección de fotos de Augusto Cicaré
-│   └── sponsors/blanco/        # Logos de sponsors monocromo (marquesina landing, carga local vía fs)
-├── scripts/                    # Scripts utilitarios (extracción PDF, generación docs)
+├── .github/workflows/deploy.yml # CI/CD: deploy a Vercel en push a main
+├── .env.local                   # Variables de entorno (gitignored, única env file)
+├── docs/                        # Corpus institucional (PDFs 2023: Expo ITEC, ordenanza,
+│                                #   educación, guías de entrenamiento IA) → alimenta RAG
+├── public/
+│   ├── cicare/                  # 13 fotos JPG de Augusto Cicaré (Cache-Control immutable 1 año)
+│   └── sponsors/blanco/         # 27 logos PNG monocromos de sponsors (marquesina landing,
+│                                #   carga local vía fs + unstable_cache 1h)
+├── scripts/                     # generateDocsContext.mjs, extractPdfText.js,
+│                                #   ingestDocsToVector.mjs, test_rag.ts
+├── scratch/                     # ~38 scripts de prueba/diagnóstico (IGNORADO por git):
+│                                #   test-db.js, test-eventos.js, diagnose-*.js, query_*.js,
+│                                #   update_latest_videos.js, analyze_videos.mjs, etc.
+├── sponsors/color/              # Logos a color originales (fuente antes de subir a Storage)
 ├── src/
-│   ├── app/                    # App Router (rutas públicas + dashboard + API)
-│   │   ├── page.tsx            # Landing page (force-dynamic, logos sponsors vía fs con unstable_cache 1h, wrapper -translate-y-30px)
-│   │   ├── layout.tsx          # Root layout (LanguageProvider + ChatWidgetWrapper lazy-loaded)
-│   │   ├── globals.css         # Estilos globales y sistema de diseño
-│   │   ├── acceso-pendiente/   # Página de acceso pendiente
-│   │   ├── login/              # Login (Google OAuth)
-│   │   ├── muro/               # Muro público de noticias
-│   │   ├── acciones/           # Catálogo público de Acciones de Impacto
-│   │   │   └── [id]/           # Detalle de acción individual
-│   │   ├── articulo/           # Artículos públicos
-│   │   │   └── [slug]/         # Detalle de artículo
-│   │   ├── capacitaciones/     # Detalle de capacitación
-│   │   │   └── [id]/
-│   │   ├── clases/             # Aula virtual (streaming)
-│   │   │   └── [id]/
-│   │   ├── certificados/       # Pasaporte Digital (verificación QR)
-│   │   │   └── [codigo]/
-│   │   ├── eventos/            # Eventos presenciales (QR, acreditación, preguntas, nube, encuestas, pantalla)
-│   │   │   ├── [id]/
-│   │   │   ├── [id]/pantalla/          # Pantalla grande para proyector (bienvenida, encuestas, nube, Q&A)
-│   │   │   ├── [id]/preguntar/
-│   │   │   ├── [id]/pantalla-preguntas/
-│   │   │   ├── [id]/pantalla-nube/
-│   │   │   └── [id]/nube/
-│   │   ├── mapa-productivo/    # Mapa Productivo (directorio empresas + talento)
-│   │   ├── registro-mapa/      # Formulario registro Mapa Productivo
-│   │   ├── sponsors/           # Portal del sponsor (por token)
-│   │   │   └── [id]/
-│   │   ├── votar/              # Votación en vivo para eventos
-│   │   ├── dashboard/          # Panel de miembros (requiere auth)
-│   │   │   ├── layout.tsx      # Sidebar + layout del dashboard
-│   │   │   ├── page.tsx        # Redirige a /dashboard/muro
-│   │   │   ├── muro/           # Muro de noticias interno
-│   │   │   ├── reuniones/      # Sala de reuniones (Google Meet)
-│   │   │   ├── drive/          # Nube de archivos (Google Drive)
-│   │   │   ├── ideas/          # Buzón de ideas
-│   │   │   ├── perfil/         # Perfil del miembro
-│   │   │   ├── capacitaciones/ # Gestión de capacitaciones
-│   │   │   ├── certificados/   # Gestión de certificados
-│   │   │   ├── comunicacion/   # Centro de comunicaciones estratégicas (multicanal)
-│   │   │   ├── miembros/       # Gestión de miembros (admin)
-│   │   │   ├── encuestas/      # Encuestas en vivo (admin)
-│   │   │   │   ├── [id]/pantalla/  # Pantalla de resultados
-│   │   │   │   └── analytics/  # Analíticas de encuestas
-│   │   │   ├── eventos/        # Sistema de preguntas en vivo (admin)
-│   │   │   │   └── [id]/moderacion/ # Moderación de preguntas
-│   │   │   ├── eventos-presenciales/ # Crear/modificar eventos (admin)
-│   │   │   │   ├── herramientasActions.ts # Toggle herramientas, modo pantalla, concepto nube
-│   │   │   │   ├── semaforoActions.ts # Voto negativo, obtener estado, reiniciar semáforo
-│   │   │   │   └── [id]/       # Panel del orador
-│   │   │   ├── nubes/          # Gestión de nubes de palabras (admin)
-│   │   │   ├── prensa/         # Gestión de medios de prensa (admin)
-│   │   │   ├── prensaNews/     # Gacetillas de prensa (admin)
-│   │   │   ├── sponsors/       # Gestión de sponsors + socios estratégicos (admin, partner-actions.ts)
-│   │   │   ├── sponsorsNews/   # Muro sponsors (admin)
-│   │   │   ├── settings/       # Ajustes del sitio (admin)
-│   │   │   ├── entrenamiento-asistente/ # Entrenamiento del asistente IA (admin)
-│   │   │   ├── videoteca/      # Gestión de videos (admin)
-│   │   │   ├── streaming/      # Streaming (admin)
-│   │   │   ├── ai/             # Procesador IA (transcripciones)
-│   │   │   ├── acciones/nueva/ # Crear nueva acción
-│   │   │   ├── eventos-presenciales/[id]/ # Editar evento presencial
-│   │   │   └── encuestas/[id]/pantalla/   # Pantalla de resultados de encuesta
-│   │   └── api/                # API routes
-│   │       ├── asistente/      # Chat IA principal (OpenRouter + HuggingFace fallback)
-│   │       │   └── feedback/   # Feedback de respuestas del asistente
-│   │       ├── chat/           # Chat legacy (Groq)
-│   │       │   └── guardar/    # Guardar conversación
-│   │       ├── news/process/   # Procesamiento IA de noticias multicanal
-│   │       ├── news-comments/  # Comentarios en noticias
-│   │       ├── press-news/     # Feed gacetillas (GET)
-│   │       ├── sponsors-news/  # Feed sponsors (GET)
-│   │       ├── eventos/registro/ # Registro a eventos presenciales
-│   │       ├── streaming/status/ # Estado streaming en vivo (site_settings, cache 30s)
-│   │       ├── ideas/          # Envío de ideas (formulario público)
-│   │       └── news/           # Procesamiento de noticias
-│   ├── auth/                   # Auth routes
-│   │   ├── callback/           # Intercambio código OAuth por sesión
-│   │   └── signout/            # Cerrar sesión
-│   ├── components/
-│   │   ├── landing/             # Componentes de landing page
-│   │   │   ├── Navbar.tsx       # Navegación principal
-│   │   │   ├── HeroSection.tsx  # Hero con headline animado y CTAs
-│   │   │   ├── AboutSection.tsx # Acerca de ITEC
-│   │   │   ├── ImpactSection.tsx # Métricas de impacto (server)
-│   │   │   ├── ImpactSectionClient.tsx # Métricas con animaciones cliente
-│   │   │   ├── ComisionesSection.tsx  # Grid de comisiones activas
-│   │   │   ├── IdeasSection.tsx # Layout 2 columnas: título/desc/beneficios (izq) + formulario (der)
-│   │   │   ├── VideotecaSection.tsx   # Videoteca destacada
-│   │   │   ├── StreamingPlayer.tsx # Reproductor YouTube en vivo (Hero, convierte URL a embed)
-│   │   │   ├── Footer.tsx       # Footer del sitio
-│   │   │   └── FloatingLanguageSelector.tsx # Selector flotante ES/EN/PT (bottom 59px, fade out al scroll)
-│   │   ├── home/               # Componentes de la landing (server-driven)
-│   │   │   ├── SponsorHeaderBar.tsx # Marquesina infinita de sponsors (fixed bottom, fade out al scroll)
-│   │   │   ├── NuestrosSociosSection.tsx # Sección "NUESTROS SOCIOS" (client, grids dinámicas por tier + Alianzas Estratégicas + modal)
-│   │   │   └── SponsorModal.tsx  # Modal unificado (ModalItem: sponsor con badge tier o partner con categoría y acciones conjuntas)
-│   │   ├── comunicacion/        # Comunicación multicanal
-│   │   │   ├── NewsWallMulticanal.tsx       # Muro con tabs: Público/Miembros/Sponsors/Prensa
-│   │   │   ├── NewsFlashMulticanalEditor.tsx # Editor multicanal con IA
-│   │   │   ├── ComunicacionTabs.tsx         # Tabs de comunicación
-│   │   │   ├── NotasMulticanalList.tsx      # Lista de notas publicadas
-│   │   │   └── ActionManagementList.tsx     # Lista de acciones
-│   │   ├── chat/                # Widget flotante del asistente IA
-│   │   │   ├── ChatWidget.tsx   # Widget visible en páginas públicas
-│   │   │   ├── ChatWidget.css   # Estilos del widget
-│   │   │   └── ChatWidgetWrapper.tsx # Wrapper condicional (oculta en rutas de eventos)
-│   │   ├── capacitaciones/      # Encuestas en vivo
-│   │   │   ├── LivePoll.tsx     # Votación en tiempo real
-│   │   │   └── actions.ts       # voteLivePollAction() con cookie dedup
-│   │   ├── acciones/            # Registro a acciones
-│   │   │   └── ActionRegistrationForm.tsx
-│   │   ├── reuniones/           # Salas de reuniones
-│   │   │   └── GeneralMeetingRoom.tsx
-│   │   ├── auth/                # Autenticación
-│   │   │   ├── LoginClientContent.tsx  # Login Google OAuth
-│   │   │   └── MembersAccessButton.tsx # Botón de acceso en navbar
-│   │   ├── dashboard/           # Sidebar del dashboard
-│   │   │   ├── sponsors/
-│   │   │   │   ├── SponsorRegistrationForm.tsx # Formulario alta sponsors
-│   │   │   │   └── StrategicPartnerModal.tsx # Modal alta/edición socios estratégicos (logo → Storage sponsors-logos)
-│   │   │   └── SidebarIdeasLink.tsx    # Link con badge de ideas pendientes
-│   │   ├── ideas/               # Formulario público de ideas
-│   │   │   └── PublicIdeasForm.tsx
-│   │   └── prensa/              # Gestión de prensa
-│   │       ├── SendGacetillaModal.tsx   # Modal envío gacetillas por email
-│   │       └── PrensaEnviosHistoryModal.tsx # Historial de envíos
-│   ├── services/
-│   │   ├── auth.ts             # getCurrentMember(), isAdmin()
-│   │   ├── ai.ts               # Procesamiento con IA (OpenRouter), embeddings (Gemini), auditoría
-│   │   ├── admin.ts            # CRUD de miembros, prompts IA
-│   │   ├── news.ts             # News multicanal (getAllMulticanalNewsFlashes, etc.)
-│   │   ├── drive.ts            # Google Drive: listFolderFiles()
-│   │   ├── videos.ts           # CRUD de videos
-│   │   ├── actions.ts          # Acciones públicas
-│   │   ├── sponsorReport.ts    # Generación de reportes de impacto con IA
-│   ├── lib/
-│   │   ├── supabase/           # Clientes Supabase (server, browser, admin)
-│   │   ├── rag/                # RAG cascade (P1-P4), conversaciones guardadas
-│   │   ├── eventos/            # Lógica compartida de eventos (semáforo de comprensión — DRY)
-│   │   │   └── semaforo.ts     # calcularEstadoSemaforo() + tipos EstadoSemaforo/SemaforoResultado
-│   │   ├── drive.ts            # Configuración de carpetas Drive por comisión
-│   │   ├── email.ts            # Servicio de emails con Resend
-│   │   ├── email/              # Templates HTML de emails
-│   │   ├── docsContext.ts      # Contexto institucional auto-generado para asistente IA
-│   │   └── docsContext.json    # Fallback estático de contexto
-│   ├── types/
-│   │   └── database.ts         # Tipos completos de la DB
-│   ├── locales/
-│   │   └── dictionary.ts       # Traducciones ES/EN/PT (context-based i18n)
-│   ├── contexts/
-│   │   └── LanguageContext.tsx  # Contexto de idioma
-│   └── proxy.ts                # Next.js middleware (auth, protección de rutas)
-├── supabase/
-│   ├── .temp/                                  # Configuración de agentes IA
-│   └── migrations/                             # Migraciones de base de datos
-│       ├── 064_streaming_config.sql            # Keys streaming_active / streaming_youtube_url en site_settings
-│       ├── 065_update_sponsors_table.sql       # Schema sponsors actualizado
-│       ├── 066_sponsors_publicos_rpc.sql       # RPC obtener_sponsors_publicos (campos seguros, security definer)
-│       ├── 067_strategic_partners.sql          # Tabla strategic_partners (socios estratégicos, RLS lectura pública / escritura admin)
-│       └── fix_storage_policies.sql            # Políticas RLS Storage
-├── AGENTS.md                   # Instrucciones para agentes IA (Next.js)
-├── CLAUDE.md                   # Instrucciones para Claude
-├── ITEC_CODEGUIDE.md           # Esta guía
-├── README.md                   # Readme del proyecto
-├── next.config.ts              # Configuración Next.js
-├── package.json                # Dependencias y scripts
-├── postcss.config.mjs          # Config PostCSS
-├── eslint.config.mjs           # Config ESLint
-├── tsconfig.json               # Config TypeScript
-└── vercel.json                 # Config despliegue Vercel
+│   ├── app/                     # App Router (ver detalle abajo)
+│   ├── components/              # Ver inventario completo en §16
+│   ├── contexts/LanguageContext.tsx  # Contexto React i18n (es/en/pt)
+│   ├── lib/                     # Utilidades core (supabase, rag, eventos, email, settings…)
+│   ├── locales/dictionary.ts    # Diccionario ES/EN/PT (~1100 líneas, 16 secciones/idioma)
+│   ├── proxy.ts                 # Middleware Next.js 16 (reemplaza middleware.ts)
+│   ├── services/                # Capa de servicios (auth, ai, admin, news, drive, videos…)
+│   └── types/database.ts        # Tipos sincronizados con schema Supabase (~493 líneas)
+├── supabase/migrations/         # 75 archivos SQL (001 → 068 + fix_storage_policies.sql)
+├── AGENTS.md                    # Advertencia breaking changes Next.js 16
+├── CLAUDE.md                    # Solo "@AGENTS.md" (referencia)
+├── ITEC_CODEGUIDE.md            # Esta guía
+├── next.config.ts               # Imágenes, headers cache, optimizePackageImports
+├── vercel.json                  # maxDuration 60s para /api/asistente
+├── tsconfig.json                # strict, target ES2017, alias @/*
+├── eslint.config.mjs            # Flat config ESLint 9 + next/core-web-vitals + TS
+└── postcss.config.mjs           # Plugin único @tailwindcss/postcss (Tailwind v4)
 ```
 
+### Árbol completo de `src/app`
+
+**47 archivos page.tsx · 2 layouts · 15 route handlers · 19 archivos `'use server'`.**
+No existen `loading.tsx`, `error.tsx`, `not-found.tsx` ni `template.tsx` en ninguna parte.
+
+#### Raíz y rutas públicas
+
+| Ruta | Tipo | Descripción |
+|------|------|-------------|
+| `/` (`page.tsx`) | Server, `force-dynamic`, `revalidate = 0` | Landing principal. NO consulta Supabase: lee logos de `public/sponsors/blanco/` vía fs cacheado con `unstable_cache` (1h). Secciones cargadas con `next/dynamic`. |
+| `/acceso-pendiente` | Server estático | Pantalla informativa para usuarios autenticados sin membresía activa. |
+| `/articulo` | Server | Índice que solo hace `redirect('/#impacto')`. |
+| `/articulo/[slug]` | Server + client | Artículo público con `generateMetadata` dinámico (SEO/OpenGraph). Delega en `ArticleDetailClient`. |
+| `/capacitaciones/[id]` | Server, `force-dynamic` | Detalle de capacitación mobile-first: player YouTube embebido, badge LIVE si `is_live`, componente `LivePoll`. Tabla `trainings`. |
+| `/certificados/[codigo]` | Server | Verificador público de certificados por código único. `generateMetadata` condicional (noindex si inválido). Renderiza `CertificadoViewer`. Tabla `certificados_digitales`. |
+| `/clases/[id]` | **Client** (1213 líneas) | Aula virtual completa realtime: chat, modómetro, mano alzada, preguntas votables, encuestas y semáforo de comprensión. Roles alumno/profesor. Usa las 14 server actions de `actions.ts`. |
+| `/eventos/[id]` | **Client** (1573 líneas) | App del asistente presencial: registro/acreditación, encuestas en vivo, preguntas con likes, nube de palabras, voto semáforo. |
+| `/eventos/[id]/nube` | Client | Envío de UNA palabra (máx. 20 caracteres) a la nube activa. Anti-duplicado por `dispositivoId` localStorage. |
+| `/eventos/[id]/pantalla` | Client (994 líneas) | Pantalla gigante unificada: alterna modos bienvenida/nube/encuestas/preguntas según `modo_pantalla_gigante`; muestra QR y estado del semáforo. |
+| `/eventos/[id]/pantalla-nube` | Client | Proyección de nube de palabras en vivo con QR lateral. |
+| `/eventos/[id]/pantalla-preguntas` | Client | Ranking de preguntas aprobadas por likes, tiempo real, QR hacia `/preguntar`. |
+| `/eventos/[id]/preguntar` | Client | Los asistentes envían preguntas (máx. 250 chars) y dan like (persistido en localStorage). |
+| `/login` | Server | Solo se muestra ante error OAuth (`searchParams error/desc/logout`). El login se dispara desde el Navbar/MembersAccessButton. |
+| `/mapa-productivo` | Server estático (385 líneas) | Landing informativa del programa: beneficios empresas/alumnos, estadísticas, CTA a `/registro-mapa`. Contenido hardcodeado. |
+| `/muro` | Server, `force-dynamic` | Muro público multicanal vía `getAllMulticanalNewsFlashes()`: filtra flashes por audiencia (miembros/sponsors/medios solo si hay sesión). Renderiza `NewsWallMulticanal`. |
+| `/registro-mapa` | **Client** (740 líneas) | Formulario dual de inscripción: perfil empresa o alumno (catálogos hardcoded). Inserta en `mapa_empresas` / `alumnos_talentos`. |
+| `/socios` | Server, `revalidate = 3600` | Página pública "Nuestros Socios": sponsors + alianzas estratégicas + canales de difusión vía `getSociosData()` (RPC `obtener_socios_publicos`). |
+| `/sponsors/[id]` | Server, `force-dynamic`, noindex | Portal privado del sponsor (acceso por token): datos, último reporte de impacto IA, acciones vinculadas e invitaciones por rubro. |
+| `/votar` | Server wrapper + `VotingClient` (client) | Busca encuesta activa (`polls.is_active=true`) y permite votación pública en tiempo real. |
+
+#### Dashboard (`src/app/dashboard/`)
+
+`layout.tsx` (Server): guard de sesión con `getCurrentMember()`/`isAdmin()`, sidebar persistente (nav miembro + herramientas admin con submenús `<details>` colapsables), badge de ideas pendientes (conteo tabla `ideas`).
+
+| Ruta | Guard | Funcionalidad |
+|------|-------|---------------|
+| `/dashboard` | — | Solo redirecciones: sin sesión→`/login`, no activo→`/acceso-pendiente`, resto→`/dashboard/muro`. |
+| `/dashboard/ai` | admin/coordinador | Procesador IA: transcripción → resumen + tareas + flash (`processTextAction`). |
+| `/dashboard/certificados` | miembro activo | "Pasaporte de Habilidades Digitales": diplomas interactivos con QR (búsqueda `ilike` por nombre en `certificados_digitales`). |
+| `/dashboard/comunicacion` | admin, `force-dynamic` | Centro de comunicación estratégica: tabs creación + lista de notas multicanal. |
+| `/dashboard/drive` | miembro activo | Explorador Google Drive por comisión (mapeo slug→folder + carpeta general configurable). |
+| `/dashboard/encuestas` | admin | CRUD y gestión en vivo de encuestas (`PollManager`). |
+| `/dashboard/encuestas/analytics` | admin | Analíticas históricas con Recharts (`AnalyticsClient`). |
+| `/dashboard/encuestas/[id]/pantalla` | — | Pantalla de proyección de resultados en vivo (`PresentationClient`). |
+| `/dashboard/entrenamiento-asistente` | admin | Entrenamiento del asistente: system prompt + gestión de documentos Storage (upload/delete/list/sync). |
+| `/dashboard/eventos` | admin | "Sistema de Preguntas al Orador": lista de eventos para moderar/proyectar/compartir. |
+| `/dashboard/eventos/[id]/moderacion` | Client (rol check client-side) | Consola de moderación de preguntas en tiempo real (aprobar/borrar). |
+| `/dashboard/eventos-presenciales` | sesión | CRUD de eventos presenciales con QR (`EventosPresencialesClient`). |
+| `/dashboard/eventos-presenciales/[id]` | sesión | Panel en vivo del orador (`PanelOradorClient`): switches de herramientas grid 2x2, modo pantalla gigante, concepto de charla, panel semáforo con reinicio. |
+| `/dashboard/ideas` | miembro activo | Buzón de ideas: listar, cambiar estado/borrar (admin) (`IdeasManagementClient`). |
+| `/dashboard/miembros` | miembro activo (UI según rol) | Gestión de membresías: aprobaciones, roles, comisiones, directorio con stats (`MemberManagementTable`). |
+| `/dashboard/muro` | miembro activo | Muro interno (`notas_miembros` publicadas mapeadas a formato multicanal). |
+| `/dashboard/nubes` | admin | Gestión de nubes de ideas por evento (reutiliza `EventListClient` con `mode="nubes"`). |
+| `/dashboard/perfil` | sesión | Edición de datos personales y avatar (sube a bucket `avatars`). |
+| `/dashboard/prensa` | admin | ABM de medios de prensa + envío gacetillas (`MediosAdmin`, `MedioForm`). |
+| `/dashboard/prensaNews` | **Client** (sin guard server) | Notas de prensa: crear, enviar gacetilla a medios (modal), historial de envíos. |
+| `/dashboard/reuniones` | miembro activo | Sala de reuniones general: enlace Meet persistente (`site_settings.general_meet_url`), acta colaborativa del día (`meeting_notes`) con guardado, procesamiento IA y publicación (`GeneralMeetingRoom`), historial. |
+| `/dashboard/settings` | admin | Ajustes del sitio (identidad visual) + gestión API keys (`site_settings` + `api_settings`) con prioridad sobre env vars. |
+| `/dashboard/sponsors` | admin | Administración integral: sponsors comerciales, socios estratégicos (`strategic_partners`), acciones del período, generación de reportes IA. |
+| `/dashboard/sponsorsNews` | **Client** | Muro exclusivo sponsors (`GET /api/sponsors-news`) + alta rápida de socio. |
+| `/dashboard/streaming` | admin/coordinador | Centro de transmisión: toggle ON/OFF, URL YouTube, setup OBS, link Meet (`NEXT_PUBLIC_MEET_LINK`). Persiste en `api_settings`. |
+| `/dashboard/videoteca` | admin/coordinador | ABM videos públicos + generación resúmenes IA (`generateVideoSummaryAction`). |
+
+#### API Routes (`src/app/api/` + `src/app/auth/`)
+
+Ver inventario completo con métodos, inputs y tablas en **§15**.
+⚠️ **Ninguna declara `runtime = 'edge'`** → todas usan Node.js runtime por defecto.
+
 ---
 
-## Sistema de Autenticación
+## 5. Configuración de Build y Despliegue
 
-1. **Supabase Auth** con Google OAuth como provider principal.
-2. **Pre-aprobación:** Los emails deben estar en tabla `allowed_emails` para auto-aprobarse. Si no, quedan `status = 'pendiente'`.
-3. **Trigger `handle_new_user()`** en Postgres: al crear usuario en `auth.users`, crea registro en `members`, verifica `allowed_emails`, asigna rol y comisión.
-4. **Proxy middleware (`proxy.ts`):** Protege `/dashboard/*`, redirige no-auth a `/login`, pending a `/acceso-pendiente`.
-5. **Roles y permisos:**
-   - `admin` — Acceso total, todas las herramientas del dashboard
-   - `coordinador` — Similar a admin, limitado a su comisión
-   - `miembro` — Dashboard básico (muro, perfil, drive, reuniones, ideas)
-   - `colaborador` — Acceso restringido
-6. **Server Components** usan `getCurrentMember()` para obtener el miembro actual.
-7. **Server Actions** (`'use server'`) también usan `getCurrentMember()` y verifican `member.role === 'admin'` para acciones administrativas.
-8. **RLS (Row-Level Security):** Las tablas usan políticas de seguridad de Supabase basadas en auth.uid() y roles.
+### `next.config.ts`
+- `compress: true` (gzip/brotli).
+- **Imágenes:** formatos AVIF/WebP, TTL mínimo 30 días, remotePatterns para Supabase (hostname derivado dinámicamente de `NEXT_PUBLIC_SUPABASE_URL` + wildcards `**.supabase.co/.in`).
+- **Headers cache:** `/cicare/:path*` y todas las imágenes estáticas → `Cache-Control: public, max-age=31536000, immutable`.
+- `experimental.optimizePackageImports: ['lucide-react', 'date-fns', 'framer-motion']`.
+
+### `vercel.json`
+```json
+{ "functions": { "src/app/api/asistente/route.ts": { "maxDuration": 60 } } }
+```
+Única función con timeout extendido (el asistente IA necesita >10s default).
+
+### CI/CD (`.github/workflows/deploy.yml`)
+- Trigger: push a `main`.
+- Job único ubuntu-latest, Node 20: checkout@v4 → setup-node@v4 → `amondnet/vercel-action@v25 --prod` con secrets `VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`.
+- ⚠️ No hay pasos de lint/test/build previos (Vercel compila al desplegar). No existen workflows de CI ni preview.
+
+### TypeScript / ESLint / PostCSS
+- `tsconfig.json`: target ES2017, `strict: true`, `noEmit`, moduleResolution `bundler`, JSX react-jsx, incremental, plugin Next.js.
+- `eslint.config.mjs`: flat config (ESLint 9) con `defineConfig`, extiende `core-web-vitals` + `typescript`.
+- `postcss.config.mjs`: único plugin `@tailwindcss/postcss` (Tailwind v4 — usar `@import "tailwindcss"`, NO directivas `@tailwind` de v3).
+
+### Estilos globales (`globals.css`, ~272 líneas)
+Tema oscuro como default y único (sin toggle). Keyframes definidos: `marquee-left` (marquesina sponsors), `float`, `pulse-glow`, `gradient-shift`, `fade-up`, `fade-in-out`, `spotlight-ltr`, `spotlight-rtl`, `spin-slow`, `slide-up`, `blink`, `pulse-glow-light`. Clase `.animate-marquee-infinite` (63s default, sobrescrita inline) y `.itec-lang-btn` (FAB selector idioma).
 
 ---
 
-## Seguridad del Sitio
+## 6. Autenticación y Autorización
 
-### Autenticación y Autorización
-- **Supabase Auth** con Google OAuth como único provider. No hay login por contraseña.
-- **Pre-aprobación obligatoria:** Emails deben estar en `allowed_emails` para auto-aprobarse. Usuarios sin pre-aprobación quedan `status = 'pendiente'` con acceso restringido.
-- **Trigger `handle_new_user()`:** Asigna rol y comisión automáticamente al registrarse. No permite auto-asignación de roles.
-- **Proxy middleware (`proxy.ts`):** Protege rutas `/dashboard/*`, redirige no-auth a `/login`, pending a `/acceso-pendiente`.
+### Proxy middleware (`src/proxy.ts`)
+Next.js 16 **reemplaza `middleware.ts` por `proxy.ts`**: exporta `proxy(request)` en lugar de `middleware(request)` (mismo contrato Edge). Lógica en orden:
 
-### Control de Acceso por Roles
+1. **Interceptor código OAuth (workaround):** si la URL trae `?code=` y el path NO es `/auth/callback` (por Site URL mal configurado en Supabase), redirige a `/auth/callback?code=...&state=...`.
+2. Crea cliente Supabase edge (`createServerClient` de `@supabase/ssr` leyendo cookies del request); en `setAll` propaga cookies refrescadas al request y a la respuesta. Luego `supabase.auth.getUser()` valida/refresca sesión.
+3. **Rutas protegidas** (`PROTECTED_ROUTES = ['/dashboard']`, match exacto o prefijo):
+   - Sin usuario → redirect `/login?redirectTo={pathname}`.
+   - Con usuario → consulta `members` (role, status): si no existe o `status !== 'activo'` → redirect `/acceso-pendiente`.
+   - Si pathname exacto `/dashboard` y activo → redirect `/dashboard/muro`.
+4. **Rutas solo-auth** (`AUTH_ONLY_ROUTES = ['/login', '/register']`): si ya hay sesión → redirect `/dashboard`.
+5. **`config.matcher`:** excluye `_next/static`, `_next/image`, favicon, imágenes, y **excluye explícitamente `api/chat` y `api/asistente`** (los endpoints del asistente corren sin este gate).
+
+Nota: el rol se consulta pero NO se usa para autorización granular en el proxy — esa distinción ocurre dentro de páginas/actions via `getCurrentMember()`/`isAdmin()`.
+
+### Flujo OAuth
+1. Login dispara `supabase.auth.signInWithOAuth({ provider: 'google' })` desde Navbar o `MembersAccessButton`.
+2. Callback en `/auth/callback/route.ts` (GET): maneja errores en query, intercambia `code` por sesión, verifica `status` del miembro en `members` (pendiente → signOut + home; activo → `/dashboard/muro`).
+3. Signout: POST `/auth/signout` → redirige a `/login?logout=true`.
+
+### Pre-aprobación y trigger DB
+- Los emails deben estar en tabla `allowed_emails` para auto-aprobarse; si no, quedan `status = 'pendiente'`.
+- **Trigger `handle_new_user()`** en Postgres: al crear usuario en `auth.users`, crea registro en `members`, verifica `allowed_emails`, asigna rol y comisión automáticamente. No permite auto-asignación de roles.
+- No hay login por contraseña. Solo Google OAuth.
+
+### Roles y permisos
+
 | Rol | Acceso | Restricciones |
 |-----|--------|---------------|
 | `admin` | Total | Acceso completo a todas las herramientas |
-| `coordinador` | Amplio | Limitado a su comisión |
-| `miembro` | Básico | Muro, perfil, drive, reuniones, ideas |
+| `coordinador` | Amplio | Similar a admin, limitado a su comisión |
+| `miembro` | Básico | Muro, perfil, drive, reuniones, ideas, certificados, aula virtual |
 | `colaborador` | Restringido | Solo lectura en áreas específicas |
 
-### Server Actions — Seguridad
-- Todas las Server Actions verifican `getCurrentMember()` antes de ejecutar.
-- Acciones administrativas (toggle herramientas, reiniciar semáforo, actualizar concepto nube) requieren rol `admin` o `coordinador`.
-- Ejemplo patrón seguro:
-  ```typescript
-  const member = await getCurrentMember()
-  if (!member || !['admin', 'coordinador'].includes(member.role)) {
-    return { success: false, error: 'No autorizado' }
-  }
-  ```
-
-### Row-Level Security (RLS)
-- Todas las tablas críticas usan políticas RLS de Supabase.
-- Las políticas filtran por `auth.uid()` y el rol del miembro en `members`.
-- Las tablas de eventos presenciales (`evento_semaforo_votos`, `eventos_asistentes`, etc.) permiten INSERT anónimo (sin login) pero restringen DELETE/UPDATE a admins.
-- **Migración 056:** Corrige políticas excesivamente permisivas en `clases_virtuales`, `clase_interacciones`, `certificados_digitales` (antes `USING (true)` permitía CRUD anónimo). Ahora escritura restringida a admin/coordinador.
-
-### Storage (sponsors-logos)
-- **Bucket:** `sponsors-logos` (público)
-- **Políticas RLS:**
-  - `SELECT`: Lectura pública (`USING bucket_id = 'sponsors-logos'`)
-  - `INSERT`: Escritura autenticada para administradores/coordinadores (`WITH CHECK` + rol check)
-
-### Datos Anónimos en Eventos
-- **Identificación por dispositivo:** `localStorage` almacena un `dispositivo_id` UUID sin login.
-- **Un voto por dispositivo:** Encuestas usan cookie-based dedup por `questionId`. Semáforo no tiene dedup server-side (votos append-only por diseño v3).
-- **Límite de 25 caracteres** en palabras de nube de ideas para prevenir abuso de almacenamiento.
-
-### Seguridad de la IA
-- **Auditoría de respuestas** (`auditarRespuestaIA()`): 4 categorías de detección vía regex:
-  1. Menciones prohibidas (palabras bloqueadas)
-  2. Exposición de rutas internas del sistema
-  3. Lenguaje informal o fuera de tono
-  4. Uso de palabras temporales relativas
-- Violaciones se registran en `ai_auditoria_violaciones` para monitoreo.
-- **Palabras prohibidas en asistente:** "hoy", "ayer", "mañana", "che", "viste", "pibe".
-- **No se exponen API keys** en el cliente. Todas las llamadas a IA se hacen desde server-side o API routes.
-- **Mensajes de error sanitizados:** Los errores de providers IA (OpenRouter, HuggingFace) no exponen detalles internos al cliente. Solo se loguean códigos de estado en server-side.
-
-### Tokens y Credenciales
-- **Supabase anon key** (pública): Solo lectura de datos públicos, filtrada por RLS.
-- **Service role key** (servidor): Solo se usa en Server Components y API routes, nunca en el cliente.
-- **Sponsors `private_token`:** UUID único por sponsor para acceso a portal exclusivo. No se expone en URLs públicas.
-- **Google Service Account:** Almacenada en `site_settings` (no en `.env.local`) para permitir rotación sin redeploy.
-
-### Headers de Seguridad
-- **CSP (Content Security Policy):** Configurado en `next.config.ts` para restringir orígenes de scripts, estilos y frames.
-- **X-Frame-Options:** Previene clickjacking en páginas sensibles.
-- **Rate limiting:** Implementado en endpoints de IA (`/api/asistente`) para prevenir abuso.
-
-### Vulnerabilidades Conocidas y Mitigaciones
-- **localStorage como identidad:** Aceptado como trade-off para UX sin login. No se almacenan datos sensibles.
-- **Semáforo sin dedup server-side:** Por diseño v3 (anonimato total). Un usuario puede enviar múltiples votos cada 5s. Mitigado por el contexto del evento (presencial, corto alcance).
-- **ChatWidget en rutas de eventos:** Oculto condicionalmente via `ChatWidgetWrapper` para no interferir con herramientas de eventos en vivo.
-
-### Recomendaciones para Nuevos Desarrollos
-1. **Nunca** exponer API keys o secrets en el cliente o en `localStorage`.
-2. **Siempre** usar `getCurrentMember()` en Server Actions antes de mutar datos.
-3. **Usar RLS** en todas las tablas nuevas. No confiar solo en la validación de la aplicación.
-4. **Auditar** cualquier endpoint público que acepte datos del usuario.
-5. **No deshabilitar** RLS en migraciones sin aprobación explícita.
-6. **Loggear** intentos de acceso no autorizado en `ai_auditoria_violaciones` o tablas similares.
+### Servicios de auth (`src/services/auth.ts`)
+- `getCurrentMember(): Promise<Member | null>` — usuario autenticado + fila en `members` en una sola llamada. Usar SIEMPRE esta función en Server Components/Actions.
+- `hasRole(member, roles)` — verifica pertenencia a lista de roles.
+- `isAdmin(member)` — shortcut para rol `admin`.
 
 ---
 
-## Base de Datos — Tablas Principales
+## 7. Seguridad
 
-### Core
+### Patrón obligatorio de Server Actions
+```typescript
+const member = await getCurrentMember()
+if (!member || !['admin', 'coordinador'].includes(member.role)) {
+  return { success: false, error: 'No autorizado' }
+}
+```
+Todas las actions administrativas verifican `getCurrentMember()` antes de ejecutar. Validación de inputs con Zod.
+
+### Row-Level Security (RLS)
+- Todas las tablas críticas usan políticas RLS basadas en `auth.uid()` y rol en `members`.
+- **Migración 056 (hardening crítico):** corrigió políticas permisivas en `clases_virtuales`, `clase_interacciones`, `certificados_digitales` (antes `USING(true)` permitía CRUD anónimo). Escritura restringida a admin/coordinador.
+- Tablas de interacción en vivo de clases (migración 060: `clase_modometro_votos`, `clase_mano_alzada`, etc.) tienen RLS abierta a propósito (interacción anónima realtime).
+- `evento_semaforo_votos`: SELECT e INSERT públicos; sin UPDATE/DELETE (votos inmutables, append-only).
+
+### Storage
+- **Buckets:** `article-media`, `avatars`, `training-docs`, `sponsors-logos` (todos públicos para lectura).
+- `sponsors-logos`: SELECT público; INSERT autenticado admin/coordinador. Políticas en `fix_storage_policies.sql`.
+
+### Identificación anónima por dispositivo
+- Eventos presenciales y aula virtual identifican usuarios por UUID en `localStorage` (`dispositivo_id`), sin login.
+- **Semáforo de comprensión:** dedup SERVER-SIDE por dispositivo — migración 057 agregó columna `dispositivo_id TEXT` + índice `(evento_id, dispositivo_id, created_at)`. La action `registrarVotoNegativo(eventoId, dispositivoId)` verifica que el dispositivo no haya votado en el ciclo actual (desde `semaforo_last_reset_at`) antes de insertar. Un dispositivo = un voto por ciclo. Cooldown adicional de 5s solo client-side.
+- Encuestas usan cookie-based dedup (`livepoll_voted_{pollId}`, httpOnly, 24h) en `voteLivePollAction()`.
+- Nube de palabras: límite de caracteres (20 en móvil, 25 genérico) + anti-duplicado por dispositivo en localStorage.
+
+### Seguridad de la IA
+- **Auditoría post-respuesta** (`auditarRespuestaIA()` en `services/ai.ts`): 4 categorías regex:
+  1. Menciones prohibidas (ej. "Peques ITEC", palabras bloqueadas) → reemplaza respuesta si gravedad alta
+  2. Exposición de rutas internas del sistema
+  3. Lenguaje informal/regionalismos fuera de tono ("che", "viste", "pibe")
+  4. Palabras temporales relativas ("hoy", "ayer", "mañana") — la IA no debe referirse al tiempo relativo
+- Violaciones registradas en `ai_auditoria_violaciones`.
+- **No se exponen API keys al cliente**: llamadas IA solo server-side/API routes. Errores de providers sanitizados (solo códigos de estado logueados).
+
+### Tokens y credenciales
+- Supabase anon key (pública): lectura filtrada por RLS.
+- Service role key: solo server-side (API routes del asistente/chat, comunicacion actions).
+- Sponsors `private_token`: UUID único por sponsor para su portal privado; no expuesto en URLs públicas (portal es `/sponsors/[id]`, noindex).
+- Google Service Account JSON: almacenado en `site_settings.google_service_account_json` (NO en .env) para rotación sin redeploy.
+- API keys rotatables en tabla `api_settings` con prioridad sobre env vars (ver §9.9).
+
+### Recomendaciones para nuevos desarrollos
+1. Nunca exponer API keys/secrets en cliente o localStorage.
+2. Siempre `getCurrentMember()` en Server Actions antes de mutar.
+3. Usar RLS en tablas nuevas; no confiar solo en validación de app.
+4. Auditar endpoints públicos que aceptan input de usuario.
+5. No deshabilitar RLS en migraciones sin aprobación explícita.
+6. Loggear accesos no autorizados en `ai_auditoria_violaciones` o similar.
+
+---
+
+## 8. Base de Datos (Supabase)
+
+### 8.1 Clientes Supabase — 3 patrones coexisten
+
+| Archivo | Uso | Detalle |
+|---------|-----|---------|
+| `src/lib/supabase/server.ts` | Server Components/Actions | `createServerClient` de `@supabase/ssr` ligado a `cookies()` de `next/headers`. **Asíncrono: siempre `await createClient()`**. En `setAll` captura silenciosamente el error en Server Components (confía en refresh del proxy). |
+| `src/lib/supabase/client.ts` | Client Components | `createBrowserClient` síncrono con env vars públicas. |
+| Cliente crudo `@supabase/supabase-js` | Casos especiales | En `lib/data/socios.ts` y `services/videos.ts` (este último importa el browser client aunque lo usan páginas admin) y en `/api/asistente` + `/api/chat` (admin client con service_role, sin cookies). |
+
+⚠️ Al crear clientes nuevos, preferir los patrones de `lib/supabase/`. No mezclar sin motivo.
+
+### 8.2 Tablas por dominio
+
+#### Core
 | Tabla | Descripción | Campos clave |
 |-------|-------------|--------------|
 | `members` | Perfiles de usuario | `id(uuid PK→auth.users)`, `full_name`, `email(UNIQUE)`, `avatar_url`, `role`(admin\|coordinador\|miembro\|colaborador), `status`(activo\|inactivo\|pendiente), `bio`, `linkedin_url`, `phone`, `join_date`, `frase_itec`, `tareas_itec` |
-| `commissions` | Grupos de trabajo | `id(uuid PK)`, `name`, `slug(UNIQUE)`, `description`, `icon`, `color`, `is_active`, `coordinator_id(FK→members)`, `meet_link`, `drive_folder_id` |
-| `commission_members` | Relación miembros-comisiones | `commission_id(FK→commissions)`, `member_id(FK→members)`, `joined_at`, `is_coordinator` — Unique(commission_id, member_id) |
-| `site_settings` | Configuración global | Clave-valor para settings del sitio (Google service account, Drive root folder, etc.) |
-| `allowed_emails` | Emails pre-aprobados | `email(UNIQUE)`, `role`, `commission_id` |
+| `commissions` | Grupos de trabajo | `name`, `slug(UNIQUE)`, `description`, `icon`, `color`, `is_active`, `coordinator_id(FK→members)`, `meet_link`, `drive_folder_id` |
+| `commission_members` | Relación m-c | Unique(commission_id, member_id), `is_coordinator` |
+| `allowed_emails` | Pre-aprobados | `email(UNIQUE)`, `role`, `commission_id` |
+| `site_settings` | Config global clave-valor | Google service account JSON, `google_drive_root_id`, `general_meet_url` (col. desde mig. 061) |
+| `api_settings` | API keys rotatables (mig. 058) | `key/value`, RLS CRUD solo admins, índice `idx_api_settings_key` |
 
-### Noticias y Comunicación (Multicanal)
+#### Noticias y Comunicación Multicanal
 | Tabla | Descripción |
 |-------|-------------|
-| `news_flashes` | Tabla principal de noticias con campos: `titulo`, `commission_id`, `author_id`, `original_text`, `summary`, `flash_text`, `source_type`, `is_published`, `tags`, `texto_publico`, `texto_miembros`, `texto_sponsors`, `texto_medios`, `datos_crudos`, `para_publico`, `para_miembros`, `para_sponsors`, `para_medios`, `media_urls(jsonb)` |
-| `notas_publico` | Notas para audiencia pública |
-| `notas_miembros` | Notas para miembros |
-| `notas_sponsors` | Notas para sponsors |
-| `notas_medios` | Notas para prensa/medios |
+| `news_flashes` | Tabla principal: `titulo`, `commission_id`, `author_id`, `original_text`, `summary`, `flash_text`, `source_type`, `is_published`, `tags`, `texto_publico`, `texto_miembros`, `texto_sponsors`, `texto_medios`, `datos_crudos`, `para_publico`, `para_miembros`, `para_sponsors`, `para_medios`, `media_urls(jsonb)` |
+| `notas_publico` / `notas_miembros` / `notas_sponsors` / `notas_medios` | Una tabla por canal (contenido adaptado por IA) |
 | `notas_generadas` | Notas generadas por IA |
-| `news_media` | Recursos multimedia de noticias |
-| `public_articles` | Artículos publicados con slugs |
-| `news_comments` | Comentarios en noticias |
+| `public_articles` | Artículos con slugs, `related_video_id` (mig. 022), `news_flash_id` (mig. 040) |
+| `news_comments` | Comentarios (soft delete), FK `news_flash_id` |
+| `news_media` | Multimedia adjunto |
 
-### Acciones y Eventos
+⚠️ Las actions de comunicación escriben en tabla dinámica según canal (`notas_publico`/`notas_miembros`/`notas_sponsors`/`notas_medios`).
+
+#### Acciones de Impacto
 | Tabla | Descripción |
 |-------|-------------|
-| `itec_actions` | Acciones de impacto (capacitacion\|evento_social\|divulgacion) con `title`, `description`, `type`, `status`, `target_audience`, `capacity`, `cost`, `start_date`, `end_date`, `location`, `thumbnail_url`, `tags(text[])`, `responsible_id`, `commission_id`, `materials_urls(text[])`, `media_urls(text[])` |
-| `action_registrations` | Inscripciones a acciones públicas |
-| `eventos` | Eventos presenciales con `herramientas_activas` (JSONB: encuestas, preguntas, nube, semáforo), `modo_pantalla_gigante`, `semaforo_last_reset_at`, `nube_concepto` |
-| `eventos_asistentes` | Asistentes a eventos presenciales |
-| `evento_preguntas` | Preguntas para oradores (con sistema de likes) |
+| `itec_actions` | Acciones (capacitacion\|evento_social\|divulgacion) con `title`, `description`, `type`, `status`, `target_audience`, `capacity`, `cost`, fechas, `location`, `thumbnail_url`, `tags(text[])`, `responsible_id`, `commission_id`, `materials_urls(text[])`, `media_urls(text[])`. ⚠️ En algunos módulos se referencia como `acciones_itec` (ver gotchas §22) |
+| `action_registrations` | Inscripciones públicas a acciones |
+
+#### Eventos Presenciales
+| Tabla | Descripción |
+|-------|-------------|
+| `eventos` | `herramientas_activas`(JSONB: `encuestas`,`preguntas`,`nube`,`semaforo` booleans), `modo_pantalla_gigante`, `semaforo_last_reset_at`, `nube_concepto TEXT DEFAULT ''` (mig. 055), `modalidad`(presencial\|virtual, mig. 059), `meet_url` (mig. 060) |
+| `eventos_asistentes` | Acreditados (unique evento+email tolerante, upsert en registro) |
+| `eventos_encuestas` / `eventos_encuestas_opciones` / `eventos_encuestas_votos` | Encuestas en vivo del evento |
+| `eventos_preguntas` / `evento_preguntas_likes` | Preguntas con sistema de likes |
 | `evento_preguntas_colaborador` | Colaboración en preguntas |
-| `evento_preguntas_likes` | Likes en preguntas de eventos |
+| `evento_nubes` / `evento_nube_palabras` / `eventos_nube_palabras` | Nubes múltiples por evento. ⚠️ Conviven singular/plural (ver gotchas §22) |
+| `evento_semaforo_votos` | Semáforo v3 (mig. 054) + `dispositivo_id` (mig. 057): solo `id`, `evento_id`, `dispositivo_id`, `created_at`. Cada fila ES un voto negativo. Append-only. Publicada en `supabase_realtime` |
 
-### Sponsors
-| Tabla | Descripción | Campos clave |
-|-------|-------------|--------------|
-| `sponsors` | Organizaciones sponsor | `id(PK)`, `name`, `tier`(platino\|oro\|plata\|bronce\|standard), `rubro`, `resena`, `website_url`, `contacto_nombre`, `contacto_telefono`, `email`, `logo_monocromo_url`, `logo_color_url`, `is_active`, `private_token(UNIQUE)` |
-| `sponsor_reports` | Reportes de impacto generados por IA para sponsors | |
-| `sponsors_medios` | Medios/sponsors para distribución de prensa | |
-| `strategic_partners` | Socios estratégicos (instituciones y organismos aliados) — migración 067 | `name`, `category`(institucion_educativa\|organismo_publico\|ong\|empresa_aliada\|otro), `actions_description`, `logo_url`, `is_active`. RLS: SELECT público solo activos, INSERT/UPDATE/DELETE solo admin. Índices en `category` e `is_active`, trigger `updated_at` |
-
-### Encuestas
+#### Clases Virtuales (Aula Virtual — migración 060 "esquema híbrido")
 | Tabla | Descripción |
 |-------|-------------|
-| `polls` | Encuestas en vivo para eventos |
-| `poll_questions` | Preguntas dentro de encuestas |
-| `poll_options` | Opciones de respuesta |
-| `poll_votes` | Votos emitidos |
+| `clases_virtuales` | Sesiones: `modalidad`(presencial\|virtual), `meet_url`, estado streaming/en vivo (`en_vivo` desde mig. 025) |
+| `clase_modometro_votos` | Ritmo de clase: voy_bien/me_perdi/muy_rapido |
+| `clase_mano_alzada` | Cola de turno de palabra (atender/bajar) |
+| `clase_preguntas` + `clase_pregunta_votos` | Q&A votable con `votos_count`, `resuelta` |
+| `clase_encuestas` + `clase_encuesta_respuestas` | Encuestas de clase (opciones JSONB) |
+| `clase_semaforo_votos` | Semáforo verde/amarillo/rojo de comprensión |
+| `clase_interacciones` | Interacciones genéricas (chat, mano alzada legacy) |
 
-### IA y Asistente
+Todas las tablas realtime de clase están en publicación `supabase_realtime`. RPCs: `reiniciar_semaforo_clase(uuid)`, `toggle_pregunta_voto(uuid, uuid, text)`.
+
+#### Encuestas Globales
+`polls` → `poll_questions` → `poll_options` → `poll_votes`. Campo `chart_type` (mig. 018). `trainings` puede tener polls propios (LivePoll de capacitaciones).
+
+#### Certificados y Capacitaciones
 | Tabla | Descripción |
 |-------|-------------|
-| `ai_prompt_settings` | System prompts dinámicos para modelos IA (keyed por `clave_prompt`) |
-| `ai_auditoria_violaciones` | Registro de violaciones en respuestas IA (4 categorías regex) |
-| `asistente_feedback` | Feedback de usuarios con embeddings para búsqueda semántica |
-| `asistente_aprendizajes` | Patrones aprendidos de interacciones |
-| `asistente_embeddings` | Embeddings vectoriales para RAG |
-| `saved_conversations` | Conversaciones guardadas con embeddings (búsqueda semántica P4) |
-| `chat_conocimiento` | Base de conocimiento de interacciones |
-| `training_docs` | Documentos de entrenamiento del asistente (en Storage bucket) |
-| `documents` | **pgvector** — Chunks de documentos con embeddings para búsqueda semántica P1. Schema: `id(uuid)`, `content(text)`, `embedding(vector(768))`, `metadata(jsonb)`. RPC: `match_documents(query_embedding, match_threshold, match_count)` |
-| `api_settings` | Configuración de API keys rotatable sin redeploy (key/value) |
-
-### Aula Virtual
-| Tabla | Descripción |
-|-------|-------------|
-| `clases_virtuales` | Sesiones de clases virtuales con estado de streaming |
-| `clase_interacciones` | Interacciones en vivo (chat, mano alzada, modómetro) vía Supabase Broadcast |
-
-### Certificados
-| Tabla | Descripción |
-|-------|-------------|
-| `certificados_digitales` | Certificados digitales verificables por QR con `codigo(UNIQUE)`, `titulo`, `alumno_nombre`, `fecha`, `competencias(text[])`, `horas_catedra`, `thumbnail_url` |
-
-### Capacitaciones
-| Tabla | Descripción |
-|-------|-------------|
-| `trainings` | Sesiones de entrenamiento/capacitación |
+| `certificados_digitales` | `codigo(UNIQUE)`, `titulo`, `alumno_nombre`, `fecha`, `competencias(text[])`, `horas_catedra`, `thumbnail_url`. SELECT público (verificación), escritura solo admin (mig. 056) |
+| `trainings` | Capacitaciones: `youtube_url`, `is_live`, status |
 | `entrenamiento_acciones` | Acciones vinculadas a entrenamientos |
-| `polls` (capacitaciones) | Encuestas en vivo para capacitaciones (con `training_id`) |
 
-**LivePoll (`capacitaciones/LivePoll.tsx`):** Componente de votación en tiempo real. Usa `voteLivePollAction()` (server action) con cookie-based dedup (`livepoll_voted_{pollId}`) para prevenir votos duplicados. Lee el conteo actual de votes antes de incrementar para evitar race conditions.
-
-### Mapa Productivo
+#### Sponsors y Socios
 | Tabla | Descripción |
 |-------|-------------|
-| `mapa_empresas` | Empresas registradas en el Mapa Productivo |
-| `mapa_empresas_telefono` | Teléfonos de empresas del mapa |
-| `alumnos_talentos` | Perfiles de talento estudiantil registrados en el mapa |
+| `sponsors` | `tier`(platino\|oro\|plata\|bronce\|standard — constraint actualizado mig. 065), `rubro`, `resena`, contactos, `logo_monocromo_url`, `logo_color_url` (ambas mig. 065), `private_token(UNIQUE)`, `type TEXT DEFAULT 'SPONSOR'` (mig. 068: SPONSOR\|STRATEGIC_ALLIANCE\|DIFFUSION_CHANNEL) |
+| `strategic_partners` (mig. 067) | Socios estratégicos: `category`(institucion_educativa\|organismo_publico\|ong\|empresa_aliada\|otro), `actions_description NOT NULL`, `logo_url NOT NULL`, `is_active`. RLS: SELECT público solo activos; escritura solo admin. Trigger `strategic_partners_updated_at` |
+| `sponsor_reportes` (+ `sponsor_reportes_acciones`) | Reportes de impacto IA |
+| `medios_prensa` | Medios registrados (también usados como canales de difusión, mig. 039 `media_urls`) |
+| `prensa_envios_log` | Historial de envíos de gacetillas (estado, destinatario, errores) |
 
-### Eventos — Tables Adicionales
+#### IA y Asistente
 | Tabla | Descripción |
 |-------|-------------|
-| `eventos_encuestas` | Encuestas dentro de eventos con opciones y votos |
-| `eventos_encuestas_opciones` | Opciones de respuesta de encuestas de evento |
-| `eventos_encuestas_votos` | Votos emitidos en encuestas de evento |
-| `evento_nubes` | Configuración de nubes de palabras múltiples por evento |
-| `evento_nube_palabras` | Palabras enviadas a cada nube |
-| `evento_semaforo_votos` | Votos del semáforo de comprensión (anónimos, por evento) |
+| `ai_prompt_settings` | System prompts dinámicos keyed por `clave_prompt` (ej. `asistente_global`, `sponsor_report_mensual`). Lecturas cacheadas con `unstable_cache` (600s, tag `ai-prompt-settings`) |
+| `ai_auditoria_violaciones` | Violaciones de auditoría IA |
+| `asistente_feedback` | Calificaciones (muy_util/util/no_util/error) + embeddings |
+| `asistente_aprendizajes` | Patrones aprendidos |
+| `asistente_embeddings` | Embeddings vectoriales |
+| `saved_conversations` | Conversaciones guardadas con embedding (búsqueda semántica P4, threshold 0.35, solo misma sesión) |
+| `chat_conocimiento` | Knowledge base de conversaciones (tipo `autogestion`) |
+| `documents` (pgvector, mig. 062+063) | Schema canónico: `id bigint identity`, `file_path`, `chunk_content`, `embedding vector(768)`, `created_at`. Índice HNSW cosine. RPC `match_documents(query_embedding, match_threshold, match_count)` (LANGUAGE sql, similitud `1 - <=>`). RLS: SELECT público; escritura vía service_role |
+| `training_docs` | Documentos de entrenamiento (Storage bucket) |
 
-### Otras
+#### Otros
 | Tabla | Descripción |
 |-------|-------------|
-| `ideas` | Ideas/comentarios de la comunidad |
-| `videos` | Videoteca (YouTube) |
-| `prensa_envios_log` | Log de envíos de prensa por email |
-| `medios_prensa` | Medios de comunicación registrados |
-| `sponsor_reportes` | Reportes de impacto generados por IA para sponsors |
-| `sponsor_reportes_acciones` | Acciones registradas en reportes de sponsor |
+| `ideas` | Buzón de ideas (RPC `insert_idea`, estados, votos) |
+| `videos` | Videoteca YouTube: `display_order`, `ai_summary`, thumbnail recalculado |
+| `meeting_notes` | Actas colaborativas de la Sala de Reuniones (nota activa del día + historial publicado) |
+| `mapa_empresas` (+ `mapa_empresas_telefono`) / `alumnos_talentos` | Mapa Productivo |
+
+### 8.3 RPCs principales
+| RPC | Propósito |
+|-----|-----------|
+| `handle_new_user()` (trigger) | Alta automática de member al registrarse |
+| `obtener_miembros_publicos` | Miembros para landing — NO retorna email ni phone (PII protegida, mig. 028/031/032) |
+| `obtener_sponsors_publicos` (mig. 066, deprecated por 068) | Campos seguros de sponsors activos (sin `private_token` ni `contacto_telefono`) |
+| `obtener_socios_publicos` (mig. 068) | **RPC unificado actual**: UNION ALL de sponsors activos + strategic_partners + medios_prensa normalizados. SECURITY DEFINER, grant anon/authenticated/service_role |
+| `match_documents(vector, float, int)` | Búsqueda pgvector cosine (P1 del RAG) |
+| `buscar_feedbacks_similares` | Feedbacks semánticamente similares |
+| `buscar_conversaciones_similares` | Conversaciones similares P4 |
+| `buscar_docs_similares` (mig. 044) | Docs de entrenamiento similares |
+| `insert_idea` | Alta idea pública |
+| `reiniciar_semaforo_clase` / `toggle_pregunta_voto` | Interacción aula virtual |
+
+### 8.4 Migraciones — historial resumido (75 archivos SQL, 001→068 + fix_storage_policies.sql)
+
+⚠️ Hay números duplicados (014, 024, 025, 026, 032, 036 tienen dos archivos c/u). No hay carpeta de rollback. Aplicar manualmente en Supabase tras cambios de schema.
+
+| Rango | Tema |
+|-------|------|
+| 001–010 | Schema inicial, sponsors_reportes, news_flashes, site_settings, admin policies, public_articles, itec_actions, storage buckets, videoteca, video_summary |
+| 011–020 | allowed_emails, pre-aprobación completa, Drive credentials/folders, RLS acciones, service account, encuestas v1/v2/chart_type, evento_preguntas, colaboradores |
+| 021–030 | Multi-nube, article_related_video, aprendizajes, embeddings asistente, clases+certificados, prompts IA, clases_en_vivo, auditoría IA, sistema eventos QR unificado, avatars, RPC miembros públicos, delete policy, mapa teléfonos |
+| 031–040 | Avatar público, más campos públicos, fix email case trigger, news multicanal (+fix), news_comments, news_media, sponsors campos, notas_generadas, titulo news_flashes, media_urls sponsors_medios, news_flash_id articles |
+| 041–050 | chat_conocimiento, training_docs storage (+fix policies), buscar_docs_similares, saved_conversations, ideas (+delete policy), prensa_envios_log, evento_semaforo v1, fix modalidad, herramientas JSONB, default false |
+| 051–060 | remove_semaforo (053) → **054 semaforo v3** (tabla mínima append-only + reset_at + realtime) → 055 nube_concepto → **056 fix RLS critical** → **057 semaforo dispositivo_id** (dedup server-side) → **058 api_settings** → 059 modalidad eventos → **060 esquema híbrido virtual** (modalidad clases, meet_url, 7 tablas realtime de aula + RPCs + realtime publication) |
+| 061–068 | 061 general_meet_url → **062/063 pgvector RAG** (extensión vector, documents, HNSW, match_documents) → **064 streaming config** (keys `streaming_active`/`streaming_youtube_url` en api_settings) → 065 sponsors update (rubro/resena/contactos/logos/tier standard) → 066 RPC sponsors públicos → **067 strategic_partners** → **068 partner_classification** (col. type + RPC unificado obtener_socios_publicos) |
 
 ---
 
-## Sistema de Noticias Multicanal (Feature Central)
+## 9. Sistema de IA
 
-El flujo de creación de noticias funciona así:
-1. **`NewsFlashMulticanalEditor`** — Editor que recibe datos crudos y los envía al backend.
-2. **`/api/news/process`** — Llama a `generateMulticanalNews()` en `services/ai.ts` que usa Gemini (`gemini-flash-latest`) para generar 4 textos diferentes para 4 canales (público, miembros, sponsors, medios) usando un prompt de agente de prensa.
-3. Los textos generados se guardan en `news_flashes` con los campos `texto_publico`, `texto_miembros`, `texto_sponsors`, `texto_medios`.
-4. También se crean registros en `notas_publico`, `notas_miembros`, `notas_sponsors`, `notas_medios`.
-5. **`NewsWallMulticanal`** — Componente de visualización con tabs: Público, Muro Noticias (interno), Muro Sponsors, Prensa.
-6. **Targets por canal:**
-   - **Público** (`para_publico`) — Noticias visibles en `/muro` para toda la comunidad
-   - **Miembros** (`para_miembros`) — Comunicación interna del dashboard
-   - **Sponsors** (`para_sponsors`) — Contenido exclusivo para sponsors vía API
-   - **Medios** (`para_medios`) — Gacetillas para prensa vía API
+### 9.1 REGLA DE ORO: Modelos Gratuitos
+> Todos los endpoints del asistente DEBEN usar modelos FREE. Nunca usar modelos de pago (deepseek/deepseek-chat eliminado del codebase). Costo objetivo: $0.
 
----
+### 9.2 Distribución por proveedor y tarea
 
-## Sidebar del Dashboard (`layout.tsx`)
+| Proveedor | Modelo | Uso |
+|-----------|--------|-----|
+| **Groq** | `llama-3.3-70b-versatile` | **Asistente ITEC primario** (`/api/asistente`, `/api/chat`). Tier gratuito. Timeout fetch 20s. |
+| **OpenRouter** | `nvidia/nemotron-nano-9b-v2:free` | Fallback del asistente. Tier gratuito. Timeout 20s. Headers `HTTP-Referer: https://itecsaladillo.org.ar` + `X-Title: ITEC Asistente`. |
+| **Google Gemini** | `gemini-flash-latest` | **Edición de texto exclusiva** en `services/ai.ts`: resúmenes, flashes, noticias multicanal, resúmenes de video. Rota hasta 4 API keys de `api_settings` con fallback a env `GOOGLE_GENERATIVE_AI_API_KEY`. |
+| **Google Gemini** | `gemini-embedding-001` | Embeddings primarios (RAG P1 + feedback). |
+| **HuggingFace** | `all-MiniLM-L6-v2` | Embeddings fallback (384 dims, zero-padded a 768 para pgvector). |
+| **Ollama self-hosted** | `llama3.2:latest` en `OLLAMA_API_BASE_URL` (default `https://ai.itecsaladillo.org.ar`) | Reportes de impacto de sponsors (`sponsorReport.ts`, timeout 98s, `num_ctx: 2048`) + síntesis de tema/feedback (`/api/asistente/feedback`, timeout 98s). NO asumir disponibilidad — siempre hay fallback. |
 
-- **Nav principal** (todos los miembros): Muro, Sala Reuniones, Aula Virtual, Pasaporte Digital, Buzón Ideas, Mi Perfil, Nube Archivos, Mapa Productivo, Capacitaciones.
-- **HERRAMIENTAS** (solo admin): Items sueltos + submenús colapsables (`<details>`):
-  - **Prensa** (cyan): Gacetillas, Gestión de Prensa
-  - **Sponsors** (amber): Muro Sponsors, Gestión de Sponsors
-  - **Herramientas para Eventos** (púrpura): Encuestas, Sistema Preguntas, Nube Ideas, Semáforo de Comprensión, Crear Evento, Editar Evento. Cada herramienta se activa/desactiva individualmente por evento via `herramientas_activas` (JSONB, claves: `encuestas`, `preguntas`, `nube`, `semaforo`).
-- Usa `scroll={false}` en todos los links para mantener posición al navegar.
-- Diseño responsive con color-coding por sección.
-- Los badges muestran conteos de items pendientes (ej. comentarios no leídos).
-
----
-
-## Sistema de IA — Proveedores y Servicios
-
-### REGLA DE ORO: Modelos Gratuitos
-> **Todos los endpoints del asistente ITEC DEBEN usar modelos FREE de OpenRouter.**
-> Nunca usar modelos de pago (deepseek/deepseek-chat, etc.) en producción.
-> El modelo `openrouter/free` es un router automático que selecciona entre 14+ modelos gratuitos disponibles.
-
-### Proveedores de IA — Distribución por tarea
-
-| Proveedor | Modelo | Uso asignado |
-|-----------|--------|-------------|
-| **Google Gemini** | `gemini-flash-latest` | **Edición de texto exclusivo**: resúmenes, flashes, noticias multicanal, videos (`services/ai.ts`). Tier gratuito. |
-| **Groq** | `llama-3.3-70b-versatile` | **Asistente ITEC primario** (`/api/asistente`) + chat legacy (`/api/chat`). Tier gratuito. |
-| **OpenRouter** | `nvidia/nemotron-nano-9b-v2:free` | **Asistente ITEC fallback** (`/api/asistente`). Tier gratuito. |
-| **Ollama** (self-hosted) | `llama3.2:latest` en `ai.itecsaladillo.org.ar` | **Último recurso** (caído). Self-hosted = gratuito. |
-| **HuggingFace** | `all-MiniLM-L6-v2` | Embeddings fallback (384-dim, zero-padded a 768) |
-
-### Arquitectura de proveedores
-
-```
-┌─────────────────────────────────────────────────┐
-│  Asistente ITEC (/api/asistente)                │
-│  Groq (llama-3.3-70b) → OpenRouter (nemotron)  │
-└─────────────────────────────────────────────────┘
-
-┌─────────────────────────────────────────────────┐
-│  Edición de texto (services/ai.ts)              │
-│  Gemini (gemini-flash-latest) exclusivo         │
-│  → processWithAI, generateFlash,                │
-│    generateMulticanalNews, generateVideoSummary │
-└─────────────────────────────────────────────────┘
-
-┌─────────────────────────────────────────────────┐
-│  Embeddings (services/ai.ts)                    │
-│  Gemini (gemini-embedding-001) → HuggingFace    │
-└─────────────────────────────────────────────────┘
-```
-
-### Servicios de IA (`src/services/ai.ts`)
+### 9.3 Servicios (`src/services/ai.ts`, ~467 líneas)
 | Función | Propósito |
 |---------|-----------|
-| `processWithAI()` | Genera resúmenes + action items de transcripciones de reuniones |
-| `generateFlash()` | Crea flashes noticiosos cortos para el muro interno |
-| `generateExecutiveSummary()` | Resúmenes ejecutivos a partir de notas |
-| `generateActionItems()` | Extrae items de acción de textos |
-| `generateMulticanalNews()` | Genera contenido para 4 audiencias (público, miembros, sponsors, medios) |
-| `generateVideoSummary()` | Resume videos de YouTube |
-| `generarEmbedding()` | Genera embeddings vía Gemini o HuggingFace |
-| `buscarFeedbacksSimilares()` | Búsqueda semántica de feedbacks similares |
-| `auditarRespuestaIA()` | Audita respuestas por violaciones de policy (4 categorías) |
+| `callAI(messages, temperature)` (privada) | POST Gemini flash con rotación de 4 keys |
+| `processWithAI(text, sourceType, commissionName?)` | `{summary, action_items[]}` desde transcripciones (sourceType: meet\|capacitacion\|reunion\|manual) |
+| `generateFlash(text)` | Flash noticioso máx. 2 oraciones para muro interno |
+| `generateExecutiveSummary(notes)` / `generateActionItems(notes)` | Wrappers de processWithAI |
+| `generateMulticanalNews(rawFacts)` | Titular + 4 textos por audiencia; parsing JSON robusto con fallback textual |
+| `generateVideoSummary(title, description)` | Resumen periodístico máx. 200 palabras |
+| `generarEmbedding(texto)` | Gemini `gemini-embedding-001` → HF fallback (pad 384→768) |
+| `buscarFeedbacksSimilares(mensaje, limit, threshold)` | RPC pgvector feedbacks |
+| `auditarRespuestaIA(mensajeUsuario, respuestaIA, sessionId?)` | Auditoría 4 categorías regex; reemplaza respuesta si gravedad alta; registra violaciones |
 
-### RAG Cascade (`src/lib/rag/ragCascade.ts`)
-Sistema de recuperación de **5 niveles** con scoring por solapamiento de tokens (estilo Jaccard):
+### 9.4 Reportes de Sponsor (`src/services/sponsorReport.ts`, ~253 líneas)
+- `generateSponsorReport(data)`: narrativa mensual vía **Ollama** con prompt dinámico de BD (`getAIPrompt('sponsor_report_mensual')`) + fallback local.
+- Parsea 4 secciones separadas por `---SECCION---`.
+- Si falla: `buildFallbackReport()` con `generado_con_ia: false`.
+
+### 9.5 RAG Cascade (`src/lib/rag/ragCascade.ts`, ~438 líneas)
+Recuperación de contexto en 5 niveles con soft fallback (mejor resultado aunque esté bajo threshold):
 
 | Nivel | Fuente | Threshold | Método |
 |-------|--------|-----------|--------|
-| **P1** | pgvector `documents` | >= 0.20 | Gemini embedding + cosine similarity via `match_documents` RPC |
-| **P2** | Documentos locales (`DOCS_CONTEXT`) | >= 0.40 | Token overlap scoring (Jaccard-style) |
-| **P3** | Supabase Storage `training-docs` | >= 0.35 | Token overlap on downloaded .txt/.md/.json (**caché en memoria 5 min + dedup de descargas concurrentes** — el bucket se consulta 1 vez por ventana, no por request) |
-| **P4** | Conversaciones guardadas | any | Semantic search via `buscar_conversaciones_similares` RPC |
-| **P5** | DuckDuckGo web search | any | Instant Answer API (sin API key) |
-| **Soft fallback** | Mejor resultado | any | Retorna el mejor aunque esté bajo thresholds |
+| **P1** | pgvector `documents` | ≥ 0.20 | Embedding Gemini de la query + RPC `match_documents` (cosine, 6 chunks) |
+| **P2** | `DOCS_CONTEXT` local (docsContext.ts autogenerado) | ≥ 0.40 | Chunking 900/120 + scoring overlap de tokens estilo Jaccard modificado `|A∩B|/min(|A|,|B|)` con stopwords español |
+| **P3** | Bucket Storage `training-docs` (.txt/.md/.json) | ≥ 0.35 | Token overlap. **Caché memoria TTL 5 min (`P3_CACHE_TTL_MS`) + deduplicación de descargas concurrentes** (`p3FetchPromise` compartida + `.finally()`) — anti-stampede |
+| **P4** | Conversaciones guardadas del propio sessionId | any | RPC `buscar_conversaciones_similares` (threshold 0.35) |
+| **P5** | DuckDuckGo Instant Answer | any | Web search sin API key, query enriquecida con "itec saladillo Cicaré expo itec" |
 
-- **Chunk size:** 900 chars, **overlap:** 120 chars, **max context:** 3200 chars
-- Compatible con Edge Runtime (sin dependencias Node pesadas)
-- **Integrado en `/api/asistente`**: Se ejecuta después de las queries de DB y se inyecta al system prompt
-- **Ingesta de documentos:**
-  - `npm run sync-docs` → PDFs → `docsContext.ts` (keyword RAG, nivel P2)
-  - `npm run ingest-vector` → PDFs → chunking → Gemini embeddings → tabla `documents` (pgvector, nivel P1)
+- Export: `recuperarContextoRAG(query, supabase, sessionId?)` → `{contexto, nivel, score}`. Contexto máximo 3200 chars, sin etiquetas de fuente. `nivel` solo para logging interno (nunca se expone al LLM).
+- Compatible con Edge Runtime (funciones puras, sin dependencias Node pesadas).
 
-### Asistente IA (`/api/asistente`)
-- **Provider:** Groq (`llama-3.3-70b-versatile`) → OpenRouter (`nvidia/nemotron-nano-9b-v2:free`) fallback
-- **RAG integrado:** Llama a `recuperarContextoRAG()` para inyectar contexto semántico
-- **Contexto dinámico de DB en paralelo:** prompt maestro, staff, noticias, comisiones, actividades, artículos
-- **Timeout:** 60s (modelos gratuitos pueden ser más lentos)
-- Detecta comandos explícitos de guardado y auto-guarda cada 10 mensajes
-- System prompt: enforce estilo ITEC (técnico, humano, vanguardista)
-- **Auditoría de IA** (`auditarRespuestaIA()`) — 4 categorías de detección vía regex:
-  1. Menciones prohibidas (palabras bloqueadas → reemplaza respuesta)
-  2. Exposición de rutas internas del sistema
-  3. Lenguaje informal o fuera de tono
-  4. Uso de palabras temporales relativas
-- Violaciones se registran en `ai_auditoria_violaciones`
-- **Sistema de Feedback** (`/api/asistente/feedback`):
-  - Usuarios califican respuestas (muy_util, util, no_util, error)
-  - Ollama sintetiza tema_principal y lo_mas_util
-  - Genera embeddings para búsqueda semántica
-  - Guarda en `asistente_feedback`
-- **Lazy Groq:** El cliente Groq en `/api/chat` usa lazy initialization para evitar error de build cuando falta `GROQ_API_KEY`
+### 9.6 Conversaciones Guardadas (`src/lib/rag/conversacionesGuardadas.ts`)
+- `detectarComandoGuardar(mensaje)`: regex español ("guardá esta conversación", etc.).
+- `debeAutoGuardar(historialLength)`: auto-guardado cada 10 mensajes tras umbral inicial de 10 (`AUTO_SAVE_THRESHOLD=10`, `AUTO_SAVE_INTERVAL=10`).
+- `guardarConversacion(...)`: embedding de últimos 20 mensajes → `saved_conversations` (fire-and-forget).
+- `buscarConversacionesSimilares(...)`: recuperación semántica P4 restringida a la sesión propia.
 
-### Constantes de IA (`src/lib/ai/constants.ts`)
-- **`FALLBACK_PROMPT`**: System prompt por defecto del asistente cuando no hay configuración en DB. Define identidad, conocimiento sobre ITEC/Cicaré, y reglas de comportamiento.
-- **`ANTI_HALLUCINATION_RULES_STRICT`**: Reglas estrictas para RAG — solo responder con información del contexto recuperado.
-- **`ANTI_HALLUCINATION_RULES_FLEXIBLE`**: Reglas flexibles — priorizar contexto RAG, luego artículos, luego conocimiento general.
+### 9.7 Asistente IA (`POST /api/asistente`)
+- Cadena: **Groq `llama-3.3-70b-versatile` → OpenRouter `nvidia/nemotron-nano-9b-v2:free`** (cada uno timeout 20s; error sanitizado al cliente, detalle solo en logs server).
+- `maxDuration = 60` (route export + vercel.json).
+- Input: `{ mensaje, historial[], sessionId?, idioma? }`. sessionId default `crypto.randomUUID()`.
+- Requiere al menos una key: GROQ_API_KEY u OPENROUTER_API_KEY (si no → 500).
+- **Contexto en paralelo** (Promise.allSettled con admin client service-role, sin cookies): prompt maestro (`ai_prompt_settings.clave_prompt='asistente_global'`), staff (`obtener_miembros_publicos`), últimas 10 notas públicas, comisiones, acciones, artículos, **RAG cascade completo**.
+- System prompt: FALLBACK_PROMPT (si no hay en BD) + reglas anti-alucinación + contexto RAG + contexto DB.
+- Detecta comandos de guardado y auto-guarda cada 10 mensajes.
+- Post-procesamiento: `auditarRespuestaIA()`.
 
-### Conversaciones Guardadas (`src/lib/rag/conversacionesGuardadas.ts`)
-- **Detección de comandos:** Patrones regex en español para detectar "guardar conversación", "guardar esto", etc.
-- **Auto-guardado:** Se activa después de 10 mensajes y se repite cada 10 mensajes.
-- **Persistencia:** Genera embedding del historial y guarda en `saved_conversations`.
-- **Recuperación (P4):** Busca conversaciones pasadas similares a la query actual usando similitud coseno.
+### 9.8 Feedback (`POST /api/asistente/feedback`)
+Input: `{ historial[{role: user|model, text}], calificacion, comentario? }`.
+- Si hay interacción: Ollama sintetiza `{tema_principal, lo_mas_util}` en JSON (timeout 98s; regla de género: nunca "el ITEC"/"la ITEC").
+- Embedding vía `generarEmbedding()` (Gemini→HF) y persistencia en `asistente_feedback`.
+
+### 9.9 Constantes de IA (`src/lib/ai/constants.ts`)
+- `FALLBACK_PROMPT`: System Prompt Maestro ("Asistente ITEC") — identidad, biografía de Augusto Cicaré, historia Expo ITEC, comisiones, estilo rioplatense técnico-humano-vanguardista, prohibición de inventar datos.
+- `ANTI_HALLUCINATION_RULES_STRICT`: responder SOLO con `<retrieved_context>`; si no está, negarse amablemente.
+- `ANTI_HALLUCINATION_RULES_FLEXIBLE`: prioridad retrieved_context → artículos publicados → conocimiento general → recién entonces "no dispongo de esa información". Es el modo usado por defecto en `/api/asistente`.
+
+### 9.10 Resolución de API keys (`src/lib/settings.ts`)
+`getSettingValue(key, envVarName?)`: estrategia **fallback híbrido DB → env**: consulta `api_settings` (clave/valor); si vacío/inexistente → `process.env[envVarName]`. Caché Map a nivel de módulo. Es la base de resolución de Gemini (×4 keys), HF, Resend, streaming config. El dashboard de settings admin gestiona estas claves con prioridad sobre env vars.
 
 ---
 
-## Páginas Públicas — Detalle Funcional
+## 10. Sistema de Noticias Multicanal (Feature Central)
 
-### Landing Page (`/`)
-Secciones: Hero (logo + fotos Cicaré + frase aleatoria de 3 opciones que cambia en cada carga), Navbar con navegación completa, Métricas de Impacto (contadores animados), Videoteca (videos de YouTube con resúmenes IA), Sección "Acerca de", Comisiones (grid visual con colores), Buzón de Ideas, Footer completo.
+Flujo completo:
+1. **`NewsFlashMulticanalEditor`** (client) — editor recibe datos crudos y llama `createMulticanalNewsAction` o `POST /api/news/process`.
+2. **IA** (`generateMulticanalNews()` en `services/ai.ts`, Gemini `gemini-flash-latest`) — genera titular + 4 textos para 4 canales con prompts detallados por audiencia.
+3. Persistencia en `news_flashes` (campos `texto_publico`, `texto_miembros`, `texto_sponsors`, `texto_medios`, flags `para_*`) + registros en `notas_publico`/`notas_miembros`/`notas_sponsors`/`notas_medios` (tabla dinámica según canal).
+4. **Distribución:**
+   - **Público** → `/muro` (visible para todos)
+   - **Miembros** → `/dashboard/muro` (requiere sesión activa; en `/muro` también visible si hay sesión)
+   - **Sponsors** → portal sponsor + `GET /api/sponsors-news`
+   - **Medios** → gacetillas + `GET /api/press-news` + email via Resend
+5. **Visualización:** `NewsWallMulticanal` (tabs por canal, slideshow de medios con aspect ratio original preservado: `object-contain` max-h-280px sobre fondo oscuro).
+6. **Gestión:** `NotasMulticanalList` — editar, borrar, publicar/despublicar, **reordenar** (`swapNotasOrderAction`).
 
-Características recientes de la landing:
-- **Sección "NUESTROS SOCIOS"** — `NuestrosSociosSection.tsx` (client): grillas dinámicas de logos agrupadas por nivel de sponsoreo (platino, oro, plata, bronce, standard), en columna derecha del título (estilo columna izquierda como Nuestro Equipo). Los datos vienen del RPC `obtener_sponsors_publicos` (solo sponsors activos, campos seguros — migración 066). Grillas dinámicas según cantidad de logos (2 a 10 columnas), alturas estandarizadas por nivel (`BASE_H=120` × pct: platino 100% con glow ámbar, oro 80%, plata 55%, bronce 35%, standard 10%). Tiers superiores (platino/oro) en columna derecha, inferiores (plata/bronce/standard) a ancho completo debajo. Click en un logo abre `SponsorModal.tsx` (Framer Motion, badge de nivel, reseña, email, link al sitio web, cierre con Escape). Título en tipografía Impact con "Socios" en gradient.
-- **Sección "Alianzas Estratégicas"** (ago 2026) — Sub-sección dentro de `NuestrosSociosSection.tsx` debajo de las grillas de sponsors: divisor con label "ALIANZAS ESTRATÉGICAS" y grid responsive de logos (3-6 columnas según breakpoint, tarjetas `h-20` con logo `object-contain`, fallback al nombre en texto si no hay logo). Los datos vienen de `strategic_partners` (solo `is_active=true`, ordenados por `created_at` desc), consultados en paralelo con el RPC de sponsors vía `Promise.all`. Click en un logo abre el mismo `SponsorModal` unificado (tipo `ModalItem` con discriminador `_kind: 'partner'`), que muestra badge de categoría (`CATEGORY_LABELS`: Institución Educativa, Organismo Público, ONG / Asociación, Empresa Aliada, Otro) y bloque destacado "Acciones conjuntas con ITEC" con `actions_description`. La sección solo se renderiza si hay partners activos.
-- **Sección "NUESTRO EQUIPO"** — En `AboutSection.tsx`: título en columna izquierda (tipografía Impact, "Equipo" con text-gradient) y fichas horizontales de miembros rodeándolo (estilo espejo de Nuestros Socios). Primeras 9 fichas en grid 3 columnas; desde la cuarta fila las fichas van a ancho completo (`lg:grid-cols-4/5`). Cada `MemberCard` horizontal (avatar circular, nombre, badge de rol, frase/bio) abre el modal de perfil del miembro al hacer click.
-- **Streaming en vivo en Hero** — Si `streaming_active=true` y `streaming_youtube_url` están configurados en `site_settings`, el Hero muestra el reproductor YouTube en vivo (`StreamingPlayer.tsx`) en lugar de las palabras spotlight. Estado consultado via `/api/streaming/status` (público, cache 30s). El botón "Aula Virtual" también se enciende en rojo pulsante cuando hay una clase con `en_vivo=true` en `clases_virtuales` (Realtime).
-- **Barra de sponsors (marquesina)** — `SponsorHeaderBar.tsx`: barra `fixed` al borde inferior con logos monocromo de sponsors en loop infinito. Los logos se leen del filesystem (`public/sponsors/blanco/`) en el server component de `page.tsx` envuelto en `unstable_cache` (Next.js, `revalidate: 3600` — 1 hora) con timestamp de mtime como cache-buster (`?v=...`). Fade out al hacer scroll (> 10px), velocidad de animación 70s, pausa al hacer hover.
-- **Posicionamiento de elementos flotantes** — El contenido principal está desplazado `-translate-y-[30px]` para compensar la barra inferior. El widget del chat y el selector de idioma se anclan al viewport (`bottom: 59px`, selector en `right-6`), ambos con fade out al scroll.
-- **Hydration-safe** — `page.tsx` usa `force-dynamic` + `revalidate = 0`; `SponsorHeaderBar` usa `suppressHydrationWarning` + `isMounted` para evitar el error de hidratación #418 (timestamps determinísticos del server, sin `Date.now()` en SSR).
-- **Sección "Buzón de Ideas"** — `IdeasSection.tsx`: layout de 2 columnas en desktop (`lg:grid-cols-2`, 1 col en mobile). Columna izquierda: badge "Buzón de Ideas", título "Tu idea puede ser / el próximo / proyecto de ITEC" en 3 líneas (tipografía `text-3xl md:text-4xl`, gradient), descripción whitespace-pre-line, y 2 primeros beneficios (Anónimo o con nombre, Sistema de votos) en formato `flex` horizontal. Columna derecha: formulario `PublicIdeasForm.tsx` (textarea idea, checkbox anónimo, campos opcionales nombre/email/teléfono, botón envío) + tercer beneficio "Seguimiento real" debajo. Textos i18n en `dictionary.ts` (ES/EN/PT). Título ComisionesSection tipografía reducida `text-3xl md:text-4xl` para 2 líneas.
+Servicio de lectura (`src/services/news.ts`):
+- `getAllMulticanalNewsFlashes()`: merge de `news_flashes` + `notas_publico` (+ `notas_miembros` si hay sesión), normaliza campos legacy, ordena por fecha.
+- `getPublicArticles()` / `getArticleBySlug(slug)`: resolución tolerante de `media_urls` (array o string JSON); slug acepta UUID con fallback a `notas_publico` y luego `news_flashes`.
 
-### Muro de Noticias (`/muro`)
-Muro público que muestra `notas_publico` publicadas. Incluye sistema de comentarios via `/api/news-comments`. Visualización con medios adjuntos (imágenes, videos).
+---
 
-### Mapa Productivo (`/mapa-productivo`)
-Directorio interactivo del ecosistema productivo regional. Muestra beneficios para empresas y estudiantes, y guía paso a paso de cómo funciona la iniciativa. Las empresas/estudiantes se registran via `/registro-mapa` con formulario de doble perfil:
-- **Empresa**: nombre, sector, contacto, necesidades, desafíos → datos en `mapa_empresas`
-- **Estudiante**: escuela, especialidad, habilidades → datos en `alumnos_talentos`
+## 11. Páginas Públicas — Detalle Funcional
 
-### Acciones de Impacto (`/acciones`)
-Catálogo público de acciones (capacitaciones, eventos sociales, divulgaciones científicas) con filtros por tipo. Cada acción tiene detalle (`/acciones/[id]`) con formulario de inscripción pública.
+### Landing (`/`)
+Secciones (server component carga con `next/dynamic`): Hero, About, Impact, Comisiones, Ideas, Videoteca, Footer, Nuestros Socios.
 
-### Artículos (`/articulo`)
-Artículos publicados con slugs amigables. Cada artículo (`/articulo/[slug]`) soporta contenido enriquecido.
+Características clave:
+- **Hero** (`HeroSection.tsx`, client): logo + galería fotos Cicaré + frase aleatoria de 3 opciones. Si hay clase con `en_vivo=true` en `clases_virtuales` (Realtime), botón "Aula Virtual" en rojo pulsante.
+- **Streaming en vivo:** si `streaming_active=true` + `streaming_youtube_url` en api_settings, el Hero muestra `StreamingPlayer` (convierte cualquier URL YouTube — watch/youtu.be/embed/shorts/live— a iframe embed autoplay+mute) en lugar de las palabras spotlight. Estado consultado vía `/api/streaming/status` (cache 30s).
+- **Barra sponsors marquesina** (`SponsorHeaderBar.tsx`): fija al borde inferior, logos monocromos de `public/sponsors/blanco/` leídos del filesystem en el server (`getSponsorLogos` con `unstable_cache` 1h, timestamp mtime como cache-buster `?v=`). Loop infinito: `MARQUEE_COPIES = 2` copias memoizadas (`useMemo`) + `translateX(-50%)`, duración inline 70s, pausa al hover, fade out al scroll > 10px, `loading="lazy"` + `decoding="async"`. Fallback a placehold.co si carpeta vacía.
+- **Compensación layout:** contenido principal `-translate-y-[30px]` + `pb-16`; widget chat y selector idioma anclados a `bottom: 59px` (lado a lado en desktop), ambos fade out al scroll.
+- **Hydration-safe:** `force-dynamic` + `revalidate = 0` + `suppressHydrationWarning`; timestamps determinísticos del server (mtimes), nunca `Date.now()` en SSR (evita error hidratación #418).
+- **NUESTROS SOCIOS** (`NuestrosSociosSection.tsx`): grillas dinámicas por tier (platino/oro columna derecha; plata/bronce/standard ancho completo debajo). Alturas por tier: platino 100% (glow ring ámbar), oro 80%, plata 55%, bronce 35%, standard 10% (BASE_H=120). Datos del RPC `obtener_socios_publicos`. Click abre `SponsorModal`.
+- **ALIANZAS ESTRATÉGICAS** (sub-sección): grid responsive 3–6 columnas de `strategic_partners` activos; modal unificado con badge de categoría y bloque "Acciones conjuntas".
+- **NUESTRO EQUIPO** (`AboutSection.tsx`): título columna izquierda (tipografía Impact, gradient) + fichas horizontales de miembros rodeándolo (primeras 9 en grid 3 cols; luego ancho completo). Modal de perfil al click. Datos de RPC `obtener_miembros_publicos` (sin PII).
+- **Métricas de Impacto:** patrón server-data → client-UI (`ImpactSection.tsx` server async fetch → `ImpactSectionClient.tsx` animado con contadores y carrusel de novedades, tabs, locales date-fns por idioma).
+- **Comisiones:** grid visual estático con colores/iconos por comisión, textos i18n.
+- **Buzón de Ideas** (`IdeasSection.tsx`): 2 columnas desktop. Izquierda: título 3 líneas + descripción + beneficios (flex horizontal). Derecha: formulario `PublicIdeasForm` (textarea, checkbox anónimo, contacto opcional) + beneficio "Seguimiento real". Envío a `POST /api/ideas` (RPC `insert_idea`, mín. 10 chars).
+- **Videoteca** (`VideotecaSection.tsx`): búsqueda y filtro por categoría usando `videoService.getPublicVideos()`; thumbnails mqdefault; resúmenes IA.
+
+### Muro Público (`/muro`)
+Noticias multicanal filtradas por audiencia (público siempre; otros canales solo con sesión). Comentarios vía `/api/news-comments` (autenticados, con nombre de member). Medios con aspect ratio original.
+
+### Mapa Productivo (`/mapa-productivo` + `/registro-mapa`)
+Landing informativa hardcodeada (beneficios empresas/estudiantes, estadísticas, pasos). Registro dual en client component: Empresa (nombre, sector, oferta/demanda, desafío tecnológico → `mapa_empresas`) o Estudiante (escuela, especialidad, habilidades → `alumnos_talentos`).
+
+### Acciones de Impacto (`/acciones` + `/acciones/[id]`)
+Catálogo con filtros por tipo (capacitación/evento social/divulgación). Detalle con formulario de inscripción pública (`ActionRegistrationForm` → `registerToAction` → `action_registrations`).
+
+### Artículos (`/articulo/[slug]`)
+Artículos con slugs amigables, `generateMetadata` SEO/OpenGraph, video relacionado opcional, medios adjuntos.
+
+### Capacitaciones (`/capacitaciones/[id]`)
+Detalle mobile-first: player YouTube embebido, badge LIVE si `is_live`, **LivePoll** (encuesta en vivo con cookie dedup httpOnly 24h via `voteLivePollAction`; lee conteo antes de incrementar contra race conditions).
 
 ### Aula Virtual (`/clases/[id]`)
-Sala de clases virtuales interactiva con streaming en vivo:
-- **Reproductor de video** simulado con controles de reproducción
-- **Chat en tiempo real** via Supabase Broadcast
-- **Modómetro** — Votación de comprensión en vivo: "Voy bien", "Me perdí", "Muy rápido"
-- **Mano Alzada** — Sistema para pedir turno de palabra respetuosamente
-- **Consola del Docente** — Cambia entre vista de chat/modómetro, reinicia votos, gestiona cola de preguntas
-- **Simulación de roles** — Alterna entre vista alumno/docente para testing
-- **Identificación por dispositivo** — localStorage anónimo
-- Estado de streaming en tiempo real vía Supabase Realtime (`postgres_changes`)
+Sala completa en tiempo real (client component, 1213 líneas):
+- **Chat realtime** via Supabase Realtime/Broadcast
+- **Modómetro:** votación de ritmo ("Voy bien"/"Me perdí"/"Muy rápido")
+- **Mano Alzada:** cola de turno de palabra (atender/bajar por docente)
+- **Preguntas votables** con toggle de voto (RPC `toggle_pregunta_voto`) y marcado de resueltas
+- **Encuestas de clase** con opciones JSONB
+- **Semáforo de comprensión** (verde/amarillo/rojo, reinicio docente via RPC `reiniciar_semaforo_clase`)
+- **Consola del Docente:** cambia vista chat/modómetro, reinicia votos, gestiona cola, configura Meet URL y modalidad
+- **Identificación por dispositivo** localStorage anónimo
+- Estado de streaming/en vivo via `postgres_changes` sobre `clases_virtuales`
+- 14 server actions propias en `clases/[id]/actions.ts`
 
-### Certificados Digitales — Pasaporte Digital (`/certificados/[codigo]`)
-Verificación pública de certificados digitales mediante código QR único. Muestra: nombre del alumno, título, fecha, competencias adquiridas, horas cátedra. Datos en `certificados_digitales`. SEO optimizado con meta tags para compartir en redes.
+### Certificados Digitales (`/certificados/[codigo]`)
+Verificación pública por QR/código único. Muestra alumno, título, fecha, competencias, horas cátedra. Meta tags SEO condicionales (noindex si inválido).
 
-### Eventos Presenciales (`/eventos/[id]`)
-Sistema completo de interacción en vivo:
-- **QR de acreditación** — Los asistentes se acreditaban escaneando QR o completan formulario con nombre, email, teléfono, organización
-- **Credencial por dispositivo** — Identificación por localStorage (sin login requerido)
-- **Preguntas al orador** (`/preguntar`) — Los asistentes envían preguntas con sistema de likes, opción de anonimato
-- **Pantalla de preguntas** (`/pantalla-preguntas`) — Moderador muestra preguntas aprobadas en pantalla grande
-- **Nube de palabras** (`/nube`, `/pantalla-nube`) — Audiencia envía palabras a nubes colaborativas; soporta múltiples nubes activas por evento con límite de caracteres, normalización de diacríticos y desduplicación
-- **Concepto de Charla dinámico** — El operador configura un concepto (`nube_concepto`) desde la Consola ITEC que se muestra en celulares y pantalla gigante en tiempo real vía Realtime
-- **Encuestas** — Votación en tiempo real con resultados visibles, un voto por dispositivo
-- **Semáforo de Comprensión** — Sistema de alertas anónimas desde celulares (v3, migración 054):
-  - **Tabla `evento_semaforo_votos`:** Solo columnas `id(uuid)` + `evento_id(uuid FK)` + `created_at(timestamptz)`. Sin `visitor_id`, sin columna `voto` — cada fila ES un voto negativo. Append-only, sin UPDATE/DELETE.
-  - **Botón "NO ENTIENDO, ME PERDÍ (Anonimo)"** en `eventos/[id]/page.tsx`: inserta fila en `evento_semaforo_votos`. Cooldown de 5s por dispositivo (solo client-side, sin server dedup).
-  - **Cálculo de porcentaje:** `votosNegativos / Math.max(totalAcreditados, votosNegativos, 1) * 100`. El denominator seguro previene división por cero y maneja el caso de más votos que acreditados.
-  - **Umbrales de estado:**
-    - VERDE: < 30% de alertas
-    - AMARILLO: 30–49% de alertas
-    - ROJO: >= 50% de alertas
-  - **Cálculo centralizado:** `calcularEstadoSemaforo()` en `src/lib/eventos/semaforo.ts` (DRY, ago 2026) — fuente única de verdad con tipos (`EstadoSemaforo` = `'VERDE' | 'AMARILLO' | 'ROJO'` en mayúsculas, `SemaforoResultado`), umbrales (VERDE < 30%, AMARILLO 30-49%, ROJO >= 50%) y cálculo con denominador seguro (`Math.max(total, votos, 1)` — previene división por cero y maneja más votos que acreditados). Retorna `{ estado, porcentaje, votosNegativos, totalAcreditados }`. Lo consumen: `semaforoActions.ts` (server), `PanelOradorClient.tsx`, `eventos/[id]/page.tsx` y `pantalla/page.tsx` (cliente). Módulo de funciones puras, compatible con Edge Runtime. Eliminadas las 4 copias duplicadas de `calcularEstadoLocal()`/`calcularEstado()` y los casts `(evento as any)`.
-  - **Reset (`resetearSemaforo()`):** Requiere rol admin/coordinador. Actualiza `semaforo_last_reset_at` a `now()` en tabla `eventos`. NO borra votos — el COUNT filtra por `created_at >= resetAt`.
-  - **3 suscripciones Realtime por cliente:**
-    1. `evento_semaforo_votos` INSERT → incrementa contador optimista (consola) o recalcula desde DB (móvil/pantalla)
-    2. `eventos` UPDATE (filtro `id=eq.{eventoId}`) → detecta cambio en `semaforo_last_reset_at` y recalcula
-    3. `eventos_asistentes` INSERT/DELETE → actualiza denominator (solo consola y pantalla, NO móvil)
-  - **Arquitectura:** 3 clientes independientes (móvil, consola orador, pantalla gigante) que suscriben los mismos canales Realtime y calculan estado localmente. El orador puede reiniciar desde `PanelOradorClient.tsx`.
-  - **RLS:** SELECT e INSERT públicos (sin auth). Sin políticas UPDATE/DELETE (votos inmutables).
-  - **Nota de tipo:** `HerramientasActivas` en `database.ts` incluye `semaforo: boolean` (junto a `encuestas`, `preguntas`, `nube`). `herramientasActions.ts` re-exporta el tipo canónico de `database.ts`; los componentes de eventos importan de `@/types/database` (sin interfaces locales duplicadas ni casts `as any`).
-- **Big Screen Display** (`/pantalla`) — Pantalla completa para proyector con múltiples modos:
-  - **Modo Bienvenida** — Código QR + conteo de asistentes
-  - **Modo Encuestas** — Barras animadas con resultados en vivo
-  - **Modo Nube de Palabras** — Visualización de palabras con concepto del operador + tamaño proporcional a frecuencia
-  - **Modo Q&A** — Preguntas destacadas con más votos
-  - Fondos animados con Framer Motion
-- **Confirmación por email** — Email de bienvenida al registrarse via Resend
+### Eventos Presenciales (`/eventos/[id]` y subrutas)
+Sistema completo de interacción en vivo (client, 1573 líneas):
+- **Acreditación QR** + formulario (nombre, email, teléfono, organización) → `POST /api/eventos/registro` (upsert tolerante unique evento+email) + email bienvenida Resend
+- **Credencial por dispositivo** (localStorage, sin login)
+- **Preguntas al orador** (`/preguntar`): máx. 250 chars, likes persistidos en localStorage, anonimato opcional
+- **Pantalla de preguntas** (`/pantalla-preguntas`): ranking aprobadas por likes, realtime, QR lateral
+- **Nube de palabras** (`/nube` + `/pantalla-nube`): UNA palabra por dispositivo (máx. 20 chars), múltiples nubes activas por evento, normalización diacríticos, concepto de charla dinámico (`nube_concepto` propagado por Realtime)
+- **Encuestas** con resultados visibles en vivo
+- **Semáforo de Comprensión v3:**
+  - Botón anónimo "NO ENTIENDO, ME PERDÍ" → `registrarVotoNegativo(eventoId, dispositivoId)` con **dedup server-side por dispositivo por ciclo** (desde último reset) + cooldown client-side 5s
+  - Cálculo centralizado `calcularEstadoSemaforo(votosNegativos, totalAcreditados)` en `lib/eventos/semaforo.ts` (DRY, funciones puras Edge-compatible): VERDE <30%, AMARILLO 30–49%, ROJO ≥50%; denominador seguro `Math.max(total, votos, 1)`
+  - Reset (`resetearSemaforo()`, requiere admin/coordinador): actualiza `semaforo_last_reset_at=now()`; NO borra votos (los COUNT filtran por fecha)
+  - 3 suscripciones Realtime por cliente: INSERT en votos (contador), UPDATE en `eventos` (reset/concepto/herramientas), INSERT/DELETE en `eventos_asistentes` (denominador)
+  - Arquitectura: 3 clientes independientes (móvil, consola orador, pantalla gigante) calculan estado localmente
+- **Pantalla gigante** (`/pantalla`): modos Bienvenida (QR + conteo asistentes) → Encuestas (barras animadas) → Preguntas → Nube, controlados por `modo_pantalla_gigante`; fondos animados Framer Motion; estado semáforo visible
+- Toggle individual de herramientas por evento: `herramientas_activas` JSONB (`encuestas`, `preguntas`, `nube`, `semaforo`)
+
+### Votación Pública (`/votar`)
+Busca la encuesta activa global (`polls.is_active=true`) y renderiza votación en tiempo real (`VotingClient`).
 
 ### Portal del Sponsor (`/sponsors/[id]`)
-Acceso por token privado (`private_token`). Muestra contenido exclusivo para el sponsor, reportes de impacto generados por IA.
+Acceso por token privado. Datos del sponsor, último reporte de impacto IA (4 secciones), acciones vinculadas al reporte (o últimas 6), invitaciones destacadas por rubro. noindex.
+
+### Página Socios (`/socios`)
+Página pública dedicada (revalidate 3600): sponsors + alianzas estratégicas + canales de difusión vía `getSociosData()` (agregación con Promise.all y errores tolerantes → arrays vacíos). Reutilizada por `NuestrosSociosSection` de la landing.
 
 ### Chat Widget Asistente ITEC
-Widget flotante visible en todas las páginas públicas EXCEPTO en herramientas de eventos. Usa `ChatWidgetWrapper.tsx` que evalúa la ruta actual con `usePathname()` y oculta el widget en:
-- `/eventos/*` (vistas móviles del evento, pantalla, preguntas, nube)
-- `/dashboard/eventos-presenciales/*` (Consola ITEC)
-- `/dashboard/eventos/*` (administración de eventos)
-
-El wrapper usa el endpoint `/api/asistente` que integra **RAG cascade completo** (5 niveles) + contexto dinámico de DB (staff, noticias, comisiones, artículos). Interfaz tipo chat con historial, ID de sesión persistente, y avatar del asistente desde la DB. Posicionado a `bottom: 59px` (alineado con el selector de idioma), con fade out al hacer scroll.
-
-### Soporte Multi-idioma
-Sistema i18n basado en contexto React (`LanguageContext`) con diccionario en `src/locales/dictionary.ts`. Idiomas: Español, English, Português.
+Widget flotante (`ChatWidgetWrapper` con `dynamic(..., {ssr:false})` lazy-load) montado en el root layout. Visible en páginas públicas EXCEPTO rutas de eventos/clases (`EVENT_ROUTES`: `/eventos/*`, `/dashboard/eventos-presenciales/*`, `/dashboard/eventos/*`, aula virtual). Endpoint `/api/asistente` (RAG 5 niveles + contexto DB paralelo). Historial persistido en localStorage (`itec_chat_mensajes`), ID de sesión persistente, avatar desde DB, feedback integrado. Posición `bottom: 59px`, fade out al scroll.
 
 ---
 
-## Dashboard de Miembros — Detalle Funcional
+## 12. Dashboard de Miembros
 
-### Muro (`/dashboard/muro`)
-Noticias internas visibles solo para miembros (`notas_miembros`). Sistema de comentarios interno.
+Ver tabla de rutas en §4. Resumen funcional:
 
-### Sala de Reuniones (`/dashboard/reuniones`)
-Integración con Google Meet. Muestra links de reuniones por comisión. Acceso directo a salas.
-
-### Nube de Archivos (`/dashboard/drive`)
-Explorador de Google Drive integrado via Service Account. Muestra archivos organizados por carpeta de comisión. Usa `listFolderFiles()` y `getRecentFiles()`.
-
-### Buzón de Ideas (`/dashboard/ideas`)
-Gestión de ideas enviadas por la comunidad. Los miembros pueden ver, comentar y cambiar estado de ideas.
-
-### Perfil (`/dashboard/perfil`)
-Edición de perfil personal: nombre, bio, teléfono, LinkedIn, frase ITEC, tareas ITEC. Actualización via server action.
-
-### Centro de Comunicaciones (`/dashboard/comunicacion`)
-Herramienta estratégica de comunicación. Editor `NewsFlashMulticanalEditor` para crear noticias multicanal. Envía datos a `/api/news/process` que usa IA para generar 4 versiones.
-
-### Procesador IA (`/dashboard/ai`)
-Herramienta para pegar transcripciones de reuniones y generar automáticamente: resumen ejecutivo, action items, flash noticioso, artículo publicable.
-
-### Entrenamiento del Asistente (`/dashboard/entrenamiento-asistente`)
-Gestión de documentos de entrenamiento para el asistente IA. Subida de PDFs al bucket `training-docs` de Supabase Storage. Sincronización de contexto con `npm run sync-docs`.
-
-### Streaming (`/dashboard/streaming`)
-Centro de Transmisión & Streaming (admin/coordinador). Controla el estado del streaming en vivo: activar/desactivar (`setStreamingActive`) y configurar la URL de YouTube (`updateStreamingUrl`), persistidas en `site_settings` (keys `streaming_active`, `streaming_youtube_url`). Incluye guía de configuración para software de streaming (RTMP `rtmp://streaming.itec.edu.ar/live`) y fuentes de navegador. El estado se consume públicamente desde el Hero de la landing via `/api/streaming/status`.
-
-### Videoteca (`/dashboard/videoteca`)
-CRUD de videos de YouTube. Cada entrada incluye: título, descripción, URL, miniatura, resumen generado por IA.
-
-### Gestión de Capacitaciones (`/dashboard/capacitaciones`)
-CRUD de capacitaciones/acciones de impacto con dashboard de estadísticas. Creación de nuevas acciones via `/dashboard/acciones/nueva`.
-
-### Certificados / Pasaporte Digital (`/dashboard/certificados`)
-Gestión de certificados digitales emitidos a miembros y alumnos.
+- **Muro** (`/dashboard/muro`): noticias internas (`notas_miembros` publicadas), formato multicanal.
+- **Reuniones** (`/dashboard/reuniones`): enlace Meet general persistente (`site_settings.general_meet_url` via `getGeneralMeetUrlAction`), **acta colaborativa del día** (`GeneralMeetingRoom`): edición de notas, guardado (`saveNotesAction`), procesamiento IA (resumen/action items), finalización y publicación (`finalizeAndPublishAction` → `meeting_notes`), historial de actas publicadas.
+- **Drive** (`/dashboard/drive`): carpetas por comisión (mapeo declarativo `DRIVE_FOLDERS` en `lib/drive.ts` con fallback carpeta general) + carpeta raíz configurable. Listado via `getFolderFilesAction` → Google Drive API Service Account.
+- **Ideas** (`/dashboard/ideas`): gestión de ideas (crear, cambiar estado — admin borra). Badge pendientes en sidebar.
+- **Perfil** (`/dashboard/perfil`): edición nombre/bio/teléfono/LinkedIn/frase/tareas + avatar (bucket `avatars`).
+- **Certificados/Pasaporte Digital**: búsqueda por nombre (`ilike full_name`) de certificados emitidos, visualización interactiva con QR verificable.
+- **Capacitaciones** (gestión): CRUD con dashboard de estadísticas; creación de acciones en `/dashboard/acciones/nueva`.
+- **Streaming**: centro de transmisión (ver §13).
+- **AI Processor** (`/dashboard/ai`): pegar transcripciones → `processTextAction` → resumen + tareas + flash noticioso (guarda en `news_flashes` con commission).
 
 ---
 
-## Herramientas de Administrador
+## 13. Herramientas de Administrador
 
-### Gestión de Miembros (`/dashboard/miembros`)
-CRUD completo de miembros: aprobar/rechazar pendientes, asignar roles, asignar a comisiones, activar/desactivar.
+Sidebar con submenús `<details>` colapsables color-coded:
+- **Prensa** (cyan): Gacetillas (`prensaNews`), Gestión de Prensa (`prensa`)
+- **Sponsors** (amber): Muro Sponsors (`sponsorsNews`), Gestión de Sponsors (`sponsors`)
+- **Herramientas para Eventos** (púrpura): Encuestas, Sistema Preguntas, Nube Ideas, Semáforo, Crear/Editar Evento
+- Items sueltos: Miembros, Comunicación, Settings, Entrenamiento Asistente, Videoteca, AI, Streaming
 
-### Gestión de Comisiones
-Crear/editar comisiones con nombre, slug, descripción, icono, color, coordinador.
-
-### Settings del Sitio (`/dashboard/settings`)
-Configuración global: Google Service Account JSON, Drive root folder ID, y otras settings clave-valor.
-
-### Prompts de IA (`/dashboard/entrenamiento-asistente`)
-Configuración de system prompts dinámicos para cada modelo IA (keyed por `clave_prompt` en tabla `ai_prompt_settings`).
-
-### Encuestas en Vivo (`/dashboard/encuestas`)
-Creación de encuestas con preguntas y opciones. Pantalla de resultados en vivo (`/dashboard/encuestas/[id]/pantalla`). Analíticas avanzadas con Recharts en `/dashboard/encuestas/analytics`.
-
-### Sistema de Preguntas (`/dashboard/eventos`)
-Moderación de preguntas enviadas por la audiencia durante eventos. Aprobación, ordenamiento, destacar en pantalla.
-
-### Eventos Presenciales (`/dashboard/eventos-presenciales`)
-Creación de eventos con slug QR, fecha, ubicación, panel de oradores. Edición de eventos existentes via `/[id]`. Incluye: preacreditación, configuración de modos de pantalla (bienvenida, encuestas, nube, Q&A), gestión de herramientas activas por evento (encuestas, preguntas, nube, semáforo). El **Panel del Orador** (`PanelOradorClient`) gestiona:
-- Switches individuales de herramientas en layout grid `2x2` responsive
-- Modo de proyección de pantalla gigante (orden: Bienvenida → Encuestas → Preguntas → Nube)
-- **Concepto de Charla** — Campo de texto para definir el concepto de la nube de ideas (se guarda vía `actualizarConceptoNube()` y se muestra en celulares/pantalla en tiempo real)
-- **Semáforo de Comprensión** — Panel con estado visual (verde/amarillo/rojo), estadísticas de acreditados/alertas/porcentaje, botón de reinicio con auth check. El panel muestra las 3 columnas de semáforo, tarjetas de estadísticas, reglas de umbrales, y botón "Reiniciar" (requiere admin/coordinador). El toggle del semáforo se controla desde el grid `2x2` de herramientas activas.
-- Conteo de asistentes acreditados en tiempo real (suscripción Realtime con manejo de INSERT y DELETE)
-
-### Nubes de Palabras (`/dashboard/nubes`)
-Gestión de nubes de palabras generadas durante eventos. Visualización y exportación.
-
-### Gestión de Prensa (`/dashboard/prensa`)
-CRUD de medios de prensa registrados. Envío de gacetillas por email via Resend. Historial de envíos en `prensa_envios_log`.
-
-### Gacetillas de Prensa (`/dashboard/prensaNews`)
-Creación y gestión de gacetillas. Distribución segmentada a medios registrados.
-
-### Gestión de Sponsors (`/dashboard/sponsors`)
-- CRUD completo de sponsors con niveles (platino, oro, plata, bronce, standard). 
-- **Módulo de Alta:** Formulario integrado (`SponsorRegistrationForm`) para registro de nuevos socios con carga de logos, categorización, validaciones y navegación de retorno. Ahora se renderiza como modal controlado con props `onClose`/`onCreated` (evita el overlay manual en `SponsorsAdmin`); los campos opcionales del schema de `actions.ts` son `null`-ables explícitamente.
-- Generación de reportes de impacto con IA (Ollama). Tokens privados únicos.
-- **Socios Estratégicos (ago 2026):** Sección superior del tab "Sponsors" en `SponsorsAdmin.tsx` separada de los sponsors comerciales por divisor ("Instituciones y organismos aliados de ITEC"). CRUD completo vía `partner-actions.ts`: `createStrategicPartner()`, `updateStrategicPartner()`, `deleteStrategicPartner()` (requieren rol `admin` estricto), `getStrategicPartners()` (público) y `getStrategicPartnersAdmin()`. Validación Zod (`name`, `category` enum, `actions_description` min 10 chars, `logo_url`). El modal `StrategicPartnerModal.tsx` soporta alta y edición con subida de logo al bucket Storage `sponsors-logos` (`cacheControl 3600`, URL pública firmada) — props controladas `onClose`/`onCreated`/`onUpdated`. La página server (`page.tsx`) carga sponsors, acciones y partners en paralelo vía `Promise.all`.
-
-### Muro Sponsors (`/dashboard/sponsorsNews`)
-Gestión de contenido exclusivo para sponsors. Noticias visibles en portal del sponsor.
-
-### Creación de Acciones de Impacto (`/dashboard/acciones/nueva`)
-Formulario para crear nuevas acciones de impacto (capacitaciones, eventos sociales, divulgaciones) con campos: título, descripción, tipo, audiencia, capacidad, costo, fechas, ubicación, tags, responsable, comisión.
+Detalle:
+- **Miembros** (`/dashboard/miembros`): aprobar/rechazar/activar/desactivar, roles, comisiones. Integra correos pre-aprobados (`allowed_emails`) como filas sintéticas `status:'pre-aprobado'`. Modelo 1 miembro → 1 comisión.
+- **Settings** (`/dashboard/settings`): identidad visual del sitio + gestión de API keys (`api_settings`) con prioridad sobre env vars (forms: `SettingsForm`, `ApiKeysSettingsForm`).
+- **Entrenamiento del Asistente**: editar system prompt (`ai_prompt_settings`), upload/delete/list docs del bucket, botón sync (`syncDocsAction`).
+- **Encuestas en Vivo**: CRUD (`PollManager`), activar/desactivar, pantalla de proyección, analytics históricas (Recharts), marcar completada.
+- **Sistema de Preguntas** (`/dashboard/eventos`): lista eventos → moderación (`/moderacion`): aprobar (`.update({aprobada:true})`), borrar, proyectar, compartir links.
+- **Eventos Presenciales** (`/dashboard/eventos-presenciales`): CRUD con slug QR, modalidad, Meet URL. Panel del Orador (`[id]/PanelOradorClient`): switches herramientas grid 2x2, modo pantalla gigante (orden Bienvenida → Encuestas → Preguntas → Nube), campo Concepto de Charla (`actualizarConceptoNube`), panel Semáforo (tarjetas stats, umbrales, reinicio con auth check), conteo asistentes realtime (INSERT/DELETE).
+- **Nubes** (`/dashboard/nubes`): gestión/exportación de nubes generadas.
+- **Prensa** (`/dashboard/prensa`): ABM medios + envío gacetillas por email (Resend) con selección de destinatarios y recursos multimedia. Historial en `prensa_envios_log`.
+- **Gacetillas** (`/dashboard/prensaNews`): crear notas para medios, enviar (modal `SendGacetillaModal` con plantilla HTML responsive `generatePrensaEmailHtml` — bloque Recursos Multimedia con botones descarga), historial (`PrensaEnviosHistoryModal`).
+- **Sponsors** (`/dashboard/sponsors`): CRUD comercial (tiers, rubros, logos monocromo/color a Storage `sponsors-logos`), alta como modal controlado (`SponsorRegistrationForm` con react-hook-form + Zod), acciones del período (`createAccionAction`), reportes de impacto IA (Ollama), **Socios Estratégicos** (sección superior con divisor; CRUD `partner-actions.ts` con rol `admin` ESTRICTO — no coordinadores; validación Zod `actions_description` min 10 chars; modal `StrategicPartnerModal` con logo a Storage, cacheControl 3600). Página server carga sponsors + acciones + partners en paralelo (`Promise.all`).
+- **Invitaciones** (`dashboard/actions/invitations.ts`): `generateInvitationAction` arma mensaje WhatsApp para invitar a sponsor/capacitación (usa `NEXT_PUBLIC_SITE_URL`).
+- **Videoteca** (`/dashboard/videoteca`): CRUD videos + `generateVideoSummaryAction` (IA).
 
 ---
 
-## API Routes — Detalle
+## 14. Inventario de Server Actions
 
-| Ruta | Método | Propósito | Input/Output |
-|------|--------|-----------|--------------|
-| `/api/asistente` | POST | Chat IA principal con RAG cascade + contexto DB | `{ mensaje, historial[], sessionId }` → `{ respuesta, guardado? }` |
-| `/api/asistente/debug` | GET | Debug: verifica env vars + testea OpenRouter y Gemini | → `{ env, openRouter, gemini }` |
-| `/api/asistente/test` | GET/POST | Test de OpenRouter directo | GET: env check. POST: `{ messages[] }` → `{ status, body }` |
-| `/api/asistente/feedback` | POST | Feedback sobre respuestas del asistente | `{ message, response, rating, comment }` |
-| `/api/chat` | POST | Chat legacy streaming via Groq + RAG cascade | `{ message, history[] }` → ReadableStream (SSE) |
-| `/api/chat/guardar` | POST | Guardar conversación en base de conocimiento | `{ conversation[] }` |
-| `/api/news/process` | POST | IA genera 4 versiones multicanal | `{ titulo, texto, commission_id }` |
-| `/api/news-comments` | GET/POST | Comentarios en noticias | GET: `?newsFlashId=`. POST: `{ news_flash_id, content }` |
-| `/api/ideas` | POST | Envío de ideas (formulario público) | `{ nombre, email, mensaje }` |
-| `/api/press-news` | GET | Feed de gacetillas para prensa | → `notas_medios[]` |
-| `/api/sponsors-news` | GET | Feed de notas para sponsors | → `notas_sponsors[]` |
-| `/api/eventos/registro` | POST | Registro a evento + email bienvenida | `{ evento_id, nombre, email, telefono?, organizacion? }` |
-| `/api/streaming/status` | GET | Estado del streaming en vivo (público, sin auth) | → `{ isActive, youtubeUrl }` desde `site_settings` (keys `streaming_active`, `streaming_youtube_url`). Cache: 30s |
+19 archivos `'use server'`. Patrón común: validar input (Zod cuando aplica) → `getCurrentMember()` + check rol → mutar → `revalidatePath()` → retornar `{ success, error? }`.
+
+| # | Archivo | Funciones exportadas |
+|---|---------|---------------------|
+| 1 | `app/clases/[id]/actions.ts` | `updateClaseMeetUrlAction`, `updateClaseModalidadAction`, `crearEncuestaAction`, `toggleEncuestaActivaAction`, `marcarPreguntaResueltaAction`, `atenderManoAlzadaAction`, `bajarManoAlzadaAction`, `reiniciarSemaforoAction`, `votarModometroAction`, `levantarManoAction`, `publicarPreguntaAction`, `toggleVotoPreguntaAction`, `responderEncuestaAction`, `votarSemaforoAction` |
+| 2 | `app/dashboard/actions.ts` | `processTextAction` (IA transcripciones → news_flashes) |
+| 3 | `app/dashboard/actions/invitations.ts` | `generateInvitationAction` (mensaje WhatsApp) |
+| 4 | `app/dashboard/comunicacion/actions.ts` | `createMulticanalNewsAction`, `updateNotaAction`, `deleteNotaAction`, `swapNotasOrderAction` |
+| 5 | `app/dashboard/drive/actions.ts` | `getFolderFilesAction` (Google Drive API) |
+| 6 | `app/dashboard/encuestas/actions.ts` | `createPollAction`, `updatePollAction`, `togglePollStatusAction`, `deletePollAction`, `submitSingleVoteAction`, `markPollAsCompletedAction` |
+| 7 | `app/dashboard/entrenamiento-asistente/actions.ts` | `getPromptAction`, `savePromptAction`, `listDocsAction`, `uploadDocAction`, `deleteDocAction`, `syncDocsAction` |
+| 8 | `app/dashboard/ideas/actions.ts` | `createIdeaAction`, `updateIdeaStatusAction`, `deleteIdeaAction` |
+| 9 | `app/dashboard/miembros/actions.ts` | `updatePhoneAction`, `approveMemberByEmailAction`, `approveMemberAction`, `deactivateMemberAction`, `rejectMemberAction`, `updateRoleAction`, `assignCommissionAction` |
+| 10 | `app/dashboard/perfil/actions.ts` | `updateProfileAction` |
+| 11 | `app/dashboard/prensa/actions.ts` | `createMedioAction`, `updateMedioAction`, `deleteMedioAction`, `sendGacetillaToMedios`, `getActiveMediosPrensa`, `getGacetillaEnviosHistory` |
+| 12 | `app/dashboard/reuniones/actions.ts` | `getGeneralMeetUrlAction`, `saveNotesAction`, `finalizeAndPublishAction` |
+| 13 | `app/dashboard/settings/actions.ts` | `updateSiteSettingsAction`, `getSettingsAction`, `updateSettingAction` |
+| 14 | `app/dashboard/sponsors/actions.ts` | `createAccionAction`, `deleteAccionAction`, `createReporteAction`, `updateSponsorAction`, `createSponsorAction`, `deleteSponsorAction` |
+| 15 | `app/dashboard/sponsors/partner-actions.ts` | `createStrategicPartner`, `updateStrategicPartner`, `deleteStrategicPartner` (admin estricto), `getStrategicPartners` (público), `getStrategicPartnersAdmin` |
+| 16 | `app/dashboard/streaming/actions.ts` | `getStreamingStatus`, `toggleStreamingAction`, `updateStreamingUrlAction` |
+| 17 | `app/dashboard/videoteca/actions.ts` | `createVideoAction`, `updateVideoAction`, `deleteVideoAction`, `generateVideoSummaryAction` |
+| 18 | `app/dashboard/eventos-presenciales/herramientasActions.ts` | `actualizarHerramientasActivasAction`, `actualizarModoPantallaAction`, `actualizarConceptoNube` |
+| 19 | `app/dashboard/eventos-presenciales/semaforoActions.ts` | `registrarVotoNegativo`, `verificarVotoDispositivo`, `obtenerEstadoSemaforo`, `resetearSemaforo` |
+| — | `components/capacitaciones/actions.ts` | `voteLivePollAction` (cookie dedup httpOnly 24h) |
 
 ---
 
-## Integraciones Externas
+## 15. Inventario de API Routes
+
+⚠️ Ninguna declara `runtime='edge'` → todas Node.js runtime.
+
+| Ruta | Métodos | Config | Input → Output |
+|------|---------|--------|----------------|
+| `/api/asistente` | POST | `maxDuration=60` | `{ mensaje, historial[], sessionId?, idioma? }` → `{ respuesta, guardado? }`. Groq→OpenRouter, RAG 5 niveles, contexto DB paralelo, auditoría |
+| `/api/asistente/debug` | GET | — | Diagnóstico: resume env keys (OpenRouter/Groq/HF/Gemini/Ollama/Supabase) y hace ping REAL a Ollama, OpenRouter, Groq y Gemini. Lee `api_settings` |
+| `/api/asistente/test` | GET/POST | — | GET: env check. POST: `{ messages[] }` → test chat OpenRouter |
+| `/api/asistente/feedback` | POST | — | `{ historial[], calificacion, comentario? }` → Ollama sintetiza tema/utilidad → embedding → `asistente_feedback` |
+| `/api/chat` | POST | — | `{ message, history[] }` → ReadableStream SSE (SDK Groq, lazy-init `getGroq()`, RAG cascade + prompt maestro + reglas anti-alucinación) |
+| `/api/chat/guardar` | POST | — | `{ conversation[] }` (mín. 2 mensajes) → `chat_conocimiento` tipo `autogestion` |
+| `/api/eventos/registro` | POST | — | `{ evento_id, nombre, email, telefono?, organizacion? }` → upsert `eventos_asistentes` + email bienvenida Resend |
+| `/api/ideas` | POST | — | `{ mensaje(≥10 chars), anonimo?, nombre?, email?, telefono? }` → RPC `insert_idea` |
+| `/api/news/process` | POST | — | Solo admin (`getCurrentMember`): `{ titulo, texto/datos_crudos, commission_id }` → IA genera 4 versiones → `news_flashes` |
+| `/api/news-comments` | GET/POST | — | GET `?newsFlashId=` → comentarios no eliminados. POST `{ news_flash_id, content }` autenticado (resuelve `member_name`) |
+| `/api/press-news` | GET | — | Feed `notas_medios` publicadas (formato flash normalizado) |
+| `/api/sponsors-news` | GET | — | Feed `notas_sponsors` publicadas (formato flash normalizado) |
+| `/api/streaming/status` | GET | `force-dynamic`, header `Cache-Control: s-maxage=30, stale-while-revalidate=60` | Estado público streaming desde `site_settings`/`api_settings` (cliente anon) → `{ isActive, youtubeUrl }` |
+| `/auth/callback` | GET | — | Intercambia código OAuth por sesión; verifica `status` member (pendiente → signOut+home; activo → dashboard) |
+| `/auth/signout` | POST | — | Cierra sesión → `/login?logout=true` |
+
+---
+
+## 16. Inventario de Componentes
+
+`src/components/` — 10 subdirectorios, 31 .tsx + 1 css + 1 actions.ts. Balance: ~29 client components, 1 server (`ImpactSection.tsx`). Patrón dominante: client + framer-motion + Supabase browser SDK.
+
+| Carpeta | Archivos | Rol |
+|---------|----------|-----|
+| `landing/` | `Navbar` (client, estado sesión, menú móvil, i18n), `HeroSection` (client, consulta clase en vivo, StreamingPlayer condicional), `AboutSection` (equipo + modal perfil), `ImpactSection` (**server**, fetch acciones/artículos/flashes), `ImpactSectionClient` (contadores/carrusel animado, i18n), `ComisionesSection` (grid estático), `IdeasSection` (2 columnas), `VideotecaSection` (búsqueda/categoría), `StreamingPlayer` (URL→embed YouTube), `Footer` (i18n + acceso miembros), `FloatingLanguageSelector` (FAB es/en/pt, bottom 59px, fade out scroll) | Landing |
+| `home/` | `SponsorHeaderBar` (marquesina fixed bottom), `NuestrosSociosSection` (grillas por tier + alianzas + canales, tabs, fetch cliente si no vienen props), `SponsorModal` (modal unificado `ModalItem` discriminador `_kind: 'sponsor'\|'partner'`, cierre Escape) | Socios landing |
+| `comunicacion/` | `ComunicacionTabs`, `NewsFlashMulticanalEditor` (editor IA 4 canales), `NewsWallMulticanal` (tabs canal + slideshow medios object-contain), `NotasMulticanalList` (editar/borrar/publicar/reordenar) | Comunicación |
+| `chat/` | `ChatWidget` (widget flotante, localStorage historial), `ChatWidgetWrapper` (lazy `ssr:false` + oculta en EVENT_ROUTES), `ChatWidget.css` | Asistente |
+| `capacitaciones/` | `LivePoll` (votación realtime), `actions.ts` (`voteLivePollAction` cookie dedup) | Encuesta en vivo |
+| `auth/` | `LoginClientContent` (pantalla error OAuth), `MembersAccessButton` (dispara signInWithOAuth google) | Auth |
+| `dashboard/` | `SidebarIdeasLink` (badge pendientes), `sponsors/SponsorRegistrationForm` (react-hook-form + Zod, modal controlado onClose/onCreated), `sponsors/StrategicPartnerModal` (alta/edición partner + upload Storage) | Admin |
+| `ideas/` | `PublicIdeasForm` | Formulario público |
+| `prensa/` | `SendGacetillaModal`, `PrensaEnviosHistoryModal` | Prensa |
+| `reuniones/` | `GeneralMeetingRoom` (acta colaborativa + IA + publicar) | Reuniones |
+
+Componentes inline en carpetas de rutas (no en `components/`): `ArticleDetailClient`, `CertificadoViewer`, `VotingClient`, `AIProcessorForm`, `certificados-interactive`, `FileList`, `PollManager`, `AnalyticsClient`, `PresentationClient`, `EntrenamientoForm`, `EventListClient`, `EventosPresencialesClient`, `PanelOradorClient`, `IdeasManagementClient`, `MemberManagementTable`, `MediosAdmin`, `MedioForm`, `ProfileForm`, `SponsorsAdmin`, `SponsorForm`, `StreamingControls`, `VideotecaManager`, `SettingsForm`, `ApiKeysSettingsForm`.
+
+---
+
+## 17. Sistema Multi-idioma (i18n)
+
+Arquitectura context-based propia (sin framework externo):
+
+- **`LanguageContext.tsx`** ('use client'): `type Language = 'es'|'en'|'pt'` (default `es`). Al montar lee `localStorage('itec_lang')`; sin preferencia detecta `navigator.language.slice(0,2)` (acepta en/pt). `setLanguage` persiste en localStorage. Expone `{ language, setLanguage, dict }` con fallback a `dictionary.es` durante SSR (render inicial siempre español → evita hydration mismatch). Hook `useLanguage()` lanza error fuera del provider.
+- **`dictionary.ts`** (~1106 líneas): objeto plano con 3 claves tipadas estructuralmente idénticas (`es` línea 2, `en` línea 371, `pt` línea 740 — ~369 líneas/idioma).
+- **16 secciones por idioma:** `navbar`, `hero`, `impact`, `impactSection`, `videoteca`, `videotecaSection`, `about`, `comisiones`, `ideas`, `footer`, `registroMapa`, `eventos`, `preguntar`, `votar`, `login`, `asistente`. Anidamiento 2–3 niveles.
+- ⚠️ Particularidad: contiene **contenido dinámico embebido por UUID** — `impactSection.feedData` (títulos de artículos específicos) y `videotecaSection.videosData` (ai_summaries de videos concretos), triplicados por idioma. Las traducciones de contenido específico están HARDCODEADAS en el diccionario, no en BD. Al agregar contenido nuevo traducible, actualizar las 3 claves de idioma.
+
+---
+
+## 18. Integraciones Externas
 
 ### Supabase
-- **Database:** PostgreSQL con 67 migraciones, RLS policies
-- **Auth:** Supabase Auth con Google OAuth, manejo de sesiones via cookies SSR
-- **Storage:** 4 buckets: `article-media`, `avatars`, `training-docs`, `sponsors-logos`
-- **Realtime:** Suscripciones `postgres_changes` para:
-  - Estado de clases virtuales en vivo
-  - Votos de encuestas, preguntas y nubes de palabras en eventos
-  - Semáforo de comprensión (`evento_semaforo_votos` INSERT, `eventos` UPDATE para reset, `eventos_asistentes` INSERT/DELETE para conteo)
-  - Concepto de nube dinámico (cambios en tabla `eventos`)
-  - Conteo de asistentes acreditados (INSERT/DELETE en `eventos_asistentes`)
-  - Badge "Aula en vivo" del Hero (cambios en `clases_virtuales`)
-- **Supabase Broadcast:** Chat en tiempo real en aula virtual (`/clases/[id]`)
+- Database PostgreSQL con pgvector, RLS policies (75 migraciones)
+- Auth: Google OAuth, sesiones vía cookies SSR (@supabase/ssr)
+- Storage: buckets `article-media`, `avatars`, `training-docs`, `sponsors-logos`
+- Realtime (`postgres_changes`): clases virtuales en vivo; votos encuestas/preguntas/nubes de eventos; semáforo (INSERT votos + UPDATE eventos reset + asistentes INSERT/DELETE); concepto nube dinámico; badge "Aula en vivo" del Hero; chat aula virtual (Broadcast, independiente de postgres_changes)
 
 ### Google Drive API
-- Autenticación via Service Account (credenciales en `site_settings`)
-- Carpetas organizadas por comisión (`drive_folder_id` en tabla `commissions`)
-- Funciones: `listFolderFiles()`, `getRecentFiles()`
-- Archivos visibles en el dashboard (`/dashboard/drive`)
+- Service Account (JSON en `site_settings`)
+- Carpetas por comisión: mapping declarativo `DRIVE_FOLDERS` en `lib/drive.ts` (5 entradas: tecnología, educación, comunicación, proyectos, general — IDs placeholder a completar) + `drive_folder_id` en tabla `commissions` + root configurable
+- Funciones: `listFolderFiles(folderId)` (`services/drive.ts`)
 
 ### Google Gemini
-- API para embeddings (`text-embedding-004`) — primario para RAG
-- API para generación de texto (`gemini-flash-latest`) — edición de texto exclusiva
-- Múltiples API keys configuradas como fallback chain (4 keys en `site_settings`)
+- Generación texto (`gemini-flash-latest`): edición de texto exclusiva
+- Embeddings (`gemini-embedding-001` / `text-embedding-004` en script ingesta)
+- Hasta 4 API keys en `api_settings` con rotación/fallback chain + env alternativa
 
 ### Resend (Emails)
-- Email de bienvenida al aprobar membresía
-- Email de confirmación de registro a eventos
-- Distribución de gacetillas de prensa a medios registrados
-- Template HTML en `src/lib/email/`
+- Email bienvenida registro a eventos (`sendEventWelcomeEmail`, HTML dark-theme inline)
+- Distribución gacetillas a medios (`generatePrensaEmailHtml` template responsive)
+- Remitente prensa configurable (`RESEND_FROM_PRENSA` / api_settings)
+- Sin API key válida: simula envío por consola (no falla)
 
 ### Vercel
-- Despliegue automático desde branch `main`
-- Edge Runtime para API routes seleccionadas
+- Deploy automático push a `main` (GitHub Action con amondnet/vercel-action)
+- `maxDuration 60` para `/api/asistente`
 
 ---
 
-## Convenciones de Código
+## 19. Convenciones de Código
 
-### Server Components vs Client Components
-- **Server Components** por defecto — toda página es server component a menos que se requiera interactividad
-- **`'use client'`** solo cuando es necesario: hooks (useState, useEffect, useRouter), event handlers, estado local
-- Los server components pueden importar client components como hojas
+### Server vs Client Components
+- Server por defecto en `page.tsx`; `'use client'` solo cuando se requiera hooks/handlers/estado. Los componentes client interactivos suelen vivir como archivos hermanos del page (ej. `XxxClient.tsx`).
+- Patrón server-data → client-UI: server async hace fetch, pasa props al client (ejemplo canónico: `ImpactSection` → `ImpactSectionClient`).
+- ⚠️ Excepciones históricas: `/clases/[id]`, `/eventos/[id]`, `/registro-mapa`, `/dashboard/prensaNews`, `/dashboard/sponsorsNews` son pages client enteras.
+
+### Params de rutas dinámicas
+⚠️ Conviven estilos: algunas páginas leen `params` como `Promise<...>` (`certificados/[codigo]`, `articulo/[slug]`), otras síncrono legacy (`sponsors/[id]`, `capacitaciones/[id]`), y una soporta ambos (`eventos-presenciales/[id]` chequea `params.then`). Para código NUEVO usar el estilo Promise de Next.js 16.
 
 ### Server Actions
-- Archivos `actions.ts` en cada carpeta de feature con `'use server'`
-- Validación con Zod schemas
-- Verificación de rol admin con `getCurrentMember()` para acciones administrativas
-- `revalidatePath()` después de mutaciones para refrescar caché
-- Manejo de errores con `{ error: string }` o `{ success: boolean }`
-- **Archivos de actions para eventos:**
-  - `herramientasActions.ts`: `actualizarHerramientasActivasAction()`, `actualizarModoPantallaAction()`, `actualizarConceptoNube()`
-  - `semaforoActions.ts`: `registrarVotoNegativo()`, `obtenerEstadoSemaforo()`, `resetearSemaforo()`
-  - `capacitaciones/actions.ts`: `voteLivePollAction()` — server action con cookie-based dedup para encuestas de capacitaciones
+- Archivo `actions.ts` por feature con `'use server'` arriba.
+- Validación Zod. Check rol con `getCurrentMember()`. `revalidatePath()` tras mutar. Retornar `{ success, error }` o `{ error }`.
+- Tipos exportados junto a las actions (interfaces de input/output).
 
 ### API Routes
-- Para endpoints consumidos por client components (fetch desde el browser)
-- GET routes para feeds públicos (`/api/press-news`, `/api/sponsors-news`)
-- POST routes para procesamiento y creación
-- Edge runtime cuando es posible
+- Para consumo desde client components o terceros (feeds públicos GET sin auth).
+- Errores: `NextResponse.json({ error }, { status })`. Nunca exponer detalles internos de providers.
 
 ### Estilos
-- **Tailwind CSS v4** con clases utilitarias
-- Variables CSS personalizadas para tema oscuro en `globals.css`
-- Tema oscuro como default y único (sin toggle)
-- Animaciones con Framer Motion para elementos interactivos
+- Tailwind v4 utilitario + variables CSS custom (tema oscuro único). Animaciones custom en `globals.css` (keyframes listados §5) + Framer Motion para interactivos.
+- Tipografía Impact para títulos de sección grandes con gradient en palabra clave.
 
 ### TypeScript
-- Modo strict
-- Tipos de base de datos completos en `src/types/database.ts` (generados de Supabase)
-- Interfaces y tipos definidos localmente en cada módulo cuando es necesario
+- Strict. Tipos DB en `types/database.ts` (enums de dominio, interfaces por tabla, `Database` genérico estilo Supabase con `Tables.{nombre}.{Row/Insert/Update}` construido con `Omit<>`).
+- Interfaces locales adicionales permitidas por módulo.
+- ⚠️ `strategic_partners` está tipada; verificar tipos al agregar tablas nuevas y mantener sincronizado `database.ts`.
 
-### Routing
-- App Router con layouts anidados
-- Dashboard usa `layout.tsx` con sidebar persistente (no se re-renderiza al navegar)
-- `scroll={false}` en todos los Links del sidebar para mantener posición
-
-### i18n
-- Sistema propio basado en contexto (`LanguageContext`)
-- Diccionario centralizado en `src/locales/dictionary.ts`
-- Sin framework externo de i18n
-- 3 idiomas: Español (default), English, Português
+### Routing/Layout
+- App Router layouts anidados; sidebar dashboard persistente (no re-render al navegar); `scroll={false}` en Links del sidebar.
 
 ---
 
-## Variables de Entorno Requeridas
+## 20. Variables de Entorno
 
-| Variable | Propósito |
-|----------|-----------|
-| `NEXT_PUBLIC_SUPABASE_URL` | URL del proyecto Supabase |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Key anónima de Supabase |
-| `SUPABASE_SERVICE_ROLE_KEY` | Service role key (admin, server-side only) |
-| `OPENROUTER_API_KEY` | API key de OpenRouter (**solo modelos FREE**) |
-| `GEMINI_API_KEY` / `GEMINI_APY_KEY` | API key de Google Gemini (typo intencional) |
-| `GOOGLE_GENERATIVE_AI_API_KEY` | API key alternativa de Gemini |
-| `GROQ_API_KEY` | API key de Groq (lazy-init, no crítico) |
-| `HF_API_KEY` | API key de HuggingFace (embeddings fallback) |
-| `OLLAMA_API_BASE_URL` | URL Ollama self-hosted (`https://ai.itecsaladillo.org.ar`) |
-| `OLLAMA_MODEL` | Modelo Ollama (default: `llama3.2:latest`) |
-| `RESEND_API_KEY` | API key de Resend (emails) |
-| `RESEND_FROM_PRENSA` | Email remitente para prensa |
-| `NEXT_PUBLIC_SITE_URL` | URL pública del sitio |
-| `SEMAFORO_PORT` | Puerto configuración semáforo |
-| `NEXT_PUBLIC_SOCKET_URL` | URL de socket (futuro uso) |
+Definidas en `.env.local` (única env file, gitignored; no existe `.env.example`).
 
----
+### Usadas en código (src/)
+| Variable | Uso |
+|----------|-----|
+| `NEXT_PUBLIC_SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Todos los clientes Supabase + next.config (remotePatterns) |
+| `SUPABASE_SERVICE_ROLE_KEY` | Admin clients en `/api/asistente`, `/api/chat`, debug, `comunicacion/actions` |
+| `GROQ_API_KEY` | `/api/asistente`, `/api/chat` (lazy-init: build no falla si falta) |
+| `OPENROUTER_API_KEY` | Fallback asistente + test route (**solo modelos FREE**) |
+| `GEMINI_API_KEY` / `GEMINI_APY_KEY` | ⚠️ typo histórico soportado (debug route + script ingesta) |
+| `GOOGLE_GENERATIVE_AI_API_KEY` | `services/ai.ts` (Gemini fallback tras api_settings ×4) |
+| `HF_API_KEY` | HuggingFace embeddings fallback |
+| `OLLAMA_API_BASE_URL` | Default `https://ai.itecsaladillo.org.ar` (reportes sponsors, feedback) |
+| `RESEND_API_KEY` / `RESEND_FROM_PRENSA` | Emails (con fallback a api_settings vía getSettingValue) |
+| `NEXT_PUBLIC_SITE_URL` | URLs en emails/invitaciones |
+| `NEXT_PUBLIC_MEET_LINK` | Página streaming (link Meet) |
+| `NODE_ENV` | Cookie dedup solo en producción |
 
-## Variables de Entorno del Proyecto (package.json scripts)
+### Definidas pero NO usadas en código
+`NEXT_PUBLIC_API_URL`, `NEXT_PUBLIC_SOCKET_URL`, `SEMAFORO_PORT`, `PUBLIC_SITE_URL`, `PUBLIC_SUPABASE_*`, `NX_DAEMON`. No eliminar sin confirmar (pueden ser residuales o futuras).
 
-| Script | Comando |
-|--------|---------|
-| `dev` | `next dev` |
-| `build` | `next build` |
-| `start` | `next start` |
-| `lint` | `eslint` |
-| `sync-docs` | `node scripts/generateDocsContext.mjs` (PDFs → docsContext.ts) |
-| `extract-docs` | `node scripts/extractPdfText.js` (PDFs → JSON) |
-| `ingest-vector` | `node --dns-result-order=ipv4first --env-file=.env.local scripts/ingestDocsToVector.mjs` (PDFs → pgvector) |
+⚠️ **Resolución híbrida:** muchas keys (Gemini ×4, HF, Resend, streaming) se resuelven PRIMERO desde tabla `api_settings` y solo como fallback desde env (`getSettingValue`). El dashboard Settings admin permite rotarlas sin redeploy.
 
 ---
 
-## Flujo de Datos
+## 21. Flujo de Datos y Patrones
 
 ```
-Server Component  →  createClient()  →  Supabase Query  →  Render HTML
+Server Component  →  await createClient()      →  Supabase Query  →  Render HTML
                         ↓
-                  getCurrentMember()  →  auth check
-                        ↓
-Client Component  →  useLanguage()  →  LanguageContext
-                  →  createClient()  →  Supabase Browser Client  →  Realtime subs
-                  →  fetch(/api/...)  →  API Route  →  Service  →  Supabase
-                        ↓
-Server Action     →  getCurrentMember()  →  validate Zod  →  mutate DB  →  revalidatePath()
+                  getCurrentMember()            →  auth check / rol
+
+Client Component  →  useLanguage()             →  dict i18n
+                  →  createClient() (browser)  →  Supabase + Realtime subs
+                  →  fetch('/api/...')          →  API Route → Service → Supabase
+                  →  server action import       →  mutación directa
+
+Server Action     →  getCurrentMember() → Zod → mutate → revalidatePath()
 ```
 
----
+### Patrones para añadir features
 
-## Patrón para Añadir Nuevas Features
+**Ruta pública nueva:**
+1. Carpeta en `src/app/[ruta]/` + `page.tsx` server
+2. Interactividad → componente cliente hermano (`XxxClient.tsx`)
+3. SEO → `generateMetadata`
 
-### Para rutas públicas:
-1. Crear carpeta en `src/app/[ruta]/`
-2. `page.tsx` (Server Component por defecto)
-3. Si necesita interactividad, crear componente cliente separado
+**Feature de dashboard:**
+1. Carpeta en `src/app/dashboard/[ruta]/` + `page.tsx` con `getCurrentMember()` + check rol
+2. Link en sidebar: nav general (`navItems`) o herramienta admin (`adminNavItems`/submenú `<details>`), con `scroll={false}`; badge de conteo si aplica
 
-### Para rutas del dashboard:
-1. Crear carpeta en `src/app/dashboard/[ruta]/`
-2. `page.tsx` con `getCurrentMember()` y verificación de rol
-3. Si es admin, agregar link en `adminNavItems` o en submenú colapsable de `layout.tsx`
-4. Para componentes cliente, agregar API route en `src/app/api/` si necesita fetch de datos
+**Server action nueva:** archivo `actions.ts` con `'use server'`, Zod, check rol, `revalidatePath()`.
 
-### Para server actions:
-1. Crear `actions.ts` con `'use server'`
-2. Validar con Zod, verificar rol admin con `getCurrentMember()` si aplica
-3. Llamar `revalidatePath()` después de mutar
+**Endpoint API nuevo:** `src/app/api/[ruta]/route.ts`; considerar si debe excluirse del proxy matcher; sanitizar errores.
 
-### Para el sidebar:
-1. Si es nav general, agregar a `navItems` en `layout.tsx`
-2. Si es admin tool, agregar a `adminNavItems` o crear submenú `<details>`
-3. Agregar `scroll={false}` a los links
-4. Si aplica, agregar badge con conteo
+**Integración IA nueva:**
+1. Provider/fallback en `services/ai.ts` (o fetch directo con timeouts + error sanitizado)
+2. Prompt editable en `ai_prompt_settings` (clave nueva)
+3. Auditoría en `auditarRespuestaIA()` si genera texto visible
+4. **Solo modelos gratuitos**
 
-### Para nuevas integraciones IA:
-1. Agregar provider en `services/ai.ts` con fallback chain
-2. Configurar prompt en tabla `ai_prompt_settings`
-3. Agregar auditoría en `auditarRespuestaIA()`
-4. Documentar en esta guía
+**Tabla nueva:**
+1. Migración SQL numerada siguiente (RLS obligatoria)
+2. Actualizar `src/types/database.ts`
+3. Considerar publicación Realtime si hay suscripciones
 
 ---
 
-## Stakeholders y sus Interfaces
+## 22. Quirks y Gotchas Conocidos
+
+⚠️ **Leer antes de modificar código relacionado.** Estas inconsistencias existen y son conocidas:
+
+1. **Naming inconsistente eventos:** conviven familias `eventos_*` (`eventos_preguntas`, `eventos_nube_palabras` — usadas por `/eventos/[id]`, `pantalla`, `semaforoActions`) y `evento_*` singular (`evento_preguntas`, `evento_nubes` — usadas por `/preguntar`, `/nube`, `/pantalla-*`, `dashboard/eventos`). No "corregir" sin refactor completo coordinado.
+2. **`itec_actions` vs `acciones_itec`:** el mismo dominio aparece con ambos nombres en distintos módulos. Verificar el nombre real contra la migración 007 antes de escribir queries.
+3. **Tres formas de crear clientes Supabase** coexisten (§8.1). `services/videos.ts` usa el browser client aunque lo consumen páginas admin. Nuevos desarrollos: usar `lib/supabase/*`.
+4. **Params Promise vs sync** en rutas dinámicas (§19). Código nuevo: estilo Promise.
+5. **Typo histórico de env var:** `GEMINI_APY_KEY` (sin "I") es intencional y está soportado junto a `GEMINI_API_KEY`.
+6. **`proxy.ts` reemplaza `middleware.ts`** (Next.js 16). Matcher excluye `api/chat` y `api/asistente`.
+7. **Sin loading/error boundaries:** no existen `loading.tsx`/`error.tsx` globales ni por ruta.
+8. **Contenido dinámico hardcodeado en dictionary.ts** (feedData/videoteca por UUID, triplicado en 3 idiomas) — no buscar esos textos en BD.
+9. **Semáforo v3:** dedup server-side POR DISPOSITIVO POR CICLO (desde último reset), NO global. Reset NO borra votos (filtra por fecha). Denominador seguro `Math.max(total, votos, 1)`.
+10. **Landing `force-dynamic` + `unstable_cache` fs:** los logos de sponsors se leen del FILESYSTEM, no de BD. Agregar/quitar logos = tocar `public/sponsors/blanco/` (monocromo) y/o tabla `sponsors` (color/portal). Cache 1h.
+11. **`suppressHydrationWarning`** en `<html>` y marquesina: necesario por timestamps determinísticos. Evitar `Date.now()` en render SSR.
+12. **ChatWidget excluido en rutas de eventos** (`EVENT_ROUTES` en wrapper) para no interferir con herramientas live.
+13. **RLS abierta a propósito** en tablas realtime de aula virtual (mig. 060) y semáforo v3 (append-only): es diseño, no bug. No "endurecer" sin analizar el flujo anónimo.
+14. **`obtener_socios_publicos` (068) es el RPC vigente** para socios; `obtener_sponsors_publicos` (066) quedó deprecated por compatibilidad.
+15. **`strategic_partners` CRUD requiere admin ESTRICTO** (no coordinadores), a diferencia de otras herramientas admin.
+16. **Dashboard pages client sin guard server:** `/dashboard/prensaNews` y `/dashboard/sponsorsNews` son client components sin guard server propio (protege el proxy + feeds públicos por diseño). No replicar este patrón para datos sensibles nuevos.
+17. **`scratch/` está gitignored:** los scripts de diagnóstico ahí no están versionados; no depender de ellos en CI.
+18. **CI/CD sin gates:** el workflow de deploy no corre lint/tests. Ejecutar `npm run lint` localmente antes de pushear.
+19. **Migraciones con números duplicados** y sin rollback: aplicar manualmente en Supabase en orden cronológico de nombre.
+20. **Timeouts IA:** Groq/OpenRouter 20s por llamada (cadena total cubierta por maxDuration 60); Ollama 98s (reportes/feedback). Respetar estos márgenes al agregar providers.
+21. **`docsContext.ts` es AUTOGENERADO** (~1366 líneas, "No editar"): regenerar con `npm run sync-docs`.
+22. **Embeddings mixtos:** pgvector almacena vectores de 768 dims; HuggingFace produce 384 (zero-padded). Mezclar orígenes de embeddings en la misma colección degrada precisión de la búsqueda.
+23. **`lib/drive.ts` tiene folder IDs placeholder** (`REEMPLAZAR_CON_ID_REAL`): el mapeo real vive en `commissions.drive_folder_id` / `site_settings`.
+
+---
+
+## 23. Stakeholders y sus Interfaces
 
 | Stakeholder | Interfaz Principal | Contenido |
 |-------------|-------------------|-----------|
-| **Público General** | Landing, `/muro`, `/acciones`, `/articulo`, `/mapa-productivo`, `/registro-mapa`, `/certificados/[codigo]` | Noticias públicas, acciones, artículos, mapa productivo, registro, certificados digitales |
-| **Miembros** | Dashboard (`/dashboard/*`) | Muro interno, reuniones, drive, ideas, perfil, certificados, aula virtual |
-| **Administradores** | Dashboard + herramientas admin | Gestión de miembros, comisiones, prensa, sponsors, eventos presenciales, encuestas, nubes, streaming, videoteca, IA, capacitaciones |
-| **Sponsors** | Portal sponsor (`/sponsors/[token]`) | Noticias exclusivas, reportes de impacto generados por IA |
-| **Prensa/Medios** | API `/api/press-news` + email | Gacetillas, materiales de prensa, historial de envíos |
-| **Asistentes a Eventos** | Portal evento (`/eventos/[id]/*`), pantalla grande (`/pantalla`) | Acreditación, preguntas, nube de palabras, encuestas |
-| **Estudiantes / Alumnos** | `/capacitaciones/[id]`, `/clases/[id]`, `/registro-mapa` | Aula virtual interactiva (modómetro, chat, mano alzada), registro de talento en mapa productivo |
+| **Público General** | Landing, `/muro`, `/acciones`, `/articulo/[slug]`, `/mapa-productivo`, `/registro-mapa`, `/certificados/[codigo]`, `/socios`, `/votar` | Noticias públicas, acciones, artículos, mapa productivo, certificados, socios, votación |
+| **Miembros** | Dashboard `/dashboard/*` | Muro interno, reuniones con acta, drive, ideas, perfil, pasaporte digital, aula virtual |
+| **Administradores** | Dashboard + herramientas admin | Miembros, comisiones, comunicación multicanal, prensa, sponsors/partners, eventos presenciales, encuestas, nubes, streaming, videoteca, AI processor, settings, entrenamiento asistente |
+| **Sponsors** | Portal `/sponsors/[token]` | Noticias exclusivas, reportes de impacto IA, invitaciones |
+| **Prensa/Medios** | `GET /api/press-news` + email | Gacetillas con recursos multimedia, historial |
+| **Asistentes a Eventos** | `/eventos/[id]/*` + pantallas | Acreditación QR, preguntas, nube, encuestas, semáforo |
+| **Estudiantes/Alumnos** | `/capacitaciones/[id]`, `/clases/[id]`, `/registro-mapa` | Aula virtual interactiva, LivePoll, registro talento |
 
 ---
 
-## Notas Técnicas Importantes
-
-- **Next.js 16 breaking changes:** Revisar `node_modules/next/dist/docs/` antes de implementar nuevas features. El middleware tradicional de Next.js fue reemplazado por `proxy.ts`.
-- **Tailwind v4:** Usa la sintaxis de Tailwind CSS v4, que difiere de v3 en varios aspectos (ej. `@import "tailwindcss"` en lugar de `@tailwind` directives).
-- **Turbopack:** El dev server usa Turbopack (`--turbopack`), que puede tener comportamientos diferentes a webpack en desarrollo.
-- **Ollama self-hosted:** El servidor Ollama corre en `https://ai.itecsaladillo.org.ar`. No asumir disponibilidad — siempre hay fallback chain.
-- **Edge Runtime:** Algunas API routes usan Edge Runtime. Verificar compatibilidad de dependencias.
-- **Google Service Account:** Las credenciales se almacenan en `site_settings` (no en `.env.local`) para permitir actualización sin redeploy.
-- **sync-docs:** Script que extrae texto de PDFs en `training-docs` y genera `docsContext.ts`. Ejecutar después de subir nuevos documentos de entrenamiento.
-- **Supabase Broadcast:** Se usa para el chat en tiempo real del aula virtual (`/clases/[id]`), independiente de `postgres_changes`.
-- **localStorage como identidad:** Asistentes a eventos y alumnos en aula virtual se identifican por dispositivo via localStorage (sin login requerido).
-- **Multi-nube:** Los eventos pueden tener múltiples nubes de palabras activas simultáneamente, cada una con su propia configuración.
-- **Embeddings:** Se generan con Gemini `text-embedding-004` como primario y HuggingFace `all-MiniLM-L6-v2` como fallback, tanto para RAG como para el sistema de feedback del asistente.
-- **Semáforo de Comprensión:** Sistema de alertas anónimas. El denominator para el cálculo de porcentaje usa `Math.max(totalAcreditados, votosNegativos, 1)` para evitar división por cero cuando no hay acreditados. Suscripciones Realtime manejan INSERT y DELETE de `eventos_asistentes`.
-- **Concepto de Nube Dinámico:** Campo `nube_concepto` en tabla `eventos`. Se actualiza vía Server Action `actualizarConceptoNube()` (requiere rol admin/coordinador). Se propaga en tiempo real a celulares y pantalla gigante via suscripción Realtime a tabla `eventos`.
-- **Migración 055_nube_concepto.sql:** Agrega columna `nube_concepto TEXT DEFAULT ''` a tabla `eventos`. Debe ejecutarse en Supabase después del deploy.
-- **Migración 056_fix_rls_critical.sql:** Corrige políticas RLS en `clases_virtuales`, `clase_interacciones`, `certificados_digitales`, `saved_conversations`. Debe ejecutarse en Supabase.
-- **Migración 031 (actualizada):** RPC `obtener_miembros_publicos` ya no retorna `email` ni `phone` para proteger PII.
-- **ChatWidget lazy-loaded:** Se carga con `next/dynamic({ ssr: false })` para no impactar carga inicial de páginas.
-- **Dead code cleanup:** Eliminados archivos huérfanos (`test-grok`, `test-gemini`, `news-multicanal.ts`, `aiConfig.json`), 22+ funciones nunca importadas, dependencia `dotenv` innecesaria, assets públicos default de Next.js.
-- **Security hardening (jul 2026):** RPC `obtener_miembros_publicos` ya no retorna `email` ni `phone` (PII leak). LivePoll usa server action con cookie dedup en vez de update client-side directo. Errores de providers IA sanitizados (no exponen detalles internos). `createSponsorAction` tipado explícito en vez de `Record<string, unknown>`.
-- **Migración 066_sponsors_publicos_rpc.sql:** Crea el RPC `obtener_sponsors_publicos()` (`security definer`, `grant` a anon/authenticated/service_role) que expone solo campos seguros de sponsors activos (`id`, `name`, `tier`, `logo_color_url`, `resena`, `website_url`, `email`) — NO expone `private_token` ni `contacto_telefono`. Ordenado por `created_at`. Consumido por `NuestrosSociosSection.tsx` en la landing.
-- **Nuestros Socios (ago 2026):** Nueva sección de landing entre "Nuestra Identidad" y "Nuestro Equipo" (`AboutSection.tsx`). Grillas dinámicas por tier con columnas 2-10 y alturas estandarizadas (platino 100% con ring glow, oro 80%, plata 55%, bronce 35%, standard 10%). El título de la sección va en columna izquierda (estilo Impact con gradient) y los niveles superiores (platino/oro) en columna derecha; los inferiores a ancho completo debajo. Detalle de cada sponsor en `SponsorModal.tsx` (Framer Motion, cierre con Escape).
-- **Nuestro Equipo (ago 2026):** Sección restyleada en `AboutSection.tsx` con layout espejo de Nuestros Socios (título columna izquierda + fichas rodeándolo). Primeros 9 miembros en grid 3 columnas; desde la cuarta fila, fichas horizontales a ancho completo (`lg:grid-cols-4/5`). Fichas con avatar circular, badge de rol y frase/bio, que abren el modal de perfil del miembro.
-- **SponsorRegistrationForm modal (ago 2026):** El formulario de alta de sponsors se renderiza como modal controlado (`onClose`/`onCreated` props) en lugar del overlay manual, y el schema de `createSponsorAction` tipa campos opcionales como `string | null`.
-- **RAG cascade integrado (ago 2026):** `/api/asistente` ahora llama a `recuperarContextoRAG()` para inyectar contexto semántico de 5 niveles (pgvector, docs locales, bucket, conversaciones, web). El asistente tiene acceso a RAG + DB en paralelo.
-- **Cache P3 training-docs (ago 2026):** `ragCascade.ts` cachea el texto combinado del bucket `training-docs` en memoria (TTL 5 min, `P3_CACHE_TTL_MS`) con deduplicación de descargas concurrentes (`p3FetchPromise` compartida + `.finally()` para limpiar). El bucket se lista/descarga 1 vez por ventana de tiempo en vez de en cada request del asistente. Nivel P3 renombrado de P2 en los logs de warning.
-- **Modelos gratuitos (ago 2026):** Regla de oro — todos los endpoints del asistente usan `openrouter/free` (router automático de 14+ modelos free). Eliminados todos los `deepseek/deepseek-chat` del codebase.
-- **Lazy Groq init (ago 2026):** Cliente Groq en `/api/chat` usa `getGroq()` con lazy initialization para evitar error de build cuando falta `GROQ_API_KEY`.
-- **pgvector RAG (migraciones 062-063):** Tabla `documents` con `vector(768)` para búsqueda semántica. RPC `match_documents` para cosine similarity. Ingesta vía `npm run ingest-vector` (PDFs → chunking 900 chars → Gemini embeddings → Supabase).
-- **Constantes de IA (sept 2026):** `FALLBACK_PROMPT` define el system prompt por defecto del asistente. `ANTI_HALLUCINATION_RULES_FLEXIBLE` controla el comportamiento RAG cuando no hay contexto recuperado.
-- **Conversaciones Guardadas (sept 2026):** Auto-guardado cada 10 mensajes después del umbral inicial. Detección de comandos explícitos en español. Recuperación semántica P4 con threshold 0.35.
-- **SponsorHeaderBar (ago 2026):** Marquesina fija de sponsors en la landing. Logos monocromo en `public/sponsors/blanco/` (carga local vía fs en el server component — sin fetch a DB ni storage). Animación `marquee-left` en `globals.css` con duración inline (70s), pausa en hover, fade out al scroll > 10px. Logos de fallback (placehold.co) si la carpeta está vacía. `page.tsx` usa `force-dynamic` + `revalidate = 0` + `suppressHydrationWarning` para evitar el error de hidratación #418 (los `?v=mtimeMs` son determinísticos, no usan `Date.now()`).
-- **Optimización sponsors + marquesina (ago 2026):** `page.tsx` cachea la lectura del filesystem con `unstable_cache` de `next/cache` (`getSponsorLogos`, key `['sponsor-logos-landing']`, `revalidate: 3600`) — evita 27+ `readdirSync`/`statSync` por request y reduce el TTFB en serverless. `SponsorHeaderBar` reduce la duplicación del loop de 4x a 2x copias (`MARQUEE_COPIES = 2`, mínimo necesario para el loop seamless de `translateX(-50%)`; la duración se ajustó a 70s para preservar la velocidad visual) y memoiza el array duplicado con `useMemo` (no se recrea en cada re-render por scroll). Imágenes con `loading="lazy"`, `decoding="async"`, `draggable={false}` y `will-change-transform` en el contenedor animado.
-- **Streaming en vivo (ago 2026):** Migración `064_streaming_config.sql` + endpoint `/api/streaming/status` (público, cache 30s, `force-dynamic`). Keys de `site_settings`: `streaming_active` (`'true'`/`'false'`) y `streaming_youtube_url`. `StreamingPlayer.tsx` convierte URLs de YouTube (watch, youtu.be, embed, live) a formato embed con autoplay+mute. Se muestra en el Hero en reemplazo de las palabras spotlight.
-- **Elementos flotantes (ago 2026):** Chat widget (`ChatWidget.css`) y selector de idioma anclados a `bottom: 59px` (misma altura, lado a lado en desktop), ambos con fade out al scroll. El contenido de la landing usa `-translate-y-[30px]` (wrapper) y `pb-16` en `<main>` para no solaparse con la barra de sponsors.
-- **Estilos globales (ago 2026):** En `globals.css`, keyframes `marquee-left` + clase `.animate-marquee-infinite` para la marquesina de sponsors (63s default, sobreescrito inline según cantidad de copias). La clase `itec-lang-btn` estiliza el FAB del selector de idioma.
-- **Migración 067_strategic_partners.sql:** Crea la tabla `strategic_partners` para instituciones y organismos aliados. RLS: `SELECT` público limitado a `is_active = true`; `INSERT`/`UPDATE`/`DELETE` solo para `members.role = 'admin'`. Índices en `category` e `is_active`, trigger `strategic_partners_updated_at` mantiene `updated_at`. Debe ejecutarse en Supabase después del deploy.
-- **Alianzas Estratégicas + Socios Estratégicos (ago 2026):** Nueva entidad `strategic_partners` con CRUD admin (`partner-actions.ts` — rol `admin` estricto, no coordinadores) y sección pública "Alianzas Estratégicas" debajo de las grillas de sponsors en la landing. El modal público `SponsorModal.tsx` fue unificado con el tipo unión `ModalItem` (`_kind: 'sponsor' | 'partner'`) que renderiza badge de tier o de categoría según corresponda. Los logos de partners se suben al bucket Storage existente `sponsors-logos`. Nota: `strategic_partners` aún no está tipada en `src/types/database.ts`.
-- **Formato original de imágenes (ago 2026):** Los medios de comunicaciones preservan su aspect ratio original: `MediaSlideshow` en `NewsWallMulticanal.tsx` usa `object-contain` con `max-h-[280px]`/`min-h-[120px]` sobre fondo `bg-black/40` (en vez de recortar con `aspect-video object-cover`), tanto para imágenes como videos. Mismo criterio aplicado a la galería de acciones del portal del sponsor (`/sponsors/[id]`).
+*Mantener este documento actualizado con cada cambio estructural relevante. Última revisión: agosto 2026 (post-migración 068).*
