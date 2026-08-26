@@ -495,19 +495,22 @@ Todas las tablas realtime de clase están en publicación `supabase_realtime`. R
 - Parsea 4 secciones separadas por `---SECCION---`.
 - Si falla: `buildFallbackReport()` con `generado_con_ia: false`.
 
-### 9.5 RAG Cascade (`src/lib/rag/ragCascade.ts`, ~438 líneas)
-Recuperación de contexto en 5 niveles con soft fallback (mejor resultado aunque esté bajo threshold):
+### 9.5 RAG Cascade (`src/lib/rag/ragCascade.ts`)
+Recuperación de contexto en 5 niveles. **Orden de resolución:** P1 → P2 → P3 → P4 → **Soft fallback (fuentes propias aunque estén bajo threshold) → P5 web** (ago 2026: el soft fallback tiene PRIORIDAD sobre la búsqueda web — un documento institucional con score bajo vale más que un resultado genérico de internet).
 
 | Nivel | Fuente | Threshold | Método |
 |-------|--------|-----------|--------|
-| **P1** | pgvector `documents` | ≥ 0.20 | Embedding Gemini de la query + RPC `match_documents` (cosine, 6 chunks) |
-| **P2** | `DOCS_CONTEXT` local (docsContext.ts autogenerado) | ≥ 0.40 | Chunking 900/120 + scoring overlap de tokens estilo Jaccard modificado `|A∩B|/min(|A|,|B|)` con stopwords español |
-| **P3** | Bucket Storage `training-docs` (.txt/.md/.json) | ≥ 0.35 | Token overlap. **Caché memoria TTL 5 min (`P3_CACHE_TTL_MS`) + deduplicación de descargas concurrentes** (`p3FetchPromise` compartida + `.finally()`) — anti-stampede |
+| **P1** | pgvector `documents` | ≥ 0.15 | Embedding Gemini de la query + RPC `match_documents` (cosine, 6 chunks) |
+| **P2** | `DOCS_CONTEXT` local (docsContext.ts autogenerado) | ≥ 0.22 | Chunking 900/120 + scoring overlap de tokens estilo Jaccard modificado `|A∩B|/min(|A|,|B|)` con stopwords español |
+| **P3** | Bucket Storage `training-docs` (.txt/.md/.json) | ≥ 0.22 | Token overlap. **Caché memoria TTL 5 min (`P3_CACHE_TTL_MS`) + deduplicación de descargas concurrentes** (`p3FetchPromise` compartida + `.finally()`) — anti-stampede |
 | **P4** | Conversaciones guardadas del propio sessionId | any | RPC `buscar_conversaciones_similares` (threshold 0.35) |
-| **P5** | DuckDuckGo Instant Answer | any | Web search sin API key, query enriquecida con "itec saladillo Cicaré expo itec" |
+| **Soft fallback** | Mejor resultado propio bajo threshold | < threshold | Se retorna ANTES de consultar web |
+| **P5** | DuckDuckGo Instant Answer + scraping nativo DDG Lite | any | Web search sin API key, query enriquecida con "itec saladillo Cicaré expo itec". Si la Instant Answer no produce ≥80 chars (habitual en español de nicho), hace **scraping HTML de `lite.duckduckgo.com/lite/`** (regex sobre `td.result-snippet`, sin APIs de terceros — AGENTS.md prohíbe Serper) |
 
-- Export: `recuperarContextoRAG(query, supabase, sessionId?)` → `{contexto, nivel, score}`. Contexto máximo 3200 chars, sin etiquetas de fuente. `nivel` solo para logging interno (nunca se expone al LLM).
-- Compatible con Edge Runtime (funciones puras, sin dependencias Node pesadas).
+⚠️ Thresholds calibrados ago 2026: los originales (0.40 keyword local) descartaban matches útiles y contribuían a negativas del asistente. No subirlos sin medir impacto en respuestas.
+
+- Export: `recuperarContextoRAG(query, supabase, sessionId?)` → `{contexto, nivel, score}`. Contexto máximo 3200 chars (`MAX_CONTEXT_CHARS`), sin etiquetas de fuente. `nivel` solo para logging interno (nunca se expone al LLM).
+- Compatible con Edge Runtime (funciones puras, fetch + regex, sin dependencias Node pesadas).
 
 ### 9.6 Conversaciones Guardadas (`src/lib/rag/conversacionesGuardadas.ts`)
 - `detectarComandoGuardar(mensaje)`: regex español ("guardá esta conversación", etc.).
@@ -520,11 +523,18 @@ Recuperación de contexto en 5 niveles con soft fallback (mejor resultado aunque
 - ⚠️ **Los modelos gratuitos rotan frecuentemente** (Groq apagó los Llama en ago 2026; OpenRouter retira slugs :free sin aviso). Si el asistente devuelve "Todos los providers fallaron", diagnosticar SIEMPRE con `GET /api/asistente/debug` (hace ping real a cada provider) y actualizar las constantes `GROQ_MODEL`/`OPENROUTER_MODEL`/`GEMINI_MODEL` al tope del route.
 - `maxDuration = 60` (route export + vercel.json).
 - Input: `{ mensaje, historial[], sessionId?, idioma? }`. sessionId default `crypto.randomUUID()`.
-- Requiere al menos una key: GROQ_API_KEY u OPENROUTER_API_KEY (si no → 500).
+- Requiere al menos una key entre GROQ_API_KEY / OPENROUTER_API_KEY / Gemini keys (si no → 500).
 - **Contexto en paralelo** (Promise.allSettled con admin client service-role, sin cookies): prompt maestro (`ai_prompt_settings.clave_prompt='asistente_global'`), staff (`obtener_miembros_publicos`), últimas 10 notas públicas, comisiones, acciones, artículos, **RAG cascade completo**.
-- System prompt: FALLBACK_PROMPT (si no hay en BD) + reglas anti-alucinación + contexto RAG + contexto DB.
+- **Ensamblado del system prompt con contextos protegidos (ago 2026 — CRÍTICO):**
+  1. Prompt maestro (DB de ~7600 chars, o FALLBACK_PROMPT)
+  2. `+ contextoAcumulado`: RAG PRIMERO ("Información recuperada para esta consulta") → luego Noticias → Actividades → Artículos (excerpt 250 chars) → Staff → Comisiones
+  3. `+ POLITICA_RESPUESTA_INTEGRAL` SIEMPRE al final (máxima precedencia por recencia)
+  - `MAX_PROMPT_CHARS = 18000`. Si el total excede el presupuesto, **se trunca SOLO el prompt maestro** (`slice` + `[...]`) — el contexto RAG/DB y la política van NUNCA truncados.
+  - ⚠️ Historia: antes se apilaba RAG al final con corte fijo en 10000 chars → el RAG quedaba fuera casi siempre y el asistente se negaba a responder pese a tener datos. Cualquier cambio en este ensamblado debe preservar: contexto completo + política al final + truncamiento solo del maestro.
+- `max_tokens: 2048` en Groq/OpenRouter y `maxOutputTokens: 2048` en Gemini. ⚠️ No subir a 4096: prompt (~15k chars ≈ 4k tokens) + completion rozan el límite por-request del tier on_demand de Groq → error 413 "Request too large". Si crece el prompt, bajar MAX_PROMPT_CHARS en lugar de subir max_tokens.
 - Detecta comandos de guardado y auto-guarda cada 10 mensajes.
 - Post-procesamiento: `auditarRespuestaIA()`.
+- ⚠️ Groq free/on-demand tiene límites TPM: ráfagas consecutivas con prompts grandes pueden devolver 429 transitorio — la cadena cae al siguiente provider automáticamente.
 
 ### 9.8 Feedback (`POST /api/asistente/feedback`)
 Input: `{ historial[{role: user|model, text}], calificacion, comentario? }`.
@@ -533,8 +543,9 @@ Input: `{ historial[{role: user|model, text}], calificacion, comentario? }`.
 
 ### 9.9 Constantes de IA (`src/lib/ai/constants.ts`)
 - `FALLBACK_PROMPT`: System Prompt Maestro ("Asistente ITEC") — identidad, biografía de Augusto Cicaré, historia Expo ITEC, comisiones, estilo rioplatense técnico-humano-vanguardista, prohibición de inventar datos.
-- `ANTI_HALLUCINATION_RULES_STRICT`: responder SOLO con `<retrieved_context>`; si no está, negarse amablemente.
-- `ANTI_HALLUCINATION_RULES_FLEXIBLE`: prioridad retrieved_context → artículos publicados → conocimiento general → recién entonces "no dispongo de esa información". Es el modo usado por defecto en `/api/asistente`.
+- `ANTI_HALLUCINATION_RULES_STRICT`: responder SOLO con `<retrieved_context>`; si no está, negarse amablemente. Usado por `/api/chat` (legacy).
+- `ANTI_HALLUCINATION_RULES_FLEXIBLE`: prioridad retrieved_context → artículos publicados → conocimiento general → recién entonces "no dispongo de esa información". (Reemplazada como regla activa del asistente por la política integral.)
+- `POLITICA_RESPUESTA_INTEGRAL` (ago 2026): **regla activa de `/api/asistente`**, va al FINAL del system prompt. Prohíbe negarse a responder si existe cualquier material relacionado en el contexto (RAG + DB), obliga a responder con lo más útil disponible, permite rechazar solo temas totalmente ajenos a ITEC/Cicaré/ecosistema, y mantiene la prohibición de inventar fechas/precios/normativas. Fue creada para eliminar las negativas frecuentes ("no cuento con información sobre ese tema") causadas por guardrails estrictos del prompt maestro combinados con contexto truncado.
 
 ### 9.10 Resolución de API keys (`src/lib/settings.ts`)
 `getSettingValue(key, envVarName?)`: estrategia **fallback híbrido DB → env**: consulta `api_settings` (clave/valor); si vacío/inexistente → `process.env[envVarName]`. Caché Map a nivel de módulo. Es la base de resolución de Gemini (×4 keys), HF, Resend, streaming config. El dashboard de settings admin gestiona estas claves con prioridad sobre env vars.

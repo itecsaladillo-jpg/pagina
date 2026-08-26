@@ -3,7 +3,7 @@ import { auditarRespuestaIA } from '@/services/ai'
 import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 import { detectarComandoGuardar, debeAutoGuardar } from '@/lib/rag/conversacionesGuardadas'
 import { recuperarContextoRAG } from '@/lib/rag/ragCascade'
-import { FALLBACK_PROMPT, ANTI_HALLUCINATION_RULES_FLEXIBLE } from '@/lib/ai/constants'
+import { FALLBACK_PROMPT, POLITICA_RESPUESTA_INTEGRAL } from '@/lib/ai/constants'
 
 export const maxDuration = 60
 
@@ -27,7 +27,7 @@ async function callGroq(messages: { role: string; content: string }[]): Promise<
       messages,
       stream: false,
       temperature: 0.7,
-      max_tokens: 4096
+      max_tokens: 2048
     }),
     signal: AbortSignal.timeout(15000),
   })
@@ -62,7 +62,7 @@ async function callOpenRouter(messages: { role: string; content: string }[]): Pr
       messages,
       stream: false,
       temperature: 0.7,
-      max_tokens: 4096
+      max_tokens: 2048
     }),
     signal: AbortSignal.timeout(15000),
   })
@@ -99,7 +99,7 @@ async function callGemini(messages: { role: string; content: string }[]): Promis
       body: JSON.stringify({
         ...(systemInstruction ? { system_instruction: { parts: [{ text: systemInstruction }] } } : {}),
         contents,
-        generationConfig: { temperature: 0.7, maxOutputTokens: 4096 },
+        generationConfig: { temperature: 0.7, maxOutputTokens: 2048 },
       }),
       signal: AbortSignal.timeout(20000),
     }
@@ -147,6 +147,7 @@ export async function POST(req: NextRequest) {
 
   // Construir un system prompt mínimo funcional
   let promptSistema = FALLBACK_PROMPT
+  let contextoAcumulado = ''
 
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
@@ -183,41 +184,58 @@ export async function POST(req: NextRequest) {
         ? `\n\n## Staff ITEC:\n${(miembrosResult.value.data as any[]).map((m: any) => `- ${m.full_name}: ${m.role}`).join('\n')}` : ''
 
       const notasContext = notasResult.status === 'fulfilled' && notasResult.value.data?.length
-        ? `\n\n## Noticias Recientes:\n${notasResult.value.data.map((n: any) => `- ${n.titulo}: ${(n.contenido || '').slice(0, 200)}`).join('\n')}` : ''
+        ? `\n\n## Noticias Recientes:\n${notasResult.value.data.map((n: any) => `- ${n.titulo}: ${(n.contenido || '').slice(0, 300)}`).join('\n')}` : ''
 
       const comisionesContext = comisionesResult.status === 'fulfilled' && comisionesResult.value.data?.length
-        ? `\n\n## Comisiones:\n${comisionesResult.value.data.map((c: any) => `- ${c.name}`).join('\n')}` : ''
+        ? `\n\n## Comisiones:\n${comisionesResult.value.data.map((c: any) => `- ${c.name}${c.description ? `: ${c.description}` : ''}`).join('\n')}` : ''
 
       const accionesContext = accionesResult.status === 'fulfilled' && accionesResult.value.data?.length
-        ? `\n\n## Próximas actividades:\n${accionesResult.value.data.map((a: any) => `- ${a.title} (${a.type})`).join('\n')}` : ''
+        ? `\n\n## Próximas actividades:\n${accionesResult.value.data.map((a: any) => `- ${a.title} (${a.type})${a.start_date ? `, inicio: ${a.start_date}` : ''}: ${(a.description || '').slice(0, 150)}`).join('\n')}` : ''
 
       const articulosContext = articulosResult.status === 'fulfilled' && articulosResult.value.data?.length
-        ? `\n\n## Artículos:\n${articulosResult.value.data.map((a: any) => `- "${a.title}": ${(a.excerpt || '').slice(0, 150)}`).join('\n')}` : ''
+        ? `\n\n## Artículos Publicados en ITEC:\n${articulosResult.value.data.map((a: any) => `- "${a.title}": ${(a.excerpt || a.content || '').slice(0, 250)}`).join('\n')}` : ''
 
-      promptSistema += `\n\n${ANTI_HALLUCINATION_RULES_FLEXIBLE}${miembrosContext}${notasContext}${comisionesContext}${accionesContext}${articulosContext}`
+      // ── Ensamblado priorizado: RAG PRIMERO (más relevante para la query),
+      // luego contexto vivo de la DB. NUNCA se trunca este bloque. ──
+      const bloques: string[] = []
 
-      // RAG ya ejecutado en paralelo con las queries
       if (ragResult.status === 'fulfilled' && ragResult.value.contexto) {
-        promptSistema += `\n\n## Contexto recuperado por RAG (nivel: ${ragResult.value.nivel}, score: ${ragResult.value.score.toFixed(2)}):\n${ragResult.value.contexto}`
-        console.log(`[Asistente] RAG: nivel=${ragResult.value.nivel}, score=${ragResult.value.score.toFixed(3)}`)
+        bloques.push(`## Información recuperada para esta consulta:\n${ragResult.value.contexto}`)
+        console.log(`[Asistente] RAG: nivel=${ragResult.value.nivel}, score=${ragResult.value.score.toFixed(3)}, chars=${ragResult.value.contexto.length}`)
       } else if (ragResult.status === 'rejected') {
         console.error('[Asistente] Error en RAG cascade:', ragResult.reason?.message)
       } else {
         console.log('[Asistente] RAG: sin contexto recuperado')
       }
+
+      for (const b of [notasContext, accionesContext, articulosContext, miembrosContext, comisionesContext]) {
+        if (b) bloques.push(b.trimStart())
+      }
+
+      contextoAcumulado = bloques.join('\n\n')
     } catch (e: any) {
       console.error('[Asistente] Error cargando contexto:', e?.message)
     }
   }
 
-  // Limitar el system prompt (preservar prompt maestro de DB completo)
-  const MAX_PROMPT_CHARS = 10000
-  if (promptSistema.length > MAX_PROMPT_CHARS) {
-    const partePrompt = promptSistema.slice(0, 7000)
-    const parteContexto = promptSistema.slice(7000, MAX_PROMPT_CHARS)
-    promptSistema = partePrompt + parteContexto + '\n\n[Contexto adicional truncado]'
+  // ── Presupuesto de prompt con contextos protegidos (ago 2026) ──
+  // El prompt maestro (DB o FALLBACK_PROMPT) se trunca SI hace falta,
+  // pero el contexto acumulado (RAG + DB) y la política de respuesta
+  // van SIEMPRE completos. Antes el corte fijo en 10000 chars eliminaba
+  // el RAG (que iba último), causando negativas del asistente.
+  const MAX_PROMPT_CHARS = 18000
+  const REGLAS_FINALES = POLITICA_RESPUESTA_INTEGRAL
+  let promptFinal = promptSistema
+
+  const presupuestoFijo = contextoAcumulado.length + REGLAS_FINALES.length + 60
+  if (promptFinal.length + presupuestoFijo > MAX_PROMPT_CHARS) {
+    const disponibleMaestro = Math.max(3500, MAX_PROMPT_CHARS - presupuestoFijo)
+    promptFinal = promptFinal.slice(0, disponibleMaestro).trimEnd() + '\n[...]'
+    console.warn(`[Asistente] Prompt maestro truncado a ${disponibleMaestro} chars para preservar contexto completo (${contextoAcumulado.length} chars)`)
   }
-  console.log(`[Asistente] Prompt final: ${promptSistema.length} chars, historial: ${historial.length} msgs`)
+
+  promptSistema = `${promptFinal}\n\n${contextoAcumulado}\n\n${REGLAS_FINALES}`
+  console.log(`[Asistente] Prompt final: ${promptSistema.length} chars (maestro ${promptFinal.length} + contexto ${contextoAcumulado.length} + política ${REGLAS_FINALES.length}), historial: ${historial.length} msgs`)
 
   // Limitar historial a últimos 10 mensajes para no exceder tokens
   const historialLimitado = historial

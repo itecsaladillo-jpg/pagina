@@ -2,12 +2,12 @@
  * ragCascade.ts
  * Módulo de Recuperación de Contexto con Cascada de Prioridades — Asistente ITEC
  *
- *   P1 (score ≥ 0.20) → pgvector: búsqueda semántica en documents (Gemini text-embedding-004)
- *   P2 (score ≥ 0.40) → Documentos locales pre-parseados (DOCS_CONTEXT en memoria, keyword scoring)
- *   P3 (score ≥ 0.35) → Bucket Supabase Storage "training-docs"
+ *   P1 (score ≥ 0.15) → pgvector: búsqueda semántica en documents (Gemini text-embedding-004)
+ *   P2 (score ≥ 0.22) → Documentos locales pre-parseados (DOCS_CONTEXT en memoria, keyword scoring)
+ *   P3 (score ≥ 0.22) → Bucket Supabase Storage "training-docs"
  *   P4              → Conversaciones Guardadas (historial previo relevante)
- *   P5              → Web search (DuckDuckGo fallback)
- *   Soft fallback   → Mejor resultado encontrado aunque esté por debajo del threshold
+ *   Soft fallback   → Mejor resultado propio aunque esté por debajo del threshold (PRIORIDAD sobre web)
+ *   P5              → Web search (DuckDuckGo Instant Answer + scraping nativo DDG Lite)
  *
  * Nota de diseño: el contexto se inyecta sin etiquetas de fuente para que el LLM
  * no sepa de dónde proviene la información.
@@ -21,9 +21,9 @@ import { buscarConversacionesSimilares } from './conversacionesGuardadas'
 // Configuración y thresholds
 // ============================================================
 
-const THRESHOLD_VECTOR    = 0.20   // Umbral bajo para no descartar info relevante (calibrado)
-const THRESHOLD_LOCAL     = 0.40   // Umbral de confianza para docs locales (keyword)
-const THRESHOLD_SUPABASE  = 0.35   // Umbral de confianza para bucket Supabase
+const THRESHOLD_VECTOR    = 0.15   // Umbral bajo para no descartar info relevante (calibrado ago 2026: antes 0.20)
+const THRESHOLD_LOCAL     = 0.22   // Umbral docs locales (ago 2026: antes 0.40 — descartaba matches útiles del keyword scoring)
+const THRESHOLD_SUPABASE  = 0.22   // Umbral bucket Supabase (ago 2026: antes 0.35)
 const CHUNK_SIZE          = 900    // Tamaño de chunk en caracteres para scoring
 const CHUNK_OVERLAP       = 120    // Solapamiento entre chunks
 const MAX_CONTEXT_CHARS   = 3200   // Máximo de chars inyectados al prompt
@@ -292,6 +292,8 @@ async function buscarEnSupabaseBucket(
  * Búsqueda vía DuckDuckGo Instant Answer API.
  * Sin API key requerida. Enriquece la query con términos del dominio ITEC.
  * Retorna AbstractText y hasta 3 RelatedTopics si están disponibles.
+ * Si la Instant Answer no produce resultados (habitual en consultas en
+ * español de nicho), hace scraping nativo de DuckDuckGo Lite.
  */
 async function buscarEnWeb(query: string): Promise<string> {
   const queryEnriquecida = `${query} ${WEB_QUERY_SUFFIX}`
@@ -313,9 +315,58 @@ async function buscarEnWeb(query: string): Promise<string> {
       if (topic.Text) partes.push(topic.Text)
     }
 
-    return partes.join('\n').slice(0, MAX_CONTEXT_CHARS)
+    const instant = partes.join('\n').trim()
+    if (instant.length >= 80) return instant.slice(0, MAX_CONTEXT_CHARS)
+
+    // Instant Answer vacío o muy pobre → scraping nativo (sin APIs de terceros)
+    return await buscarEnWebScraping(queryEnriquecida)
   } catch (err) {
-    console.warn('[RAG P3] DuckDuckGo falló:', err)
+    console.warn('[RAG P5] DuckDuckGo falló:', err)
+    return ''
+  }
+}
+
+/**
+ * Scraping nativo de DuckDuckGo Lite (HTML simple, sin JS).
+ * Extrae los snippets de los primeros resultados orgánicos.
+ * Compatible con Edge Runtime: solo fetch + regex.
+ */
+async function buscarEnWebScraping(queryEnriquecida: string): Promise<string> {
+  try {
+    const res = await fetch(`https://lite.duckduckgo.com/lite/?q=${encodeURIComponent(queryEnriquecida)}`, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+        'Accept-Language': 'es-AR,es;q=0.9',
+      },
+      signal: AbortSignal.timeout(6000),
+    })
+    if (!res.ok) return ''
+
+    const html = await res.text()
+    const resultados: string[] = []
+
+    // DuckDuckGo Lite renderiza snippets en <td class="result-snippet">
+    const regexSnippet = /<td[^>]*class="result-snippet"[^>]*>([\s\S]*?)<\/td>/gi
+    let match: RegExpExecArray | null
+    while ((match = regexSnippet.exec(html)) !== null && resultados.length < 4) {
+      const texto = match[1]
+        .replace(/<[^>]+>/g, ' ')
+        .replace(/&amp;/g, '&')
+        .replace(/&quot;/g, '"')
+        .replace(/&#x27;/g, "'")
+        .replace(/&lt;/g, '<')
+        .replace(/&gt;/g, '>')
+        .replace(/\s+/g, ' ')
+        .trim()
+      if (texto.length > 40) resultados.push(texto)
+    }
+
+    if (resultados.length > 0) {
+      console.log(`[RAG P5] Scraping DDG Lite: ${resultados.length} snippets`)
+    }
+    return resultados.join('\n').slice(0, MAX_CONTEXT_CHARS)
+  } catch (err) {
+    console.warn('[RAG P5] Scraping DDG Lite falló:', err)
     return ''
   }
 }
@@ -416,7 +467,15 @@ export async function recuperarContextoRAG(
     }
   }
 
-  // ── P5: Web Search Fallback ────────────────────────────────
+  // ── Soft Fallback: mejor resultado propio aunque esté bajo el threshold ──
+  // Prioridad sobre web search: los documentos institucionales, incluso con
+  // score bajo, son más confiables que resultados genéricos de internet.
+  if (softBest.contexto) {
+    console.warn(`[RAG] Usando soft fallback (${softBest.nivel}, score=${softBest.score.toFixed(3)})`)
+    return { contexto: softBest.contexto, nivel: 'soft_fallback', score: softBest.score }
+  }
+
+  // ── P5: Web Search Fallback (solo si nada propio fue encontrado) ──
   try {
     const webContexto = await buscarEnWeb(query)
 
@@ -425,12 +484,6 @@ export async function recuperarContextoRAG(
     }
   } catch (err) {
     console.error('[RAG P5-web] Error en búsqueda web:', err)
-  }
-
-  // ── Soft Fallback: mejor resultado aunque esté bajo el threshold ──
-  if (softBest.contexto) {
-    console.warn(`[RAG] Usando soft fallback (${softBest.nivel}, score=${softBest.score.toFixed(3)})`)
-    return { contexto: softBest.contexto, nivel: 'soft_fallback', score: softBest.score }
   }
 
   console.warn('[RAG] Sin contexto recuperado en ningún nivel.')
