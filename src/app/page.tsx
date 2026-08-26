@@ -57,11 +57,13 @@ export default async function HomePage() {
       {/* SponsorHeaderBar fuera del wrapper: fixed se ancla al viewport y NO se mueve */}
       <SponsorHeaderBar logos={sponsorLogos} />
 
-      {/* Todo lo demás sube 30px */}
-      <div className="-translate-y-[30px]">
-        <HeroSection />
-        <Navbar />
+      <HeroSection />
 
+      {/* Navbar sticky: fuera del translate para no verse cortado arriba */}
+      <Navbar />
+
+      {/* Resto del contenido sube 30px para solapar sutilmente con el hero */}
+      <div className="-translate-y-[30px]">
         <div className="section-divider" />
         <ImpactSection />
 
