@@ -470,9 +470,9 @@ Todas las tablas realtime de clase están en publicación `supabase_realtime`. R
 
 | Proveedor | Modelo | Uso |
 |-----------|--------|-----|
-| **Groq** | `llama-3.3-70b-versatile` | **Asistente ITEC primario** (`/api/asistente`, `/api/chat`). Tier gratuito. Timeout fetch 20s. |
-| **OpenRouter** | `nvidia/nemotron-nano-9b-v2:free` | Fallback del asistente. Tier gratuito. Timeout 20s. Headers `HTTP-Referer: https://itecsaladillo.org.ar` + `X-Title: ITEC Asistente`. |
-| **Google Gemini** | `gemini-flash-latest` | **Edición de texto exclusiva** en `services/ai.ts`: resúmenes, flashes, noticias multicanal, resúmenes de video. Rota hasta 4 API keys de `api_settings` con fallback a env `GOOGLE_GENERATIVE_AI_API_KEY`. |
+| **Groq** | `openai/gpt-oss-120b` | **Asistente ITEC primario** (`/api/asistente`). Tier gratuito/developer. Timeout fetch 15s. ⚠️ `llama-3.3-70b-versatile` fue apagado por Groq el 16/08/2026 (reemplazo oficial recomendado: gpt-oss-120b). `/api/chat` usa `openai/gpt-oss-20b`. |
+| **OpenRouter** | `nvidia/nemotron-3-super-120b-a12b:free` | Fallback del asistente. Tier gratuito. Timeout 15s. Headers `HTTP-Referer: https://itecsaladillo.org.ar` + `X-Title: ITEC Asistente`. ⚠️ Los slugs `nemotron-nano-9b-v2:free` y `nemotron-3-nano-30b-a3b:free` ya no existen (retirados del catálogo free). |
+| **Google Gemini** | `gemini-flash-latest` | **Último recurso del asistente** (`/api/asistente`, tercer fallback vía REST v1beta) + **edición de texto exclusiva** en `services/ai.ts`: resúmenes, flashes, noticias multicanal, resúmenes de video. Rota hasta 4 API keys de `api_settings` con fallback a env `GOOGLE_GENERATIVE_AI_API_KEY`. |
 | **Google Gemini** | `gemini-embedding-001` | Embeddings primarios (RAG P1 + feedback). |
 | **HuggingFace** | `all-MiniLM-L6-v2` | Embeddings fallback (384 dims, zero-padded a 768 para pgvector). |
 | **Ollama self-hosted** | `llama3.2:latest` en `OLLAMA_API_BASE_URL` (default `https://ai.itecsaladillo.org.ar`) | Reportes de impacto de sponsors (`sponsorReport.ts`, timeout 98s, `num_ctx: 2048`) + síntesis de tema/feedback (`/api/asistente/feedback`, timeout 98s). NO asumir disponibilidad — siempre hay fallback. |
@@ -516,7 +516,8 @@ Recuperación de contexto en 5 niveles con soft fallback (mejor resultado aunque
 - `buscarConversacionesSimilares(...)`: recuperación semántica P4 restringida a la sesión propia.
 
 ### 9.7 Asistente IA (`POST /api/asistente`)
-- Cadena: **Groq `llama-3.3-70b-versatile` → OpenRouter `nvidia/nemotron-nano-9b-v2:free`** (cada uno timeout 20s; error sanitizado al cliente, detalle solo en logs server).
+- Cadena de 3 niveles: **Groq `openai/gpt-oss-120b` → OpenRouter `nvidia/nemotron-3-super-120b-a12b:free` → Gemini `gemini-flash-latest`** (timeouts 15s/15s/20s, peor caso ~50s < maxDuration 60; error sanitizado al cliente con detalle de cada provider solo en logs server).
+- ⚠️ **Los modelos gratuitos rotan frecuentemente** (Groq apagó los Llama en ago 2026; OpenRouter retira slugs :free sin aviso). Si el asistente devuelve "Todos los providers fallaron", diagnosticar SIEMPRE con `GET /api/asistente/debug` (hace ping real a cada provider) y actualizar las constantes `GROQ_MODEL`/`OPENROUTER_MODEL`/`GEMINI_MODEL` al tope del route.
 - `maxDuration = 60` (route export + vercel.json).
 - Input: `{ mensaje, historial[], sessionId?, idioma? }`. sessionId default `crypto.randomUUID()`.
 - Requiere al menos una key: GROQ_API_KEY u OPENROUTER_API_KEY (si no → 500).
@@ -922,7 +923,7 @@ Server Action     →  getCurrentMember() → Zod → mutate → revalidatePath(
 17. **`scratch/` está gitignored:** los scripts de diagnóstico ahí no están versionados; no depender de ellos en CI.
 18. **CI/CD sin gates:** el workflow de deploy no corre lint/tests. Ejecutar `npm run lint` localmente antes de pushear.
 19. **Migraciones con números duplicados** y sin rollback: aplicar manualmente en Supabase en orden cronológico de nombre.
-20. **Timeouts IA:** Groq/OpenRouter 20s por llamada (cadena total cubierta por maxDuration 60); Ollama 98s (reportes/feedback). Respetar estos márgenes al agregar providers.
+20. **Timeouts IA:** cadena del asistente Groq 15s → OpenRouter 15s → Gemini 20s (peor caso ~50s, cubierto por maxDuration 60); Ollama 98s (reportes/feedback). Si un provider devuelve respuesta inválida/vacía (<10 chars o metadata de seguridad), la cadena pasa al siguiente automáticamente.
 21. **`docsContext.ts` es AUTOGENERADO** (~1366 líneas, "No editar"): regenerar con `npm run sync-docs`.
 22. **Embeddings mixtos:** pgvector almacena vectores de 768 dims; HuggingFace produce 384 (zero-padded). Mezclar orígenes de embeddings en la misma colección degrada precisión de la búsqueda.
 23. **`lib/drive.ts` tiene folder IDs placeholder** (`REEMPLAZAR_CON_ID_REAL`): el mapeo real vive en `commissions.drive_folder_id` / `site_settings`.

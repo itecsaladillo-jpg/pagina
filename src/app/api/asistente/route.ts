@@ -7,12 +7,14 @@ import { FALLBACK_PROMPT, ANTI_HALLUCINATION_RULES_FLEXIBLE } from '@/lib/ai/con
 
 export const maxDuration = 60
 
+const GROQ_MODEL = 'openai/gpt-oss-120b'
+
 async function callGroq(messages: { role: string; content: string }[]): Promise<Response> {
   const apiKey = process.env.GROQ_API_KEY
   if (!apiKey) throw new Error('GROQ_API_KEY not set')
 
   const totalChars = messages.reduce((sum, m) => sum + m.content.length, 0)
-  console.log(`[Asistente] Groq: ${messages.length} msgs, ${totalChars} chars`)
+  console.log(`[Asistente] Groq (${GROQ_MODEL}): ${messages.length} msgs, ${totalChars} chars`)
 
   const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
     method: 'POST',
@@ -21,13 +23,13 @@ async function callGroq(messages: { role: string; content: string }[]): Promise<
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      model: 'llama-3.3-70b-versatile',
+      model: GROQ_MODEL,
       messages,
       stream: false,
       temperature: 0.7,
       max_tokens: 4096
     }),
-    signal: AbortSignal.timeout(20000),
+    signal: AbortSignal.timeout(15000),
   })
 
   if (!response.ok) {
@@ -38,12 +40,14 @@ async function callGroq(messages: { role: string; content: string }[]): Promise<
   return response
 }
 
+const OPENROUTER_MODEL = 'nvidia/nemotron-3-super-120b-a12b:free'
+
 async function callOpenRouter(messages: { role: string; content: string }[]): Promise<Response> {
   const apiKey = process.env.OPENROUTER_API_KEY
   if (!apiKey) throw new Error('OPENROUTER_API_KEY not set')
 
   const totalChars = messages.reduce((sum, m) => sum + m.content.length, 0)
-  console.log(`[Asistente] OpenRouter (fallback): ${messages.length} msgs, ${totalChars} chars`)
+  console.log(`[Asistente] OpenRouter (fallback) (${OPENROUTER_MODEL}): ${messages.length} msgs, ${totalChars} chars`)
 
   const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
     method: 'POST',
@@ -54,13 +58,13 @@ async function callOpenRouter(messages: { role: string; content: string }[]): Pr
       'X-Title': 'ITEC Asistente'
     },
     body: JSON.stringify({
-      model: 'nvidia/nemotron-nano-9b-v2:free',
+      model: OPENROUTER_MODEL,
       messages,
       stream: false,
       temperature: 0.7,
       max_tokens: 4096
     }),
-    signal: AbortSignal.timeout(20000),
+    signal: AbortSignal.timeout(15000),
   })
 
   if (!response.ok) {
@@ -69,6 +73,52 @@ async function callOpenRouter(messages: { role: string; content: string }[]): Pr
     throw new Error(`OpenRouter ${response.status}`)
   }
   return response
+}
+
+const GEMINI_MODEL = 'gemini-flash-latest'
+
+async function callGemini(messages: { role: string; content: string }[]): Promise<string> {
+  const apiKey = process.env.GEMINI_API_KEY || process.env.GEMINI_APY_KEY || process.env.GOOGLE_GENERATIVE_AI_API_KEY
+  if (!apiKey) throw new Error('No Gemini key configured')
+
+  const systemInstruction = messages.find(m => m.role === 'system')?.content
+  const contents = messages
+    .filter(m => m.role !== 'system')
+    .map(m => ({
+      role: m.role === 'assistant' ? 'model' : 'user',
+      parts: [{ text: m.content }],
+    }))
+
+  console.log(`[Asistente] Gemini (último recurso) (${GEMINI_MODEL}): ${contents.length} contenidos`)
+
+  const response = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${apiKey}`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        ...(systemInstruction ? { system_instruction: { parts: [{ text: systemInstruction }] } } : {}),
+        contents,
+        generationConfig: { temperature: 0.7, maxOutputTokens: 4096 },
+      }),
+      signal: AbortSignal.timeout(20000),
+    }
+  )
+
+  if (!response.ok) {
+    const errorBody = await response.text().catch(() => 'no body')
+    console.error(`[Asistente] Gemini ${response.status}:`, errorBody.slice(0, 500))
+    throw new Error(`Gemini ${response.status}`)
+  }
+
+  const data = await response.json()
+  const texto = (data.candidates?.[0]?.content?.parts || [])
+    .map((p: { text?: string }) => p.text || '')
+    .join('')
+    .trim()
+
+  if (!texto) throw new Error('Gemini devolvió contenido vacío')
+  return texto
 }
 
 export async function POST(req: NextRequest) {
@@ -89,8 +139,9 @@ export async function POST(req: NextRequest) {
   // Verificar que al menos una API key esté configurada
   const groqKey = process.env.GROQ_API_KEY
   const orKey = process.env.OPENROUTER_API_KEY
-  if (!groqKey && !orKey) {
-    console.error('[Asistente] Ninguna API key configurada (GROQ ni OPENROUTER)')
+  const geminiKey = process.env.GEMINI_API_KEY || process.env.GEMINI_APY_KEY || process.env.GOOGLE_GENERATIVE_AI_API_KEY
+  if (!groqKey && !orKey && !geminiKey) {
+    console.error('[Asistente] Ninguna API key configurada (GROQ, OPENROUTER ni Gemini)')
     return NextResponse.json({ error: 'API keys no configuradas' }, { status: 500 })
   }
 
@@ -204,16 +255,16 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({
       respuesta: resultadoAuditoria.respuestaFinal,
-      modelo: 'llama-3.3-70b-versatile',
+      modelo: GROQ_MODEL,
       guardado: detectarComandoGuardar(mensaje) || debeAutoGuardar(historial.length + 1) ? true : undefined
     })
   } catch (error: any) {
     console.error('[Asistente] Groq FAILED:', error?.message)
 
     // Fallback: OpenRouter
-    if (!orKey) {
+    if (!orKey && !geminiKey) {
       return NextResponse.json({
-        error: 'Groq falló y OpenRouter no está configurado',
+        error: 'Groq falló y no hay fallbacks configurados (OpenRouter ni Gemini)',
         groq: error?.message,
       }, { status: 502 })
     }
@@ -234,11 +285,33 @@ export async function POST(req: NextRequest) {
       const resultadoAuditoria = await auditarRespuestaIA(mensaje, textoRespuesta)
       return NextResponse.json({
         respuesta: resultadoAuditoria.respuestaFinal,
-        modelo: 'nvidia/nemotron-nano-9b-v2:free',
+        modelo: OPENROUTER_MODEL,
         fallback: true
       })
     } catch (orError: any) {
       console.error('[Asistente] OpenRouter FAILED:', orError?.message)
+
+      // Último recurso: Gemini
+      if (geminiKey) {
+        try {
+          const textoGemini = await callGemini(messages)
+          const resultadoAuditoria = await auditarRespuestaIA(mensaje, textoGemini)
+          return NextResponse.json({
+            respuesta: resultadoAuditoria.respuestaFinal,
+            modelo: GEMINI_MODEL,
+            fallback: true
+          })
+        } catch (gemError: any) {
+          console.error('[Asistente] Gemini FAILED:', gemError?.message)
+          return NextResponse.json({
+            error: 'Todos los providers fallaron',
+            groq: error?.message,
+            openrouter: orError?.message,
+            gemini: gemError?.message,
+          }, { status: 502 })
+        }
+      }
+
       return NextResponse.json({
         error: 'Todos los providers fallaron',
         groq: error?.message,

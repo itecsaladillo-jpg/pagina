@@ -147,7 +147,7 @@ async function fetchDynamicContext(): Promise<string> {
 }
 
 // ============================================================
-// POST /api/chat — Streaming con Groq llama-3.3-70b-versatile
+// POST /api/chat — Streaming con Groq openai/gpt-oss-20b
 // ============================================================
 
 export async function POST(request: NextRequest) {
@@ -199,7 +199,7 @@ ${datosDinamicos || '(No hay datos dinámicos disponibles en este momento)'}
       })),
     ];
 
-    // ── 6. Streaming con Groq llama-3.3-70b-versatile ──
+    // ── 6. Streaming con Groq openai/gpt-oss-20b ──
     const stream = await getGroq().chat.completions.create({
       messages,
       model: 'openai/gpt-oss-20b',

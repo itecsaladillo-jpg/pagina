@@ -63,7 +63,7 @@ export async function GET() {
           'X-Title': 'ITEC Debug'
         },
         body: JSON.stringify({
-          model: 'nvidia/nemotron-3-nano-30b-a3b:free',
+          model: 'nvidia/nemotron-3-super-120b-a12b:free',
           messages: [{ role: 'user', content: 'Say hi in 3 words' }],
           max_tokens: 50
         }),
@@ -78,7 +78,7 @@ export async function GET() {
     result.openRouter = { error: 'No OPENROUTER_API_KEY' }
   }
 
-  // 5. Test Groq
+  // 5. Test Groq (openai/gpt-oss-120b — reemplazo oficial de llama-3.3-70b-versatile, apagado el 16/08/2026)
   const groqKey = process.env.GROQ_API_KEY
   if (groqKey) {
     try {
@@ -89,7 +89,7 @@ export async function GET() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          model: 'llama-3.3-70b-versatile',
+          model: 'openai/gpt-oss-120b',
           messages: [{ role: 'user', content: 'Say hi in 3 words' }],
           max_tokens: 50
         }),

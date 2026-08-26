@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
         'X-Title': 'ITEC Test'
       },
       body: JSON.stringify({
-        model: 'meta-llama/llama-3.1-8b-instant:free',
+        model: 'nvidia/nemotron-3-super-120b-a12b:free',
         messages,
         stream: false,
         temperature: 0.7,
