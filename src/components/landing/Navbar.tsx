@@ -17,8 +17,8 @@ export function Navbar() {
 
   const dynamicLinks = [
     { label: dict.navbar.videoteca, href: '/#videoteca' },
-    { label: dict.navbar.nosotros, href: '/#nosotros' },
-    { label: dict.navbar.sponsors, href: '/#sponsors' },
+    { label: dict.navbar.nosotros, href: '/#equipo' },
+    { label: dict.navbar.sponsors, href: '/#socios' },
     { label: dict.navbar.ideas, href: '/#ideas' },
     { label: dict.navbar.mapa, href: '/mapa-productivo', highlight: true },
     { label: dict.navbar.miembros, href: '/login' },

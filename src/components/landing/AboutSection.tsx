@@ -153,7 +153,7 @@ export function AboutSection() {
         <NuestrosSociosSection />
 
         {/* Sección de Miembros ITEC */}
-        <div className="mt-16 grid grid-cols-1 lg:grid-cols-[minmax(0,340px)_1fr] gap-10 lg:gap-14 items-start">
+        <div id="equipo" className="mt-16 grid grid-cols-1 lg:grid-cols-[minmax(0,340px)_1fr] gap-10 lg:gap-14 items-start">
           <div className="text-left">
             <h3 className="text-4xl md:text-5xl lg:text-6xl font-black text-white mb-4 leading-[1.1] tracking-tighter">
               Nuestro <span className="text-gradient">Equipo</span>
