@@ -6,22 +6,25 @@ import { Save, Loader2, CheckCircle2, AlertCircle, Mail, Lock, Layout, Cloud, Ey
 
 interface Props {
   settings: any
+  /** ago 2026: flags server-side — los secretos reales ya no viajan al navegador. */
+  drivePasswordConfigurada?: boolean
+  serviceAccountConfigurada?: boolean
 }
 
-export function SettingsForm({ settings }: Props) {
+export function SettingsForm({ settings, drivePasswordConfigurada = false, serviceAccountConfigurada = false }: Props) {
   const [loading, setLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null)
-  
+
   const [formData, setFormData] = useState({
     hero_title: settings.hero_title || '',
     hero_subtitle: settings.hero_subtitle || '',
     contact_email: settings.contact_email || '',
     general_meet_url: settings.general_meet_url || '',
     google_drive_email: settings.google_drive_email || '',
-    google_drive_password: settings.google_drive_password || '',
+    google_drive_password: '',
     google_drive_root_id: settings.google_drive_root_id || '',
-    google_service_account_json: settings.google_service_account_json || '',
+    google_service_account_json: '',
   })
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -136,7 +139,7 @@ export function SettingsForm({ settings }: Props) {
               <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" size={16} />
               <input
                 type={showPassword ? 'text' : 'password'}
-                placeholder="••••••••••••"
+                placeholder={drivePasswordConfigurada ? 'Configurada — escribir para reemplazar' : '••••••••••••'}
                 value={formData.google_drive_password}
                 onChange={(e) => setFormData({ ...formData, google_drive_password: e.target.value })}
                 className="w-full bg-white/5 border border-[var(--border-subtle)] rounded-xl pl-12 pr-12 py-3 text-white text-sm focus:border-blue-500/50 outline-none transition-all"
@@ -149,6 +152,9 @@ export function SettingsForm({ settings }: Props) {
                 {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
               </button>
             </div>
+            {drivePasswordConfigurada && (
+              <p className="text-[10px] text-cyan-400/80 ml-1">✓ Hay una contraseña guardada (no se muestra por seguridad).</p>
+            )}
           </div>
         </div>
 
@@ -176,13 +182,17 @@ export function SettingsForm({ settings }: Props) {
           </label>
           <textarea
             rows={4}
-            placeholder='{ "type": "service_account", ... }'
+            placeholder={serviceAccountConfigurada ? 'Configurado — pegá un nuevo JSON para reemplazarlo' : '{ "type": "service_account", ... }'}
             value={formData.google_service_account_json}
             onChange={(e) => setFormData({ ...formData, google_service_account_json: e.target.value })}
             className="w-full bg-white/5 border border-[var(--border-subtle)] rounded-xl px-4 py-3 text-white text-[10px] font-mono focus:border-blue-500/50 outline-none transition-all resize-none"
           />
           <p className="text-[10px] text-[var(--text-muted)] ml-1 leading-relaxed">
-            * <strong>Requerido para listar archivos en tiempo real.</strong> Crea una cuenta de servicio en Google Cloud, descarga el JSON y pegalo aquí.
+            {serviceAccountConfigurada ? (
+              <>✓ <strong>Hay un JSON guardado</strong> (no se muestra por seguridad). Pegá uno nuevo arriba solo si querés reemplazarlo.</>
+            ) : (
+              <>* <strong>Requerido para listar archivos en tiempo real.</strong> Crea una cuenta de servicio en Google Cloud, descarga el JSON y pegalo aquí.</>
+            )}
           </p>
         </div>
       </div>

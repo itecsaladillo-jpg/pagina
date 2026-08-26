@@ -16,26 +16,24 @@ export default async function ReunionesPage() {
   const supabase = await createClient()
   const today = new Date().toISOString().split('T')[0]
 
-  // 1. Obtener enlace Meet general
-  const meetUrl = await getGeneralMeetUrlAction()
-
-  // 2. Cargar nota activa (General)
-  const { data: notes } = await supabase
-    .from('meeting_notes')
-    .select('content')
-    .is('commission_id', null)
-    .eq('session_date', today)
-    .eq('is_active', true)
-    .single()
-
-  // 3. Cargar historial de reuniones (General)
-  const { data: history } = await supabase
-    .from('meeting_notes')
-    .select('id, content, session_date, created_at')
-    .is('commission_id', null)
-    .eq('is_published', true)
-    .order('created_at', { ascending: false })
-    .limit(6)
+  // ago 2026: las 3 consultas son independientes → en paralelo (antes en serie)
+  const [meetUrl, { data: notes }, { data: history }] = await Promise.all([
+    getGeneralMeetUrlAction(),
+    supabase
+      .from('meeting_notes')
+      .select('content')
+      .is('commission_id', null)
+      .eq('session_date', today)
+      .eq('is_active', true)
+      .single(),
+    supabase
+      .from('meeting_notes')
+      .select('id, content, session_date, created_at')
+      .is('commission_id', null)
+      .eq('is_published', true)
+      .order('created_at', { ascending: false })
+      .limit(6),
+  ])
 
   return (
     <div className="space-y-6">

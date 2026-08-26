@@ -31,14 +31,15 @@ function guardarMensajesStorage(mensajes: Mensaje[]) {
   } catch { /* quota exceeded — ignore */ }
 }
 
+const MENSAJE_BIENVENIDA: Mensaje = { rol: 'bot', texto: '¡Hola! Soy el Asistente Virtual del ITEC. ¿En qué puedo ayudarte hoy?' };
+
 export default function ChatWidget() {
   const [abierto, setAbierto] = useState(false);
-  const [mensajes, setMensajes] = useState<Mensaje[]>(() => {
-    const guardados = cargarMensajesStorage();
-    return guardados.length > 0 ? guardados : [
-      { rol: 'bot', texto: '¡Hola! Soy el Asistente Virtual del ITEC. ¿En qué puedo ayudarte hoy?' }
-    ];
-  });
+  // ago 2026: el historial se carga en useEffect (NO en el initializer del
+  // useState) — leer localStorage durante el render causaba hydration mismatch
+  // (el HTML server muestra el mensaje de bienvenida y el cliente reemplazaba
+  // todo por el historial guardado).
+  const [mensajes, setMensajes] = useState<Mensaje[]>([MENSAJE_BIENVENIDA]);
   const [input, setInput] = useState('');
   const [cargando, setCargando] = useState(false);
   const [avatarUrl, setAvatarUrl] = useState<string>('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><rect width="40" height="40" rx="20" fill="%233b82f6"/><text x="20" y="26" text-anchor="middle" fill="white" font-size="18" font-weight="bold">IT</text></svg>');
@@ -48,6 +49,12 @@ export default function ChatWidget() {
   const mensajesRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const intercambiosRef = useRef(0);
+
+  // Cargar historial persistido después de la hidratación
+  useEffect(() => {
+    const guardados = cargarMensajesStorage();
+    if (guardados.length > 0) setMensajes(guardados);
+  }, []);
 
   // Generar o recuperar sessionId
   useEffect(() => {

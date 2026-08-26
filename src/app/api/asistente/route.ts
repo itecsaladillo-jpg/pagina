@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auditarRespuestaIA } from '@/services/ai'
 import { createClient as createSupabaseClient } from '@supabase/supabase-js'
-import { detectarComandoGuardar, debeAutoGuardar } from '@/lib/rag/conversacionesGuardadas'
+import { detectarComandoGuardar, debeAutoGuardar, guardarConversacion } from '@/lib/rag/conversacionesGuardadas'
 import { recuperarContextoRAG } from '@/lib/rag/ragCascade'
 import { FALLBACK_PROMPT, POLITICA_RESPUESTA_INTEGRAL } from '@/lib/ai/constants'
 
@@ -386,9 +386,31 @@ export async function POST(req: NextRequest) {
   }
 
   console.log(`[Asistente] Éxito vía ${modeloUsado} en pasada ${pasadaExitosa} (intento ${intentosTotales}, ${Date.now() - inicio}ms)`)
-  console.log('[Asistente] Respuesta antes de auditoría:', textoRespuesta.slice(0, 200))
+
+  // ── Persistencia real de conversaciones (ago 2026) ──
+  // Antes el flag `guardado` se marcaba pero NADIE persistía nada: la función
+  // guardarConversacion() nunca era llamada y el nivel P4 del RAG quedaba
+  // siempre vacío. Ahora se persiste (con embedding) cuando hay comando
+  // explícito o al alcanzar el umbral de auto-guardado.
+  const debeGuardar = detectarComandoGuardar(mensaje) || debeAutoGuardar(historial.length + 1)
+  if (debeGuardar && hasSupabase) {
+    try {
+      const adminClient = createSupabaseClient(supabaseUrl, serviceKey)
+      await guardarConversacion(
+        [...historial, { role: 'user', content: mensaje }, { role: 'assistant', content: textoRespuesta }],
+        sessionId,
+        adminClient,
+        detectarComandoGuardar(mensaje)
+      )
+    } catch (e: any) {
+      console.error('[Asistente] Error guardando conversación:', e?.message)
+    }
+  }
+
   const resultadoAuditoria = await auditarRespuestaIA(mensaje, textoRespuesta)
-  console.log('[Asistente] Auditoría:', resultadoAuditoria.tieneViolacion ? 'VIOLACIÓN' : 'OK')
+  if (resultadoAuditoria.tieneViolacion) {
+    console.warn('[Asistente] Auditoría: VIOLACIÓN — respuesta reemplazada')
+  }
 
   return NextResponse.json({
     respuesta: resultadoAuditoria.respuestaFinal,

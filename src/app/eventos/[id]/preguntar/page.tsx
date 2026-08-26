@@ -33,8 +33,12 @@ export default function PreguntarPage({ params }: { params: Promise<{ id: string
   const supabase = createClient();
 
   useEffect(() => {
-    // Cargar likes locales
-    const localLikes = JSON.parse(localStorage.getItem(`likes_${eventoId}`) || "[]");
+    // Cargar likes locales (ago 2026: try/catch — localStorage corrupto mataba el effect)
+    let localLikes: string[] = [];
+    try {
+      localLikes = JSON.parse(localStorage.getItem(`likes_${eventoId}`) || "[]");
+    } catch { localLikes = []; }
+    if (!Array.isArray(localLikes)) localLikes = [];
     setLikedIds(localLikes);
 
     const fetchPreguntas = async () => {

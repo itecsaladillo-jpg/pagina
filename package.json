@@ -12,7 +12,6 @@
     "ingest-vector": "node --dns-result-order=ipv4first --env-file=.env.local scripts/ingestDocsToVector.mjs"
   },
   "dependencies": {
-    "@google/genai": "latest",
     "@hookform/resolvers": "^5.4.0",
     "@supabase/ssr": "^0.10.3",
     "@supabase/supabase-js": "^2.105.4",
@@ -28,7 +27,8 @@
     "react-hook-form": "^7.81.0",
     "react-qr-code": "^2.0.21",
     "recharts": "^3.8.1",
-    "resend": "^6.12.3"
+    "resend": "^6.12.3",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

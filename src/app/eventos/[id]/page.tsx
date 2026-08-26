@@ -414,7 +414,12 @@ export default function EventoPage({ params }: { params: Promise<{ id: string }>
   useEffect(() => {
     if (!evento || activeTab !== "preguntas") return;
 
-    const localLikes = JSON.parse(localStorage.getItem(`likes_preguntas_${evento.id}`) || "[]");
+    // ago 2026: try/catch — localStorage corrupto mataba todo el effect en silencio
+    let localLikes: string[] = [];
+    try {
+      localLikes = JSON.parse(localStorage.getItem(`likes_preguntas_${evento.id}`) || "[]");
+    } catch { localLikes = []; }
+    if (!Array.isArray(localLikes)) localLikes = [];
     setPregLikedIds(localLikes);
 
     const fetchPreguntas = async () => {

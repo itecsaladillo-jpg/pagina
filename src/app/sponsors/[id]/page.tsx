@@ -28,25 +28,28 @@ function formatCurrency(n: number) {
 // ─────────────────────────────────────────
 // Page
 // ─────────────────────────────────────────
-export default async function SponsorPortalPage({ params }: { params: { id: string } }) {
+export default async function SponsorPortalPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   const supabase = await createClient()
 
-  const { data: sponsor } = await supabase
-    .from('sponsors')
-    .select('*')
-    .eq('id', params.id)
-    .single()
+  // Sponsor y reporte más reciente en paralelo (ambos dependen solo del id).
+  // Antes: params síncrono (roto en Next 16, siempre undefined) y queries en serie.
+  const [{ data: sponsor }, { data: reporte }] = await Promise.all([
+    supabase
+      .from('sponsors')
+      .select('*')
+      .eq('id', id)
+      .single(),
+    supabase
+      .from('sponsor_reportes')
+      .select('*')
+      .eq('sponsor_id', id)
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .single(),
+  ])
 
   if (!sponsor) notFound()
-
-  // Obtener el reporte más reciente del sponsor
-  const { data: reporte } = await supabase
-    .from('sponsor_reportes')
-    .select('*')
-    .eq('sponsor_id', sponsor.id)
-    .order('created_at', { ascending: false })
-    .limit(1)
-    .single()
 
   // Obtener todas las acciones del período (si hay reporte), o las últimas 6
   let acciones: any[] = []

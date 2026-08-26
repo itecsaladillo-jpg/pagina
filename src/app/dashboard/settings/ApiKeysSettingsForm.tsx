@@ -55,14 +55,14 @@ export function ApiKeysSettingsForm({ settings }: Props) {
 function ApiKeyRow({ def, initialValue }: { def: KeyDef; initialValue: string }) {
   const [value, setValue] = useState('')
   const [showValue, setShowValue] = useState(false)
+  // ago 2026: initialValue llega ya enmascarado desde el server (getSettingsAction
+  // nunca devuelve la key real). El input siempre arranca vacío y solo envía valores nuevos.
   const [hasValue] = useState(() => initialValue.length > 0)
   const [saved, setSaved] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [isPending, startTransition] = useTransition()
 
-  const masked = hasValue
-    ? initialValue.slice(0, 4) + '•'.repeat(Math.min(initialValue.length - 7, 20)) + initialValue.slice(-3)
-    : ''
+  const masked = initialValue
 
   const handleSave = useCallback(() => {
     setError(null)
@@ -91,7 +91,7 @@ function ApiKeyRow({ def, initialValue }: { def: KeyDef; initialValue: string })
           <span className="text-white text-sm font-medium">{def.label}</span>
           {hasValue && !hasEdited && (
             <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 font-medium">
-              {initialValue.slice(0, 4)}••••{initialValue.slice(-3)}
+              {initialValue}
             </span>
           )}
         </div>

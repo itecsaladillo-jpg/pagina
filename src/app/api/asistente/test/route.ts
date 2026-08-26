@@ -1,18 +1,27 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { verificarAccesoDiagnostico } from '../diag-gate'
 
 /**
  * Endpoint mínimo para testear OpenRouter directamente.
  * GET  = test de env vars
  * POST = test de OpenRouter con el mismo payload que el asistente
+ *
+ * SEGURIDAD (ago 2026): protegido por diag-gate — antes exponía prefijos de la
+ * API key públicamente y el POST actuaba como proxy abierto a OpenRouter.
  */
-export async function GET() {
+export async function GET(req: NextRequest) {
+  const bloqueo = verificarAccesoDiagnostico(req)
+  if (bloqueo) return bloqueo
+
   return NextResponse.json({
     OPENROUTER: !!process.env.OPENROUTER_API_KEY,
-    keyPreview: process.env.OPENROUTER_API_KEY?.slice(0, 8) + '...',
   })
 }
 
 export async function POST(req: NextRequest) {
+  const bloqueo = verificarAccesoDiagnostico(req)
+  if (bloqueo) return bloqueo
+
   const apiKey = process.env.OPENROUTER_API_KEY
   if (!apiKey) return NextResponse.json({ error: 'No OPENROUTER_API_KEY' }, { status: 500 })
 

@@ -1,10 +1,17 @@
-import { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { createClient } from '@/lib/supabase/server'
 import { VotingClient } from './VotingClient'
 
 export const metadata: Metadata = {
   title: 'Votar — Encuestas ITEC',
-  viewport: 'width=device-width, initial-scale=1, maximum-scale=1',
+}
+
+// ago 2026: viewport migrado a su export propio (el campo dentro de Metadata
+// está deprecado desde Next 14 y Next 16 ya no lo aplica)
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
 }
 
 export default async function VotarPage() {

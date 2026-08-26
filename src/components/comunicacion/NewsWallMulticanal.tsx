@@ -110,7 +110,9 @@ export function NewsWallMulticanal({
       try {
         const parsed = JSON.parse(m)
         if (Array.isArray(parsed)) return parsed
-      } catch {}
+      } catch (err) {
+        console.warn('[NewsWall] media_urls corrupto en flash:', flash.id, err)
+      }
     }
     return []
   }

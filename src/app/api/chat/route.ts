@@ -62,27 +62,45 @@ async function fetchDynamicContext(): Promise<string> {
   const supabase = await createClient();
   const sections: string[] = [];
 
-  // Comisiones activas
-  try {
-    const { data } = await supabase
+  // ago 2026: las 4 queries corren en paralelo (antes en serie — latencia
+  // directa del chatbot público). Los errores de cada una no bloquean a las demás.
+  const [comisionesRes, miembrosRes, accionesRes, notasRes] = await Promise.allSettled([
+    supabase
       .from('commissions')
       .select('name, description')
       .eq('is_active', true)
-      .order('name');
+      .order('name'),
+    supabase.rpc('obtener_miembros_publicos'),
+    supabase
+      .from('itec_actions')
+      .select('title, type, status, start_date, description')
+      .in('status', ['planificacion', 'en_curso'])
+      .order('start_date', { ascending: true })
+      .limit(10),
+    supabase
+      .from('notas_publico')
+      .select('titulo, contenido, created_at')
+      .eq('is_published', true)
+      .order('created_at', { ascending: false })
+      .limit(5),
+  ]);
 
+  // Comisiones activas
+  if (comisionesRes.status === 'fulfilled') {
+    const { data } = comisionesRes.value;
     if (data?.length) {
       sections.push(
         '## Comisiones / Áreas de ITEC\n' +
         data.map((c) => `- ${c.name}${c.description ? `: ${c.description}` : ''}`).join('\n')
       );
     }
-  } catch (err) {
-    console.warn('[chat] Error fetching commissions:', err);
+  } else {
+    console.warn('[chat] Error fetching commissions:', comisionesRes.reason);
   }
 
   // Staff
-  try {
-    const { data } = await supabase.rpc('obtener_miembros_publicos');
+  if (miembrosRes.status === 'fulfilled') {
+    const { data } = miembrosRes.value;
     if (data?.length) {
       sections.push(
         '## Staff de ITEC\n' +
@@ -92,19 +110,13 @@ async function fetchDynamicContext(): Promise<string> {
           .join('\n')
       );
     }
-  } catch (err) {
-    console.warn('[chat] Error fetching members:', err);
+  } else {
+    console.warn('[chat] Error fetching members:', miembrosRes.reason);
   }
 
   // Próximas actividades
-  try {
-    const { data } = await supabase
-      .from('itec_actions')
-      .select('title, type, status, start_date, description')
-      .in('status', ['planificacion', 'en_curso'])
-      .order('start_date', { ascending: true })
-      .limit(10);
-
+  if (accionesRes.status === 'fulfilled') {
+    const { data } = accionesRes.value;
     if (data?.length) {
       sections.push(
         '## Próximas actividades / Eventos\n' +
@@ -116,19 +128,13 @@ async function fetchDynamicContext(): Promise<string> {
         }).join('\n')
       );
     }
-  } catch (err) {
-    console.warn('[chat] Error fetching actions:', err);
+  } else {
+    console.warn('[chat] Error fetching actions:', accionesRes.reason);
   }
 
   // Noticias recientes
-  try {
-    const { data } = await supabase
-      .from('notas_publico')
-      .select('titulo, contenido, created_at')
-      .eq('is_published', true)
-      .order('created_at', { ascending: false })
-      .limit(5);
-
+  if (notasRes.status === 'fulfilled') {
+    const { data } = notasRes.value;
     if (data?.length) {
       sections.push(
         '## Noticias recientes\n' +
@@ -139,8 +145,8 @@ async function fetchDynamicContext(): Promise<string> {
         }).join('\n')
       );
     }
-  } catch (err) {
-    console.warn('[chat] Error fetching noticias:', err);
+  } else {
+    console.warn('[chat] Error fetching notes:', notasRes.reason);
   }
 
   return sections.join('\n\n');

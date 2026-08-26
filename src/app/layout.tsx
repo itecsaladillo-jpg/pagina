@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { Inter } from 'next/font/google'
 import { LanguageProvider } from '@/contexts/LanguageContext'
 import './globals.css'
@@ -25,6 +25,12 @@ export const metadata: Metadata = {
     title: 'ITEC Saladillo — Ciencia, Tecnología y Comunidad',
     description: 'ONG de ciencia y tecnología en Saladillo, Buenos Aires.',
   },
+}
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  themeColor: '#09090b',
 }
 
 export default function RootLayout({

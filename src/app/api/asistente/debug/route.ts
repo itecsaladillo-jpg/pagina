@@ -1,15 +1,19 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { createClient as createSupabaseClient } from '@supabase/supabase-js'
+import { verificarAccesoDiagnostico } from '../diag-gate'
 
-export async function GET() {
+export async function GET(req: NextRequest) {
+  // SEGURIDAD (ago 2026): antes este endpoint público exponía prefijos de 12
+  // chars de las API keys y ejecutaba pings reales a providers sin auth.
+  const bloqueo = verificarAccesoDiagnostico(req)
+  if (bloqueo) return bloqueo
+
   const result: Record<string, any> = {}
 
-  // 1. Env vars summary
+  // 1. Env vars summary (solo presencia — sin prefijos de keys)
   result.env = {
     OPENROUTER: !!process.env.OPENROUTER_API_KEY,
-    OPENROUTER_KEY_PREFIX: process.env.OPENROUTER_API_KEY?.slice(0, 12) + '...',
     GROQ: !!process.env.GROQ_API_KEY,
-    GROQ_KEY_PREFIX: process.env.GROQ_API_KEY?.slice(0, 12) + '...',
     HF: !!process.env.HF_API_KEY,
     GEMINI: !!(process.env.GEMINI_API_KEY || process.env.GEMINI_APY_KEY || process.env.GOOGLE_GENERATIVE_AI_API_KEY),
     OLLAMA_URL: (process.env.OLLAMA_API_BASE_URL || 'https://ai.itecsaladillo.org.ar').slice(0, 40) + '...',
@@ -30,7 +34,7 @@ export async function GET() {
       result.supabaseSettings = data?.map(r => ({
         key: r.key,
         hasValue: !!r.value && r.value.trim() !== '',
-        prefix: r.value ? r.value.slice(0, 8) + '...' : '(empty)'
+        // ago 2026: sin prefijos — solo presencia del valor
       })) || []
     } catch (e: any) {
       result.supabaseSettings = { error: e.message }

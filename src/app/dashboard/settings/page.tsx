@@ -16,6 +16,17 @@ export default async function SettingsPage() {
     getSettingsAction()
   ])
 
+  // SEGURIDAD (ago 2026): los secretos (password de Drive, Service Account JSON)
+  // NUNCA viajan al navegador. Se envían flags de "configurada" y el formulario
+  // solo reenvía valores nuevos (el action ignora los vacíos para estos campos).
+  const settingsSeguras = settings
+    ? {
+        ...settings,
+        google_drive_password: '',
+        google_service_account_json: '',
+      }
+    : {}
+
   return (
     <div className="space-y-8 animate-fade-in">
       <div className="border-b border-[var(--border-subtle)] pb-6">
@@ -29,7 +40,11 @@ export default async function SettingsPage() {
       </div>
 
       <div className="glass border border-[var(--border-subtle)] rounded-2xl p-8">
-        <SettingsForm settings={settings || {}} />
+        <SettingsForm
+          settings={settingsSeguras}
+          drivePasswordConfigurada={!!settings?.google_drive_password}
+          serviceAccountConfigurada={!!settings?.google_service_account_json}
+        />
       </div>
 
       <div className="glass border border-[var(--border-subtle)] rounded-2xl p-8">
