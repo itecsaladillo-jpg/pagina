@@ -80,7 +80,7 @@ export function Navbar() {
   return (
     <nav
       className={`sticky top-0 z-50 w-full transition-all duration-300 border-b border-[var(--border-subtle)] flex items-center ${
-        showSolidNavbar ? 'h-14' : 'h-16'
+        showSolidNavbar ? 'h-[60px]' : 'h-[72px]'
       }`}
       style={{
         background: showSolidNavbar 
@@ -101,7 +101,7 @@ export function Navbar() {
             width={200}
             height={76}
             className={`w-auto object-contain group-hover:opacity-90 transition-all duration-300 relative z-10 shrink-0 ${
-              showSolidNavbar ? 'h-[32px]' : 'h-[40px]'
+              showSolidNavbar ? 'h-[40px]' : 'h-[48px]'
             }`}
             priority
             loading="eager"
