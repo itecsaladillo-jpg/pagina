@@ -301,11 +301,12 @@ Todas las actions administrativas verifican `getCurrentMember()` antes de ejecut
 
 ### Seguridad de la IA
 - **Auditoría post-respuesta** (`auditarRespuestaIA()` en `services/ai.ts`): 4 categorías regex:
-  1. Menciones prohibidas (ej. "Peques ITEC", palabras bloqueadas) → reemplaza respuesta si gravedad alta
-  2. Exposición de rutas internas del sistema
-  3. Lenguaje informal/regionalismos fuera de tono ("che", "viste", "pibe")
-  4. Palabras temporales relativas ("hoy", "ayer", "mañana") — la IA no debe referirse al tiempo relativo
-- Violaciones registradas en `ai_auditoria_violaciones`.
+  1. Mención de "Peques ITEC" → **solo monitoreo/log (ago 2026)**. El prompt maestro define el programa como público y difundible; la regla anterior (gravedad alta que reemplazaba TODA la respuesta por una negativa genérica) era la causa principal de las negativas frecuentes del asistente
+  2. Exposición de rutas internas del sistema → **redacta solo la ruta detectada** con "Sección interna del sitio ITEC" (antes anulaba toda la respuesta)
+  3. Lenguaje informal/regionalismos fuera de tono ("che", "viste", "pibe") → solo log
+  4. Palabras temporales relativas ("hoy", "ayer", "mañana") → solo log — el prompt maestro ya indica los reemplazos correctos
+- Violaciones registradas en `ai_auditoria_violaciones` para monitoreo.
+- ⚠️ Lección arquitectónica: no agregar reglas de reemplazo total de respuesta que contradigan el prompt maestro de la DB. Las fuentes institucionales (`ai_prompt_settings`) son la autoridad sobre qué información es pública.
 - **No se exponen API keys al cliente**: llamadas IA solo server-side/API routes. Errores de providers sanitizados (solo códigos de estado logueados).
 
 ### Tokens y credenciales

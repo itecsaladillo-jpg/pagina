@@ -397,30 +397,46 @@ export async function auditarRespuestaIA(
     let reglaViolada: string | null = null
     let nivelGravedad: 'bajo' | 'medio' | 'alto' = 'bajo'
 
-    const reglas = [
+    interface ReglaAuditoria {
+      nombre: string
+      regex: RegExp
+      gravedad: 'bajo' | 'alto'
+      /** Texto de reemplazo total (solo si la respuesta debe anularse). */
+      fallback?: string
+      /** Si está definido: redacta las coincidencias con este texto en vez de anular la respuesta. */
+      redactar?: string
+    }
+
+    const reglas: ReglaAuditoria[] = [
       {
-        nombre: 'Mención prohibida a Peques ITEC',
+        nombre: 'Mención de Peques ITEC (monitoreo)',
+        // ago 2026: el prompt maestro (ai_prompt_settings.asistente_global) define
+        // Peques ITEC como programa PÚBLICO difundible ("podés brindarle difusión e
+        // información abierta a la comunidad"). Antes esta regla tenía gravedad
+        // 'alto' y reemplazaba TODA la respuesta por una negativa genérica cada vez
+        // que el modelo mencionaba legítimamente el programa — era la causa
+        // principal de las negativas frecuentes del asistente. Ahora solo se
+        // registra para monitoreo, sin alterar la respuesta.
         regex: /peques\s+itec/i,
-        gravedad: 'alto' as const,
-        fallback: 'Disculpame, pero no cuento con información sobre ese tema en particular en este momento. ¿Hay algún otro proyecto o actividad de ITEC sobre el que te gustaría conversar?'
+        gravedad: 'bajo' as const
       },
       {
         nombre: 'Exposición de rutas internas del código',
         regex: /(?:src\/|components\/|app\/|lib\/|pages\/|api\/|services\/|contexts\/)[a-zA-Z0-9_/-]+\.(?:ts|tsx|js|jsx)/i,
         gravedad: 'alto' as const,
-        fallback: 'Disculpame, pero no puedo revelar enlaces o rutas técnicas de la plataforma. Podés recorrer las secciones principales del sitio desde el menú de navegación.'
+        // ago 2026: en vez de anular toda la respuesta (perdía información útil),
+        // se redacta únicamente la ruta detectada.
+        redactar: 'Sección interna del sitio ITEC'
       },
       {
         nombre: 'Uso de regionalismos informales',
         regex: /\b(viste|che|pibe)\b/i,
-        gravedad: 'bajo' as const,
-        fallback: null
+        gravedad: 'bajo' as const
       },
       {
         nombre: 'Uso de palabras temporales genéricas',
         regex: /\b(hoy|ayer|mañana)\b/i,
-        gravedad: 'bajo' as const,
-        fallback: null
+        gravedad: 'bajo' as const
       }
     ]
 
@@ -430,7 +446,10 @@ export async function auditarRespuestaIA(
         reglaViolada = regla.nombre
         nivelGravedad = regla.gravedad
 
-        if (regla.gravedad === 'alto' && regla.fallback) {
+        if (regla.redactar && regla.gravedad === 'alto') {
+          const regexGlobal = new RegExp(regla.regex.source, 'gi')
+          respuestaFinal = respuestaFinal.replace(regexGlobal, regla.redactar)
+        } else if (regla.gravedad === 'alto' && regla.fallback) {
           respuestaFinal = regla.fallback
           break
         }
