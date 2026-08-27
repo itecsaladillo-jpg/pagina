@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ExternalLink, X } from 'lucide-react'
 import type { PartnerEntity } from '@/types/database'
@@ -105,7 +106,7 @@ export function SponsorModal({ isOpen, onClose, entity }: Props) {
     }
   }, [isOpen, onClose])
 
-  return (
+  return createPortal(
     <AnimatePresence>
       {isOpen && entity && (
         <motion.div
@@ -120,6 +121,7 @@ export function SponsorModal({ isOpen, onClose, entity }: Props) {
           <ModalPanel entity={entity} onClose={onClose} />
         </motion.div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   )
 }
