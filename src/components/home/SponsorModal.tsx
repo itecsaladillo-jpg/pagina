@@ -106,6 +106,8 @@ export function SponsorModal({ isOpen, onClose, entity }: Props) {
     }
   }, [isOpen, onClose])
 
+  if (typeof document === 'undefined') return null
+
   return createPortal(
     <AnimatePresence>
       {isOpen && entity && (

@@ -217,7 +217,7 @@ export function AboutSection() {
       </div>
 
       {/* Modal de Perfil del Miembro */}
-      {createPortal(
+      {typeof document !== 'undefined' && createPortal(
         <AnimatePresence>
           {selectedMember && (
             <motion.div
