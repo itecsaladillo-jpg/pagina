@@ -68,28 +68,31 @@ function chunkText(text, chunkSize = CHUNK_SIZE, overlap = CHUNK_OVERLAP) {
   return chunks;
 }
 
-/** Genera embeddings en batch usando Gemini text-embedding-004 */
+/** Genera embeddings usando Gemini gemini-embedding-001 (uno a uno) */
 async function generateEmbeddings(texts) {
-  const res = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/text-embedding-004:embedContent?key=${GEMINI_KEY}`,
-    {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'models/text-embedding-004',
-        content: { parts: texts.map(t => ({ text: t })) },
-        taskType: 'RETRIEVAL_DOCUMENT',
-      }),
+  const results = [];
+  for (const text of texts) {
+    const res = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:embedContent?key=${GEMINI_KEY}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          content: { parts: [{ text }] },
+          outputDimensionality: EMBEDDING_DIM,
+        }),
+      }
+    );
+
+    if (!res.ok) {
+      const err = await res.text();
+      throw new Error(`Gemini API error ${res.status}: ${err}`);
     }
-  );
 
-  if (!res.ok) {
-    const err = await res.text();
-    throw new Error(`Gemini API error ${res.status}: ${err}`);
+    const data = await res.json();
+    results.push(data.embedding.values);
   }
-
-  const data = await res.json();
-  return data.embeddings.map(e => e.values);
+  return results;
 }
 
 /** Inserta chunks en Supabase en batches */
@@ -212,13 +215,7 @@ async function main() {
     // Preparar registros
     const records = chunks.map((chunk, idx) => ({
       file_path: relPath,
-      chunk_index: idx,
       chunk_content: chunk,
-      metadata: {
-        filename: file,
-        chunk_total: chunks.length,
-        char_count: chunk.length,
-      },
       embedding: `[${embeddings[idx].join(',')}]`,
     }));
 

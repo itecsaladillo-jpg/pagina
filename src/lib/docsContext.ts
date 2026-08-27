@@ -797,6 +797,57 @@ I T E C SALADILLO 2024 LOS ESPERAMOS!!!!
 --- Fin del documento: 2023_STANDS_1ra_expo_itec.pdf ---
 
 
+--- Inicio del documento: Cadenas productivas de Saladillo_agosto 2026 - Salvatierra JMS.pdf ---
+Evolución de las cadenas productivas de Saladillo en la última década
+Juan Manuel Salvatierra
+*
+* Profesor investigador de Finanzas de Empresas en la FCE-UNLP y del Centro de Investigaciones Administrativas (IIA) de la
+FCE-UNLP. Correo: juanmanuel.salvatierra@econo.unlp.edu.ar
+La estructura productiva de Saladillo está orientada hacia el agro, fundamentalmente por el gran peso relativo de esta rama dentro de su estructura productiva. Históricamente, alrededor de un cuarto del Producto Bruto
+Geográfico (PBG) del Municipio es explicado por la rama agropecuaria, factor que lo diferencia de la estructura provincial general en donde predomina la industria manufacturera.
+Ambas estructuras productivas (tanto provincial como municipal) se orientan mayoritariamente hacia los servicios, siendo preponderante el comercio tanto en Saladillo como en la Provincia de Buenos Aires (PBA).
+Sin embargo, individualmente la rama más importante del municipio saladillense es la agropecuaria si se suman las distintas cadenas del agro.
+Para realizar este informe económico
+1
+se tomaron en cuenta 63 cadenas productivas de Argentina que van desde la Soja y Tabaco hasta el Software y Construcción, que en su totalidad explican 88% del Producto
+Interno Bruto (PIB). Fue realizado en base al relevante trabajo que desarrolla el Laboratorio de Desarrollo
+Sectorial y Territorial (Link) (LABDATA) de la Facultad de Ciencias Económicas de la Universidad Nacional de La Plata (UNLP).
+En términos generales, en la última década (2016/2025), la economía provincial presentó un estancamiento de la actividad productiva, donde el Valor Agregado Bruto (VAB) de las cadenas productivas de la Provincia mostraron un estancamiento estructural. Después de algunos vaivenes cíclicos (caída hasta 2020, recuperación 2020/2022, caídas en 2023 y 2024 y recuperación en 2025), el nivel en 2025 se encontraba en niveles similares que diez años atrás.
+Particularmente en Saladillo, de las 63 cadenas relevadas por LABDATA, 45 registraron actividad en 2025.
+La estructura estaba fuertemente concentrada, donde las cinco primeras cadenas productivas explican casi el 60% del VAB municipal (Comercio, Porcina, Girasol, Sojera y Educación) y las diez primeras el 82,1%
+(si se suman las cadenas de Salud, Avícola, Bovina y Energía Eléctrica). En 2025, el Comercio sigue siendo la principal actividad con el 17,4% de la estructura productiva.
+Si desagregamos la información, en términos relativos se destaca el crecimiento de la cadena porcina en la última década (+10 p.p.) y del Girasol (+4,7 p.p.) en la participación en el VAB. Como así, las principales caídas fueron en la cadena Sojera en el período mencionado del -7,6 p.p. y del Comercio en un -5,1 p.p.
+Por otro lado, si realizamos un diagnóstico por macrosector
+2
+, el rasgo estructural más relevante de la década es la agroindustrialización del perfil productivo de Saladillo. Las cadenas agroindustriales pasaron de representar el 41,4% a ser el 51,0% del VAB municipal, desplazando a Servicios del primer lugar (pasó del
+46,0% al 38,6%). En la lógica de eslabones productivos, el peso del eslabón manufacturero
+(fundamentalmente procesamiento agroindustrial) creció de 24,9% a 30,3% y el primario de 21,7% a 24,8%, mientras que retrocedió el eslabón comercial (23,7% a 18,0%).
+A su vez, el VAB total de Saladillo presentó una expansión real del +18,2% en la década analizada. Esta cifra contrasta de manera marcada con el agregado provincial, que en el mismo período se mantuvo prácticamente estancado en términos reales (+0,35 %). En consecuencia, Saladillo ganó peso relativo dentro de la provincia. Por lo cual, su participación en el VAB bonaerense subió de 0,232% (2016) a 0,273% (2025) del total. Se trata, por tanto, de un caso de crecimiento territorial efectivo y no de una mera redistribución dentro de un total.
+1
+Se agradecen los comentarios de Agustín Lodola y Adrián Filgueira.
+2
+Macro sector (o macrosector) es una agrupación de diversos sectores económicos que comparten características productivas, comerciales o tecnológicas similares.
+
+Si analizamos el aporte de cada cadena a la evolución del período 2016-2025 y poder distinguir entre quién crece rápido de quién efectivamente mueve el agregado municipal, se separaron dos métricas: la tasa de crecimiento de la cadena (variación de su propio VAB) y el aporte (incidencia), es decir, ΔVAB de la cadena sobre el VAB total del municipio en el año base, en puntos porcentuales (pp). Por construcción del indicador, se llega a que la suma de los aportes de todas las cadenas reproduce la tasa total del municipio (+18,2 pp).
+La interpretación realizada de los datos, sugieren que la expansión de la década en Saladillo se explica esencialmente por la cadena porcina, cuyo VAB casi se septuplicó y que por sí sola aportó +12,25 pp, pasando de un rol marginal (2,1% de la estructura) a ser la segunda cadena del Municipio (12,1%), a pesar de la caída del último año (-8,5% interanual). Sumada al girasol (+6,69 pp), ambas cadenas aportan casi +19
+pp, es decir, más que el crecimiento neto total del municipio (+18,2 pp). Por lo cual, compensaron por sí solas el fuerte retroceso de la cadena sojera (−5,78 pp, el mayor lastre) y del comercio (−1,99 pp). El resto del complejo de granos (triguera, maicera, cebada, sorgo) y la ganadería (bovina, avícola) refuerzan la lectura de un municipio traccionado por el agro y su procesamiento. Cabe una precaución de análisis, cadenas como cebada (+2.657%), porcina (+585%) o telecomunicaciones (+271%) exhiben tasas de crecimiento muy elevadas influidas por bases de partida reducidas; su relevancia efectiva se aprecia mejor por el aporte en puntos porcentuales (pp) que por las variaciones punta a punta.
+A modo de cierre y no perdernos en tantos números, se puede concluir que Saladillo creció contra la tendencia provincial en la última década. Mostrando un crecimiento real del +18,2% entre 2016-2025
+frente a un agregado provincial que permaneció estancado. Como así, el municipio ganó participación en el
+VAB bonaerense total donde subió de 0,232% en 2016 a 0,273% en 2025.
+Asimismo, muestra una agroindustrialización de su perfil productivo. En donde el bloque agroindustrial supera a los servicios como principal macrosector. Donde el sector agroindustrial pasó de representar el
+41,4% en 2016 a ser el 51% del VAB municipal en 2025, desplazando a servicios del primer lugar que pasó del 46,0% al 38,6% en la década. En definitiva, se demuestra un refuerzo en los eslabones primario y manufacturero en detrimento del comercial.
+En la última década analizada, el principal motor de crecimiento estuvo concentrado en la cadena productiva porcina (+585,7%, +12,5 pp) por el rol de la faena, procesado y producción intensiva de cerdos, y del girasol (+107,4%, +6,69 pp) principalmente con el extrusado del grano. Estas dos cadenas explican la totalidad del crecimiento neto decenal, compensando con el retroceso estructural de la cadena sojera (casi un -33%, -5,78 pp) y del comercio (-8,8%, -1,99 pp). Para futuras investigaciones y diagnósticos se puede indagar dentro de las distintas cadenas como fue su comportamiento en forma más desagregada.
+Para finalizar, se puede inferir que la dinámica de las cadenas productivas es genuinamente local. Las variaciones de las principales cadenas de Saladillo difieren de las provinciales, lo que indicaría que la evolución responde a dinámicas territoriales propias y no a una asignación proporcional (prorrateo) desde el total provincial.
+Referencias
+Lódola, A., & Pitetti, D. (2026). Cadenas productivas en los municipios de la Provincia de Buenos Aires en la última década. Periodo 2016/2025. Junio de 2026. Laboratorio de Desarrollo Sectorial y Territorial, Facultad de Ciencias Económicas, Universidad Nacional de La Plata.
+https://www.econo.unlp.edu.ar/frontend/media/8/35808/17516fd7475d7e0afac5e9905e86b119.pdf
+Lódola, A., & Pitetti, D. (2023). Cadenas productivas y producto bruto en los municipios de La Plata, Saladillo y 25 de Mayo. Laboratorio de Desarrollo Sectorial y Territorial, Facultad de Ciencias Económicas, Universidad
+Nacional de La Plata. https://www.minerva.unlp.edu.ar/informes-minerva/
+Base VAB por municipio según cadena, rama y año — versión 9 (2016–2025). Laboratorio de Desarrollo
+Sectorial y Territorial – FCE –UNLP.
+--- Fin del documento: Cadenas productivas de Saladillo_agosto 2026 - Salvatierra JMS.pdf ---
+
+
 --- Inicio del documento: contexto-ong.md ---
 ---
 name: contexto-ong description: "Base de conocimiento central con toda la información sobre la ONG, sus causas, programas, tono de voz y público objetivo (donantes, voluntarios y beneficiarios)."

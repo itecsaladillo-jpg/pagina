@@ -405,7 +405,7 @@ export function NuestrosSociosSection({ sponsors, alianzas, canalesDifusion }: N
                 const layout = TIER_LAYOUT[tier]
                 return (
                   <Reveal key={tier}>
-                    <div className={`grid ${layout.grid} gap-3`}>
+                    <div className={`grid ${layout.grid} gap-3 justify-center`}>
                       {list.map((p) => (
                         <PartnerCard
                           key={p.id}
@@ -434,7 +434,7 @@ export function NuestrosSociosSection({ sponsors, alianzas, canalesDifusion }: N
             return (
               <div className={`${FULL_BLEED} my-12`}>
                 <Reveal>
-                  <div className={`grid ${cfg.grid}`}>
+                  <div className={`grid ${cfg.grid} justify-center`}>
                     {list.map((p) => (
                       <PartnerCard
                         key={p.id}
@@ -459,7 +459,7 @@ export function NuestrosSociosSection({ sponsors, alianzas, canalesDifusion }: N
             return (
               <div className={`${FULL_BLEED} my-12`}>
                 <Reveal>
-                  <div className={`grid ${cfg.grid}`}>
+                  <div className={`grid ${cfg.grid} justify-center`}>
                     {list.map((p) => (
                       <PartnerCard
                         key={p.id}
@@ -484,7 +484,7 @@ export function NuestrosSociosSection({ sponsors, alianzas, canalesDifusion }: N
             return (
               <div className={`${FULL_BLEED} my-12`}>
                 <Reveal>
-                  <div className={`grid ${cfg.grid}`}>
+                  <div className={`grid ${cfg.grid} justify-center`}>
                     {list.map((p) => (
                       <PartnerCard
                         key={p.id}
@@ -505,7 +505,7 @@ export function NuestrosSociosSection({ sponsors, alianzas, canalesDifusion }: N
           {alliances.length > 0 && (
             <div className={`${FULL_BLEED} my-12`}>
               <Reveal>
-                <div className={`grid ${ALLIANCES_GRID}`}>
+                <div className={`grid ${ALLIANCES_GRID} justify-center`}>
                   {alliances.map((p) => (
                     <PartnerCard
                       key={p.id}
@@ -525,7 +525,7 @@ export function NuestrosSociosSection({ sponsors, alianzas, canalesDifusion }: N
           {media.length > 0 && (
             <div className={`${FULL_BLEED} my-12`}>
               <Reveal>
-                <div className={`grid ${MEDIA_GRID}`}>
+                <div className={`grid ${MEDIA_GRID} justify-center`}>
                   {media.map((p) => (
                     <PartnerCard
                       key={p.id}
