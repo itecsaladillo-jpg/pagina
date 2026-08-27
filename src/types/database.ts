@@ -37,6 +37,18 @@ export interface PublicPartner {
   email: string | null
   category: string | null
   actions_description: string | null
+  // Sponsors extras
+  rubro: string | null
+  description: string | null
+  contacto_nombre: string | null
+  contacto_telefono: string | null
+  actividad: string | null
+  zona_influencia: string | null
+  telefono: string | null
+  // Medios de prensa extras
+  nombre_contacto: string | null
+  apellido_contacto: string | null
+  dial_radio: string | null
 }
 
 // Entidades soportadas por el modal público unificado (SponsorModal).

@@ -170,6 +170,16 @@ function sponsorFromServer(s: SocioSponsor): PublicPartner {
     email: s.email,
     category: null,
     actions_description: null,
+    rubro: null,
+    description: null,
+    contacto_nombre: null,
+    contacto_telefono: null,
+    actividad: null,
+    zona_influencia: null,
+    telefono: null,
+    nombre_contacto: null,
+    apellido_contacto: null,
+    dial_radio: null,
   }
 }
 
@@ -186,6 +196,16 @@ function alianzaFromServer(a: SocioAlianza): PublicPartner {
     email: null,
     category: a.category,
     actions_description: a.actions_description,
+    rubro: null,
+    description: null,
+    contacto_nombre: null,
+    contacto_telefono: null,
+    actividad: null,
+    zona_influencia: null,
+    telefono: null,
+    nombre_contacto: null,
+    apellido_contacto: null,
+    dial_radio: null,
   }
 }
 
@@ -202,6 +222,16 @@ function canalFromServer(c: SocioCanalDifusion): PublicPartner {
     email: c.email,
     category: c.tipo_medio,
     actions_description: null,
+    rubro: null,
+    description: null,
+    contacto_nombre: null,
+    contacto_telefono: null,
+    actividad: null,
+    zona_influencia: null,
+    telefono: null,
+    nombre_contacto: null,
+    apellido_contacto: null,
+    dial_radio: null,
   }
 }
 
@@ -271,6 +301,16 @@ export function NuestrosSociosSection({ sponsors, alianzas, canalesDifusion }: N
             email: s.email,
             category: null,
             actions_description: null,
+            rubro: null,
+            description: null,
+            contacto_nombre: null,
+            contacto_telefono: null,
+            actividad: null,
+            zona_influencia: null,
+            telefono: null,
+            nombre_contacto: null,
+            apellido_contacto: null,
+            dial_radio: null,
           })
         }
         for (const p of alliancesData ?? []) {
@@ -286,6 +326,16 @@ export function NuestrosSociosSection({ sponsors, alianzas, canalesDifusion }: N
             email: null,
             category: p.category,
             actions_description: p.actions_description,
+            rubro: null,
+            description: null,
+            contacto_nombre: null,
+            contacto_telefono: null,
+            actividad: null,
+            zona_influencia: null,
+            telefono: null,
+            nombre_contacto: null,
+            apellido_contacto: null,
+            dial_radio: null,
           })
         }
         setPartners(legacy)

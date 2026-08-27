@@ -3,7 +3,7 @@
 import { useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ExternalLink, X, Mail, Tag } from 'lucide-react'
+import { ExternalLink, X, Mail, Tag, Phone, MapPin, Building2, Radio, User } from 'lucide-react'
 import type { PartnerEntity } from '@/types/database'
 
 interface Props {
@@ -32,6 +32,13 @@ function ModalPanel({ entity, onClose }: { entity: PartnerEntity; onClose: () =>
   const websiteUrl = pickField(entity, 'url_web', 'website_url')
   const email = pickField(entity, 'email')
   const category = pickField(entity, 'category', 'tipo_medio')
+  const rubro = pickField(entity, 'rubro')
+  const telefono = pickField(entity, 'telefono', 'contacto_telefono')
+  const zonaInfluencia = pickField(entity, 'zona_influencia')
+  const actividad = pickField(entity, 'actividad')
+  const contactoNombre = pickField(entity, 'contacto_nombre', 'nombre_contacto')
+  const contactoApellido = pickField(entity, 'apellido_contacto')
+  const dialRadio = pickField(entity, 'dial_radio')
   const tier = typeof entity === 'object' && entity !== null && 'tier' in entity
     ? (entity as { tier: string | null }).tier
     : null
@@ -52,6 +59,8 @@ function ModalPanel({ entity, onClose }: { entity: PartnerEntity; onClose: () =>
     bronce: 'Bronce',
     standard: 'Standard',
   }
+
+  const contactoFull = [contactoNombre, contactoApellido].filter(Boolean).join(' ') || null
 
   return (
     <motion.div
@@ -105,6 +114,11 @@ function ModalPanel({ entity, onClose }: { entity: PartnerEntity; onClose: () =>
                 {category}
               </span>
             )}
+            {rubro && (
+              <span className="text-[10px] font-medium text-green-400 bg-green-400/10 px-3 py-1 rounded-full border border-green-400/20">
+                {rubro}
+              </span>
+            )}
           </div>
         </div>
 
@@ -117,12 +131,49 @@ function ModalPanel({ entity, onClose }: { entity: PartnerEntity; onClose: () =>
         )}
 
         <div className="space-y-3">
+          {actividad && (
+            <div className="flex items-center gap-3 text-sm">
+              <Building2 size={16} className="text-[var(--accent-warm)]" />
+              <span className="text-[var(--text-secondary)]">{actividad}</span>
+            </div>
+          )}
+
+          {contactoFull && (
+            <div className="flex items-center gap-3 text-sm">
+              <User size={16} className="text-[var(--accent-warm)]" />
+              <span className="text-[var(--text-secondary)]">{contactoFull}</span>
+            </div>
+          )}
+
           {email && (
             <div className="flex items-center gap-3 text-sm">
               <Mail size={16} className="text-[var(--accent-warm)]" />
               <a href={`mailto:${email}`} className="text-[var(--text-secondary)] hover:text-white transition-colors">
                 {email}
               </a>
+            </div>
+          )}
+
+          {telefono && (
+            <div className="flex items-center gap-3 text-sm">
+              <Phone size={16} className="text-[var(--accent-warm)]" />
+              <a href={`tel:${telefono}`} className="text-[var(--text-secondary)] hover:text-white transition-colors">
+                {telefono}
+              </a>
+            </div>
+          )}
+
+          {dialRadio && (
+            <div className="flex items-center gap-3 text-sm">
+              <Radio size={16} className="text-[var(--accent-warm)]" />
+              <span className="text-[var(--text-secondary)]">{dialRadio}</span>
+            </div>
+          )}
+
+          {zonaInfluencia && (
+            <div className="flex items-center gap-3 text-sm">
+              <MapPin size={16} className="text-[var(--accent-warm)]" />
+              <span className="text-[var(--text-secondary)]">{zonaInfluencia}</span>
             </div>
           )}
 
