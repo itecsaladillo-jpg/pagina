@@ -73,6 +73,22 @@ export function AboutSection() {
     fetchMembers()
   }, [])
 
+  useEffect(() => {
+    if (!selectedMember) return
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setSelectedMember(null)
+    }
+
+    document.body.style.overflow = 'hidden'
+    window.addEventListener('keydown', onKeyDown)
+
+    return () => {
+      window.removeEventListener('keydown', onKeyDown)
+      document.body.style.overflow = ''
+    }
+  }, [selectedMember])
+
   const valores = [
     {
       icon: '💡',
@@ -202,16 +218,25 @@ export function AboutSection() {
       {/* Modal de Perfil del Miembro */}
       <AnimatePresence>
         {selectedMember && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+          <motion.div
+            key="member-modal-backdrop"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+            onClick={() => setSelectedMember(null)}
+          >
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
               transition={{ duration: 0.2 }}
-              className="bg-[#0a0f1e] border border-white/10 rounded-3xl w-full max-w-lg overflow-hidden shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+              className="bg-[#0a0f1e] border border-white/10 rounded-3xl w-full max-w-lg overflow-y-auto shadow-2xl max-h-[calc(100vh-2rem)] flex flex-col"
             >
               {/* Header con imagen de fondo */}
-              <div className="relative h-32 bg-gradient-to-r from-[var(--accent-warm)]/20 to-violet-600/20">
+              <div className="relative h-32 bg-gradient-to-r from-[var(--accent-warm)]/20 to-violet-600/20 flex-shrink-0">
                 <button
                   onClick={() => setSelectedMember(null)}
                   className="absolute top-4 right-4 w-8 h-8 bg-black/40 backdrop-blur-sm rounded-full flex items-center justify-center text-white/70 hover:text-white hover:bg-black/60 transition-colors"
@@ -221,7 +246,7 @@ export function AboutSection() {
               </div>
 
               {/* Avatar centrado */}
-              <div className="flex justify-center -mt-16">
+              <div className="flex justify-center -mt-16 flex-shrink-0">
                 <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-[#0a0f1e] shadow-xl">
                   {selectedMember.avatar_url ? (
                     <img
@@ -238,7 +263,7 @@ export function AboutSection() {
               </div>
 
               {/* Contenido */}
-              <div className="px-6 pt-4 pb-6">
+              <div className="px-6 pt-4 pb-6 space-y-4 flex-1">
                 {/* Nombre y Rol */}
                 <div className="text-center mb-4">
                   <h3 className="text-2xl font-bold text-white mb-2">{selectedMember.full_name}</h3>
@@ -249,7 +274,7 @@ export function AboutSection() {
 
                 {/* Bio / Frase */}
                 {(selectedMember.frase_itec || selectedMember.bio) && (
-                  <div className="mb-4 p-4 bg-white/5 rounded-xl border border-white/5">
+                  <div className="p-4 bg-white/5 rounded-xl border border-white/5">
                     <p className="text-[var(--text-secondary)] text-sm leading-relaxed italic">
                       &quot;{selectedMember.frase_itec || selectedMember.bio}&quot;
                     </p>
@@ -258,7 +283,7 @@ export function AboutSection() {
 
                 {/* Tareas ITEC */}
                 {selectedMember.tareas_itec && (
-                  <div className="mb-4 p-4 bg-white/5 rounded-xl border border-white/5">
+                  <div className="p-4 bg-white/5 rounded-xl border border-white/5">
                     <h4 className="text-white text-sm font-semibold mb-2">Tareas en ITEC</h4>
                     <p className="text-[var(--text-secondary)] text-sm leading-relaxed">
                       {selectedMember.tareas_itec}
@@ -311,7 +336,7 @@ export function AboutSection() {
                 </div>
               </div>
             </motion.div>
-          </div>
+          </motion.div>
         )}
       </AnimatePresence>
     </section>
