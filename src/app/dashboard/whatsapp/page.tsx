@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 import { getCurrentMember } from '@/services/auth'
 import { createClient } from '@/lib/supabase/server'
-import { getTemplatesAction } from './actions'
+import { getTemplatesAction, getContactsAction, getGroupsAction } from './actions'
 import { WhatsAppPanel } from '@/components/whatsapp/WhatsAppPanel'
 import { WhatsAppIcon } from '@/components/whatsapp/WhatsAppLinkGenerator'
 
@@ -34,7 +34,11 @@ export default async function WhatsAppPage() {
     phone: m.phone as string,
   }))
 
-  const templates = await getTemplatesAction()
+  const [templates, contacts, groups] = await Promise.all([
+    getTemplatesAction(),
+    getContactsAction(),
+    getGroupsAction(),
+  ])
 
   return (
     <div className="space-y-8 animate-fade-in">
@@ -69,7 +73,7 @@ export default async function WhatsAppPage() {
 
       {/* Panel principal */}
       <div className="glass border border-[var(--border-subtle)] rounded-2xl p-6">
-        <WhatsAppPanel members={members} templates={templates} />
+        <WhatsAppPanel members={members} templates={templates} contactsData={contacts} groupsData={groups} />
       </div>
     </div>
   )

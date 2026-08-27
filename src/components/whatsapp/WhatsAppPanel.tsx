@@ -1,11 +1,13 @@
 'use client'
 
 import { useState, useMemo, useCallback, useTransition } from 'react'
-import type { WhatsAppTemplate } from '@/app/dashboard/whatsapp/actions'
+import type { WhatsAppTemplate, WhatsAppContact, WhatsAppGroup } from '@/app/dashboard/whatsapp/actions'
 import { logWhatsAppSendAction } from '@/app/dashboard/whatsapp/actions'
 import { WhatsAppLinkGenerator, WhatsAppIcon, ITEC_WHATSAPP_NUMBER, buildWaLink, normalizeArgentinaPhone } from './WhatsAppLinkGenerator'
 import { TemplateEditor } from './TemplateEditor'
-import { Search, Phone, ChevronDown, Send, Copy, Users } from 'lucide-react'
+import { ContactImporter } from './ContactImporter'
+import { ContactGroupManager } from './ContactGroupManager'
+import { Search, Phone, ChevronDown, Send, Copy, Users, FileUp, FolderHeart } from 'lucide-react'
 
 // ─── Tipos ──────────────────────────────────────────────────
 
@@ -19,6 +21,8 @@ interface MemberContact {
 interface Props {
   members: MemberContact[]
   templates: WhatsAppTemplate[]
+  contactsData?: WhatsAppContact[]
+  groupsData?: WhatsAppGroup[]
 }
 
 // ─── Helpers ─────────────────────────────────────────────────
@@ -27,6 +31,8 @@ const TABS = [
   { id: 'contacto',   label: 'Contacto Directo', icon: <Phone size={15} /> },
   { id: 'plantillas', label: 'Plantillas',         icon: <Send size={15} /> },
   { id: 'masivo',     label: 'Envío Masivo',        icon: <Users size={15} /> },
+  { id: 'contactos',  label: 'Contactos',           icon: <FileUp size={15} /> },
+  { id: 'grupos',     label: 'Grupos',              icon: <FolderHeart size={15} /> },
 ]
 
 function replacePlaceholders(template: string, vars: Record<string, string>): string {
@@ -35,8 +41,10 @@ function replacePlaceholders(template: string, vars: Record<string, string>): st
 
 // ─── Panel principal ─────────────────────────────────────────
 
-export function WhatsAppPanel({ members, templates }: Props) {
-  const [activeTab, setActiveTab] = useState<'contacto' | 'plantillas' | 'masivo'>('contacto')
+export function WhatsAppPanel({ members, templates, contactsData = [], groupsData = [] }: Props) {
+  const [activeTab, setActiveTab] = useState<'contacto' | 'plantillas' | 'masivo' | 'contactos' | 'grupos'>('contacto')
+  const [contacts, setContacts] = useState(contactsData)
+  const [groups, setGroups] = useState(groupsData)
 
   return (
     <div className="space-y-6">
@@ -60,20 +68,20 @@ export function WhatsAppPanel({ members, templates }: Props) {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1 p-1 rounded-xl bg-white/3 border border-[var(--border-subtle)]">
+      <div className="flex gap-1 p-1 rounded-xl bg-white/3 border border-[var(--border-subtle)] overflow-x-auto">
         {TABS.map(tab => (
           <button
             key={tab.id}
             type="button"
             onClick={() => setActiveTab(tab.id as typeof activeTab)}
-            className={`flex-1 flex items-center justify-center gap-2 px-3 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 ${
+            className={`flex-1 min-w-[120px] flex items-center justify-center gap-2 px-3 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 ${
               activeTab === tab.id
                 ? 'bg-[#25d366]/15 text-[#25d366] border border-[#25d366]/25'
                 : 'text-[var(--text-muted)] hover:text-white hover:bg-white/5'
             }`}
           >
             {tab.icon}
-            <span className="hidden sm:inline">{tab.label}</span>
+            <span>{tab.label}</span>
           </button>
         ))}
       </div>
@@ -87,6 +95,12 @@ export function WhatsAppPanel({ members, templates }: Props) {
       )}
       {activeTab === 'masivo' && (
         <TabMasivo members={members} templates={templates} />
+      )}
+      {activeTab === 'contactos' && (
+        <ContactImporter contacts={contacts} onContactsChanged={setContacts} />
+      )}
+      {activeTab === 'grupos' && (
+        <ContactGroupManager groups={groups} contacts={contacts} templates={templates} onGroupsChanged={setGroups} />
       )}
     </div>
   )
