@@ -2,6 +2,7 @@
 
 import { useLanguage } from '@/contexts/LanguageContext'
 import { useEffect, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { createClient } from '@/lib/supabase/client'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, Mail, Phone, ExternalLink, Calendar } from 'lucide-react'
@@ -216,25 +217,26 @@ export function AboutSection() {
       </div>
 
       {/* Modal de Perfil del Miembro */}
-      <AnimatePresence>
-        {selectedMember && (
-          <motion.div
-            key="member-modal-backdrop"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
-            onClick={() => setSelectedMember(null)}
-          >
+      {createPortal(
+        <AnimatePresence>
+          {selectedMember && (
             <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
+              key="member-modal-backdrop"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
-              onClick={(e) => e.stopPropagation()}
-              className="bg-[#0a0f1e] border border-white/10 rounded-3xl w-full max-w-lg overflow-y-auto shadow-2xl max-h-[calc(100vh-2rem)] flex flex-col"
+              className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+              onClick={() => setSelectedMember(null)}
             >
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ duration: 0.2 }}
+                onClick={(e) => e.stopPropagation()}
+                className="bg-[#0a0f1e] border border-white/10 rounded-3xl w-full max-w-lg overflow-y-auto shadow-2xl max-h-[calc(100vh-2rem)] flex flex-col"
+              >
               {/* Header con imagen de fondo */}
               <div className="relative h-32 bg-gradient-to-r from-[var(--accent-warm)]/20 to-violet-600/20 flex-shrink-0">
                 <button
@@ -336,9 +338,11 @@ export function AboutSection() {
                 </div>
               </div>
             </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+            </motion.div>
+          )}
+        </AnimatePresence>,
+        document.body
+      )}
     </section>
   )
 }
