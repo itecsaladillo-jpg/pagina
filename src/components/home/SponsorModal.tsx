@@ -3,7 +3,7 @@
 import { useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ExternalLink, X } from 'lucide-react'
+import { ExternalLink, X, Mail, Tag } from 'lucide-react'
 import type { PartnerEntity } from '@/types/database'
 
 interface Props {
@@ -30,6 +30,28 @@ function ModalPanel({ entity, onClose }: { entity: PartnerEntity; onClose: () =>
   const logoUrl = pickField(entity, 'logo_color_url', 'logo_url')
   const description = pickField(entity, 'resena', 'actions_description', 'description')
   const websiteUrl = pickField(entity, 'url_web', 'website_url')
+  const email = pickField(entity, 'email')
+  const category = pickField(entity, 'category', 'tipo_medio')
+  const tier = typeof entity === 'object' && entity !== null && 'tier' in entity
+    ? (entity as { tier: string | null }).tier
+    : null
+  const type = typeof entity === 'object' && entity !== null && 'type' in entity
+    ? (entity as { type: string }).type
+    : null
+
+  const typeLabels: Record<string, string> = {
+    SPONSOR: 'Sponsor',
+    STRATEGIC_ALLIANCE: 'Alianza Estratégica',
+    DIFFUSION_CHANNEL: 'Canal de Difusión',
+  }
+
+  const tierLabels: Record<string, string> = {
+    platino: 'Platino',
+    oro: 'Oro',
+    plata: 'Plata',
+    bronce: 'Bronce',
+    standard: 'Standard',
+  }
 
   return (
     <motion.div
@@ -38,9 +60,9 @@ function ModalPanel({ entity, onClose }: { entity: PartnerEntity; onClose: () =>
       exit={{ opacity: 0, scale: 0.95 }}
       transition={{ duration: 0.2 }}
       onClick={(e) => e.stopPropagation()}
-      className="bg-[#0a0f1e] border border-white/10 rounded-3xl w-full max-w-lg overflow-hidden shadow-2xl"
+      className="bg-[#0a0f1e] border border-white/10 rounded-3xl w-full max-w-lg overflow-hidden shadow-2xl max-h-[calc(100vh-2rem)] flex flex-col"
     >
-      <div className="relative h-36 bg-gradient-to-r from-[var(--accent-warm)]/20 to-violet-600/20 flex items-center justify-center">
+      <div className="relative h-36 bg-gradient-to-r from-[var(--accent-warm)]/20 to-violet-600/20 flex items-center justify-center flex-shrink-0">
         <button
           onClick={onClose}
           aria-label="Cerrar"
@@ -64,26 +86,67 @@ function ModalPanel({ entity, onClose }: { entity: PartnerEntity; onClose: () =>
         )}
       </div>
 
-      <div className="px-6 pt-5 pb-6 text-center">
-        <h3 className="text-2xl font-bold text-white mb-3">{name}</h3>
+      <div className="px-6 pt-5 pb-6 overflow-y-auto flex-1">
+        <div className="text-center mb-4">
+          <h3 className="text-2xl font-bold text-white mb-2">{name}</h3>
+          <div className="flex items-center justify-center gap-2 flex-wrap">
+            {type && typeLabels[type] && (
+              <span className="text-[10px] font-medium text-[var(--accent-warm)] bg-[var(--accent-warm)]/10 px-3 py-1 rounded-full border border-[var(--accent-warm)]/20">
+                {typeLabels[type]}
+              </span>
+            )}
+            {tier && tierLabels[tier] && (
+              <span className="text-[10px] font-medium text-amber-400 bg-amber-400/10 px-3 py-1 rounded-full border border-amber-400/20">
+                {tierLabels[tier]}
+              </span>
+            )}
+            {category && (
+              <span className="text-[10px] font-medium text-blue-400 bg-blue-400/10 px-3 py-1 rounded-full border border-blue-400/20">
+                {category}
+              </span>
+            )}
+          </div>
+        </div>
 
         {description && (
-          <p className="text-[var(--text-secondary)] text-sm leading-relaxed mb-5">
-            {description}
-          </p>
+          <div className="mb-4 p-4 bg-white/5 rounded-xl border border-white/5">
+            <p className="text-[var(--text-secondary)] text-sm leading-relaxed">
+              {description}
+            </p>
+          </div>
         )}
 
-        {websiteUrl && (
-          <a
-            href={websiteUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[var(--accent-warm)] text-gray-900 text-sm font-semibold hover:opacity-90 transition-opacity"
-          >
-            <ExternalLink size={14} />
-            Visitar sitio web
-          </a>
-        )}
+        <div className="space-y-3">
+          {email && (
+            <div className="flex items-center gap-3 text-sm">
+              <Mail size={16} className="text-[var(--accent-warm)]" />
+              <a href={`mailto:${email}`} className="text-[var(--text-secondary)] hover:text-white transition-colors">
+                {email}
+              </a>
+            </div>
+          )}
+
+          {category && (
+            <div className="flex items-center gap-3 text-sm">
+              <Tag size={16} className="text-[var(--accent-warm)]" />
+              <span className="text-[var(--text-secondary)]">{category}</span>
+            </div>
+          )}
+
+          {websiteUrl && (
+            <div className="pt-2">
+              <a
+                href={websiteUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[var(--accent-warm)] text-gray-900 text-sm font-semibold hover:opacity-90 transition-opacity"
+              >
+                <ExternalLink size={14} />
+                Visitar sitio web
+              </a>
+            </div>
+          )}
+        </div>
       </div>
     </motion.div>
   )
