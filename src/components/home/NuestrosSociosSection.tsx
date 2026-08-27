@@ -100,7 +100,7 @@ function LogoImage({ src, alt, sizes }: { src: string; alt: string; sizes: strin
       <img
         src={src}
         alt={alt}
-        className="h-full w-full object-contain"
+        className="max-h-full max-w-full object-contain"
         loading="lazy"
         decoding="async"
         draggable={false}
@@ -111,9 +111,10 @@ function LogoImage({ src, alt, sizes }: { src: string; alt: string; sizes: strin
     <Image
       src={src}
       alt={alt}
-      fill
+      width={200}
+      height={200}
       sizes={sizes}
-      className="object-contain"
+      className="max-h-full max-w-full object-contain"
       draggable={false}
     />
   )
@@ -138,14 +139,14 @@ function PartnerCard({ partner, cardH, pad, sizes, featured, onOpen }: {
       whileTap={{ scale: 0.97 }}
       transition={{ type: 'spring', stiffness: 380, damping: 24 }}
       aria-label={partner.name}
-      className={`relative flex items-center justify-center overflow-hidden rounded-2xl border bg-white cursor-pointer transition-colors duration-300 ${
+      className={`relative flex items-center justify-center overflow-hidden rounded-2xl border bg-white cursor-pointer transition-colors duration-300 w-fit ${
         featured
           ? 'border-amber-300/50 ring-1 ring-amber-300/25 shadow-[0_0_45px_-10px_rgba(251,191,36,0.35)] hover:border-amber-300/70 hover:shadow-[0_0_60px_-8px_rgba(251,191,36,0.5)]'
           : 'border-[var(--border-subtle)] hover:border-[var(--accent-warm)]/40'
       }`}
     >
       {logo ? (
-        <div className={`absolute inset-0 ${pad}`}>
+        <div className={`flex items-center justify-center h-full ${pad}`}>
           <LogoImage src={logo} alt={partner.name} sizes={sizes} />
         </div>
       ) : (
@@ -405,7 +406,7 @@ export function NuestrosSociosSection({ sponsors, alianzas, canalesDifusion }: N
                 const layout = TIER_LAYOUT[tier]
                 return (
                   <Reveal key={tier}>
-                    <div className={`grid ${layout.grid} gap-3 justify-center`}>
+                    <div className={`grid ${layout.grid} gap-3 justify-items-center`}>
                       {list.map((p) => (
                         <PartnerCard
                           key={p.id}
@@ -434,7 +435,7 @@ export function NuestrosSociosSection({ sponsors, alianzas, canalesDifusion }: N
             return (
               <div className={`${FULL_BLEED} my-12`}>
                 <Reveal>
-                  <div className={`grid ${cfg.grid} justify-center`}>
+                  <div className={`grid ${cfg.grid} justify-items-center`}>
                     {list.map((p) => (
                       <PartnerCard
                         key={p.id}
@@ -459,7 +460,7 @@ export function NuestrosSociosSection({ sponsors, alianzas, canalesDifusion }: N
             return (
               <div className={`${FULL_BLEED} my-12`}>
                 <Reveal>
-                  <div className={`grid ${cfg.grid} justify-center`}>
+                  <div className={`grid ${cfg.grid} justify-items-center`}>
                     {list.map((p) => (
                       <PartnerCard
                         key={p.id}
@@ -484,7 +485,7 @@ export function NuestrosSociosSection({ sponsors, alianzas, canalesDifusion }: N
             return (
               <div className={`${FULL_BLEED} my-12`}>
                 <Reveal>
-                  <div className={`grid ${cfg.grid} justify-center`}>
+                  <div className={`grid ${cfg.grid} justify-items-center`}>
                     {list.map((p) => (
                       <PartnerCard
                         key={p.id}
@@ -505,7 +506,7 @@ export function NuestrosSociosSection({ sponsors, alianzas, canalesDifusion }: N
           {alliances.length > 0 && (
             <div className={`${FULL_BLEED} my-12`}>
               <Reveal>
-                <div className={`grid ${ALLIANCES_GRID} justify-center`}>
+                <div className={`grid ${ALLIANCES_GRID} justify-items-center`}>
                   {alliances.map((p) => (
                     <PartnerCard
                       key={p.id}
@@ -525,7 +526,7 @@ export function NuestrosSociosSection({ sponsors, alianzas, canalesDifusion }: N
           {media.length > 0 && (
             <div className={`${FULL_BLEED} my-12`}>
               <Reveal>
-                <div className={`grid ${MEDIA_GRID} justify-center`}>
+                <div className={`grid ${MEDIA_GRID} justify-items-center`}>
                   {media.map((p) => (
                     <PartnerCard
                       key={p.id}
