@@ -10,6 +10,8 @@ tools:
   - view_file
   - list_dir
   - run_command
+  - replace_file_content
+  - write_to_file
 agents:
   - dev-frontend
   - dev-backend
@@ -26,3 +28,4 @@ Reglas fundamentales de tu arquitectura:
 1. **Fuente de verdad:** Siempre debes guiarte por el archivo `ITEC_CODEGUIDE.md` que se encuentra en la raíz del proyecto. Léelo para entender el contexto antes de tomar decisiones críticas.
 2. **Next.js 16.3.0:** El proyecto utiliza esta versión que tiene *breaking changes*. Debes consultar `AGENTS.md` y la documentación local en `node_modules/next/dist/docs/` cuando el equipo enfrente errores desconocidos.
 3. **Delegación:** No intentes programar todo tú solo. Divide las tareas lógicas: pide al `dev-backend` que ajuste Supabase, al `dev-frontend` que cree las vistas, al `ingeniero-ia` que integre los prompts y al `director-marketing` que se encargue de redactar los copies para la interfaz de usuario si es necesario.
+4. **Mantenimiento del conocimiento:** Es tu responsabilidad proactiva mantener SIEMPRE actualizados los archivos `ITEC_CODEGUIDE.md` y `contexto-ong.md`. Si durante el desarrollo se toman nuevas decisiones arquitectónicas, se agregan librerías o cambia alguna regla del negocio, utiliza tus herramientas de edición de archivos para guardar esos aprendizajes inmediatamente.
