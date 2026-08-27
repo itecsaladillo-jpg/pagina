@@ -16,62 +16,62 @@ interface NuestrosSociosSectionProps {
 
 const TIER_LAYOUT: Record<
   SponsorTier,
-  { grid: string; cardH: number; pad: string; sizes: string; featured: boolean }
+  { itemW: string; cardH: number; pad: string; sizes: string; featured: boolean }
 > = {
   platino: {
-    grid: 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3',
+    itemW: 'w-full sm:w-[calc(50%-0.375rem)] lg:w-[calc(33.333%-0.5rem)]',
     cardH: 120,
     pad: 'p-5',
     sizes: '(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw',
     featured: true,
   },
   oro: {
-    grid: 'grid-cols-2 md:grid-cols-3 lg:grid-cols-4',
+    itemW: 'w-[calc(50%-0.375rem)] md:w-[calc(33.333%-0.5rem)] lg:w-[calc(25%-0.5625rem)]',
     cardH: 88,
     pad: 'p-3',
     sizes: '(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw',
     featured: false,
   },
-  plata: { grid: '', cardH: 0, pad: '', sizes: '', featured: false },
-  bronce: { grid: '', cardH: 0, pad: '', sizes: '', featured: false },
-  standard: { grid: '', cardH: 0, pad: '', sizes: '', featured: false },
+  plata: { itemW: '', cardH: 0, pad: '', sizes: '', featured: false },
+  bronce: { itemW: '', cardH: 0, pad: '', sizes: '', featured: false },
+  standard: { itemW: '', cardH: 0, pad: '', sizes: '', featured: false },
 }
 
 const PREMIUM_TIERS: SponsorTier[] = ['platino', 'oro']
 
 const TIER_FULLWIDTH: Record<
   Exclude<SponsorTier, 'platino' | 'oro'>,
-  { grid: string; cardH: number; pad: string; sizes: string }
+  { itemW: string; cardH: number; pad: string; sizes: string }
 > = {
   plata: {
-    grid: 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-4 md:gap-5',
+    itemW: 'w-[calc(50%-0.5rem)] sm:w-[calc(33.333%-0.667rem)] md:w-[calc(25%-0.75rem)] lg:w-[calc(16.667%-0.833rem)] xl:w-[calc(12.5%-0.9375rem)]',
     cardH: 60,
     pad: 'p-2',
     sizes: '(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, 16vw',
   },
   bronce: {
-    grid: 'grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 gap-4 md:gap-5',
+    itemW: 'w-[calc(33.333%-0.667rem)] sm:w-[calc(25%-0.75rem)] md:w-[calc(16.667%-0.833rem)] lg:w-[calc(12.5%-0.9375rem)] xl:w-[calc(10%-1rem)]',
     cardH: 52,
     pad: 'p-2',
     sizes: '(max-width: 640px) 33vw, (max-width: 768px) 25vw, (max-width: 1024px) 16vw, 12vw',
   },
   standard: {
-    grid: 'grid-cols-3 sm:grid-cols-5 md:grid-cols-7 lg:grid-cols-9 xl:grid-cols-11 gap-3 md:gap-4',
+    itemW: 'w-[calc(33.333%-0.5rem)] sm:w-[calc(20%-0.6rem)] md:w-[calc(14.286%-0.714rem)] lg:w-[calc(11.111%-0.778rem)] xl:w-[calc(9.091%-0.818rem)]',
     cardH: 46,
     pad: 'p-1.5',
     sizes: '(max-width: 640px) 33vw, (max-width: 768px) 20vw, (max-width: 1024px) 14vw, 10vw',
   },
 }
 
-const ALLIANCES_GRID =
-  'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-4 md:gap-5'
+const ALLIANCES_ITEM_W =
+  'w-[calc(50%-0.5rem)] sm:w-[calc(33.333%-0.667rem)] md:w-[calc(25%-0.75rem)] lg:w-[calc(16.667%-0.833rem)] xl:w-[calc(12.5%-0.9375rem)]'
 const ALLIANCES_CARD_H = 56
 const ALLIANCES_PAD = 'p-2'
 const ALLIANCES_SIZES =
   '(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, 16vw'
 
-const MEDIA_GRID =
-  'grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 gap-4 md:gap-5'
+const MEDIA_ITEM_W =
+  'w-[calc(33.333%-0.667rem)] sm:w-[calc(25%-0.75rem)] md:w-[calc(16.667%-0.833rem)] lg:w-[calc(12.5%-0.9375rem)] xl:w-[calc(10%-1rem)]'
 const MEDIA_CARD_H = 48
 const MEDIA_PAD = 'p-2'
 const MEDIA_SIZES =
@@ -139,7 +139,7 @@ function PartnerCard({ partner, cardH, pad, sizes, featured, onOpen }: {
       whileTap={{ scale: 0.97 }}
       transition={{ type: 'spring', stiffness: 380, damping: 24 }}
       aria-label={partner.name}
-      className={`relative flex items-center justify-center overflow-hidden rounded-2xl border bg-white cursor-pointer transition-colors duration-300 w-fit ${
+      className={`relative flex items-center justify-center overflow-hidden rounded-2xl border bg-white cursor-pointer transition-colors duration-300 w-full ${
         featured
           ? 'border-amber-300/50 ring-1 ring-amber-300/25 shadow-[0_0_45px_-10px_rgba(251,191,36,0.35)] hover:border-amber-300/70 hover:shadow-[0_0_60px_-8px_rgba(251,191,36,0.5)]'
           : 'border-[var(--border-subtle)] hover:border-[var(--accent-warm)]/40'
@@ -406,17 +406,18 @@ export function NuestrosSociosSection({ sponsors, alianzas, canalesDifusion }: N
                 const layout = TIER_LAYOUT[tier]
                 return (
                   <Reveal key={tier}>
-                    <div className={`grid ${layout.grid} gap-3 justify-items-center`}>
+                    <div className="flex flex-wrap justify-center gap-3">
                       {list.map((p) => (
-                        <PartnerCard
-                          key={p.id}
-                          partner={p}
-                          cardH={layout.cardH}
-                          pad={layout.pad}
-                          sizes={layout.sizes}
-                          featured={layout.featured}
-                          onOpen={() => setSelected(p)}
-                        />
+                        <div key={p.id} className={layout.itemW}>
+                          <PartnerCard
+                            partner={p}
+                            cardH={layout.cardH}
+                            pad={layout.pad}
+                            sizes={layout.sizes}
+                            featured={layout.featured}
+                            onOpen={() => setSelected(p)}
+                          />
+                        </div>
                       ))}
                     </div>
                   </Reveal>
@@ -435,16 +436,17 @@ export function NuestrosSociosSection({ sponsors, alianzas, canalesDifusion }: N
             return (
               <div className={`${FULL_BLEED} my-12`}>
                 <Reveal>
-                  <div className={`grid ${cfg.grid} justify-items-center`}>
+                  <div className="flex flex-wrap justify-center gap-4 md:gap-5">
                     {list.map((p) => (
-                      <PartnerCard
-                        key={p.id}
-                        partner={p}
-                        cardH={cfg.cardH}
-                        pad={cfg.pad}
-                        sizes={cfg.sizes}
-                        onOpen={() => setSelected(p)}
-                      />
+                      <div key={p.id} className={cfg.itemW}>
+                        <PartnerCard
+                          partner={p}
+                          cardH={cfg.cardH}
+                          pad={cfg.pad}
+                          sizes={cfg.sizes}
+                          onOpen={() => setSelected(p)}
+                        />
+                      </div>
                     ))}
                   </div>
                 </Reveal>
@@ -460,16 +462,17 @@ export function NuestrosSociosSection({ sponsors, alianzas, canalesDifusion }: N
             return (
               <div className={`${FULL_BLEED} my-12`}>
                 <Reveal>
-                  <div className={`grid ${cfg.grid} justify-items-center`}>
+                  <div className="flex flex-wrap justify-center gap-4 md:gap-5">
                     {list.map((p) => (
-                      <PartnerCard
-                        key={p.id}
-                        partner={p}
-                        cardH={cfg.cardH}
-                        pad={cfg.pad}
-                        sizes={cfg.sizes}
-                        onOpen={() => setSelected(p)}
-                      />
+                      <div key={p.id} className={cfg.itemW}>
+                        <PartnerCard
+                          partner={p}
+                          cardH={cfg.cardH}
+                          pad={cfg.pad}
+                          sizes={cfg.sizes}
+                          onOpen={() => setSelected(p)}
+                        />
+                      </div>
                     ))}
                   </div>
                 </Reveal>
@@ -485,16 +488,17 @@ export function NuestrosSociosSection({ sponsors, alianzas, canalesDifusion }: N
             return (
               <div className={`${FULL_BLEED} my-12`}>
                 <Reveal>
-                  <div className={`grid ${cfg.grid} justify-items-center`}>
+                  <div className="flex flex-wrap justify-center gap-3 md:gap-4">
                     {list.map((p) => (
-                      <PartnerCard
-                        key={p.id}
-                        partner={p}
-                        cardH={cfg.cardH}
-                        pad={cfg.pad}
-                        sizes={cfg.sizes}
-                        onOpen={() => setSelected(p)}
-                      />
+                      <div key={p.id} className={cfg.itemW}>
+                        <PartnerCard
+                          partner={p}
+                          cardH={cfg.cardH}
+                          pad={cfg.pad}
+                          sizes={cfg.sizes}
+                          onOpen={() => setSelected(p)}
+                        />
+                      </div>
                     ))}
                   </div>
                 </Reveal>
@@ -506,16 +510,17 @@ export function NuestrosSociosSection({ sponsors, alianzas, canalesDifusion }: N
           {alliances.length > 0 && (
             <div className={`${FULL_BLEED} my-12`}>
               <Reveal>
-                <div className={`grid ${ALLIANCES_GRID} justify-items-center`}>
+                <div className="flex flex-wrap justify-center gap-4 md:gap-5">
                   {alliances.map((p) => (
-                    <PartnerCard
-                      key={p.id}
-                      partner={p}
-                      cardH={ALLIANCES_CARD_H}
-                      pad={ALLIANCES_PAD}
-                      sizes={ALLIANCES_SIZES}
-                      onOpen={() => setSelected(p)}
-                    />
+                    <div key={p.id} className={ALLIANCES_ITEM_W}>
+                      <PartnerCard
+                        partner={p}
+                        cardH={ALLIANCES_CARD_H}
+                        pad={ALLIANCES_PAD}
+                        sizes={ALLIANCES_SIZES}
+                        onOpen={() => setSelected(p)}
+                      />
+                    </div>
                   ))}
                 </div>
               </Reveal>
@@ -526,16 +531,17 @@ export function NuestrosSociosSection({ sponsors, alianzas, canalesDifusion }: N
           {media.length > 0 && (
             <div className={`${FULL_BLEED} my-12`}>
               <Reveal>
-                <div className={`grid ${MEDIA_GRID} justify-items-center`}>
+                <div className="flex flex-wrap justify-center gap-4 md:gap-5">
                   {media.map((p) => (
-                    <PartnerCard
-                      key={p.id}
-                      partner={p}
-                      cardH={MEDIA_CARD_H}
-                      pad={MEDIA_PAD}
-                      sizes={MEDIA_SIZES}
-                      onOpen={() => setSelected(p)}
-                    />
+                    <div key={p.id} className={MEDIA_ITEM_W}>
+                      <PartnerCard
+                        partner={p}
+                        cardH={MEDIA_CARD_H}
+                        pad={MEDIA_PAD}
+                        sizes={MEDIA_SIZES}
+                        onOpen={() => setSelected(p)}
+                      />
+                    </div>
                   ))}
                 </div>
               </Reveal>
