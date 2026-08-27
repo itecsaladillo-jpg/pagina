@@ -261,6 +261,9 @@ export function NuestrosSociosSection({ sponsors, alianzas, canalesDifusion }: N
       const supabase = createClient()
 
       const { data: unified, error: rpcError } = await supabase.rpc('obtener_socios_publicos')
+      if (rpcError) {
+        console.error('[NuestrosSocios] RPC obtener_socios_publicos error:', rpcError.message)
+      }
       if (!rpcError && unified && unified.length > 0) {
         if (mounted) {
           setPartners(unified as PublicPartner[])
