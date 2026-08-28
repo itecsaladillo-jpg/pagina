@@ -10,6 +10,3 @@ ALTER TABLE public.eventos DROP COLUMN IF EXISTS semaforo_last_reset_at;
 UPDATE public.eventos
 SET herramientas_activas = herramientas_activas - 'semaforo'
 WHERE herramientas_activas ? 'semaforo';
-
--- 4. Eliminar la tabla de la publicación de Supabase Realtime
-ALTER PUBLICATION supabase_realtime DROP TABLE IF EXISTS public.evento_semaforo_votos;

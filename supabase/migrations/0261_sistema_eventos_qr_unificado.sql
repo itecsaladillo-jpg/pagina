@@ -215,9 +215,28 @@ create policy "Permitir gestión de nube de ideas al staff"
 -- SUPABASE REALTIME: Activar publicaciones Realtime
 -- ============================================================
 
-alter publication supabase_realtime add table public.eventos;
-alter publication supabase_realtime add table public.eventos_preguntas;
-alter publication supabase_realtime add table public.eventos_preguntas_likes;
-alter publication supabase_realtime add table public.eventos_encuestas;
-alter publication supabase_realtime add table public.eventos_encuestas_votos;
-alter publication supabase_realtime add table public.eventos_nube_palabras;
+DO $$
+DECLARE
+  tbl text;
+BEGIN
+  FOREACH tbl IN ARRAY array[
+    'eventos',
+    'eventos_preguntas',
+    'eventos_preguntas_likes',
+    'eventos_encuestas',
+    'eventos_encuestas_votos',
+    'eventos_nube_palabras'
+  ]
+  LOOP
+    IF NOT EXISTS (
+      SELECT 1
+      FROM pg_publication_tables
+      WHERE pubname = 'supabase_realtime'
+        AND schemaname = 'public'
+        AND tablename = tbl
+    ) THEN
+      EXECUTE format('ALTER PUBLICATION supabase_realtime ADD TABLE public.%I', tbl);
+    END IF;
+  END LOOP;
+END
+$$;

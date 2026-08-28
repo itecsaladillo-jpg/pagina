@@ -28,6 +28,10 @@ CREATE INDEX IF NOT EXISTS idx_doc_embeddings_file_path
   ON document_embeddings (file_path);
 
 -- 4. RPC: Búsqueda por similitud coseno
+DROP FUNCTION IF EXISTS match_documents(vector(768), float, int);
+DROP FUNCTION IF EXISTS match_documents(vector, float, int);
+DROP FUNCTION IF EXISTS match_documents;
+
 CREATE OR REPLACE FUNCTION match_documents(
   query_embedding vector(768),
   match_threshold float DEFAULT 0.40,
@@ -59,18 +63,22 @@ $$;
 -- 5. RLS: lectura pública, escritura solo admin
 ALTER TABLE document_embeddings ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "doc_embeddings_public_read" ON document_embeddings;
 CREATE POLICY "doc_embeddings_public_read"
   ON document_embeddings FOR SELECT
   USING (true);
 
+DROP POLICY IF EXISTS "doc_embeddings_admin_insert" ON document_embeddings;
 CREATE POLICY "doc_embeddings_admin_insert"
   ON document_embeddings FOR INSERT
   WITH CHECK (true);
 
+DROP POLICY IF EXISTS "doc_embeddings_admin_delete" ON document_embeddings;
 CREATE POLICY "doc_embeddings_admin_delete"
   ON document_embeddings FOR DELETE
   USING (true);
 
+DROP POLICY IF EXISTS "doc_embeddings_admin_update" ON document_embeddings;
 CREATE POLICY "doc_embeddings_admin_update"
   ON document_embeddings FOR UPDATE
   USING (true);

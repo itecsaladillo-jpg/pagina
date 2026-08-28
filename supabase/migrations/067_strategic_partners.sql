@@ -17,11 +17,13 @@ CREATE TABLE IF NOT EXISTS strategic_partners (
 ALTER TABLE strategic_partners ENABLE ROW LEVEL SECURITY;
 
 -- 3. Política de lectura pública (cualquiera puede ver socios estratégicos activos)
+DROP POLICY IF EXISTS "strategic_partners_select_public" ON strategic_partners;
 CREATE POLICY "strategic_partners_select_public" ON strategic_partners
   FOR SELECT
   USING (is_active = true);
 
 -- 4. Política de escritura solo para admins
+DROP POLICY IF EXISTS "strategic_partners_insert_admin" ON strategic_partners;
 CREATE POLICY "strategic_partners_insert_admin" ON strategic_partners
   FOR INSERT
   TO authenticated
@@ -33,6 +35,7 @@ CREATE POLICY "strategic_partners_insert_admin" ON strategic_partners
     )
   );
 
+DROP POLICY IF EXISTS "strategic_partners_update_admin" ON strategic_partners;
 CREATE POLICY "strategic_partners_update_admin" ON strategic_partners
   FOR UPDATE
   TO authenticated
@@ -51,6 +54,7 @@ CREATE POLICY "strategic_partners_update_admin" ON strategic_partners
     )
   );
 
+DROP POLICY IF EXISTS "strategic_partners_delete_admin" ON strategic_partners;
 CREATE POLICY "strategic_partners_delete_admin" ON strategic_partners
   FOR DELETE
   TO authenticated
@@ -63,8 +67,8 @@ CREATE POLICY "strategic_partners_delete_admin" ON strategic_partners
   );
 
 -- 5. Índices para búsquedas frecuentes
-CREATE INDEX idx_strategic_partners_category ON strategic_partners(category);
-CREATE INDEX idx_strategic_partners_active ON strategic_partners(is_active);
+CREATE INDEX IF NOT EXISTS idx_strategic_partners_category ON strategic_partners(category);
+CREATE INDEX IF NOT EXISTS idx_strategic_partners_active ON strategic_partners(is_active);
 
 -- 6. Trigger para actualizar updated_at
 CREATE OR REPLACE FUNCTION update_strategic_partners_updated_at()
@@ -75,6 +79,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+DROP TRIGGER IF EXISTS strategic_partners_updated_at ON strategic_partners;
 CREATE TRIGGER strategic_partners_updated_at
   BEFORE UPDATE ON strategic_partners
   FOR EACH ROW

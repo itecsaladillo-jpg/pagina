@@ -83,18 +83,22 @@ $$;
 -- ============================================================
 ALTER TABLE documents ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "documents_public_read" ON documents;
 CREATE POLICY "documents_public_read"
   ON documents FOR SELECT
   USING (true);
 
+DROP POLICY IF EXISTS "documents_admin_insert" ON documents;
 CREATE POLICY "documents_admin_insert"
   ON documents FOR INSERT
   WITH CHECK (true);
 
+DROP POLICY IF EXISTS "documents_admin_delete" ON documents;
 CREATE POLICY "documents_admin_delete"
   ON documents FOR DELETE
   USING (true);
 
+DROP POLICY IF EXISTS "documents_admin_update" ON documents;
 CREATE POLICY "documents_admin_update"
   ON documents FOR UPDATE
   USING (true);

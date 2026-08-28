@@ -166,43 +166,69 @@ ALTER TABLE public.clase_semaforo_votos ENABLE ROW LEVEL SECURITY;
 -- ─────────────────────────────────────────────────────────────
 
 -- Modómetro
+DROP POLICY IF EXISTS "clase_modometro_select" ON public.clase_modometro_votos;
 CREATE POLICY "clase_modometro_select" ON public.clase_modometro_votos FOR SELECT USING (true);
+DROP POLICY IF EXISTS "clase_modometro_insert" ON public.clase_modometro_votos;
 CREATE POLICY "clase_modometro_insert" ON public.clase_modometro_votos FOR INSERT WITH CHECK (true);
+DROP POLICY IF EXISTS "clase_modometro_update" ON public.clase_modometro_votos;
 CREATE POLICY "clase_modometro_update" ON public.clase_modometro_votos FOR UPDATE USING (true) WITH CHECK (true);
+DROP POLICY IF EXISTS "clase_modometro_delete" ON public.clase_modometro_votos;
 CREATE POLICY "clase_modometro_delete" ON public.clase_modometro_votos FOR DELETE USING (true);
 
 -- Mano alzada
+DROP POLICY IF EXISTS "clase_mano_select" ON public.clase_mano_alzada;
 CREATE POLICY "clase_mano_select" ON public.clase_mano_alzada FOR SELECT USING (true);
+DROP POLICY IF EXISTS "clase_mano_insert" ON public.clase_mano_alzada;
 CREATE POLICY "clase_mano_insert" ON public.clase_mano_alzada FOR INSERT WITH CHECK (true);
+DROP POLICY IF EXISTS "clase_mano_update" ON public.clase_mano_alzada;
 CREATE POLICY "clase_mano_update" ON public.clase_mano_alzada FOR UPDATE USING (true) WITH CHECK (true);
+DROP POLICY IF EXISTS "clase_mano_delete" ON public.clase_mano_alzada;
 CREATE POLICY "clase_mano_delete" ON public.clase_mano_alzada FOR DELETE USING (true);
 
 -- Preguntas
+DROP POLICY IF EXISTS "clase_preguntas_select" ON public.clase_preguntas;
 CREATE POLICY "clase_preguntas_select" ON public.clase_preguntas FOR SELECT USING (true);
+DROP POLICY IF EXISTS "clase_preguntas_insert" ON public.clase_preguntas;
 CREATE POLICY "clase_preguntas_insert" ON public.clase_preguntas FOR INSERT WITH CHECK (true);
+DROP POLICY IF EXISTS "clase_preguntas_update" ON public.clase_preguntas;
 CREATE POLICY "clase_preguntas_update" ON public.clase_preguntas FOR UPDATE USING (true) WITH CHECK (true);
+DROP POLICY IF EXISTS "clase_preguntas_delete" ON public.clase_preguntas;
 CREATE POLICY "clase_preguntas_delete" ON public.clase_preguntas FOR DELETE USING (true);
 
 -- Votos de preguntas
+DROP POLICY IF EXISTS "clase_pregunta_votos_select" ON public.clase_pregunta_votos;
 CREATE POLICY "clase_pregunta_votos_select" ON public.clase_pregunta_votos FOR SELECT USING (true);
+DROP POLICY IF EXISTS "clase_pregunta_votos_insert" ON public.clase_pregunta_votos;
 CREATE POLICY "clase_pregunta_votos_insert" ON public.clase_pregunta_votos FOR INSERT WITH CHECK (true);
+DROP POLICY IF EXISTS "clase_pregunta_votos_delete" ON public.clase_pregunta_votos;
 CREATE POLICY "clase_pregunta_votos_delete" ON public.clase_pregunta_votos FOR DELETE USING (true);
 
 -- Encuestas
+DROP POLICY IF EXISTS "clase_encuestas_select" ON public.clase_encuestas;
 CREATE POLICY "clase_encuestas_select" ON public.clase_encuestas FOR SELECT USING (true);
+DROP POLICY IF EXISTS "clase_encuestas_insert" ON public.clase_encuestas;
 CREATE POLICY "clase_encuestas_insert" ON public.clase_encuestas FOR INSERT WITH CHECK (true);
+DROP POLICY IF EXISTS "clase_encuestas_update" ON public.clase_encuestas;
 CREATE POLICY "clase_encuestas_update" ON public.clase_encuestas FOR UPDATE USING (true) WITH CHECK (true);
+DROP POLICY IF EXISTS "clase_encuestas_delete" ON public.clase_encuestas;
 CREATE POLICY "clase_encuestas_delete" ON public.clase_encuestas FOR DELETE USING (true);
 
 -- Respuestas de encuestas
+DROP POLICY IF EXISTS "clase_encuesta_resp_select" ON public.clase_encuesta_respuestas;
 CREATE POLICY "clase_encuesta_resp_select" ON public.clase_encuesta_respuestas FOR SELECT USING (true);
+DROP POLICY IF EXISTS "clase_encuesta_resp_insert" ON public.clase_encuesta_respuestas;
 CREATE POLICY "clase_encuesta_resp_insert" ON public.clase_encuesta_respuestas FOR INSERT WITH CHECK (true);
+DROP POLICY IF EXISTS "clase_encuesta_resp_delete" ON public.clase_encuesta_respuestas;
 CREATE POLICY "clase_encuesta_resp_delete" ON public.clase_encuesta_respuestas FOR DELETE USING (true);
 
 -- Semáforo
+DROP POLICY IF EXISTS "clase_semaforo_select" ON public.clase_semaforo_votos;
 CREATE POLICY "clase_semaforo_select" ON public.clase_semaforo_votos FOR SELECT USING (true);
+DROP POLICY IF EXISTS "clase_semaforo_insert" ON public.clase_semaforo_votos;
 CREATE POLICY "clase_semaforo_insert" ON public.clase_semaforo_votos FOR INSERT WITH CHECK (true);
+DROP POLICY IF EXISTS "clase_semaforo_update" ON public.clase_semaforo_votos;
 CREATE POLICY "clase_semaforo_update" ON public.clase_semaforo_votos FOR UPDATE USING (true) WITH CHECK (true);
+DROP POLICY IF EXISTS "clase_semaforo_delete" ON public.clase_semaforo_votos;
 CREATE POLICY "clase_semaforo_delete" ON public.clase_semaforo_votos FOR DELETE USING (true);
 
 -- 5. HABILITAR SUPABASE REALTIME

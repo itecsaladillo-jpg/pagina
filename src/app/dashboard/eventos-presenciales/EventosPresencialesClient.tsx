@@ -143,7 +143,9 @@ export default function EventosPresencialesClient({ initialEventos }: { initialE
       return;
     }
     const anioCompleto = anio.length === 2 ? `20${anio}` : anio;
-    const fechaDateObj = new Date(`${anioCompleto}-${mes}-${dia}T${fechaTime}:00`);
+    const mesP = mes.padStart(2, "0");
+    const diaP = dia.padStart(2, "0");
+    const fechaDateObj = new Date(`${anioCompleto}-${mesP}-${diaP}T${fechaTime}:00`);
 
     if (isNaN(fechaDateObj.getTime())) {
       setError("La fecha ingresada no es válida.");

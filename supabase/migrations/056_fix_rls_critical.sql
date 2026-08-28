@@ -16,18 +16,21 @@ DROP POLICY IF EXISTS "Lectura pública de clases virtuales" ON public.clases_vi
 DROP POLICY IF EXISTS "Administración total de clases virtuales para administradores" ON public.clases_virtuales;
 
 -- Lectura: cualquier usuario autenticado puede ver clases (para pantalla gigante)
+DROP POLICY IF EXISTS "clases_virtuales_select_auth" ON public.clases_virtuales;
 CREATE POLICY "clases_virtuales_select_auth"
   ON public.clases_virtuales FOR SELECT
   TO authenticated
   USING (true);
 
 -- Lectura pública: solo lectura para anónimos (pantalla gigante pública)
+DROP POLICY IF EXISTS "clases_virtuales_select_anon" ON public.clases_virtuales;
 CREATE POLICY "clases_virtuales_select_anon"
   ON public.clases_virtuales FOR SELECT
   TO anon
   USING (true);
 
 -- INSERT/UPDATE/DELETE: solo admin y coordinador
+DROP POLICY IF EXISTS "clases_virtuales_insert_admin" ON public.clases_virtuales;
 CREATE POLICY "clases_virtuales_insert_admin"
   ON public.clases_virtuales FOR INSERT
   TO authenticated
@@ -40,6 +43,7 @@ CREATE POLICY "clases_virtuales_insert_admin"
     )
   );
 
+DROP POLICY IF EXISTS "clases_virtuales_update_admin" ON public.clases_virtuales;
 CREATE POLICY "clases_virtuales_update_admin"
   ON public.clases_virtuales FOR UPDATE
   TO authenticated
@@ -60,6 +64,7 @@ CREATE POLICY "clases_virtuales_update_admin"
     )
   );
 
+DROP POLICY IF EXISTS "clases_virtuales_delete_admin" ON public.clases_virtuales;
 CREATE POLICY "clases_virtuales_delete_admin"
   ON public.clases_virtuales FOR DELETE
   TO authenticated
@@ -80,12 +85,14 @@ DROP POLICY IF EXISTS "Lectura pública de interacciones de clase" ON public.cla
 DROP POLICY IF EXISTS "Estudiantes pueden insertar/actualizar sus interacciones (UPSERT)" ON public.clase_interacciones;
 
 -- Lectura: cualquier usuario autenticado puede ver interacciones
+DROP POLICY IF EXISTS "clase_interacciones_select" ON public.clase_interacciones;
 CREATE POLICY "clase_interacciones_select"
   ON public.clase_interacciones FOR SELECT
   TO authenticated
   USING (true);
 
 -- INSERT: cualquier usuario autenticado puede insertar sus interacciones
+DROP POLICY IF EXISTS "clase_interacciones_insert" ON public.clase_interacciones;
 CREATE POLICY "clase_interacciones_insert"
   ON public.clase_interacciones FOR INSERT
   TO authenticated
@@ -93,6 +100,7 @@ CREATE POLICY "clase_interacciones_insert"
 
 -- UPDATE: solo el propio usuario puede actualizar sus interacciones
 -- o un admin/coordinador puede actualizar cualquiera
+DROP POLICY IF EXISTS "clase_interacciones_update" ON public.clase_interacciones;
 CREATE POLICY "clase_interacciones_update"
   ON public.clase_interacciones FOR UPDATE
   TO authenticated
@@ -108,6 +116,7 @@ CREATE POLICY "clase_interacciones_update"
   WITH CHECK (true);
 
 -- DELETE: solo admin/coordinador
+DROP POLICY IF EXISTS "clase_interacciones_delete" ON public.clase_interacciones;
 CREATE POLICY "clase_interacciones_delete"
   ON public.clase_interacciones FOR DELETE
   TO authenticated
@@ -129,11 +138,13 @@ DROP POLICY IF EXISTS "Administración total de certificados para administradore
 
 -- Lectura pública: cualquiera puede verificar un certificado por código
 -- (necesario para la página de verificación pública)
+DROP POLICY IF EXISTS "certificados_digitales_select_public" ON public.certificados_digitales;
 CREATE POLICY "certificados_digitales_select_public"
   ON public.certificados_digitales FOR SELECT
   USING (true);
 
 -- INSERT/UPDATE/DELETE: solo admin
+DROP POLICY IF EXISTS "certificados_digitales_insert_admin" ON public.certificados_digitales;
 CREATE POLICY "certificados_digitales_insert_admin"
   ON public.certificados_digitales FOR INSERT
   TO authenticated
@@ -146,6 +157,7 @@ CREATE POLICY "certificados_digitales_insert_admin"
     )
   );
 
+DROP POLICY IF EXISTS "certificados_digitales_update_admin" ON public.certificados_digitales;
 CREATE POLICY "certificados_digitales_update_admin"
   ON public.certificados_digitales FOR UPDATE
   TO authenticated
@@ -166,6 +178,7 @@ CREATE POLICY "certificados_digitales_update_admin"
     )
   );
 
+DROP POLICY IF EXISTS "certificados_digitales_delete_admin" ON public.certificados_digitales;
 CREATE POLICY "certificados_digitales_delete_admin"
   ON public.certificados_digitales FOR DELETE
   TO authenticated
