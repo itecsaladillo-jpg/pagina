@@ -71,16 +71,17 @@ export function HeroSection() {
     }
   }, [])
 
-  // Fetch streaming status
+  // Fetch streaming status (cache 30s alineado con el ISR del endpoint)
   useEffect(() => {
     const fetchStreamingStatus = async () => {
       try {
         const response = await fetch('/api/streaming/status')
+        if (!response.ok) return
         const data = await response.json()
         setStreamingActive(data.isActive)
         setStreamingUrl(data.youtubeUrl)
-      } catch (err) {
-        console.error('Error fetching streaming status:', err)
+      } catch {
+        // silently fail - streaming no es crítico
       }
     }
 

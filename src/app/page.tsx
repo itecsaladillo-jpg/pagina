@@ -8,9 +8,8 @@ import { Footer } from '@/components/landing/Footer'
 import { FloatingLanguageSelector } from '@/components/landing/FloatingLanguageSelector'
 import { SponsorHeaderBar } from '@/components/home/SponsorHeaderBar'
 
-// Forzar renderizado dinámico en cada request (desactiva cache estático de Vercel/Next.js)
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
+// ISR: regenerar el homepage cada 60 segundos en Vercel
+export const revalidate = 60;
 
 const AboutSection = nextDynamic(() => import('@/components/landing/AboutSection').then(m => m.AboutSection))
 const ComisionesSection = nextDynamic(() => import('@/components/landing/ComisionesSection').then(m => m.ComisionesSection))
