@@ -600,7 +600,7 @@ export default function PantallaGigantePage({ params }: { params: Promise<{ id: 
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -30 }}
               transition={{ duration: 0.6, ease: 'easeOut' }}
-              className="flex flex-row items-center justify-center gap-16 w-full max-w-6xl mx-auto"
+              className="flex flex-row items-center justify-center gap-12 lg:gap-24 w-full max-w-[95vw] mx-auto"
             >
               {/* QR a la izquierda */}
               <motion.div
@@ -609,18 +609,18 @@ export default function PantallaGigantePage({ params }: { params: Promise<{ id: 
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.8, delay: 0.7 }}
               >
-                <div className="absolute -inset-6 bg-gradient-to-r from-cyan-500/20 via-indigo-500/20 to-purple-500/20 rounded-[40px] blur-2xl" />
-                <div className="absolute -inset-3 bg-gradient-to-r from-cyan-500/10 via-indigo-500/10 to-purple-500/10 rounded-[36px] blur-xl" />
-                <div className="relative bg-white p-5 rounded-3xl shadow-2xl shadow-indigo-500/20">
-                  <QRCode value={eventUrl} size={340} bgColor="#ffffff" fgColor="#000000" level="H" />
+                <div className="absolute -inset-6 bg-gradient-to-r from-cyan-500/20 via-indigo-500/20 to-purple-500/20 rounded-[48px] blur-2xl" />
+                <div className="absolute -inset-3 bg-gradient-to-r from-cyan-500/10 via-indigo-500/10 to-purple-500/10 rounded-[40px] blur-xl" />
+                <div className="relative bg-white p-6 rounded-[32px] shadow-2xl shadow-indigo-500/20">
+                  <QRCode value={eventUrl} size={460} bgColor="#ffffff" fgColor="#000000" level="H" />
                 </div>
               </motion.div>
 
               {/* Texto explicativo a la derecha */}
-              <div className="flex flex-col items-start text-left max-w-xl gap-6">
+              <div className="flex flex-col items-start text-left max-w-3xl gap-8">
                 <div className="space-y-4">
                   <motion.h1
-                    className="text-5xl md:text-7xl font-black tracking-tight text-white leading-[1.1]"
+                    className="text-6xl md:text-8xl font-black tracking-tight text-white leading-[1.1]"
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.8, delay: 0.1 }}
@@ -628,7 +628,7 @@ export default function PantallaGigantePage({ params }: { params: Promise<{ id: 
                     Bienvenidos a
                   </motion.h1>
                   <motion.p
-                    className="text-4xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-indigo-300 to-purple-400 leading-[1.15]"
+                    className="text-5xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-indigo-300 to-purple-400 leading-[1.15]"
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8, delay: 0.3 }}
@@ -638,7 +638,7 @@ export default function PantallaGigantePage({ params }: { params: Promise<{ id: 
                 </div>
 
                 <motion.p
-                  className="text-xl md:text-2xl text-zinc-400 leading-relaxed font-light"
+                  className="text-2xl md:text-4xl text-zinc-400 leading-relaxed font-light"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.8, delay: 0.5 }}
@@ -647,7 +647,7 @@ export default function PantallaGigantePage({ params }: { params: Promise<{ id: 
                 </motion.p>
 
                 <motion.p
-                  className="text-lg text-zinc-600 font-mono tracking-wide bg-white/[0.03] border border-white/5 px-6 py-2 rounded-full"
+                  className="text-xl md:text-2xl text-zinc-600 font-mono tracking-wide bg-white/[0.03] border border-white/5 px-8 py-3 rounded-full"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.8, delay: 0.9 }}
@@ -666,20 +666,20 @@ export default function PantallaGigantePage({ params }: { params: Promise<{ id: 
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -30 }}
               transition={{ duration: 0.5 }}
-              className="w-full max-w-5xl mx-auto space-y-10"
+              className="w-full max-w-[95vw] mx-auto space-y-12"
             >
-              <div className="text-center space-y-4">
+              <div className="text-center space-y-6">
                 <motion.span
-                  className="inline-block text-sm font-black uppercase tracking-[0.2em] text-cyan-400 bg-cyan-500/10 border border-cyan-500/25 px-4 py-1.5 rounded-full"
+                  className="inline-block text-lg font-black uppercase tracking-[0.2em] text-cyan-400 bg-cyan-500/10 border border-cyan-500/25 px-6 py-2 rounded-full"
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.4 }}
                 >
-                  <Vote size={14} className="inline mr-1.5 -mt-0.5" />
+                  <Vote size={20} className="inline mr-2 -mt-1" />
                   Encuesta en Vivo
                 </motion.span>
                 <motion.h2
-                  className="text-4xl md:text-5xl font-black text-white leading-tight"
+                  className="text-5xl md:text-7xl font-black text-white leading-tight"
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0.1 }}
@@ -690,7 +690,7 @@ export default function PantallaGigantePage({ params }: { params: Promise<{ id: 
 
               {encuestaActiva && (
                 <motion.div
-                  className="grid grid-cols-1 md:grid-cols-2 gap-6"
+                  className="grid grid-cols-1 md:grid-cols-2 gap-8"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.5, delay: 0.2 }}
@@ -709,13 +709,13 @@ export default function PantallaGigantePage({ params }: { params: Promise<{ id: 
                     return (
                       <motion.div
                         key={opc.id}
-                        className="bg-white/[0.04] backdrop-blur-xl border border-white/10 rounded-3xl p-8 space-y-4"
+                        className="bg-white/[0.04] backdrop-blur-xl border border-white/10 rounded-[2rem] p-10 space-y-6"
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.4, delay: 0.3 + idx * 0.1 }}
                       >
-                        <h3 className="text-2xl md:text-3xl font-bold text-white">{opc.texto_opcion}</h3>
-                        <div className="w-full bg-white/5 h-8 rounded-full overflow-hidden border border-white/5">
+                        <h3 className="text-3xl md:text-4xl font-bold text-white">{opc.texto_opcion}</h3>
+                        <div className="w-full bg-white/5 h-10 rounded-full overflow-hidden border border-white/5">
                           <motion.div
                             className={`h-full rounded-full bg-gradient-to-r ${colores[idx % colores.length]}`}
                             initial={{ width: 0 }}
@@ -724,10 +724,10 @@ export default function PantallaGigantePage({ params }: { params: Promise<{ id: 
                           />
                         </div>
                         <div className="flex items-end justify-between">
-                          <span className="text-5xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white to-zinc-300">
+                          <span className="text-6xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white to-zinc-300">
                             {pct}%
                           </span>
-                          <span className="text-xl text-zinc-500 font-bold">
+                          <span className="text-2xl text-zinc-500 font-bold">
                             {votos} {votos === 1 ? 'voto' : 'votos'}
                           </span>
                         </div>
@@ -761,21 +761,21 @@ export default function PantallaGigantePage({ params }: { params: Promise<{ id: 
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -30 }}
               transition={{ duration: 0.5 }}
-              className="w-full max-w-6xl mx-auto space-y-8 text-center"
+              className="w-full max-w-[95vw] mx-auto space-y-8 text-center"
             >
               <motion.span
-                className="inline-block text-sm font-black uppercase tracking-[0.2em] text-violet-400 bg-violet-500/10 border border-violet-500/25 px-4 py-1.5 rounded-full"
+                className="inline-block text-lg font-black uppercase tracking-[0.2em] text-violet-400 bg-violet-500/10 border border-violet-500/25 px-6 py-2 rounded-full"
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4 }}
               >
-                <Cloud size={14} className="inline mr-1.5 -mt-0.5" />
+                <Cloud size={20} className="inline mr-2 -mt-1" />
                 Nube de Ideas
               </motion.span>
 
               {evento.nube_concepto && evento.nube_concepto.trim() !== '' && (
                 <motion.p
-                  className="text-3xl font-bold text-white tracking-wide"
+                  className="text-4xl md:text-5xl font-bold text-white tracking-wide"
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.4, delay: 0.2 }}
