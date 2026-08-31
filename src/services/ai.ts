@@ -14,83 +14,117 @@ const OPENROUTER_MODEL = 'nvidia/nemotron-3.5-lightning:free'
 const GEMINI_MODEL = 'gemini-flash-latest'
 
 async function callGroq(messages: { role: string; content: string }[]): Promise<string> {
-  const apiKey = process.env.GROQ_API_KEY
-  if (!apiKey) throw providerError('GROQ_API_KEY not set')
-
-  const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${apiKey}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      model: GROQ_MODEL,
-      messages,
-      stream: false,
-      temperature: 0.7,
-      max_tokens: 8192,
-    }),
-    signal: AbortSignal.timeout(12000),
-  })
-
-  if (!res.ok) {
-    const errBody = await res.text().catch(() => '')
-    throw providerError(`[Groq] ${res.status}: ${errBody.slice(0, 200)}`, res.status)
+  const dbKeys = await Promise.all([
+    getSettingValue('groq_api_key'),
+    getSettingValue('groq_api_key_2'),
+  ])
+  const envKeys = [process.env.GROQ_API_KEY || '', process.env.GROQ_API_KEY_2 || '']
+  const seen = new Set<string>()
+  const allKeys: string[] = []
+  for (const k of [...envKeys, ...dbKeys]) {
+    if (k && k.trim() !== '' && !seen.has(k)) { seen.add(k); allKeys.push(k) }
   }
+  if (allKeys.length === 0) throw providerError('GROQ_API_KEY not set')
 
-  const data = await res.json()
-  const texto = data.choices?.[0]?.message?.content || ''
-  if (!texto.trim()) throw providerError('[Groq] respuesta vacía')
-  return texto
-}
+  console.log(`[Groq] ${allKeys.length} keys: ${allKeys.map(k => `...${k.slice(-6)}`).join(', ')}`)
 
-async function callOpenRouter(messages: { role: string; content: string }[]): Promise<string> {
-  const apiKey = process.env.OPENROUTER_API_KEY
-  if (!apiKey) throw providerError('OPENROUTER_API_KEY not set')
+  const keyErrors: string[] = []
+  const attempts = allKeys.map(async (apiKey) => {
+    const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: GROQ_MODEL,
+        messages,
+        stream: false,
+        temperature: 0.7,
+        max_tokens: 8192,
+      }),
+      signal: AbortSignal.timeout(10000),
+    })
 
-  const models = ['nvidia/nemotron-3.5-lightning:free', 'minimax/minimax-m3:free']
-  const modelErrors: string[] = []
-
-  const attempts = models.map(async (model) => {
-    try {
-      const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${apiKey}`,
-          'Content-Type': 'application/json',
-          'HTTP-Referer': 'https://itecsaladillo.org.ar',
-          'X-Title': 'ITEC Comunicacion',
-        },
-        body: JSON.stringify({
-          model,
-          messages,
-          stream: false,
-          temperature: 0.7,
-          max_tokens: 8192,
-        }),
-        signal: AbortSignal.timeout(10000),
-      })
-
-      if (!res.ok) {
-        const errBody = await res.text().catch(() => '')
-        throw new Error(`${res.status}: ${errBody.slice(0, 100)}`)
-      }
-
-      const data = await res.json()
-      const texto = data.choices?.[0]?.message?.content || ''
-      if (!texto.trim()) throw new Error('respuesta vacía')
-      return texto
-    } catch (err: any) {
-      modelErrors.push(`${model}: ${err?.message || 'error'}`)
-      throw err
+    if (!res.ok) {
+      const errBody = await res.text().catch(() => '')
+      throw new Error(`key ...${apiKey.slice(-6)} ${res.status}: ${errBody.slice(0, 100)}`)
     }
+
+    const data = await res.json()
+    const texto = data.choices?.[0]?.message?.content || ''
+    if (!texto.trim()) throw new Error(`key ...${apiKey.slice(-6)} respuesta vacía`)
+    return texto
   })
 
   const results = await Promise.allSettled(attempts)
   for (const r of results) {
     if (r.status === 'fulfilled') return r.value
+    keyErrors.push(r.reason?.message || 'error')
   }
-  throw providerError(`[OpenRouter] ${modelErrors.join(' | ')}`)
+  throw providerError(`[Groq] ${keyErrors.join(' | ')}`)
+}
+
+async function callOpenRouter(messages: { role: string; content: string }[]): Promise<string> {
+  const dbKeys = await Promise.all([
+    getSettingValue('openrouter_api_key'),
+    getSettingValue('openrouter_api_key_2'),
+  ])
+  const envKeys = [process.env.OPENROUTER_API_KEY || '', process.env.OPENROUTER_API_KEY_2 || '']
+  const seen = new Set<string>()
+  const allKeys: string[] = []
+  for (const k of [...envKeys, ...dbKeys]) {
+    if (k && k.trim() !== '' && !seen.has(k)) { seen.add(k); allKeys.push(k) }
+  }
+  if (allKeys.length === 0) throw providerError('OPENROUTER_API_KEY not set')
+
+  console.log(`[OpenRouter] ${allKeys.length} keys: ${allKeys.map(k => `...${k.slice(-6)}`).join(', ')}`)
+
+  const models = ['nvidia/nemotron-3.5-lightning:free', 'minimax/minimax-m3:free']
+
+  // Combinar keys x modelos, lanzar todo en paralelo
+  const attempts: Promise<string>[] = []
+  for (const apiKey of allKeys) {
+    for (const model of models) {
+      attempts.push(
+        fetch('https://openrouter.ai/api/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${apiKey}`,
+            'Content-Type': 'application/json',
+            'HTTP-Referer': 'https://itecsaladillo.org.ar',
+            'X-Title': 'ITEC Comunicacion',
+          },
+          body: JSON.stringify({
+            model,
+            messages,
+            stream: false,
+            temperature: 0.7,
+            max_tokens: 8192,
+          }),
+          signal: AbortSignal.timeout(10000),
+        })
+        .then(async (res) => {
+          if (!res.ok) {
+            const errBody = await res.text().catch(() => '')
+            throw new Error(`${model} key...${apiKey.slice(-6)} ${res.status}: ${errBody.slice(0, 80)}`)
+          }
+          const data = await res.json()
+          const texto = data.choices?.[0]?.message?.content || ''
+          if (!texto.trim()) throw new Error(`${model} key...${apiKey.slice(-6)} vacía`)
+          return texto
+        })
+      )
+    }
+  }
+
+  const results = await Promise.allSettled(attempts)
+  const errors: string[] = []
+  for (const r of results) {
+    if (r.status === 'fulfilled') return r.value
+    errors.push(r.reason?.message || 'error')
+  }
+  throw providerError(`[OpenRouter] ${errors.join(' | ')}`)
 }
 
 async function callGemini(
@@ -181,7 +215,7 @@ async function callAI(messages: { role: string; content: string }[], temperature
   // Esto es crítico para Vercel Hobby (maxDuration ~10s).
   const candidates: { nombre: string; promise: Promise<string> }[] = []
 
-  if (process.env.OPENROUTER_API_KEY) {
+  if (process.env.OPENROUTER_API_KEY || process.env.OPENROUTER_API_KEY_2) {
     candidates.push({ nombre: 'openrouter', promise: callOpenRouter(messages) })
   }
 
@@ -200,7 +234,7 @@ async function callAI(messages: { role: string; content: string }[], temperature
     candidates.push({ nombre: 'gemini', promise: callGemini(messages, temperature) })
   }
 
-  if (process.env.GROQ_API_KEY && !skipGroq) {
+  if ((process.env.GROQ_API_KEY || process.env.GROQ_API_KEY_2) && !skipGroq) {
     candidates.push({ nombre: 'groq', promise: callGroq(messages) })
   }
 
