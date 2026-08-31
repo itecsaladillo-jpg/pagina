@@ -97,21 +97,39 @@ async function callGemini(
   messages: { role: string; content: string }[],
   temperature: number
 ): Promise<string> {
-  const allKeys = await Promise.all([
-    getSettingValue('gemini_api_key', 'GEMINI_API_KEY'),
-    getSettingValue('gemini_api_key_2', 'GEMINI_API_KEY_2'),
-    getSettingValue('gemini_api_key_3', 'GEMINI_API_KEY_3'),
-    getSettingValue('gemini_api_key_4', 'GEMINI_API_KEY_4'),
+  // Recopilar keys de DB Y de env vars, deduplicando.
+  // Priorizar env vars (las que el usuario acaba de agregar).
+  const dbKeys = await Promise.all([
+    getSettingValue('gemini_api_key'),
+    getSettingValue('gemini_api_key_2'),
+    getSettingValue('gemini_api_key_3'),
+    getSettingValue('gemini_api_key_4'),
   ])
-  const validKeys = allKeys.filter(k => k && k.trim() !== '')
-  if (validKeys.length === 0) throw providerError('[Gemini] no API key configurada')
+  const envKeys = [
+    process.env.GEMINI_API_KEY || '',
+    process.env.GEMINI_API_KEY_2 || '',
+    process.env.GEMINI_API_KEY_3 || '',
+    process.env.GEMINI_API_KEY_4 || '',
+  ]
+  // Unir: env first (más recientes), luego DB, sin duplicados
+  const seen = new Set<string>()
+  const allKeys: string[] = []
+  for (const k of [...envKeys, ...dbKeys]) {
+    if (k && k.trim() !== '' && !seen.has(k)) {
+      seen.add(k)
+      allKeys.push(k)
+    }
+  }
+  if (allKeys.length === 0) throw providerError('[Gemini] no API key configurada')
+
+  console.log(`[Gemini] ${allKeys.length} keys disponibles: ${allKeys.map(k => `...${k.slice(-6)}`).join(', ')}`)
 
   const systemMsg = messages.find(m => m.role === 'system')?.content || ''
   const userMsg = messages.filter(m => m.role === 'user').map(m => m.content).join('\n')
 
   // Lanzar TODAS las keys EN PARALELO, la primera que responda gana
   const keyErrors: string[] = []
-  const attempts = validKeys.map(async (key) => {
+  const attempts = allKeys.map(async (key) => {
     try {
       const res = await fetch(
         `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${key}`,
