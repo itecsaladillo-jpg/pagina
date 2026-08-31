@@ -48,48 +48,38 @@ async function callOpenRouter(messages: { role: string; content: string }[]): Pr
   const apiKey = process.env.OPENROUTER_API_KEY
   if (!apiKey) throw providerError('OPENROUTER_API_KEY not set')
 
-  // Dos modelos free: Lightning primero, luego MiniMax como fallback
+  // Lanzar ambos modelos EN PARALELO, el primero que responda gana
   const models = ['nvidia/nemotron-3.5-lightning:free', 'minimax/minimax-m3:free']
+  const attempts = models.map(async (model) => {
+    const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+        'HTTP-Referer': 'https://itecsaladillo.org.ar',
+        'X-Title': 'ITEC Comunicacion',
+      },
+      body: JSON.stringify({
+        model,
+        messages,
+        stream: false,
+        temperature: 0.7,
+        max_tokens: 8192,
+      }),
+      signal: AbortSignal.timeout(10000),
+    })
 
-  for (const model of models) {
-    try {
-      const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${apiKey}`,
-          'Content-Type': 'application/json',
-          'HTTP-Referer': 'https://itecsaladillo.org.ar',
-          'X-Title': 'ITEC Comunicacion',
-        },
-        body: JSON.stringify({
-          model,
-          messages,
-          stream: false,
-          temperature: 0.7,
-          max_tokens: 8192,
-        }),
-        signal: AbortSignal.timeout(10000),
-      })
+    if (!res.ok) throw new Error(`${res.status}`)
+    const data = await res.json()
+    const texto = data.choices?.[0]?.message?.content || ''
+    if (!texto.trim()) throw new Error('respuesta vacía')
+    return texto
+  })
 
-      if (!res.ok) {
-        const errBody = await res.text().catch(() => '')
-        console.error(`[OpenRouter] ${model} ${res.status}:`, errBody.slice(0, 200))
-        continue
-      }
-
-      const data = await res.json()
-      const texto = data.choices?.[0]?.message?.content || ''
-      if (!texto.trim()) {
-        console.error(`[OpenRouter] ${model} respuesta vacía`)
-        continue
-      }
-      return texto
-    } catch (err: any) {
-      console.error(`[OpenRouter] ${model} error:`, err?.message)
-      continue
-    }
+  const results = await Promise.allSettled(attempts)
+  for (const r of results) {
+    if (r.status === 'fulfilled') return r.value
   }
-
   throw providerError('[OpenRouter] todos los modelos fallaron')
 }
 
@@ -109,42 +99,33 @@ async function callGemini(
   const systemMsg = messages.find(m => m.role === 'system')?.content || ''
   const userMsg = messages.filter(m => m.role === 'user').map(m => m.content).join('\n')
 
-  // Intentar cada key hasta que una funcione
-  for (const key of validKeys) {
-    try {
-      const res = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${key}`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            systemInstruction: systemMsg ? { parts: [{ text: systemMsg }] } : undefined,
-            contents: [{ parts: [{ text: userMsg }] }],
-            generationConfig: { temperature, maxOutputTokens: 8192 },
-          }),
-          signal: AbortSignal.timeout(10000),
-        },
-      )
+  // Lanzar TODAS las keys EN PARALELO, la primera que responda gana
+  const attempts = validKeys.map(async (key) => {
+    const res = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${key}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          systemInstruction: systemMsg ? { parts: [{ text: systemMsg }] } : undefined,
+          contents: [{ parts: [{ text: userMsg }] }],
+          generationConfig: { temperature, maxOutputTokens: 8192 },
+        }),
+        signal: AbortSignal.timeout(10000),
+      },
+    )
 
-      if (!res.ok) {
-        const err = await res.text().catch(() => '')
-        console.error(`[Gemini] key ...${key.slice(-6)} falló ${res.status}:`, err.slice(0, 200))
-        continue
-      }
+    if (!res.ok) throw new Error(`key ...${key.slice(-6)} ${res.status}`)
+    const data = await res.json()
+    const texto = data.candidates?.[0]?.content?.parts?.[0]?.text || ''
+    if (!texto.trim()) throw new Error(`key ...${key.slice(-6)} vacía`)
+    return texto
+  })
 
-      const data = await res.json()
-      const texto = data.candidates?.[0]?.content?.parts?.[0]?.text || ''
-      if (!texto.trim()) {
-        console.error(`[Gemini] key ...${key.slice(-6)} respuesta vacía`)
-        continue
-      }
-      return texto
-    } catch (err: any) {
-      console.error(`[Gemini] key ...${key.slice(-6)} error:`, err?.message)
-      continue
-    }
+  const results = await Promise.allSettled(attempts)
+  for (const r of results) {
+    if (r.status === 'fulfilled') return r.value
   }
-
   throw providerError('[Gemini] todas las API keys fallaron')
 }
 
