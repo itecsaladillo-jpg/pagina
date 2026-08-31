@@ -9,8 +9,8 @@ function providerError(msg: string, status?: number): ProviderError {
   return e
 }
 
-const GROQ_MODEL = 'llama-3.3-70b-versatile'
-const OPENROUTER_MODEL = 'nvidia/nemotron-3-super-120b-a12b:free'
+const GROQ_MODEL = 'openai/gpt-oss-20b'
+const OPENROUTER_MODEL = 'google/gemma-4-31b-it:free'
 const TOKENROUTER_MODEL = 'deepseek/deepseek-chat'
 const GEMINI_MODEL = 'gemini-flash-latest'
 
