@@ -85,7 +85,14 @@ export function NewsFlashMulticanalEditor({ onSave, onCancel }: NewsFlashMultica
         body: JSON.stringify({ datos_crudos: rawFacts })
       })
 
-      const data = await res.json()
+      const text = await res.text()
+      let data: any
+      try {
+        data = JSON.parse(text)
+      } catch {
+        setErrorBanner('Error del servidor: respuesta inválida. Reintentá en unos segundos.')
+        return
+      }
       
       if (data.success && data.result) {
         setResult(data.result)

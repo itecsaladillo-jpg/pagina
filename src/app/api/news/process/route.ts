@@ -2,14 +2,21 @@ import { getCurrentMember } from '@/services/auth'
 import { NextRequest, NextResponse } from 'next/server'
 import { generateMulticanalNews } from '@/services/ai'
 
+export const maxDuration = 60
+
 export async function POST(request: NextRequest) {
   const member = await getCurrentMember()
   if (!member || member.role !== 'admin') {
     return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
   }
 
-  const body = await request.json()
-  const { datos_crudos } = body
+  let datos_crudos: string
+  try {
+    const body = await request.json()
+    datos_crudos = body.datos_crudos
+  } catch {
+    return NextResponse.json({ error: 'JSON inválido' }, { status: 400 })
+  }
 
   if (!datos_crudos || datos_crudos.length < 20) {
     return NextResponse.json({ error: 'Los datos crudos son obligatorios y deben tener al menos 20 caracteres' }, { status: 400 })

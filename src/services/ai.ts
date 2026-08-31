@@ -121,6 +121,10 @@ async function callGemini(
 async function callAI(messages: { role: string; content: string }[], temperature = 0.7): Promise<string> {
   const esperar = (ms: number) => new Promise(r => setTimeout(r, ms))
 
+  // Timeout total: 50s para dejar margen al maxDuration=60 del route
+  const DEADLINE_MS = 50000
+  const inicio = Date.now()
+
   // Estimar tokens: Groq free tier limita a 8000 TPM por cuenta.
   // Usamos umbral conservador de 5000 para skippear Groq con prompts grandes.
   const totalChars = messages.reduce((sum, m) => sum + m.content.length, 0)
@@ -162,6 +166,12 @@ async function callAI(messages: { role: string; content: string }[], temperature
   const MAX_PASADAS = 7
 
   for (let pasada = 1; pasada <= MAX_PASADAS; pasada++) {
+    // Verificar deadline
+    if (Date.now() - inicio > DEADLINE_MS) {
+      console.error(`[AI Service] Deadline alcanzado tras ${(Date.now() - inicio) / 1000}s`)
+      break
+    }
+
     for (const proveedor of proveedores) {
       if (deshabilitados.has(proveedor.nombre)) continue
 
@@ -199,10 +209,13 @@ async function callAI(messages: { role: string; content: string }[], temperature
           deshabilitados.add(proveedor.nombre)
         }
 
-        // Backoff exponencial: 2s, 4s, 8s, 16s, 32s
-        const backoff = 2000 * Math.pow(2, pasada - 1)
-        console.log(`[AI Service] Esperando ${backoff}ms antes del siguiente intento...`)
-        await esperar(backoff)
+        // Backoff exponencial con tope: 2s, 4s, 8s, 16s, 32s
+        const restante = DEADLINE_MS - (Date.now() - inicio)
+        const backoff = Math.min(2000 * Math.pow(2, pasada - 1), restante - 3000)
+        if (backoff > 0) {
+          console.log(`[AI Service] Esperando ${backoff}ms antes del siguiente intento...`)
+          await esperar(backoff)
+        }
       }
     }
 
@@ -212,7 +225,7 @@ async function callAI(messages: { role: string; content: string }[], temperature
     }
   }
 
-  throw new Error(`[AI Service] Todos los providers fallaron tras ${MAX_PASADAS} pasadas:\n${errores.join('\n')}`)
+  throw new Error(`[AI Service] Todos los providers fallaron:\n${errores.join('\n')}`)
 }
 
 /**
