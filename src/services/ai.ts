@@ -10,7 +10,7 @@ function providerError(msg: string, status?: number): ProviderError {
 }
 
 const GROQ_MODEL = 'openai/gpt-oss-20b'
-const OPENROUTER_MODEL = 'nvidia/nemotron-3-ultra-550b-a55b:free'
+const OPENROUTER_MODEL = 'nvidia/nemotron-3.5-lightning:free'
 const GEMINI_MODEL = 'gemini-flash-latest'
 
 async function callGroq(messages: { role: string; content: string }[]): Promise<string> {
@@ -48,33 +48,49 @@ async function callOpenRouter(messages: { role: string; content: string }[]): Pr
   const apiKey = process.env.OPENROUTER_API_KEY
   if (!apiKey) throw providerError('OPENROUTER_API_KEY not set')
 
-  const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${apiKey}`,
-      'Content-Type': 'application/json',
-      'HTTP-Referer': 'https://itecsaladillo.org.ar',
-      'X-Title': 'ITEC Comunicacion',
-    },
-    body: JSON.stringify({
-      model: OPENROUTER_MODEL,
-      messages,
-      stream: false,
-      temperature: 0.7,
-      max_tokens: 8192,
-    }),
-    signal: AbortSignal.timeout(12000),
-  })
+  // Dos modelos free: Lightning primero, luego MiniMax como fallback
+  const models = ['nvidia/nemotron-3.5-lightning:free', 'minimax/minimax-m3:free']
 
-  if (!res.ok) {
-    const errBody = await res.text().catch(() => '')
-    throw providerError(`[OpenRouter] ${res.status}: ${errBody.slice(0, 200)}`, res.status)
+  for (const model of models) {
+    try {
+      const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${apiKey}`,
+          'Content-Type': 'application/json',
+          'HTTP-Referer': 'https://itecsaladillo.org.ar',
+          'X-Title': 'ITEC Comunicacion',
+        },
+        body: JSON.stringify({
+          model,
+          messages,
+          stream: false,
+          temperature: 0.7,
+          max_tokens: 8192,
+        }),
+        signal: AbortSignal.timeout(10000),
+      })
+
+      if (!res.ok) {
+        const errBody = await res.text().catch(() => '')
+        console.error(`[OpenRouter] ${model} ${res.status}:`, errBody.slice(0, 200))
+        continue
+      }
+
+      const data = await res.json()
+      const texto = data.choices?.[0]?.message?.content || ''
+      if (!texto.trim()) {
+        console.error(`[OpenRouter] ${model} respuesta vacía`)
+        continue
+      }
+      return texto
+    } catch (err: any) {
+      console.error(`[OpenRouter] ${model} error:`, err?.message)
+      continue
+    }
   }
 
-  const data = await res.json()
-  const texto = data.choices?.[0]?.message?.content || ''
-  if (!texto.trim()) throw providerError('[OpenRouter] respuesta vacía')
-  return texto
+  throw providerError('[OpenRouter] todos los modelos fallaron')
 }
 
 async function callGemini(
