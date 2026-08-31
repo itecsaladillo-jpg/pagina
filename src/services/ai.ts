@@ -9,61 +9,8 @@ function providerError(msg: string, status?: number): ProviderError {
   return e
 }
 
-const GROQ_MODEL = 'openai/gpt-oss-20b'
 const OPENROUTER_MODEL = 'nvidia/nemotron-3.5-lightning:free'
 const GEMINI_MODEL = 'gemini-flash-latest'
-
-async function callGroq(messages: { role: string; content: string }[]): Promise<string> {
-  const dbKeys = await Promise.all([
-    getSettingValue('groq_api_key'),
-    getSettingValue('groq_api_key_2'),
-  ])
-  const envKeys = [process.env.GROQ_API_KEY || '', process.env.GROQ_API_KEY_2 || '']
-  const seen = new Set<string>()
-  const allKeys: string[] = []
-  for (const k of [...envKeys, ...dbKeys]) {
-    if (k && k.trim() !== '' && !seen.has(k)) { seen.add(k); allKeys.push(k) }
-  }
-  if (allKeys.length === 0) throw providerError('GROQ_API_KEY not set')
-
-  console.log(`[Groq] ${allKeys.length} keys: ${allKeys.map(k => `...${k.slice(-6)}`).join(', ')}`)
-
-  const keyErrors: string[] = []
-  const attempts = allKeys.map(async (apiKey) => {
-    const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: GROQ_MODEL,
-        messages,
-        stream: false,
-        temperature: 0.7,
-        max_tokens: 8192,
-      }),
-      signal: AbortSignal.timeout(10000),
-    })
-
-    if (!res.ok) {
-      const errBody = await res.text().catch(() => '')
-      throw new Error(`key ...${apiKey.slice(-6)} ${res.status}: ${errBody.slice(0, 100)}`)
-    }
-
-    const data = await res.json()
-    const texto = data.choices?.[0]?.message?.content || ''
-    if (!texto.trim()) throw new Error(`key ...${apiKey.slice(-6)} respuesta vacía`)
-    return texto
-  })
-
-  const results = await Promise.allSettled(attempts)
-  for (const r of results) {
-    if (r.status === 'fulfilled') return r.value
-    keyErrors.push(r.reason?.message || 'error')
-  }
-  throw providerError(`[Groq] ${keyErrors.join(' | ')}`)
-}
 
 async function callOpenRouter(messages: { role: string; content: string }[]): Promise<string> {
   const dbKeys = await Promise.all([
@@ -202,17 +149,7 @@ async function callGemini(
 }
 
 async function callAI(messages: { role: string; content: string }[], temperature = 0.7): Promise<string> {
-  // Estimar tokens: Groq free tier limita a 8000 TPM por cuenta.
-  const totalChars = messages.reduce((sum, m) => sum + m.content.length, 0)
-  const estimTokens = Math.ceil(totalChars / 3.5)
-  const skipGroq = estimTokens > 5000
-
-  if (skipGroq) {
-    console.warn(`[AI Service] Prompt grande (~${estimTokens} tokens) — Groq deshabilitado`)
-  }
-
   // Lanzar todos los providers EN PARALELO. El primero que responda gana.
-  // Esto es crítico para Vercel Hobby (maxDuration ~10s).
   const candidates: { nombre: string; promise: Promise<string> }[] = []
 
   if (process.env.OPENROUTER_API_KEY || process.env.OPENROUTER_API_KEY_2) {
@@ -232,10 +169,6 @@ async function callAI(messages: { role: string; content: string }[], temperature
 
   if (geminiKey) {
     candidates.push({ nombre: 'gemini', promise: callGemini(messages, temperature) })
-  }
-
-  if ((process.env.GROQ_API_KEY || process.env.GROQ_API_KEY_2) && !skipGroq) {
-    candidates.push({ nombre: 'groq', promise: callGroq(messages) })
   }
 
   if (candidates.length === 0) {
