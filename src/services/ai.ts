@@ -119,14 +119,20 @@ async function callGemini(
 }
 
 async function callAI(messages: { role: string; content: string }[], temperature = 0.7): Promise<string> {
-  const BACKOFF_MS = 1200
-  const PERMANENT_ERRORS = new Set([400, 401, 403, 404, 413])
+  const BASE_BACKOFF_MS = 1500
+  const PERMANENT_ERRORS = new Set([400, 401, 403, 404])
   const esperar = (ms: number) => new Promise(r => setTimeout(r, ms))
+
+  // Estimar tokens (~4 chars por token). Si el prompt es muy largo,
+  // Groq falla con 413 (límite 8000 TPM de cuenta free).
+  const totalChars = messages.reduce((sum, m) => sum + m.content.length, 0)
+  const estimTokens = Math.ceil(totalChars / 4)
+  const GROQ_MAX_TOKENS = 7500
 
   const proveedores = [
     {
       nombre: 'groq',
-      disponible: () => !!process.env.GROQ_API_KEY,
+      disponible: () => !!process.env.GROQ_API_KEY && estimTokens < GROQ_MAX_TOKENS,
       ejecutar: () => callGroq(messages),
     },
     {
@@ -149,17 +155,23 @@ async function callAI(messages: { role: string; content: string }[], temperature
     },
   ]
 
+  if (estimTokens >= GROQ_MAX_TOKENS) {
+    console.warn(`[AI Service] Prompt grande (~${estimTokens} tokens), saltando Groq`)
+  }
+
   const errores: string[] = []
   const deshabilitados = new Set<string>()
 
-  for (let pasada = 1; pasada <= 3; pasada++) {
+  for (let pasada = 1; pasada <= 5; pasada++) {
     for (const proveedor of proveedores) {
       if (deshabilitados.has(proveedor.nombre)) continue
 
       const disponible = await proveedor.disponible()
       if (!disponible) {
-        deshabilitados.add(proveedor.nombre)
-        errores.push(`${proveedor.nombre}: sin API key`)
+        if (!deshabilitados.has(proveedor.nombre)) {
+          deshabilitados.add(proveedor.nombre)
+          errores.push(`${proveedor.nombre}: ${estimTokens >= GROQ_MAX_TOKENS && proveedor.nombre === 'groq' ? 'skip (prompt grande)' : 'sin API key'}`)
+        }
         continue
       }
 
@@ -179,7 +191,8 @@ async function callAI(messages: { role: string; content: string }[], temperature
           console.warn(`[AI Service] ${proveedor.nombre} deshabilitado por error permanente (${status})`)
         }
 
-        await esperar(BACKOFF_MS)
+        // Backoff exponencial: 1.5s, 3s, 6s, 12s
+        await esperar(BASE_BACKOFF_MS * Math.pow(2, pasada - 1))
       }
     }
 
