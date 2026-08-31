@@ -119,109 +119,65 @@ async function callGemini(
 }
 
 async function callAI(messages: { role: string; content: string }[], temperature = 0.7): Promise<string> {
-  const esperar = (ms: number) => new Promise(r => setTimeout(r, ms))
-
-  // Timeout total: 55s para dejar margen al maxDuration=60 del route
-  const DEADLINE_MS = 55000
-  const inicio = Date.now()
-
   // Estimar tokens: Groq free tier limita a 8000 TPM por cuenta.
-  // Usamos umbral conservador de 5000 para skippear Groq con prompts grandes.
   const totalChars = messages.reduce((sum, m) => sum + m.content.length, 0)
   const estimTokens = Math.ceil(totalChars / 3.5)
   const skipGroq = estimTokens > 5000
 
   if (skipGroq) {
-    console.warn(`[AI Service] Prompt grande (~${estimTokens} tokens estimados, ${totalChars} chars) — Groq deshabilitado para este request`)
+    console.warn(`[AI Service] Prompt grande (~${estimTokens} tokens) — Groq deshabilitado`)
   }
 
-  const proveedores = [
-    {
-      nombre: 'openrouter',
-      disponible: () => !!process.env.OPENROUTER_API_KEY,
-      ejecutar: () => callOpenRouter(messages),
-    },
-    {
-      nombre: 'gemini',
-      disponible: async () => {
-        const keys = await Promise.all([
-          getSettingValue('gemini_api_key', 'GEMINI_APY_KEY'),
-          getSettingValue('gemini_api_key_2', 'GEMINI_API_KEY_2'),
-          getSettingValue('gemini_api_key_3', 'GEMINI_API_KEY_3'),
-          getSettingValue('gemini_api_key_4', 'GEMINI_API_KEY_4'),
-        ])
-        return !!(keys.find(k => k) || process.env.GOOGLE_GENERATIVE_AI_API_KEY)
-      },
-      ejecutar: () => callGemini(messages, temperature),
-    },
-    {
-      nombre: 'groq',
-      disponible: () => !!process.env.GROQ_API_KEY && !skipGroq,
-      ejecutar: () => callGroq(messages),
-    },
-  ]
+  // Lanzar todos los providers EN PARALELO. El primero que responda gana.
+  // Esto es crítico para Vercel Hobby (maxDuration ~10s).
+  const candidates: { nombre: string; promise: Promise<string> }[] = []
 
+  if (process.env.OPENROUTER_API_KEY) {
+    candidates.push({ nombre: 'openrouter', promise: callOpenRouter(messages) })
+  }
+
+  // Gemini: necesitamos la key, launch la promise de resolución de key en paralelo
+  const geminiKey = await (async () => {
+    const keys = await Promise.all([
+      getSettingValue('gemini_api_key', 'GEMINI_APY_KEY'),
+      getSettingValue('gemini_api_key_2', 'GEMINI_API_KEY_2'),
+      getSettingValue('gemini_api_key_3', 'GEMINI_API_KEY_3'),
+      getSettingValue('gemini_api_key_4', 'GEMINI_API_KEY_4'),
+    ])
+    return keys.find(k => k) || process.env.GOOGLE_GENERATIVE_AI_API_KEY || ''
+  })()
+
+  if (geminiKey) {
+    candidates.push({ nombre: 'gemini', promise: callGemini(messages, temperature) })
+  }
+
+  if (process.env.GROQ_API_KEY && !skipGroq) {
+    candidates.push({ nombre: 'groq', promise: callGroq(messages) })
+  }
+
+  if (candidates.length === 0) {
+    throw new Error('[AI Service] Ningún provider disponible (sin API keys)')
+  }
+
+  console.log(`[AI Service] Lanzando ${candidates.length} providers en paralelo: ${candidates.map(c => c.nombre).join(', ')}`)
+
+  // Usar Promise.any: resuelve con el primer成功, rechaza si TODOS fallan
   const errores: string[] = []
-  const deshabilitados = new Set<string>()
-  const MAX_PASADAS = 4
+  const results = await Promise.allSettled(candidates.map(c =>
+    c.promise.then(ok => ({ ok: true, nombre: c.nombre, texto: ok } as const))
+      .catch(err => { throw { nombre: c.nombre, error: err } })
+  ))
 
-  for (let pasada = 1; pasada <= MAX_PASADAS; pasada++) {
-    // Verificar deadline
-    if (Date.now() - inicio > DEADLINE_MS) {
-      console.error(`[AI Service] Deadline alcanzado tras ${(Date.now() - inicio) / 1000}s`)
-      break
+  for (const r of results) {
+    if (r.status === 'fulfilled' && r.value.ok) {
+      console.log(`[AI Service] OK con ${r.value.nombre}`)
+      return r.value.texto
     }
-
-    for (const proveedor of proveedores) {
-      if (deshabilitados.has(proveedor.nombre)) continue
-
-      const disponible = await proveedor.disponible()
-      if (!disponible) {
-        deshabilitados.add(proveedor.nombre)
-        const razon = proveedor.nombre === 'groq' && skipGroq
-          ? 'skip (prompt excede límite Groq 8K TPM)'
-          : 'sin API key'
-        if (!errores.some(e => e.startsWith(proveedor.nombre))) {
-          errores.push(`${proveedor.nombre}: ${razon}`)
-        }
-        continue
-      }
-
-      try {
-        console.log(`[AI Service] Pasada ${pasada}/${MAX_PASADAS} → ${proveedor.nombre}`)
-        const resultado = await proveedor.ejecutar()
-        console.log(`[AI Service] OK con ${proveedor.nombre} en pasada ${pasada}`)
-        return resultado
-      } catch (err: any) {
-        const msg = err?.message || 'error desconocido'
-        const status = err?.status as number | undefined
-        errores.push(`${proveedor.nombre}: ${msg}`)
-        console.error(`[AI Service] ${proveedor.nombre} falló (pasada ${pasada}):`, msg)
-
-        // Errores permanentes: deshabilitar provider
-        if (status && new Set([400, 401, 403, 404]).has(status)) {
-          deshabilitados.add(proveedor.nombre)
-          console.warn(`[AI Service] ${proveedor.nombre} deshabilitado permanentemente (${status})`)
-        }
-
-        // 413 en Groq: deshabilitar inmediatamente (prompt siempre grande)
-        if (proveedor.nombre === 'groq' && status === 413) {
-          deshabilitados.add(proveedor.nombre)
-        }
-
-        // Backoff fijo de 2s (rate limits se recuperan rápido)
-        const restante = DEADLINE_MS - (Date.now() - inicio)
-        const backoff = Math.min(2000, restante - 2000)
-        if (backoff > 0) {
-          console.log(`[AI Service] Esperando ${backoff}ms...`)
-          await esperar(backoff)
-        }
-      }
-    }
-
-    if (deshabilitados.size === proveedores.length) {
-      console.error(`[AI Service] Todos los providers deshabilitados tras pasada ${pasada}`)
-      break
+    if (r.status === 'rejected') {
+      const e = r.reason
+      const msg = e?.error?.message || e?.message || 'error desconocido'
+      errores.push(`${e?.nombre || 'unknown'}: ${msg}`)
+      console.error(`[AI Service] ${e?.nombre} falló:`, msg)
     }
   }
 
