@@ -10,7 +10,7 @@ function providerError(msg: string, status?: number): ProviderError {
 }
 
 const GROQ_MODEL = 'openai/gpt-oss-20b'
-const OPENROUTER_MODEL = 'google/gemma-4-31b-it:free'
+const OPENROUTER_MODEL = 'nvidia/nemotron-3-ultra-550b-a55b:free'
 const GEMINI_MODEL = 'gemini-flash-latest'
 
 async function callGroq(messages: { role: string; content: string }[]): Promise<string> {
@@ -119,22 +119,19 @@ async function callGemini(
 }
 
 async function callAI(messages: { role: string; content: string }[], temperature = 0.7): Promise<string> {
-  const BASE_BACKOFF_MS = 1500
-  const PERMANENT_ERRORS = new Set([400, 401, 403, 404])
   const esperar = (ms: number) => new Promise(r => setTimeout(r, ms))
 
-  // Estimar tokens (~4 chars por token). Si el prompt es muy largo,
-  // Groq falla con 413 (límite 8000 TPM de cuenta free).
+  // Estimar tokens: Groq free tier limita a 8000 TPM por cuenta.
+  // Usamos umbral conservador de 5000 para skippear Groq con prompts grandes.
   const totalChars = messages.reduce((sum, m) => sum + m.content.length, 0)
-  const estimTokens = Math.ceil(totalChars / 4)
-  const GROQ_MAX_TOKENS = 7500
+  const estimTokens = Math.ceil(totalChars / 3.5)
+  const skipGroq = estimTokens > 5000
+
+  if (skipGroq) {
+    console.warn(`[AI Service] Prompt grande (~${estimTokens} tokens estimados, ${totalChars} chars) — Groq deshabilitado para este request`)
+  }
 
   const proveedores = [
-    {
-      nombre: 'groq',
-      disponible: () => !!process.env.GROQ_API_KEY && estimTokens < GROQ_MAX_TOKENS,
-      ejecutar: () => callGroq(messages),
-    },
     {
       nombre: 'openrouter',
       disponible: () => !!process.env.OPENROUTER_API_KEY,
@@ -153,32 +150,37 @@ async function callAI(messages: { role: string; content: string }[], temperature
       },
       ejecutar: () => callGemini(messages, temperature),
     },
+    {
+      nombre: 'groq',
+      disponible: () => !!process.env.GROQ_API_KEY && !skipGroq,
+      ejecutar: () => callGroq(messages),
+    },
   ]
-
-  if (estimTokens >= GROQ_MAX_TOKENS) {
-    console.warn(`[AI Service] Prompt grande (~${estimTokens} tokens), saltando Groq`)
-  }
 
   const errores: string[] = []
   const deshabilitados = new Set<string>()
+  const MAX_PASADAS = 7
 
-  for (let pasada = 1; pasada <= 5; pasada++) {
+  for (let pasada = 1; pasada <= MAX_PASADAS; pasada++) {
     for (const proveedor of proveedores) {
       if (deshabilitados.has(proveedor.nombre)) continue
 
       const disponible = await proveedor.disponible()
       if (!disponible) {
-        if (!deshabilitados.has(proveedor.nombre)) {
-          deshabilitados.add(proveedor.nombre)
-          errores.push(`${proveedor.nombre}: ${estimTokens >= GROQ_MAX_TOKENS && proveedor.nombre === 'groq' ? 'skip (prompt grande)' : 'sin API key'}`)
+        deshabilitados.add(proveedor.nombre)
+        const razon = proveedor.nombre === 'groq' && skipGroq
+          ? 'skip (prompt excede límite Groq 8K TPM)'
+          : 'sin API key'
+        if (!errores.some(e => e.startsWith(proveedor.nombre))) {
+          errores.push(`${proveedor.nombre}: ${razon}`)
         }
         continue
       }
 
       try {
-        console.log(`[AI Service] Pasada ${pasada} → ${proveedor.nombre}`)
+        console.log(`[AI Service] Pasada ${pasada}/${MAX_PASADAS} → ${proveedor.nombre}`)
         const resultado = await proveedor.ejecutar()
-        if (pasada > 1) console.log(`[AI Service] Éxito en pasada ${pasada} con ${proveedor.nombre}`)
+        console.log(`[AI Service] OK con ${proveedor.nombre} en pasada ${pasada}`)
         return resultado
       } catch (err: any) {
         const msg = err?.message || 'error desconocido'
@@ -186,20 +188,31 @@ async function callAI(messages: { role: string; content: string }[], temperature
         errores.push(`${proveedor.nombre}: ${msg}`)
         console.error(`[AI Service] ${proveedor.nombre} falló (pasada ${pasada}):`, msg)
 
-        if (status && PERMANENT_ERRORS.has(status)) {
+        // Errores permanentes: deshabilitar provider
+        if (status && new Set([400, 401, 403, 404]).has(status)) {
           deshabilitados.add(proveedor.nombre)
-          console.warn(`[AI Service] ${proveedor.nombre} deshabilitado por error permanente (${status})`)
+          console.warn(`[AI Service] ${proveedor.nombre} deshabilitado permanentemente (${status})`)
         }
 
-        // Backoff exponencial: 1.5s, 3s, 6s, 12s
-        await esperar(BASE_BACKOFF_MS * Math.pow(2, pasada - 1))
+        // 413 en Groq: deshabilitar inmediatamente (prompt siempre grande)
+        if (proveedor.nombre === 'groq' && status === 413) {
+          deshabilitados.add(proveedor.nombre)
+        }
+
+        // Backoff exponencial: 2s, 4s, 8s, 16s, 32s
+        const backoff = 2000 * Math.pow(2, pasada - 1)
+        console.log(`[AI Service] Esperando ${backoff}ms antes del siguiente intento...`)
+        await esperar(backoff)
       }
     }
 
-    if (deshabilitados.size === proveedores.length) break
+    if (deshabilitados.size === proveedores.length) {
+      console.error(`[AI Service] Todos los providers deshabilitados tras pasada ${pasada}`)
+      break
+    }
   }
 
-  throw new Error(`[AI Service] Todos los providers fallaron:\n${errores.join('\n')}`)
+  throw new Error(`[AI Service] Todos los providers fallaron tras ${MAX_PASADAS} pasadas:\n${errores.join('\n')}`)
 }
 
 /**
