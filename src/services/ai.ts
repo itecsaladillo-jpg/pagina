@@ -1,9 +1,86 @@
 import { createClient } from '@/lib/supabase/server'
 import { getSettingValue } from '@/lib/settings'
 
-async function callAI(messages: { role: string; content: string }[], temperature = 0.7): Promise<string> {
-  const errors: string[] = []
+type ProviderError = Error & { status?: number }
 
+function providerError(msg: string, status?: number): ProviderError {
+  const e = new Error(msg) as ProviderError
+  e.status = status
+  return e
+}
+
+const GROQ_MODEL = 'openai/gpt-oss-120b'
+const OPENROUTER_MODEL = 'nvidia/nemotron-3-super-120b-a12b:free'
+const GEMINI_MODEL = 'gemini-flash-latest'
+
+async function callGroq(messages: { role: string; content: string }[]): Promise<string> {
+  const apiKey = process.env.GROQ_API_KEY
+  if (!apiKey) throw providerError('GROQ_API_KEY not set')
+
+  const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      model: GROQ_MODEL,
+      messages,
+      stream: false,
+      temperature: 0.7,
+      max_tokens: 8192,
+    }),
+    signal: AbortSignal.timeout(15000),
+  })
+
+  if (!res.ok) {
+    const errBody = await res.text().catch(() => '')
+    throw providerError(`[Groq] ${res.status}: ${errBody.slice(0, 200)}`, res.status)
+  }
+
+  const data = await res.json()
+  const texto = data.choices?.[0]?.message?.content || ''
+  if (!texto.trim()) throw providerError('[Groq] respuesta vacía')
+  return texto
+}
+
+async function callOpenRouter(messages: { role: string; content: string }[]): Promise<string> {
+  const apiKey = process.env.OPENROUTER_API_KEY
+  if (!apiKey) throw providerError('OPENROUTER_API_KEY not set')
+
+  const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+      'HTTP-Referer': 'https://itecsaladillo.org.ar',
+      'X-Title': 'ITEC Comunicacion',
+    },
+    body: JSON.stringify({
+      model: OPENROUTER_MODEL,
+      messages,
+      stream: false,
+      temperature: 0.7,
+      max_tokens: 8192,
+    }),
+    signal: AbortSignal.timeout(15000),
+  })
+
+  if (!res.ok) {
+    const errBody = await res.text().catch(() => '')
+    throw providerError(`[OpenRouter] ${res.status}: ${errBody.slice(0, 200)}`, res.status)
+  }
+
+  const data = await res.json()
+  const texto = data.choices?.[0]?.message?.content || ''
+  if (!texto.trim()) throw providerError('[OpenRouter] respuesta vacía')
+  return texto
+}
+
+async function callGemini(
+  messages: { role: string; content: string }[],
+  temperature: number
+): Promise<string> {
   const keys = await Promise.all([
     getSettingValue('gemini_api_key', 'GEMINI_APY_KEY'),
     getSettingValue('gemini_api_key_2', 'GEMINI_API_KEY_2'),
@@ -11,13 +88,13 @@ async function callAI(messages: { role: string; content: string }[], temperature
     getSettingValue('gemini_api_key_4', 'GEMINI_API_KEY_4'),
   ])
   const key = keys.find(k => k) || process.env.GOOGLE_GENERATIVE_AI_API_KEY || ''
-  if (!key) throw new Error('[Gemini] no API key configurada')
+  if (!key) throw providerError('[Gemini] no API key configurada')
 
   const systemMsg = messages.find(m => m.role === 'system')?.content || ''
   const userMsg = messages.filter(m => m.role === 'user').map(m => m.content).join('\n')
 
   const res = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${key}`,
+    `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${key}`,
     {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -26,16 +103,90 @@ async function callAI(messages: { role: string; content: string }[], temperature
         contents: [{ parts: [{ text: userMsg }] }],
         generationConfig: { temperature, maxOutputTokens: 8192 },
       }),
+      signal: AbortSignal.timeout(18000),
     },
   )
 
   if (!res.ok) {
     const err = await res.text().catch(() => '')
-    throw new Error(`[Gemini] ${res.status}: ${err.slice(0, 200)}`)
+    throw providerError(`[Gemini] ${res.status}: ${err.slice(0, 200)}`, res.status)
   }
 
   const data = await res.json()
-  return data.candidates?.[0]?.content?.parts?.[0]?.text || ''
+  const texto = data.candidates?.[0]?.content?.parts?.[0]?.text || ''
+  if (!texto.trim()) throw providerError('[Gemini] respuesta vacía')
+  return texto
+}
+
+async function callAI(messages: { role: string; content: string }[], temperature = 0.7): Promise<string> {
+  const BACKOFF_MS = 1200
+  const PERMANENT_ERRORS = new Set([400, 401, 403, 404, 413])
+  const esperar = (ms: number) => new Promise(r => setTimeout(r, ms))
+
+  const proveedores = [
+    {
+      nombre: 'groq',
+      disponible: () => !!process.env.GROQ_API_KEY,
+      ejecutar: () => callGroq(messages),
+    },
+    {
+      nombre: 'openrouter',
+      disponible: () => !!process.env.OPENROUTER_API_KEY,
+      ejecutar: () => callOpenRouter(messages),
+    },
+    {
+      nombre: 'gemini',
+      disponible: async () => {
+        const keys = await Promise.all([
+          getSettingValue('gemini_api_key', 'GEMINI_APY_KEY'),
+          getSettingValue('gemini_api_key_2', 'GEMINI_API_KEY_2'),
+          getSettingValue('gemini_api_key_3', 'GEMINI_API_KEY_3'),
+          getSettingValue('gemini_api_key_4', 'GEMINI_API_KEY_4'),
+        ])
+        return !!(keys.find(k => k) || process.env.GOOGLE_GENERATIVE_AI_API_KEY)
+      },
+      ejecutar: () => callGemini(messages, temperature),
+    },
+  ]
+
+  const errores: string[] = []
+  const deshabilitados = new Set<string>()
+
+  for (let pasada = 1; pasada <= 3; pasada++) {
+    for (const proveedor of proveedores) {
+      if (deshabilitados.has(proveedor.nombre)) continue
+
+      const disponible = await proveedor.disponible()
+      if (!disponible) {
+        deshabilitados.add(proveedor.nombre)
+        errores.push(`${proveedor.nombre}: sin API key`)
+        continue
+      }
+
+      try {
+        console.log(`[AI Service] Pasada ${pasada} → ${proveedor.nombre}`)
+        const resultado = await proveedor.ejecutar()
+        if (pasada > 1) console.log(`[AI Service] Éxito en pasada ${pasada} con ${proveedor.nombre}`)
+        return resultado
+      } catch (err: any) {
+        const msg = err?.message || 'error desconocido'
+        const status = err?.status as number | undefined
+        errores.push(`${proveedor.nombre}: ${msg}`)
+        console.error(`[AI Service] ${proveedor.nombre} falló (pasada ${pasada}):`, msg)
+
+        if (status && PERMANENT_ERRORS.has(status)) {
+          deshabilitados.add(proveedor.nombre)
+          console.warn(`[AI Service] ${proveedor.nombre} deshabilitado por error permanente (${status})`)
+        }
+
+        await esperar(BACKOFF_MS)
+      }
+    }
+
+    if (deshabilitados.size === proveedores.length) break
+  }
+
+  throw new Error(`[AI Service] Todos los providers fallaron:\n${errores.join('\n')}`)
 }
 
 /**
