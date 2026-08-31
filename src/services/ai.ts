@@ -11,6 +11,7 @@ function providerError(msg: string, status?: number): ProviderError {
 
 const GROQ_MODEL = 'llama-3.3-70b-versatile'
 const OPENROUTER_MODEL = 'nvidia/nemotron-3-super-120b-a12b:free'
+const TOKENROUTER_MODEL = 'deepseek/deepseek-chat'
 const GEMINI_MODEL = 'gemini-flash-latest'
 
 async function callGroq(messages: { role: string; content: string }[]): Promise<string> {
@@ -77,6 +78,37 @@ async function callOpenRouter(messages: { role: string; content: string }[]): Pr
   return texto
 }
 
+async function callTokenRouter(messages: { role: string; content: string }[]): Promise<string> {
+  const apiKey = process.env.TOKENROUTER_API_KEY
+  if (!apiKey) throw providerError('TOKENROUTER_API_KEY not set')
+
+  const res = await fetch('https://api.tokenrouter.io/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      model: TOKENROUTER_MODEL,
+      messages,
+      stream: false,
+      temperature: 0.7,
+      max_tokens: 8192,
+    }),
+    signal: AbortSignal.timeout(30000),
+  })
+
+  if (!res.ok) {
+    const errBody = await res.text().catch(() => '')
+    throw providerError(`[TokenRouter] ${res.status}: ${errBody.slice(0, 200)}`, res.status)
+  }
+
+  const data = await res.json()
+  const texto = data.choices?.[0]?.message?.content || ''
+  if (!texto.trim()) throw providerError('[TokenRouter] respuesta vacía')
+  return texto
+}
+
 async function callGemini(
   messages: { role: string; content: string }[],
   temperature: number
@@ -133,6 +165,11 @@ async function callAI(messages: { role: string; content: string }[], temperature
       nombre: 'openrouter',
       disponible: () => !!process.env.OPENROUTER_API_KEY,
       ejecutar: () => callOpenRouter(messages),
+    },
+    {
+      nombre: 'tokenrouter',
+      disponible: () => !!process.env.TOKENROUTER_API_KEY,
+      ejecutar: () => callTokenRouter(messages),
     },
     {
       nombre: 'gemini',
