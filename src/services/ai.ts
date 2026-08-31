@@ -30,7 +30,7 @@ async function callGroq(messages: { role: string; content: string }[]): Promise<
       temperature: 0.7,
       max_tokens: 8192,
     }),
-    signal: AbortSignal.timeout(25000),
+    signal: AbortSignal.timeout(12000),
   })
 
   if (!res.ok) {
@@ -63,7 +63,7 @@ async function callOpenRouter(messages: { role: string; content: string }[]): Pr
       temperature: 0.7,
       max_tokens: 8192,
     }),
-    signal: AbortSignal.timeout(30000),
+    signal: AbortSignal.timeout(12000),
   })
 
   if (!res.ok) {
@@ -103,7 +103,7 @@ async function callGemini(
         contents: [{ parts: [{ text: userMsg }] }],
         generationConfig: { temperature, maxOutputTokens: 8192 },
       }),
-      signal: AbortSignal.timeout(30000),
+      signal: AbortSignal.timeout(12000),
     },
   )
 
@@ -121,8 +121,8 @@ async function callGemini(
 async function callAI(messages: { role: string; content: string }[], temperature = 0.7): Promise<string> {
   const esperar = (ms: number) => new Promise(r => setTimeout(r, ms))
 
-  // Timeout total: 50s para dejar margen al maxDuration=60 del route
-  const DEADLINE_MS = 50000
+  // Timeout total: 55s para dejar margen al maxDuration=60 del route
+  const DEADLINE_MS = 55000
   const inicio = Date.now()
 
   // Estimar tokens: Groq free tier limita a 8000 TPM por cuenta.
@@ -163,7 +163,7 @@ async function callAI(messages: { role: string; content: string }[], temperature
 
   const errores: string[] = []
   const deshabilitados = new Set<string>()
-  const MAX_PASADAS = 7
+  const MAX_PASADAS = 4
 
   for (let pasada = 1; pasada <= MAX_PASADAS; pasada++) {
     // Verificar deadline
@@ -209,11 +209,11 @@ async function callAI(messages: { role: string; content: string }[], temperature
           deshabilitados.add(proveedor.nombre)
         }
 
-        // Backoff exponencial con tope: 2s, 4s, 8s, 16s, 32s
+        // Backoff fijo de 2s (rate limits se recuperan rápido)
         const restante = DEADLINE_MS - (Date.now() - inicio)
-        const backoff = Math.min(2000 * Math.pow(2, pasada - 1), restante - 3000)
+        const backoff = Math.min(2000, restante - 2000)
         if (backoff > 0) {
-          console.log(`[AI Service] Esperando ${backoff}ms antes del siguiente intento...`)
+          console.log(`[AI Service] Esperando ${backoff}ms...`)
           await esperar(backoff)
         }
       }
