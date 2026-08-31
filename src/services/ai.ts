@@ -175,7 +175,7 @@ async function callGemini(
             contents: [{ parts: [{ text: userMsg }] }],
             generationConfig: { temperature, maxOutputTokens: 8192 },
           }),
-          signal: AbortSignal.timeout(10000),
+          signal: AbortSignal.timeout(20000),
         },
       )
 
