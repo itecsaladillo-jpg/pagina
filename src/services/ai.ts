@@ -122,7 +122,7 @@ async function callGemini(
             contents: [{ parts: [{ text: userMsg }] }],
             generationConfig: { temperature, maxOutputTokens: 8192 },
           }),
-          signal: AbortSignal.timeout(20000),
+          signal: AbortSignal.timeout(25000),
         },
       )
 
@@ -320,92 +320,67 @@ export async function generateMulticanalNews(rawFacts: string): Promise<{
   
   Generás textos profesionales para diferentes audiencias de ITEC.`
 
-  const userPrompt = `Actuá como Jefe de Prensa y redactor profesional de ITEC Saladillo. Generá un titular y 4 textos para diferentes audiencias basándote en las notas crudas que están al final.
-
-INSTRUCCIONES POR CANAL (seguilas estrictamente para que cada texto tenga su identidad propia):
-
-=== CANAL PÚBLICO ===
+  const CANAL_INSTRUCTIONS: Record<string, string> = {
+    publico: `=== CANAL PÚBLICO ===
 Propósito: Noticia para la página web oficial.
 Tono: Tercera persona, institucional pero accesible. Sin "nosotros".
-Estructura: TITULAR atractivo con verbo de acción → COPETE/LEAD (5W: qué, quiénes, dónde, cuándo, cómo, por qué) → DESARROLLO (2-3 párrafos, impacto en comunidad, identificar expositores) → CITA TEXTUAL entre comillas → CIERRE positivo → CTA final.
-Prohibido: balance económico, enumerar aciertos/errores.
-Separar secciones con \\n\\n.
-
-=== CANAL MIEMBROS ===
+Estructura: TITULAR atractivo → COPETE (5W) → DESARROLLO (2-3 párrafos) → CITA TEXTUAL → CIERRE positivo → CTA final.
+Prohibido: balance económico. Separar secciones con \n\n.`,
+    miembros: `=== CANAL MIEMBROS ===
 Propósito: Comunicación interna para el equipo ITEC.
-Tono: PRIMERA PERSONA DEL PLURAL ("nosotros", "nuestro"), cercano, entusiasta, con emojis moderados (🎉💪✨🚀).
-Estructura: ASUNTO motivador → SALUDO cordial → AGRADECIMIENTO explícito (nominar personas destacadas) → LO QUE FUNCIONÓ (lista 2-4 items) → LO QUE MEJORAR (lista 2-4 items constructivos) → CONEXIÓN CON COMETIDO GENERAL de ITEC → CITA DE LIDERAZGO → INVITACIÓN a fotos/video → CIERRE con firma "Equipo ITEC".
-Prohibido: balance económico.
-Separar secciones con \\n\\n.
-
-=== CANAL SPONSORS ===
+Tono: PRIMERA PERSONA DEL PLURAL ("nosotros"), cercano, entusiasta, con emojis moderados (🎉💪✨🚀).
+Estructura: ASUNTO → SALUDO → AGRADECIMIENTO (nominar personas) → LO QUE FUNCIONÓ (2-4 items) → LO QUE MEJORAR (2-4 items) → CONEXIÓN CON COMETIDO → CITA DE LIDERAZGO → INVITACIÓN a fotos → CIERRE "Equipo ITEC".
+Prohibido: balance económico. Separar secciones con \n\n.`,
+    sponsors: `=== CANAL SPONSORS ===
 Propósito: Reporte de valor para sponsors (socios estratégicos, NO donantes).
 Tono: Profesional, formal B2B, orientado a resultados. SIN emojis.
-Estructura: ASUNTO con "Resultados" o "Impacto" → SALUDO formal → AGRADECIMIENTO por la confianza → IMPORTANCIA DE LA ALIANZA → IMPACTO EN LA COMUNIDAD → BALANCE ECONÓMICO (usar placeholders [Monto] si no hay dato exacto) → HIGHLIGHTS cuantitativos → VISIBILIDAD DE MARCA → EVIDENCIA ADJUNTA (PDF + fotos) → INVITACIÓN A FUTURO → Cierre formal.
-Prohibido: tratar al sponsor como donante, emojis.
-Separar secciones con \\n\\n.
-
-=== CANAL MEDIOS ===
+Estructura: ASUNTO con "Resultados" → SALUDO formal → AGRADECIMIENTO → IMPORTANCIA DE LA ALIANZA → IMPACTO EN COMUNIDAD → BALANCE ECONÓMICO ([Monto] si no hay dato) → HIGHLIGHTS cuantitativos → VISIBILIDAD DE MARCA → EVIDENCIA ADJUNTA → INVITACIÓN A FUTURO → Cierre formal.
+Prohibido: tratar al sponsor como donante, emojis. Separar secciones con \n\n.`,
+    medios: `=== CANAL MEDIOS ===
 Propósito: Gacetilla de prensa para medios periodísticos.
 Tono: Periodístico objetivo, tercera persona estricta, SIN emojis, SIN adjetivos subjetivos.
-Estructura: ENCABEZADO "GACETILLA DE PRENSA – PARA PUBLICACIÓN INMEDIATA" → LUGAR Y FECHA → TITULAR INFORMATIVO → LEAD (5W) → CUERPO con contexto y actividades → PRÓXIMOS EVENTOS Y PROYECTOS → CITA TEXTUAL ATRIBUIBLE → CIERRE con mención de fotos disponibles → ACERCA DE ITEC (2-3 líneas) → CONTACTO DE PRENSA con placeholders.
-Prohibido: información interna, emojis, balance económico.
-Separar secciones con \\n\\n.
+Estructura: ENCABEZADO "GACETILLA DE PRENSA – PARA PUBLICACIÓN INMEDIATA" → LUGAR Y FECHA → TITULAR INFORMATIVO → LEAD (5W) → CUERPO → PRÓXIMOS EVENTOS → CITA ATRIBUIBLE → CIERRE con fotos disponibles → ACERCA DE ITEC (2-3 líneas) → CONTACTO DE PRENSA.
+Prohibido: información interna, emojis, balance económico. Separar secciones con \n\n.`
+  }
 
-Respondé ÚNICAMENTE con este JSON, sin texto adicional, sin markdown, sin bloques de código:
-
-{
-  "titulo": "titular periodístico con verbo de acción (máx 8 palabras)",
-  "texto_publico": "texto completo para canal público siguiendo las instrucciones de PUBLICO",
-  "texto_miembros": "texto completo para canal miembros siguiendo las instrucciones de MIEMBROS",
-  "texto_sponsors": "texto completo para canal sponsors siguiendo las instrucciones de SPONSORS",
-  "texto_medios": "texto completo para canal medios siguiendo las instrucciones de MEDIOS"
-}
+  // Lanzar los 4 canales EN PARALELO (cada uno es más rápido por separado)
+  const channelEntries = Object.entries(CANAL_INSTRUCTIONS)
+  const channelPromises = channelEntries.map(async ([canal, instrucciones]) => {
+    const prompt = `Redactá UN SOLO texto para el canal ${canal.toUpperCase()} de ITEC Saladillo.
+${instrucciones}
 
 NOTAS CRUDAS:
 """${rawFacts}"""`
 
-  const raw = await callAI([
-    { role: 'system', content: systemPrompt },
-    { role: 'user', content: userPrompt }
-  ], 0.8)
+    const texto = await callAI([
+      { role: 'system', content: systemPrompt },
+      { role: 'user', content: prompt }
+    ], 0.8)
+    return [canal, texto.trim()] as const
+  })
 
-  const cleaned = raw.replace(/^```json\s*/i, '').replace(/\s*```$/i, '').trim()
+  // Ejecutar todos en paralelo, recoger resultados
+  const resultados = await Promise.allSettled(channelPromises)
+  
+  const texto_publico = resultados[0]?.status === 'fulfilled' ? resultados[0].value[1] : 'Error al generar texto para público.'
+  const texto_miembros = resultados[1]?.status === 'fulfilled' ? resultados[1].value[1] : 'Error al generar texto para miembros.'
+  const texto_sponsors = resultados[2]?.status === 'fulfilled' ? resultados[2].value[1] : 'Error al generar texto para sponsors.'
+  const texto_medios = resultados[3]?.status === 'fulfilled' ? resultados[3].value[1] : 'Error al generar texto para medios.'
 
-  // Estrategia de parseo robusta: si la respuesta vino con markdown o etiquetas
-  // (ej: "**Titular:** ..."), extraemos el primer bloque { ... } balanceado.
-  const tryParse = (text: string): any | null => {
-    try { return JSON.parse(text) } catch { return null }
+  // Generar titular a partir del texto público
+  let titulo = 'Novedad ITEC'
+  try {
+    const tituloRaw = await callAI([
+      { role: 'system', content: systemPrompt },
+      { role: 'user', content: `Generá UN TITULAR periodístico con verbo de acción (máx 8 palabras) para esta noticia:\n\n${texto_publico.slice(0, 500)}` }
+    ], 0.8)
+    titulo = tituloRaw.trim().replace(/^[""]|[""]$/g, '').slice(0, 100)
+  } catch {
+    // Usar primera línea del texto público como titular fallback
+    titulo = texto_publico.split('\n')[0]?.slice(0, 80) || 'Novedad ITEC'
   }
 
-  let parsed = tryParse(cleaned)
-  if (!parsed) {
-    const start = cleaned.indexOf('{')
-    const end = cleaned.lastIndexOf('}')
-    if (start !== -1 && end !== -1 && end > start) {
-      parsed = tryParse(cleaned.slice(start, end + 1))
-    }
-  }
-
-  if (parsed) {
-    return {
-      titulo: parsed.titulo || '',
-      texto_publico: parsed.texto_publico || '',
-      texto_miembros: parsed.texto_miembros || '',
-      texto_sponsors: parsed.texto_sponsors || '',
-      texto_medios: parsed.texto_medios || ''
-    }
-  }
-
-  // Fallback si el modelo no devolvió JSON válido
-  console.error('[generateMulticanalNews] Respuesta no parseable como JSON:\n', raw)
-  return {
-    titulo: 'Novedad ITEC',
-    texto_publico: rawFacts + '\n\nEsta iniciativa fortalece el acceso a la tecnología para toda la comunidad saladense.',
-    texto_miembros: '¡Equipo! ' + rawFacts + '\n\nGracias a quienes hicieron posible este logro. Nuestro trabajo voluntario transforma realidades.',
-    texto_sponsors: 'Evento con impacto en el ecosistema local. Destacan los contributos recibidos.',
-    texto_medios: 'ITEC Saladillo informa actividad comunitaria. ' + rawFacts + '. "Un paso más hacia la innovación", comentó la institución.'
-  }
+  return { titulo, texto_publico, texto_miembros, texto_sponsors, texto_medios }
 }
 
 export async function generateVideoSummary(title: string, description: string): Promise<string> {
