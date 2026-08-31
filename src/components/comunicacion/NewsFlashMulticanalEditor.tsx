@@ -70,7 +70,7 @@ export function NewsFlashMulticanalEditor({ onSave, onCancel }: NewsFlashMultica
   const [paraSponsors, setParaSponsors] = useState(true)
   const [paraMedios, setParaMedios] = useState(true)
 
-  const handleProcess = async () => {
+  const handleProcess = async (retryCount: number = 0) => {
     setErrorBanner(null)
     if (!rawFacts.trim() || rawFacts.length < 20) {
       alert('Ingresá al menos 20 caracteres en las notas crudas')
@@ -78,6 +78,7 @@ export function NewsFlashMulticanalEditor({ onSave, onCancel }: NewsFlashMultica
     }
 
     setIsProcessing(true)
+    const MAX_RETRIES = 2
     try {
       const res = await fetch('/api/news/process', {
         method: 'POST',
@@ -90,7 +91,7 @@ export function NewsFlashMulticanalEditor({ onSave, onCancel }: NewsFlashMultica
       try {
         data = JSON.parse(text)
       } catch {
-        setErrorBanner('Error del servidor: respuesta inválida. Reintentá en unos segundos.')
+        setErrorBanner('Error del servidor: respuesta inválida.')
         return
       }
       
@@ -98,7 +99,15 @@ export function NewsFlashMulticanalEditor({ onSave, onCancel }: NewsFlashMultica
         setResult(data.result)
         setActiveTab('preview')
       } else {
-        setErrorBanner(data.error || 'Error desconocido al procesar con IA')
+        // Reintento automático si todos los providers fallaron
+        const errorMsg = data.error || 'Error desconocido'
+        if (retryCount < MAX_RETRIES && errorMsg.includes('Todos los providers fallaron')) {
+          setErrorBanner(`Providers temporalmente no disponibles. Reintentando (${retryCount + 1}/${MAX_RETRIES})...`)
+          await new Promise(r => setTimeout(r, 15000))
+          setIsProcessing(false)
+          return handleProcess(retryCount + 1)
+        }
+        setErrorBanner(errorMsg)
       }
     } catch (err: any) {
       setErrorBanner('Error de conexión: ' + (err.message || 'Verifique su conexión'))
@@ -364,7 +373,7 @@ export function NewsFlashMulticanalEditor({ onSave, onCancel }: NewsFlashMultica
         </div>
 
         <button
-          onClick={handleProcess}
+          onClick={() => handleProcess()}
           disabled={isProcessing || rawFacts.length < 20}
           className="w-full py-4 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold text-sm flex items-center justify-center gap-3 hover:scale-[1.02] transition-all disabled:opacity-30 shadow-xl"
         >
