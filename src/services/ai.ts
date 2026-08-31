@@ -9,7 +9,7 @@ function providerError(msg: string, status?: number): ProviderError {
   return e
 }
 
-const GROQ_MODEL = 'openai/gpt-oss-120b'
+const GROQ_MODEL = 'llama-3.3-70b-versatile'
 const OPENROUTER_MODEL = 'nvidia/nemotron-3-super-120b-a12b:free'
 const GEMINI_MODEL = 'gemini-flash-latest'
 
@@ -30,7 +30,7 @@ async function callGroq(messages: { role: string; content: string }[]): Promise<
       temperature: 0.7,
       max_tokens: 8192,
     }),
-    signal: AbortSignal.timeout(15000),
+    signal: AbortSignal.timeout(25000),
   })
 
   if (!res.ok) {
@@ -63,7 +63,7 @@ async function callOpenRouter(messages: { role: string; content: string }[]): Pr
       temperature: 0.7,
       max_tokens: 8192,
     }),
-    signal: AbortSignal.timeout(15000),
+    signal: AbortSignal.timeout(30000),
   })
 
   if (!res.ok) {
@@ -103,7 +103,7 @@ async function callGemini(
         contents: [{ parts: [{ text: userMsg }] }],
         generationConfig: { temperature, maxOutputTokens: 8192 },
       }),
-      signal: AbortSignal.timeout(18000),
+      signal: AbortSignal.timeout(30000),
     },
   )
 
