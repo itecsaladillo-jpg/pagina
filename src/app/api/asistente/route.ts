@@ -7,7 +7,9 @@ import { FALLBACK_PROMPT, POLITICA_RESPUESTA_INTEGRAL } from '@/lib/ai/constants
 
 export const maxDuration = 60
 
-const GROQ_MODEL = 'openai/gpt-oss-120b'
+const OPENCODE_MODEL = 'opencode/glm-5-free'
+
+const GROQ_MODEL = 'openai/gpt-oss-20b'
 
 /** Error de provider con status HTTP para detectar fallos permanentes. */
 type ErrorProvider = Error & { status?: number }
@@ -102,7 +104,7 @@ async function callOpenRouter(messages: { role: string; content: string }[]): Pr
   return validarTextoRespuesta(data.choices?.[0]?.message?.content || '', 'OpenRouter')
 }
 
-const GEMINI_MODEL = 'gemini-flash-latest'
+const GEMINI_MODEL = 'gemini-2.0-flash'
 
 async function callGemini(messages: { role: string; content: string }[], timeoutMs: number): Promise<string> {
   const apiKey = process.env.GEMINI_API_KEY || process.env.GEMINI_APY_KEY || process.env.GOOGLE_GENERATIVE_AI_API_KEY
@@ -146,6 +148,39 @@ async function callGemini(messages: { role: string; content: string }[], timeout
   return validarTextoRespuesta(texto, 'Gemini')
 }
 
+async function callOpenCode(messages: { role: string; content: string }[]): Promise<string> {
+  const apiKey = process.env.OPENCODE_API_KEY
+  if (!apiKey) throw errorProvider('OPENCODE_API_KEY not set')
+
+  const totalChars = messages.reduce((sum, m) => sum + m.content.length, 0)
+  console.log(`[Asistente] OpenCode (${OPENCODE_MODEL}): ${messages.length} msgs, ${totalChars} chars`)
+
+  const response = await fetch('https://api.opencode.ai/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      model: OPENCODE_MODEL,
+      messages,
+      stream: false,
+      temperature: 0.7,
+      max_tokens: 2048
+    }),
+    signal: AbortSignal.timeout(13000),
+  })
+
+  if (!response.ok) {
+    const errorBody = await response.text().catch(() => 'no body')
+    console.error(`[Asistente] OpenCode ${response.status}:`, errorBody.slice(0, 400))
+    throw errorProvider(`OpenCode ${response.status}`, response.status)
+  }
+
+  const data = await response.json()
+  return validarTextoRespuesta(data.choices?.[0]?.message?.content || '', 'OpenCode')
+}
+
 export async function POST(req: NextRequest) {
   let cuerpo: { mensaje?: string; historial?: { role: string; content: string }[]; idioma?: string; sessionId?: string }
   try {
@@ -162,11 +197,12 @@ export async function POST(req: NextRequest) {
   }
 
   // Verificar que al menos una API key esté configurada
+  const openCodeKey = process.env.OPENCODE_API_KEY
   const groqKey = process.env.GROQ_API_KEY
   const orKey = process.env.OPENROUTER_API_KEY
   const geminiKey = process.env.GEMINI_API_KEY || process.env.GEMINI_APY_KEY || process.env.GOOGLE_GENERATIVE_AI_API_KEY
-  if (!groqKey && !orKey && !geminiKey) {
-    console.error('[Asistente] Ninguna API key configurada (GROQ, OPENROUTER ni Gemini)')
+  if (!openCodeKey && !groqKey && !orKey && !geminiKey) {
+    console.error('[Asistente] Ninguna API key configurada (OpenCode, GROQ, OPENROUTER ni Gemini)')
     return NextResponse.json({ error: 'API keys no configuradas' }, { status: 500 })
   }
 
@@ -297,6 +333,13 @@ export async function POST(req: NextRequest) {
   }
 
   const proveedores: ProveedorIA[] = [
+    {
+      nombre: 'opencode',
+      modelo: OPENCODE_MODEL,
+      timeoutMs: 13000,
+      disponible: () => !!process.env.OPENCODE_API_KEY,
+      ejecutar: () => callOpenCode(messages),
+    },
     {
       nombre: 'groq',
       modelo: GROQ_MODEL,

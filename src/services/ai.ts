@@ -9,8 +9,9 @@ function providerError(msg: string, status?: number): ProviderError {
   return e
 }
 
+const OPENCODE_MODEL = 'opencode/glm-5-free'
 const OPENROUTER_MODEL = 'nvidia/nemotron-3.5-lightning:free'
-const GEMINI_MODEL = 'gemini-flash-latest'
+const GEMINI_MODEL = 'gemini-2.0-flash'
 
 async function callOpenRouter(messages: { role: string; content: string }[]): Promise<string> {
   const dbKeys = await Promise.all([
@@ -72,6 +73,39 @@ async function callOpenRouter(messages: { role: string; content: string }[]): Pr
     errors.push(r.reason?.message || 'error')
   }
   throw providerError(`[OpenRouter] ${errors.join(' | ')}`)
+}
+
+async function callOpenCode(messages: { role: string; content: string }[]): Promise<string> {
+  const apiKey = process.env.OPENCODE_API_KEY
+  if (!apiKey) throw providerError('OPENCODE_API_KEY not set')
+
+  console.log(`[OpenCode] ${OPENCODE_MODEL}: ${messages.length} msgs`)
+
+  const response = await fetch('https://api.opencode.ai/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      model: OPENCODE_MODEL,
+      messages,
+      stream: false,
+      temperature: 0.7,
+      max_tokens: 8192
+    }),
+    signal: AbortSignal.timeout(13000),
+  })
+
+  if (!response.ok) {
+    const errorBody = await response.text().catch(() => '')
+    throw providerError(`OpenCode ${response.status}: ${errorBody.slice(0, 200)}`, response.status)
+  }
+
+  const data = await response.json()
+  const texto = data.choices?.[0]?.message?.content || ''
+  if (!texto.trim()) throw providerError('OpenCode respuesta vacía')
+  return texto
 }
 
 async function callGemini(
@@ -151,6 +185,10 @@ async function callGemini(
 async function callAI(messages: { role: string; content: string }[], temperature = 0.7): Promise<string> {
   // Lanzar todos los providers EN PARALELO. El primero que responda gana.
   const candidates: { nombre: string; promise: Promise<string> }[] = []
+
+  if (process.env.OPENCODE_API_KEY) {
+    candidates.push({ nombre: 'opencode', promise: callOpenCode(messages) })
+  }
 
   if (process.env.OPENROUTER_API_KEY || process.env.OPENROUTER_API_KEY_2) {
     candidates.push({ nombre: 'openrouter', promise: callOpenRouter(messages) })

@@ -205,29 +205,69 @@ ${datosDinamicos || '(No hay datos dinámicos disponibles en este momento)'}
       })),
     ];
 
-    // ── 6. Streaming con Groq openai/gpt-oss-20b ──
-    const stream = await getGroq().chat.completions.create({
-      messages,
-      model: 'openai/gpt-oss-20b',
-      temperature: 0.2,
-      max_tokens: 1024,
-      stream: true,
-    });
+    // ── 6. Streaming con OPENCODE (free) ──
+    const openCodeKey = process.env.OPENCODE_API_KEY
+    if (!openCodeKey) {
+      return new Response(JSON.stringify({ error: 'OPENCODE_API_KEY not configured' }), { status: 500 })
+    }
+
+    const response = await fetch('https://api.opencode.ai/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${openCodeKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: 'opencode/glm-5-free',
+        messages,
+        stream: true,
+        temperature: 0.2,
+        max_tokens: 1024,
+      }),
+    })
+
+    if (!response.ok) {
+      const errorBody = await response.text().catch(() => '')
+      console.error(`[chat] OpenCode ${response.status}:`, errorBody.slice(0, 200))
+      return new Response(JSON.stringify({ error: 'OpenCode API error' }), { status: 502 })
+    }
 
     // ── 6. Convertir a ReadableStream para streaming nativo ──
     const encoder = new TextEncoder();
     const readable = new ReadableStream({
       async start(controller) {
         try {
-          for await (const chunk of stream) {
-            const content = chunk.choices[0]?.delta?.content;
-            if (content) {
-              controller.enqueue(encoder.encode(content));
+          const reader = response.body?.getReader()
+          if (!reader) {
+            controller.close()
+            return
+          }
+          
+          const decoder = new TextDecoder()
+          while (true) {
+            const { done, value } = await reader.read()
+            if (done) break
+            
+            const chunk = decoder.decode(value, { stream: true })
+            const lines = chunk.split('\n').filter(line => line.trim() !== '')
+            
+            for (const line of lines) {
+              if (line.startsWith('data: ')) {
+                const data = line.slice(6)
+                if (data === '[DONE]') continue
+                try {
+                  const parsed = JSON.parse(data)
+                  const content = parsed.choices?.[0]?.delta?.content
+                  if (content) {
+                    controller.enqueue(encoder.encode(content))
+                  }
+                } catch {}
+              }
             }
           }
-          controller.close();
+          controller.close()
         } catch (err) {
-          controller.error(err);
+          controller.error(err)
         }
       },
     });

@@ -1,0 +1,26 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "model": "opencode/glm-5-free",
+  "small_model": "opencode/glm-5-free",
+  "provider": {
+    "opencode": {
+      "options": {
+        "apiKey": "{env:OPENCODE_API_KEY}"
+      }
+    }
+  },
+  "agent": {
+    "asistente-itec": {
+      "description": "Asistente virtual del ITEC - responde consultas sobre el instituto, servicios, eventos y mas",
+      "mode": "primary",
+      "model": "opencode/glm-5-free",
+      "prompt": "Eres el Asistente Virtual del ITEC (Instituto de Tecnologia y Ciencias). Tu funcion es ayudar a los usuarios con consultas sobre el instituto, sus servicios, eventos, cursos, y informacion general. Responde en espanol de forma amigable y profesional."
+    },
+    "editor-comunicaciones": {
+      "description": "Editor de comunicaciones del ITEC - ayuda a redactar y editar comunicados, notas de prensa y contenido institucional",
+      "mode": "primary",
+      "model": "opencode/glm-5-free",
+      "prompt": "Eres un editor de comunicaciones especializado en contenido institucional del ITEC. Ayuda a redactar, editar y mejorar comunicados de prensa, notas informativas, boletines y cualquier tipo de comunicacion oficial del instituto. Mantén un tono profesional, claro y consistente con la imagen del ITEC."
+    }
+  }
+}
