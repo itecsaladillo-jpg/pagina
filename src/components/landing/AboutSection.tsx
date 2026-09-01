@@ -7,6 +7,7 @@ import { createClient } from '@/lib/supabase/client'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, Mail, Phone, ExternalLink, Calendar } from 'lucide-react'
 import { NuestrosSociosSection } from '@/components/home/NuestrosSociosSection'
+import { SaladilloExportSection } from '@/components/saladillo-export/SaladilloExportSection'
 
 interface Member {
   id: string;
@@ -164,6 +165,10 @@ export function AboutSection() {
             ))}
           </div>
         </div>
+
+        {/* Sección SALADILLO FOR EXPORT */}
+        <div className="section-divider" />
+        <SaladilloExportSection />
 
         {/* Sección NUESTROS SOCIOS: entre NUESTRA IDENTIDAD y NUESTRO EQUIPO */}
         <div className="section-divider" />

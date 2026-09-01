@@ -1,15 +1,16 @@
 'use client'
 
-import { useState, useMemo, useRef, type ReactNode } from 'react'
+import { useState, useMemo, useRef, useEffect, type ReactNode } from 'react'
 import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Search, MapPin, GraduationCap, Briefcase, Globe, Send, X, CheckCircle2, Star } from 'lucide-react'
+import { createClient } from '@/lib/supabase/client'
 import { crearTestimonioSaladilloExport } from '@/app/actions/saladillo-export'
 import type { TestimonioSaladilloExport } from '@/lib/data/saladillo-export'
 
 interface SaladilloExportSectionProps {
-  embajadores: TestimonioSaladilloExport[]
-  testimonios: TestimonioSaladilloExport[]
+  embajadores?: TestimonioSaladilloExport[]
+  testimonios?: TestimonioSaladilloExport[]
 }
 
 function Reveal({ children, className, delay = 0 }: { children: ReactNode; className?: string; delay?: number }) {
@@ -279,9 +280,39 @@ function RegistroForm({ onSubmitted }: { onSubmitted: () => void }) {
   )
 }
 
-export function SaladilloExportSection({ embajadores, testimonios }: SaladilloExportSectionProps) {
+export function SaladilloExportSection({ embajadores: embajadoresProp, testimonios: testimoniosProp }: SaladilloExportSectionProps) {
+  const [embajadores, setEmbajadores] = useState<TestimonioSaladilloExport[]>(embajadoresProp ?? [])
+  const [testimonios, setTestimonios] = useState<TestimonioSaladilloExport[]>(testimoniosProp ?? [])
+  const [loading, setLoading] = useState(!embajadoresProp || !testimoniosProp)
   const [search, setSearch] = useState('')
   const [showSuccess, setShowSuccess] = useState(false)
+
+  useEffect(() => {
+    if (embajadoresProp && testimoniosProp) return
+
+    const supabase = createClient()
+    const fetchData = async () => {
+      const [embResult, testResult] = await Promise.all([
+        supabase
+          .from('saladillo_for_export')
+          .select('*')
+          .eq('es_embajador', true)
+          .eq('estado', 'aprobado')
+          .not('orden_embajador', 'is', null)
+          .order('orden_embajador', { ascending: true }),
+        supabase
+          .from('saladillo_for_export')
+          .select('*')
+          .eq('es_embajador', false)
+          .eq('estado', 'aprobado')
+          .order('created_at', { ascending: false }),
+      ])
+      setEmbajadores((embResult.data as TestimonioSaladilloExport[]) ?? [])
+      setTestimonios((testResult.data as TestimonioSaladilloExport[]) ?? [])
+      setLoading(false)
+    }
+    fetchData()
+  }, [embajadoresProp, testimoniosProp])
 
   const uniqueCountries = useMemo(() => {
     const set = new Set(testimonios.map(t => t.pais_residencia))
@@ -300,6 +331,18 @@ export function SaladilloExportSection({ embajadores, testimonios }: SaladilloEx
       t.escuela_origen.toLowerCase().includes(q)
     )
   }, [testimonios, search])
+
+  if (loading) {
+    return (
+      <section className="py-20 relative overflow-hidden">
+        <div className="max-w-7xl mx-auto px-6 flex justify-center py-12">
+          <div className="w-10 h-10 border-4 border-amber-400 border-t-transparent rounded-full animate-spin" />
+        </div>
+      </section>
+    )
+  }
+
+  if (embajadores.length === 0 && testimonios.length === 0) return null
 
   return (
     <section id="saladillo-for-export" className="py-20 relative overflow-hidden">
