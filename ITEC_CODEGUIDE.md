@@ -44,6 +44,7 @@ Plataforma web full-stack de **ITEC Saladillo** (Asociación Civil de Ciencia y 
 - Asistente virtual con IA (RAG cascade de 5 niveles sobre pgvector)
 - Comunicación estratégica multicanal (una noticia → 4 versiones para 4 audiencias, generadas por IA)
 - Mapa Productivo (directorio de empresas locales y talento estudiantil)
+- Saladillo for Export (testimonios de saladillenses en el mundo, embajadores y gestión admin)
 - Portal exclusivo para sponsors con reportes de impacto generados por IA
 - Pasaporte Digital (certificados verificables por QR)
 
@@ -114,13 +115,14 @@ D:\ITEC\
 ├── src/
 │   ├── app/                     # App Router (ver detalle abajo)
 │   ├── components/              # Ver inventario completo en §16
+│   │   └── saladillo-export/    # SaladilloExportSection (embajadores + testimonios)
 │   ├── contexts/LanguageContext.tsx  # Contexto React i18n (es/en/pt)
 │   ├── lib/                     # Utilidades core (supabase, rag, eventos, email, settings…)
 │   ├── locales/dictionary.ts    # Diccionario ES/EN/PT (~1100 líneas, 16 secciones/idioma)
 │   ├── proxy.ts                 # Middleware Next.js 16 (reemplaza middleware.ts)
 │   ├── services/                # Capa de servicios (auth, ai, admin, news, drive, videos…)
 │   └── types/database.ts        # Tipos sincronizados con schema Supabase (~493 líneas)
-├── supabase/migrations/         # 75 archivos SQL (001 → 068 + fix_storage_policies.sql)
+├── supabase/migrations/         # 71+ archivos SQL (001 → 071 + fix_storage_policies.sql)
 ├── AGENTS.md                    # Advertencia breaking changes Next.js 16
 ├── CLAUDE.md                    # Solo "@AGENTS.md" (referencia)
 ├── ITEC_CODEGUIDE.md            # Esta guía
@@ -188,6 +190,7 @@ No existen `loading.tsx`, `error.tsx`, `not-found.tsx` ni `template.tsx` en ning
 | `/dashboard/prensa` | admin | ABM de medios de prensa + envío gacetillas (`MediosAdmin`, `MedioForm`). |
 | `/dashboard/prensaNews` | **Client** (sin guard server) | Notas de prensa: crear, enviar gacetilla a medios (modal), historial de envíos. |
 | `/dashboard/reuniones` | miembro activo | Sala de reuniones general: enlace Meet persistente (`site_settings.general_meet_url`), acta colaborativa del día (`meeting_notes`) con guardado, procesamiento IA y publicación (`GeneralMeetingRoom`), historial. |
+| `/dashboard/saladillo-for-export` | miembro activo | Gestión de testimonios "Saladillo for Export": aprobar/rechazar, asignar embajadores (posición 1–4), crear testimonios (admin), eliminar. CRUD completo con `SaladilloForExportClient`. |
 | `/dashboard/settings` | admin | Ajustes del sitio (identidad visual) + gestión API keys (`site_settings` + `api_settings`) con prioridad sobre env vars. |
 | `/dashboard/sponsors` | admin | Administración integral: sponsors comerciales, socios estratégicos (`strategic_partners`), acciones del período, generación de reportes IA. |
 | `/dashboard/sponsorsNews` | **Client** | Muro exclusivo sponsors (`GET /api/sponsors-news`) + alta rápida de socio. |
@@ -211,9 +214,9 @@ Ver inventario completo con métodos, inputs y tablas en **§15**.
 
 ### `vercel.json`
 ```json
-{ "functions": { "src/app/api/asistente/route.ts": { "maxDuration": 60 } } }
+{ "functions": { "src/app/api/asistente/route.ts": { "maxDuration": 60 }, "src/app/api/news/process/route.ts": { "maxDuration": 60 } } }
 ```
-Única función con timeout extendido (el asistente IA necesita >10s default).
+Dos funciones con timeout extendido: el asistente IA (RAG + multi-provider) y procesamiento de noticias multicanal (4 versiones en paralelo).
 
 ### CI/CD (`.github/workflows/deploy.yml`)
 - Trigger: push a `main`.
@@ -286,12 +289,14 @@ Todas las actions administrativas verifican `getCurrentMember()` antes de ejecut
 ### Row-Level Security (RLS)
 - Todas las tablas críticas usan políticas RLS basadas en `auth.uid()` y rol en `members`.
 - **Migración 056 (hardening crítico):** corrigió políticas permisivas en `clases_virtuales`, `clase_interacciones`, `certificados_digitales` (antes `USING(true)` permitía CRUD anónimo). Escritura restringida a admin/coordinador.
+- **Migración 071 (saladillo_for_export):** SELECT público solo para registros aprobados; INSERT público permitido (estado por defecto 'pendiente'). Storage bucket `saladillo-export-photos` público para lectura y escritura.
 - Tablas de interacción en vivo de clases (migración 060: `clase_modometro_votos`, `clase_mano_alzada`, etc.) tienen RLS abierta a propósito (interacción anónima realtime).
 - `evento_semaforo_votos`: SELECT e INSERT públicos; sin UPDATE/DELETE (votos inmutables, append-only).
 
 ### Storage
-- **Buckets:** `article-media`, `avatars`, `training-docs`, `sponsors-logos` (todos públicos para lectura).
+- **Buckets:** `article-media`, `avatars`, `training-docs`, `sponsors-logos`, `saladillo-export-photos` (todos públicos para lectura).
 - `sponsors-logos`: SELECT público; INSERT autenticado admin/coordinador. Políticas en `fix_storage_policies.sql`.
+- `saladillo-export-photos`: SELECT público; INSERT público (formulario de creación de testimonios).
 
 ### Identificación anónima por dispositivo
 - Eventos presenciales y aula virtual identifican usuarios por UUID en `localStorage` (`dispositivo_id`), sin login.
@@ -431,6 +436,7 @@ Todas las tablas realtime de clase están en publicación `supabase_realtime`. R
 | `videos` | Videoteca YouTube: `display_order`, `ai_summary`, thumbnail recalculado |
 | `meeting_notes` | Actas colaborativas de la Sala de Reuniones (nota activa del día + historial publicado) |
 | `mapa_empresas` (+ `mapa_empresas_telefono`) / `alumnos_talentos` | Mapa Productivo |
+| `saladillo_for_export` (mig. 071) | Testimonios "Saladillo for Export": `nombre`, `foto_url`, `ciudad_residencia`, `pais_residencia`, `escuela_origen`, `profesion_rol`, `mensaje_gratitud`, `es_embajador` (bool), `orden_embajador` (1–4), `estado` (pendiente\|aprobado\|rechazado). RLS: SELECT solo aprobados; INSERT público. Storage bucket `saladillo-export-photos` (público). |
 
 ### 8.3 RPCs principales
 | RPC | Propósito |
@@ -446,7 +452,7 @@ Todas las tablas realtime de clase están en publicación `supabase_realtime`. R
 | `insert_idea` | Alta idea pública |
 | `reiniciar_semaforo_clase` / `toggle_pregunta_voto` | Interacción aula virtual |
 
-### 8.4 Migraciones — historial resumido (75 archivos SQL, 001→068 + fix_storage_policies.sql)
+### 8.4 Migraciones — historial resumido (71+ archivos SQL, 001→071 + fix_storage_policies.sql)
 
 ⚠️ Hay números duplicados (014, 024, 025, 026, 032, 036 tienen dos archivos c/u). No hay carpeta de rollback. Aplicar manualmente en Supabase tras cambios de schema.
 
@@ -459,33 +465,37 @@ Todas las tablas realtime de clase están en publicación `supabase_realtime`. R
 | 041–050 | chat_conocimiento, training_docs storage (+fix policies), buscar_docs_similares, saved_conversations, ideas (+delete policy), prensa_envios_log, evento_semaforo v1, fix modalidad, herramientas JSONB, default false |
 | 051–060 | remove_semaforo (053) → **054 semaforo v3** (tabla mínima append-only + reset_at + realtime) → 055 nube_concepto → **056 fix RLS critical** → **057 semaforo dispositivo_id** (dedup server-side) → **058 api_settings** → 059 modalidad eventos → **060 esquema híbrido virtual** (modalidad clases, meet_url, 7 tablas realtime de aula + RPCs + realtime publication) |
 | 061–068 | 061 general_meet_url → **062/063 pgvector RAG** (extensión vector, documents, HNSW, match_documents) → **064 streaming config** (keys `streaming_active`/`streaming_youtube_url` en api_settings) → 065 sponsors update (rubro/resena/contactos/logos/tier standard) → 066 RPC sponsors públicos → **067 strategic_partners** → **068 partner_classification** (col. type + RPC unificado obtener_socios_publicos) |
+| 069–071 | **071 saladillo_for_export** (tabla testimonios saladillenses en el mundo, embajadores 1–4, RLS SELECT aprobados/INSERT público, storage bucket `saladillo-export-photos`). Integrada en AboutSection landing + admin dashboard. |
 
 ---
 
 ## 9. Sistema de IA
 
 ### 9.1 REGLA DE ORO: Modelos Gratuitos
-> Todos los endpoints del asistente DEBEN usar modelos FREE. Nunca usar modelos de pago (deepseek/deepseek-chat eliminado del codebase). Costo objetivo: $0.
+> Todos los endpoints del asistente DEBEN usar modelos FREE. El proveedor primario es **OpenCode** (`opencode/glm-5-free`). Costo objetivo: $0.
 
 ### 9.2 Distribución por proveedor y tarea
 
 | Proveedor | Modelo | Uso |
 |-----------|--------|-----|
-| **Groq** | `openai/gpt-oss-120b` | **Asistente ITEC primario** (`/api/asistente`). Tier gratuito/developer. Timeout fetch 15s. ⚠️ `llama-3.3-70b-versatile` fue apagado por Groq el 16/08/2026 (reemplazo oficial recomendado: gpt-oss-120b). `/api/chat` usa `openai/gpt-oss-20b`. |
-| **OpenRouter** | `nvidia/nemotron-3-super-120b-a12b:free` | Fallback del asistente. Tier gratuito. Timeout 15s. Headers `HTTP-Referer: https://itecsaladillo.org.ar` + `X-Title: ITEC Asistente`. ⚠️ Los slugs `nemotron-nano-9b-v2:free` y `nemotron-3-nano-30b-a3b:free` ya no existen (retirados del catálogo free). |
-| **Google Gemini** | `gemini-flash-latest` | **Último recurso del asistente** (`/api/asistente`, tercer fallback vía REST v1beta) + **edición de texto exclusiva** en `services/ai.ts`: resúmenes, flashes, noticias multicanal, resúmenes de video. Rota hasta 4 API keys de `api_settings` con fallback a env `GOOGLE_GENERATIVE_AI_API_KEY`. |
+| **OpenCode** | `opencode/glm-5-free` | **Asistente ITEC primario** (`/api/asistente`). Tier gratuito. Timeout 13s. Endpoint `https://api.opencode.ai/v1/chat/completions`. También usado en `services/ai.ts` para generación de texto (comunicación multicanal). |
+| **Groq** | `openai/gpt-oss-20b` | **Asistente fallback** (`/api/asistente`). Tier gratuito/developer. Timeout 13s. `/api/chat` usa el mismo modelo. Multi-key soportado (`GROQ_API_KEY`, `GROQ_API_KEY_2`). |
+| **OpenRouter** | `nvidia/nemotron-3.5-lightning:free` | Fallback del asistente. Tier gratuito. Timeout 13s. Headers `HTTP-Referer: https://itecsaladillo.org.ar` + `X-Title: ITEC Asistente`. Multi-key (`OPENROUTER_API_KEY`, `OPENROUTER_API_KEY_2`). Modelos secundarios: `minimax/minimax-m3:free`. |
+| **Google Gemini** | `gemini-2.0-flash` | **Último recurso del asistente** (`/api/asistente`, cuarto fallback vía REST v1beta, timeout 18s) + **edición de texto exclusiva** en `services/ai.ts`: resúmenes, flashes, noticias multicanal, resúmenes de video. Rota hasta 4 API keys de `api_settings` con fallback a env `GOOGLE_GENERATIVE_AI_API_KEY`. Env vars tienen prioridad sobre DB. |
 | **Google Gemini** | `gemini-embedding-001` | Embeddings primarios (RAG P1 + feedback). |
 | **HuggingFace** | `all-MiniLM-L6-v2` | Embeddings fallback (384 dims, zero-padded a 768 para pgvector). |
 | **Ollama self-hosted** | `llama3.2:latest` en `OLLAMA_API_BASE_URL` (default `https://ai.itecsaladillo.org.ar`) | Reportes de impacto de sponsors (`sponsorReport.ts`, timeout 98s, `num_ctx: 2048`) + síntesis de tema/feedback (`/api/asistente/feedback`, timeout 98s). NO asumir disponibilidad — siempre hay fallback. |
 
-### 9.3 Servicios (`src/services/ai.ts`, ~467 líneas)
+### 9.3 Servicios (`src/services/ai.ts`, ~661 líneas)
 | Función | Propósito |
 |---------|-----------|
-| `callAI(messages, temperature)` (privada) | POST Gemini flash con rotación de 4 keys |
+| `callOpenCode(messages)` | POST OpenCode `opencode/glm-5-free` con `OPENCODE_API_KEY`, timeout 13s |
+| `callOpenRouter(messages)` | POST OpenRouter multi-key × multi-modelo (`nemotron-3.5-lightning:free`, `minimax-m3:free`), lanza todas en paralelo, timeout 10s por intento |
+| `callGemini(messages, temperature)` | POST Gemini `gemini-2.0-flash` con rotación de 4+ keys (env first, luego DB), todas en paralelo, timeout 25s |
 | `processWithAI(text, sourceType, commissionName?)` | `{summary, action_items[]}` desde transcripciones (sourceType: meet\|capacitacion\|reunion\|manual) |
 | `generateFlash(text)` | Flash noticioso máx. 2 oraciones para muro interno |
 | `generateExecutiveSummary(notes)` / `generateActionItems(notes)` | Wrappers de processWithAI |
-| `generateMulticanalNews(rawFacts)` | Titular + 4 textos por audiencia; parsing JSON robusto con fallback textual |
+| `generateMulticanalNews(rawFacts)` | Titular + 4 textos por audiencia; parsing JSON robusto con fallback textual. **Generación en paralelo** (Promise.allSettled, 1 texto por llamada concurrente a OpenCode) |
 | `generateVideoSummary(title, description)` | Resumen periodístico máx. 200 palabras |
 | `generarEmbedding(texto)` | Gemini `gemini-embedding-001` → HF fallback (pad 384→768) |
 | `buscarFeedbacksSimilares(mensaje, limit, threshold)` | RPC pgvector feedbacks |
@@ -512,17 +522,19 @@ Recuperación de contexto en 5 niveles. **Orden de resolución:** P1 → P2 → 
 
 - Export: `recuperarContextoRAG(query, supabase, sessionId?)` → `{contexto, nivel, score}`. Contexto máximo 3200 chars (`MAX_CONTEXT_CHARS`), sin etiquetas de fuente. `nivel` solo para logging interno (nunca se expone al LLM).
 - Compatible con Edge Runtime (funciones puras, fetch + regex, sin dependencias Node pesadas).
+- ⚠️ Para `services/ai.ts` (comunicación multicanal), los timeouts de Gemini son 20s (vs 18s del asistente) para dar margen a prompts de 4 textos generados en paralelo.
 
 ### 9.6 Conversaciones Guardadas (`src/lib/rag/conversacionesGuardadas.ts`)
 - `detectarComandoGuardar(mensaje)`: regex español ("guardá esta conversación", etc.).
 - `debeAutoGuardar(historialLength)`: auto-guardado cada 10 mensajes tras umbral inicial de 10 (`AUTO_SAVE_THRESHOLD=10`, `AUTO_SAVE_INTERVAL=10`).
 - `guardarConversacion(...)`: embedding de últimos 20 mensajes → `saved_conversations` (fire-and-forget).
 - `buscarConversacionesSimilares(...)`: recuperación semántica P4 restringida a la sesión propia.
+- ⚠️ **Persistencia real (ago 2026):** antes el flag `guardado` se marcaba pero nadie persistía nada. Ahora `guardarConversacion()` se ejecuta efectivamente cuando hay comando explícito o auto-guardado, manteniendo el nivel P4 del RAG operativo.
 
 ### 9.7 Asistente IA (`POST /api/asistente`)
-- **Cadena con reintentos multi-pasada (ago 2026):** los providers se recorren en orden **Groq `openai/gpt-oss-120b` → OpenRouter `nvidia/nemotron-3-super-120b-a12b:free` → Gemini `gemini-flash-latest`**, y si TODOS fallan se vuelve a recorrer la cadena (pasada 2, 3…) hasta agotar un presupuesto de **48s** (`DEADLINE_MS`) dentro del `maxDuration = 60`. Backoff de 1.2s entre fallos. Los errores transitorios (429/5xx/timeouts/red) se reintenta; los permanentes (**400/401/403/404/413**) deshabilitan al provider por el resto del request. Ante respuestas inválidas (vacías, <10 chars o metadata de seguridad) también se reintenta. La respuesta 502 incluye `{intentos, pasadas, groq, openrouter, gemini}` para diagnóstico.
-- Timeouts por intento: Groq/OpenRouter 13s, Gemini 18s — acotados además por el presupuesto restante (`MIN_PRESUPUESTO_INTENTO` 3s: no se arranca un intento que no pueda terminar dentro del deadline).
-- ⚠️ **Los modelos gratuitos rotan frecuentemente** (Groq apagó los Llama en ago 2026; OpenRouter retira slugs :free sin aviso). Si el asistente devuelve "Todos los providers fallaron", diagnosticar SIEMPRE con `GET /api/asistente/debug` (hace ping real a cada provider) y actualizar las constantes `GROQ_MODEL`/`OPENROUTER_MODEL`/`GEMINI_MODEL` al tope del route.
+- **Cadena con reintentos multi-pasada (ago 2026):** los providers se recorren en orden **OpenCode `opencode/glm-5-free` → Groq `openai/gpt-oss-20b` → OpenRouter `nvidia/nemotron-3.5-lightning:free` → Gemini `gemini-2.0-flash`**, y si TODOS fallan se vuelve a recorrer la cadena (pasada 2, 3…) hasta agotar un presupuesto de **48s** (`DEADLINE_MS`) dentro del `maxDuration = 60`. Backoff de 1.2s entre fallos. Los errores transitorios (429/5xx/timeouts/red) se reintenta; los permanentes (**400/401/403/404/413**) deshabilitan al provider por el resto del request. Ante respuestas inválidas (vacías, <10 chars o metadata de seguridad) también se reintenta. La respuesta 502 incluye `{intentos, pasadas, opencode, groq, openrouter, gemini}` para diagnóstico.
+- Timeouts por intento: OpenCode/Groq/OpenRouter 13s, Gemini 18s — acotados además por el presupuesto restante (`MIN_PRESUPUESTO_INTENTO` 3s: no se arranca un intento que no pueda terminar dentro del deadline).
+- ⚠️ **Los modelos gratuitos rotan frecuentemente** (Groq apagó los Llama en ago 2026; OpenRouter retira slugs :free sin aviso). Si el asistente devuelve "Todos los providers fallaron", diagnosticar SIEMPRE con `GET /api/asistente/debug` (hace ping real a cada provider) y actualizar las constantes de modelos al tope del route.
 - `maxDuration = 60` (route export + vercel.json).
 - Input: `{ mensaje, historial[], sessionId?, idioma? }`. sessionId default `crypto.randomUUID()`.
 - Requiere al menos una key entre GROQ_API_KEY / OPENROUTER_API_KEY / Gemini keys (si no → 500).
@@ -577,7 +589,7 @@ Servicio de lectura (`src/services/news.ts`):
 ## 11. Páginas Públicas — Detalle Funcional
 
 ### Landing (`/`)
-Secciones (server component carga con `next/dynamic`): Hero, About, Impact, Comisiones, Ideas, Videoteca, Footer, Nuestros Socios.
+Secciones (server component carga con `next/dynamic`): Hero, About, Impact, Comisiones, Ideas, Videoteca, Footer, Nuestros Socios, Saladillo for Export.
 
 Características clave:
 - **Hero** (`HeroSection.tsx`, client): logo + galería fotos Cicaré + frase aleatoria de 3 opciones. Si hay clase con `en_vivo=true` en `clases_virtuales` (Realtime), botón "Aula Virtual" en rojo pulsante.
@@ -587,7 +599,7 @@ Características clave:
 - **Hydration-safe:** `force-dynamic` + `revalidate = 0` + `suppressHydrationWarning`; timestamps determinísticos del server (mtimes), nunca `Date.now()` en SSR (evita error hidratación #418).
 - **NUESTROS SOCIOS** (`NuestrosSociosSection.tsx`): grillas dinámicas por tier (platino/oro columna derecha; plata/bronce/standard ancho completo debajo). Alturas por tier: platino 100% (glow ring ámbar), oro 80%, plata 55%, bronce 35%, standard 10% (BASE_H=120). Datos del RPC `obtener_socios_publicos`. Click abre `SponsorModal`.
 - **ALIANZAS ESTRATÉGICAS** (sub-sección): grid responsive 3–6 columnas de `strategic_partners` activos; modal unificado con badge de categoría y bloque "Acciones conjuntas".
-- **NUESTRO EQUIPO** (`AboutSection.tsx`): título columna izquierda (tipografía Impact, gradient) + fichas horizontales de miembros rodeándolo (primeras 9 en grid 3 cols; luego ancho completo). Modal de perfil al click. Datos de RPC `obtener_miembros_publicos` (sin PII).
+- **NUESTRO EQUIPO** (`AboutSection.tsx`): título columna izquierda (tipografía Impact, gradient) + fichas horizontales de miembros rodeándolo (primeras 9 en grid 3 cols; luego ancho completo). Modal de perfil al click. Datos de RPC `obtener_miembros_publicos` (sin PII). **SaladilloExportSection** integrada al final: grid de embajadores (posición 1–4) + testimonios + formulario de creación pública.
 - **Métricas de Impacto:** patrón server-data → client-UI (`ImpactSection.tsx` server async fetch → `ImpactSectionClient.tsx` animado con contadores y carrusel de novedades, tabs, locales date-fns por idioma).
 - **Comisiones:** grid visual estático con colores/iconos por comisión, textos i18n.
 - **Buzón de Ideas** (`IdeasSection.tsx`): 2 columnas desktop. Izquierda: título 3 líneas + descripción + beneficios (flex horizontal). Derecha: formulario `PublicIdeasForm` (textarea, checkbox anónimo, contacto opcional) + beneficio "Seguimiento real". Envío a `POST /api/ideas` (RPC `insert_idea`, mín. 10 chars).
@@ -667,6 +679,7 @@ Ver tabla de rutas en §4. Resumen funcional:
 - **Certificados/Pasaporte Digital**: búsqueda por nombre (`ilike full_name`) de certificados emitidos, visualización interactiva con QR verificable.
 - **Capacitaciones** (gestión): CRUD con dashboard de estadísticas; creación de acciones en `/dashboard/acciones/nueva`.
 - **Streaming**: centro de transmisión (ver §13).
+- **Saladillo for Export** (`/dashboard/saladillo-for-export`): gestión de testimonios de saladillenses en el mundo — aprobar/rechazar, asignar embajadores (posición 1–4), crear testimonios, eliminar.
 - **AI Processor** (`/dashboard/ai`): pegar transcripciones → `processTextAction` → resumen + tareas + flash noticioso (guarda en `news_flashes` con commission).
 
 ---
@@ -677,7 +690,7 @@ Sidebar con submenús `<details>` colapsables color-coded:
 - **Prensa** (cyan): Gacetillas (`prensaNews`), Gestión de Prensa (`prensa`)
 - **Sponsors** (amber): Muro Sponsors (`sponsorsNews`), Gestión de Sponsors (`sponsors`)
 - **Herramientas para Eventos** (púrpura): Encuestas, Sistema Preguntas, Nube Ideas, Semáforo, Crear/Editar Evento
-- Items sueltos: Miembros, Comunicación, Settings, Entrenamiento Asistente, Videoteca, AI, Streaming
+- Items sueltos: Miembros, Comunicación, Settings, Entrenamiento Asistente, Videoteca, AI, Streaming, Saladillo for Export
 
 Detalle:
 - **Miembros** (`/dashboard/miembros`): aprobar/rechazar/activar/desactivar, roles, comisiones. Integra correos pre-aprobados (`allowed_emails`) como filas sintéticas `status:'pre-aprobado'`. Modelo 1 miembro → 1 comisión.
@@ -691,6 +704,7 @@ Detalle:
 - **Gacetillas** (`/dashboard/prensaNews`): crear notas para medios, enviar (modal `SendGacetillaModal` con plantilla HTML responsive `generatePrensaEmailHtml` — bloque Recursos Multimedia con botones descarga), historial (`PrensaEnviosHistoryModal`).
 - **Sponsors** (`/dashboard/sponsors`): CRUD comercial (tiers, rubros, logos monocromo/color a Storage `sponsors-logos`), alta como modal controlado (`SponsorRegistrationForm` con react-hook-form + Zod), acciones del período (`createAccionAction`), reportes de impacto IA (Ollama), **Socios Estratégicos** (sección superior con divisor; CRUD `partner-actions.ts` con rol `admin` ESTRICTO — no coordinadores; validación Zod `actions_description` min 10 chars; modal `StrategicPartnerModal` con logo a Storage, cacheControl 3600). Página server carga sponsors + acciones + partners en paralelo (`Promise.all`).
 - **Invitaciones** (`dashboard/actions/invitations.ts`): `generateInvitationAction` arma mensaje WhatsApp para invitar a sponsor/capacitación (usa `NEXT_PUBLIC_SITE_URL`).
+- **Saladillo for Export** (`/dashboard/saladillo-for-export`): gestión de testimonios de saladillenses en el mundo — aprobar/rechazar, asignar embajadores (máx. 4 posiciones), crear testimonios (con upload foto a Storage), eliminar. Server actions admin en `actions.ts`, server action pública en `app/actions/saladillo-export.ts`.
 - **Videoteca** (`/dashboard/videoteca`): CRUD videos + `generateVideoSummaryAction` (IA).
 
 ---
@@ -720,6 +734,8 @@ Detalle:
 | 17 | `app/dashboard/videoteca/actions.ts` | `createVideoAction`, `updateVideoAction`, `deleteVideoAction`, `generateVideoSummaryAction` |
 | 18 | `app/dashboard/eventos-presenciales/herramientasActions.ts` | `actualizarHerramientasActivasAction`, `actualizarModoPantallaAction`, `actualizarConceptoNube` |
 | 19 | `app/dashboard/eventos-presenciales/semaforoActions.ts` | `registrarVotoNegativo`, `verificarVotoDispositivo`, `obtenerEstadoSemaforo`, `resetearSemaforo` |
+| 20 | `app/dashboard/saladillo-for-export/actions.ts` | `aprobarTestimonioAction`, `rechazarTestimonioAction`, `setEmbajadorAction`, `crearTestimonioAdminAction`, `eliminarTestimonioAction` (requieren admin) |
+| — | `app/actions/saladillo-export.ts` | `crearTestimonioSaladilloExport` (pública, upload foto a Storage + insert estado pendiente) |
 | — | `components/capacitaciones/actions.ts` | `voteLivePollAction` (cookie dedup httpOnly 24h) |
 
 ---
@@ -730,8 +746,8 @@ Detalle:
 
 | Ruta | Métodos | Config | Input → Output |
 |------|---------|--------|----------------|
-| `/api/asistente` | POST | `maxDuration=60` | `{ mensaje, historial[], sessionId?, idioma? }` → `{ respuesta, guardado? }`. Groq→OpenRouter, RAG 5 niveles, contexto DB paralelo, auditoría |
-| `/api/asistente/debug` | GET | — | Diagnóstico: resume env keys (OpenRouter/Groq/HF/Gemini/Ollama/Supabase) y hace ping REAL a Ollama, OpenRouter, Groq y Gemini. Lee `api_settings` |
+| `/api/asistente` | POST | `maxDuration=60` | `{ mensaje, historial[], sessionId?, idioma? }` → `{ respuesta, modelo?, guardado? }`. Cadena OpenCode→Groq→OpenRouter→Gemini con reintentos multi-pasada bajo deadline 48s, RAG 5 niveles, contexto DB paralelo, auditoría |
+| `/api/asistente/debug` | GET | — | Diagnóstico: resume env keys (OpenCode/Groq/OpenRouter/HF/Gemini/Ollama/Supabase) y hace ping REAL a cada provider. Lee `api_settings`. |
 | `/api/asistente/test` | GET/POST | — | GET: env check. POST: `{ messages[] }` → test chat OpenRouter |
 | `/api/asistente/feedback` | POST | — | `{ historial[], calificacion, comentario? }` → Ollama sintetiza tema/utilidad → embedding → `asistente_feedback` |
 | `/api/chat` | POST | — | `{ message, history[] }` → ReadableStream SSE (SDK Groq, lazy-init `getGroq()`, RAG cascade + prompt maestro + reglas anti-alucinación) |
@@ -754,7 +770,7 @@ Detalle:
 
 | Carpeta | Archivos | Rol |
 |---------|----------|-----|
-| `landing/` | `Navbar` (client, estado sesión, menú móvil, i18n), `HeroSection` (client, consulta clase en vivo, StreamingPlayer condicional), `AboutSection` (equipo + modal perfil), `ImpactSection` (**server**, fetch acciones/artículos/flashes), `ImpactSectionClient` (contadores/carrusel animado, i18n), `ComisionesSection` (grid estático), `IdeasSection` (2 columnas), `VideotecaSection` (búsqueda/categoría), `StreamingPlayer` (URL→embed YouTube), `Footer` (i18n + acceso miembros), `FloatingLanguageSelector` (FAB es/en/pt, bottom 59px, fade out scroll) | Landing |
+| `landing/` | `Navbar` (client, estado sesión, menú móvil, i18n), `HeroSection` (client, consulta clase en vivo, StreamingPlayer condicional), `AboutSection` (equipo + modal perfil + SaladilloExportSection), `ImpactSection` (**server**, fetch acciones/artículos/flashes), `ImpactSectionClient` (contadores/carrusel animado, i18n), `ComisionesSection` (grid estático), `IdeasSection` (2 columnas), `VideotecaSection` (búsqueda/categoría), `StreamingPlayer` (URL→embed YouTube), `Footer` (i18n + acceso miembros), `FloatingLanguageSelector` (FAB es/en/pt, bottom 59px, fade out scroll) | Landing |
 | `home/` | `SponsorHeaderBar` (marquesina fixed bottom), `NuestrosSociosSection` (grillas por tier + alianzas + canales, tabs, fetch cliente si no vienen props), `SponsorModal` (modal unificado `ModalItem` discriminador `_kind: 'sponsor'\|'partner'`, cierre Escape) | Socios landing |
 | `comunicacion/` | `ComunicacionTabs`, `NewsFlashMulticanalEditor` (editor IA 4 canales), `NewsWallMulticanal` (tabs canal + slideshow medios object-contain), `NotasMulticanalList` (editar/borrar/publicar/reordenar) | Comunicación |
 | `chat/` | `ChatWidget` (widget flotante, localStorage historial), `ChatWidgetWrapper` (lazy `ssr:false` + oculta en EVENT_ROUTES), `ChatWidget.css` | Asistente |
@@ -764,6 +780,7 @@ Detalle:
 | `ideas/` | `PublicIdeasForm` | Formulario público |
 | `prensa/` | `SendGacetillaModal`, `PrensaEnviosHistoryModal` | Prensa |
 | `reuniones/` | `GeneralMeetingRoom` (acta colaborativa + IA + publicar) | Reuniones |
+| `saladillo-export/` | `SaladilloExportSection` (embajadores grid + testimonios + formulario pública, fetch client si no vienen props) | Saladillo for Export |
 
 Componentes inline en carpetas de rutas (no en `components/`): `ArticleDetailClient`, `CertificadoViewer`, `VotingClient`, `AIProcessorForm`, `certificados-interactive`, `FileList`, `PollManager`, `AnalyticsClient`, `PresentationClient`, `EntrenamientoForm`, `EventListClient`, `EventosPresencialesClient`, `PanelOradorClient`, `IdeasManagementClient`, `MemberManagementTable`, `MediosAdmin`, `MedioForm`, `ProfileForm`, `SponsorsAdmin`, `SponsorForm`, `StreamingControls`, `VideotecaManager`, `SettingsForm`, `ApiKeysSettingsForm`.
 
@@ -794,9 +811,13 @@ Arquitectura context-based propia (sin framework externo):
 - Funciones: `listFolderFiles(folderId)` (`services/drive.ts`)
 
 ### Google Gemini
-- Generación texto (`gemini-flash-latest`): edición de texto exclusiva
+- Generación texto (`gemini-2.0-flash`): edición de texto exclusiva
 - Embeddings (`gemini-embedding-001` / `text-embedding-004` en script ingesta)
-- Hasta 4 API keys en `api_settings` con rotación/fallback chain + env alternativa
+- Hasta 4 API keys en `api_settings` con rotación/fallback chain + env alternativa (env vars tienen prioridad)
+
+### OpenCode
+- Generación texto (`opencode/glm-5-free`): **provider principal** de asistente + generación multicanal
+- API key única (`OPENCODE_API_KEY`), endpoint `https://api.opencode.ai/v1/chat/completions`
 
 ### Resend (Emails)
 - Email bienvenida registro a eventos (`sendEventWelcomeEmail`, HTML dark-theme inline)
@@ -852,9 +873,10 @@ Definidas en `.env.local` (única env file, gitignored; no existe `.env.example`
 |----------|-----|
 | `NEXT_PUBLIC_SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Todos los clientes Supabase + next.config (remotePatterns) |
 | `SUPABASE_SERVICE_ROLE_KEY` | Admin clients en `/api/asistente`, `/api/chat`, debug, `comunicacion/actions` |
-| `GROQ_API_KEY` | `/api/asistente`, `/api/chat` (lazy-init: build no falla si falta) |
-| `OPENROUTER_API_KEY` | Fallback asistente + test route (**solo modelos FREE**) |
-| `GEMINI_API_KEY` / `GEMINI_APY_KEY` | ⚠️ typo histórico soportado (debug route + script ingesta) |
+| `OPENCODE_API_KEY` | Asistente ITEC primario (`/api/asistente`), generación texto (`services/ai.ts`) — **provider FREE principal** |
+| `GROQ_API_KEY` / `GROQ_API_KEY_2` | Asistente fallback (`/api/asistente`, `/api/chat`). Multi-key soportado |
+| `OPENROUTER_API_KEY` / `OPENROUTER_API_KEY_2` | Asistente fallback + test route (**solo modelos FREE**). Multi-key |
+| `GEMINI_API_KEY` / `GEMINI_APY_KEY` | ⚠️ typo histórico soportado (debug route + script ingesta). Env vars tienen prioridad sobre DB |
 | `GOOGLE_GENERATIVE_AI_API_KEY` | `services/ai.ts` (Gemini fallback tras api_settings ×4) |
 | `HF_API_KEY` | HuggingFace embeddings fallback |
 | `OLLAMA_API_BASE_URL` | Default `https://ai.itecsaladillo.org.ar` (reportes sponsors, feedback) |
@@ -901,7 +923,7 @@ Server Action     →  getCurrentMember() → Zod → mutate → revalidatePath(
 **Endpoint API nuevo:** `src/app/api/[ruta]/route.ts`; considerar si debe excluirse del proxy matcher; sanitizar errores.
 
 **Integración IA nueva:**
-1. Provider/fallback en `services/ai.ts` (o fetch directo con timeouts + error sanitizado)
+1. Provider/fallback en `services/ai.ts` (o fetch directo con timeouts + error sanitizado). Los providers de texto (OpenCode, OpenRouter, Gemini) ejecutan en paralelo multi-key para minimizar latencia.
 2. Prompt editable en `ai_prompt_settings` (clave nueva)
 3. Auditoría en `auditarRespuestaIA()` si genera texto visible
 4. **Solo modelos gratuitos**
@@ -936,7 +958,7 @@ Server Action     →  getCurrentMember() → Zod → mutate → revalidatePath(
 17. **`scratch/` está gitignored:** los scripts de diagnóstico ahí no están versionados; no depender de ellos en CI.
 18. **CI/CD sin gates:** el workflow de deploy no corre lint/tests. Ejecutar `npm run lint` localmente antes de pushear.
 19. **Migraciones con números duplicados** y sin rollback: aplicar manualmente en Supabase en orden cronológico de nombre.
-20. **Timeouts y reintentos IA:** cadena del asistente con reintentos multi-pasada bajo deadline de 48s (Groq 13s → OR 13s → Gemini 18s por intento, backoff 1.2s; errores permanentes 400/401/403/404/413 deshabilitan al provider en el request). Ollama 98s (reportes/feedback). No subir `max_tokens` ni `MAX_PROMPT_CHARS` sin revisar §9.7 (riesgo 413 de Groq).
+20. **Timeouts y reintentos IA:** cadena del asistente con reintentos multi-pasada bajo deadline de 48s (OpenCode 13s → Groq 13s → OR 13s → Gemini 18s por intento, backoff 1.2s; errores permanentes 400/401/403/404/413 deshabilitan al provider en el request). Ollama 98s (reportes/feedback). No subir `max_tokens` ni `MAX_PROMPT_CHARS` sin revisar §9.7 (riesgo 413). Gemini timeout 20s en `services/ai.ts` para prompts multicanal largos (4 textos en paralelo).
 21. **`docsContext.ts` es AUTOGENERADO** (~1366 líneas, "No editar"): regenerar con `npm run sync-docs`.
 22. **Embeddings mixtos:** pgvector almacena vectores de 768 dims; HuggingFace produce 384 (zero-padded). Mezclar orígenes de embeddings en la misma colección degrada precisión de la búsqueda.
 23. **`lib/drive.ts` tiene folder IDs placeholder** (`REEMPLAZAR_CON_ID_REAL`): el mapeo real vive en `commissions.drive_folder_id` / `site_settings`.
@@ -954,7 +976,8 @@ Server Action     →  getCurrentMember() → Zod → mutate → revalidatePath(
 | **Prensa/Medios** | `GET /api/press-news` + email | Gacetillas con recursos multimedia, historial |
 | **Asistentes a Eventos** | `/eventos/[id]/*` + pantallas | Acreditación QR, preguntas, nube, encuestas, semáforo |
 | **Estudiantes/Alumnos** | `/capacitaciones/[id]`, `/clases/[id]`, `/registro-mapa` | Aula virtual interactiva, LivePoll, registro talento |
+| **Saladillenses en el Mundo** | Sección About landing (formulario público) + admin `/dashboard/saladillo-for-export` | Testimonios, embajadores, gestión de contenido |
 
 ---
 
-*Mantener este documento actualizado con cada cambio estructural relevante. Última revisión: agosto 2026 (post-migración 068).*
+*Mantener este documento actualizado con cada cambio estructural relevante. Última revisión: septiembre 2026 (post-migración 071, integración OPENCODE).*  

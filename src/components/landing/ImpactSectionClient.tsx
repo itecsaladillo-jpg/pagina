@@ -202,7 +202,7 @@ export function ImpactSectionClient({ actions, articles }: any) {
             </p>
           </div>
 
-          <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-10">
+          <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-10 mt-12 lg:mt-0">
             {feedItems.slice(0, 2).map((item: any, idx: number) => (
               <ImpactCard key={idx} item={item} idx={idx} />
             ))}
