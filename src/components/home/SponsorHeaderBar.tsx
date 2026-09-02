@@ -52,10 +52,10 @@ export function SponsorHeaderBar({ logos = [] }: { logos?: SponsorLogo[] }) {
   return (
     <div
       suppressHydrationWarning
-      className={`fixed bottom-0 left-0 w-full z-40 bg-transparent overflow-hidden transition-all duration-500 ease-in-out ${
+      className={`fixed bottom-0 left-0 w-full z-40 overflow-hidden transition-all duration-500 ease-in-out backdrop-blur-md border-t border-white/10 ${
         isScrolled
           ? 'opacity-0 translate-y-4 pointer-events-none'
-          : 'opacity-100 translate-y-0 py-3'
+          : 'opacity-100 translate-y-0 py-4'
       }`}
     >
       <div
