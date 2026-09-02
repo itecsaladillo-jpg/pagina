@@ -61,8 +61,8 @@ export default async function HomePage() {
       {/* Navbar sticky: fuera del translate para no verse cortado arriba */}
       <Navbar />
 
-      {/* Resto del contenido sube 30px para solapar sutilmente con el hero */}
-      <div className="-translate-y-[30px]">
+      {/* Resto del contenido sube 40px para solapar sutilmente con el hero */}
+      <div className="-translate-y-[40px]">
         <div className="section-divider" />
         <ImpactSection />
 
