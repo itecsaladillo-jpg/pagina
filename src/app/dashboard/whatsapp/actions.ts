@@ -283,11 +283,16 @@ export async function saveContactAction(data: {
 export async function saveContactsBulkAction(
   contacts: Array<{ nombre: string; telefono: string; email?: string }>,
   fuente: WhatsAppContact['fuente']
-): Promise<{ success: boolean; inserted: number; error?: string }> {
+): Promise<{
+  success: boolean
+  inserted: number
+  contacts: WhatsAppContact[]
+  error?: string
+}> {
   const member = await getCurrentMember()
-  if (!member || member.role !== 'admin') return { success: false, inserted: 0, error: 'No autorizado' }
+  if (!member || member.role !== 'admin') return { success: false, inserted: 0, contacts: [], error: 'No autorizado' }
 
-  if (contacts.length === 0) return { success: true, inserted: 0 }
+  if (contacts.length === 0) return { success: true, inserted: 0, contacts: [] }
 
   const supabase = await createClient()
   const rows = contacts.map(c => ({
@@ -302,15 +307,25 @@ export async function saveContactsBulkAction(
   const { data, error } = await supabase
     .from('whatsapp_contacts')
     .upsert(rows, { onConflict: 'telefono', ignoreDuplicates: true })
-    .select('id')
+    .select('*')
 
   if (error) {
     console.error('[whatsapp] saveContactsBulkAction error:', error.message)
-    return { success: false, inserted: 0, error: error.message }
+    return { success: false, inserted: 0, contacts: [], error: error.message }
   }
 
   revalidatePath('/dashboard/whatsapp')
-  return { success: true, inserted: data?.length ?? 0 }
+  const insertedContacts: WhatsAppContact[] = (data ?? []).map((row: any) => ({
+    id: row.id,
+    nombre: row.nombre,
+    telefono: row.telefono,
+    email: row.email ?? null,
+    fuente: row.fuente as WhatsAppContact['fuente'],
+    es_agenda_itec: row.es_agenda_itec,
+    creado_por: row.creado_por ?? null,
+    created_at: row.created_at,
+  }))
+  return { success: true, inserted: insertedContacts.length, contacts: insertedContacts }
 }
 
 export async function deleteContactAction(id: string): Promise<{ success: boolean; error?: string }> {

@@ -122,25 +122,21 @@ export function ContactImporter({ contacts, onContactsChanged }: Props) {
 
   // ── Confirmar importación ──
   const handleConfirmImport = useCallback((fuente: WhatsAppContact['fuente']) => {
-    if (!preview || preview.length === 0) return
+    if (!preview || preview.length === 0) {
+      showFeedback('err', 'No hay contactos para importar.')
+      return
+    }
     startTransition(async () => {
       const res = await saveContactsBulkAction(preview, fuente)
       if (res.success) {
-        showFeedback('ok', `✅ ${res.inserted} contactos importados correctamente.`)
+        const skipped = preview.length - res.inserted
+        const msg = skipped > 0
+          ? `✅ ${res.inserted} importados (${skipped} duplicados omitidos).`
+          : `✅ ${res.inserted} contactos importados correctamente.`
+        showFeedback('ok', msg)
         setPreview(null)
         setFileName('')
-        // Refrescar lista local (optimistic)
-        const newContacts: WhatsAppContact[] = preview.map(p => ({
-          id: crypto.randomUUID(),
-          nombre: p.nombre,
-          telefono: p.telefono,
-          email: p.email ?? null,
-          fuente,
-          es_agenda_itec: true,
-          creado_por: null,
-          created_at: new Date().toISOString(),
-        }))
-        onContactsChanged([...contacts, ...newContacts])
+        onContactsChanged([...contacts, ...res.contacts])
       } else {
         showFeedback('err', res.error ?? 'Error al importar.')
       }
