@@ -139,6 +139,7 @@ export interface WhatsAppContact {
   telefono: string
   email: string | null
   fuente: 'manual' | 'vcf' | 'csv' | 'device'
+  es_agenda_itec: boolean
   creado_por: string | null
   created_at: string
 }
@@ -248,6 +249,7 @@ export async function saveContactAction(data: {
     telefono: data.telefono.trim(),
     email: data.email?.trim() || null,
     fuente: data.fuente ?? 'manual',
+    es_agenda_itec: true,
     creado_por: member.id,
   }
 
@@ -293,6 +295,7 @@ export async function saveContactsBulkAction(
     telefono: c.telefono.trim(),
     email: c.email?.trim() || null,
     fuente,
+    es_agenda_itec: true,
     creado_por: member.id,
   }))
 

@@ -5,7 +5,7 @@ import { saveContactsBulkAction, saveContactAction, deleteContactAction } from '
 import type { WhatsAppContact } from '@/app/dashboard/whatsapp/actions'
 import { normalizeArgentinaPhone } from './WhatsAppLinkGenerator'
 import {
-  Smartphone, FileUp, Table2, PenLine,
+  Smartphone, FileUp, Table2, PenLine, Contact,
   Upload, CheckCircle2, AlertCircle, Trash2,
   Plus, Loader2, X, Search
 } from 'lucide-react'
@@ -66,6 +66,7 @@ export function ContactImporter({ contacts, onContactsChanged }: Props) {
   const [preview, setPreview] = useState<ParsedContact[] | null>(null)
   const [fileName, setFileName] = useState('')
   const [search, setSearch] = useState('')
+  const [showAgendaOnly, setShowAgendaOnly] = useState(false)
   const [feedback, setFeedback] = useState<{ type: 'ok' | 'err'; msg: string } | null>(null)
   const [isPending, startTransition] = useTransition()
   const fileRef = useRef<HTMLInputElement>(null)
@@ -135,6 +136,7 @@ export function ContactImporter({ contacts, onContactsChanged }: Props) {
           telefono: p.telefono,
           email: p.email ?? null,
           fuente,
+          es_agenda_itec: true,
           creado_por: null,
           created_at: new Date().toISOString(),
         }))
@@ -157,10 +159,11 @@ export function ContactImporter({ contacts, onContactsChanged }: Props) {
     })
   }, [contacts, onContactsChanged])
 
-  const filteredContacts = contacts.filter(c =>
-    c.nombre.toLowerCase().includes(search.toLowerCase()) ||
-    c.telefono.includes(search)
-  )
+  const filteredContacts = contacts.filter(c => {
+    const matchesSearch = c.nombre.toLowerCase().includes(search.toLowerCase()) || c.telefono.includes(search)
+    const matchesAgenda = !showAgendaOnly || c.es_agenda_itec
+    return matchesSearch && matchesAgenda
+  })
 
   const IMPORT_TABS: { id: ImportTab; label: string; icon: React.ReactNode; disabled?: boolean }[] = [
     { id: 'device', label: 'Desde teléfono', icon: <Smartphone size={14} />, disabled: !supportsContactPicker },
@@ -268,6 +271,7 @@ export function ContactImporter({ contacts, onContactsChanged }: Props) {
                   onContactsChanged([...contacts, {
                     id: res.id ?? crypto.randomUUID(),
                     nombre, telefono, email: email || null, fuente: 'manual',
+                    es_agenda_itec: true,
                     creado_por: null, created_at: new Date().toISOString(),
                   }])
                   showFeedback('ok', 'Contacto agregado.')
@@ -322,17 +326,31 @@ export function ContactImporter({ contacts, onContactsChanged }: Props) {
       <div>
         <div className="flex items-center justify-between mb-3">
           <p className="text-xs text-[var(--text-muted)] font-bold uppercase tracking-wider">
-            Contactos guardados ({contacts.length})
+            Contactos guardados ({filteredContacts.length}{showAgendaOnly ? ` / ${contacts.length}` : ''})
           </p>
-          <div className="relative">
-            <Search size={12} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" />
-            <input
-              type="text"
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-              placeholder="Buscar…"
-              className="bg-white/5 border border-[var(--border-subtle)] rounded-lg pl-7 pr-3 py-1.5 text-white text-xs placeholder:text-[var(--text-muted)]/50 focus:border-[var(--accent-primary)] outline-none w-44 transition-all"
-            />
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setShowAgendaOnly(!showAgendaOnly)}
+              className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[10px] font-semibold border transition-all ${
+                showAgendaOnly
+                  ? 'bg-[#25d366]/15 text-[#25d366] border-[#25d366]/25'
+                  : 'bg-white/5 text-[var(--text-muted)] border-[var(--border-subtle)] hover:text-white hover:bg-white/10'
+              }`}
+            >
+              <Contact size={11} />
+              Agenda ITEC
+            </button>
+            <div className="relative">
+              <Search size={12} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" />
+              <input
+                type="text"
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                placeholder="Buscar…"
+                className="bg-white/5 border border-[var(--border-subtle)] rounded-lg pl-7 pr-3 py-1.5 text-white text-xs placeholder:text-[var(--text-muted)]/50 focus:border-[var(--accent-primary)] outline-none w-44 transition-all"
+              />
+            </div>
           </div>
         </div>
 
@@ -362,6 +380,11 @@ export function ContactImporter({ contacts, onContactsChanged }: Props) {
                 }`}>
                   {c.fuente}
                 </span>
+                {c.es_agenda_itec && (
+                  <span className="shrink-0 text-[9px] px-1.5 py-0.5 rounded-full border font-medium bg-[#25d366]/10 border-[#25d366]/20 text-[#25d366]">
+                    ITEC
+                  </span>
+                )}
                 <button
                   type="button"
                   onClick={() => handleDelete(c.id)}
