@@ -58,7 +58,7 @@ export default async function WhatsAppPage() {
       {/* Estadísticas rápidas */}
       <div className="grid grid-cols-3 gap-4">
         <div className="glass border border-[var(--border-subtle)] rounded-2xl p-4 text-center">
-          <p className="text-2xl font-black text-white">{members.length}</p>
+          <p className="text-2xl font-black text-white">{contacts.filter(c => c.es_agenda_itec).length}</p>
           <p className="text-[var(--text-muted)] text-xs mt-0.5">Contactos con teléfono</p>
         </div>
         <div className="glass border border-[var(--border-subtle)] rounded-2xl p-4 text-center">
