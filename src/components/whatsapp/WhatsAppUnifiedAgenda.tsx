@@ -75,6 +75,14 @@ function WhatsAppAgendaInner({ members, templates: initialTemplates, contactsDat
   const handleGroupUpdated = (g: WhatsAppGroup) => setGroups(prev => prev.map(x => x.id === g.id ? g : x))
   const handleGroupDeleted = (id: string) => setGroups(prev => prev.filter(x => x.id !== id))
 
+  // Contactos unificados para GruposTab
+  const allContacts = useMemo(() => {
+    const arr: { id: string; nombre: string; telefono: string; email: string | null; tipo: 'miembro' | WhatsAppContact['fuente'] }[] = []
+    members.forEach(m => arr.push({ id: m.id, nombre: m.full_name, telefono: m.phone, email: m.email, tipo: 'miembro' }))
+    contacts.forEach(c => arr.push({ id: c.id, nombre: c.nombre, telefono: c.telefono, email: c.email, tipo: c.fuente }))
+    return arr.sort((a, b) => a.nombre.localeCompare(b.nombre))
+  }, [members, contacts])
+
   const tabs: { key: Tab; label: string; icon: React.ReactNode; count: number }[] = [
     { key: 'contactos', label: 'Contactos', icon: <Users size={15} />, count: memberCount + contactCount },
     { key: 'grupos', label: 'Grupos', icon: <MessageSquare size={15} />, count: groupCount },
@@ -150,12 +158,7 @@ function WhatsAppAgendaInner({ members, templates: initialTemplates, contactsDat
         {activeTab === 'grupos' && (
           <GruposTab
             groupsData={groups}
-            allContacts={useMemo(() => {
-              const arr: { id: string; nombre: string; telefono: string; email: string | null; tipo: 'miembro' | WhatsAppContact['fuente'] }[] = []
-              members.forEach(m => arr.push({ id: m.id, nombre: m.full_name, telefono: m.phone, email: m.email, tipo: 'miembro' }))
-              contacts.forEach(c => arr.push({ id: c.id, nombre: c.nombre, telefono: c.telefono, email: c.email, tipo: c.fuente }))
-              return arr.sort((a, b) => a.nombre.localeCompare(b.nombre))
-            }, [members, contacts])}
+            allContacts={allContacts}
             templates={templates}
             onGroupCreated={handleGroupCreated}
             onGroupUpdated={handleGroupUpdated}
