@@ -8,7 +8,7 @@ import {
 } from '@/app/dashboard/whatsapp/actions'
 import { WhatsAppLinkGenerator, WhatsAppIcon, ITEC_WHATSAPP_NUMBER, buildWaLink, normalizeArgentinaPhone } from './WhatsAppLinkGenerator'
 import { TemplateEditor } from './TemplateEditor'
-import { Search, Users, User, Plus, X, Upload, MoreVertical, Copy, Loader2, Settings } from 'lucide-react'
+import { Search, Users, User, Plus, X, Upload, MoreVertical, Copy, Loader2, Settings, ExternalLink } from 'lucide-react'
 
 // ─── Helpers y Tipos ────────────────────────────────────────────────
 
@@ -281,7 +281,7 @@ export function WhatsAppUnifiedAgenda({ members, templates: initialTemplates, co
         ) : (
           <GroupChat
             group={selected.data as WhatsAppGroup}
-            allContacts={contacts}
+            allContacts={unifiedContacts}
             templates={templates}
             onGroupUpdated={g => setGroups(prev => prev.map(x => x.id === g.id ? g : x))}
             onGroupDeleted={id => {
@@ -412,7 +412,7 @@ function ContactChat({ contact, templates, onManageTemplates }: { contact: Unifi
   )
 }
 
-function GroupChat({ group, allContacts, templates, onGroupUpdated, onGroupDeleted }: { group: WhatsAppGroup, allContacts: WhatsAppContact[], templates: WhatsAppTemplate[], onGroupUpdated: (g: WhatsAppGroup) => void, onGroupDeleted: (id: string) => void }) {
+function GroupChat({ group, allContacts, templates, onGroupUpdated, onGroupDeleted }: { group: WhatsAppGroup, allContacts: UnifiedContact[], templates: WhatsAppTemplate[], onGroupUpdated: (g: WhatsAppGroup) => void, onGroupDeleted: (id: string) => void }) {
   const [fullGroup, setFullGroup] = useState<any>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [msg, setMsg] = useState('')
@@ -463,42 +463,41 @@ function GroupChat({ group, allContacts, templates, onGroupUpdated, onGroupDelet
              onChange={e => setMsg(e.target.value)}
              placeholder="Escribí el mensaje para el grupo (soporta {{nombre}})..."
              rows={3}
-             className="w-full bg-black/20 border border-[var(--border-subtle)] rounded-lg p-3 text-white text-sm outline-none focus:border-[#25d366]/50 resize-none"
+             className="w-full bg-black/40 border border-[var(--border-subtle)] rounded-lg p-3 text-white text-sm custom-scrollbar mb-3 focus:outline-none focus:border-[#25d366]"
            />
-           <div className="mt-3 flex justify-end">
-             <button onClick={handleCopyAll} className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 text-white text-xs font-bold rounded-lg transition-colors">
-               <Copy size={14} /> Copiar Todos los Links
-             </button>
+           <div className="flex items-center gap-2 overflow-x-auto custom-scrollbar pb-2">
+             {templates.map(t => (
+               <button key={t.id} onClick={() => setMsg(t.cuerpo)} className="whitespace-nowrap px-3 py-1.5 rounded-full bg-white/5 hover:bg-white/10 text-xs text-white border border-white/10 transition-colors">
+                 {t.titulo}
+               </button>
+             ))}
            </div>
         </div>
 
-        {/* Lista de Miembros del Grupo */}
-        <div>
-          <h4 className="text-xs font-bold text-[var(--text-muted)] uppercase tracking-wider mb-3">Miembros del grupo</h4>
-          {isLoading ? (
-            <div className="flex justify-center p-4"><Loader2 className="animate-spin text-[var(--text-muted)]" /></div>
-          ) : !fullGroup?.contacts?.length ? (
-            <p className="text-sm text-[var(--text-muted)]">El grupo está vacío. Haz clic en "destinatarios" arriba para añadir miembros.</p>
-          ) : (
-            <div className="space-y-1.5">
-              {fullGroup.contacts.map((c: any) => (
-                <div key={c.id} className="flex items-center justify-between p-3 rounded-lg bg-white/3 border border-[var(--border-subtle)]">
-                  <div>
-                    <p className="text-sm font-semibold text-white">{c.nombre}</p>
-                    <p className="text-xs font-mono text-[var(--text-muted)]">+{normalizeArgentinaPhone(c.telefono)}</p>
-                  </div>
-                  <a
-                    href={buildWaLink(c.telefono, replacePlaceholders(msg, { nombre: c.nombre.split(' ')[0] }))}
-                    target="_blank" rel="noopener noreferrer"
-                    className="p-2 bg-[#25d366]/10 text-[#25d366] hover:bg-[#25d366]/20 rounded-lg transition-colors"
-                  >
-                    <WhatsAppIcon size={16} />
-                  </a>
-                </div>
-              ))}
-            </div>
-          )}
+        {/* Lista de Miembros (Vista previa) */}
+        <div className="flex items-center justify-between mb-2">
+          <label className="text-xs font-bold text-[var(--text-muted)] uppercase tracking-wider">Destinatarios ({fullGroup?.contacts?.length || 0})</label>
+          <button onClick={handleCopyAll} disabled={!msg.trim() || !fullGroup?.contacts?.length} className="text-[#25d366] text-xs font-bold hover:underline disabled:opacity-50">Copiar todos los links</button>
         </div>
+
+        {isLoading ? (
+          <div className="flex justify-center p-8"><Loader2 className="animate-spin text-[var(--text-muted)]" size={24} /></div>
+        ) : (
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-2">
+            {fullGroup?.contacts?.map((c: any) => {
+              const link = buildWaLink(c.telefono, replacePlaceholders(msg, { nombre: c.nombre.split(' ')[0] }))
+              return (
+                <a key={c.id} href={link} target="_blank" rel="noreferrer" className="flex items-center justify-between p-3 rounded-xl bg-white/5 hover:bg-white/10 border border-transparent hover:border-white/10 transition-colors group">
+                  <div className="min-w-0">
+                    <p className="text-sm text-white font-medium truncate">{c.nombre}</p>
+                    <p className="text-xs text-[var(--text-muted)] font-mono">{c.telefono}</p>
+                  </div>
+                  <ExternalLink size={14} className="text-[var(--text-muted)] group-hover:text-[#25d366] shrink-0" />
+                </a>
+              )
+            })}
+          </div>
+        )}
       </div>
 
       {/* Modal Edición de Miembros */}
@@ -519,25 +518,31 @@ function GroupChat({ group, allContacts, templates, onGroupUpdated, onGroupDelet
   )
 }
 
-function GroupMembersModal({ group, currentMembers, allContacts, onClose, onSaved }: { group: WhatsAppGroup, currentMembers: any[], allContacts: WhatsAppContact[], onClose: () => void, onSaved: (c: any[]) => void }) {
-  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set(currentMembers.map(c => c.id)))
+function GroupMembersModal({ group, currentMembers, allContacts, onClose, onSaved }: { group: WhatsAppGroup, currentMembers: any[], allContacts: UnifiedContact[], onClose: () => void, onSaved: (c: any[]) => void }) {
+  const [selectedPhones, setSelectedPhones] = useState<Set<string>>(new Set(currentMembers.map(c => c.telefono)))
   const [isPending, startTransition] = useTransition()
+  const [searchTerm, setSearchTerm] = useState('')
 
-  const toggle = (id: string) => {
-    const next = new Set(selectedIds)
-    next.has(id) ? next.delete(id) : next.add(id)
-    setSelectedIds(next)
+  const toggle = (phone: string) => {
+    const next = new Set(selectedPhones)
+    next.has(phone) ? next.delete(phone) : next.add(phone)
+    setSelectedPhones(next)
   }
 
   const save = () => {
     startTransition(async () => {
-      const arr = Array.from(selectedIds)
-      const res = await setGroupContactsAction(group.id, arr)
+      const contactsToSync = allContacts.filter(c => selectedPhones.has(c.telefono))
+      const res = await setGroupContactsAction(group.id, contactsToSync as any)
       if (res.success) {
-        onSaved(allContacts.filter(c => selectedIds.has(c.id)))
+        onSaved(contactsToSync)
       }
     })
   }
+
+  const filteredContacts = allContacts.filter(c => 
+    c.nombre.toLowerCase().includes(searchTerm.toLowerCase()) || 
+    c.telefono.includes(searchTerm)
+  )
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
@@ -545,25 +550,38 @@ function GroupMembersModal({ group, currentMembers, allContacts, onClose, onSave
         <h3 className="text-xl font-bold text-white mb-2">Editar miembros</h3>
         <p className="text-sm text-[var(--text-muted)] mb-4">{group.nombre}</p>
         
+        <input 
+          type="text"
+          placeholder="Buscar para agregar..."
+          className="w-full bg-black/40 border border-[var(--border-subtle)] rounded-lg p-2 text-white text-sm mb-4 focus:outline-none focus:border-[#25d366]"
+          value={searchTerm}
+          onChange={e => setSearchTerm(e.target.value)}
+        />
+
         <div className="flex-1 overflow-y-auto space-y-1 mb-4 custom-scrollbar">
-          {allContacts.map(c => (
-            <label key={c.id} className="flex items-center gap-3 p-2 rounded-lg hover:bg-white/5 cursor-pointer">
-              <input type="checkbox" checked={selectedIds.has(c.id)} onChange={() => toggle(c.id)} className="w-4 h-4 accent-[#25d366]" />
-              <div>
-                <p className="text-sm text-white">{c.nombre}</p>
-                <p className="text-xs text-[var(--text-muted)] font-mono">{c.telefono}</p>
+          {filteredContacts.map(c => (
+            <label key={c.id} className="flex items-center justify-between p-2 rounded-lg hover:bg-white/5 cursor-pointer border border-transparent hover:border-white/10 transition-colors">
+              <div className="flex items-center gap-3">
+                <input type="checkbox" checked={selectedPhones.has(c.telefono)} onChange={() => toggle(c.telefono)} className="w-4 h-4 accent-[#25d366] rounded cursor-pointer" />
+                <div>
+                  <p className="text-sm text-white font-medium">{c.nombre}</p>
+                  <p className="text-xs text-[var(--text-muted)] font-mono">{c.telefono}</p>
+                </div>
               </div>
+              <span className={`text-[10px] px-2 py-0.5 rounded-full ${c.tipo === 'miembro' ? 'bg-blue-500/10 text-blue-400' : 'bg-slate-500/10 text-slate-400'}`}>
+                {c.tipo}
+              </span>
             </label>
           ))}
-          {allContacts.length === 0 && (
-            <p className="text-sm text-[var(--text-muted)] text-center py-4">No hay contactos externos en la agenda.</p>
+          {filteredContacts.length === 0 && (
+            <p className="text-sm text-[var(--text-muted)] text-center py-4">No se encontraron contactos.</p>
           )}
         </div>
 
         <div className="flex justify-end gap-2 pt-4 border-t border-[var(--border-subtle)]">
           <button onClick={onClose} className="px-4 py-2 text-sm text-[var(--text-muted)] hover:text-white">Cancelar</button>
           <button onClick={save} disabled={isPending} className="px-4 py-2 bg-[#25d366] text-black font-bold text-sm rounded-lg hover:bg-[#1fae53]">
-            {isPending ? 'Guardando...' : 'Guardar'}
+            {isPending ? 'Guardando...' : `Guardar (${selectedPhones.size})`}
           </button>
         </div>
       </div>

@@ -398,14 +398,43 @@ export async function deleteGroupAction(id: string): Promise<{ success: boolean;
 
 export async function setGroupContactsAction(
   groupId: string,
-  contactIds: string[]
+  contactsToSync: { id: string, nombre: string, telefono: string, email: string | null, tipo: string }[]
 ): Promise<{ success: boolean; error?: string }> {
   const member = await getCurrentMember()
   if (!member || member.role !== 'admin') return { success: false, error: 'No autorizado' }
 
   const supabase = await createClient()
 
-  // Reemplazar todos los miembros del grupo (delete + insert)
+  // 1. Asegurar que todos existan en whatsapp_contacts para respetar la FK
+  let phoneToId = new Map<string, string>()
+  if (contactsToSync.length > 0) {
+    const rowsToUpsert = contactsToSync.map(c => ({
+      nombre: c.nombre,
+      telefono: c.telefono,
+      email: c.email,
+      fuente: c.tipo === 'miembro' ? 'manual' : c.tipo,
+      es_agenda_itec: true,
+      creado_por: member.id
+    }))
+
+    const { data: upsertedContacts, error: upsertError } = await supabase
+      .from('whatsapp_contacts')
+      .upsert(rowsToUpsert, { onConflict: 'telefono' })
+      .select('id, telefono')
+
+    if (upsertError) {
+      console.error('[whatsapp] upsert error in setGroupContactsAction:', upsertError.message)
+      return { success: false, error: upsertError.message }
+    }
+
+    if (upsertedContacts) {
+      for (const uc of upsertedContacts) {
+        phoneToId.set(uc.telefono, uc.id)
+      }
+    }
+  }
+
+  // 2. Reemplazar todos los miembros del grupo
   const { error: delError } = await supabase
     .from('whatsapp_group_contacts')
     .delete()
@@ -413,8 +442,11 @@ export async function setGroupContactsAction(
 
   if (delError) return { success: false, error: delError.message }
 
-  if (contactIds.length > 0) {
-    const rows = contactIds.map(cid => ({ group_id: groupId, contact_id: cid }))
+  if (contactsToSync.length > 0) {
+    const rows = contactsToSync.map(c => ({
+      group_id: groupId,
+      contact_id: phoneToId.get(c.telefono) || c.id
+    }))
     const { error: insError } = await supabase.from('whatsapp_group_contacts').insert(rows)
     if (insError) return { success: false, error: insError.message }
   }
