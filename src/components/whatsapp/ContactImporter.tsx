@@ -103,24 +103,52 @@ export function ContactImporter({ contacts, onContactsChanged }: Props) {
     }
   }, [supportsContactPicker])
 
-  // ── Leer archivo vCard / CSV ──
+  // ── Leer archivo vCard / CSV y guardar automáticamente ──
   const handleFile = useCallback((file: File, type: 'vcf' | 'csv') => {
     setFileName(file.name)
     const reader = new FileReader()
     reader.onload = e => {
       const text = e.target?.result as string
       const parsed = type === 'vcf' ? parseVCard(text) : parseCsv(text)
-      setPreview(parsed)
+      
       if (parsed.length === 0) {
         showFeedback('err', 'No se encontraron contactos válidos en el archivo.')
-      } else {
-        showFeedback('ok', `${parsed.length} contactos encontrados. Confirmá para importarlos.`)
+        return
       }
+
+      // Guardar automáticamente en la DB
+      startTransition(async () => {
+        const res = await saveContactsBulkAction(parsed, type)
+        if (res.success) {
+          showFeedback('ok', `✅ ${res.inserted} contactos importados y guardados correctamente.`)
+          
+          // Refrescar lista local (optimistic update)
+          const newContacts: WhatsAppContact[] = parsed.map(p => ({
+            id: crypto.randomUUID(),
+            nombre: p.nombre,
+            telefono: p.telefono,
+            email: p.email ?? null,
+            fuente: type,
+            creado_por: null,
+            created_at: new Date().toISOString(),
+          }))
+          
+          // Agregamos los nuevos, filtrando duplicados por teléfono por si acaso
+          const currentPhones = new Set(contacts.map(c => c.telefono))
+          const filteredNew = newContacts.filter(c => !currentPhones.has(c.telefono))
+          
+          onContactsChanged([...contacts, ...filteredNew])
+          setPreview(null)
+          setFileName('')
+        } else {
+          showFeedback('err', res.error ?? 'Error al guardar los contactos en la base de datos.')
+        }
+      })
     }
     reader.readAsText(file, 'utf-8')
-  }, [])
+  }, [contacts, onContactsChanged])
 
-  // ── Confirmar importación ──
+  // ── Confirmar importación (para device) ──
   const handleConfirmImport = useCallback((fuente: WhatsAppContact['fuente']) => {
     if (!preview || preview.length === 0) {
       showFeedback('err', 'No hay contactos para importar.')
