@@ -454,3 +454,34 @@ export async function setGroupContactsAction(
   revalidatePath('/dashboard/whatsapp')
   return { success: true }
 }
+
+export async function updateUnifiedContactAction(id: string, tipo: string, payload: { nombre: string, telefono: string, email: string | null }) {
+  const member = await getCurrentMember()
+  if (!member || member.role !== 'admin') return { success: false, error: 'No autorizado' }
+  const supabase = await createClient()
+
+  if (tipo === 'miembro') {
+    const { error } = await supabase.from('members').update({ full_name: payload.nombre, phone: payload.telefono, email: payload.email }).eq('id', id)
+    if (error) return { success: false, error: error.message }
+  } else {
+    const { error } = await supabase.from('whatsapp_contacts').update({ nombre: payload.nombre, telefono: payload.telefono, email: payload.email }).eq('id', id)
+    if (error) return { success: false, error: error.message }
+  }
+  revalidatePath('/dashboard/whatsapp')
+  return { success: true }
+}
+
+export async function deleteUnifiedContactAction(id: string, tipo: string) {
+  const member = await getCurrentMember()
+  if (!member || member.role !== 'admin') return { success: false, error: 'No autorizado' }
+  const supabase = await createClient()
+
+  if (tipo === 'miembro') {
+    return { success: false, error: 'No se puede eliminar un miembro desde la agenda de WhatsApp.' }
+  } else {
+    const { error } = await supabase.from('whatsapp_contacts').delete().eq('id', id)
+    if (error) return { success: false, error: error.message }
+  }
+  revalidatePath('/dashboard/whatsapp')
+  return { success: true }
+}

@@ -4,7 +4,8 @@ import { useState, useMemo, useTransition, useCallback, useRef } from 'react'
 import type { WhatsAppTemplate, WhatsAppContact, WhatsAppGroup } from '@/app/dashboard/whatsapp/actions'
 import {
   saveGroupAction, deleteGroupAction, setGroupContactsAction,
-  getGroupWithContactsAction, saveContactsBulkAction
+  getGroupWithContactsAction, saveContactsBulkAction,
+  updateUnifiedContactAction, deleteUnifiedContactAction
 } from '@/app/dashboard/whatsapp/actions'
 import { WhatsAppLinkGenerator, WhatsAppIcon, ITEC_WHATSAPP_NUMBER, buildWaLink, normalizeArgentinaPhone } from './WhatsAppLinkGenerator'
 import { TemplateEditor } from './TemplateEditor'
@@ -277,6 +278,14 @@ export function WhatsAppUnifiedAgenda({ members, templates: initialTemplates, co
             contact={selected.data as UnifiedContact}
             templates={templates}
             onManageTemplates={() => setShowTemplateModal(true)}
+            onContactUpdated={(c) => {
+              setContacts(prev => prev.map(x => x.id === c.id ? { ...x, nombre: c.nombre, telefono: c.telefono, email: c.email } : x))
+              setSelected({ type: 'contact', data: c })
+            }}
+            onContactDeleted={(id) => {
+              setContacts(prev => prev.filter(x => x.id !== id))
+              setSelected(null)
+            }}
           />
         ) : (
           <GroupChat
@@ -346,9 +355,10 @@ export function WhatsAppUnifiedAgenda({ members, templates: initialTemplates, co
 
 // ─── Sub-componentes Contextuales ──────────────────────────────────────
 
-function ContactChat({ contact, templates, onManageTemplates }: { contact: UnifiedContact, templates: WhatsAppTemplate[], onManageTemplates: () => void }) {
+function ContactChat({ contact, templates, onManageTemplates, onContactUpdated, onContactDeleted }: { contact: UnifiedContact, templates: WhatsAppTemplate[], onManageTemplates: () => void, onContactUpdated: (c: UnifiedContact) => void, onContactDeleted: (id: string) => void }) {
   const [msg, setMsg] = useState('')
   const [selTemplate, setSelTemplate] = useState('')
+  const [showEdit, setShowEdit] = useState(false)
 
   const finalMsg = replacePlaceholders(msg || (templates.find(t => t.id === selTemplate)?.cuerpo ?? ''), {
     nombre: contact.nombre.split(' ')[0],
@@ -356,15 +366,20 @@ function ContactChat({ contact, templates, onManageTemplates }: { contact: Unifi
   })
 
   return (
-    <div className="flex flex-col h-full">
-      <div className="p-4 border-b border-[var(--border-subtle)] flex items-center gap-4 bg-[#0f0f0f]/80">
-        <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center text-white">
-          <User size={24} />
+    <div className="flex flex-col h-full relative">
+      <div className="p-4 border-b border-[var(--border-subtle)] flex items-center justify-between bg-[#0f0f0f]/80">
+        <div className="flex items-center gap-4">
+          <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center text-white">
+            <User size={24} />
+          </div>
+          <div>
+            <h3 className="text-lg font-bold text-white">{contact.nombre}</h3>
+            <p className="text-sm text-[var(--text-muted)] font-mono">+{normalizeArgentinaPhone(contact.telefono)} • Origen: {contact.tipo}</p>
+          </div>
         </div>
-        <div>
-          <h3 className="text-lg font-bold text-white">{contact.nombre}</h3>
-          <p className="text-sm text-[var(--text-muted)] font-mono">+{normalizeArgentinaPhone(contact.telefono)} • Origen: {contact.tipo}</p>
-        </div>
+        <button onClick={() => setShowEdit(true)} className="px-3 py-1.5 text-xs font-bold text-white bg-white/10 hover:bg-white/20 rounded-lg transition-colors border border-white/10">
+          Editar Contacto
+        </button>
       </div>
       
       <div className="flex-1 p-6 flex flex-col justify-end bg-[url('/img/wa-bg.png')] bg-center bg-cover bg-no-repeat relative">
@@ -408,6 +423,21 @@ function ContactChat({ contact, templates, onManageTemplates }: { contact: Unifi
           </div>
         </div>
       </div>
+
+      {showEdit && (
+        <EditContactModal
+          contact={contact}
+          onClose={() => setShowEdit(false)}
+          onSaved={(updated) => {
+            onContactUpdated(updated)
+            setShowEdit(false)
+          }}
+          onDeleted={() => {
+            onContactDeleted(contact.id)
+            setShowEdit(false)
+          }}
+        />
+      )}
     </div>
   )
 }
@@ -619,6 +649,70 @@ function CreateGroupModal({ onClose, onCreated }: { onClose: () => void, onCreat
           <button onClick={save} disabled={isPending || !nombre.trim()} className="px-4 py-2 bg-[#25d366] text-black font-bold text-sm rounded-lg hover:bg-[#1fae53] disabled:opacity-50">
             {isPending ? 'Guardando...' : 'Crear'}
           </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function EditContactModal({ contact, onClose, onSaved, onDeleted }: { contact: UnifiedContact, onClose: () => void, onSaved: (c: UnifiedContact) => void, onDeleted: () => void }) {
+  const [nombre, setNombre] = useState(contact.nombre)
+  const [telefono, setTelefono] = useState(contact.telefono)
+  const [email, setEmail] = useState(contact.email || '')
+  const [isPending, startTransition] = useTransition()
+
+  const save = () => {
+    if (!nombre.trim() || !telefono.trim()) return
+    startTransition(async () => {
+      const res = await updateUnifiedContactAction(contact.id, contact.tipo, { nombre, telefono, email })
+      if (res.success) {
+        onSaved({ ...contact, nombre, telefono, email })
+      } else {
+        alert(res.error)
+      }
+    })
+  }
+
+  const trash = () => {
+    if (!confirm('¿Seguro que querés eliminar este contacto?')) return
+    startTransition(async () => {
+      const res = await deleteUnifiedContactAction(contact.id, contact.tipo)
+      if (res.success) {
+        onDeleted()
+      } else {
+        alert(res.error)
+      }
+    })
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+      <div className="glass border border-[var(--border-subtle)] rounded-2xl w-full max-w-sm p-6 relative">
+        <h3 className="text-xl font-bold text-white mb-4">Editar Contacto</h3>
+        
+        <div className="space-y-4 mb-6">
+          <div>
+            <label className="text-xs font-bold text-[var(--text-muted)] uppercase tracking-wider mb-1 block">Nombre</label>
+            <input value={nombre} onChange={e => setNombre(e.target.value)} className="w-full bg-black/20 border border-[var(--border-subtle)] rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-[#25d366]/50" />
+          </div>
+          <div>
+            <label className="text-xs font-bold text-[var(--text-muted)] uppercase tracking-wider mb-1 block">Teléfono (WhatsApp)</label>
+            <input value={telefono} onChange={e => setTelefono(e.target.value)} className="w-full bg-black/20 border border-[var(--border-subtle)] rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-[#25d366]/50" />
+          </div>
+          <div>
+            <label className="text-xs font-bold text-[var(--text-muted)] uppercase tracking-wider mb-1 block">Email (Opcional)</label>
+            <input value={email} onChange={e => setEmail(e.target.value)} className="w-full bg-black/20 border border-[var(--border-subtle)] rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-[#25d366]/50" />
+          </div>
+        </div>
+
+        <div className="flex items-center justify-between">
+          <button onClick={trash} disabled={isPending || contact.tipo === 'miembro'} className="text-sm text-red-400 hover:text-red-300 disabled:opacity-50" title={contact.tipo === 'miembro' ? 'No se pueden borrar miembros desde aquí' : 'Eliminar'}>Eliminar</button>
+          <div className="flex gap-2">
+            <button onClick={onClose} className="px-4 py-2 text-sm text-[var(--text-muted)] hover:text-white">Cancelar</button>
+            <button onClick={save} disabled={isPending || !nombre.trim() || !telefono.trim()} className="px-4 py-2 bg-[#25d366] text-black font-bold text-sm rounded-lg hover:bg-[#1fae53] disabled:opacity-50">
+              {isPending ? 'Guardando...' : 'Guardar'}
+            </button>
+          </div>
         </div>
       </div>
     </div>
