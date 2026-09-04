@@ -479,9 +479,14 @@ function GroupChat({ group, allContacts, templates, onGroupUpdated, onGroupDelet
             </p>
           </div>
         </div>
-        <button onClick={() => deleteGroupAction(group.id).then(() => onGroupDeleted(group.id))} className="p-2 text-red-400 hover:bg-red-500/10 rounded-lg transition-colors" title="Eliminar Grupo">
-          <X size={18} />
-        </button>
+        <div className="flex items-center gap-2">
+          <button onClick={() => setShowMembersModal(true)} className="px-3 py-1.5 text-xs font-bold text-black bg-[#25d366] hover:bg-[#1fae53] rounded-lg transition-colors flex items-center gap-2">
+            <Plus size={14} /> Asignar Contactos
+          </button>
+          <button onClick={() => deleteGroupAction(group.id).then(() => onGroupDeleted(group.id))} className="p-2 text-red-400 hover:bg-red-500/10 rounded-lg transition-colors" title="Eliminar Grupo">
+            <X size={18} />
+          </button>
+        </div>
       </div>
 
       <div className="flex-1 overflow-y-auto p-4 custom-scrollbar space-y-4">
@@ -506,7 +511,10 @@ function GroupChat({ group, allContacts, templates, onGroupUpdated, onGroupDelet
 
         {/* Lista de Miembros (Vista previa) */}
         <div className="flex items-center justify-between mb-2">
-          <label className="text-xs font-bold text-[var(--text-muted)] uppercase tracking-wider">Destinatarios ({fullGroup?.contacts?.length || 0})</label>
+          <div className="flex items-center gap-3">
+            <label className="text-xs font-bold text-[var(--text-muted)] uppercase tracking-wider">Destinatarios ({fullGroup?.contacts?.length || 0})</label>
+            <button onClick={() => setShowMembersModal(true)} className="text-[#25d366] text-xs hover:underline flex items-center gap-1"><Plus size={12}/> Agregar o quitar</button>
+          </div>
           <button onClick={handleCopyAll} disabled={!msg.trim() || !fullGroup?.contacts?.length} className="text-[#25d366] text-xs font-bold hover:underline disabled:opacity-50">Copiar todos los links</button>
         </div>
 
