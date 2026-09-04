@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation'
 import { getCurrentMember } from '@/services/auth'
 import { createClient } from '@/lib/supabase/server'
 import { getTemplatesAction, getContactsAction, getGroupsAction } from './actions'
-import { WhatsAppPanel } from '@/components/whatsapp/WhatsAppPanel'
+import { WhatsAppUnifiedAgenda } from '@/components/whatsapp/WhatsAppUnifiedAgenda'
 import { WhatsAppIcon } from '@/components/whatsapp/WhatsAppLinkGenerator'
 
 export const dynamic = 'force-dynamic'
@@ -41,9 +41,9 @@ export default async function WhatsAppPage() {
   ])
 
   return (
-    <div className="space-y-8 animate-fade-in">
+    <div className="space-y-8 animate-fade-in h-full flex flex-col">
       {/* Encabezado */}
-      <div className="border-b border-[var(--border-subtle)] pb-6">
+      <div className="border-b border-[var(--border-subtle)] pb-6 shrink-0">
         <h1 className="text-3xl font-bold text-white mb-2 flex items-center gap-3">
           <span className="text-[#25d366]">
             <WhatsAppIcon size={30} />
@@ -56,24 +56,24 @@ export default async function WhatsAppPage() {
       </div>
 
       {/* Estadísticas rápidas */}
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-3 gap-4 shrink-0">
         <div className="glass border border-[var(--border-subtle)] rounded-2xl p-4 text-center">
-          <p className="text-2xl font-black text-white">{contacts.filter(c => c.es_agenda_itec).length}</p>
-          <p className="text-[var(--text-muted)] text-xs mt-0.5">Contactos con teléfono</p>
+          <p className="text-2xl font-black text-white">{members.length + contacts.length}</p>
+          <p className="text-[var(--text-muted)] text-xs mt-0.5">Contactos en agenda</p>
         </div>
         <div className="glass border border-[var(--border-subtle)] rounded-2xl p-4 text-center">
-          <p className="text-2xl font-black text-[#25d366]">{templates.length}</p>
+          <p className="text-2xl font-black text-[#25d366]">{groups.length}</p>
+          <p className="text-[var(--text-muted)] text-xs mt-0.5">Grupos creados</p>
+        </div>
+        <div className="glass border border-[var(--border-subtle)] rounded-2xl p-4 text-center">
+          <p className="text-2xl font-black text-purple-400">{templates.length}</p>
           <p className="text-[var(--text-muted)] text-xs mt-0.5">Plantillas guardadas</p>
-        </div>
-        <div className="glass border border-[var(--border-subtle)] rounded-2xl p-4 text-center">
-          <p className="text-2xl font-black text-purple-400">wa.me</p>
-          <p className="text-[var(--text-muted)] text-xs mt-0.5">Links instantáneos</p>
         </div>
       </div>
 
       {/* Panel principal */}
-      <div className="glass border border-[var(--border-subtle)] rounded-2xl p-6">
-        <WhatsAppPanel members={members} templates={templates} contactsData={contacts} groupsData={groups} />
+      <div className="flex-1 min-h-0">
+        <WhatsAppUnifiedAgenda members={members} templates={templates} contactsData={contacts} groupsData={groups} />
       </div>
     </div>
   )
