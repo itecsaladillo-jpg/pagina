@@ -125,7 +125,7 @@ export function MedioForm({ medio, onClose }: Props) {
             <div className="flex items-center gap-4">
               {logoPreview && (
                 <div className="w-16 h-16 rounded-lg overflow-hidden border border-white/10 flex-shrink-0">
-                  <img src={logoPreview} alt="Logo preview" className="w-full h-full object-contain bg-white" />
+                  <img src={logoPreview} alt="Logo preview" className="w-full h-full object-contain" />
                 </div>
               )}
               <label className="flex-1">

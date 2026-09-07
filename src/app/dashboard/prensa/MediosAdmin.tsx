@@ -34,7 +34,7 @@ export function MediosAdmin({ initialMedios }: Props) {
             <div className="flex items-center gap-4">
               {m.logo_url ? (
                 <div className="w-12 h-12 rounded-lg overflow-hidden border border-white/10 flex-shrink-0">
-                  <img src={m.logo_url} alt={m.nombre_medio} className="w-full h-full object-contain bg-white" />
+                  <img src={m.logo_url} alt={m.nombre_medio} className="w-full h-full object-contain" />
                 </div>
               ) : (
                 <div className="w-12 h-12 rounded-lg border border-white/10 flex-shrink-0 bg-white/5 flex items-center justify-center text-white/30 text-lg font-bold">
