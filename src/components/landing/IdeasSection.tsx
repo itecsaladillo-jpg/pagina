@@ -20,7 +20,7 @@ export function IdeasSection() {
       <div className="relative z-10 max-w-5xl mx-auto px-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
           <div className="text-left">
-            <span className="inline-block text-xs font-bold tracking-[0.2em] text-[var(--accent-primary-2)] uppercase mb-6 px-4 py-1.5 rounded-full border border-[var(--accent-primary-2)]/20 bg-[var(--accent-primary-2)]/5">
+            <span className="inline-block text-xs font-bold tracking-[0.2em] text-[var(--accent-warm)] uppercase mb-6 px-4 py-1.5 rounded-full border border-[var(--accent-warm)]/20 bg-[var(--accent-warm)]/5">
               {dict.ideas.badge}
             </span>
 
