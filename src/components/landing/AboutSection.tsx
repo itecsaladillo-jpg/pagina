@@ -122,6 +122,19 @@ export function AboutSection() {
     },
   ]
 
+  const roleOrder: Record<string, number> = {
+    coordinador: 1,  // Comisión Directiva
+    admin: 2,        // Socios Fundador
+    colaborador: 3,  // Voluntario
+    miembro: 3,      // Voluntario
+  }
+
+  const sortedMembers = [...members].sort((a, b) => {
+    const orderA = roleOrder[a.role ?? ''] ?? 4
+    const orderB = roleOrder[b.role ?? ''] ?? 4
+    return orderA - orderB
+  })
+
   return (
     <section id="nosotros" className="py-16 relative">
       {/* Orbe decorativo */}
@@ -196,7 +209,7 @@ export function AboutSection() {
           ) : (
           <>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {members.slice(0, 9).map((member, index) => (
+              {sortedMembers.slice(0, 9).map((member, index) => (
                 <MemberCard
                   key={member.id || `member-${index}`}
                   member={member}
@@ -205,9 +218,9 @@ export function AboutSection() {
               ))}
             </div>
 
-            {members.length > 9 && (
+            {sortedMembers.length > 9 && (
               <div className="lg:col-span-2 grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-                {members.slice(9).map((member, index) => (
+                {sortedMembers.slice(9).map((member, index) => (
                   <MemberCard
                     key={member.id || `member-wide-${index}`}
                     member={member}
