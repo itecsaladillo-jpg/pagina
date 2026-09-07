@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { createMedioAction, updateMedioAction } from './actions'
+import { createClient } from '@/lib/supabase/client'
 
 const medioSchema = z.object({
   nombre_medio: z.string().min(1, 'Nombre del medio requerido'),
@@ -27,6 +28,10 @@ interface Props {
 
 export function MedioForm({ medio, onClose }: Props) {
   const [loading, setLoading] = useState(false)
+  const [logoFile, setLogoFile] = useState<File | null>(null)
+  const [logoPreview, setLogoPreview] = useState<string | null>(medio?.logo_url || null)
+  const [uploadingLogo, setUploadingLogo] = useState(false)
+
   const { register, handleSubmit, watch, formState: { errors } } = useForm<MedioFormData>({
     resolver: zodResolver(medioSchema),
     defaultValues: {
@@ -44,13 +49,45 @@ export function MedioForm({ medio, onClose }: Props) {
 
   const tipoMedio = watch('tipo_medio')
 
+  const handleLogoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) {
+      setLogoFile(file)
+      setLogoPreview(URL.createObjectURL(file))
+    }
+  }
+
+  const uploadLogo = async (file: File): Promise<string> => {
+    const cleanName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_')
+    const fileExt = cleanName.split('.').pop()
+    const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`
+    const filePath = `medios-logos/${fileName}`
+
+    const supabase = createClient()
+    const { error } = await supabase.storage
+      .from('sponsors-logos')
+      .upload(filePath, file, { cacheControl: '3600', upsert: false })
+    if (error) throw error
+    return supabase.storage.from('sponsors-logos').getPublicUrl(filePath).data.publicUrl
+  }
+
   const onSubmit = async (data: MedioFormData) => {
     setLoading(true)
     try {
+      let logoUrl = medio?.logo_url || null
+
+      if (logoFile) {
+        setUploadingLogo(true)
+        logoUrl = await uploadLogo(logoFile)
+        setUploadingLogo(false)
+      }
+
+      const payload = { ...data, logo_url: logoUrl }
+
       if (medio) {
-        await updateMedioAction(medio.id, data)
+        await updateMedioAction(medio.id, payload)
       } else {
-        await createMedioAction(data)
+        await createMedioAction(payload)
       }
       onClose()
     } catch (err: any) {
@@ -81,6 +118,29 @@ export function MedioForm({ medio, onClose }: Props) {
               <option value="Portal Web">Portal Web</option>
               <option value="TV">TV</option>
             </select>
+          </div>
+
+          <div>
+            <label className="block text-[10px] uppercase tracking-widest text-white/60 mb-2">Logo del Medio</label>
+            <div className="flex items-center gap-4">
+              {logoPreview && (
+                <div className="w-16 h-16 rounded-lg overflow-hidden border border-white/10 flex-shrink-0">
+                  <img src={logoPreview} alt="Logo preview" className="w-full h-full object-contain bg-white" />
+                </div>
+              )}
+              <label className="flex-1">
+                <span className="block w-full input-field text-center cursor-pointer text-sm">
+                  {logoPreview ? 'Cambiar logo' : 'Seleccionar logo'}
+                </span>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleLogoChange}
+                  className="hidden"
+                />
+              </label>
+            </div>
+            <p className="text-white/40 text-xs mt-1">Formatos: JPG, PNG, SVG. Tamaño máximo recomendado: 500KB</p>
           </div>
 
           <div>
@@ -126,8 +186,8 @@ export function MedioForm({ medio, onClose }: Props) {
 
           <div className="flex gap-4 pt-2">
             <button type="button" onClick={onClose} className="flex-1 px-6 py-3 rounded-xl border border-white/10 text-white">Cancelar</button>
-            <button type="submit" disabled={loading} className="flex-1 btn-primary py-3 rounded-xl">
-              {loading ? 'Guardando...' : 'Guardar'}
+            <button type="submit" disabled={loading || uploadingLogo} className="flex-1 btn-primary py-3 rounded-xl">
+              {loading ? 'Guardando...' : uploadingLogo ? 'Subiendo logo...' : 'Guardar'}
             </button>
           </div>
         </form>

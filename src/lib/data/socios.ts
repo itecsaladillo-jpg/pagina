@@ -25,6 +25,7 @@ export interface SocioCanalDifusion {
   tipo_medio: string | null
   url_web: string | null
   email: string | null
+  logo_url: string | null
 }
 
 export interface SociosData {
@@ -48,7 +49,7 @@ export async function getSociosData(): Promise<SociosData> {
       .order('created_at', { ascending: false }),
     supabase
       .from('medios_prensa')
-      .select('id, nombre_medio, tipo_medio, url_web, email')
+      .select('id, nombre_medio, tipo_medio, url_web, email, logo_url')
       .not('nombre_medio', 'is', null)
       .order('nombre_medio', { ascending: true }),
   ])

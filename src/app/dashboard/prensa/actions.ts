@@ -17,6 +17,7 @@ const medioSchema = z.object({
   apellido_contacto: z.string().optional(),
   telefono: z.string().optional(),
   email: z.string().email('Email inválido').min(1, 'Email requerido'),
+  logo_url: z.string().optional().or(z.literal('')),
 })
 
 export async function createMedioAction(data: z.infer<typeof medioSchema>) {

@@ -217,7 +217,7 @@ function canalFromServer(c: SocioCanalDifusion): PublicPartner {
     type: 'DIFFUSION_CHANNEL',
     tier: null,
     logo_color_url: null,
-    logo_url: null,
+    logo_url: c.logo_url,
     resena: null,
     website_url: c.url_web,
     email: c.email,
