@@ -207,7 +207,6 @@ export function AboutSection() {
               No hay miembros públicos disponibles en este momento.
             </div>
           ) : (
-          <>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {sortedMembers.slice(0, 6).map((member, index) => (
                 <MemberCard
@@ -217,21 +216,20 @@ export function AboutSection() {
                 />
               ))}
             </div>
-
-            {sortedMembers.length > 6 && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
-                {sortedMembers.slice(6).map((member, index) => (
-                  <MemberCard
-                    key={member.id || `member-wide-${index}`}
-                    member={member}
-                    onOpen={() => setSelectedMember(member)}
-                  />
-                ))}
-              </div>
-            )}
-          </>
           )}
         </div>
+
+        {sortedMembers.length > 6 && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-10">
+            {sortedMembers.slice(6).map((member, index) => (
+              <MemberCard
+                key={member.id || `member-wide-${index}`}
+                member={member}
+                onOpen={() => setSelectedMember(member)}
+              />
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Modal de Perfil del Miembro */}
