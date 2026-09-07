@@ -100,7 +100,7 @@ function LogoImage({ src, alt, sizes }: { src: string; alt: string; sizes: strin
       <img
         src={src}
         alt={alt}
-        className="max-h-full max-w-full object-contain"
+        className="h-full w-auto object-contain"
         loading="lazy"
         decoding="async"
         draggable={false}
@@ -114,7 +114,7 @@ function LogoImage({ src, alt, sizes }: { src: string; alt: string; sizes: strin
       width={200}
       height={200}
       sizes={sizes}
-      className="max-h-full max-w-full object-contain"
+      className="h-full w-auto object-contain"
       draggable={false}
     />
   )
