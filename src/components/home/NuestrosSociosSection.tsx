@@ -392,7 +392,7 @@ export function NuestrosSociosSection({ sponsors, alianzas, canalesDifusion }: N
               </span>
               <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-white leading-[1.1] tracking-tighter">
                 Nuestros <br />
-                <span className="text-gradient">colaboradores</span>
+                <span className="text-gradient">Socios</span>
               </h2>
               <p className="text-[var(--text-secondary)] text-2xl leading-snug max-w-[280px]">
                 Con ellos compartimos el sueño de un Saladillo de avanzada en un país mejor

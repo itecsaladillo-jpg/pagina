@@ -5,7 +5,7 @@ import { getSociosData } from '@/lib/data/socios'
 export const revalidate = 3600
 
 export const metadata: Metadata = {
-  title: 'Nuestros colaboradores — ITEC',
+  title: 'Nuestros Socios — ITEC',
   description:
     'Sponsors, alianzas estratégicas y canales de difusión que hacen posible el ITEC Augusto Cicaré de Saladillo.',
 }
