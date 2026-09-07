@@ -209,7 +209,7 @@ export function AboutSection() {
           ) : (
           <>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {sortedMembers.slice(0, 9).map((member, index) => (
+              {sortedMembers.slice(0, 6).map((member, index) => (
                 <MemberCard
                   key={member.id || `member-${index}`}
                   member={member}
@@ -218,9 +218,9 @@ export function AboutSection() {
               ))}
             </div>
 
-            {sortedMembers.length > 9 && (
-              <div className="lg:col-span-2 grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-                {sortedMembers.slice(9).map((member, index) => (
+            {sortedMembers.length > 6 && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
+                {sortedMembers.slice(6).map((member, index) => (
                   <MemberCard
                     key={member.id || `member-wide-${index}`}
                     member={member}
