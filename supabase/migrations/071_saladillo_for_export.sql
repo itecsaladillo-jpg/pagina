@@ -26,12 +26,14 @@ CREATE INDEX IF NOT EXISTS idx_saladillo_export_embajador ON public.saladillo_fo
 ALTER TABLE public.saladillo_for_export ENABLE ROW LEVEL SECURITY;
 
 -- Lectura pública solo para registros aprobados
+DROP POLICY IF EXISTS "Leer testimonios aprobados" ON public.saladillo_for_export;
 CREATE POLICY "Leer testimonios aprobados"
   ON public.saladillo_for_export
   FOR SELECT
   USING (estado = 'aprobado');
 
 -- Inserción pública permitida (estado por defecto 'pendiente')
+DROP POLICY IF EXISTS "Permitir crear testimonios" ON public.saladillo_for_export;
 CREATE POLICY "Permitir crear testimonios"
   ON public.saladillo_for_export
   FOR INSERT
@@ -43,12 +45,14 @@ VALUES ('saladillo-export-photos', 'saladillo-export-photos', true)
 ON CONFLICT (id) DO NOTHING;
 
 -- Lectura pública de fotos
+DROP POLICY IF EXISTS "Fotos de Saladillo Export son públicas" ON storage.objects;
 CREATE POLICY "Fotos de Saladillo Export son públicas"
   ON storage.objects
   FOR SELECT
   USING (bucket_id = 'saladillo-export-photos');
 
 -- Cualquier usuario puede subir fotos (formulario público)
+DROP POLICY IF EXISTS "Permitir subir fotos de Saladillo Export" ON storage.objects;
 CREATE POLICY "Permitir subir fotos de Saladillo Export"
   ON storage.objects
   FOR INSERT
