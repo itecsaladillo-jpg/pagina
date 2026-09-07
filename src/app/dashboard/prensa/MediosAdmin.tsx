@@ -31,12 +31,23 @@ export function MediosAdmin({ initialMedios }: Props) {
       <div className="grid gap-4">
         {medios.map(m => (
           <div key={m.id} className="glass border border-white/5 rounded-xl p-5 flex items-center justify-between">
-            <div>
-              <h3 className="font-bold text-white">{m.nombre_medio}</h3>
-              <p className="text-[10px] text-[var(--text-muted)] uppercase">{m.tipo_medio} • {m.zona_influencia || 'Sin zona'}</p>
-              <p className="text-xs text-white/60 mt-1">{m.nombre_contacto} {m.apellido_contacto}</p>
-              <p className="text-xs text-emerald-400">{m.email}</p>
-              {m.dial_radio && <p className="text-[10px] text-white/40">Dial: {m.dial_radio}</p>}
+            <div className="flex items-center gap-4">
+              {m.logo_url ? (
+                <div className="w-12 h-12 rounded-lg overflow-hidden border border-white/10 flex-shrink-0">
+                  <img src={m.logo_url} alt={m.nombre_medio} className="w-full h-full object-contain bg-white" />
+                </div>
+              ) : (
+                <div className="w-12 h-12 rounded-lg border border-white/10 flex-shrink-0 bg-white/5 flex items-center justify-center text-white/30 text-lg font-bold">
+                  {m.nombre_medio?.charAt(0)?.toUpperCase() || '?'}
+                </div>
+              )}
+              <div>
+                <h3 className="font-bold text-white">{m.nombre_medio}</h3>
+                <p className="text-[10px] text-[var(--text-muted)] uppercase">{m.tipo_medio} • {m.zona_influencia || 'Sin zona'}</p>
+                <p className="text-xs text-white/60 mt-1">{m.nombre_contacto} {m.apellido_contacto}</p>
+                <p className="text-xs text-emerald-400">{m.email}</p>
+                {m.dial_radio && <p className="text-[10px] text-white/40">Dial: {m.dial_radio}</p>}
+              </div>
             </div>
 
             <div className="flex gap-2">
