@@ -413,7 +413,7 @@ Todas las tablas realtime de clase están en publicación `supabase_realtime`. R
 | `sponsors` | `tier`(platino\|oro\|plata\|bronce\|standard — constraint actualizado mig. 065), `rubro`, `resena`, contactos, `logo_monocromo_url`, `logo_color_url` (ambas mig. 065), `private_token(UNIQUE)`, `type TEXT DEFAULT 'SPONSOR'` (mig. 068: SPONSOR\|STRATEGIC_ALLIANCE\|DIFFUSION_CHANNEL) |
 | `strategic_partners` (mig. 067) | Socios estratégicos: `category`(institucion_educativa\|organismo_publico\|ong\|empresa_aliada\|otro), `actions_description NOT NULL`, `logo_url NOT NULL`, `is_active`. RLS: SELECT público solo activos; escritura solo admin. Trigger `strategic_partners_updated_at` |
 | `sponsor_reportes` (+ `sponsor_reportes_acciones`) | Reportes de impacto IA |
-| `medios_prensa` | Medios registrados (también usados como canales de difusión, mig. 039 `media_urls`) |
+| `medios_prensa` | Medios registrados (también usados como canales de difusión, mig. 039 `media_urls`). **Mig. 074**: columna `logo_url` para logo del medio. |
 | `prensa_envios_log` | Historial de envíos de gacetillas (estado, destinatario, errores) |
 
 #### IA y Asistente
@@ -444,7 +444,7 @@ Todas las tablas realtime de clase están en publicación `supabase_realtime`. R
 | `handle_new_user()` (trigger) | Alta automática de member al registrarse |
 | `obtener_miembros_publicos` | Miembros para landing — NO retorna email ni phone (PII protegida, mig. 028/031/032) |
 | `obtener_sponsors_publicos` (mig. 066, deprecated por 068) | Campos seguros de sponsors activos (sin `private_token` ni `contacto_telefono`) |
-| `obtener_socios_publicos` (mig. 068) | **RPC unificado actual**: UNION ALL de sponsors activos + strategic_partners + medios_prensa normalizados. SECURITY DEFINER, grant anon/authenticated/service_role |
+| `obtener_socios_publicos` (mig. 068, actualizada 074) | **RPC unificado actual**: UNION ALL de sponsors activos + strategic_partners + medios_prensa normalizados. Retorna `logo_url` para medios. SECURITY DEFINER, grant anon/authenticated/service_role |
 | `match_documents(vector, float, int)` | Búsqueda pgvector cosine (P1 del RAG) |
 | `buscar_feedbacks_similares` | Feedbacks semánticamente similares |
 | `buscar_conversaciones_similares` | Conversaciones similares P4 |
@@ -465,7 +465,7 @@ Todas las tablas realtime de clase están en publicación `supabase_realtime`. R
 | 041–050 | chat_conocimiento, training_docs storage (+fix policies), buscar_docs_similares, saved_conversations, ideas (+delete policy), prensa_envios_log, evento_semaforo v1, fix modalidad, herramientas JSONB, default false |
 | 051–060 | remove_semaforo (053) → **054 semaforo v3** (tabla mínima append-only + reset_at + realtime) → 055 nube_concepto → **056 fix RLS critical** → **057 semaforo dispositivo_id** (dedup server-side) → **058 api_settings** → 059 modalidad eventos → **060 esquema híbrido virtual** (modalidad clases, meet_url, 7 tablas realtime de aula + RPCs + realtime publication) |
 | 061–068 | 061 general_meet_url → **062/063 pgvector RAG** (extensión vector, documents, HNSW, match_documents) → **064 streaming config** (keys `streaming_active`/`streaming_youtube_url` en api_settings) → 065 sponsors update (rubro/resena/contactos/logos/tier standard) → 066 RPC sponsors públicos → **067 strategic_partners** → **068 partner_classification** (col. type + RPC unificado obtener_socios_publicos) |
-| 069–071 | **071 saladillo_for_export** (tabla testimonios saladillenses en el mundo, embajadores 1–4, RLS SELECT aprobados/INSERT público, storage bucket `saladillo-export-photos`). Integrada en AboutSection landing + admin dashboard. |
+| 069–074 | **071 saladillo_for_export** (tabla testimonios saladillenses en el mundo, embajadores 1–4, RLS SELECT aprobados/INSERT público, storage bucket `saladillo-export-photos`). Integrada en AboutSection landing + admin dashboard. **073 enforce_matias_admin** (trigger permanente que asegura que `matiasvidal11972@gmail.com` siempre tenga rol admin). **074 add_logo_to_medios_prensa** (columna `logo_url` en `medios_prensa` + actualización RPC `obtener_socios_publicos` para retornar `logo_url`). |
 
 ---
 
@@ -597,9 +597,9 @@ Características clave:
 - **Barra sponsors marquesina** (`SponsorHeaderBar.tsx`): fija al borde inferior, logos monocromos de `public/sponsors/blanco/` leídos del filesystem en el server (`getSponsorLogos` con `unstable_cache` 1h, timestamp mtime como cache-buster `?v=`). Loop infinito: `MARQUEE_COPIES = 2` copias memoizadas (`useMemo`) + `translateX(-50%)`, duración inline 70s, pausa al hover, fade out al scroll > 10px, `loading="lazy"` + `decoding="async"`. Fallback a placehold.co si carpeta vacía.
 - **Compensación layout:** contenido principal `-translate-y-[30px]` + `pb-16`; widget chat y selector idioma anclados a `bottom: 59px` (lado a lado en desktop), ambos fade out al scroll.
 - **Hydration-safe:** `force-dynamic` + `revalidate = 0` + `suppressHydrationWarning`; timestamps determinísticos del server (mtimes), nunca `Date.now()` en SSR (evita error hidratación #418).
-- **NUESTROS SOCIOS** (`NuestrosSociosSection.tsx`): grillas dinámicas por tier (platino/oro columna derecha; plata/bronce/standard ancho completo debajo). Alturas por tier: platino 100% (glow ring ámbar), oro 80%, plata 55%, bronce 35%, standard 10% (BASE_H=120). Datos del RPC `obtener_socios_publicos`. Click abre `SponsorModal`.
+- **NUESTRO EQUIPO** (`AboutSection.tsx`): título "Quienes hacen ITEC" con descripción i18n. **Mapeo de roles para UI**: `admin` → "Socios Fundador", `coordinador` → "Comisión Directiva", `colaborador/miembro` → "Voluntario". **Orden de miembros**: Comisión Directiva → Socios Fundador → Voluntarios. **Grid adaptativo**: primeras 2 filas = 3 columnas (6 miembros), desde fila 3 = 4 columnas. Tarjetas con layout float para frase completa envolviendo foto. Modal de perfil al click. Datos de RPC `obtener_miembros_publicos` (sin PII). **SaladilloExportSection** integrada al final: grid de embajadores (posición 1–4) + testimonios + formulario de creación pública.
+- **NUESTROS SOCIOS** (`NuestrosSociosSection.tsx`): grillas dinámicas por tier con **alturas diferenciadas**: platino 120px, oro 100px, plata 80px, bronce 60px, standard 50px. Logos con `h-full w-auto object-contain` para ocupar toda la altura del contenedor. Títulos animados "ITEC en red" y "Medios que nos ayudan a llegar más lejos" con `font-black text-gradient animate-gradient`. **Estilos especiales**: AAVEA con `scale-125` para verse más grande; UNICEN con fondo oscuro gradiente (`bg-gradient-to-br from-gray-800 to-gray-900`) para visibilidad de letras blancas. Datos del RPC `obtener_socios_publicos`. Click abre `SponsorModal`.
 - **ALIANZAS ESTRATÉGICAS** (sub-sección): grid responsive 3–6 columnas de `strategic_partners` activos; modal unificado con badge de categoría y bloque "Acciones conjuntas".
-- **NUESTRO EQUIPO** (`AboutSection.tsx`): título columna izquierda (tipografía Impact, gradient) + fichas horizontales de miembros rodeándolo (primeras 9 en grid 3 cols; luego ancho completo). Modal de perfil al click. Datos de RPC `obtener_miembros_publicos` (sin PII). **SaladilloExportSection** integrada al final: grid de embajadores (posición 1–4) + testimonios + formulario de creación pública.
 - **Métricas de Impacto:** patrón server-data → client-UI (`ImpactSection.tsx` server async fetch → `ImpactSectionClient.tsx` animado con contadores y carrusel de novedades, tabs, locales date-fns por idioma).
 - **Comisiones:** grid visual estático con colores/iconos por comisión, textos i18n.
 - **Buzón de Ideas** (`IdeasSection.tsx`): 2 columnas desktop. Izquierda: título 3 líneas + descripción + beneficios (flex horizontal). Derecha: formulario `PublicIdeasForm` (textarea, checkbox anónimo, contacto opcional) + beneficio "Seguimiento real". Envío a `POST /api/ideas` (RPC `insert_idea`, mín. 10 chars).
@@ -770,8 +770,8 @@ Detalle:
 
 | Carpeta | Archivos | Rol |
 |---------|----------|-----|
-| `landing/` | `Navbar` (client, estado sesión, menú móvil, i18n), `HeroSection` (client, consulta clase en vivo, StreamingPlayer condicional), `AboutSection` (equipo + modal perfil + SaladilloExportSection), `ImpactSection` (**server**, fetch acciones/artículos/flashes), `ImpactSectionClient` (contadores/carrusel animado, i18n), `ComisionesSection` (grid estático), `IdeasSection` (2 columnas), `VideotecaSection` (búsqueda/categoría), `StreamingPlayer` (URL→embed YouTube), `Footer` (i18n + acceso miembros), `FloatingLanguageSelector` (FAB es/en/pt, bottom 59px, fade out scroll) | Landing |
-| `home/` | `SponsorHeaderBar` (marquesina fixed bottom), `NuestrosSociosSection` (grillas por tier + alianzas + canales, tabs, fetch cliente si no vienen props), `SponsorModal` (modal unificado `ModalItem` discriminador `_kind: 'sponsor'\|'partner'`, cierre Escape) | Socios landing |
+| `landing/` | `Navbar` (client, estado sesión, menú móvil, i18n), `HeroSection` (client, consulta clase en vivo, StreamingPlayer condicional), `AboutSection` (título "Quienes hacen ITEC" + mapeo roles UI + grid adaptativo 3-4 cols + modal perfil + SaladilloExportSection), `ImpactSection` (**server**, fetch acciones/artículos/flashes), `ImpactSectionClient` (contadores/carrusel animado, i18n), `ComisionesSection` (grid estático con "Nuestro Equipo de trabajo" 6 áreas), `IdeasSection` (2 columnas), `VideotecaSection` (búsqueda/categoría), `StreamingPlayer` (URL→embed YouTube), `Footer` (i18n + acceso miembros), `FloatingLanguageSelector` (FAB es/en/pt, bottom 59px, fade out scroll) | Landing |
+| `home/` | `SponsorHeaderBar` (marquesina fixed bottom), `NuestrosSociosSection` (grillas por tier con alturas diferenciadas + títulos animados "ITEC en red"/"Medios que nos ayudan a llegar más lejos" + estilos especiales AAVEA/UNICEN + alianzas + canales, tabs, fetch cliente si no vienen props), `SponsorModal` (modal unificado `ModalItem` discriminador `_kind: 'sponsor'\|'partner'`, cierre Escape) | Socios landing |
 | `comunicacion/` | `ComunicacionTabs`, `NewsFlashMulticanalEditor` (editor IA 4 canales), `NewsWallMulticanal` (tabs canal + slideshow medios object-contain), `NotasMulticanalList` (editar/borrar/publicar/reordenar) | Comunicación |
 | `chat/` | `ChatWidget` (widget flotante, localStorage historial), `ChatWidgetWrapper` (lazy `ssr:false` + oculta en EVENT_ROUTES), `ChatWidget.css` | Asistente |
 | `capacitaciones/` | `LivePoll` (votación realtime), `actions.ts` (`voteLivePollAction` cookie dedup) | Encuesta en vivo |
@@ -962,6 +962,8 @@ Server Action     →  getCurrentMember() → Zod → mutate → revalidatePath(
 21. **`docsContext.ts` es AUTOGENERADO** (~1366 líneas, "No editar"): regenerar con `npm run sync-docs`.
 22. **Embeddings mixtos:** pgvector almacena vectores de 768 dims; HuggingFace produce 384 (zero-padded). Mezclar orígenes de embeddings en la misma colección degrada precisión de la búsqueda.
 23. **`lib/drive.ts` tiene folder IDs placeholder** (`REEMPLAZAR_CON_ID_REAL`): el mapeo real vive en `commissions.drive_folder_id` / `site_settings`.
+24. **Trigger `enforce_matias_admin` (mig. 073):** trigger permanente que asegura que `matiasvidal11972@gmail.com` siempre tenga rol `admin` en `members`. No eliminar sin aprobación explícita.
+25. **Mapeo de roles para UI (Nuestros Socios):** `admin` → "Socios Fundador", `coordinador` → "Comisión Directiva", `colaborador/miembro` → "Voluntario". Este mapeo se usa en `AboutSection.tsx`, `MemberManagementTable.tsx` y `ProfileForm.tsx`.
 
 ---
 
@@ -980,4 +982,4 @@ Server Action     →  getCurrentMember() → Zod → mutate → revalidatePath(
 
 ---
 
-*Mantener este documento actualizado con cada cambio estructural relevante. Última revisión: septiembre 2026 (post-migración 071, integración OPENCODE).*  
+*Mantener este documento actualizado con cada cambio estructural relevante. Última revisión: septiembre 2026 (post-migración 074, roles UI, titulos animados, alturas logos diferenciadas).*  
