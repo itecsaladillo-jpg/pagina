@@ -94,13 +94,13 @@ function Reveal({ children, className }: { children: ReactNode; className?: stri
   )
 }
 
-function LogoImage({ src, alt, sizes }: { src: string; alt: string; sizes: string }) {
+function LogoImage({ src, alt, sizes, className = '' }: { src: string; alt: string; sizes: string; className?: string }) {
   if (/\.svg($|\?)/i.test(src)) {
     return (
       <img
         src={src}
         alt={alt}
-        className="h-full w-auto object-contain"
+        className={`h-full w-auto object-contain ${className}`}
         loading="lazy"
         decoding="async"
         draggable={false}
@@ -114,7 +114,7 @@ function LogoImage({ src, alt, sizes }: { src: string; alt: string; sizes: strin
       width={200}
       height={200}
       sizes={sizes}
-      className="h-full w-auto object-contain"
+      className={`h-full w-auto object-contain ${className}`}
       draggable={false}
     />
   )
@@ -129,6 +129,8 @@ function PartnerCard({ partner, cardH, pad, sizes, featured, onOpen }: {
   onOpen: () => void
 }) {
   const logo = partner.logo_color_url || partner.logo_url
+  const isAavea = partner.name.toUpperCase().includes('AAVEA')
+  const isUnicen = partner.name.toUpperCase().includes('UNICEN')
 
   return (
     <motion.button
@@ -140,17 +142,18 @@ function PartnerCard({ partner, cardH, pad, sizes, featured, onOpen }: {
       transition={{ type: 'spring', stiffness: 380, damping: 24 }}
       aria-label={partner.name}
       className={`relative flex items-center justify-center overflow-hidden rounded-2xl border bg-white cursor-pointer transition-colors duration-300 w-full ${
+        isUnicen ? 'bg-gradient-to-br from-gray-800 to-gray-900 border-gray-700' :
         featured
           ? 'border-amber-300/50 ring-1 ring-amber-300/25 shadow-[0_0_45px_-10px_rgba(251,191,36,0.35)] hover:border-amber-300/70 hover:shadow-[0_0_60px_-8px_rgba(251,191,36,0.5)]'
           : 'border-[var(--border-subtle)] hover:border-[var(--accent-warm)]/40'
       }`}
     >
       {logo ? (
-        <div className={`flex items-center justify-center h-full ${pad}`}>
-          <LogoImage src={logo} alt={partner.name} sizes={sizes} />
+        <div className={`flex items-center justify-center h-full ${pad} ${isAavea ? 'px-2' : ''}`}>
+          <LogoImage src={logo} alt={partner.name} sizes={sizes} className={isAavea ? 'scale-125' : ''} />
         </div>
       ) : (
-        <span className="px-3 text-center text-sm font-semibold leading-tight text-black/70">
+        <span className={`px-3 text-center text-sm font-semibold leading-tight ${isUnicen ? 'text-white' : 'text-black/70'}`}>
           {partner.name}
         </span>
       )}
