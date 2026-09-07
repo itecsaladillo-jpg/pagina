@@ -373,7 +373,7 @@ export function ProfileForm({ member }: Props) {
           <h2 className="text-xl font-bold text-white leading-tight truncate px-2">{formData.full_name || 'Miembro ITEC'}</h2>
           <div className="flex flex-wrap gap-2 justify-center">
             <span className="text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
-              {member.role || 'Miembro'}
+              {member.role === 'admin' ? 'Socios Fundador' : member.role === 'coordinador' ? 'Comisión Directiva' : member.role === 'colaborador' ? 'Voluntario' : member.role === 'miembro' ? 'Voluntario' : member.role || 'Voluntario'}
             </span>
             <span className="text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
               {member.status || 'Activo'}

@@ -43,7 +43,7 @@ function MemberCard({ member, onOpen }: { member: Member; onOpen: () => void }) 
         <div className="flex items-center gap-2 flex-wrap mb-1">
           <h4 className="text-white font-semibold text-lg">{member.full_name}</h4>
           <span className="text-[10px] font-medium text-[var(--accent-warm)] bg-[var(--accent-warm)]/10 px-2.5 py-0.5 rounded-full border border-[var(--accent-warm)]/20">
-            {member.role === 'admin' ? 'Administrador' : member.role === 'coordinador' ? 'Coordinador' : member.role === 'colaborador' ? 'Colaborador' : 'Miembro'}
+            {member.role === 'admin' ? 'Socios Fundador' : member.role === 'coordinador' ? 'Comisión Directiva' : member.role === 'colaborador' ? 'Voluntario' : 'Voluntario'}
           </span>
         </div>
 
@@ -178,10 +178,10 @@ export function AboutSection() {
         <div id="equipo" className="mt-16 grid grid-cols-1 lg:grid-cols-[minmax(0,340px)_1fr] gap-10 lg:gap-14 items-start">
           <div className="text-left">
             <h3 className="text-4xl md:text-5xl lg:text-6xl font-black text-white mb-4 leading-[1.1] tracking-tighter">
-              Nuestro <span className="text-gradient">Equipo</span>
+              Quienes hacen <span className="text-gradient">ITEC</span>
             </h3>
             <p className="text-[var(--text-secondary)] text-2xl leading-snug max-w-[280px]">
-              Detrás de cada iniciativa del ITEC Saladillo hay un equipo comprometido con el conocimiento, la tecnología y la educación transformadora.
+              Diferentes saberes y experiencias unidos por un mismo propósito: transformar y crecer.
             </p>
           </div>
 
@@ -275,7 +275,7 @@ export function AboutSection() {
                 <div className="text-center mb-4">
                   <h3 className="text-2xl font-bold text-white mb-2">{selectedMember.full_name}</h3>
                   <span className="text-xs font-medium text-[var(--accent-warm)] bg-[var(--accent-warm)]/10 px-4 py-1.5 rounded-full border border-[var(--accent-warm)]/20">
-                    {selectedMember.role === 'admin' ? 'Administrador' : selectedMember.role === 'coordinador' ? 'Coordinador' : selectedMember.role === 'colaborador' ? 'Colaborador' : 'Miembro'}
+                    {selectedMember.role === 'admin' ? 'Socios Fundador' : selectedMember.role === 'coordinador' ? 'Comisión Directiva' : selectedMember.role === 'colaborador' ? 'Voluntario' : 'Voluntario'}
                   </span>
                 </div>
 
