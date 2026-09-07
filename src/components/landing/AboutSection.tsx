@@ -157,11 +157,6 @@ export function AboutSection() {
             <p className="text-[var(--text-secondary)] leading-relaxed mb-8">
               {dict.about.desc2}
             </p>
-
-            <div className="flex items-center gap-3">
-              <div className="h-px flex-1 bg-gradient-to-r from-[var(--border-glow)] to-transparent" />
-              <span className="text-[var(--text-muted)] text-sm">{dict.about.fundacion}</span>
-            </div>
           </div>
 
           {/* Valores */}

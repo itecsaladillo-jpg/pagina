@@ -126,7 +126,6 @@ export const dictionary = {
       headingGradient: 'ciencia cobra vida',
       desc1: 'ITEC Saladillo nació con una misión clara: democratizar el acceso al conocimiento científico y tecnológico en Saladillo. Somos una ONG formada por personas apasionadas que creen en el poder transformador de la ciencia.',
       desc2: 'Nuestra esencia rinde homenaje a Augusto Cicaré, el inventor argentino de Saladillo reconocido mundialmente por sus innovaciones en helicópteros — un símbolo de que la creatividad y la perseverancia no tienen límites geográficos.',
-      fundacion: 'Fundado en Saladillo, Buenos Aires',
       pilares: {
         innovacion: {
           title: 'Innovación',
@@ -503,7 +502,6 @@ export const dictionary = {
       headingGradient: 'science comes to life',
       desc1: 'ITEC Saladillo was born with a clear mission: to democratize access to scientific and technological knowledge in Saladillo. We are an NGO made up of passionate people who believe in the transforming power of science.',
       desc2: 'Our essence pays tribute to Augusto Cicaré, the Argentine inventor from Saladillo recognized worldwide for his innovations in helicopters — a symbol that creativity and perseverance have no geographical boundaries.',
-      fundacion: 'Founded in Saladillo, Buenos Aires',
       pilares: {
         innovacion: {
           title: 'Innovation',
@@ -880,7 +878,6 @@ export const dictionary = {
       headingGradient: 'ciência ganha vida',
       desc1: 'ITEC Saladillo nasceu com uma missão clara: democratizar o acesso ao conhecimento científico e tecnológico em Saladillo. Somos uma ONG formada por pessoas apaixonadas que acreditam no poder transformador da ciência.',
       desc2: 'Nossa essência homenageia Augusto Cicaré, o inventor argentino de Saladillo reconhecido mundialmente por suas inovações em helicópteros — um símbolo de que a criatividade e a perseverança não têm limites geográficos.',
-      fundacion: 'Fundado em Saladillo, Buenos Aires',
       pilares: {
         innovacion: {
           title: 'Inovação',
