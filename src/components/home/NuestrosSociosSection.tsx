@@ -506,7 +506,7 @@ export function NuestrosSociosSection({ sponsors, alianzas, canalesDifusion }: N
             )
           })()}
 
-          {/* Alianzas Estratégicas */}
+          {/* Instituciones (Gestión de Sponsors) */}
           {alliances.length > 0 && (
             <div className={`${FULL_BLEED} my-12`}>
               <Reveal>
@@ -527,7 +527,7 @@ export function NuestrosSociosSection({ sponsors, alianzas, canalesDifusion }: N
             </div>
           )}
 
-          {/* Canales de Comunicación / Prensa */}
+          {/* Canales de Comunicación / Prensa (Gestión de Prensa) */}
           {media.length > 0 && (
             <div className={`${FULL_BLEED} my-12`}>
               <Reveal>
