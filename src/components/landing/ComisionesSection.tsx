@@ -80,7 +80,7 @@ export function ComisionesSection() {
         <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,320px)_1fr] gap-10 lg:gap-14 items-start">
           {/* Header — columna izquierda */}
           <div className="text-left">
-            <span className="inline-block text-xs font-bold tracking-[0.2em] text-[var(--accent-cyan-2)] uppercase mb-4 px-4 py-1.5 rounded-full border border-[var(--accent-cyan-2)]/20 bg-[var(--accent-cyan-2)]/5">
+            <span className="inline-block text-xs font-bold tracking-[0.2em] text-[var(--accent-warm)] uppercase mb-4 px-4 py-1.5 rounded-full border border-[var(--accent-warm)]/20 bg-[var(--accent-warm)]/5">
               {dict.comisiones.badge}
             </span>
             <h2 className="text-3xl md:text-4xl font-black text-white mb-4 leading-[1.1] tracking-tighter">
