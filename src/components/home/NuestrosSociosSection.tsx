@@ -510,8 +510,8 @@ export function NuestrosSociosSection({ sponsors, alianzas, canalesDifusion }: N
           {alliances.length > 0 && (
             <div className={`${FULL_BLEED} my-12`}>
               <Reveal>
-                <h3 className="text-center text-2xl font-bold text-white mb-8">
-                  ITEC en red
+                <h3 className="text-center text-2xl font-black mb-8">
+                  <span className="text-gradient animate-gradient">ITEC en red</span>
                 </h3>
                 <div className="flex flex-wrap justify-center gap-4 md:gap-5">
                   {alliances.map((p) => (
@@ -534,8 +534,8 @@ export function NuestrosSociosSection({ sponsors, alianzas, canalesDifusion }: N
           {media.length > 0 && (
             <div className={`${FULL_BLEED} my-12`}>
               <Reveal>
-                <h3 className="text-center text-2xl font-bold text-white mb-8">
-                  Medios que nos ayudan a llegar más lejos
+                <h3 className="text-center text-2xl font-black mb-8">
+                  <span className="text-gradient animate-gradient">Medios que nos ayudan a llegar más lejos</span>
                 </h3>
                 <div className="flex flex-wrap justify-center gap-4 md:gap-5">
                   {media.map((p) => (
