@@ -175,11 +175,9 @@ export function AboutSection() {
         </div>
 
         {/* Sección SALADILLO FOR EXPORT */}
-        <div className="section-divider" />
         <SaladilloExportSection />
 
         {/* Sección NUESTROS SOCIOS: entre NUESTRA IDENTIDAD y NUESTRO EQUIPO */}
-        <div className="section-divider" />
         <NuestrosSociosSection />
 
         {/* Sección de Miembros ITEC */}

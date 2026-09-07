@@ -63,19 +63,14 @@ export default async function HomePage() {
 
       {/* Resto del contenido sube 50px para solapar sutilmente con el hero */}
       <div className="-translate-y-[50px]">
-        <div className="section-divider" />
         <ImpactSection />
 
-        <div className="section-divider" />
         <VideotecaSection />
 
-        <div className="section-divider" />
         <AboutSection />
 
-        <div className="section-divider" />
         <ComisionesSection />
 
-        <div className="section-divider" />
         <IdeasSection />
 
         <Footer />
