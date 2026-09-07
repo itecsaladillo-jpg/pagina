@@ -26,33 +26,33 @@ interface Member {
 
 function MemberCard({ member, onOpen }: { member: Member; onOpen: () => void }) {
   return (
-    <div onClick={onOpen} className="glass rounded-2xl p-5 flex items-center gap-5 card-hover border border-[var(--border-subtle)] relative overflow-hidden group cursor-pointer">
+    <div onClick={onOpen} className="glass rounded-2xl p-5 card-hover border border-[var(--border-subtle)] relative overflow-hidden group cursor-pointer">
       <div className="absolute inset-0 bg-gradient-to-r from-[var(--accent-warm)]/0 to-[var(--accent-warm)]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
-      <div className="w-20 h-20 rounded-full overflow-hidden flex-shrink-0 border-2 border-[var(--border-subtle)] group-hover:border-[var(--accent-warm)]/50 transition-colors shadow-lg shadow-black/20">
-        {member.avatar_url ? (
-          <img src={member.avatar_url} alt={member.full_name} className="w-full h-full object-cover" />
-        ) : (
-          <div className="w-full h-full bg-white/5 flex items-center justify-center text-white text-2xl font-bold">
-            {member.full_name.charAt(0).toUpperCase()}
-          </div>
-        )}
-      </div>
-
-      <div className="min-w-0">
-        <div className="flex items-center gap-2 flex-wrap mb-1">
-          <h4 className="text-white font-semibold text-lg">{member.full_name}</h4>
-          <span className="text-[10px] font-medium text-[var(--accent-warm)] bg-[var(--accent-warm)]/10 px-2.5 py-0.5 rounded-full border border-[var(--accent-warm)]/20">
-            {member.role === 'admin' ? 'Socios Fundador' : member.role === 'coordinador' ? 'Comisión Directiva' : member.role === 'colaborador' ? 'Voluntario' : 'Voluntario'}
-          </span>
+      <div className="float-left mr-4 mb-1">
+        <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-[var(--border-subtle)] group-hover:border-[var(--accent-warm)]/50 transition-colors shadow-lg shadow-black/20">
+          {member.avatar_url ? (
+            <img src={member.avatar_url} alt={member.full_name} className="w-full h-full object-cover" />
+          ) : (
+            <div className="w-full h-full bg-white/5 flex items-center justify-center text-white text-2xl font-bold">
+              {member.full_name.charAt(0).toUpperCase()}
+            </div>
+          )}
         </div>
-
-        {(member.frase_itec || member.bio) && (
-          <p className="text-[var(--text-secondary)] text-sm line-clamp-2 leading-relaxed italic">
-            &quot;{member.frase_itec || member.bio}&quot;
-          </p>
-        )}
       </div>
+
+      <div className="flex items-center gap-2 flex-wrap mb-1">
+        <h4 className="text-white font-semibold text-lg">{member.full_name}</h4>
+        <span className="text-[10px] font-medium text-[var(--accent-warm)] bg-[var(--accent-warm)]/10 px-2.5 py-0.5 rounded-full border border-[var(--accent-warm)]/20">
+          {member.role === 'admin' ? 'Socios Fundador' : member.role === 'coordinador' ? 'Comisión Directiva' : member.role === 'colaborador' ? 'Voluntario' : 'Voluntario'}
+        </span>
+      </div>
+
+      {(member.frase_itec || member.bio) && (
+        <p className="text-[var(--text-secondary)] text-sm leading-relaxed italic clear-both">
+          &quot;{member.frase_itec || member.bio}&quot;
+        </p>
+      )}
     </div>
   )
 }
