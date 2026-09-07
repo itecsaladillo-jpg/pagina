@@ -20,14 +20,14 @@ const TIER_LAYOUT: Record<
 > = {
   platino: {
     itemW: 'w-full sm:w-[calc(50%-0.375rem)] lg:w-[calc(33.333%-0.5rem)]',
-    cardH: 80,
-    pad: 'p-3',
+    cardH: 120,
+    pad: 'p-5',
     sizes: '(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw',
     featured: true,
   },
   oro: {
     itemW: 'w-[calc(50%-0.375rem)] md:w-[calc(33.333%-0.5rem)] lg:w-[calc(25%-0.5625rem)]',
-    cardH: 80,
+    cardH: 100,
     pad: 'p-3',
     sizes: '(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw',
     featured: false,
@@ -51,13 +51,13 @@ const TIER_FULLWIDTH: Record<
   },
   bronce: {
     itemW: 'w-[calc(33.333%-0.667rem)] sm:w-[calc(25%-0.75rem)] md:w-[calc(16.667%-0.833rem)] lg:w-[calc(12.5%-0.9375rem)] xl:w-[calc(10%-1rem)]',
-    cardH: 80,
+    cardH: 60,
     pad: 'p-2',
     sizes: '(max-width: 640px) 33vw, (max-width: 768px) 25vw, (max-width: 1024px) 16vw, 12vw',
   },
   standard: {
     itemW: 'w-[calc(33.333%-0.5rem)] sm:w-[calc(20%-0.6rem)] md:w-[calc(14.286%-0.714rem)] lg:w-[calc(11.111%-0.778rem)] xl:w-[calc(9.091%-0.818rem)]',
-    cardH: 80,
+    cardH: 50,
     pad: 'p-1.5',
     sizes: '(max-width: 640px) 33vw, (max-width: 768px) 20vw, (max-width: 1024px) 14vw, 10vw',
   },
