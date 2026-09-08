@@ -247,6 +247,7 @@ async function callAI(messages: { role: string; content: string }[], temperature
     }
   }
 
+  console.error(`[AI Service] TODOS los providers fallaron. Errores:\n${errores.join('\n')}`)
   throw new Error(`[AI Service] Todos los providers fallaron:\n${errores.join('\n')}`)
 }
 

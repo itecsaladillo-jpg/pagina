@@ -105,12 +105,21 @@ export function NewsFlashMulticanalEditor({ onSave, onCancel }: NewsFlashMultica
       
       if (data.success && data.result) {
         // Verificar que al menos uno de los textos no sea un string de error
-        const hasRealContent = [data.result.texto_publico, data.result.texto_miembros, data.result.texto_sponsors, data.result.texto_medios]
-          .some(t => t && !t.startsWith('Error al generar'))
-        if (!hasRealContent) {
+        const errorChannels: string[] = []
+        const channelMap = { texto_publico: 'Público', texto_miembros: 'Miembros', texto_sponsors: 'Sponsors', texto_medios: 'Medios' }
+        for (const [key, label] of Object.entries(channelMap)) {
+          const val = (data.result as any)[key]
+          if (!val || val.startsWith('Error al generar')) {
+            errorChannels.push(label)
+          }
+        }
+        if (errorChannels.length === 4) {
           console.error('[Procesar IA] Todos los canales fallaron:', data.result)
-          setErrorBanner('Los providers de IA no pudieron generar los textos. Verificá las API keys.')
+          setErrorBanner('Todos los providers de IA fallaron. Verificá las API keys en Configuración > API Keys.')
           return
+        }
+        if (errorChannels.length > 0) {
+          console.warn(`[Procesar IA] Canales con error: ${errorChannels.join(', ')}`)
         }
         setResult(data.result)
         setActiveTab('preview')
