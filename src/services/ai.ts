@@ -381,7 +381,7 @@ Estructura: ENCABEZADO "GACETILLA DE PRENSA – PARA PUBLICACIÓN INMEDIATA" →
 Prohibido: información interna, emojis, balance económico. Separar secciones con \n\n.`
   }
 
-  // Lanzar los 4 canales EN PARALELO (cada uno es más rápido por separado)
+  // Generar los 4 canales + el titular EN PARALELO para no exceder el timeout del serverless
   const channelEntries = Object.entries(CANAL_INSTRUCTIONS)
   const channelPromises = channelEntries.map(async ([canal, instrucciones]) => {
     const prompt = `Redactá UN SOLO texto para el canal ${canal.toUpperCase()} de ITEC Saladillo.
@@ -397,24 +397,27 @@ NOTAS CRUDAS:
     return [canal, texto.trim()] as const
   })
 
-  // Ejecutar todos en paralelo, recoger resultados
-  const resultados = await Promise.allSettled(channelPromises)
-  
-  const texto_publico = resultados[0]?.status === 'fulfilled' ? resultados[0].value[1] : 'Error al generar texto para público.'
-  const texto_miembros = resultados[1]?.status === 'fulfilled' ? resultados[1].value[1] : 'Error al generar texto para miembros.'
-  const texto_sponsors = resultados[2]?.status === 'fulfilled' ? resultados[2].value[1] : 'Error al generar texto para sponsors.'
-  const texto_medios = resultados[3]?.status === 'fulfilled' ? resultados[3].value[1] : 'Error al generar texto para medios.'
+  // Lanzar también el titular en paralelo (genera un titular genérico a partir de las notas crudas)
+  const tituloPromise = callAI([
+    { role: 'system', content: systemPrompt },
+    { role: 'user', content: `Generá UN TITULAR periodístico con verbo de acción (máx 8 palabras) para esta noticia basándote en las notas crudas:\n\n${rawFacts.slice(0, 500)}` }
+  ], 0.8).then(t => t.trim().replace(/^[""]|[""]$/g, '').slice(0, 100))
 
-  // Generar titular a partir del texto público
-  let titulo = 'Novedad ITEC'
-  try {
-    const tituloRaw = await callAI([
-      { role: 'system', content: systemPrompt },
-      { role: 'user', content: `Generá UN TITULAR periodístico con verbo de acción (máx 8 palabras) para esta noticia:\n\n${texto_publico.slice(0, 500)}` }
-    ], 0.8)
-    titulo = tituloRaw.trim().replace(/^[""]|[""]$/g, '').slice(0, 100)
-  } catch {
-    // Usar primera línea del texto público como titular fallback
+  // Ejecutar todo en paralelo: 4 canales + titular
+  const [channelResults, tituloResult] = await Promise.allSettled([
+    Promise.allSettled(channelPromises),
+    tituloPromise,
+  ])
+  
+  const settledChannels = channelResults.status === 'fulfilled' ? channelResults.value : []
+  const texto_publico = settledChannels[0]?.status === 'fulfilled' ? settledChannels[0].value[1] : 'Error al generar texto para público.'
+  const texto_miembros = settledChannels[1]?.status === 'fulfilled' ? settledChannels[1].value[1] : 'Error al generar texto para miembros.'
+  const texto_sponsors = settledChannels[2]?.status === 'fulfilled' ? settledChannels[2].value[1] : 'Error al generar texto para sponsors.'
+  const texto_medios = settledChannels[3]?.status === 'fulfilled' ? settledChannels[3].value[1] : 'Error al generar texto para medios.'
+
+  // Usar el titular generado en paralelo, o fallback al texto público
+  let titulo = tituloResult.status === 'fulfilled' ? tituloResult.value : ''
+  if (!titulo) {
     titulo = texto_publico.split('\n')[0]?.slice(0, 80) || 'Novedad ITEC'
   }
 
