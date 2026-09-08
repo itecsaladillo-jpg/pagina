@@ -9,9 +9,9 @@ function providerError(msg: string, status?: number): ProviderError {
   return e
 }
 
-const OPENCODE_MODEL = 'opencode/glm-5-free'
+const OPENCODE_MODEL = 'mimo-v2.5-free'
 const OPENROUTER_MODEL = 'nvidia/nemotron-3.5-lightning:free'
-const GEMINI_MODEL = 'gemini-2.0-flash'
+const GEMINI_MODEL = 'gemini-3.5-flash'
 
 async function callOpenRouter(messages: { role: string; content: string }[]): Promise<string> {
   const dbKeys = await Promise.all([
@@ -28,7 +28,7 @@ async function callOpenRouter(messages: { role: string; content: string }[]): Pr
 
   console.log(`[OpenRouter] ${allKeys.length} keys: ${allKeys.map(k => `...${k.slice(-6)}`).join(', ')}`)
 
-  const models = ['nvidia/nemotron-3.5-lightning:free', 'minimax/minimax-m3:free']
+  const models = ['openrouter/free', 'meta-llama/llama-4-scout:free', 'google/gemma-3-27b-it:free']
 
   const attempts: Promise<string>[] = []
   for (const apiKey of allKeys) {
@@ -81,7 +81,7 @@ async function callOpenCode(messages: { role: string; content: string }[]): Prom
 
   console.log(`[OpenCode] ${OPENCODE_MODEL}: ${messages.length} msgs`)
 
-  const response = await fetch('https://api.opencode.ai/v1/chat/completions', {
+  const response = await fetch('https://opencode.ai/zen/v1/chat/completions', {
     method: 'POST',
     headers: {
       'Authorization': `Bearer ${apiKey}`,
