@@ -110,29 +110,33 @@ async function callOpenCode(messages: { role: string; content: string }[]): Prom
 
 async function callGemini(
   messages: { role: string; content: string }[],
-  temperature: number
+  temperature: number,
+  preResolvedKeys?: string[]
 ): Promise<string> {
-  // Recopilar keys de DB Y de env vars, deduplicando.
-  // Priorizar env vars (las que el usuario acaba de agregar).
-  const dbKeys = await Promise.all([
-    getSettingValue('gemini_api_key'),
-    getSettingValue('gemini_api_key_2'),
-    getSettingValue('gemini_api_key_3'),
-    getSettingValue('gemini_api_key_4'),
-  ])
-  const envKeys = [
-    process.env.GEMINI_API_KEY || '',
-    process.env.GEMINI_API_KEY_2 || '',
-    process.env.GEMINI_API_KEY_3 || '',
-    process.env.GEMINI_API_KEY_4 || '',
-  ]
-  // Unir: env first (más recientes), luego DB, sin duplicados
-  const seen = new Set<string>()
-  const allKeys: string[] = []
-  for (const k of [...envKeys, ...dbKeys]) {
-    if (k && k.trim() !== '' && !seen.has(k)) {
-      seen.add(k)
-      allKeys.push(k)
+  // Usar keys pre-resueltas si se proveen, sino resolver aquí
+  let allKeys: string[]
+  if (preResolvedKeys && preResolvedKeys.length > 0) {
+    allKeys = preResolvedKeys
+  } else {
+    const dbKeys = await Promise.all([
+      getSettingValue('gemini_api_key'),
+      getSettingValue('gemini_api_key_2'),
+      getSettingValue('gemini_api_key_3'),
+      getSettingValue('gemini_api_key_4'),
+    ])
+    const envKeys = [
+      process.env.GEMINI_API_KEY || '',
+      process.env.GEMINI_API_KEY_2 || '',
+      process.env.GEMINI_API_KEY_3 || '',
+      process.env.GEMINI_API_KEY_4 || '',
+    ]
+    const seen = new Set<string>()
+    allKeys = []
+    for (const k of [...envKeys, ...dbKeys]) {
+      if (k && k.trim() !== '' && !seen.has(k)) {
+        seen.add(k)
+        allKeys.push(k)
+      }
     }
   }
   if (allKeys.length === 0) throw providerError('[Gemini] no API key configurada')
@@ -194,19 +198,27 @@ async function callAI(messages: { role: string; content: string }[], temperature
     candidates.push({ nombre: 'openrouter', promise: callOpenRouter(messages) })
   }
 
-  // Gemini: necesitamos la key, launch la promise de resolución de key en paralelo
-  const geminiKey = await (async () => {
-    const keys = await Promise.all([
-      getSettingValue('gemini_api_key', 'GEMINI_APY_KEY'),
-      getSettingValue('gemini_api_key_2', 'GEMINI_API_KEY_2'),
-      getSettingValue('gemini_api_key_3', 'GEMINI_API_KEY_3'),
-      getSettingValue('gemini_api_key_4', 'GEMINI_API_KEY_4'),
-    ])
-    return keys.find(k => k) || process.env.GOOGLE_GENERATIVE_AI_API_KEY || ''
-  })()
+  // Resolver Gemini keys UNA SOLA VEZ (DB + env, deduplicadas)
+  const geminiDbKeys = await Promise.all([
+    getSettingValue('gemini_api_key', 'GEMINI_APY_KEY'),
+    getSettingValue('gemini_api_key_2', 'GEMINI_API_KEY_2'),
+    getSettingValue('gemini_api_key_3', 'GEMINI_API_KEY_3'),
+    getSettingValue('gemini_api_key_4', 'GEMINI_API_KEY_4'),
+  ])
+  const geminiEnvKeys = [
+    process.env.GEMINI_API_KEY || '',
+    process.env.GEMINI_API_KEY_2 || '',
+    process.env.GEMINI_API_KEY_3 || '',
+    process.env.GEMINI_API_KEY_4 || '',
+  ]
+  const geminiSeen = new Set<string>()
+  const allGeminiKeys: string[] = []
+  for (const k of [...geminiEnvKeys, ...geminiDbKeys]) {
+    if (k && k.trim() !== '' && !geminiSeen.has(k)) { geminiSeen.add(k); allGeminiKeys.push(k) }
+  }
 
-  if (geminiKey) {
-    candidates.push({ nombre: 'gemini', promise: callGemini(messages, temperature) })
+  if (allGeminiKeys.length > 0) {
+    candidates.push({ nombre: 'gemini', promise: callGemini(messages, temperature, allGeminiKeys) })
   }
 
   if (candidates.length === 0) {
@@ -354,6 +366,9 @@ export async function generateMulticanalNews(rawFacts: string): Promise<{
   texto_sponsors: string
   texto_medios: string
 }> {
+  // Timeout global de 50s para no exceder el maxDuration del serverless (60s)
+  const GENERATION_TIMEOUT = 50000
+
   const systemPrompt = `${ITEC_SYSTEM_PROMPT}
   
   Generás textos profesionales para diferentes audiencias de ITEC.`
@@ -403,10 +418,14 @@ NOTAS CRUDAS:
     { role: 'user', content: `Generá UN TITULAR periodístico con verbo de acción (máx 8 palabras) para esta noticia basándote en las notas crudas:\n\n${rawFacts.slice(0, 500)}` }
   ], 0.8).then(t => t.trim().replace(/^[""]|[""]$/g, '').slice(0, 100))
 
-  // Ejecutar todo en paralelo: 4 canales + titular
+  // Ejecutar todo en paralelo CON TIMEOUT GLOBAL
+  const timeoutPromise = new Promise<never>((_, reject) =>
+    setTimeout(() => reject(new Error(`Timeout: generación multicanal excedió ${GENERATION_TIMEOUT / 1000}s`)), GENERATION_TIMEOUT)
+  )
+
   const [channelResults, tituloResult] = await Promise.allSettled([
     Promise.allSettled(channelPromises),
-    tituloPromise,
+    Promise.race([tituloPromise, timeoutPromise]),
   ])
   
   const settledChannels = channelResults.status === 'fulfilled' ? channelResults.value : []

@@ -79,28 +79,45 @@ export function NewsFlashMulticanalEditor({ onSave, onCancel }: NewsFlashMultica
 
     setIsProcessing(true)
     const MAX_RETRIES = 2
+    const FETCH_TIMEOUT = 65000 // 65s para dar margen al serverless de 60s
     try {
+      const controller = new AbortController()
+      const timeoutId = setTimeout(() => controller.abort(), FETCH_TIMEOUT)
+
       const res = await fetch('/api/news/process', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ datos_crudos: rawFacts })
+        body: JSON.stringify({ datos_crudos: rawFacts }),
+        signal: controller.signal,
       })
+
+      clearTimeout(timeoutId)
 
       const text = await res.text()
       let data: any
       try {
         data = JSON.parse(text)
       } catch {
+        console.error('[Procesar IA] Respuesta no es JSON:', text.slice(0, 200))
         setErrorBanner('Error del servidor: respuesta inválida.')
         return
       }
       
       if (data.success && data.result) {
+        // Verificar que al menos uno de los textos no sea un string de error
+        const hasRealContent = [data.result.texto_publico, data.result.texto_miembros, data.result.texto_sponsors, data.result.texto_medios]
+          .some(t => t && !t.startsWith('Error al generar'))
+        if (!hasRealContent) {
+          console.error('[Procesar IA] Todos los canales fallaron:', data.result)
+          setErrorBanner('Los providers de IA no pudieron generar los textos. Verificá las API keys.')
+          return
+        }
         setResult(data.result)
         setActiveTab('preview')
       } else {
         // Reintento automático si todos los providers fallaron
         const errorMsg = data.error || 'Error desconocido'
+        console.error('[Procesar IA] Error de la API:', errorMsg)
         if (retryCount < MAX_RETRIES && errorMsg.includes('Todos los providers fallaron')) {
           setErrorBanner(`Providers temporalmente no disponibles. Reintentando (${retryCount + 1}/${MAX_RETRIES})...`)
           await new Promise(r => setTimeout(r, 15000))
@@ -110,7 +127,11 @@ export function NewsFlashMulticanalEditor({ onSave, onCancel }: NewsFlashMultica
         setErrorBanner(errorMsg)
       }
     } catch (err: any) {
-      setErrorBanner('Error de conexión: ' + (err.message || 'Verifique su conexión'))
+      const msg = err.name === 'AbortError'
+        ? 'Timeout: el servidor tardó demasiado (>65s). Intentá con menos texto.'
+        : 'Error de conexión: ' + (err.message || 'Verifique su conexión')
+      console.error('[Procesar IA] Excepción:', err)
+      setErrorBanner(msg)
     } finally {
       setIsProcessing(false)
     }
