@@ -114,7 +114,7 @@ export function NewsFlashMulticanalEditor({ onSave, onCancel }: NewsFlashMultica
           }
         }
         if (errorChannels.length === 4) {
-          console.error('[Procesar IA] Todos los canales fallaron:', data.result)
+          console.error('[Procesar IA] Todos los canales fallaron:', JSON.stringify(data.result, null, 2))
           setErrorBanner('Todos los providers de IA fallaron. Verificá las API keys en Configuración > API Keys.')
           return
         }
