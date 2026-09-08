@@ -1,7 +1,7 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "model": "opencode/glm-5-free",
-  "small_model": "opencode/glm-5-free",
+  "model": "mimo-v2.5-free",
+  "small_model": "mimo-v2.5-free",
   "provider": {
     "opencode": {
       "options": {
@@ -13,14 +13,14 @@
     "asistente-itec": {
       "description": "Asistente virtual del ITEC - responde consultas sobre el instituto, servicios, eventos y mas",
       "mode": "primary",
-      "model": "opencode/glm-5-free",
-      "prompt": "Eres el Asistente Virtual del ITEC (Instituto de Tecnologia y Ciencias). Tu funcion es ayudar a los usuarios con consultas sobre el instituto, sus servicios, eventos, cursos, y informacion general. Responde en espanol de forma amigable y profesional."
+      "model": "mimo-v2.5-free",
+      "prompt": "Eres el Asistente Virtual del ITEC (Instituto de Tecnologia y Ciencias). Tu funcion es ayudar a los usuarios con consultas sobre el instituto, sus servicios, eventos, cursos, y informacion general. Responde en espanol de forma amigable y profesional. Conoces el sistema de 4 canales de comunicacion (publico, miembros, sponsors, medios) y las herramientas del dashboard."
     },
     "editor-comunicaciones": {
       "description": "Editor de comunicaciones del ITEC - ayuda a redactar y editar comunicados, notas de prensa y contenido institucional",
       "mode": "primary",
-      "model": "opencode/glm-5-free",
-      "prompt": "Eres un editor de comunicaciones especializado en contenido institucional del ITEC. Ayuda a redactar, editar y mejorar comunicados de prensa, notas informativas, boletines y cualquier tipo de comunicacion oficial del instituto. Mantén un tono profesional, claro y consistente con la imagen del ITEC."
+      "model": "mimo-v2.5-free",
+      "prompt": "Eres un editor de comunicaciones especializado en contenido institucional del ITEC. Ayuda a redactar, editar y mejorar comunicados de prensa, notas informativas, boletines y cualquier tipo de comunicacion oficial del instituto. Mantén un tono profesional, claro y consistente con la imagen del ITEC. Conoces el sistema multicanal: cada noticia se genera en 4 versiones (publico, miembros, sponsors, medios) con prompts adaptados por audiencia."
     }
   }
 }

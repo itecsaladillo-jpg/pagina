@@ -472,16 +472,16 @@ Todas las tablas realtime de clase están en publicación `supabase_realtime`. R
 ## 9. Sistema de IA
 
 ### 9.1 REGLA DE ORO: Modelos Gratuitos
-> Todos los endpoints del asistente DEBEN usar modelos FREE. El proveedor primario es **OpenCode** (`opencode/glm-5-free`). Costo objetivo: $0.
+> Todos los endpoints del asistente DEBEN usar modelos FREE. Los providers activos son **OpenCode** (`mimo-v2.5-free`), **OpenRouter** (`openrouter/free` auto-router) y **Google Gemini** (`gemini-3.5-flash`). Costo objetivo: $0.
 
 ### 9.2 Distribución por proveedor y tarea
 
 | Proveedor | Modelo | Uso |
 |-----------|--------|-----|
-| **OpenCode** | `opencode/glm-5-free` | **Asistente ITEC primario** (`/api/asistente`). Tier gratuito. Timeout 13s. Endpoint `https://api.opencode.ai/v1/chat/completions`. También usado en `services/ai.ts` para generación de texto (comunicación multicanal). |
+| **OpenCode** | `mimo-v2.5-free` | **Asistente ITEC primario** (`/api/asistente`). Tier gratuito. Timeout 10s. Endpoint `https://opencode.ai/zen/v1/chat/completions`. También usado en `services/ai.ts` para generación de texto (comunicación multicanal). |
 | **Groq** | `openai/gpt-oss-20b` | **Asistente fallback** (`/api/asistente`). Tier gratuito/developer. Timeout 13s. `/api/chat` usa el mismo modelo. Multi-key soportado (`GROQ_API_KEY`, `GROQ_API_KEY_2`). |
-| **OpenRouter** | `nvidia/nemotron-3.5-lightning:free` | Fallback del asistente. Tier gratuito. Timeout 13s. Headers `HTTP-Referer: https://itecsaladillo.org.ar` + `X-Title: ITEC Asistente`. Multi-key (`OPENROUTER_API_KEY`, `OPENROUTER_API_KEY_2`). Modelos secundarios: `minimax/minimax-m3:free`. |
-| **Google Gemini** | `gemini-2.0-flash` | **Último recurso del asistente** (`/api/asistente`, cuarto fallback vía REST v1beta, timeout 18s) + **edición de texto exclusiva** en `services/ai.ts`: resúmenes, flashes, noticias multicanal, resúmenes de video. Rota hasta 4 API keys de `api_settings` con fallback a env `GOOGLE_GENERATIVE_AI_API_KEY`. Env vars tienen prioridad sobre DB. |
+| **OpenRouter** | `openrouter/free` (auto-router a mejor modelo FREE disponible) | Fallback del asistente. Tier gratuito. Timeout 8s. Headers `HTTP-Referer: https://itecsaladillo.org.ar` + `X-Title: ITEC Asistente`. Modelos secundarios: `meta-llama/llama-4-scout:free`, `google/gemma-3-27b-it:free`. |
+| **Google Gemini** | `gemini-3.5-flash` | **Último recurso del asistente** (`/api/asistente`, cuarto fallback vía REST v1beta, timeout 18s) + **edición de texto exclusiva** en `services/ai.ts`: resúmenes, flashes, noticias multicanal, resúmenes de video. Rota hasta 4 API keys de `api_settings` con fallback a env `GOOGLE_GENERATIVE_AI_API_KEY`. Env vars tienen prioridad sobre DB. ⚠️ `gemini-2.0-flash` fue desactivado por Google en junio 2026. |
 | **Google Gemini** | `gemini-embedding-001` | Embeddings primarios (RAG P1 + feedback). |
 | **HuggingFace** | `all-MiniLM-L6-v2` | Embeddings fallback (384 dims, zero-padded a 768 para pgvector). |
 | **Ollama self-hosted** | `llama3.2:latest` en `OLLAMA_API_BASE_URL` (default `https://ai.itecsaladillo.org.ar`) | Reportes de impacto de sponsors (`sponsorReport.ts`, timeout 98s, `num_ctx: 2048`) + síntesis de tema/feedback (`/api/asistente/feedback`, timeout 98s). NO asumir disponibilidad — siempre hay fallback. |
@@ -489,9 +489,9 @@ Todas las tablas realtime de clase están en publicación `supabase_realtime`. R
 ### 9.3 Servicios (`src/services/ai.ts`, ~661 líneas)
 | Función | Propósito |
 |---------|-----------|
-| `callOpenCode(messages)` | POST OpenCode `opencode/glm-5-free` con `OPENCODE_API_KEY`, timeout 13s |
-| `callOpenRouter(messages)` | POST OpenRouter multi-key × multi-modelo (`nemotron-3.5-lightning:free`, `minimax-m3:free`), lanza todas en paralelo, timeout 10s por intento |
-| `callGemini(messages, temperature)` | POST Gemini `gemini-2.0-flash` con rotación de 4+ keys (env first, luego DB), todas en paralelo, timeout 25s |
+| `callOpenCode(messages)` | POST OpenCode `mimo-v2.5-free` con `OPENCODE_API_KEY`, endpoint `https://opencode.ai/zen/v1/chat/completions`, timeout 10s |
+| `callOpenRouter(messages)` | POST OpenRouter multi-modelo (`openrouter/free` auto-route, `meta-llama/llama-4-scout:free`, `google/gemma-3-27b-it:free`), lanza todas en paralelo, timeout 8s por intento |
+| `callGemini(messages, temperature)` | POST Gemini `gemini-3.5-flash` con rotación de 4+ keys (env first, luego DB), todas en paralelo, timeout 25s |
 | `processWithAI(text, sourceType, commissionName?)` | `{summary, action_items[]}` desde transcripciones (sourceType: meet\|capacitacion\|reunion\|manual) |
 | `generateFlash(text)` | Flash noticioso máx. 2 oraciones para muro interno |
 | `generateExecutiveSummary(notes)` / `generateActionItems(notes)` | Wrappers de processWithAI |
@@ -532,8 +532,8 @@ Recuperación de contexto en 5 niveles. **Orden de resolución:** P1 → P2 → 
 - ⚠️ **Persistencia real (ago 2026):** antes el flag `guardado` se marcaba pero nadie persistía nada. Ahora `guardarConversacion()` se ejecuta efectivamente cuando hay comando explícito o auto-guardado, manteniendo el nivel P4 del RAG operativo.
 
 ### 9.7 Asistente IA (`POST /api/asistente`)
-- **Cadena con reintentos multi-pasada (ago 2026):** los providers se recorren en orden **OpenCode `opencode/glm-5-free` → Groq `openai/gpt-oss-20b` → OpenRouter `nvidia/nemotron-3.5-lightning:free` → Gemini `gemini-2.0-flash`**, y si TODOS fallan se vuelve a recorrer la cadena (pasada 2, 3…) hasta agotar un presupuesto de **48s** (`DEADLINE_MS`) dentro del `maxDuration = 60`. Backoff de 1.2s entre fallos. Los errores transitorios (429/5xx/timeouts/red) se reintenta; los permanentes (**400/401/403/404/413**) deshabilitan al provider por el resto del request. Ante respuestas inválidas (vacías, <10 chars o metadata de seguridad) también se reintenta. La respuesta 502 incluye `{intentos, pasadas, opencode, groq, openrouter, gemini}` para diagnóstico.
-- Timeouts por intento: OpenCode/Groq/OpenRouter 13s, Gemini 18s — acotados además por el presupuesto restante (`MIN_PRESUPUESTO_INTENTO` 3s: no se arranca un intento que no pueda terminar dentro del deadline).
+- **Cadena con reintentos multi-pasada (sept 2026):** los providers se recorren en orden **OpenCode `mimo-v2.5-free` → Groq `openai/gpt-oss-20b` → OpenRouter `openrouter/free` → Gemini `gemini-3.5-flash`**, y si TODOS fallan se vuelve a recorrer la cadena (pasada 2, 3…) hasta agotar un presupuesto de **48s** (`DEADLINE_MS`) dentro del `maxDuration = 60`. Backoff de 1.2s entre fallos. Los errores transitorios (429/5xx/timeouts/red) se reintenta; los permanentes (**400/401/403/404/413**) deshabilitan al provider por el resto del request. Ante respuestas inválidas (vacías, <10 chars o metadata de seguridad) también se reintenta. La respuesta 502 incluye `{intentos, pasadas, opencode, groq, openrouter, gemini}` para diagnóstico.
+- Timeouts por intento: OpenCode 10s, Groq/OpenRouter 13s, Gemini 18s — acotados además por el presupuesto restante (`MIN_PRESUPUESTO_INTENTO` 3s: no se arranca un intento que no pueda terminar dentro del deadline).
 - ⚠️ **Los modelos gratuitos rotan frecuentemente** (Groq apagó los Llama en ago 2026; OpenRouter retira slugs :free sin aviso). Si el asistente devuelve "Todos los providers fallaron", diagnosticar SIEMPRE con `GET /api/asistente/debug` (hace ping real a cada provider) y actualizar las constantes de modelos al tope del route.
 - `maxDuration = 60` (route export + vercel.json).
 - Input: `{ mensaje, historial[], sessionId?, idioma? }`. sessionId default `crypto.randomUUID()`.
@@ -569,8 +569,8 @@ Input: `{ historial[{role: user|model, text}], calificacion, comentario? }`.
 ## 10. Sistema de Noticias Multicanal (Feature Central)
 
 Flujo completo:
-1. **`NewsFlashMulticanalEditor`** (client) — editor recibe datos crudos y llama `createMulticanalNewsAction` o `POST /api/news/process`.
-2. **IA** (`generateMulticanalNews()` en `services/ai.ts`, Gemini `gemini-flash-latest`) — genera titular + 4 textos para 4 canales con prompts detallados por audiencia.
+1. **`NewsFlashMulticanalEditor`** (client) — editor recibe datos crudos y llama `createMulticanalNewsAction` o `POST /api/news/process`. Timeout cliente 65s via `AbortController`.
+2. **IA** (`generateMulticanalNews()` en `services/ai.ts`, 3 providers en paralelo) — genera titular + 4 textos para 4 canales **en paralelo** (5 llamadas simultáneas: 4 canales + 1 titular). Cada llamada lanza OpenCode/OpenRouter/Gemini en paralelo via `callAI()`. **Timeout global de 50s** con `Promise.race`.
 3. Persistencia en `news_flashes` (campos `texto_publico`, `texto_miembros`, `texto_sponsors`, `texto_medios`, flags `para_*`) + registros en `notas_publico`/`notas_miembros`/`notas_sponsors`/`notas_medios` (tabla dinámica según canal).
 4. **Distribución:**
    - **Público** → `/muro` (visible para todos)
@@ -579,6 +579,8 @@ Flujo completo:
    - **Medios** → gacetillas + `GET /api/press-news` + email via Resend
 5. **Visualización:** `NewsWallMulticanal` (tabs por canal, slideshow de medios con aspect ratio original preservado: `object-contain` max-h-280px sobre fondo oscuro).
 6. **Gestión:** `NotasMulticanalList` — editar, borrar, publicar/despublicar, **reordenar** (`swapNotasOrderAction`).
+
+**Defensas implementadas (sept 2026):** `callAI()` lee `res.text()` antes de `JSON.parse` con try-catch para evitar crashes por respuestas no-JSON. Validación post-generación que los textos contengan contenido real (no strings de error). Logging detallado server-side en cada provider y en la API route.
 
 Servicio de lectura (`src/services/news.ts`):
 - `getAllMulticanalNewsFlashes()`: merge de `news_flashes` + `notas_publico` (+ `notas_miembros` si hay sesión), normaliza campos legacy, ordena por fecha.
@@ -811,13 +813,13 @@ Arquitectura context-based propia (sin framework externo):
 - Funciones: `listFolderFiles(folderId)` (`services/drive.ts`)
 
 ### Google Gemini
-- Generación texto (`gemini-2.0-flash`): edición de texto exclusiva
+- Generación texto (`gemini-3.5-flash`): edición de texto exclusiva. ⚠️ `gemini-2.0-flash` desactivado por Google en junio 2026.
 - Embeddings (`gemini-embedding-001` / `text-embedding-004` en script ingesta)
 - Hasta 4 API keys en `api_settings` con rotación/fallback chain + env alternativa (env vars tienen prioridad)
 
 ### OpenCode
-- Generación texto (`opencode/glm-5-free`): **provider principal** de asistente + generación multicanal
-- API key única (`OPENCODE_API_KEY`), endpoint `https://api.opencode.ai/v1/chat/completions`
+- Generación texto (`mimo-v2.5-free`): **provider principal** de asistente + generación multicanal
+- API key única (`OPENCODE_API_KEY`), endpoint `https://opencode.ai/zen/v1/chat/completions`
 
 ### Resend (Emails)
 - Email bienvenida registro a eventos (`sendEventWelcomeEmail`, HTML dark-theme inline)
@@ -958,12 +960,14 @@ Server Action     →  getCurrentMember() → Zod → mutate → revalidatePath(
 17. **`scratch/` está gitignored:** los scripts de diagnóstico ahí no están versionados; no depender de ellos en CI.
 18. **CI/CD sin gates:** el workflow de deploy no corre lint/tests. Ejecutar `npm run lint` localmente antes de pushear.
 19. **Migraciones con números duplicados** y sin rollback: aplicar manualmente en Supabase en orden cronológico de nombre.
-20. **Timeouts y reintentos IA:** cadena del asistente con reintentos multi-pasada bajo deadline de 48s (OpenCode 13s → Groq 13s → OR 13s → Gemini 18s por intento, backoff 1.2s; errores permanentes 400/401/403/404/413 deshabilitan al provider en el request). Ollama 98s (reportes/feedback). No subir `max_tokens` ni `MAX_PROMPT_CHARS` sin revisar §9.7 (riesgo 413). Gemini timeout 20s en `services/ai.ts` para prompts multicanal largos (4 textos en paralelo).
+20. **Timeouts y reintentos IA:** cadena del asistente con reintentos multi-pasada bajo deadline de 48s (OpenCode 10s → Groq 13s → OR 13s → Gemini 18s por intento, backoff 1.2s; errores permanentes 400/401/403/404/413 deshabilitan al provider en el request). Ollama 98s (reportes/feedback). No subir `max_tokens` ni `MAX_PROMPT_CHARS` sin revisar §9.7 (riesgo 413). Generación multicanal: 5 llamadas paralelas con timeout global 50s. API route `maxDuration=60`.
 21. **`docsContext.ts` es AUTOGENERADO** (~1366 líneas, "No editar"): regenerar con `npm run sync-docs`.
 22. **Embeddings mixtos:** pgvector almacena vectores de 768 dims; HuggingFace produce 384 (zero-padded). Mezclar orígenes de embeddings en la misma colección degrada precisión de la búsqueda.
 23. **`lib/drive.ts` tiene folder IDs placeholder** (`REEMPLAZAR_CON_ID_REAL`): el mapeo real vive en `commissions.drive_folder_id` / `site_settings`.
 24. **Trigger `enforce_matias_admin` (mig. 073):** trigger permanente que asegura que `matiasvidal11972@gmail.com` siempre tenga rol `admin` en `members`. No eliminar sin aprobación explícita.
 25. **Mapeo de roles para UI (Nuestros Socios):** `admin` → "Socios Fundador", `coordinador` → "Comisión Directiva", `colaborador/miembro` → "Voluntario". Este mapeo se usa en `AboutSection.tsx`, `MemberManagementTable.tsx` y `ProfileForm.tsx`.
+26. **Modelos IA deprecados sin aviso:** Google desactivó `gemini-2.0-flash` en junio 2026; OpenRouter retira slugs `:free` frecuentemente. Si el asistente o generación multicanal falla con 404/400, verificar modelos en `services/ai.ts` y `app/api/asistente/route.ts` (constantés `OPENCODE_MODEL`, `OPENROUTER_MODEL`, `GEMINI_MODEL`). Diagnosticar con `GET /api/asistente/debug`.
+27. **Generación multicanal: DB key resolution optimizada.** `callAI()` resuelve la API key de Gemini UNA sola vez (DB → env) y la pasa como parámetro a `callGemini()`, evitando ~40 queries DB por request (antes resolvía key en cada intento). Para otros providers, la key se resuelve una vez al inicio de `generateMulticanalNews()`.
 
 ---
 
@@ -982,4 +986,4 @@ Server Action     →  getCurrentMember() → Zod → mutate → revalidatePath(
 
 ---
 
-*Mantener este documento actualizado con cada cambio estructural relevante. Última revisión: septiembre 2026 (post-migración 074, roles UI, titulos animados, alturas logos diferenciadas).*  
+*Mantener este documento actualizado con cada cambio estructural relevante. Última revisión: septiembre 2026 (post-migración 074, modelos IA actualizados — Gemini 3.5, OpenCode mimo-v2.5, OpenRouter auto-router, generación multicanal paralelizada).*  
