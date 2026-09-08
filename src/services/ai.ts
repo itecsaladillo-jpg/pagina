@@ -30,7 +30,6 @@ async function callOpenRouter(messages: { role: string; content: string }[]): Pr
 
   const models = ['nvidia/nemotron-3.5-lightning:free', 'minimax/minimax-m3:free']
 
-  // Combinar keys x modelos, lanzar todo en paralelo
   const attempts: Promise<string>[] = []
   for (const apiKey of allKeys) {
     for (const model of models) {
@@ -53,11 +52,12 @@ async function callOpenRouter(messages: { role: string; content: string }[]): Pr
           signal: AbortSignal.timeout(10000),
         })
         .then(async (res) => {
+          const bodyText = await res.text().catch(() => '')
           if (!res.ok) {
-            const errBody = await res.text().catch(() => '')
-            throw new Error(`${model} key...${apiKey.slice(-6)} ${res.status}: ${errBody.slice(0, 80)}`)
+            throw new Error(`${model} key...${apiKey.slice(-6)} ${res.status}: ${bodyText.slice(0, 120)}`)
           }
-          const data = await res.json()
+          let data: any
+          try { data = JSON.parse(bodyText) } catch { throw new Error(`${model} key...${apiKey.slice(-6)} respuesta no-JSON: ${bodyText.slice(0, 120)}`) }
           const texto = data.choices?.[0]?.message?.content || ''
           if (!texto.trim()) throw new Error(`${model} key...${apiKey.slice(-6)} vacía`)
           return texto
@@ -97,12 +97,13 @@ async function callOpenCode(messages: { role: string; content: string }[]): Prom
     signal: AbortSignal.timeout(13000),
   })
 
+  const bodyText = await response.text().catch(() => '')
   if (!response.ok) {
-    const errorBody = await response.text().catch(() => '')
-    throw providerError(`OpenCode ${response.status}: ${errorBody.slice(0, 200)}`, response.status)
+    throw providerError(`OpenCode ${response.status}: ${bodyText.slice(0, 200)}`, response.status)
   }
 
-  const data = await response.json()
+  let data: any
+  try { data = JSON.parse(bodyText) } catch { throw providerError(`OpenCode respuesta no-JSON: ${bodyText.slice(0, 200)}`) }
   const texto = data.choices?.[0]?.message?.content || ''
   if (!texto.trim()) throw providerError('OpenCode respuesta vacía')
   return texto
@@ -164,12 +165,13 @@ async function callGemini(
         },
       )
 
+      const bodyText = await res.text().catch(() => '')
       if (!res.ok) {
-        const err = await res.text().catch(() => '')
-        throw new Error(`key ...${key.slice(-6)} ${res.status}: ${err.slice(0, 100)}`)
+        throw new Error(`key ...${key.slice(-6)} ${res.status}: ${bodyText.slice(0, 120)}`)
       }
 
-      const data = await res.json()
+      let data: any
+      try { data = JSON.parse(bodyText) } catch { throw new Error(`key ...${key.slice(-6)} respuesta no-JSON: ${bodyText.slice(0, 120)}`) }
       const texto = data.candidates?.[0]?.content?.parts?.[0]?.text || ''
       if (!texto.trim()) throw new Error(`key ...${key.slice(-6)} respuesta vacía`)
       return texto
