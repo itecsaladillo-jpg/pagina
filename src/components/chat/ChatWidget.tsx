@@ -181,7 +181,21 @@ export default function ChatWidget() {
         {abierto ? (
           <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
         ) : (
-          <svg viewBox="0 0 24 24"><path d="M20 2H4a2 2 0 0 0-2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2z"/></svg>
+          <img
+            src={avatarUrl}
+            alt="Asistente ITEC"
+            style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }}
+            onError={(e) => {
+              (e.target as HTMLImageElement).style.display = 'none';
+              const parent = (e.target as HTMLImageElement).parentElement;
+              if (parent && !parent.querySelector('svg')) {
+                const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                svg.setAttribute('viewBox', '0 0 24 24');
+                svg.innerHTML = '<path d="M20 2H4a2 2 0 0 0-2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2z"/>';
+                parent.appendChild(svg);
+              }
+            }}
+          />
         )}
       </button>
 
