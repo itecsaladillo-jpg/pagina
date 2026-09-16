@@ -39,6 +39,12 @@ const nextConfig: NextConfig = {
         ],
       },
       {
+        source: '/(favicon.ico|icon.png|apple-icon.png|apple-touch-icon.png|favicon-32x32.png|favicon-16x16.png|icon-192.png|icon-512.png)',
+        headers: [
+          { key: 'Cache-Control', value: 'public, max-age=0, must-revalidate' },
+        ],
+      },
+      {
         source: '/:all*(svg|jpg|jpeg|png|gif|ico|webp|avif)',
         headers: [
           { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
