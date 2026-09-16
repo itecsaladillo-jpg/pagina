@@ -11,7 +11,7 @@ function providerError(msg: string, status?: number): ProviderError {
 
 const OPENCODE_MODEL = 'mimo-v2.5-free'
 const OPENROUTER_MODEL = 'nvidia/nemotron-3.5-lightning:free'
-const GEMINI_MODEL = 'gemini-3.5-flash'
+const GEMINI_MODELS = ['gemini-3.8-flash', 'gemini-3.6-flash', 'gemini-flash-latest']
 
 async function callOpenRouter(messages: { role: string; content: string }[]): Promise<string> {
   const dbKeys = await Promise.all([
@@ -28,7 +28,7 @@ async function callOpenRouter(messages: { role: string; content: string }[]): Pr
 
   console.log(`[OpenRouter] ${allKeys.length} keys: ${allKeys.map(k => `...${k.slice(-6)}`).join(', ')}`)
 
-  const models = ['openrouter/free', 'meta-llama/llama-4-scout:free', 'google/gemma-3-27b-it:free']
+  const models = [OPENROUTER_MODEL, 'openrouter/free', 'meta-llama/llama-4-scout:free', 'google/gemma-3-27b-it:free']
 
   const attempts: Promise<string>[] = []
   for (const apiKey of allKeys) {
@@ -86,6 +86,7 @@ async function callOpenCode(messages: { role: string; content: string }[]): Prom
     headers: {
       'Authorization': `Bearer ${apiKey}`,
       'Content-Type': 'application/json',
+      'x-session-id': `ses_${Math.random().toString(36).substring(2)}`,
     },
     body: JSON.stringify({
       model: OPENCODE_MODEL,
@@ -147,39 +148,41 @@ async function callGemini(
   const systemMsg = messages.find(m => m.role === 'system')?.content || ''
   const userMsg = messages.filter(m => m.role === 'user').map(m => m.content).join('\n')
 
-  // Lanzar TODAS las keys EN PARALELO, la primera que responda gana
+  // Lanzar TODAS las keys y modelos Gemini EN PARALELO, la primera que responda gana
   const keyErrors: string[] = []
-  const attempts = allKeys.map(async (key) => {
-    try {
-      const res = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${key}`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            systemInstruction: systemMsg ? { parts: [{ text: systemMsg }] } : undefined,
-            contents: [{ parts: [{ text: userMsg }] }],
-            generationConfig: { temperature, maxOutputTokens: 8192 },
-          }),
-          signal: AbortSignal.timeout(25000),
-        },
-      )
+  const attempts = allKeys.flatMap((key) =>
+    GEMINI_MODELS.map(async (model) => {
+      try {
+        const res = await fetch(
+          `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`,
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              systemInstruction: systemMsg ? { parts: [{ text: systemMsg }] } : undefined,
+              contents: [{ parts: [{ text: userMsg }] }],
+              generationConfig: { temperature, maxOutputTokens: 8192 },
+            }),
+            signal: AbortSignal.timeout(25000),
+          },
+        )
 
-      const bodyText = await res.text().catch(() => '')
-      if (!res.ok) {
-        throw new Error(`key ...${key.slice(-6)} ${res.status}: ${bodyText.slice(0, 120)}`)
+        const bodyText = await res.text().catch(() => '')
+        if (!res.ok) {
+          throw new Error(`${model} key ...${key.slice(-6)} ${res.status}: ${bodyText.slice(0, 120)}`)
+        }
+
+        let data: any
+        try { data = JSON.parse(bodyText) } catch { throw new Error(`${model} key ...${key.slice(-6)} respuesta no-JSON: ${bodyText.slice(0, 120)}`) }
+        const texto = data.candidates?.[0]?.content?.parts?.[0]?.text || ''
+        if (!texto.trim()) throw new Error(`${model} key ...${key.slice(-6)} respuesta vacía`)
+        return texto
+      } catch (err: any) {
+        keyErrors.push(err?.message || 'error')
+        throw err
       }
-
-      let data: any
-      try { data = JSON.parse(bodyText) } catch { throw new Error(`key ...${key.slice(-6)} respuesta no-JSON: ${bodyText.slice(0, 120)}`) }
-      const texto = data.candidates?.[0]?.content?.parts?.[0]?.text || ''
-      if (!texto.trim()) throw new Error(`key ...${key.slice(-6)} respuesta vacía`)
-      return texto
-    } catch (err: any) {
-      keyErrors.push(err?.message || 'error')
-      throw err
-    }
-  })
+    })
+  )
 
   const results = await Promise.allSettled(attempts)
   for (const r of results) {
@@ -491,7 +494,10 @@ export async function generarEmbedding(texto: string): Promise<number[]> {
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ content: { parts: [{ text: texto }] } })
+          body: JSON.stringify({
+            content: { parts: [{ text: texto }] },
+            outputDimensionality: 768,
+          })
         }
       )
 

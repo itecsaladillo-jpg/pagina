@@ -216,6 +216,7 @@ ${datosDinamicos || '(No hay datos dinámicos disponibles en este momento)'}
       headers: {
         'Authorization': `Bearer ${openCodeKey}`,
         'Content-Type': 'application/json',
+        'x-session-id': sessionId || `ses_${Math.random().toString(36).substring(2)}`,
       },
       body: JSON.stringify({
         model: 'opencode/glm-5-free',

@@ -175,7 +175,7 @@ export function generatePrensaEmailHtml({
                             prensa@itecsaladillo.org.ar
                           </a>
                           <span style="color: #cbd5e1; margin: 0 8px;">·</span>
-                          <a href="https://itecsaladillo.org.ar" target="_blank" style="color: #2563eb; text-decoration: none; font-size: 13px; font-weight: 500;">
+                          <a href="${SITE_URL}" target="_blank" style="color: #2563eb; text-decoration: none; font-size: 13px; font-weight: 500;">
                             itecsaladillo.org.ar
                           </a>
                         </td>

@@ -86,9 +86,6 @@ export function TemplateEditor({ templates: initialTemplates }: Props) {
     )
   }
 
-  const categoriaInfo = (cat: WhatsAppTemplate['categoria']) =>
-    CATEGORIAS.find(c => c.value === cat) ?? CATEGORIAS[0]
-
   return (
     <div className="space-y-6">
       {/* Feedback toast */}

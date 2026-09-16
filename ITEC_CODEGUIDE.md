@@ -18,6 +18,7 @@
 8. [Base de Datos (Supabase)](#8-base-de-datos-supabase)
 9. [Sistema de IA](#9-sistema-de-ia)
 10. [Sistema de Noticias Multicanal](#10-sistema-de-noticias-multicanal)
+10.1 [Módulo WhatsApp](#101-módulo-whatsapp-sept-2026)
 11. [Páginas Públicas — Detalle Funcional](#11-páginas-públicas--detalle-funcional)
 12. [Dashboard de Miembros](#12-dashboard-de-miembros)
 13. [Herramientas de Administrador](#13-herramientas-de-administrador)
@@ -47,6 +48,7 @@ Plataforma web full-stack de **ITEC Saladillo** (Asociación Civil de Ciencia y 
 - Saladillo for Export (testimonios de saladillenses en el mundo, embajadores y gestión admin)
 - Portal exclusivo para sponsors con reportes de impacto generados por IA
 - Pasaporte Digital (certificados verificables por QR)
+- **Comunicación masiva vía WhatsApp** (plantillas, agenda unificada, grupos, auditoría de envíos)
 
 La landing incluye streaming en vivo de YouTube y barra inferior de sponsors con marquesina infinita.
 
@@ -91,6 +93,7 @@ La landing incluye streaming en vivo de YouTube y barra inferior de sponsors con
 | `sync-docs` | `node scripts/generateDocsContext.mjs` | Lee PDF/TXT/MD de `/docs` → limpia texto → genera `src/lib/docsContext.ts` (constante `DOCS_CONTEXT`) + `docsContext.json`. Alimenta nivel P2 del RAG. Ejecutar después de subir documentos nuevos. |
 | `extract-docs` | `node scripts/extractPdfText.js` | Predecesor simple: extrae texto plano de PDFs a JSON (CommonJS, pdf-parse) |
 | `ingest-vector` | `node --dns-result-order=ipv4first --env-file=.env.local scripts/ingestDocsToVector.mjs` | Pipeline pgvector: limpia embeddings previos → chunking 900 chars/overlap 120 → embeddings Gemini `text-embedding-004` (batches de 20, task RETRIEVAL_DOCUMENT) → inserta en tabla `documents` vía REST con service_role |
+| `agent-get-context` | `node scripts/agent-get-context.mjs` | Script de diagnóstico que consulta `news_flashes` y `itec_actions` para ver contexto dinámico de la BD |
 
 ---
 
@@ -135,7 +138,7 @@ D:\ITEC\
 
 ### Árbol completo de `src/app`
 
-**47 archivos page.tsx · 2 layouts · 15 route handlers · 19 archivos `'use server'`.**
+**48 archivos page.tsx · 2 layouts · 15 route handlers · 20 archivos `'use server'`.**
 No existen `loading.tsx`, `error.tsx`, `not-found.tsx` ni `template.tsx` en ninguna parte.
 
 #### Raíz y rutas públicas
@@ -196,6 +199,7 @@ No existen `loading.tsx`, `error.tsx`, `not-found.tsx` ni `template.tsx` en ning
 | `/dashboard/sponsorsNews` | **Client** | Muro exclusivo sponsors (`GET /api/sponsors-news`) + alta rápida de socio. |
 | `/dashboard/streaming` | admin/coordinador | Centro de transmisión: toggle ON/OFF, URL YouTube, setup OBS, link Meet (`NEXT_PUBLIC_MEET_LINK`). Persiste en `api_settings`. |
 | `/dashboard/videoteca` | admin/coordinador | ABM videos públicos + generación resúmenes IA (`generateVideoSummaryAction`). |
+| `/dashboard/whatsapp` | admin | **Módulo WhatsApp** (ver §10.1): generador de links, agenda unificada, plantillas, grupos, auditoría de envíos. |
 
 #### API Routes (`src/app/api/` + `src/app/auth/`)
 
@@ -312,6 +316,7 @@ Todas las actions administrativas verifican `getCurrentMember()` antes de ejecut
   4. Palabras temporales relativas ("hoy", "ayer", "mañana") → solo log — el prompt maestro ya indica los reemplazos correctos
 - Violaciones registradas en `ai_auditoria_violaciones` para monitoreo.
 - ⚠️ Lección arquitectónica: no agregar reglas de reemplazo total de respuesta que contradigan el prompt maestro de la DB. Las fuentes institucionales (`ai_prompt_settings`) son la autoridad sobre qué información es pública.
+- **Gate de diagnóstico** (`src/app/api/asistente/diag-gate.ts`): protege endpoints `/api/asistente/debug` y `/api/asistente/test`. En producción: solo accesible con header `x-diag-key` + secreto `DIAG_SECRETO`. Sin secreto o incorrecto: retorna 404 (no revela existencia). En desarrollo: acceso libre.
 - **No se exponen API keys al cliente**: llamadas IA solo server-side/API routes. Errores de providers sanitizados (solo códigos de estado logueados).
 
 ### Tokens y credenciales
@@ -437,6 +442,11 @@ Todas las tablas realtime de clase están en publicación `supabase_realtime`. R
 | `meeting_notes` | Actas colaborativas de la Sala de Reuniones (nota activa del día + historial publicado) |
 | `mapa_empresas` (+ `mapa_empresas_telefono`) / `alumnos_talentos` | Mapa Productivo |
 | `saladillo_for_export` (mig. 071) | Testimonios "Saladillo for Export": `nombre`, `foto_url`, `ciudad_residencia`, `pais_residencia`, `escuela_origen`, `profesion_rol`, `mensaje_gratitud`, `es_embajador` (bool), `orden_embajador` (1–4), `estado` (pendiente\|aprobado\|rechazado). RLS: SELECT solo aprobados; INSERT público. Storage bucket `saladillo-export-photos` (público). |
+| `whatsapp_templates` (mig. 0121) | Plantillas reutilizables: `titulo`, `body`, `categoria` (general\|evento\|socio\|sponsor\|medio) |
+| `whatsapp_logs` (mig. 0133) | Auditoría de envíos WhatsApp |
+| `whatsapp_contacts` (mig. 0131) | Contactos externos: `telefono` (UNIQUE), `nombre`, `fuente` (manual\|vcf\|csv\|device), `es_agenda_itec` |
+| `whatsapp_groups` (mig. 0132) | Grupos de contactos: `nombre`, `descripcion` |
+| `whatsapp_group_contacts` (mig. 0132) | Relación N:M grupo-contacto |
 
 ### 8.3 RPCs principales
 | RPC | Propósito |
@@ -452,7 +462,7 @@ Todas las tablas realtime de clase están en publicación `supabase_realtime`. R
 | `insert_idea` | Alta idea pública |
 | `reiniciar_semaforo_clase` / `toggle_pregunta_voto` | Interacción aula virtual |
 
-### 8.4 Migraciones — historial resumido (71+ archivos SQL, 001→071 + fix_storage_policies.sql)
+### 8.4 Migraciones — historial resumido (75+ archivos SQL, 001→075 + fix_storage_policies.sql)
 
 ⚠️ Hay números duplicados (014, 024, 025, 026, 032, 036 tienen dos archivos c/u). No hay carpeta de rollback. Aplicar manualmente en Supabase tras cambios de schema.
 
@@ -465,7 +475,7 @@ Todas las tablas realtime de clase están en publicación `supabase_realtime`. R
 | 041–050 | chat_conocimiento, training_docs storage (+fix policies), buscar_docs_similares, saved_conversations, ideas (+delete policy), prensa_envios_log, evento_semaforo v1, fix modalidad, herramientas JSONB, default false |
 | 051–060 | remove_semaforo (053) → **054 semaforo v3** (tabla mínima append-only + reset_at + realtime) → 055 nube_concepto → **056 fix RLS critical** → **057 semaforo dispositivo_id** (dedup server-side) → **058 api_settings** → 059 modalidad eventos → **060 esquema híbrido virtual** (modalidad clases, meet_url, 7 tablas realtime de aula + RPCs + realtime publication) |
 | 061–068 | 061 general_meet_url → **062/063 pgvector RAG** (extensión vector, documents, HNSW, match_documents) → **064 streaming config** (keys `streaming_active`/`streaming_youtube_url` en api_settings) → 065 sponsors update (rubro/resena/contactos/logos/tier standard) → 066 RPC sponsors públicos → **067 strategic_partners** → **068 partner_classification** (col. type + RPC unificado obtener_socios_publicos) |
-| 069–074 | **071 saladillo_for_export** (tabla testimonios saladillenses en el mundo, embajadores 1–4, RLS SELECT aprobados/INSERT público, storage bucket `saladillo-export-photos`). Integrada en AboutSection landing + admin dashboard. **073 enforce_matias_admin** (trigger permanente que asegura que `matiasvidal11972@gmail.com` siempre tenga rol admin). **074 add_logo_to_medios_prensa** (columna `logo_url` en `medios_prensa` + actualización RPC `obtener_socios_publicos` para retornar `logo_url`). |
+| 069–075 | **069** expand_socios_rpc_fields (campos adicionales en obtener_socios_publicos) → **070** fix_storage_policies (políticas bucket sponsors-logos) → **0701** fix_sponsors_type_column (columna type + recreación RPC) → **071 saladillo_for_export** (tabla testimonios saladillenses en el mundo, embajadores 1–4, RLS SELECT aprobados/INSERT público, storage bucket `saladillo-export-photos`). Integrada en AboutSection landing + admin dashboard. → **072/073 enforce_matias_admin** (trigger permanente que asegura que `matiasvidal11972@gmail.com` siempre tenga rol admin). → **074 add_logo_to_medios_prensa** (columna `logo_url` en `medios_prensa` + actualización RPC `obtener_socios_publicos` para retornar `logo_url`). → **075_add_saladillo_data_to_assistant_prompt** (bloque de datos demográficos Censo 2022 al system_prompt de `asistente_global` en BD: población 35.656 hab., 6 localidades, estructura por sexo/edad, viviendas, precipitaciones, conectividad vial, código postal). |
 
 ---
 
@@ -478,9 +488,9 @@ Todas las tablas realtime de clase están en publicación `supabase_realtime`. R
 
 | Proveedor | Modelo | Uso |
 |-----------|--------|-----|
-| **OpenCode** | `mimo-v2.5-free` | **Asistente ITEC primario** (`/api/asistente`). Tier gratuito. Timeout 10s. Endpoint `https://opencode.ai/zen/v1/chat/completions`. También usado en `services/ai.ts` para generación de texto (comunicación multicanal). |
+| **OpenCode** | `mimo-v2.5-free` | **Asistente ITEC primario** (`/api/asistente`). Tier gratuito. Timeout 10s. Endpoint `https://api.opencode.ai/v1/chat/completions`. También usado en `services/ai.ts` para generación de texto (comunicación multicanal). |
 | **Groq** | `openai/gpt-oss-20b` | **Asistente fallback** (`/api/asistente`). Tier gratuito/developer. Timeout 13s. `/api/chat` usa el mismo modelo. Multi-key soportado (`GROQ_API_KEY`, `GROQ_API_KEY_2`). |
-| **OpenRouter** | `openrouter/free` (auto-router a mejor modelo FREE disponible) | Fallback del asistente. Tier gratuito. Timeout 8s. Headers `HTTP-Referer: https://itecsaladillo.org.ar` + `X-Title: ITEC Asistente`. Modelos secundarios: `meta-llama/llama-4-scout:free`, `google/gemma-3-27b-it:free`. |
+| **OpenRouter** | `nvidia/nemotron-3-super-120b-a12b:free` | Fallback del asistente. Tier gratuito. Timeout 13s. Headers `HTTP-Referer: https://itecsaladillo.org.ar` + `X-Title: ITEC Asistente`. |
 | **Google Gemini** | `gemini-3.5-flash` | **Último recurso del asistente** (`/api/asistente`, cuarto fallback vía REST v1beta, timeout 18s) + **edición de texto exclusiva** en `services/ai.ts`: resúmenes, flashes, noticias multicanal, resúmenes de video. Rota hasta 4 API keys de `api_settings` con fallback a env `GOOGLE_GENERATIVE_AI_API_KEY`. Env vars tienen prioridad sobre DB. ⚠️ `gemini-2.0-flash` fue desactivado por Google en junio 2026. |
 | **Google Gemini** | `gemini-embedding-001` | Embeddings primarios (RAG P1 + feedback). |
 | **HuggingFace** | `all-MiniLM-L6-v2` | Embeddings fallback (384 dims, zero-padded a 768 para pgvector). |
@@ -489,7 +499,7 @@ Todas las tablas realtime de clase están en publicación `supabase_realtime`. R
 ### 9.3 Servicios (`src/services/ai.ts`, ~661 líneas)
 | Función | Propósito |
 |---------|-----------|
-| `callOpenCode(messages)` | POST OpenCode `mimo-v2.5-free` con `OPENCODE_API_KEY`, endpoint `https://opencode.ai/zen/v1/chat/completions`, timeout 10s |
+| `callOpenCode(messages)` | POST OpenCode `mimo-v2.5-free` con `OPENCODE_API_KEY`, endpoint `https://api.opencode.ai/v1/chat/completions`, timeout 10s |
 | `callOpenRouter(messages)` | POST OpenRouter multi-modelo (`openrouter/free` auto-route, `meta-llama/llama-4-scout:free`, `google/gemma-3-27b-it:free`), lanza todas en paralelo, timeout 8s por intento |
 | `callGemini(messages, temperature)` | POST Gemini `gemini-3.5-flash` con rotación de 4+ keys (env first, luego DB), todas en paralelo, timeout 25s |
 | `processWithAI(text, sourceType, commissionName?)` | `{summary, action_items[]}` desde transcripciones (sourceType: meet\|capacitacion\|reunion\|manual) |
@@ -532,7 +542,7 @@ Recuperación de contexto en 5 niveles. **Orden de resolución:** P1 → P2 → 
 - ⚠️ **Persistencia real (ago 2026):** antes el flag `guardado` se marcaba pero nadie persistía nada. Ahora `guardarConversacion()` se ejecuta efectivamente cuando hay comando explícito o auto-guardado, manteniendo el nivel P4 del RAG operativo.
 
 ### 9.7 Asistente IA (`POST /api/asistente`)
-- **Cadena con reintentos multi-pasada (sept 2026):** los providers se recorren en orden **OpenCode `mimo-v2.5-free` → Groq `openai/gpt-oss-20b` → OpenRouter `openrouter/free` → Gemini `gemini-3.5-flash`**, y si TODOS fallan se vuelve a recorrer la cadena (pasada 2, 3…) hasta agotar un presupuesto de **48s** (`DEADLINE_MS`) dentro del `maxDuration = 60`. Backoff de 1.2s entre fallos. Los errores transitorios (429/5xx/timeouts/red) se reintenta; los permanentes (**400/401/403/404/413**) deshabilitan al provider por el resto del request. Ante respuestas inválidas (vacías, <10 chars o metadata de seguridad) también se reintenta. La respuesta 502 incluye `{intentos, pasadas, opencode, groq, openrouter, gemini}` para diagnóstico.
+- **Cadena con reintentos multi-pasada (sept 2026):** los providers se recorren en orden **OpenCode `mimo-v2.5-free` → Groq `openai/gpt-oss-20b` → OpenRouter `nvidia/nemotron-3-super-120b-a12b:free` → Gemini `gemini-3.5-flash`**, y si TODOS fallan se vuelve a recorrer la cadena (pasada 2, 3…) hasta agotar un presupuesto de **48s** (`DEADLINE_MS`) dentro del `maxDuration = 60`. Backoff de 1.2s entre fallos. Los errores transitorios (429/5xx/timeouts/red) se reintenta; los permanentes (**400/401/403/404/413**) deshabilitan al provider por el resto del request. Ante respuestas inválidas (vacías, <10 chars o metadata de seguridad) también se reintenta. La respuesta 502 incluye `{intentos, pasadas, opencode, groq, openrouter, gemini}` para diagnóstico.
 - Timeouts por intento: OpenCode 10s, Groq/OpenRouter 13s, Gemini 18s — acotados además por el presupuesto restante (`MIN_PRESUPUESTO_INTENTO` 3s: no se arranca un intento que no pueda terminar dentro del deadline).
 - ⚠️ **Los modelos gratuitos rotan frecuentemente** (Groq apagó los Llama en ago 2026; OpenRouter retira slugs :free sin aviso). Si el asistente devuelve "Todos los providers fallaron", diagnosticar SIEMPRE con `GET /api/asistente/debug` (hace ping real a cada provider) y actualizar las constantes de modelos al tope del route.
 - `maxDuration = 60` (route export + vercel.json).
@@ -556,10 +566,24 @@ Input: `{ historial[{role: user|model, text}], calificacion, comentario? }`.
 - Embedding vía `generarEmbedding()` (Gemini→HF) y persistencia en `asistente_feedback`.
 
 ### 9.9 Constantes de IA (`src/lib/ai/constants.ts`)
-- `FALLBACK_PROMPT`: System Prompt Maestro ("Asistente ITEC") — identidad, biografía de Augusto Cicaré, historia Expo ITEC, comisiones, estilo rioplatense técnico-humano-vanguardista, prohibición de inventar datos.
+- `FALLBACK_PROMPT`: System Prompt Maestro ("Asistente ITEC") — identidad, biografía de Augusto Cicaré, historia Expo ITEC, comisiones, estilo rioplatense técnico-humano-vanguardista, **datos estadísticos de Saladillo (Censo 2022)**, prohibición de inventar datos.
 - `ANTI_HALLUCINATION_RULES_STRICT`: responder SOLO con `<retrieved_context>`; si no está, negarse amablemente. Usado por `/api/chat` (legacy).
 - `ANTI_HALLUCINATION_RULES_FLEXIBLE`: prioridad retrieved_context → artículos publicados → conocimiento general → recién entonces "no dispongo de esa información". (Reemplazada como regla activa del asistente por la política integral.)
-- `POLITICA_RESPUESTA_INTEGRAL` (ago 2026): **regla activa de `/api/asistente`**, va al FINAL del system prompt. Prohíbe negarse a responder si existe cualquier material relacionado en el contexto (RAG + DB), obliga a responder con lo más útil disponible, permite rechazar solo temas totalmente ajenos a ITEC/Cicaré/ecosistema, y mantiene la prohibición de inventar fechas/precios/normativas. Fue creada para eliminar las negativas frecuentes ("no cuento con información sobre ese tema") causadas por guardrails estrictos del prompt maestro combinados con contexto truncado.
+- `POLITICA_RESPUESTA_INTEGRAL` (ago 2026): **regla activa de `/api/asistente`**, va al FINAL del system prompt. Incluye 13 instrucciones detalladas:
+  1. Analizar TODO el contexto antes de responder
+  2. Prohibido negarse si existe material relacionado
+  3. Responder con lo más útil disponible
+  4. Rechazar solo temas totalmente ajenos
+  5. Prohibido inventar fechas/precios/normativas
+  6. Presentar información como conocimiento propio
+  7. **Usar datos numéricos del contexto DIRECTAMENTE** (población, superficie, etc.)
+  8. **Responder con cifras exactas** (ej: "Saladillo tiene 34.247 habitantes")
+  9. Extraer valores exactos del contexto para demografía/geografía
+  10. Realizar cálculos simples (porcentajes, comparaciones)
+  11. Sacar conclusiones basadas en datos
+  12. Presentar datos múltiples en lista/tabla
+  13. Mencionar fuente "Censo 2022 del INDEC" cuando aplique
+- **Migración 075:** inyecta bloque de datos demográficos de Saladillo al prompt maestro en BD (`ai_prompt_settings.clave_prompt='asistente_global'`), insertado después de la personalidad y antes de las reglas estrictas para evitar truncamiento.
 
 ### 9.10 Resolución de API keys (`src/lib/settings.ts`)
 `getSettingValue(key, envVarName?)`: estrategia **fallback híbrido DB → env**: consulta `api_settings` (clave/valor); si vacío/inexistente → `process.env[envVarName]`. Caché Map a nivel de módulo. Es la base de resolución de Gemini (×4 keys), HF, Resend, streaming config. El dashboard de settings admin gestiona estas claves con prioridad sobre env vars.
@@ -585,6 +609,38 @@ Flujo completo:
 Servicio de lectura (`src/services/news.ts`):
 - `getAllMulticanalNewsFlashes()`: merge de `news_flashes` + `notas_publico` (+ `notas_miembros` si hay sesión), normaliza campos legacy, ordena por fecha.
 - `getPublicArticles()` / `getArticleBySlug(slug)`: resolución tolerante de `media_urls` (array o string JSON); slug acepta UUID con fallback a `notas_publico` y luego `news_flashes`.
+
+### 10.1 Módulo WhatsApp (sept 2026)
+
+Sistema de comunicación masiva vía WhatsApp para difusión de noticias, eventos y actividades de ITEC.
+
+**Página admin:** `/dashboard/whatsapp` (solo admin)
+
+**Server Actions** (`src/app/dashboard/whatsapp/actions.ts`, ~487 líneas):
+- `getTemplatesAction`, `saveTemplateAction`, `deleteTemplateAction` — CRUD de plantillas reutilizables
+- `logWhatsAppSendAction` — auditoría de envíos
+- `getContactsAction`, `getGroupsAction`, `getGroupWithContactsAction` — lectura de agenda
+- `saveContactAction`, `saveContactsBulkAction` (upsert por teléfono), `deleteContactAction` — gestión contactos
+- `saveGroupAction`, `deleteGroupAction`, `setGroupContactsAction` — gestión grupos
+- `updateUnifiedContactAction`, `deleteUnifiedContactAction` — agenda unificada
+
+**Componentes** (`src/components/whatsapp/`):
+- `WhatsAppUnifiedAgenda` — vista unificada de miembros + contactos externos
+- `WhatsAppLinkGenerator` — generador de links de difusión masiva
+- `TemplateEditor` — editor de plantillas con preview
+- `PlantillasTab`, `GruposTab`, `ContactosTab` — pestañas de gestión
+- `PlantillaSidebar`, `ConfirmDialog`, `Toast` — UI auxiliar
+
+**Tablas de BD:**
+| Tabla | Descripción |
+|-------|-------------|
+| `whatsapp_templates` | Plantillas reutilizables: `titulo`, `body`, `categoria` (general\|evento\|socio\|sponsor\|medio) |
+| `whatsapp_logs` | Auditoría de envíos con estado y destinatarios |
+| `whatsapp_contacts` | Contactos externos: `telefono` (UNIQUE), `nombre`, `fuente` (manual\|vcf\|csv\|device), `es_agenda_itec` |
+| `whatsapp_groups` | Grupos de contactos: `nombre`, `descripcion` |
+| `whatsapp_group_contacts` | Relación N:M grupo-contacto |
+
+**Migraciones:** 0121 (whatsapp_templates), 0131 (whatsapp_contacts), 0132 (whatsapp_groups), 0133 (whatsapp_agenda)
 
 ---
 
@@ -713,7 +769,7 @@ Detalle:
 
 ## 14. Inventario de Server Actions
 
-19 archivos `'use server'`. Patrón común: validar input (Zod cuando aplica) → `getCurrentMember()` + check rol → mutar → `revalidatePath()` → retornar `{ success, error? }`.
+20 archivos `'use server'`. Patrón común: validar input (Zod cuando aplica) → `getCurrentMember()` + check rol → mutar → `revalidatePath()` → retornar `{ success, error? }`.
 
 | # | Archivo | Funciones exportadas |
 |---|---------|---------------------|
@@ -737,6 +793,7 @@ Detalle:
 | 18 | `app/dashboard/eventos-presenciales/herramientasActions.ts` | `actualizarHerramientasActivasAction`, `actualizarModoPantallaAction`, `actualizarConceptoNube` |
 | 19 | `app/dashboard/eventos-presenciales/semaforoActions.ts` | `registrarVotoNegativo`, `verificarVotoDispositivo`, `obtenerEstadoSemaforo`, `resetearSemaforo` |
 | 20 | `app/dashboard/saladillo-for-export/actions.ts` | `aprobarTestimonioAction`, `rechazarTestimonioAction`, `setEmbajadorAction`, `crearTestimonioAdminAction`, `eliminarTestimonioAction` (requieren admin) |
+| 21 | `app/dashboard/whatsapp/actions.ts` | `getTemplatesAction`, `saveTemplateAction`, `deleteTemplateAction`, `logWhatsAppSendAction`, `getContactsAction`, `getGroupsAction`, `getGroupWithContactsAction`, `saveContactAction`, `saveContactsBulkAction`, `deleteContactAction`, `saveGroupAction`, `deleteGroupAction`, `setGroupContactsAction`, `updateUnifiedContactAction`, `deleteUnifiedContactAction` (admin) |
 | — | `app/actions/saladillo-export.ts` | `crearTestimonioSaladilloExport` (pública, upload foto a Storage + insert estado pendiente) |
 | — | `components/capacitaciones/actions.ts` | `voteLivePollAction` (cookie dedup httpOnly 24h) |
 
@@ -749,10 +806,10 @@ Detalle:
 | Ruta | Métodos | Config | Input → Output |
 |------|---------|--------|----------------|
 | `/api/asistente` | POST | `maxDuration=60` | `{ mensaje, historial[], sessionId?, idioma? }` → `{ respuesta, modelo?, guardado? }`. Cadena OpenCode→Groq→OpenRouter→Gemini con reintentos multi-pasada bajo deadline 48s, RAG 5 niveles, contexto DB paralelo, auditoría |
-| `/api/asistente/debug` | GET | — | Diagnóstico: resume env keys (OpenCode/Groq/OpenRouter/HF/Gemini/Ollama/Supabase) y hace ping REAL a cada provider. Lee `api_settings`. |
-| `/api/asistente/test` | GET/POST | — | GET: env check. POST: `{ messages[] }` → test chat OpenRouter |
+| `/api/asistente/debug` | GET | — | Diagnóstico: resume env keys (OpenCode/Groq/OpenRouter/HF/Gemini/Ollama/Supabase) y hace ping REAL a cada provider. Lee `api_settings`. Protegido por `diag-gate.ts` (header `x-diag-key` en prod, libre en dev). |
+| `/api/asistente/test` | GET/POST | — | GET: env check. POST: `{ messages[] }` → test chat OpenRouter. Protegido por `diag-gate.ts`. |
 | `/api/asistente/feedback` | POST | — | `{ historial[], calificacion, comentario? }` → Ollama sintetiza tema/utilidad → embedding → `asistente_feedback` |
-| `/api/chat` | POST | — | `{ message, history[] }` → ReadableStream SSE (SDK Groq, lazy-init `getGroq()`, RAG cascade + prompt maestro + reglas anti-alucinación) |
+| `/api/chat` | POST | — | `{ message, history[] }` → ReadableStream SSE (OpenCode `glm-5-free` streaming, RAG cascade + prompt maestro + reglas anti-alucinación) |
 | `/api/chat/guardar` | POST | — | `{ conversation[] }` (mín. 2 mensajes) → `chat_conocimiento` tipo `autogestion` |
 | `/api/eventos/registro` | POST | — | `{ evento_id, nombre, email, telefono?, organizacion? }` → upsert `eventos_asistentes` + email bienvenida Resend |
 | `/api/ideas` | POST | — | `{ mensaje(≥10 chars), anonimo?, nombre?, email?, telefono? }` → RPC `insert_idea` |
@@ -783,6 +840,7 @@ Detalle:
 | `prensa/` | `SendGacetillaModal`, `PrensaEnviosHistoryModal` | Prensa |
 | `reuniones/` | `GeneralMeetingRoom` (acta colaborativa + IA + publicar) | Reuniones |
 | `saladillo-export/` | `SaladilloExportSection` (embajadores grid + testimonios + formulario pública, fetch client si no vienen props) | Saladillo for Export |
+| `whatsapp/` | `WhatsAppUnifiedAgenda`, `WhatsAppLinkGenerator`, `TemplateEditor`, `PlantillasTab`, `GruposTab`, `ContactosTab`, `PlantillaSidebar`, `ConfirmDialog`, `Toast` | WhatsApp |
 
 Componentes inline en carpetas de rutas (no en `components/`): `ArticleDetailClient`, `CertificadoViewer`, `VotingClient`, `AIProcessorForm`, `certificados-interactive`, `FileList`, `PollManager`, `AnalyticsClient`, `PresentationClient`, `EntrenamientoForm`, `EventListClient`, `EventosPresencialesClient`, `PanelOradorClient`, `IdeasManagementClient`, `MemberManagementTable`, `MediosAdmin`, `MedioForm`, `ProfileForm`, `SponsorsAdmin`, `SponsorForm`, `StreamingControls`, `VideotecaManager`, `SettingsForm`, `ApiKeysSettingsForm`.
 
@@ -819,7 +877,7 @@ Arquitectura context-based propia (sin framework externo):
 
 ### OpenCode
 - Generación texto (`mimo-v2.5-free`): **provider principal** de asistente + generación multicanal
-- API key única (`OPENCODE_API_KEY`), endpoint `https://opencode.ai/zen/v1/chat/completions`
+- API key única (`OPENCODE_API_KEY`), endpoint `https://api.opencode.ai/v1/chat/completions`
 
 ### Resend (Emails)
 - Email bienvenida registro a eventos (`sendEventWelcomeEmail`, HTML dark-theme inline)
@@ -885,6 +943,7 @@ Definidas en `.env.local` (única env file, gitignored; no existe `.env.example`
 | `RESEND_API_KEY` / `RESEND_FROM_PRENSA` | Emails (con fallback a api_settings vía getSettingValue) |
 | `NEXT_PUBLIC_SITE_URL` | URLs en emails/invitaciones |
 | `NEXT_PUBLIC_MEET_LINK` | Página streaming (link Meet) |
+| `DIAG_SECRETO` | Secret para endpoints de diagnóstico (`/api/asistente/debug`, `/api/asistente/test`) en producción. En dev acceso libre. Si no está configurado, los endpoints retornan 404. |
 | `NODE_ENV` | Cookie dedup solo en producción |
 
 ### Definidas pero NO usadas en código
@@ -968,6 +1027,8 @@ Server Action     →  getCurrentMember() → Zod → mutate → revalidatePath(
 25. **Mapeo de roles para UI (Nuestros Socios):** `admin` → "Socios Fundador", `coordinador` → "Comisión Directiva", `colaborador/miembro` → "Voluntario". Este mapeo se usa en `AboutSection.tsx`, `MemberManagementTable.tsx` y `ProfileForm.tsx`.
 26. **Modelos IA deprecados sin aviso:** Google desactivó `gemini-2.0-flash` en junio 2026; OpenRouter retira slugs `:free` frecuentemente. Si el asistente o generación multicanal falla con 404/400, verificar modelos en `services/ai.ts` y `app/api/asistente/route.ts` (constantés `OPENCODE_MODEL`, `OPENROUTER_MODEL`, `GEMINI_MODEL`). Diagnosticar con `GET /api/asistente/debug`.
 27. **Generación multicanal: DB key resolution optimizada.** `callAI()` resuelve la API key de Gemini UNA sola vez (DB → env) y la pasa como parámetro a `callGemini()`, evitando ~40 queries DB por request (antes resolvía key en cada intento). Para otros providers, la key se resuelve una vez al inicio de `generateMulticanalNews()`.
+28. **WhatsApp módulo:** tablas `whatsapp_*` no tipadas en `types/database.ts`. El módulo usa server actions en `app/dashboard/whatsapp/actions.ts` con upsert por teléfono para contactos. La agenda unifica miembros (tabla `members`) y contactos externos (`whatsapp_contacts`).
+29. **Trigger enforce_matias_admin (mig. 073):** trigger permanente que asegura que `matiasvidal11972@gmail.com` siempre tenga rol `admin` en `members`. No eliminar sin aprobación explícita.
 
 ---
 
@@ -986,4 +1047,4 @@ Server Action     →  getCurrentMember() → Zod → mutate → revalidatePath(
 
 ---
 
-*Mantener este documento actualizado con cada cambio estructural relevante. Última revisión: septiembre 2026 (post-migración 074, modelos IA actualizados — Gemini 3.5, OpenCode mimo-v2.5, OpenRouter auto-router, generación multicanal paralelizada).*  
+*Mantener este documento actualizado con cada cambio estructural relevante. Última revisión: septiembre 2026 (post-migración 075, módulo WhatsApp, corrección endpoints/modelos IA, trigger enforce_matias_admin, logo_url medios_prensa).*  

@@ -62,7 +62,7 @@ export async function getPublicArticles(): Promise<PublicArticle[]> {
   const articles = (data ?? []).map((art: any) => {
     // Resolver media_urls
     const media = art.media_urls
-    let mediaArr = Array.isArray(media) ? media : (typeof media === 'string' ? (() => { try { return JSON.parse(media) } catch { return [] } })() : [])
+    const mediaArr = Array.isArray(media) ? media : (typeof media === 'string' ? (() => { try { return JSON.parse(media) } catch { return [] } })() : [])
     art.media_urls = mediaArr
     return art
   })

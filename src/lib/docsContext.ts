@@ -883,9 +883,498 @@ Cada vez que planifiques una estrategia o delegues tareas a los especialistas, *
 --- Fin del documento: contexto-ong.md ---
 
 
+--- Inicio del documento: contexto_itec_saladillo.md ---
+# Contexto y Base de Conocimiento Institucional: Grupo ITEC (Saladillo)
+
+Este documento reúne de forma estructurada, factual y exhaustiva la información oficial extraída de los partes de prensa del **Grupo ITEC (Innovación, Tecnología, Emprendedurismo y Ciencia)** para servir como contexto de referencia en la alimentación de chatbots o asistentes virtuales institucionales.
+
+---
+
+## 1. Identidad Institucional y Propósito
+
+* **Nombre de la Organización:** Grupo ITEC / Asociación ITEC Augusto Cicaré.
+* **Significado de la Sigla:** Innovación, Tecnología, Emprendedurismo y Ciencia.
+* **Ubicación:** Ciudad de Saladillo, Provincia de Buenos Aires, Argentina (a aproximadamente 180 km de la Ciudad Autónoma de Buenos Aires).
+* **Origen y Conformación:** Creada por iniciativa de un grupo de jóvenes autoconvocados que admiraron en vida a Augusto Cicaré y trabajan de manera *ad honorem* con el fin de mantener vivo su legado.
+* **Presidenta / Referente Institucional:** Isabela Bonaccio.
+* **Prensa y Difusión:** Cristela Cicaré y Sandra Kan (Contacto: 2494514461).
+* **Sitio Web Oficial:** https://itecaugustocicare.com.ar/
+* **Misión y Visión:**
+* Acercar el conocimiento científico y la tecnología a toda la comunidad de manera interactiva, práctica y accesible, sin límite de edad.
+* Promover el desarrollo del potencial integral en niños y jóvenes mediante herramientas educativas adecuadas.
+* Impulsar a Saladillo para convertirlo en un polo de desarrollo sostenible e innovación tecnológica, y reafirmar su identidad como referente aeronáutico (Saladillo fue declarada "Capital Provincial del Helicóptero", aspirando a su reconocimiento internacional).
+
+---
+
+## 2. Figura Tutelar y Mentor: Augusto Ulderico Cicaré ("Pirincho")
+
+* **Biografía básica:** Destacado inventor autodidacta argentino nacido en Polvaredas (localidad rural del partido de Saladillo) en 1937.
+* **Hito histórico:** Primer latinoamericano en diseñar, construir y volar su propio helicóptero.
+* **Reconocimiento:** A pesar de no contar con formación académica formal de grado, recibió el título de Ingeniero *Honoris Causa*, revolucionando la industria de helicópteros ligeros a nivel internacional con desarrollos propios y exportaciones a diversos países.
+* **Valores transmitidos:** Creatividad, trabajo, humildad, perseverancia y superación frente a la adversidad. Su figura es el pilar motivacional de ITEC.
+
+---
+
+## 3. Evento Insignia: EXPO ITEC "Augusto Cicaré" (Edición 2024)
+
+* **Denominación:** 2da Edición de la EXPO ITEC "Augusto Cicaré" (*"Despegando hacia el futuro"*).
+* **Fecha:** Viernes 22 y sábado 23 de noviembre.
+* **Carácter del evento:** Primera gran exposición regional centrada en Innovación, Tecnología, Emprendedurismo y Ciencia, orientada a toda la familia. Contó con el auspicio de sponsors y el acompañamiento de la Municipalidad de Saladillo.
+
+### Cronograma y Sedes
+
+#### A. Viernes 22 de Noviembre (Sede: Teatro Marconi)
+Jornada orientada a conferencias, divulgación y expresiones culturales:
+* **Ciclo de charlas y temáticas:**
+* Ciberseguridad (a cargo de referentes del Banco Santander).
+* Nanotecnología (especialista de CONICET).
+* Diseño industrial y energías limpias.
+* Charlas de científicos saladillenses vinculados a CONICET y la Universidad Nacional de La Plata (UNLP).
+* Emprendedores y empresarios locales compartiendo experiencias.
+* **Actividades culturales:** Ciclo de música ambiental y teatro científico sobre el cuidado del medio ambiente.
+* **Disertaciones magistrales / Cierres destacados:**
+* **Jerónimo Batista Bucher:** Joven tecnólogo argentino reconocido internacionalmente por el MIT y Harvard.
+* **Enrique Nardone:** Creador y quíntuple campeón mundial con "Los Murciélagos" (Selección Argentina de Fútbol para Ciegos), quien expuso sobre liderazgo positivo, inclusión y trabajo en equipo (cierre a las 20:30 hs).
+
+#### B. Sábado 23 de Noviembre (Sedes: Plaza Principal, Calles Aledañas y Escuela N° 1)
+Jornada al aire libre e interactiva a partir de las 16:00 hs:
+* **Exhibición en Plaza Principal:**
+* Helicópteros en exhibición de la firma Cicaré.
+* Drones del Ministerio de Seguridad de la Provincia de Buenos Aires en vuelos demostrativos.
+* Autos eléctricos desarrollados por la UNICEN (Universidad Nacional del Centro de la Provincia de Buenos Aires) y microeléctricos.
+* Stand de la UNLP con los avances del primer avión eléctrico de Latinoamérica.
+* Robot interactivo caminando entre los niños.
+* **Actividades en la Escuela N° 1 (desde las 16:15 hs):**
+* *Muestra Unreal:* Talleres interactivos de automatización, robótica, programación/diseño de videojuegos y áreas lúdicas.
+* *Inmersive Films:* Proyecciones de cine inmersivo y realidad virtual.
+* *Muestras participativas:* Reseña de la historia y aporte de los inmigrantes en Saladillo.
+* *Ciclo con UNLP (16:30 hs):* Conferencias sobre aviación eléctrica y cartografía contracultural.
+* **Instituciones y entidades participantes:**
+* Organismos: INTA, IFONA, Dirección Provincial de Vialidad (talleres de educación vial para niños en torno a la prevención sobre la Ruta Nacional 205).
+* Educativas: Colegios técnicos de la ciudad y facultades (UNLP, UNICEN).
+* Inclusión y comunidad: CEDIFISA, CETIDIM, Escuelas de Educación Especial.
+* **Cierre de jornada (20:30 hs):** Celebración del 150° aniversario de la Sociedad Italiana de Saladillo.
+
+---
+
+## 4. Programa Formativo Infantil: "Peques ITEC Saladillenses"
+
+* **Destinatarios:** Niñas y niños de 6 a 12 años.
+* **Objetivo:** Fomentar tempranamente las vocaciones científicas, técnicas y aeronáuticas.
+* **Actividad destacada:** Visita guiada al museo y fábrica de helicópteros Cicaré. Los niños interactuaron con el personal técnico e ingenieros, conociendo de primera mano las invenciones y proyectos de "Pirincho".
+
+---
+
+## 5. Eventos Culturales y Artístico-Científicos
+
+### Espectáculo "Cuando el arte se expresa, ciencia lleva"
+* **Lugar:** Galpón Cultural de Saladillo.
+* **Horario y Entrada:** A partir de las 21:00 hs. Entrada anticipada $2.000. Servicio de cantina a beneficio de la Cooperadora de la Escuela de Educación Especial N° 501.
+* **Propuesta:** Fusión de canto, danza y divulgación científica sobre la maravilla y el funcionamiento del cuerpo humano en acción.
+* **Elenco y disertantes:** Médicos, terapeutas y artistas locales:
+* Daniel Robles, Mitro Trofino, Guillermo Trofino, Daniel "Yuna" Rodríguez, Silvia Kuz, Anabella Solchaga, Ezequiel Achilli y Alejandro Monelli.
+* **Concepto:** Según Isabela Bonaccio, integrar el arte como vehículo para comunicar contenidos científicos complejos, sanar el espíritu y potenciar las emociones.
+
+---
+
+## 6. Capacitaciones Técnicas y Workshops Productivos
+
+### A. Curso "Tendencias e Innovación en Panificados"
+* **Co-organizador técnico:** INTI (Instituto Nacional de Tecnología Industrial).
+* **Auspiciante:** Molino Sicsa.
+* **Sede:** Auditorio del CFR Masculino (anunciado previamente en el stand de la Fiesta de la Galleta de Piso).
+* **Disertante principal:** Lic. / Técnico Hugo Pollo (experto en desarrollo de productos y Subgerente Operativo de Tecnología de Alimentos del INTI).
+* **Ejes temáticos:**
+* Calidad y tipos de harinas, lectura y comprensión de protocolos y análisis reológicos.
+* Comportamiento y física de la masa panaria.
+* Comparativa entre panadería tradicional y producción semi-industrial.
+* Harinas e ingredientes alternativos, incluyendo harina de bagazo.
+* Conferencia complementaria sobre "El Bagazo cervecero como ingrediente en panificados y repostería" dictada por Eber Andriuolo (empresario y propietario de Lindemberg).
+* **Público:** Panaderos, pasteleros, pizzeros, fabricantes de pastas, cerveceros artesanales y estudiantes gastronómicos. Entrega de certificados de asistencia.
+
+### B. Workshop "Desarrollo de Productos Alimenticios y/o Sustentables"
+* **Fecha y Marco:** 7 de septiembre, en el marco de la Semana de la Educación Agraria.
+* **Sede:** Escuela Secundaria Agraria N° 1 de la localidad de Cazón (partido de Saladillo).
+* **Disertantes (Científicas de CONICET):**
+* Lic. en Ciencia y Tecnología de los Alimentos Anabella Marinacci.
+* Lic. en Ciencia y Tecnología de los Alimentos Lucía Pucciarelli.
+* Lic. en Tecnología de los Alimentos Eugenia Golzi.
+* **Metodología y Destinatarios:** Encuentro teórico-práctico destinado a docentes, estudiantes de agronomía/alimentos y emprendedores, con visualización física de alimentos y estudio de tendencias sostenibles en la industria alimentaria.
+
+---
+
+## 7. Participación Externa Especial: Fiesta de la Galleta de Piso
+
+* **Aclaración institucional obligatoria:** Este evento **NO** es organizado por ITEC. Es una fiesta tradicional organizada íntegramente por la **Municipalidad de Saladillo**.
+* **Rol de ITEC:** Participación como institución invitada montando un stand propio de divulgación tecnológica y productiva.
+* **Aportes del stand de ITEC (Edición 4ta):**
+* Espacio de interacción con visitantes locales y de la región.
+* Ciclo de charlas gratuitas sobre la cadena de valor del trigo y el pan:
+1. *Ing. Fabiana Prado:* "Conociendo el Molino y tipos de harinas productivas".
+2. *Bioquímica Lorena Bruno:* "Los microorganismos y nuestra alimentación".
+3. *Ing. José Onis:* "Variedades de trigo de producción regional".
+4. *Chef Guadalupe Arocena:* "Adicionales en la producción de alimentos".
+* Lanzamiento y preinscripción a la capacitación técnica de panificados dictada con el INTI.
+
+---
+
+## 8. Guía de Tono y Directrices para el Chatbot
+
+1. **Voz y Tono:** Profesional, motivador, comunitario, enfocado en el fomento del conocimiento, el rigor tecnológico y la inspiración cívica.
+2. **Énfasis de Legado:** Destacar permanentemente que Saladillo es cuna del talento de Augusto Cicaré y que la asociación honra el esfuerzo autodidacta y la innovación desde el interior del país.
+3. **Distinción de Eventos:** Si se pregunta por la *Fiesta de la Galleta de Piso*, puntualizar siempre que es una fiesta municipal y que ITEC participa exclusivamente con stands y charlas científicas/formativas.
+4. **Vínculos:** Referir a \`https://itecaugustocicare.com.ar/\` para consultas oficiales o inscripciones institucionales.
+--- Fin del documento: contexto_itec_saladillo.md ---
+
+
 --- Inicio del documento: correr para entrenar.txt ---
 node --env-file=.env scripts/uploadDocsToGemini.mjs
 --- Fin del documento: correr para entrenar.txt ---
+
+
+--- Inicio del documento: documento-integral-saladillo-rag.md ---
+# BASE DE CONOCIMIENTO INTEGRAL: PARTIDO Y CIUDAD DE SALADILLO
+## Documento Estructurado para Ingesta RAG (Agent / Chatbot ITEC "Augusto Cicaré")
+
+---
+
+### METADATOS DEL DOCUMENTO
+- **Título**: Base de Conocimiento Integral del Partido de Saladillo (Pasado, Presente, Economía, Demografía, Educación e Instituciones)
+- **Entidad Emisora/Contexto**: Municipio de Saladillo / Observatorio de Estadísticas y Banco Municipal de Datos / ITEC Augusto Cicaré
+- **Propósito**: Ingesta en Vector Database / Sistema RAG para atención ciudadana e información institucional.
+- **Fecha de Actualización**: Febrero 2026 (Datos consolidados Anuario Estadístico 2025 y Censo 2022).
+
+---
+
+### SECCIÓN 1: UBICACIÓN GEOGRÁFICA, TERRITORIO Y DENSIDAD POBLACIONAL
+
+#### 1.1 Ubicación y Conectividad Vial
+El Partido de Saladillo se localiza en la Pampa Deprimida, dentro de la cuenca del Río Salado, en el centro-norte de la Provincia de Buenos Aires, República Argentina [238, 239]. Forma parte de la Séptima Sección Electoral de la Provincia de Buenos Aires [238].
+- **Cabecera urbana**: Ciudad de Saladillo, ubicada a 180 - 185 kilómetros al suroeste de la Ciudad Autónoma de Buenos Aires (CABA) [186, 239].
+- **Altitud**: Entre 40 y 43 metros sobre el nivel del mar [186, 237].
+- **Rutas de acceso**: Está conectado principalmente por la Ruta Nacional 205 (RN 205), la Ruta Provincial 51 (RP 51, a 5 km de la ciudad), la RP 91 (que conecta con Las Flores y empalma con la RN 3 a 80 km) y la RP 215 (que conecta Saladillo con Polvaredas) [238, 239, 261].
+- **Códigos Postales**: Código Postal general **7260**; Códigos Postales Argentinos (CPA): B7260, B7261, B7265, B7267 [115, 237].
+- **Prefijo Telefónico**: 02344 / 02345 (Llamadas internacionales: +54 2344) [115, 120].
+
+#### 1.2 Superficie y División Territorial
+- **Superficie total del Partido**: **2.706 km²** (equivalente a 273.600 hectáreas) [10, 154, 237].
+- **Límites territoriales**: Al noroeste limita con el arroyo Saladillo (que marca el límite con Roque Pérez y 25 de Mayo); al sur con el arroyo Las Flores (que lo separa del partido homónimo); y el Canal 16 marca el límite con General Alvear [239].
+- **Localidades del Partido**:
+1. **Saladillo** (Cabecera urbana principal): 34.247 habitantes (Censo 2022) / 23.313 hab. en registros urbanos previos [187, 261].
+2. **Del Carril**: 1.225 habitantes [187, 261].
+3. **Polvaredas**: 405 habitantes [187, 261].
+4. **Cazón** ("Pueblo del millón de árboles" / Pueblo turístico sustentable): 251 habitantes [1, 187, 261].
+5. **Álvarez de Toledo**: 287 habitantes [187, 261].
+6. **Juan José Blaquier**: 12 habitantes [187, 261].
+- **Parajes del Partido**: El Mangrullo, La Barrancosa, La Campana, La Mascota, La Razón, La Margarita, Esther, Emiliano Reynoso, Saladillo Norte, José Ramón Sojo, San Blas, Gobernador Ortiz de Rosas y San Benito [115, 187, 261].
+
+#### 1.3 Clima y Precipitaciones
+Saladillo cuenta con una estación meteorológica operativa en el Radio Club local (LU9DZZ) [263].
+- **Precipitaciones acumuladas año 2025**: **1.645,70 mm** [12].
+- **Desglose mensual de lluvias (2025)**: Enero (23,70 mm), Febrero (309,60 mm), Marzo (207,30 mm), Abril (103,50 mm), Mayo (201,90 mm), Junio (9,00 mm), Julio (64,80 mm), Agosto (166,80 mm), Septiembre (180,60 mm), Octubre (184,10 mm), Noviembre (118,80 mm), Diciembre (75,60 mm) [12].
+- **Evolución histórica de precipitaciones**: 2021 (1.173,60 mm); 2022 (974,40 mm); 2023 (991,50 mm); 2024 (1.050,30 mm); 2025 (1.645,70 mm) [13].
+
+---
+
+### SECCIÓN 2: HISTORIA, MITOLOGÍA Y PATRIMONIO CULTURAL
+
+#### 2.1 Origen y Fundación
+- **Creación del Partido**: El Partido de Saladillo fue creado por decreto del Gobernador de la Provincia de Buenos Aires, Brigadier **Juan Manuel de Rosas**, el **25 de diciembre de 1839**, como consecuencia política tras la Revolución de los Estancieros del Sur [183, 241].
+- **Fundación del Pueblo Cabecera**: Ocurrió 23 años después, el **31 de julio de 1863**, mediante decreto firmado por el Gobernador **Mariano Saavedra** [183, 184, 242].
+- **El acto fundacional**: El Ministro de Gobierno, **Mariano Acosta**, junto al agrimensor Enrique Nelson y Jacques Coquet, clavaron la estaca fundacional en el terreno elevado (donde hoy se ubica la plaza principal) expresando la famosa frase: *“Salga pato o gallareta, aquí será el centro del pueblo”* [184, 243].
+- **Piedra Fundamental**: La colocación estuvo a cargo del joven estanciero **Federico Álvarez de Toledo Bedoya**, elegido por ser el miembro más joven de la comisión fundadora [244].
+- **Declaración de Ciudad**: El pueblo fue elevado formalmente a la jerarquía de ciudad en **1948**, por gestiones del diputado provincial Américo Nicolás Giordano [246].
+- **Etimología**: El nombre "Saladillo" proviene de las aguas salobres de los arroyos que cruzan la región. Históricamente tuvo nombres como "del Saladillo", "El Tránsito de Saladillo" y "La Asunción de Saladillo" [188, 238].
+
+#### 2.2 Leyendas y Mitología Local
+- **La Leyenda del Indio Anfibio**: Relato tradicional de la zona de humedales y la Laguna Indio Muerto. Cuenta que un joven indígena con branquias y aletas fue el único sobreviviente de una inundación ancestral. Según la creencia popular, el Indio Anfibio protege el equilibrio ecológico del humedal y maldice las tierras de quienes realizan canalizaciones ilegales o alteran los cursos naturales de agua [246, 247].
+- **La Luz Mala**: Mito folclórico tradicional extendido en los campos del partido [248].
+
+---
+
+### SECCIÓN 3: DEMOGRAFÍA Y ESTADÍSTICAS POBLACIONALES
+
+#### 3.1 Datos Censales Consolidados (Censo INDEC 2022)
+- **Población Total del Partido**: **35.656 habitantes** [10, 13, 256].
+- **Variación Intercensal (2010 vs 2022)**: La población creció un **11,1%** respecto al Censo 2010 (que registraba 32.103 habitantes), representando un incremento absoluto de **3.553 residentes** [16, 256].
+- **Densidad Poblacional**: **13,2 hab/km²** [11].
+
+#### 3.2 Estructura Demográfica por Sexo y Edad
+- **Población por Sexo (Valores Absolutos y Relativos)**:
+- **Mujeres**: 18.310 habitantes (**51,35%**) [13, 14].
+- **Varones**: 17.346 habitantes (**48,65%**) [13, 14].
+- **Población por Grupos de Edad (Año 2022)**:
+- **0 a 14 años**: 7.600 personas (**21,31%**) [17].
+- **15 a 24 años**: 4.979 personas (**13,96%**) [17].
+- **25 a 54 años**: 13.740 personas (**38,53%**) [17].
+- **55 a 64 años**: 3.520 personas (**9,87%**) [17].
+- **65 años y más**: 5.817 personas (**16,31%**) [17].
+
+#### 3.3 Datos de Vivienda y Hogares
+- **Total de viviendas en el Partido**: **16.329 viviendas** [21].
+- **Viviendas particulares**: 16.309 [21].
+- **Viviendas colectivas**: 20 [21].
+- **Población según tipo de vivienda**:
+- En viviendas particulares: 35.423 residentes (18.172 mujeres y 17.251 varones) [14, 15].
+- En viviendas colectivas: 233 residentes [14].
+- **Evolución de viviendas particulares (2010 - 2022)**: De 13.353 viviendas en 2010 a 16.309 en 2022 (+22,14% de incremento) [22, 23].
+
+---
+
+### SECCIÓN 4: ESTRUCTURA ECONÓMICA, PRODUCCIÓN Y COMERCIO
+
+#### 4.1 Crecimiento y Transformación Económica (Estudio UNLP / LABDATA 2016 - 2025)
+Un estudio técnico elaborado por el investigador Juan Manuel Salvatierra (UNLP) sobre 63 actividades productivas reveló una transformación estructural en Saladillo [126, 133]:
+- **Crecimiento real del PBI local**: Entre 2016 y 2025, la economía de Saladillo **creció un 18,2% en términos reales**, superando drásticamente el promedio de la Provincia de Buenos Aires (que se estancó en +0,35%) [127].
+- **Cambio de matriz productiva**: En 2016, los servicios lideraban la riqueza del municipio (46%), mientras la agroindustria representaba el 41,4%. Para 2025, el **bloque agroindustrial pasó a representar el 51% del total producido**, convirtiendo a Saladillo en un municipio predominantemente agroindustrial [128].
+- **Los dos grandes motores del crecimiento**:
+1. **Cadena Porcina**: Multiplicó casi por 7 su producción en una década. Pasó de representar el 2,1% del PBI local a convertirse en la **segunda actividad económica más importante del municipio (12,1% del total)** mediante producción intensiva, faena y procesamiento [129, 143].
+2. **Girasol**: Más que duplicó su tamaño en el período, impulsado principalmente por el procesamiento y extrusado del grano [129].
+- **Concentración Económica**: 5 actividades concentran casi el **60%** de la producción local: Comercio (17,4%), Producción Porcina (12,1%), Girasol, Soja (que cayó un 33%) y Educación [131, 145]. Al sumar Salud, Avicultura, Ganadería Bovina y Energía Eléctrica, se alcanza el **82%** [131, 145].
+
+#### 4.2 Ganadería, Guías y Faena (Datos 2025)
+- **Ganado movido en el año 2025 (Total: 395.248 animales)** [21, 49]:
+- Vacunos: 241.479 cabezas [21, 49].
+- Porcinos: 150.086 cabezas [21, 49].
+- Equinos: 1.851 cabezas [21, 49].
+- Lanares: 1.832 cabezas [21, 49].
+- **Guías de movimiento de ganado por destino (Total: 11.264 guías)** [21, 49]:
+- Faena: 7.383 guías [21, 49].
+- Invernar: 2.654 guías [21, 49].
+- Feria: 1.123 guías [21, 49].
+- Retorno: 75 guías [21, 49].
+- Feedlot: 29 guías [21, 49].
+
+#### 4.3 Emprendedurismo, Comercio y Construcción (Año 2025)
+- **Emprendedores registrados**: 575 emprendedores activos al 31/12/2025 (Oficina de Emprendedores) [18].
+- **Carros de comida (Food Trucks)**: 46 unidades habilitadas [18].
+- **Programa Mercado en tu Barrio**: 15 productores participantes [18, 19].
+- **Habilitaciones Comerciales (2025)**: 218 altas de comercios y 52 bajas registradas [19].
+- **Permisos de Edificación/Construcción (2025)**: 200 permisos otorgados por la Dirección de Obras Particulares [20].
+- **Inserción Laboral**: 50 personas insertadas laboralmente mediante la Oficina de Empleo Municipal en 2025 [28].
+
+---
+
+### SECCIÓN 5: EMPRESAS, PyMES, ENERGÍA Y PARQUE SOLAR
+
+#### 5.1 Principales Empresas e Industrias Instaladas
+Saladillo cuenta con un parque industrial y empresarial diversificado con presencia de destacadas firmas [251]:
+- **Cicaré Helicópteros S.A.**: Empresa referente mundial en diseño y fabricación de helicópteros y simuladores de vuelo [165, 170].
+- **Thyssen Plastic Solutions**: Industria de soluciones plásticas [251].
+- **Otras industrias y agroempresas**: El Tejar, Pet-food (alimento balanceado), Baya Casal, La Bragadense, Metalcen S.A., Los Grobos, Distrinando (calzado y vestimenta), El Vasco Alpargatas, Cargill, Molino Harinero, Tambo modelo "Pasturas de Cazón" [1, 249, 251].
+
+#### 5.2 Cooperativa Eléctrica de Saladillo (CES) y Parque Solar
+La Cooperativa Eléctrica de Consumo y Otros Servicios de Saladillo Ltda. (CES) presta servicios esenciales en un área de concesión de **273.600 hectáreas**, abarcando a cerca de **16.000 asociados** en sectores urbanos y rurales [154].
+- **Parque Solar Saladillo I (Cazón)**: Denominado "Contador Mario Cabitto", inaugurado en octubre de 2022. Cuenta con **550 paneles solares de 600 W**, capaces de generar **330 kWp pico** inyectados al sistema interconectado nacional [155].
+- **Unidades de servicio de la CES**:
+- **CES Energía**: Distribución y generación eléctrica [152, 153].
+- **CESTEL**: Telecomunicaciones e Internet de alta velocidad [152].
+- **CESPAZ**: Servicios sociales y sepelios cooperativos [152, 218].
+- **CESPRET**: Fábrica de pretensados, premoldeados y obras eléctricas [152].
+
+#### 5.3 Cazón: Vivero Municipal y Turismo Sustentable
+Declarado Pueblo Turístico Bonaerense en 2019, Cazón es un pueblo sustentable de energías limpias con menos de 250 habitantes [1].
+- **Vivero Municipal «Eduardo L. Holmberg»**: Creado en 1910, posee **210 hectáreas** de superficie dedicadas a la producción de especies arbóreas, forestales y ornamentales [1]. Cuenta con taller, aserradero, senderos audiosguiados, viveros privados, hornos de carbón, parque de aventuras y el parque solar [1].
+
+---
+
+### SECCIÓN 6: CIUDADANOS ILUSTRES Y PERSONAJES HISTÓRICOS
+
+#### 6.1 Dr. Alejandro Posadas (1870 – 1902)
+- **Biografía**: Nacido en Saladillo el 28 de diciembre de 1870. Destacado médico y cirujano argentino [156].
+- **Aportes a la Medicina**:
+- Descubrió la enfermedad parasitarias/fúngica conocida como coccidioidomicosis (enfermedad de Posadas-Wernicke) [157].
+- Inauguró la cirugía torácica endocavitaria en 1895 (arponamiento pulmonar para quiste hidatídico) [158].
+- Trajo a la Argentina el primer equipo de Rayos X, instalado en el Hospital de Clínicas [160].
+- **Pionero del Cine**: Realizó en 1899 junto al camarógrafo Eugenio Py la **primera película filmada en la República Argentina** y el primer documento fílmico de una cirugía en la historia del cine mundial [159].
+- **Homenajes**: El Hospital Zonal de Saladillo lleva el nombre de "Hospital Regional Doctor Posadas" desde 1906, y el Hospital Nacional de Haedo/Morón se denomina "Hospital Nacional Alejandro Posadas" desde 1970 [161].
+
+#### 6.2 Augusto Ulderico "Pirincho" Cicaré (1937 – 2022)
+- **Biografía**: Nacido el 25 de mayo de 1937 en Polvaredas (Saladillo). Genio autodidacta e inventor aeronáutico [162]. Falleció el 26 de enero de 2022 a los 84 años [165].
+- **Logros e Invocaciones**:
+- A los 11 años construyó su primer motor de 4 tiempos; a los 14, un motor diésel de 2 tiempos que alimentó de energía su taller durante 18 años [162, 163].
+- A los 21 años (1958) diseñó, construyó y voló el **CICARE CH-1**, el **primer helicóptero desarrollado y construido en Sudamérica** [165].
+- Creador del simulador de vuelo para helicópteros **CICARE SVH-3**, distinguido con **Medalla de Oro** en la Exposición Internacional de Inventos de Ginebra (Suiza) en 1999 [170, 178].
+- Diseñó motores para Juan Manuel Fangio (motor V4 para DKW) y bombas inyectoras (Premio Fangio) [172, 176].
+- Registró patentes internacionales de comandos de helicópteros (US5165854A) [168].
+- **Reconocimientos**: Ciudadano Ilustre de la Provincia de Buenos Aires, Personalidad Ilustre de Saladillo, Matrícula Honoraria de Ingeniero Aeronáutico y Espacial [177, 178, 179]. Su legado dio nombre al **ITEC "Augusto Cicaré"** [112, 180].
+
+#### 6.3 Dr. Roberto Raúl Pisani (1941 – 2026)
+- Médico querido e histórico de la localidad de Del Carril, recordado por dedicar su vida con apostolado a la salud comunitaria [124, 209].
+
+#### 6.4 Autoridades Municipalidades Destacadas
+- **Ing. José Luis Salomón**: Intendente Municipal de Saladillo (período 2015 – 2027) [3, 237, 263].
+- **Carlos Antonio Gorosito**: Intendente Municipal durante 24 años (1991 – 2015) [263].
+- **Francisco Ferro**: Primer intendente del retorno a la democracia (1983 – 1991) [263].
+- **Francisco Emparanza**: Farmacéutico pionero e intendente en los períodos 1902-1908 y 1910-1911 [255, 263].
+
+---
+
+### SECCIÓN 7: SISTEMA EDUCATIVO Y OFERTA ACADÉMICA
+
+#### 7.1 Infraestructura Educativa del Distrito
+Según los registros de la Dirección General de Cultura y Educación (ABC), el distrito de Saladillo cuenta con **164 ofertas/establecimientos educativos** [87, 97].
+- **Distribución por tipo de jornada**:
+- Jornada Simple: 135 ofertas [87, 96].
+- Jornada Completa: 19 ofertas [87, 96].
+- Jornada Doble: 8 ofertas [87, 96].
+- Jornada Extendida: 2 ofertas [87, 96].
+- **Oferta por Nivel y Modalidad**:
+- Educación Primaria: 41 establecimientos [88, 97].
+- Educación Inicial: 32 jardines [88, 97].
+- Educación Superior: 28 carreras/ofertas [88, 97].
+- DIEGEP (Gestión Privada): 21 establecimientos [88, 97].
+- Educación Secundaria: 15 escuelas [88, 97].
+- Educación Técnica: 7 ofertas [88, 97].
+- Educación de Adultos: 7 establecimientos (EEPA N°701, CENS N°451) [88, 90, 97].
+- Educación Agraria: 6 escuelas (Escuela Agraria N°1 "Horacio Giberti" en Cazón) [1, 88, 97].
+- Educación Especial: 6 ofertas (Escuela Especial N°501 "Helen Keller") [88, 93, 97].
+- Educación Artística: 1 centro (CEPEAC N°2 - Centro de Producción y Educación Artístico Cultural N°2) [88, 97].
+
+#### 7.2 Educación Superior y Universitaria
+- **CURS - Centro Universitario Regional Saladillo «Dr. Hugo Daniel Salomón»**:
+- Fundado en **1995** mediante convenio entre la Municipalidad de Saladillo, la Universidad Nacional de La Plata (UNLP - Ciencias Económicas) y la Universidad de Buenos Aires (UBA) [203].
+- **Sede Propia**: Inaugurada en junio de 2018 en calle Zamorano 2960 [204, 205].
+- Equipamiento: 7 aulas, biblioteca, buffet, sala de profesores, Punto Digital y departamento de alumnos [204].
+- Matrícula: Recibe a más de 370 estudiantes universitarios de Saladillo y la región [204].
+- **ITEC «Augusto Cicaré»**: Instituto Tecnológico de nivel terciario enfocado en la formación técnica, innovación y desarrollo productivo local [112].
+
+---
+
+### SECCIÓN 8: INSTITUCIONES SOCIALES, DEPORTIVAS Y EVENTOS COMUNITARIOS
+
+#### 8.1 Instituciones Civiles y Comunitarias
+- **Sociedad de Bomberos Voluntarios de Saladillo**: Institución de prevención y emergencias [255].
+- **Sociedad Rural de Saladillo**: Organizadora de la Expo Rural y remates ganaderos [112, 255].
+- **Cooperativa Agrícola Ganadera de Saladillo**: Entidad histórica de apoyo al productor agrícola [255].
+- **Biblioteca Municipal «Bartolomé Mitre»**: Fundada en 1872, principal centro bibliográfico [255].
+- **Biblioteca de Polvaredas**: Institución cultural con 19 años de trayectoria en la localidad [210].
+- **Otras Instituciones**: Aeroclub Saladillo, CE.DI.FI.SA., Sociedad Italiana, Sociedad Española, ECOS (Ecología con Orientación Social) [255, 259].
+
+#### 8.2 Cronograma de Fiestas y Eventos Anuales
+- **Enero**: Jueves Joven, Calle Libre Deportiva, Música en el Jardín del Palacio [111].
+- **Febrero**: Conciertos Itinerantes, Carnavales, Feria Farol Cazón, Encuentro de Jeep Cazón [111].
+- **Marzo**: Expo Cactus Cazón, Fiesta Criolla [111].
+- **Abril**: **Fiesta de la Galleta de Piso** (evento gastronómico icónico), Clásica Retro Autojuntable en Polvaredas [111].
+- **Mayo**: Fiesta de la Torta Frita y Chocolate Caliente, Fiesta de la Empanada al Disco (en Álvarez de Toledo), Desfile Criollo del 25 de Mayo [112, 114].
+- **Julio**: Fiestas Patrias, Aniversario de Fundación de Saladillo (31 de julio), Maratón "Saladillo Corre" [112, 114].
+- **Agosto**: Fiesta del Buñuelo y Mate Cocido (en Del Carril) [112, 114].
+- **Septiembre**: Expo Rural Saladillo, Aniversario de Cazón, Muestra de Teatro Bonaerense [112, 114, 212].
+- **Octubre**: **Expo Vivero Cazón** (evento turístico nacional), "Listo el Pollo" (Del Carril), Festival de los Sentidos [112, 114].
+- **Noviembre**: Desafío Cazón 8K, Juntada "La Oxidada" en Álvarez de Toledo [112, 114].
+- **Diciembre**: Fiesta Cervecera de la Cuenca del Salado [112, 114].
+
+---
+
+### SECCIÓN 9: SALUD PÚBLICA, SERVICIOS MUNICIPALES Y GESTIÓN AMBIENTAL
+
+#### 9.1 Sistema de Salud Pública
+- **Hospital Regional Doctor Posadas**: Hospital provincial Zonal de alta complejidad (ubicado en Emparanza 2800) [106, 161].
+- **Red de Centros de Atención Primaria de la Salud (C.A.P.S.)**:
+1. C.A.P.S. San Roque (Rivadavia 1910) [106].
+2. C.A.P.S. Tevés / Saavedra (Dellatorre 4209) [106].
+3. C.A.P.S. Ibarbia / Falucho (Bozán y Martín Fierro) [106, 107].
+4. C.A.P.S. 31 de Julio (Sojo e Ibarbia) [107].
+5. C.A.P.S. Armendáriz (Lope Serrano y Ledesma) [107].
+6. C.A.P.S. Saladillo Norte [107].
+7. Unidad Sanitaria Del Carril (Mitre e/ Moreno y Urquiza) [107].
+8. C.A.P.S. Álvarez de Toledo (Cabral e/ 25 de Mayo y Sarmiento) [107].
+9. C.A.P.S. Polvaredas (Moreno y Los Fresnos) [107].
+10. C.A.P.S. Cazón (La Rioja y Santiago del Estero) [107].
+- **Estadísticas Anuales de Atención en Salud (Año 2025)** [20, 26]:
+- Atenciones totales en la red CAPS: **46.211 consultas** [20, 26].
+- Atenciones por especialidad: Enfermería (15.410), Clínica Médica (8.419), Servicio Educativo (6.572), Pediatría (3.616), Odontología (2.837), Obstetricia (2.616), Control Niño Sano (2.149), Psicología (1.678), Nutrición (880), PAP (464), Kinesiología (262), Ecografías (254), Diabetología (204), Radiología (193), Fonoaudiología (189), Cardiología (166), Ginecología (249), Puericultura (53) [26].
+- Atenciones en Salud Sexual y Reproductiva: 4.590 consultas [26, 27].
+- Personas acompañadas en el **Programa Mil Días**: 794 personas [27].
+- Servicio gratuito de **Telemedicina Municipal** [105, 226].
+
+#### 9.2 Zoonosis, Bromatología y Medio Ambiente (Año 2025)
+- Castraciones de animales domésticos: 1.222 intervenciones [24].
+- Vacunaciones de animales domésticos: 2.491 mascotas [24].
+- Cursos de manipulación segura de alimentos: 727 personas capacitadas [24, 25].
+- Programas ambientales: Programa Reciclatón, Vivero Municipal Cazón y Planta de Tratamiento de Efluentes Cloacales [1, 105, 217].
+
+---
+*Fin de la Base de Conocimiento para Agente ITEC RAG - Saladillo.*
+--- Fin del documento: documento-integral-saladillo-rag.md ---
+
+
+--- Inicio del documento: guia-uso-sitio-itec.md ---
+# Guía de Uso y Navegación del Sitio Web de ITEC Saladillo
+
+**Propósito de este documento:** Este archivo sirve como base de conocimiento para el Asistente Virtual ITEC. Tu objetivo es utilizar esta información para guiar a los usuarios, miembros y visitantes sobre cómo utilizar las funcionalidades de la plataforma web (itecsaladillo.org.ar), dónde encontrar información, y cómo interactuar en eventos y clases.
+
+---
+
+## 1. Landing Page (Página Principal)
+La página de inicio concentra el acceso a los pilares de ITEC Saladillo. Las secciones principales incluyen:
+* **Hero (Inicio):** Muestra el logo, fotos históricas de Augusto Cicaré y acceso rápido al **Aula Virtual** si hay una clase en vivo. Si hay una transmisión en vivo activa, se muestra un reproductor de YouTube.
+* **Nuestro Equipo (Quiénes hacen ITEC):** Directorio de la Comisión Directiva, Socios Fundadores y Voluntarios. También incluye la sub-sección **Saladillo for Export**, que muestra testimonios de saladillenses destacados en el mundo y permite a los visitantes registrar su propio testimonio.
+* **Nuestros Socios / ITEC en red:** Marquesina inferior y grilla visual que destaca a nuestros Sponsors (Platino, Oro, Plata, Bronce, Standard), Alianzas Estratégicas y Canales de difusión o medios de prensa.
+* **Comisiones:** Explicación de las distintas áreas de trabajo de la asociación.
+* **Métricas de Impacto:** Estadísticas actualizadas sobre el alcance de ITEC en la comunidad.
+* **Buzón de Ideas:** Un formulario público donde cualquier visitante puede aportar ideas para nuevos proyectos. Permite envíos anónimos o con datos de contacto.
+* **Videoteca:** Acceso a los videos y charlas de ITEC categorizados, con resúmenes generados por inteligencia artificial.
+* **Chat del Asistente (Tú):** Widget flotante en la esquina inferior para resolver dudas en tiempo real en español, inglés o portugués (gracias al selector de idioma).
+
+## 2. Acciones, Noticias y Contenido Educativo
+* **Muro Público (\`/muro\`):** Es el feed de noticias principal. Las noticias están adaptadas por nuestra IA para ser relevantes al público general.
+* **Acciones de Impacto (\`/acciones\`):** Catálogo de actividades organizadas por ITEC, divididas en Capacitaciones, Eventos Sociales y Divulgación. Los usuarios pueden inscribirse directamente desde la plataforma.
+* **Artículos (\`/articulo\`):** Publicaciones detalladas del blog con recursos y videos relacionados.
+* **Capacitaciones (\`/capacitaciones\`):** Visualización de entrenamientos. Si la capacitación es en vivo, incluye un reproductor embebido y encuestas en tiempo real (LivePoll).
+* **Certificados Digitales (\`/certificados\`):** Conocido como el "Pasaporte de Habilidades Digitales". Los usuarios pueden verificar diplomas obtenidos buscando por el código único o escanear el código QR.
+
+## 3. Mapa Productivo (\`/mapa-productivo\`)
+Un directorio estratégico que conecta el talento local con el ecosistema empresarial.
+* Los visitantes pueden leer sobre los beneficios para empresas y estudiantes.
+* **Registro (\`/registro-mapa\`):** Los usuarios pueden registrar su Perfil de Empresa (oferta, demanda, desafíos tecnológicos) o su Perfil de Estudiante/Talento (habilidades y especialidades) para formar parte de la base de datos de ITEC.
+
+## 4. Herramientas de Interacción en Tiempo Real
+El sitio cuenta con herramientas avanzadas para la participación de la audiencia. Como asistente, puedes guiar a los usuarios en su uso:
+
+### Aula Virtual (\`/clases\`)
+Usada para clases online en vivo (Google Meet integrado). Los alumnos tienen un panel interactivo (sin requerir instalación extra) con herramientas para comunicarse con el docente:
+* **Modómetro:** Para indicar el ritmo de la clase y dar feedback ("Voy bien", "Me perdí", "Muy rápido").
+* **Mano Alzada:** Para pedir el turno de hablar de forma ordenada.
+* **Semáforo de Comprensión:** Para votar rápidamente si están entendiendo el tema (Verde, Amarillo, Rojo). El docente lo puede reiniciar durante la clase.
+* **Preguntas y Encuestas:** Para hacer preguntas al docente (que pueden ser votadas por otros alumnos para darle prioridad) y responder encuestas.
+* **Chat en vivo.**
+
+### Eventos Presenciales (\`/eventos\`)
+Para asistentes físicos a congresos, charlas y exposiciones de ITEC. No requieren inicio de sesión, el sistema identifica a la persona por su dispositivo tras escanear un código QR:
+* **Acreditación:** Registro rápido al llegar al evento desde el celular.
+* **Preguntas al orador (\`/eventos/[id]/preguntar\`):** Permite enviar preguntas desde el celular y dar "like" a las preguntas de otros. Las preguntas más votadas se mostrarán en la pantalla gigante.
+* **Nube de Palabras (\`/eventos/[id]/nube\`):** Permite aportar una palabra clave sobre el concepto que se esté debatiendo. Las palabras de todos forman una gráfica dinámica proyectada en vivo.
+* **Semáforo de Comprensión:** Un botón simple de "NO ENTIENDO, ME PERDÍ" para enviar retroalimentación anónima e instantánea al disertante.
+* **Encuestas en vivo:** Participación en sondeos cuyos resultados se proyectan en pantalla.
+
+## 5. Portal Privado para Miembros y Sponsors
+Para los usuarios que tienen un rol dentro de ITEC y que han iniciado sesión con Google:
+
+### Dashboard de Miembros (\`/dashboard\`)
+* **Muro Interno:** Noticias exclusivas con lenguaje adaptado para el equipo (staff).
+* **Reuniones:** Acceso a la sala de Google Meet principal y al sistema de actas colaborativas (donde se toman notas, y luego la IA genera un resumen y tareas automáticas).
+* **Drive:** Acceso directo a las carpetas de Google Drive correspondientes a la comisión del miembro.
+* **Perfil:** Edición de datos personales, avatar, biografía y la frase motivacional "ITEC".
+* **Buzón de Ideas Interno:** Para proponer o revisar mejoras operativas.
+* **Saladillo for Export:** Los miembros pueden revisar testimonios y designar a los embajadores (las 4 posiciones destacadas).
+* Los administradores y coordinadores tienen acceso a herramientas adicionales (como gestión de encuestas, nubes, moderación de eventos, prensa, envíos de WhatsApp y edición de noticias multicanal).
+
+### Portal de Sponsors (\`/sponsors/[id]\`)
+* Acceso mediante token privado (ruta segura sin contraseña).
+* Visualización de reportes de impacto mensuales redactados automáticamente por IA.
+* Listado de acciones en las que ha participado el sponsor y oportunidades de vinculación sugeridas por su rubro.
+
+---
+
+**Instrucciones de comportamiento para el Asistente al guiar al usuario:**
+1. Si un usuario te pregunta "¿Cómo me sumo a ITEC?", recomiéndale visitar la página principal y llenar el "Buzón de Ideas" o inscribirse en el "Mapa Productivo" si es estudiante o empresa.
+2. Si preguntan por cursos, charlas o eventos, indícales que visiten el menú de "Acciones" (para eventos activos) o la "Videoteca" (para contenido histórico grabado).
+3. Si un alumno tiene dudas durante una clase virtual en vivo sobre cómo interactuar, explícale cómo usar el "Modómetro", la "Mano Alzada" o el "Semáforo de Comprensión", disponibles en su panel virtual.
+4. Para validar un diploma de ITEC, indícale al usuario que debe ir a la sección "Certificados" (\`itecsaladillo.org.ar/certificados\`) e ingresar el código alfanumérico o, alternativamente, escanear el código QR del diploma.
+5. Si preguntan por los miembros del equipo, o por testimonios de saladillenses por el mundo, guíalos a la sección "Quienes hacen ITEC" o "Saladillo for Export" en la página principal.
+6. Siempre mantén un tono servicial, tecnológico e innovador, fiel al estilo y visión de ITEC Saladillo.
+--- Fin del documento: guia-uso-sitio-itec.md ---
 
 
 --- Inicio del documento: GUÍA DE ENTRENAMIENTO PARA ASISTENTE VIRTUAL.pdf ---
@@ -1118,6 +1607,61 @@ EN VIVO DE NOVEDADES. PREACREDITACION CHARLAS Y TALLERES.
 •10 / 20 JOVENES QUE AYUDEN EN LA DIFUSION DEL EVENTO YENDO ESCUELA POR ESCUELA.
 •20 /30 JOVENES PARA MANTENER LIMPIA LA PLAZA.
 --- Fin del documento: municipalidad_septiembre_2023.pdf ---
+
+
+--- Inicio del documento: museos interactivos de ciencia.pdf ---
+DOCUMENTO DE CONTEXTO RAG: Divulgación Científica y Museología
+Interactiva
+Nota aclaratoria de contexto institucional: El material expuesto en este documento recopila referentes teóricos sobre divulgación científica, historia de las ciencias y modelos de museología interactiva. Todo el contenido se incluye únicamente como marco de referencia para ampliar el contexto de diseño conceptual de futuros proyectos institucionales. Se aclara de manera explícita que el Museo Interactivo de Ciencias (MIC) del ITEC constituye en la actualidad un proyecto en fase de planificación y aún no concretado.
+Ninguno de los modelos, análisis de caso o enfoques presentados en este texto corresponde a exhibiciones o infraestructuras activas de ITEC.
+1. Paradigmas de la Divulgación y la Comunicación de la Ciencia
+El diseño conceptual de espacios de divulgación requiere comprender las distintas tradiciones que han orientado la relación entre la ciencia y la sociedad:
+● Modelo de Déficit vs. Modelo Contextual/Democrático: El modelo tradicional de déficit asume que el público carece de conocimientos y que la divulgación debe
+"llenar" esa vacancia de forma unidireccional. Por el contrario, el modelo contextual reconoce que los visitantes poseen saberes previo, necesidades e intereses, planteando una visión sociohistórica y participativa del conocimiento.
+● Corrientes de Divulgación:
+○ Metodológica: Enfatiza el método científico positivista como la única forma racional de interpretar la realidad.
+○ Cultural: concibe la ciencia como parte de la cultura y la estética humana, distanciándola de las justificaciones puramente utilitarias.
+○ Promocional (PUS): Orientada a mejorar la percepción pública para legitimar y financiar las instituciones científicas.
+○ Democrática/CTS: Promueve la responsabilidad social de la ciencia y la tecnología, analizando tanto sus beneficios como sus dilemas e impactos en la sociedad y el medio ambiente.
+2. Evolución Generacional de los Museos de Ciencia
+La literatura museológica clasifica las instituciones de ciencia en cuatro generaciones de acuerdo a su enfoque pedagógico e interactivo:
+Generación Enfoque Principal Rol del Visitante Ejemplo
+Histórico
+1.ª
+Generación
+Preservación y conservación de colecciones.
+Observador contemplativo
+("prohibido tocar").
+Museos tradicionales de Historia
+Natural.
+
+2.ª
+Generación
+Demostración de principios técnicos e industriales.
+Operador (activa mecanismos/aparatos).
+Deutsches
+Museum de
+Múnich.
+3.ª
+Generación
+Fenómenos y conceptos mediante módulos diseñados
+(Science Centers).
+Participante interactivo con experiencias de "final cerrado".
+Exploratorium de San
+Francisco.
+4.ª
+Generación
+Tecnologías de punta, transdisciplinariedad e interacción abierta.
+Creador/Experimentador con respuestas múltiples o de "final abierto".
+Metropolis de
+Ámsterdam.
+3. Perspectiva CTS y Nuevas Tendencias Museográficas
+Los museos modernos buscan superar la visión internalista que presenta el conocimiento como una simple suma de "hechos" descontextualizados o descubrimientos atribuidos exclusivamente a genios individuales. Para lograr una verdadera divulgación contemporánea se proponen los siguientes ejes:
+● Integración de la dimensión CTS (Ciencia, Tecnología y Sociedad): Representar el proceso científico como una práctica social cruzada por valores, decisiones políticas, dilemas éticos e impactos ambientales.
+● Transdisciplinariedad: Romper la tajante separación entre ciencias naturales y ciencias sociales, vinculando los desarrollos científicos con las problemáticas locales, los saberes tradicionales y los antecedentes sociohistóricos de la comunidad.
+● Inclusión de la Perspectiva Ambiental: Integrar temas críticos contemporáneos como la biotecnología, el cambio climático y la conservación.
+● Modelos Ecomuseísticos: Fomentar que el entorno biofísico y cultural de una región se constituya en el propio eje explicativo e integrador de la propuesta formativa.
+--- Fin del documento: museos interactivos de ciencia.pdf ---
 
 
 --- Inicio del documento: Perfil Maestro de Entrenamiento IA_ Augusto Ulderico Cicaré.pdf ---
@@ -1606,6 +2150,113 @@ Mateo Salvatto, 50-70 personas asistieron al primer bloque de charlas en el teat
 Inteligencia Artificial y Mundo Virtual.
 La ciencia y la tecnología se convirtieron en el hilo conductor de experiencias únicas, desde el vuelo simulado hasta la exploración de la soldadura láser. El evento no solo consolidó conocimientos, sino que también sembró la semilla para futuras colaboraciones e innovaciones, demostrando el potencial colectivo cuando la curiosidad se encuentra con la innovación. En resumen, la exposición fue más que un escaparate de tecnologías avanzadas; fue un testimonio del poder transformador cuando la comunidad se encuentra con el progreso cientifico-tecnológico.
 --- Fin del documento: resumen_final_expo_itec_2023.pdf ---
+
+
+--- Inicio del documento: Saladillo_ Base de Conocimiento Integral para Agente RAG ITEC.pdf ---
+Informe RAG Integrado: Base de Conocimiento Integral Saladillo 2025
+1. Marco Institucional y Autoridades Municipales
+Autoridades Vigentes
+Bajo la estructura orgánica actual del municipio, se identifican los siguientes responsables institucionales:
+● Intendente Municipal: Ing. José Luis Salomón
+● Secretaria de Desarrollo Local: Prof. Victoria Irañeta
+● Responsable del Observatorio de Estadísticas y Banco Municipal de Datos: Lic.
+Esteban Alberto Burghi
+Contexto del Observatorio de Estadísticas
+El Observatorio de Estadísticas y Banco Municipal de Datos fue establecido mediante la
+Ordenanza N° 54 de 2016 . Su misión técnica consiste en recolectar, registrar, procesar y difundir información estadística sobre la situación social, económica y territorial del Partido de Saladillo. El flujo de información se sustenta en tres tipologías de datos:
+● Fuentes primarias:
+● Información estadística generada directamente por el Observatorio a través de encuestas y censos específicos.
+● Fuentes secundarias:
+● Datos elaborados por organismos externos como el INDEC, la Dirección Provincial de Estadística de la Provincia de Buenos Aires y diversas universidades.
+● Registros administrativos:
+● Estadísticas derivadas de procesos administrativos y normativos internos que, mediante procesamiento técnico, adquieren valor informativo.
+Información de Contacto Institucional
+Para la consulta de datos y gestión administrativa, se establece el siguiente bloque de contacto estructurado:Entidad: Observatorio de Estadísticas y Banco Municipal de Datos
+(Secretaría de Desarrollo Local) Dirección: Avenida Mariano Moreno 3.512, Partido de
+Saladillo, Provincia de Buenos Aires Teléfono celular: 02345-15669967 Correo electrónico: observatorio@saladillo.gob.ar Sitio web: https://www.saladillo.gob.ar/observatoriodeestadisticas Horario de atención: Lunes a viernes de 8:00 a 14:00 hs
+2. Territorio y Variables Climáticas
+Extensión y Superficie
+De acuerdo con los resultados definitivos del INDEC (Censo 2022), el partido cuenta con la siguiente extensión territorial:Superficie total del Partido de Saladillo: 2.706 km²
+Análisis de Precipitaciones 2025
+Distribución mensual de la pluviosidad registrada durante el último ciclo anual:| Mes | mm ||
+------ | ------ || Enero | 23,70 || Febrero | 309,60 || Marzo | 207,30 || Abril | 103,50 || Mayo |
+201,90 || Junio | 9,00 || Julio | 64,80 || Agosto | 166,80 || Septiembre | 180,60 || Octubre |
+
+184,10 || Noviembre | 118,80 || Diciembre | 75,60 || Total Anual | 1.645,70 || Fuente:
+Estación Meteorológica Saladillo. | |
+Tendencia Pluviométrica Interanual (2021-2025)
+Evolución de los registros totales de precipitaciones para el análisis de variabilidad hídrica:|
+Año | Precipitaciones (mm) || ------ | ------ || 2021 | 1.173,60 || 2022 | 974,40 || 2023 | 991,50 ||
+2024 | 1.050,30 || 2025 | 1.645,70 || Fuente: Estación Meteorológica Saladillo. | |
+3. Perfil Demográfico y Censo 2022
+Estadísticas de Población General
+Indicadores demográficos clave consolidados según el Censo 2022:
+● Población Total: 35.656 habitantes.
+● Densidad Poblacional: 13,2 Hab/km².
+● Distribución por sexo registrado al nacer:
+● Mujeres: 18.310 (51,35%).
+● Varones: 17.346 (48,65%).
+Dinámica de Crecimiento (2010 vs. 2022)
+Comparativa intercensal de la evolución poblacional por jurisdicción:| Jurisdicción | 2010 |
+2022 | Variación Absoluta | Variación Relativa (%) || ------ | ------ | ------ | ------ | ------ || País |
+40.117.096 | 45.892.285 | 5.775.189 | 14,4% || Provincia | 15.625.084 | 17.523.996 |
+1.898.912 | 12,2% || Saladillo | 32.103 | 35.656 | 3.553 | 11,1% |
+Estructura de Edad
+Composición poblacional por estratos etarios registrada en 2022:| Grupo | Cantidad | % ||
+------ | ------ | ------ || 0 a 14 | 7.600 | 21,31% || 15 a 24 | 4.979 | 13,96% || 25 a 54 | 13.740 |
+38,53% || 55 a 64 | 3.520 | 9,87% || 65 y más | 5.817 | 16,31% || Total | 35.656 | 100,00% |
+4. Estructura Económica y Desarrollo Productivo
+Emprendedurismo y Comercio Local
+Indicadores de actividad económica local registrados al 31/12/2025:
+● Emprendedores registrados: 575.
+● Carros de comida (Food trucks): 46.
+● Productores en el Programa "Mercado en tu Barrio": 15.
+Dinámica Comercial y de Construcción
+Evolución mensual de la actividad mercantil y edilicia durante el año 2025:| Mes | Altas
+Comerciales | Bajas Comerciales | Permisos de Edificación || ------ | ------ | ------ | ------ ||
+Enero | 18 | 5 | 15 || Febrero | 20 | 2 | 8 || Marzo | 16 | 8 | 12 || Abril | 17 | 6 | 23 || Mayo | 12 |
+1 | 20 || Junio | 15 | 4 | 19 || Julio | 17 | 4 | 15 || Agosto | 23 | 5 | 19 || Septiembre | 21 | 3 | 13
+|| Octubre | 15 | 9 | 25 || Noviembre | 19 | 2 | 23 || Diciembre | 25 | 3 | 8 || Total Anual | 218 |
+52 | 200 |
+Actividad Ganadera (Movimiento de Guías)
+Análisis jerárquico de la logística pecuaria durante 2025:Destino de las Guías Emitidas:
+
+● Movimientos Comerciales y Productivos:
+● Faena: 7.383 guías.
+● Invernar: 2.654 guías.
+● Feria: 1.123 guías.
+● Movimientos Logísticos y Otros:
+● Retorno: 75 guías.
+● Feedlot: 29 guías.
+● Competencias Deportivas: 0 guías.Existencias y Movimiento de Ganado por
+Tipo:| Tipo de animal | Cantidad || ------ | ------ || Vacunos | 241.479 || Porcinos |
+150.086 || Equinos | 1.851 || Lanares | 1.832 || Total General | 395.248 |
+5. Sociedad, Vivienda y Salud Pública
+Análisis del Fondo Habitacional
+Comparación del crecimiento del parque habitacional (viviendas particulares) entre los censos de 2010 y 2022:| Jurisdicción | 2010 | 2022 | Variación Relativa (%) || ------ | ------ |
+------ | ------ || País | 13.812.125 | 17.794.949 | 28,84% || Provincia | 5.377.786 | 6.749.094 |
+25,50% || Saladillo | 13.353 (1) | 16.309 (1) | 22,14% || (1): Correspondiente a viviendas particulares. | | | |
+Según el Censo 2022, Saladillo registra un total de 16.329 viviendas , desglosadas en
+16.309 viviendas particulares y 20 viviendas colectivas .
+Gestión de Salud y Prevención Animal
+Actividad mensual de la Dirección de Bromatología durante 2025:| Mes | Castraciones |
+Vacunaciones || ------ | ------ | ------ || Enero | 55 | 138 || Febrero | 132 | 224 || Marzo | 75 | 125
+|| Abril | 71 | 74 || Mayo | 203 | 409 || Junio | 149 | 305 || Julio | 64 | 179 || Agosto | 143 | 162
+|| Septiembre | 51 | 176 || Octubre | 147 | 367 || Noviembre | 57 | 199 || Diciembre | 75 | 133 ||
+Total Anual | 1.222 | 2.491 |
+Adicionalmente, se certificó la capacitación de 727 personas en los cursos de manipulación de alimentos durante el periodo.
+Red de Atención Primaria (CAPS) y Programas de Salud
+El sistema sanitario municipal consolidó los siguientes indicadores de impacto en 2025:
+● Atenciones totales en CAPS: 46.211 consultas.
+● Programa de Salud Sexual y Reproductiva: 4.590 atenciones realizadas.
+● Impacto del Programa Mil Días: Este programa, orientado al cuidado de personas gestantes, bebés y familias con seguimiento hasta los 3 años, acompañó a 794
+personas . Esta cifra representa una cobertura significativa sobre la base de la población infantil (segmento contenido en los 7.600 individuos de 0 a 14 años del partido).
+6. Personalidades, Educación e Instituciones (Reserva de Datos)
+Aviso de Configuración de Conocimiento: Se informa que las secciones correspondientes a personalidades destacadas (Posadas, Cicaré), el sistema universitario y de educación superior (CURS, ITEC) e instituciones de carácter social o deportivo se encuentran contempladas en la arquitectura de esta base de conocimiento. Sin embargo, su población veraz requiere la carga de documentos históricos y pedagógicos
+
+complementarios, dado que los datos específicos de estos rubros no están presentes en el
+Anuario Estadístico 2025 que constituye la fuente de este informe.
+--- Fin del documento: Saladillo_ Base de Conocimiento Integral para Agente RAG ITEC.pdf ---
 
 
 `;

@@ -151,24 +151,33 @@ async function main() {
     process.exit(1);
   }
 
-  // Limpiar embeddings existentes
-  console.log('🗑  Limpiando embeddings existentes...');
-  const deleteRes = await fetch(`${SUPABASE_URL}/rest/v1/documents?file_path=like.*`, {
-    method: 'DELETE',
-    headers: {
-      'apikey': SUPABASE_KEY,
-      'Authorization': `Bearer ${SUPABASE_KEY}`,
-    },
-  });
-  console.log(`   ${deleteRes.ok ? 'OK' : 'Error (continuando)'}\n`);
+  const targetArg = process.argv[2];
+  let files = [];
 
-  const files = fs.readdirSync(DOCS_DIR).filter(f =>
-    f.toLowerCase().endsWith('.pdf') ||
-    f.toLowerCase().endsWith('.txt') ||
-    f.toLowerCase().endsWith('.md')
-  );
+  if (targetArg) {
+    const baseName = path.basename(targetArg);
+    files = [baseName];
+    console.log(`🎯 Modo archivo específico: ${baseName}\n`);
+  } else {
+    // Limpiar embeddings existentes solo en modo completo
+    console.log('🗑  Limpiando todos los embeddings existentes...');
+    const deleteRes = await fetch(`${SUPABASE_URL}/rest/v1/documents?file_path=like.*`, {
+      method: 'DELETE',
+      headers: {
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`,
+      },
+    });
+    console.log(`   ${deleteRes.ok ? 'OK' : 'Error (continuando)'}\n`);
 
-  console.log(`📄 ${files.length} archivos encontrados\n`);
+    files = fs.readdirSync(DOCS_DIR).filter(f =>
+      f.toLowerCase().endsWith('.pdf') ||
+      f.toLowerCase().endsWith('.txt') ||
+      f.toLowerCase().endsWith('.md')
+    );
+  }
+
+  console.log(`📄 ${files.length} archivo(s) para procesar\n`);
 
   let totalChunks = 0;
   let totalInserted = 0;
@@ -190,6 +199,10 @@ async function main() {
     if (!text.trim()) {
       console.log('  (sin contenido, saltando)\n');
       continue;
+    }
+
+    if (targetArg) {
+      await deleteExistingEmbeddings(relPath);
     }
 
     // Chunking

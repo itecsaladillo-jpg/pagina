@@ -169,6 +169,17 @@ export default function ChatWidget() {
     }
   }
 
+  // Cerrar con Escape cuando esté abierto
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && abierto) {
+        setAbierto(false)
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [abierto])
+
   return (
     <>
       {/* Botón flotante */}
@@ -176,7 +187,8 @@ export default function ChatWidget() {
         id="itec-chat-btn"
         className={`itec-chat-btn${!abierto && scrollOculto ? ' itec-chat-btn--hidden' : ''}`}
         onClick={() => setAbierto(v => !v)}
-        aria-label="Abrir asistente ITEC"
+        aria-label={abierto ? "Cerrar asistente ITEC" : "Abrir asistente ITEC"}
+        aria-expanded={abierto}
       >
         {abierto ? (
           <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
@@ -204,6 +216,7 @@ export default function ChatWidget() {
         className={`itec-chat-window${abierto ? ' open' : ''}`}
         role="dialog"
         aria-label="Asistente ITEC"
+        aria-modal="true"
       >
         {/* Header */}
         <div className="itec-chat-header">
@@ -212,7 +225,7 @@ export default function ChatWidget() {
           </div>
           <div className="itec-header-info">
             <div className="itec-header-name">Asistente ITEC</div>
-            <div className="itec-header-status">En línea · iTec LLaMA 3.1</div>
+            <div className="itec-header-status">En línea · IA ITEC</div>
           </div>
           <button
             className="itec-close-btn"

@@ -104,7 +104,7 @@ async function callOpenRouter(messages: { role: string; content: string }[]): Pr
   return validarTextoRespuesta(data.choices?.[0]?.message?.content || '', 'OpenRouter')
 }
 
-const GEMINI_MODEL = 'gemini-2.0-flash'
+const GEMINI_MODELS = ['gemini-3.8-flash', 'gemini-3.6-flash', 'gemini-flash-latest']
 
 async function callGemini(messages: { role: string; content: string }[], timeoutMs: number): Promise<string> {
   const apiKey = process.env.GEMINI_API_KEY || process.env.GEMINI_APY_KEY || process.env.GOOGLE_GENERATIVE_AI_API_KEY
@@ -118,34 +118,45 @@ async function callGemini(messages: { role: string; content: string }[], timeout
       parts: [{ text: m.content }],
     }))
 
-  console.log(`[Asistente] Gemini (último recurso) (${GEMINI_MODEL}): ${contents.length} contenidos`)
+  let lastError: Error | null = null
 
-  const response = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${apiKey}`,
-    {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        ...(systemInstruction ? { system_instruction: { parts: [{ text: systemInstruction }] } } : {}),
-        contents,
-        generationConfig: { temperature: 0.7, maxOutputTokens: 2048 },
-      }),
-      signal: AbortSignal.timeout(timeoutMs),
+  for (const model of GEMINI_MODELS) {
+    try {
+      console.log(`[Asistente] Gemini (${model}): ${contents.length} contenidos`)
+
+      const response = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            ...(systemInstruction ? { systemInstruction: { parts: [{ text: systemInstruction }] } } : {}),
+            contents,
+            generationConfig: { temperature: 0.7, maxOutputTokens: 2048 },
+          }),
+          signal: AbortSignal.timeout(timeoutMs),
+        }
+      )
+
+      if (!response.ok) {
+        const errorBody = await response.text().catch(() => 'no body')
+        console.error(`[Asistente] Gemini ${model} ${response.status}:`, errorBody.slice(0, 400))
+        lastError = errorProvider(`Gemini ${model} ${response.status}`, response.status)
+        continue
+      }
+
+      const data = await response.json()
+      const texto = (data.candidates?.[0]?.content?.parts || [])
+        .map((p: { text?: string }) => p.text || '')
+        .join('')
+
+      return validarTextoRespuesta(texto, `Gemini (${model})`)
+    } catch (err: any) {
+      lastError = err
     }
-  )
-
-  if (!response.ok) {
-    const errorBody = await response.text().catch(() => 'no body')
-    console.error(`[Asistente] Gemini ${response.status}:`, errorBody.slice(0, 400))
-    throw errorProvider(`Gemini ${response.status}`, response.status)
   }
 
-  const data = await response.json()
-  const texto = (data.candidates?.[0]?.content?.parts || [])
-    .map((p: { text?: string }) => p.text || '')
-    .join('')
-
-  return validarTextoRespuesta(texto, 'Gemini')
+  throw lastError || errorProvider('Gemini failed', 500)
 }
 
 async function callOpenCode(messages: { role: string; content: string }[]): Promise<string> {
@@ -160,6 +171,7 @@ async function callOpenCode(messages: { role: string; content: string }[]): Prom
     headers: {
       'Authorization': `Bearer ${apiKey}`,
       'Content-Type': 'application/json',
+      'x-session-id': `ses_${Math.random().toString(36).substring(2)}`,
     },
     body: JSON.stringify({
       model: OPENCODE_MODEL,
@@ -226,6 +238,9 @@ export async function POST(req: NextRequest) {
         comisionesResult,
         accionesResult,
         articulosResult,
+        sociosResult,
+        videosResult,
+        mapaResult,
         ragResult,
       ] = await Promise.allSettled([
         adminClient.from('ai_prompt_settings').select('system_prompt').eq('clave_prompt', 'asistente_global').maybeSingle(),
@@ -234,6 +249,9 @@ export async function POST(req: NextRequest) {
         adminClient.from('commissions').select('name, description').eq('is_active', true).order('name'),
         adminClient.from('itec_actions').select('title, type, status, start_date, description').in('status', ['planificacion', 'en_curso']).order('start_date', { ascending: true }).limit(10),
         adminClient.from('public_articles').select('title, slug, excerpt, content').eq('is_published', true).order('created_at', { ascending: false }).limit(15),
+        adminClient.rpc('obtener_socios_publicos'),
+        adminClient.from('videos').select('title, ai_summary').eq('is_active', true).order('display_order', { ascending: true }).limit(15),
+        adminClient.from('mapa_empresas').select('nombre_empresa, sector, descripcion_oferta, descripcion_demanda').limit(10),
         recuperarContextoRAG(mensaje, adminClient, sessionId),
       ])
 
@@ -255,6 +273,15 @@ export async function POST(req: NextRequest) {
 
       const articulosContext = articulosResult.status === 'fulfilled' && articulosResult.value.data?.length
         ? `\n\n## Artículos Publicados en ITEC:\n${articulosResult.value.data.map((a: any) => `- "${a.title}": ${(a.excerpt || a.content || '').slice(0, 250)}`).join('\n')}` : ''
+        
+      const sociosContext = sociosResult.status === 'fulfilled' && (sociosResult.value.data as any[])?.length
+        ? `\n\n## Sponsors y Alianzas Estratégicas:\n${(sociosResult.value.data as any[]).map((s: any) => `- ${s.name} (${s.type === 'SPONSOR' ? (s.tier || 'Sponsor') : s.type === 'STRATEGIC_ALLIANCE' ? 'Alianza Estratégica' : 'Canal de Difusión'})${s.rubro ? `, Rubro: ${s.rubro}` : ''}${s.category ? `, Categoría: ${s.category}` : ''}`).join('\n')}` : ''
+        
+      const videosContext = videosResult.status === 'fulfilled' && videosResult.value.data?.length
+        ? `\n\n## Videoteca ITEC:\n${videosResult.value.data.map((v: any) => `- "${v.title}": ${(v.ai_summary || '').slice(0, 250)}`).join('\n')}` : ''
+        
+      const mapaContext = mapaResult.status === 'fulfilled' && mapaResult.value.data?.length
+        ? `\n\n## Empresas en el Mapa Productivo:\n${mapaResult.value.data.map((m: any) => `- ${m.nombre_empresa} (${m.sector})${m.descripcion_oferta ? `, Oferta: ${m.descripcion_oferta}` : ''}${m.descripcion_demanda ? `, Demanda: ${m.descripcion_demanda}` : ''}`).join('\n')}` : ''
 
       // ── Ensamblado priorizado: RAG PRIMERO (más relevante para la query),
       // luego contexto vivo de la DB. NUNCA se trunca este bloque. ──
@@ -269,7 +296,7 @@ export async function POST(req: NextRequest) {
         console.log('[Asistente] RAG: sin contexto recuperado')
       }
 
-      for (const b of [notasContext, accionesContext, articulosContext, miembrosContext, comisionesContext]) {
+      for (const b of [notasContext, accionesContext, articulosContext, miembrosContext, comisionesContext, sociosContext, videosContext, mapaContext]) {
         if (b) bloques.push(b.trimStart())
       }
 
@@ -356,7 +383,7 @@ export async function POST(req: NextRequest) {
     },
     {
       nombre: 'gemini',
-      modelo: GEMINI_MODEL,
+      modelo: GEMINI_MODELS[0],
       timeoutMs: 18000,
       disponible: () => !!(process.env.GEMINI_API_KEY || process.env.GEMINI_APY_KEY || process.env.GOOGLE_GENERATIVE_AI_API_KEY),
       ejecutar: (timeoutMs) => callGemini(messages, timeoutMs),

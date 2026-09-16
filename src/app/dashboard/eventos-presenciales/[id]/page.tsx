@@ -8,16 +8,11 @@ export const metadata: Metadata = {
   title: "Panel en Vivo del Disertante — ITEC",
 };
 
-export default async function PanelOradorPage({ params }: { params: any }) {
+export default async function PanelOradorPage({ params }: { params: Promise<{ id: string }> }) {
   const member = await getCurrentMember();
   if (!member) redirect("/login");
 
-  // Resolver el ID de los parámetros dinámicos
-  const resolvedParams = params && typeof params.then === "function"
-    ? await params
-    : params;
-  
-  const eventoId = resolvedParams?.id || "";
+  const { id: eventoId } = await params;
   if (!eventoId) redirect("/dashboard/eventos-presenciales");
 
   const supabase = await createClient();

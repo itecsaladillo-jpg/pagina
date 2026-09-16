@@ -82,9 +82,6 @@ export function PlantillasTab({ initialTemplates }: Props) {
     setEditing(prev => prev ? { ...prev, cuerpo: (prev.cuerpo ?? '') + v } : prev)
   }
 
-  const categoriaInfo = (cat: WhatsAppTemplate['categoria']) =>
-    CATEGORIAS.find(c => c.value === cat) ?? CATEGORIAS[0]
-
   return (
     <div className="flex flex-col h-full">
       {/* Header */}

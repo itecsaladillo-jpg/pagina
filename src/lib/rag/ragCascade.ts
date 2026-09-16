@@ -153,17 +153,27 @@ async function buscarEnVectorStore(
       return { contexto: '', score: 0 }
     }
 
-    if (!data || data.length === 0) {
+    interface MatchRow {
+      chunk_content: string
+      similarity: number
+    }
+
+    const validRows: MatchRow[] = ((data as any[]) || []).filter((r) => {
+      const sim = Number(r?.similarity)
+      return typeof r?.chunk_content === 'string' && !isNaN(sim) && sim > 0
+    })
+
+    if (validRows.length === 0) {
       return { contexto: '', score: 0 }
     }
 
     // Concatenar los chunks más relevantes
-    const contexto = data
-      .map((r: any) => r.chunk_content)
+    const contexto = validRows
+      .map((r) => r.chunk_content)
       .join('\n...\n')
       .slice(0, MAX_CONTEXT_CHARS)
 
-    const maxScore = Math.max(...data.map((r: any) => r.similarity))
+    const maxScore = Math.max(...validRows.map((r) => Number(r.similarity)))
 
     return { contexto, score: maxScore }
   } catch (err) {

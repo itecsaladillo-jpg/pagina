@@ -15,21 +15,28 @@ const LanguageContext = createContext<LanguageContextProps | undefined>(undefine
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
   const [language, setLanguageState] = useState<Language>('es')
-  const [mounted, setMounted] = useState(false)
 
   // Cargar preferencia persistida del navegador tras montar
   useEffect(() => {
-    const savedLang = localStorage.getItem('itec_lang') as Language
-    if (savedLang && (savedLang === 'es' || savedLang === 'en' || savedLang === 'pt')) {
-      setLanguageState(savedLang)
-    } else {
-      // Intentar detectar idioma del navegador
-      const browserLang = navigator.language.slice(0, 2)
-      if (browserLang === 'en' || browserLang === 'pt') {
-        setLanguageState(browserLang as Language)
+    try {
+      const savedLang = localStorage.getItem('itec_lang') as Language
+      let targetLang: Language | null = null
+      if (savedLang && (savedLang === 'es' || savedLang === 'en' || savedLang === 'pt')) {
+        targetLang = savedLang
+      } else {
+        const browserLang = navigator.language.slice(0, 2)
+        if (browserLang === 'en' || browserLang === 'pt') {
+          targetLang = browserLang as Language
+        }
       }
+      if (targetLang && targetLang !== 'es') {
+        queueMicrotask(() => {
+          setLanguageState(targetLang!)
+        })
+      }
+    } catch {
+      // Ignorar entornos sin storage disponible
     }
-    setMounted(true)
   }, [])
 
   const setLanguage = (lang: Language) => {
