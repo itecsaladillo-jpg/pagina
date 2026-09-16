@@ -18,6 +18,17 @@ export const metadata: Metadata = {
   description:
     'ITEC Saladillo es una ONG de ciencia y tecnología de Saladillo, Buenos Aires. Capacitaciones, proyectos de innovación y vinculación comunitaria.',
   keywords: ['ITEC', 'ITEC Saladillo', 'ciencia', 'tecnología', 'ONG', 'Saladillo', 'innovación', 'capacitación'],
+  icons: {
+    icon: [
+      { url: '/favicon.ico' },
+      { url: '/icon.png', sizes: '32x32', type: 'image/png' },
+      { url: '/icon-192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/icon-512.png', sizes: '512x512', type: 'image/png' },
+    ],
+    apple: [
+      { url: '/apple-icon.png', sizes: '180x180', type: 'image/png' },
+    ],
+  },
   openGraph: {
     type: 'website',
     locale: 'es_AR',
