@@ -797,6 +797,319 @@ I T E C SALADILLO 2024 LOS ESPERAMOS!!!!
 --- Fin del documento: 2023_STANDS_1ra_expo_itec.pdf ---
 
 
+--- Inicio del documento: aavea-electromovilidad-litio.md ---
+# Aavea Electromovilidad Litio
+
+*Fuente original: \`Doucmento AAVEA para discusion.docx\` — Documento institucional de ITEC Saladillo*
+
+---
+
+Las actividades vinculadas con la electromovilidad y las baterías de litio pueden agruparse en las siguientes categorías estratégicas:
+
+- Electromovilidad y transporte
+
+- Vehículos eléctricos livianos y pesados.
+
+- Transporte público, logística y minería.
+
+- Micromovilidad y movilidad urbana sostenible.
+
+- Infraestructura de carga
+
+- Diseño, instalación y operación de cargadores.
+
+- Redes de carga rápida y ultrarrápida.
+
+- Gestión energética e integración con energías renovables.
+
+- Baterías de litio
+
+- Fabricación, ensamblaje y diagnóstico.
+
+- Sistemas de gestión de baterías (BMS).
+
+- Transporte, almacenamiento y mantenimiento.
+
+- Retrofit y reconversión vehicular
+
+- Transformación de vehículos de combustión a eléctricos.
+
+- Desarrollo de kits de conversión.
+
+- Homologación y certificación de vehículos reconvertidos.
+
+- Talleres especializados
+
+- Seguridad y respuesta a emergencias
+
+- Prevención y gestión de riesgos.
+
+- Incendios y eventos térmicos en baterías de litio.
+
+- Capacitación para bomberos y primeros respondedores.
+
+- Rescate vehicular y protocolos de emergencia.
+
+- Economía circular y sostenibilidad
+
+- Segunda vida de baterías.
+
+- Reciclaje y recuperación de materiales.
+
+- Gestión ambiental y trazabilidad.
+
+- Almacenamiento energético
+
+- Sistemas BESS (Battery Energy Storage Systems).
+
+- Integración vehículo-red (V2G) y vehículo-edificio (V2B).
+
+- Microredes y soluciones de respaldo energético.
+
+- Investigación, formación y desarrollo
+
+- Capacitación técnica y profesional.
+
+- Investigación aplicada e innovación.
+
+- Desarrollo normativo y estandarización.
+
+- Servicios y consultoría especializada
+
+- Estudios de factibilidad.
+
+- Auditorías técnicas.
+
+- Peritajes, certificación y gestión de riesgos.
+
+Esta clasificación permite estructurar iniciativas de colaboración entre universidades, empresas, autoridades, cuerpos de bomberos y organizaciones del sector en torno a los principales desafíos y oportunidades de la electromovilidad.
+
+A continuación, se presentan ejemplos de proyectos concretos para cada categoría, pensados para ser desarrollados por universidades, empresas, organismos públicos, cuerpos de bomberos y asociaciones gremiales.
+
+| Categoría | Ejemplos de proyectos |
+| --- | --- |
+| 1. Electromovilidad y transporte | • Plan piloto de electrificación de flotas municipales. • Evaluación técnica y económica para electrificación de vehículos de reparto. • Proyecto demostrativo de buses eléctricos para transporte interurbano. |
+| 2. Infraestructura de carga | • Red de cargadores públicos para corredores turísticos. • Implementación de hubs de carga rápida para logística urbana. • Plataforma de monitoreo y gestión inteligente de estaciones de carga. |
+| 3. Baterías de litio | • Laboratorio de diagnóstico y análisis de degradación de baterías. • Banco de pruebas para sistemas BMS. • Centro de certificación de seguridad para baterías de litio. |
+| 4. Retrofit y reconversión vehicular | • Conversión de vehículos patrimoniales a eléctricos. • Retrofit de camionetas de servicios municipales. • Desarrollo y homologación de kits de conversión para vehículos comerciales livianos. |
+| 5. Seguridad y respuesta a emergencias | • Programa de capacitación para bomberos en incidentes con vehículos eléctricos. • Desarrollo de protocolos de emergencia para incendios de baterías. • Centro de entrenamiento con simuladores de eventos térmicos y rescate vehicular eléctrico. |
+| 6. Economía circular y sostenibilidad | • Programa de reutilización de baterías para almacenamiento estacionario. • Sistema de trazabilidad para baterías fuera de uso. • Planta piloto de reciclaje y recuperación de materiales críticos. |
+| 7. Almacenamiento energético | • Sistema BESS para respaldo de infraestructura crítica. • Microred con energía solar y baterías de segunda vida. • Proyecto piloto Vehicle-to-Grid (V2G) para gestión de demanda eléctrica. |
+| 8. Investigación, formación y desarrollo | • Diplomado en electromovilidad y baterías de litio. • Observatorio nacional de seguridad en electromovilidad. • Centro de investigación aplicada en tecnologías de almacenamiento energético. |
+| 9. Servicios y consultoría especializada | • Metodología de evaluación de riesgos para instalaciones con baterías. • Programa de auditorías de seguridad en infraestructura de carga. • Estudios de factibilidad para electrificación de flotas corporativas y mineras. |
+
+Proyectos de alto impacto para una alianza Universidad - AAVEA - Bomberos
+
+- Centro de Excelencia en Seguridad para la Electromovilidad
+
+- Investigación aplicada.
+
+- Capacitación de primeros respondedores.
+
+- Desarrollo de protocolos y estándares.
+
+- Programa Nacional de Capacitación para Bomberos
+
+- Vehículos eléctricos.
+
+- Sistemas BESS.
+
+- Manejo de incidentes con baterías de litio.
+
+- Laboratorio de Retrofit y Reconversión Vehicular
+
+- Diseño y certificación de conversiones.
+
+- Ensayos de seguridad.
+
+- Formación técnica especializada.
+
+- Observatorio de Incidentes en Electromovilidad
+
+- Base de datos nacional.
+
+- Análisis estadístico de eventos.
+
+- Recomendaciones para reguladores e industria.
+
+- Campus Demostrativo de Electromovilidad
+
+- Estaciones de carga.
+
+- Sistemas solares y almacenamiento.
+
+- Vehículos eléctricos y baterías de segunda vida para fines educativos.
+
+Estos proyectos combinan formación, investigación, seguridad, innovación y transferencia tecnológica, generando un alto valor para la industria de la electromovilidad y para los organismos de respuesta a emergencias.
+--- Fin del documento: aavea-electromovilidad-litio.md ---
+
+
+--- Inicio del documento: argenbio-capacitacion.md ---
+# Argenbio Capacitacion
+
+*Fuente original: \`ARGENBIO CAPACITACION COPY.docx\` — Documento institucional de ITEC Saladillo*
+
+---
+
+COPY PARA REDES
+
+Atención educadores 📚, comunicadores 🗣️, periodistas 📰, divulgadores científicos 🔬, estudiantes 🎓 y profesionales vinculados a las ciencias naturales 🌱, la salud 🧬 y la producción agropecuaria 🚜!
+
+¡Tenemos una invitación para hacerles! ✨Les proponemos una formación en biotecnología 🧪, junto con ArgenBio.
+
+¿Qué temas involucra? 🤔Los fundamentos y principales aplicaciones de la biotecnología 🔍, desde sus orígenes hasta los desarrollos actuales 🚀, incluyendo mejoramiento animal y vegetal 🐄🌾, cultivos transgénicos 🌽, edición génica 🧬 y comunicación científica 📢.
+
+Será una oportunidad para fortalecer conocimientos 💡 y promover una comunicación científica responsable 🤝.
+
+La actividad es gratuita 🆓 y la modalidad, virtual asincrónica 💻.Comienza el 5 de mayo 📅 y finaliza con un encuentro el 19 de mayo.
+
+¡Los esperamos! 🙌¡No se lo pueden perder! 🔥
+
+#Biotecnología #Ciencia #DivulgaciónCientífica #Educación #Formación #CienciasNaturales
+
+Principio del formulario
+
+Final del formulario
+--- Fin del documento: argenbio-capacitacion.md ---
+
+
+--- Inicio del documento: arte-y-ciencia-espectaculo.md ---
+# Arte Y Ciencia Espectaculo
+
+*Fuente original: \`ARTE Y CIENCIA FINAL.docx\` — Documento institucional de ITEC Saladillo*
+
+---
+
+- PROYECTAR IMAGEN DEL ESPECTACULO MIENTRAS HABLA EL LOCUTOR
+
+“Cuando el Arte se expresa, Ciencia lleva", es un espectáculo dinámico y entretenido, donde cantantes, músicos, bailarines que también son profesionales de la salud —médicos, psiquiatras y musicoterapeutas - , exploran el fascinante vínculo entre el arte y la ciencia. Este evento es co-organizado entre un grupo de artistas-profesionales o profesionales-artistas de nuestra comunidad, ITEC "Augusto Cicare", Cooperadora de la Escuela de Educación Especial Hellen Kelerg. Para quien no saben, ITEC Augusto Cicare es una asociación civil sin fines de lucro que busca fomentar, desde una edad temprana, el amor por el conocimiento y el interés por los diversos lenguajes científico-tecnológicos y artísticos en todas sus formas. Creemos firmemente que cuando niñas, niños, jóvenes y adultos descubren aquello que los apasiona, se encaminan a convertirse en mejores seres humanos, seres libres innovadores y emprendedores, que contribuirán, sin dudas, a la construcción de una comunidad más justa, donde las oportunidades se democraticen y cada individuo pueda desarrollar su potencial innato al máximo y que le permita participar en cualquier ámbito u organización con igualdad de oportunidades.
+
+Agradecimiento a quienes nos acompañaron en este día y a la Municipalidad de Saladillo por ofrecernos este espacio, “El Galpón Cultural”.
+
+Se da comienzo al espectáculo…….
+
+- PROYECCIÓN DEL FRAGMENTO “VIENTOS DE AGUA”
+
+Observamos en esta película "vientos de agua", una escena donde la música, los sonidos los gestos, unen, comunican y hacen sentir a cada individuo niños o adultos la sensación de pertenencia aunque sus orígenes sean culturalmente diversos. La ciencia es una danza de palabras y conceptos, un intento de dar sentido a lo que nos rodea. Su lenguaje predilecto, la matemática, se convierte en un puente hacia la comprensión de lo desconocido. Pero existen otros lenguajes igualmente poderosos: el lenguaje corporal, que habla sin palabras, y la música, que, a través de notas y silencios, revela una matemática intuitiva que conecta nuestras emociones. Todos estos lenguajes nos invitan a explorar el mundo y a entenderlo de maneras nuevas y profundas.
+
+Quienes nos acompañan en esta noche son: …..
+
+- ANABELLA: PROYECCION POWER POINT + VIDEO
+
+Después que finalizan las modelos, ingresa Camila para cantar
+
+- PROYECTAR LETRA DE LA CANCIÓN CAÓTICA BELLEZA
+--- Fin del documento: arte-y-ciencia-espectaculo.md ---
+
+
+--- Inicio del documento: brochure-sponsoreo-expo-itec-2025.md ---
+# Brochure Sponsoreo Expo Itec 2025
+
+*Fuente original: \`BROCHURE SPONSOREO 2025 (1).docx\` — Documento institucional de ITEC Saladillo*
+
+---
+
+# 3er EXPO ITEC “AUGUSTO CICARE”
+
+### 19 al 21 de Septiembre de 2025, Saladillo.
+
+“Imaginar, pensar y trabajar para hacer de Saladillo una de las ciudades Latinoamericanas de mayor crecimiento sostenible del siglo XXI”
+
+El grupo ITEC Saladillo, está formado por un equipo interdisciplinario de Saladillenses que deseamos SUMAR propuestas y acciones para consolidar a Saladillo como una ciudad moderna, sustentable y referente en la región. Y, además, somos los organizadores de Expo ITEC “Augusto Cicaré”. Que es una exposición de Ciencia y Tecnología interactiva, la primera en la región, que visibiliza todo lo que estamos siendo capaces de hacer como comunidad. En que estamos trabajando, como estamos creando, como nos estamos imaginando y hacia donde deseamos ir.
+
+Augusto Cicaré siempre representara al “ser-Saladillense”. Un inventor nato, un tecnólogo incansable que, con la humildad de quien todo lo intuye y no puede probarlo sino haciendo. Augusto Cicaré elevó el nombre de su tierra natal al firmamento, creando y perfeccionando helicópteros que volaron mucho más allá de las fronteras de su querido pueblo, Saladillo.
+
+Augusto “Pirincho” Cicaré no es solo un nombre; es el símbolo de nuestra identidad y pertenencia, un faro que ilumina el orgullo de un pueblo que sueña en grande, siguiendo el rastro de su inquebrantable espíritu.
+
+## Objetivos Específicos de ITEC Saladillo
+
+## 3ra Expo ITEC “Augusto Cicaré” 2025
+
+Esta edición será un apéndice de la EXPOSICION RURAL SALADILLO con el objetivo de hacer sinergia con esta prestigiosa institución.
+
+El objetivo es sumarle a la Expo Rural, un pabellón “ITEC” DE CIENCIA Y TECNOLOGIA donde se nuclearán y vincularán las instituciones educativas locales, Provinciales y Nacionales, el sistema productivo y de servicios, y los emprendedores de nuestra comunidad y la región, en torno a los conceptos de Innovación, Tecnología, Emprendedurismo y Ciencia, aportando así un espacio de muestra y reconocimiento de todas las iniciativas y proyectos que hoy están transformando el agro y toda su cadena productiva.
+
+- Educación temprana con actividades y proyectos de investigación para motivar a los jóvenes a construir una ciudad moderna y sustentable.
+
+- Alianzas estratégicas con instituciones educativas para apoyar proyectos científicos y tecnológicos, con Universidades, CONICET, CICPBA, INTI, INTA pero también el sector privado.
+
+- Políticas favorables que eliminen barreras burocráticas y fomenten la inversión en investigación y desarrollo.
+
+- Estímulo al espíritu emprendedor mediante formación, mentoría, y acceso a redes de contactos, con la creación futura de incubadoras y aceleradoras.
+
+- Involucrar a la comunidad a través de buzones de ideas y colaborar con el Observatorio Local en la creación de índices de desarrollo.
+
+- Base de datos de profesionales para acercar sus experiencias al sistema educativo, fortaleciendo el vínculo entre la escuela y el mundo laboral.
+
+·1ER EXPO ITEC “AUGUSTO CICARE”- 21 DE Noviembre
+
+de 2023
+
+·“Curso de UNREAL ENGINE 5” – 12 becas– Se dio inicio el 23 de febrero y culminó el 14 de agosto 2024– Dirigido a: estudiantes, docentes, arquitectos, diseñadores industriales.
+
+·Ciclo de charlas en la Fiesta de la Galleta de Piso: “Los
+
+microorganismos y nuestra alimentación”, “Variedades de trigo en nuestra región”, “Adicionales en la producción de alimentos” y “Conociendo el Molino y tipos de harinas producidas del Molino SICSA - 5 y 6 de abril 2024
+
+·“Tendencias e Innovación en Panificados ”Capacitación en calidad de harinas y nuevos ingredientes” - Trabajo conjunto con CICSA – INTI – ITEC - Fecha 16 de abril de 2024
+
+·“Mejora de la calidad y reducción de costos: Estrategias y herramientas efectivas” – INTI
+
+·“Desarrollo de productos alimenticios novedosos y/o sustentables” – Whorkshop – Licenciadas en Tecnología de los Alimentos: Anabella Marinacci, Lucia Puciarelli, Eugenia Golzi - CIDCA – CONICET – UNLP – 6 de septiembre de 2024 – EESA N°1 Cazón – Dirigido a: estudiantes, docentes (EESA1 y EEST N1)
+
+Ciclo de charlas de emprendedurismo: “De la pasión a la acción” Julio 2024
+
+·“Designación de Embajadores de Buena Voluntad”Julio 2024
+
+·“Avances técnicos sobre fallas con aplicaciones electrónicas” – Capacitación a cargo del Ingeniero Juan José Martinez – 4 clases, inicio el 6/09/24
+
+·“Peques ITEC” – Acercando la Ciencia y la tecnología a los niños.
+
+·“Tecnología e innovación en nuestro sector agroganadero” – Charlas – 21/09/2024 enel marco de la Exposición Rural de la Sociedad Rural de Saladillo.
+
+·“Hormigones sostenibles y fundamentos básicos del hormigón elaborado” – A cargo de la asesoría de técnica de LOMA NEGRA: José Victor Tejeda y Marcelo Cidades . Fecha: 26/09/24 – Organizado por ITEC Saladillo y Colegio de Arquitectos Distrito VIII
+
+·“Cuando el arte se expresa, ciencia lleva”- Espectáculo de ciencia y arte - Espectáculo de divulgación de ciencia
+
+·“EXPO ITEC AUGUSTO CICARÉ” – 22 Y 23 DE NOVIEMBRE 2024
+
+·“El DRONE como herramienta para el agro y la salud” – Jornada de intercambio y aprendizaje, el impacto de la tecnología en la producción agropecuaria, a cargo de “TecnoDrones Saladillo” Abril 2025.
+
+·Nombramiento del nuevo Embajador de Buena Voluntad: Jesús Alberto Almada – Julio 2025
+
+·Firma conjunta del convenio marco, con el “CLUSTER INFOTECH PATAGONICO” e ITEC SALADILLO: A partir
+
+de ello, se generarán acciones para la mejora del ecosistema tecnológico relacionado al sector rural, industrial y educativo. Julio 2025
+
+·PLATAFORMA PARA CURSOS Y CAPACITACIONES A
+
+DISTANCIA: Se podrá acceder de manera libre y gratuita, con temáticas relacionadas a ITEC.
+
+·CUANDO LA HERRAMIENTA SE VUELVE OBSTÁCULO: EDUCACIÓN
+
+EN TIEMPOS DE INTELIGENCIA ARTIFICIAL: A cargo del Bioingeniero Pedro Benedetti del ITBA – CONICET – Charla destinada docentes y formadores de formadores. Julio 2025.
+
+·“CHARLAS ITEC” Son presentaciones breves, donde expertos y personas inspiradoras, identificadas con Saladillo, comparten ideas valiosas sobre diversos temas.El objetivo principal de las charlas es difundir ideas que puedan generar un impacto positivo en la sociedad, a través de la construcción de un legado que permitan conectar con otros agentes de cambio.
+
+LA MISION DE EXPO ITEC ES: Promover el conocimiento, la innovación y el emprendedurismo como base
+
+del crecimiento local, uniendo educación, producción
+
+y Estado. Visibilizar el aporte de cada sector al desarrollo sostenible de nuestra comunidad.
+
+Contacto: www.itecaugustocicare.com.ar Whatsapp: 2344 54-7030
+
+| SPONSOREO ANUAL DE TODAS LAS ACTIVIDADES DEL CRONOGRAMA | |
+| --- | --- |
+| NIVEL | APORTE |
+| MAIN | $ 4.000.000 |
+| PLATINUM | $ 1.500.000 |
+| ORO | $ 800.000 |
+| PLATA | $ 400.000 |
+| BRONCE | $ 250.000 |
+--- Fin del documento: brochure-sponsoreo-expo-itec-2025.md ---
+
+
 --- Inicio del documento: Cadenas productivas de Saladillo_agosto 2026 - Salvatierra JMS.pdf ---
 Evolución de las cadenas productivas de Saladillo en la última década
 Juan Manuel Salvatierra
@@ -846,6 +1159,262 @@ Nacional de La Plata. https://www.minerva.unlp.edu.ar/informes-minerva/
 Base VAB por municipio según cadena, rama y año — versión 9 (2016–2025). Laboratorio de Desarrollo
 Sectorial y Territorial – FCE –UNLP.
 --- Fin del documento: Cadenas productivas de Saladillo_agosto 2026 - Salvatierra JMS.pdf ---
+
+
+--- Inicio del documento: capacitacion-electricidad-fallas-electronicas.md ---
+# Capacitacion Electricidad Fallas Electronicas
+
+*Fuente original: \`CAPACITACION ELECTRICIDAD.docx\` — Documento institucional de ITEC Saladillo*
+
+---
+
+AVANCES TECNICOS SOBRE FALLAS CON APLICACIONES ELECTRONICAS
+
+RESPONSABLE: Ing. Electrónico Juan José Martinez
+
+LUGAR: ESCUEL A DE EDUCACIÓN TÉCNICA
+
+FECHA: 6/13/20/27 SEPTIEMBRE
+
+HORARIO: 15 A 18 HS
+
+DIRIGIDO A: técnicos electricistas, personal de mantenimiento con conocimientos similares, profesores relacionados al área de electricidad y alumnos avanzados
+
+MODALIDAD: Presencial
+
+CUPO: 20
+
+TEMARIO:
+
+### Clase 1
+
+### Motores y Variadores (3 horas)
+
+- Introducción a Motores (1 hora)
+
+- Tipos de motores: clasificación y aplicaciones.
+
+- Principios básicos de operación.
+
+- Introducción a variadores de frecuencia.
+
+- Motores Síncronos y Asíncronos (1 hora)
+
+- Características y diferencias.
+
+- Aplicaciones industriales.
+
+- Ventajas y desventajas de cada tipo.
+
+- Tensiones en un Motor (30 minutos)
+
+- Tensiones de alimentación y distribución.
+
+- Importancia del equilibrio de tensiones.
+
+- Función de un Relé Térmico (30 minutos)
+
+- Principio de funcionamiento.
+
+- Protección de motores.
+
+- Ajustes y mantenimiento preventivo.
+
+### Clase 2
+
+### Arranques Suaves y Variadores de Frecuencia (3 horas)
+
+- Arranques Suaves (1.5 horas)
+
+- Concepto y necesidad de arranque suave.
+
+- Técnicas de arranque suave.
+
+- Casos prácticos y simulaciones.
+
+- Variadores de Frecuencia (1.5 horas)
+
+- Introducción y principios de funcionamiento.
+
+- Configuración y control.
+
+- Ejemplos prácticos de integración con motores.
+
+### Clase 3
+
+### Tableros Eléctricos (3 horas)
+
+- Ubicación Frente a Tablero en Falla (1.5 horas)
+
+- Procedimientos de diagnóstico.
+
+- Uso de instrumentos de medición.
+
+- Identificación y resolución de fallas comunes.
+
+- Indicación de Cada Parte en un Tablero (1.5 horas)
+
+- Descripción de componentes clave (interruptores, relés, protecciones).
+
+- Funcionamiento y mantenimiento.
+
+- Normativas de seguridad aplicables.
+
+### Clase 4
+
+### Introducción a PLC (3 horas)
+
+- Conceptos Básicos de PLC (1 hora)
+
+- Definición y estructura de un PLC.
+
+- Principios de funcionamiento.
+
+- Diferencias entre PLC y otros controladores.
+
+- Programación Básica de PLC (1 hora)
+
+- Lenguajes de programación comunes.
+
+- Ejemplos básicos de programación.
+
+- Simulaciones de control.
+
+- Aplicaciones de PLC en la Industria (1 hora)
+
+- Integración en sistemas eléctricos.
+
+- Casos de uso y ejemplos prácticos.
+
+- Mantenimiento y diagnóstico de fallas.
+--- Fin del documento: capacitacion-electricidad-fallas-electronicas.md ---
+
+
+--- Inicio del documento: capacitacion-harina-panificacion-inti.md ---
+# Capacitacion Harina Panificacion Inti
+
+*Fuente original: \`CAPACITACION HARINA PANIF INTI.docx\` — Documento institucional de ITEC Saladillo*
+
+---
+
+Saladillo, Pcia Bs. As, Argentina
+
+26 de marzo de 2024
+
+Estimada Inspectora de Educación Técnico Profesional
+
+Prof. Vanina Altamirano:
+
+Es un placer para nosotros, organizadores ITEC, invitarla al Curso de Capacitación en Calidad de Harinas de Trigo y Panaderia, y a través suyo hacer extensivo a las instituciones educativas afines a la temática a desarrollar, que se llevará a cabo:
+
+- Fecha: 16/03/2024
+
+- Horario: 14:00 hs a 16:00 hs
+
+- Lugar: (* A definir)
+
+El curso abordará temas fundamentales relacionados con la calidad de las harinas de trigo y su impacto en la industria panadera. A continuación, se detallan algunos de los contenidos que se tratarán:
+
+- Lectura y comprensión de protocolo
+
+- Análisis reológicos: Alveograma, farinograma, falling number, gluten, viscoamilograma.
+
+- Comportamiento de la masa: Según el tipo y calidad de harina en corta, larga fermentación y en la laminación.
+
+- Situación actual de la panadería tradicional: Hábitos de consumo, tecnología de producción, producción semi-industrial vs. artesanal.
+
+- Uso de harinas e ingredientes alternativos: Harinas de cereales y pseudocereales, harinas de legumbres.
+
+- Harina de Bagazo: Utilización de un subproducto de la elaboración de cerveza. Caso testigo y aplicaciones en panificados.
+
+- Nuevas tendencias en panificación: Hacia dónde va la panadería, desarrollo e innovación.
+
+El curso estará a cargo del Tec. Hugo Pollo, experto en Desarrollo de Nuevos Productos y Subgerente Operativo de Tecnología de Alimentos.
+
+Se entregará CERTIFICADO DE ASISTENCIA junto con el material en formato PDF con los contenidos del curso dictado. Como lo expresamos en la reunión pasada, uno de los valores que el Grupo ITEC es el de acompañar en la formación de los estudiantes y a su vez fortalecer la vinculación entre educación, el mundo del trabajo y los organismos gubernamentales, por tal motivo quedamos a disposición para coordinar y realizar las adaptaciones que Usted crea necesario, para viabilizar dicha capacitación. (* A definir) es sumamente necesario saber qué número de asistentes dependientes de las instituciones educativas participarán, para definir el lugar donde se realizará. Si tiene alguna pregunta o necesita más información, no dude en ponerse en contacto con nosotros.
+
+Atentamente,
+
+Organizadores ITEC - Área de Formación permanente
+--- Fin del documento: capacitacion-harina-panificacion-inti.md ---
+
+
+--- Inicio del documento: circuito-movil-vial-2023.md ---
+# Circuito Movil Vial 2023
+
+*Fuente original: \`CIRCUITO MOVIL VIAL.docx\` — Documento institucional de ITEC Saladillo*
+
+---
+
+| CIRCUITO MOVIL VIAL – 22-11-23 - SALADILLO | | |
+| --- | --- | --- |
+| HORARIO | INSTITUCIÓN | ESTUDIANTES |
+| 8:15 HS | CEC N°801 - JARDIN N°901 | 24 - 11 |
+| 9:30 HS | JARDIN N° 905 – JARDIN N°901 | 25 - 10 |
+| 10:30 HS | JARDIN N°901 | 35 |
+| 13;30 HS | JARDIN N°905 | 35 |
+| 14:40 HS | EP N°3 - INJ | 23 -15 |
+| 16:00 HS | INJ N°35 | 35 |
+--- Fin del documento: circuito-movil-vial-2023.md ---
+
+
+--- Inicio del documento: congreso-agroalimentos-cazon-2026.md ---
+# Congreso Agroalimentos Cazon 2026
+
+*Fuente original: \`congreso_agroalimentos (1).docx\` — Documento institucional de ITEC Saladillo*
+
+---
+
+III Congreso de Agroalimentos – EESA N°1 de Cazón – 2026 (Saladillo)
+
+### Introducción
+
+Por tercer año consecutivo, la Escuela de Educación Secundaria Agraria N°1 de Cazón, en el partido de Saladillo, será sede del Congreso de Agroalimentos, un espacio que se consolida como referencia regional en la articulación entre educación, ciencia y producción. Enmarcado en la Semana de la Educación Agraria, este congreso se distingue por ser el único en la región que promueve el intercambio directo entre estudiantes, docentes, investigadores y actores del sector agroindustrial.
+
+En esta tercera edición, el eje central estará puesto en el impacto de la inteligencia artificial en la agroindustria, abordando sus aplicaciones en distintas cadenas de valor como la producción de agroalimentos. La incorporación de tecnologías emergentes está redefiniendo los modelos productivos, optimizando procesos, mejorando la trazabilidad y favoreciendo la toma de decisiones basadas en datos.
+
+Asimismo, este encuentro reafirma el compromiso de la educación agraria con la innovación, el desarrollo sostenible y la formación de jóvenes capaces de enfrentar los desafíos del futuro. La escuela se posiciona así como un nodo clave en la construcción de saberes que integran tecnología, producción y territorio.
+
+### Lunes 10 de Agosto – Mañana
+
+9:15 – 09:45 | AcreditaciónRecepción de participantes.
+
+09:45 – 10:15 | Acto de AperturaPalabras de autoridades institucionales y locales.
+
+09:45 – 10:15 | Primera Conferencia
+
+Ing. Daniela Baldini
+
+- La tecnología al servicio de la calidad de alimentos
+
+Resumen: La tecnología actual juega un papel crucial en la mejora y el control de la calidad dentro de la industria alimentaria. Este resumen examina cómo la aplicación de diversas herramientas tecnológicas permite optimizar los procesos de producción, almacenamiento y distribución. Gracias al uso de maquinaria moderna, sistemas de control automatizados y nuevos métodos de conservación, es posible garantizar productos más seguros y duraderos. Estas innovaciones no solo facilitan el cumplimiento de los estándares normativos, sino que también responden a las demandas de un mercado en constante evolución. En conclusión, la tecnología se posiciona como un aliado estratégico indispensable para elevar la calidad, proteger la salud del consumidor y mejorar la eficiencia sectorial.
+
+11:00 – 12:00 | Segunda Conferencia
+
+Ing. Agr. Facundo Rohlmann
+
+- Agricultura de Precisión y Gestión Digital del Negocio Agropecuario
+
+Resumen: Esta ponencia, enmarcada en el 3er Congreso de Agroalimento – Cazón Saladillo 2026, analiza la transformación de las empresas agropecuarias mediante la innovación y el uso estratégico de datos. Se abordará cómo pasar de decisiones intuitivas a procesos basados en evidencia para optimizar la eficiencia y sostenibilidad. Se detallarán herramientas clave para la agricultura por ambientes: captura de datos off-line, mapas de drones, altimetría e imágenes NDVI. El eje central será la plataforma ACA Mi Campo, demostrando cómo correlacionar capas de información para generar prescripciones precisas por lote. Finalmente, se explorará la visión a futuro: la integración de Inteligencia Artificial para potenciar el análisis predictivo en el sector.
+
+### Lunes 10 de Agosto – Tarde
+
+- 14:00 – 16:00 | Demostraciones en tiempo real de adquisicion de datos
+
+- - Empresas de Saladillo haran demostraciones reales con drones.
+
+Los drones equipados con cámaras multiespectrales capturan información clave más allá de la vista humana. Los principales datos incluyen:
+
+- - Índice NDVI (Índice de Vegetación de Diferencia Normalizada): Es una fórmula que mide la luz reflejada por las plantas. Ayuda a conocer la salud general, detectar estrés hídrico (falta de agua) y descubrir enfermedades antes de que se vean a simple vista.
+
+- - Grado de cobertura de pasto: Mide qué porcentaje del suelo está cubierto por vegetación verde. Es útil para evaluar el crecimiento de pasturas.
+
+- - Altimetría y Topografía: Permiten crear mapas de elevación del terreno. Estos datos ayudan a entender cómo fluye el agua y prevenir inundaciones o sequías localizadas.
+
+- - Humedad del suelo: Ciertas cámaras térmicas o multiespectrales ayudan a estimar zonas secas o con deficiencias de riego.
+
+- - Conteo de plantas: Permite estimar la densidad de siembra y el vigor de los cultivos de manera automática.
+--- Fin del documento: congreso-agroalimentos-cazon-2026.md ---
 
 
 --- Inicio del documento: contexto-ong.md ---
@@ -1299,6 +1868,49 @@ Según los registros de la Dirección General de Cultura y Educación (ABC), el 
 --- Fin del documento: documento-integral-saladillo-rag.md ---
 
 
+--- Inicio del documento: fundamento-sponsors-museo-itec.md ---
+# Fundamento Sponsors Museo Itec
+
+*Fuente original: \`FUNDAMENTO PARA SPONSOR.docx\` — Documento institucional de ITEC Saladillo*
+
+---
+
+1. Visibilidad de Marca e Impacto de Marketing Directo
+
+- Asociación con la Innovación: El museo interactivo representa tecnología de vanguardia y métodos educativos modernos. Al patrocinar un módulo, la marca se asocia directamente con conceptos como "futuro", "tecnología" e "innovación", reforzando su imagen de líder en su sector.
+
+- Alcance Masivo y Dirigido: El museo atraerá a familias, escuelas y turistas. Esto ofrece una plataforma de marketing única para llegar a un público objetivo diverso y receptivo, en un entorno donde están prestando atención y están predispuestos a aprender.
+
+- ** Branding de Alto Impacto:** La marca del sponsor estará visible no solo en el módulo físico, sino también en todo el material promocional, el sitio web del museo, las redes sociales y las campañas de comunicación.
+
+2. Responsabilidad Social Empresarial (RSE) y Relaciones Comunitarias
+
+Inversión en el Futuro de Saladillo: El museo es un recurso educativo para toda la comunidad. Los sponsors que se sumen serán vistos como empresas comprometidas con el desarrollo educativo, cultural y tecnológico de Saladillo y su gente.
+
+ Fortalecimiento del Ecosistema Productivo Local: Varios módulos (Agrosilo TPS, Lideragro, Belgrains, Don Roberto) destacan la importancia y el funcionamiento de la producción agrícola local. Esto demuestra el compromiso del sponsor con la sostenibilidad y el crecimiento del sector productivo local.
+
+ Fomento de la Ciencia y la Tecnología (STEM): El museo promueve activamente el interés en áreas de Ciencia, Tecnología, Ingeniería y Matemáticas. Los sponsors pueden usar esto para demostrar su compromiso con el desarrollo de habilidades críticas para el futuro de la región.
+
+### 3. Desarrollo de Recursos Humanos y Talento Local
+
+- Inspiración para Futuros Profesionales: Al mostrar cómo funciona el mundo real y las oportunidades en diferentes industrias locales, el museo puede inspirar a los niños y jóvenes a considerar carreras en esas áreas, creando un "cantera" de talento local.
+
+- Retención y Atracción de Talento: Una comunidad con un fuerte ecosistema educativo y cultural es más atractiva para profesionales calificados y sus familias. Esto beneficia a todas las empresas locales al facilitar la atracción y retención de personal.
+
+- Asociación con Instituciones Educativas: El museo será un punto de encuentro para escuelas e instituciones educativas. Esto ofrece a los sponsors una plataforma para fortalecer sus lazos con el sector educativo local.
+
+### 4. Ventajas Comerciales y de Redes
+
+- Diferenciación de la Competencia: En un mercado saturado, el patrocinio del museo interactivo es una forma única y de alto perfil de destacar y diferenciarse de la competencia, demostrando liderazgo y compromiso con la comunidad.
+
+- Oportunidades de Networking: El proyecto del museo involucra a múltiples stakeholders locales, incluyendo el gobierno, instituciones educativas, otras empresas y la comunidad. Esto crea un entorno propicio para el networking y el desarrollo de nuevas relaciones comerciales.
+
+- Acceso a Datos e Insights: El museo puede proporcionar a los sponsors datos anónimos y agregados sobre cómo los visitantes interactúan con sus módulos. Estos insights pueden ser valiosos para entender las percepciones y el interés del público en sus industrias.
+
+En resumen, el museo interactivo ofrece a los sponsors una plataforma única que combina marketing de alto impacto, RSE genuina, desarrollo de talento y oportunidades comerciales, todo mientras contribuye al crecimiento y bienestar de Saladillo.
+--- Fin del documento: fundamento-sponsors-museo-itec.md ---
+
+
 --- Inicio del documento: guia-uso-sitio-itec.md ---
 # Guía de Uso y Navegación del Sitio Web de ITEC Saladillo
 
@@ -1424,6 +2036,99 @@ ITEC actúa como un nodo que conecta la formación formal con la práctica:
 8. Proyecciones Futuras
 En el mediano y largo plazo, ITEC aspira a liderar la creación de un Polo Tecnológico y Emprendedor Sustentable en Saladillo, que incluya incubadoras y aceleradoras de empresas de base científica y tecnológica.
 --- Fin del documento: GUÍA DE ENTRENAMIENTO PARA ASISTENTE VIRTUAL.pdf ---
+
+
+--- Inicio del documento: labor-actividades-itec-2023-2026.md ---
+# Labor Actividades Itec 2023 2026
+
+*Fuente original: \`LABOR ITEC AL 8-9-2026.docx\` — Documento institucional de ITEC Saladillo*
+
+---
+
+ACTIVIDADES REALIZADAS - ITEC SALADILLO
+
+- 1ER EXPO ITEC “AUGUSTO CICARE”- 21 de Noviembre del 2023
+
+- “Curso de UNREAL ENGINE 5” – 12 becas– Se dió inicio el 23 de febrero y culminó el 14 de agosto 2024– Dirigido a: estudiantes, docentes, arquitectos, diseñadores industriales.
+
+- Ciclo de charlas en la Fiesta de la Galleta de Piso: “Los
+
+microorganismos y nuestra alimentación”, “Variedades de trigo en nuestra región”, “Adicionales en la producción de alimentos” y “Conociendo el Molino y tipos de harinas producidas del Molino SICSA - 5 y 6 de abril 2024.
+
+- “Tendencias e Innovación en Panificados” Capacitación en calidad de harinas y nuevos ingredientes” - Trabajo conjunto con CICSA – INTI – ITEC - Fecha 16 de abril de 2024
+
+- “Mejora de la calidad y reducción de costos: Estrategias y herramientas efectivas” – INTI. “Desarrollo de productos alimenticios novedosos y/o sustentables” – Whorkshop – Licenciadas en Tecnología de los Alimentos: Anabella Marinacci, Lucia Puciarelli, Eugenia Golzi - CIDCA – CONICET – UNLP – 6 de septiembre de 2024 – EESA N°1 Cazón – Dirigido a: estudiantes, docentes (EESA1 y EEST N1).
+
+- Ciclo de charlas de emprendedurismo: “De la pasión a la acción” Julio 2024
+
+- Designación de Embajadores de Buena Voluntad”- Gustavo Larroca y Andrés Angelani Julio 2024
+
+- “Avances técnicos sobre fallas con aplicaciones electrónicas” – Capacitación a cargo del Ingeniero Juan José Martinez – 4 clases, inicio el 6/09/24
+
+- “Peques ITEC” – Acercando la Ciencia y la tecnología a los niños. 6 talleres para niños en la Biblioteca Julio Morena
+
+- “Tecnología e innovación en nuestro sector agroganadero” – Charlas a cargo de 5 profesionales del área – 21/09/2024 en el marco de la Exposición Rural de la Sociedad Rural de Saladillo.
+
+- “Hormigones sostenibles y fundamentos básicos del hormigón elaborado” – A cargo de la asesoría de técnica de LOMA NEGRA: José Victor Tejeda y Marcelo Cidades . Fecha: 26/09/24 – Organizado por ITEC Saladillo y Colegio de Arquitectos Distrito VIII
+
+- “Cuando el arte se expresa, ciencia lleva”- Espectáculo de ciencia y arte - Espectáculo de divulgación de ciencia, realizada por médicos, kinesiólogo, musicoterapeuta.
+
+- “EXPO ITEC AUGUSTO CICARÉ” – 22 Y 23 DE NOVIEMBRE 2024
+
+- “El DRONE como herramienta para el agro y la salud” – Jornada de intercambio y aprendizaje, el impacto de la tecnología en la producción agropecuaria, a cargo de “TecnoDrones Saladillo” Abril 2025.
+
+- Nombramiento del nuevo Embajador de Buena Voluntad: Jesús Alberto Almada. Firma conjunta del convenio marco, con el “CLUSTER INFOTECH PATAGONICO” e ITEC SALADILLO: A partir de ello, se generarán acciones para la mejora del ecosistema tecnológico relacionado al sector rural, industrial y educativo.
+
+- PLATAFORMA PARA CURSOS Y CAPACITACIONES A DISTANCIA: Se podrá acceder de manera libre y gratuita, con temáticas relacionadas a ITEC.
+
+- CUANDO LA HERRAMIENTA SE VUELVE OBSTÁCULO: EDUCACIÓN. EN TIEMPOS DE INTELIGENCIA ARTIFICIAL: A cargo del Bioingeniero Pedro Benedetti del ITBA – CONICET – Charla destinada docentes y formadores de formadores. Julio 2025.
+
+- “CHARLAS ITEC” Son presentaciones breves, donde expertos y personas inspiradoras, identificadas con Saladillo, comparten ideas valiosas sobre diversos temas. El objetivo principal de las charlas es difundir ideas que puedan generar un impacto positivo en la sociedad, a través de la construcción de un legado que permitan conectar con otros agentes de cambio.
+
+- 3° “EXPO ITEC”- 2025
+
+- Charla ITEC a cargo del Ing. Luciano González sobre 'Ganadería de precisión' en el salón de la Cooperativa Agrícola Ganadera de Saladillo.
+
+- Consolidación del primer Embajador Científico-Tecnológico del ITEC en la Universidad de Sydney, Australia, impulsando la inserción global de la región.
+
+- Lanzamiento del trabajo conjunto junto con la Cooperativa Eléctrica de Saladillo (CES) para establecer Puntos Digitales en las localidades rurales del interior
+
+- Gestión y acompañamiento en la visita de un contingente de la Facultad de Ingeniería de Materiales de la UNLP a las industrias locales Agrosilo TPS y Cicaré S.A.
+
+- Capacitación virtual, asincrónica y gratuita desarrollada con ARGENBIO para profesores, alumnos de colegios agrarios, prensa y profesionales de la salud.
+
+- Curso especializado e intensivo de soldadura dictado por la Ing. Silvia Purificatto en las instalaciones de la Escuela de Educación Secundaria Técnica N°1 (EEST N°1).
+
+- Despliegue y funcionamiento interactivo de la Expo móvil de AUTOMACIÓN MICRO en la Plaza de los Inmigrantes y en el CFR, destinada a alumnos, docentes y profesionales.
+
+- Suscripción de un acuerdo formal con los medios de comunicación locales para garantizar la difusión de todas las actividades y programas del ITEC Saladillo.
+
+- Jornadas de capacitación técnica y artística de PLANTEC dictadas por Conny Mellien sobre 'Materiales artísticos, técnicas mixtas, expresión, ciencia y tecnología' en Casa SOBA.
+
+- 3° Congreso de agroalimentos. Participación en el 3° Congreso de Agroalimentos en la EESA N°1 de Cazón con las conferencias de la Ing. Daniela Baldini (Frigorífico Angelani), Ing. Facundo Rohlmann (ACA MICAMPO) y operadores de Tecno Drones
+
+- Charla ITEC, a cargo del Ing. Roberto Fagan: Análisis exhaustivo del sector eléctrico, fuentes primarias de energía, costos de la energía, tarifas finales y cuellos de botella del sistema. Auditorio de la CES (28/08/2026).
+
+- Presentación de la nueva página web de ITEC Saladillo, https://www.itecsaladillo.org.ar/ destinada a visibilizar todo lo inherente a la ong, tanto lo que significa la visibilización de las actividades que realiza, como así también una plataforma de trabajo, a través de su aula virtual.
+
+- Gestión y adquisición de 10 PC por parte de la Fundación Equidad, que serán destinadas a la formación continua
+
+ACTIVIDADES PLANIFICADAS PARA EL RESTO DEL AÑO
+
+- Capacitación Ing. Silvia Purificatto: Taller de capacitación sobre “Sistema de protección anti corrosivo - Mantenimiento y detección de fallas - Operaciones y procesos industriales” en entornos industriales (16/10/2026). Auditorio Ricardo Galliani
+
+- Charla de Emprendedores: Dos encuentros interactivos orientados a motivar, inspirar y acompañar el espíritu emprendedor e innovador de los jóvenes de Saladillo.
+
+- AAVEA - Grupo Promotor de Vehículos Eléctricos y Movilidad Alternativa: Capacitación sobre seguridad y respuesta a emergencias: destinado a Defensa Civil, Bomberos voluntarios, áreas de mecánica, electricidad y mantenimiento del automotor, público general – Encuentro de móviles eléctricos en lugar a definir
+
+- Convenios de Cooperación Académica dentro del marco “ITEC en red”: Consolidación de Convenios Marco con la Universidad Nacional del Centro (UNICEN), la UTN Facultad Regional La Plata, CICPBA, CONICET y conversaciones muy avanzadas con IRAM.
+
+- Museo Interactivo de Ciencia (MIC): Es un proyecto destinado a acercar la ciencia y la tecnología de manera interactiva, y que permita paralelamente visibilizar y poner en valor los procesos productivos de Saladillo, a través de módulos que representen a cada uno de los sponsors, con el asesoramiento de la UNICEN. Se realizará un primer acercamiento con una muestra de módulos interactivos proveniente de la facultad de ingeniería de sistemas de la Tandil – UNICEN. 16/10
+
+- Circuito de Educación Vial Móvil de Vialidad de Pcia. De Bs. As: Actividad vial adaptada y lúdica para niñas y niños de educación inicial y 1° año de educación primaria. Fecha a Confirmar. 2° quincena de noviembre.
+
+- Jornada Peques ITEC: Iniciativa recreativa y científica con Astroturismo (Ezequiel Brahim), Sherlock Holmes Jr. (Daniel Grubich) y un Taller lúdico de Robótica infantil. Fecha a Confirmar.
+--- Fin del documento: labor-actividades-itec-2023-2026.md ---
 
 
 --- Inicio del documento: municipalidad_septiembre_2023.pdf ---
