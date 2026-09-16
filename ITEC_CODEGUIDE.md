@@ -71,11 +71,12 @@ La landing incluye streaming en vivo de YouTube y barra inferior de sponsors con
 | Emails | Resend | ^6.12.3 |
 | Fechas | date-fns (con locales es/enUS/pt) | ^4.1.0 |
 | Drive API | googleapis | ^171.4.0 |
-| IA chat | groq-sdk 1.3.0 (SDK legacy), fetch directo a Groq/OpenRouter/Ollama | — |
-| IA genérica | @google/genai (Gemini) | latest |
-| Embeddings PDF | pdf-parse / pdf-parse-new | — |
+| IA chat | OpenCode (`mimo-v2.5-free` con `x-session-id`), Groq (`openai/gpt-oss-20b`), OpenRouter | — |
+| IA genérica | Google Gemini (`gemini-3.8-flash`, `gemini-3.6-flash`, `gemini-flash-latest`) | REST v1beta |
+| Embeddings Vectoriales | Google Gemini (`gemini-embedding-001`, 768 dims) + HF fallback | — |
+| Extracción Documental | pdf-parse / pdf-parse-new, convertDocxToMd (OpenXML/zipfile) | — |
 | QR | react-qr-code | ^2.0.21 |
-| Despliegue | Vercel (auto-deploy desde `main`) | — |
+| Despliegue | Vercel (auto-deploy desde `main` en itecsaladillo-jpg/pagina) | — |
 | Fuente | Inter via `next/font/google` (variable CSS `--font-inter`) | — |
 
 **Path alias:** `@/*` → `./src/*` (configurado en `tsconfig.json`).
@@ -90,9 +91,9 @@ La landing incluye streaming en vivo de YouTube y barra inferior de sponsors con
 | `build` | `next build` | Build de producción |
 | `start` | `next start` | Servidor de producción |
 | `lint` | `eslint` | Linting (ESLint 9 flat config + eslint-config-next) |
-| `sync-docs` | `node scripts/generateDocsContext.mjs` | Lee PDF/TXT/MD de `/docs` → limpia texto → genera `src/lib/docsContext.ts` (constante `DOCS_CONTEXT`) + `docsContext.json`. Alimenta nivel P2 del RAG. Ejecutar después de subir documentos nuevos. |
+| `sync-docs` | `node scripts/generateDocsContext.mjs` | Lee PDF/TXT/MD de `/docs` → limpia texto → genera `src/lib/docsContext.ts` (constante `DOCS_CONTEXT`) + `docsContext.json` (~187k chars). Alimenta nivel P2 del RAG. Ejecutar después de subir documentos nuevos. |
 | `extract-docs` | `node scripts/extractPdfText.js` | Predecesor simple: extrae texto plano de PDFs a JSON (CommonJS, pdf-parse) |
-| `ingest-vector` | `node --dns-result-order=ipv4first --env-file=.env.local scripts/ingestDocsToVector.mjs` | Pipeline pgvector: limpia embeddings previos → chunking 900 chars/overlap 120 → embeddings Gemini `text-embedding-004` (batches de 20, task RETRIEVAL_DOCUMENT) → inserta en tabla `documents` vía REST con service_role |
+| `ingest-vector` | `node --dns-result-order=ipv4first --env-file=.env.local scripts/ingestDocsToVector.mjs [archivo.md]` | Pipeline pgvector: limpia embeddings previos (o solo del archivo si se pasa argumento) → chunking 900 chars/overlap 120 → embeddings Gemini `gemini-embedding-001` (batches de 20, 768 dims) → inserta en tabla `documents` vía REST con service_role. |
 | `agent-get-context` | `node scripts/agent-get-context.mjs` | Script de diagnóstico que consulta `news_flashes` y `itec_actions` para ver contexto dinámico de la BD |
 
 ---
@@ -101,35 +102,42 @@ La landing incluye streaming en vivo de YouTube y barra inferior de sponsors con
 
 ```
 D:\ITEC\
-├── .github/workflows/deploy.yml # CI/CD: deploy a Vercel en push a main
 ├── .env.local                   # Variables de entorno (gitignored, única env file)
-├── docs/                        # Corpus institucional (PDFs 2023: Expo ITEC, ordenanza,
-│                                #   educación, guías de entrenamiento IA) → alimenta RAG
+├── docs/                        # Corpus institucional (PDFs, Markdown y DOCX):
+│                                #   Expo ITEC 2023-2025, ordenanza, educación, ArgenBio,
+│                                #   AAVEA electromovilidad, INTI panificación, fallas electrónicas,
+│                                #   Congreso Agroalimentos Cazón 2026, contexto Saladillo → RAG
 ├── public/
+│   ├── favicon.ico              # Multi-resolución RGBA (16x16 → 256x256)
+│   ├── favicon-32x32.png        # Icono PNG 32x32 nítido para pestañas
+│   ├── favicon-16x16.png        # Icono PNG 16x16
+│   ├── icon.png / icon-512.png  # Icono maestro PNG 512x512
+│   ├── apple-icon.png           # Icono táctil Apple iOS (180x180)
 │   ├── cicare/                  # 13 fotos JPG de Augusto Cicaré (Cache-Control immutable 1 año)
 │   └── sponsors/blanco/         # 27 logos PNG monocromos de sponsors (marquesina landing,
 │                                #   carga local vía fs + unstable_cache 1h)
 ├── scripts/                     # generateDocsContext.mjs, extractPdfText.js,
-│                                #   ingestDocsToVector.mjs, test_rag.ts
-├── scratch/                     # ~38 scripts de prueba/diagnóstico (IGNORADO por git):
-│                                #   test-db.js, test-eventos.js, diagnose-*.js, query_*.js,
-│                                #   update_latest_videos.js, analyze_videos.mjs, etc.
+│                                #   ingestDocsToVector.mjs, test_rag.ts, convertDocxToMd.py
+├── scratch/                     # Scripts de prueba/diagnóstico (IGNORADO por git)
 ├── sponsors/color/              # Logos a color originales (fuente antes de subir a Storage)
 ├── src/
-│   ├── app/                     # App Router (ver detalle abajo)
+│   ├── app/                     # App Router (incluye loading.tsx y error.tsx boundaries)
+│   │   ├── loading.tsx          # Loader global esmeralda con glow
+│   │   ├── error.tsx            # Boundary interactivo global con reset()
+│   │   └── dashboard/           # Dashboard administrativo (con sus propios loading/error boundaries)
 │   ├── components/              # Ver inventario completo en §16
 │   │   └── saladillo-export/    # SaladilloExportSection (embajadores + testimonios)
-│   ├── contexts/LanguageContext.tsx  # Contexto React i18n (es/en/pt)
+│   ├── contexts/LanguageContext.tsx  # Contexto React i18n (es/en/pt, queueMicrotask hydrated)
 │   ├── lib/                     # Utilidades core (supabase, rag, eventos, email, settings…)
 │   ├── locales/dictionary.ts    # Diccionario ES/EN/PT (~1100 líneas, 16 secciones/idioma)
 │   ├── proxy.ts                 # Middleware Next.js 16 (reemplaza middleware.ts)
 │   ├── services/                # Capa de servicios (auth, ai, admin, news, drive, videos…)
-│   └── types/database.ts        # Tipos sincronizados con schema Supabase (~493 líneas)
-├── supabase/migrations/         # 71+ archivos SQL (001 → 071 + fix_storage_policies.sql)
+│   └── types/database.ts        # Tipos 100% sincronizados con Supabase (~570 líneas)
+├── supabase/migrations/         # 77+ archivos SQL (001 → 077 + fix_storage_policies.sql)
 ├── AGENTS.md                    # Advertencia breaking changes Next.js 16
 ├── CLAUDE.md                    # Solo "@AGENTS.md" (referencia)
 ├── ITEC_CODEGUIDE.md            # Esta guía
-├── next.config.ts               # Imágenes, headers cache, optimizePackageImports
+├── next.config.ts               # Imágenes, headers cache (no-cache para favicons), optimizePackageImports
 ├── vercel.json                  # maxDuration 60s para /api/asistente
 ├── tsconfig.json                # strict, target ES2017, alias @/*
 ├── eslint.config.mjs            # Flat config ESLint 9 + next/core-web-vitals + TS
@@ -138,8 +146,7 @@ D:\ITEC\
 
 ### Árbol completo de `src/app`
 
-**48 archivos page.tsx · 2 layouts · 15 route handlers · 20 archivos `'use server'`.**
-No existen `loading.tsx`, `error.tsx`, `not-found.tsx` ni `template.tsx` en ninguna parte.
+**48 archivos page.tsx · 2 layouts · 15 route handlers · 20 archivos `'use server'` · 4 boundaries (`loading.tsx` / `error.tsx` en raíz y dashboard).**
 
 #### Raíz y rutas públicas
 
@@ -213,7 +220,9 @@ Ver inventario completo con métodos, inputs y tablas en **§15**.
 ### `next.config.ts`
 - `compress: true` (gzip/brotli).
 - **Imágenes:** formatos AVIF/WebP, TTL mínimo 30 días, remotePatterns para Supabase (hostname derivado dinámicamente de `NEXT_PUBLIC_SUPABASE_URL` + wildcards `**.supabase.co/.in`).
-- **Headers cache:** `/cicare/:path*` y todas las imágenes estáticas → `Cache-Control: public, max-age=31536000, immutable`.
+- **Headers cache:**
+  - `/cicare/:path*` y assets estáticos generales → `Cache-Control: public, max-age=31536000, immutable`.
+  - **Favicons e iconos (`/(favicon.ico|icon.png|apple-icon.png|apple-touch-icon.png|favicon-32x32.png|favicon-16x16.png|icon-192.png|icon-512.png)`):** `Cache-Control: public, max-age=0, must-revalidate`. Esto evita que navegadores como Chrome almacenen indefinidamente el favicon de Vercel en su base SQLite local. Enlazados con cache-busting `?v=4` en `<head>` y `metadata.icons` de `layout.tsx`.
 - `experimental.optimizePackageImports: ['lucide-react', 'date-fns', 'framer-motion']`.
 
 ### `vercel.json`
@@ -475,39 +484,39 @@ Todas las tablas realtime de clase están en publicación `supabase_realtime`. R
 | 041–050 | chat_conocimiento, training_docs storage (+fix policies), buscar_docs_similares, saved_conversations, ideas (+delete policy), prensa_envios_log, evento_semaforo v1, fix modalidad, herramientas JSONB, default false |
 | 051–060 | remove_semaforo (053) → **054 semaforo v3** (tabla mínima append-only + reset_at + realtime) → 055 nube_concepto → **056 fix RLS critical** → **057 semaforo dispositivo_id** (dedup server-side) → **058 api_settings** → 059 modalidad eventos → **060 esquema híbrido virtual** (modalidad clases, meet_url, 7 tablas realtime de aula + RPCs + realtime publication) |
 | 061–068 | 061 general_meet_url → **062/063 pgvector RAG** (extensión vector, documents, HNSW, match_documents) → **064 streaming config** (keys `streaming_active`/`streaming_youtube_url` en api_settings) → 065 sponsors update (rubro/resena/contactos/logos/tier standard) → 066 RPC sponsors públicos → **067 strategic_partners** → **068 partner_classification** (col. type + RPC unificado obtener_socios_publicos) |
-| 069–075 | **069** expand_socios_rpc_fields (campos adicionales en obtener_socios_publicos) → **070** fix_storage_policies (políticas bucket sponsors-logos) → **0701** fix_sponsors_type_column (columna type + recreación RPC) → **071 saladillo_for_export** (tabla testimonios saladillenses en el mundo, embajadores 1–4, RLS SELECT aprobados/INSERT público, storage bucket `saladillo-export-photos`). Integrada en AboutSection landing + admin dashboard. → **072/073 enforce_matias_admin** (trigger permanente que asegura que `matiasvidal11972@gmail.com` siempre tenga rol admin). → **074 add_logo_to_medios_prensa** (columna `logo_url` en `medios_prensa` + actualización RPC `obtener_socios_publicos` para retornar `logo_url`). → **075_add_saladillo_data_to_assistant_prompt** (bloque de datos demográficos Censo 2022 al system_prompt de `asistente_global` en BD: población 35.656 hab., 6 localidades, estructura por sexo/edad, viviendas, precipitaciones, conectividad vial, código postal). |
+| 069–077 | **069** expand_socios_rpc_fields (campos adicionales en obtener_socios_publicos) → **070** fix_storage_policies (políticas bucket sponsors-logos) → **0701** fix_sponsors_type_column (columna type + recreación RPC) → **071 saladillo_for_export** (tabla testimonios saladillenses en el mundo, embajadores 1–4, RLS SELECT aprobados/INSERT público, storage bucket `saladillo-export-photos`). Integrada en AboutSection landing + admin dashboard. → **072/073 enforce_matias_admin** (trigger permanente que asegura que `matiasvidal11972@gmail.com` siempre tenga rol admin). → **074 add_logo_to_medios_prensa** (columna `logo_url` en `medios_prensa` + actualización RPC `obtener_socios_publicos` para retornar `logo_url`). → **075_add_saladillo_data_to_assistant_prompt** (bloque de datos demográficos Censo 2022 al system_prompt de `asistente_global` en BD: población 35.656 hab., 6 localidades, estructura por sexo/edad, viviendas, precipitaciones, conectividad vial, código postal). → **076_delete_huertas_comunitarias_article** (limpieza de artículo desactualizado) → **077_delete_legacy_public_articles** (purgado de artículos públicos legacy). |
 
 ---
 
 ## 9. Sistema de IA
 
 ### 9.1 REGLA DE ORO: Modelos Gratuitos
-> Todos los endpoints del asistente DEBEN usar modelos FREE. Los providers activos son **OpenCode** (`mimo-v2.5-free`), **OpenRouter** (`openrouter/free` auto-router) y **Google Gemini** (`gemini-3.5-flash`). Costo objetivo: $0.
+> Todos los endpoints del asistente DEBEN usar modelos FREE. Los providers activos son **OpenCode** (`mimo-v2.5-free` con `x-session-id`), **OpenRouter** (`openrouter/free` auto-router) y **Google Gemini** (`gemini-3.8-flash`, `gemini-3.6-flash`, `gemini-flash-latest`). Costo objetivo: $0.
 
 ### 9.2 Distribución por proveedor y tarea
 
 | Proveedor | Modelo | Uso |
 |-----------|--------|-----|
-| **OpenCode** | `mimo-v2.5-free` | **Asistente ITEC primario** (`/api/asistente`). Tier gratuito. Timeout 10s. Endpoint `https://api.opencode.ai/v1/chat/completions`. También usado en `services/ai.ts` para generación de texto (comunicación multicanal). |
+| **OpenCode** | `mimo-v2.5-free` | **Asistente ITEC primario** (`/api/asistente`). Tier gratuito. Timeout 10s. Requiere header obligatorio `x-session-id`. Endpoint `https://api.opencode.ai/v1/chat/completions`. También usado en `services/ai.ts` para generación de texto (comunicación multicanal). |
 | **Groq** | `openai/gpt-oss-20b` | **Asistente fallback** (`/api/asistente`). Tier gratuito/developer. Timeout 13s. `/api/chat` usa el mismo modelo. Multi-key soportado (`GROQ_API_KEY`, `GROQ_API_KEY_2`). |
 | **OpenRouter** | `nvidia/nemotron-3-super-120b-a12b:free` | Fallback del asistente. Tier gratuito. Timeout 13s. Headers `HTTP-Referer: https://itecsaladillo.org.ar` + `X-Title: ITEC Asistente`. |
-| **Google Gemini** | `gemini-3.5-flash` | **Último recurso del asistente** (`/api/asistente`, cuarto fallback vía REST v1beta, timeout 18s) + **edición de texto exclusiva** en `services/ai.ts`: resúmenes, flashes, noticias multicanal, resúmenes de video. Rota hasta 4 API keys de `api_settings` con fallback a env `GOOGLE_GENERATIVE_AI_API_KEY`. Env vars tienen prioridad sobre DB. ⚠️ `gemini-2.0-flash` fue desactivado por Google en junio 2026. |
-| **Google Gemini** | `gemini-embedding-001` | Embeddings primarios (RAG P1 + feedback). |
+| **Google Gemini** | `gemini-3.8-flash` / `gemini-3.6-flash` / `gemini-flash-latest` | **Fallback de alta potencia y resiliencia del asistente** (`/api/asistente`, cuarto fallback vía REST v1beta, timeout 18s) + **edición de texto exclusiva** en `services/ai.ts`: resúmenes, flashes, noticias multicanal, resúmenes de video. Rota modelos activos (`['gemini-3.8-flash', 'gemini-3.6-flash', 'gemini-flash-latest']`) y hasta 4 API keys de `api_settings` con fallback a env `GOOGLE_GENERATIVE_AI_API_KEY`. ⚠️ `gemini-2.0-flash` fue desactivado y `gemini-3.5-flash` presenta sobrecargas 503 intermitentes. |
+| **Google Gemini** | `gemini-embedding-001` | Embeddings primarios (RAG P1 + feedback) con `outputDimensionality: 768` explícito para paridad exacta con la tabla `documents` de pgvector. |
 | **HuggingFace** | `all-MiniLM-L6-v2` | Embeddings fallback (384 dims, zero-padded a 768 para pgvector). |
 | **Ollama self-hosted** | `llama3.2:latest` en `OLLAMA_API_BASE_URL` (default `https://ai.itecsaladillo.org.ar`) | Reportes de impacto de sponsors (`sponsorReport.ts`, timeout 98s, `num_ctx: 2048`) + síntesis de tema/feedback (`/api/asistente/feedback`, timeout 98s). NO asumir disponibilidad — siempre hay fallback. |
 
 ### 9.3 Servicios (`src/services/ai.ts`, ~661 líneas)
 | Función | Propósito |
 |---------|-----------|
-| `callOpenCode(messages)` | POST OpenCode `mimo-v2.5-free` con `OPENCODE_API_KEY`, endpoint `https://api.opencode.ai/v1/chat/completions`, timeout 10s |
+| `callOpenCode(messages, sessionId?)` | POST OpenCode `mimo-v2.5-free` con `OPENCODE_API_KEY` + header `x-session-id`, endpoint `https://api.opencode.ai/v1/chat/completions`, timeout 10s |
 | `callOpenRouter(messages)` | POST OpenRouter multi-modelo (`openrouter/free` auto-route, `meta-llama/llama-4-scout:free`, `google/gemma-3-27b-it:free`), lanza todas en paralelo, timeout 8s por intento |
-| `callGemini(messages, temperature)` | POST Gemini `gemini-3.5-flash` con rotación de 4+ keys (env first, luego DB), todas en paralelo, timeout 25s |
+| `callGemini(messages, temperature)` | POST Gemini con rotación de modelos (`gemini-3.8-flash` → `gemini-3.6-flash` → `gemini-flash-latest`) y 4+ keys (env first, luego DB), todas en paralelo, timeout 25s |
 | `processWithAI(text, sourceType, commissionName?)` | `{summary, action_items[]}` desde transcripciones (sourceType: meet\|capacitacion\|reunion\|manual) |
 | `generateFlash(text)` | Flash noticioso máx. 2 oraciones para muro interno |
 | `generateExecutiveSummary(notes)` / `generateActionItems(notes)` | Wrappers de processWithAI |
 | `generateMulticanalNews(rawFacts)` | Titular + 4 textos por audiencia; parsing JSON robusto con fallback textual. **Generación en paralelo** (Promise.allSettled, 1 texto por llamada concurrente a OpenCode) |
 | `generateVideoSummary(title, description)` | Resumen periodístico máx. 200 palabras |
-| `generarEmbedding(texto)` | Gemini `gemini-embedding-001` → HF fallback (pad 384→768) |
+| `generarEmbedding(texto)` | Gemini `gemini-embedding-001` con `outputDimensionality: 768` → HF fallback (pad 384→768) |
 | `buscarFeedbacksSimilares(mensaje, limit, threshold)` | RPC pgvector feedbacks |
 | `auditarRespuestaIA(mensajeUsuario, respuestaIA, sessionId?)` | Auditoría 4 categorías regex; reemplaza respuesta si gravedad alta; registra violaciones |
 
@@ -521,8 +530,8 @@ Recuperación de contexto en 5 niveles. **Orden de resolución:** P1 → P2 → 
 
 | Nivel | Fuente | Threshold | Método |
 |-------|--------|-----------|--------|
-| **P1** | pgvector `documents` | ≥ 0.15 | Embedding Gemini de la query + RPC `match_documents` (cosine, 6 chunks) |
-| **P2** | `DOCS_CONTEXT` local (docsContext.ts autogenerado) | ≥ 0.22 | Chunking 900/120 + scoring overlap de tokens estilo Jaccard modificado `|A∩B|/min(|A|,|B|)` con stopwords español |
+| **P1** | pgvector `documents` | ≥ 0.15 | Embedding Gemini (`outputDimensionality: 768`) de la query + RPC `match_documents` (cosine, 6 chunks). Sanitizado para descartar similitudes `NaN` o no-numéricas. Contiene todo el corpus institucional histórico y reciente (incluyendo 49 chunks de las últimas 10 temáticas 2025/2026). |
+| **P2** | `DOCS_CONTEXT` local (docsContext.ts autogenerado) | ≥ 0.22 | Chunking 900/120 + scoring overlap de tokens estilo Jaccard modificado `|A∩B|/min(|A|,|B|)` con stopwords español. Base de ~187k chars generada desde PDFs y Markdowns estructurados. |
 | **P3** | Bucket Storage `training-docs` (.txt/.md/.json) | ≥ 0.22 | Token overlap. **Caché memoria TTL 5 min (`P3_CACHE_TTL_MS`) + deduplicación de descargas concurrentes** (`p3FetchPromise` compartida + `.finally()`) — anti-stampede |
 | **P4** | Conversaciones guardadas del propio sessionId | any | RPC `buscar_conversaciones_similares` (threshold 0.35) |
 | **Soft fallback** | Mejor resultado propio bajo threshold | < threshold | Se retorna ANTES de consultar web |
@@ -542,7 +551,7 @@ Recuperación de contexto en 5 niveles. **Orden de resolución:** P1 → P2 → 
 - ⚠️ **Persistencia real (ago 2026):** antes el flag `guardado` se marcaba pero nadie persistía nada. Ahora `guardarConversacion()` se ejecuta efectivamente cuando hay comando explícito o auto-guardado, manteniendo el nivel P4 del RAG operativo.
 
 ### 9.7 Asistente IA (`POST /api/asistente`)
-- **Cadena con reintentos multi-pasada (sept 2026):** los providers se recorren en orden **OpenCode `mimo-v2.5-free` → Groq `openai/gpt-oss-20b` → OpenRouter `nvidia/nemotron-3-super-120b-a12b:free` → Gemini `gemini-3.5-flash`**, y si TODOS fallan se vuelve a recorrer la cadena (pasada 2, 3…) hasta agotar un presupuesto de **48s** (`DEADLINE_MS`) dentro del `maxDuration = 60`. Backoff de 1.2s entre fallos. Los errores transitorios (429/5xx/timeouts/red) se reintenta; los permanentes (**400/401/403/404/413**) deshabilitan al provider por el resto del request. Ante respuestas inválidas (vacías, <10 chars o metadata de seguridad) también se reintenta. La respuesta 502 incluye `{intentos, pasadas, opencode, groq, openrouter, gemini}` para diagnóstico.
+- **Cadena con reintentos multi-pasada (sept 2026):** los providers se recorren en orden **OpenCode `mimo-v2.5-free` (con header `x-session-id`) → Groq `openai/gpt-oss-20b` → OpenRouter `nvidia/nemotron-3-super-120b-a12b:free` → Gemini (`['gemini-3.8-flash', 'gemini-3.6-flash', 'gemini-flash-latest']`)**, y si TODOS fallan se vuelve a recorrer la cadena (pasada 2, 3…) hasta agotar un presupuesto de **48s** (`DEADLINE_MS`) dentro del `maxDuration = 60`. Backoff de 1.2s entre fallos. Los errores transitorios (429/5xx/timeouts/red) se reintenta; los permanentes (**400/401/403/404/413**) deshabilitan al provider por el resto del request. Ante respuestas inválidas (vacías, <10 chars o metadata de seguridad) también se reintenta. La respuesta 502 incluye `{intentos, pasadas, opencode, groq, openrouter, gemini}` para diagnóstico.
 - Timeouts por intento: OpenCode 10s, Groq/OpenRouter 13s, Gemini 18s — acotados además por el presupuesto restante (`MIN_PRESUPUESTO_INTENTO` 3s: no se arranca un intento que no pueda terminar dentro del deadline).
 - ⚠️ **Los modelos gratuitos rotan frecuentemente** (Groq apagó los Llama en ago 2026; OpenRouter retira slugs :free sin aviso). Si el asistente devuelve "Todos los providers fallaron", diagnosticar SIEMPRE con `GET /api/asistente/debug` (hace ping real a cada provider) y actualizar las constantes de modelos al tope del route.
 - `maxDuration = 60` (route export + vercel.json).
@@ -1006,12 +1015,12 @@ Server Action     →  getCurrentMember() → Zod → mutate → revalidatePath(
 4. **Params Promise vs sync** en rutas dinámicas (§19). Código nuevo: estilo Promise.
 5. **Typo histórico de env var:** `GEMINI_APY_KEY` (sin "I") es intencional y está soportado junto a `GEMINI_API_KEY`.
 6. **`proxy.ts` reemplaza `middleware.ts`** (Next.js 16). Matcher excluye `api/chat` y `api/asistente`.
-7. **Sin loading/error boundaries:** no existen `loading.tsx`/`error.tsx` globales ni por ruta.
+7. **Boundaries de carga y error presentes:** Existen `loading.tsx` y `error.tsx` globales en la raíz (`src/app/`) y en el dashboard (`src/app/dashboard/`) para evitar pantallas en blanco durante la hidratación de Server Components y permitir reintentos interactivos con glow esmeralda temático.
 8. **Contenido dinámico hardcodeado en dictionary.ts** (feedData/videoteca por UUID, triplicado en 3 idiomas) — no buscar esos textos en BD.
 9. **Semáforo v3:** dedup server-side POR DISPOSITIVO POR CICLO (desde último reset), NO global. Reset NO borra votos (filtra por fecha). Denominador seguro `Math.max(total, votos, 1)`.
 10. **Landing `force-dynamic` + `unstable_cache` fs:** los logos de sponsors se leen del FILESYSTEM, no de BD. Agregar/quitar logos = tocar `public/sponsors/blanco/` (monocromo) y/o tabla `sponsors` (color/portal). Cache 1h.
 11. **`suppressHydrationWarning`** en `<html>` y marquesina: necesario por timestamps determinísticos. Evitar `Date.now()` en render SSR.
-12. **ChatWidget excluido en rutas de eventos** (`EVENT_ROUTES` en wrapper) para no interferir con herramientas live.
+12. **ChatWidget excluido en rutas de eventos** (`EVENT_ROUTES` en wrapper) para no interferir con herramientas live. Badge actualizado a "En línea · IA ITEC", soporte de tecla Escape y atributos de accesibilidad ARIA.
 13. **RLS abierta a propósito** en tablas realtime de aula virtual (mig. 060) y semáforo v3 (append-only): es diseño, no bug. No "endurecer" sin analizar el flujo anónimo.
 14. **`obtener_socios_publicos` (068) es el RPC vigente** para socios; `obtener_sponsors_publicos` (066) quedó deprecated por compatibilidad.
 15. **`strategic_partners` CRUD requiere admin ESTRICTO** (no coordinadores), a diferencia de otras herramientas admin.
@@ -1019,16 +1028,19 @@ Server Action     →  getCurrentMember() → Zod → mutate → revalidatePath(
 17. **`scratch/` está gitignored:** los scripts de diagnóstico ahí no están versionados; no depender de ellos en CI.
 18. **CI/CD sin gates:** el workflow de deploy no corre lint/tests. Ejecutar `npm run lint` localmente antes de pushear.
 19. **Migraciones con números duplicados** y sin rollback: aplicar manualmente en Supabase en orden cronológico de nombre.
-20. **Timeouts y reintentos IA:** cadena del asistente con reintentos multi-pasada bajo deadline de 48s (OpenCode 10s → Groq 13s → OR 13s → Gemini 18s por intento, backoff 1.2s; errores permanentes 400/401/403/404/413 deshabilitan al provider en el request). Ollama 98s (reportes/feedback). No subir `max_tokens` ni `MAX_PROMPT_CHARS` sin revisar §9.7 (riesgo 413). Generación multicanal: 5 llamadas paralelas con timeout global 50s. API route `maxDuration=60`.
-21. **`docsContext.ts` es AUTOGENERADO** (~1366 líneas, "No editar"): regenerar con `npm run sync-docs`.
+20. **Timeouts y reintentos IA:** cadena del asistente con reintentos multi-pasada bajo deadline de 48s (OpenCode 10s con `x-session-id` → Groq 13s → OR 13s → Gemini 18s por intento, backoff 1.2s; errores permanentes 400/401/403/404/413 deshabilitan al provider en el request). Ollama 98s (reportes/feedback). No subir `max_tokens` ni `MAX_PROMPT_CHARS` sin revisar §9.7 (riesgo 413). Generación multicanal: 5 llamadas paralelas con timeout global 50s. API route `maxDuration=60`.
+21. **`docsContext.ts` es AUTOGENERADO** (~1366 líneas, "No editar"): regenerar con `npm run sync-docs`. Contiene más de 187k caracteres de corpus institucional.
 22. **Embeddings mixtos:** pgvector almacena vectores de 768 dims; HuggingFace produce 384 (zero-padded). Mezclar orígenes de embeddings en la misma colección degrada precisión de la búsqueda.
 23. **`lib/drive.ts` tiene folder IDs placeholder** (`REEMPLAZAR_CON_ID_REAL`): el mapeo real vive en `commissions.drive_folder_id` / `site_settings`.
 24. **Trigger `enforce_matias_admin` (mig. 073):** trigger permanente que asegura que `matiasvidal11972@gmail.com` siempre tenga rol `admin` en `members`. No eliminar sin aprobación explícita.
 25. **Mapeo de roles para UI (Nuestros Socios):** `admin` → "Socios Fundador", `coordinador` → "Comisión Directiva", `colaborador/miembro` → "Voluntario". Este mapeo se usa en `AboutSection.tsx`, `MemberManagementTable.tsx` y `ProfileForm.tsx`.
-26. **Modelos IA deprecados sin aviso:** Google desactivó `gemini-2.0-flash` en junio 2026; OpenRouter retira slugs `:free` frecuentemente. Si el asistente o generación multicanal falla con 404/400, verificar modelos en `services/ai.ts` y `app/api/asistente/route.ts` (constantés `OPENCODE_MODEL`, `OPENROUTER_MODEL`, `GEMINI_MODEL`). Diagnosticar con `GET /api/asistente/debug`.
+26. **Modelos IA deprecados sin aviso:** Google desactivó `gemini-2.0-flash` y `gemini-3.5-flash` presenta saturación 503; OpenRouter retira slugs `:free` frecuentemente. La cadena activa en producción utiliza `gemini-3.8-flash` y `gemini-3.6-flash`. Si el asistente o generación multicanal falla con 404/400/503, verificar modelos en `services/ai.ts` y `app/api/asistente/route.ts`. Diagnosticar con `GET /api/asistente/debug`.
 27. **Generación multicanal: DB key resolution optimizada.** `callAI()` resuelve la API key de Gemini UNA sola vez (DB → env) y la pasa como parámetro a `callGemini()`, evitando ~40 queries DB por request (antes resolvía key en cada intento). Para otros providers, la key se resuelve una vez al inicio de `generateMulticanalNews()`.
-28. **WhatsApp módulo:** tablas `whatsapp_*` no tipadas en `types/database.ts`. El módulo usa server actions en `app/dashboard/whatsapp/actions.ts` con upsert por teléfono para contactos. La agenda unifica miembros (tabla `members`) y contactos externos (`whatsapp_contacts`).
-29. **Trigger enforce_matias_admin (mig. 073):** trigger permanente que asegura que `matiasvidal11972@gmail.com` siempre tenga rol `admin` en `members`. No eliminar sin aprobación explícita.
+28. **WhatsApp módulo y tipos sincronizados:** Las tablas `whatsapp_*` (`whatsapp_templates`, `whatsapp_contacts`, `whatsapp_groups`, `whatsapp_group_contacts`, `whatsapp_logs`), `saladillo_for_export`, `certificados_digitales`, y `documents` están 100% tipadas en `src/types/database.ts`. El módulo usa server actions en `app/dashboard/whatsapp/actions.ts` con upsert por teléfono para contactos. La agenda unifica miembros (`members`) y contactos externos (`whatsapp_contacts`).
+29. **Caché inmutable de Favicons y resolución de iconos:** Vercel aplica por defecto `Cache-Control: public, max-age=31536000, immutable` a extensiones de imagen. Si el navegador alguna vez guardó el favicon por defecto de Vercel en su base de datos local SQLite (`Favicons`), nunca lo re-pedirá a menos que se fuerce con `max-age=0, must-revalidate` en `next.config.ts` y se especifique un parámetro de versión (`?v=4`) en los tags `<link rel="icon">`. Además, `src/app/favicon.ico` auto-genera `sizes="256x256"` lo que causa que navegadores como Chrome lo descarten para la barra de pestañas (16x16 / 32x32); se debe servir desde `public/` en RGBA.
+30. **React 19 y cascading renders en contextos:** En `src/contexts/LanguageContext.tsx`, la lectura de `localStorage` durante la hidratación debe diferirse mediante `queueMicrotask` para evitar advertencias de React 19 por renders en cascada y desincronización con el servidor.
+31. **Turbopack y decodificación ICO:** El compilador de Turbopack en Next.js 16 procesa los iconos con un parser estricto que exige que las imágenes PNG dentro de un contenedor `.ico` estén en formato **RGBA**. Si se guardan en RGB sin canal alfa, Turbopack arroja el error de compilación: `Format error decoding Ico: The PNG is not in RGBA format!`.
+32. **RAG Cascade P1 y valores NaN:** La búsqueda vectorial sobre Supabase `match_documents` puede devolver valores no numéricos si existen registros corruptos. En `src/lib/rag/ragCascade.ts`, la función `buscarEnVectorStore` valida explícitamente `!isNaN(item.similarity)` antes de evaluar el umbral y siempre fuerza `outputDimensionality: 768` en `generarEmbedding` para garantizar paridad con pgvector.
 
 ---
 
