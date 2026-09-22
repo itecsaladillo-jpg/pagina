@@ -1,0 +1,231 @@
+'use server'
+
+import { createClient } from '@/lib/supabase/server'
+import { getCurrentMember } from '@/services/auth'
+import { calcularEstadoSemaforo, type EstadoSemaforo } from '@/lib/eventos/semaforo'
+
+// ============================================================
+// Tipos (respuesta de la server action)
+// ============================================================
+
+export interface EstadoSemaforoResult {
+  totalAcreditados: number
+  votosNegativos: number
+  porcentajeNegativo: number
+  estado: EstadoSemaforo
+}
+
+// ============================================================
+// Server Actions
+// ============================================================
+
+/**
+ * Registra un voto negativo anónimo ("No entiendo, me perdí").
+ * Verifica que el dispositivo no haya votado ya en el ciclo actual
+ * (desde semaforo_last_reset_at). Un dispositivo = un voto por ciclo.
+ */
+export async function registrarVotoNegativo(
+  eventoId: string,
+  dispositivoId: string
+): Promise<{ success: boolean; yaVoto?: boolean; error?: string }> {
+  try {
+    if (!dispositivoId || !dispositivoId.trim()) {
+      return { success: false, error: 'dispositivo_id requerido.' }
+    }
+
+    const supabase = await createClient()
+
+    // 1. Obtener semaforo_last_reset_at del evento
+    const { data: eventoData, error: eventoError } = await supabase
+      .from('eventos')
+      .select('semaforo_last_reset_at')
+      .eq('id', eventoId)
+      .single()
+
+    if (eventoError || !eventoData) {
+      return { success: false, error: 'Evento no encontrado.' }
+    }
+
+    const resetAt: string = eventoData.semaforo_last_reset_at ?? new Date(0).toISOString()
+
+    // 2. Verificar si el dispositivo ya votó en este ciclo
+    const { count: votosExistentes, error: checkError } = await supabase
+      .from('evento_semaforo_votos')
+      .select('id', { count: 'exact', head: true })
+      .eq('evento_id', eventoId)
+      .eq('dispositivo_id', dispositivoId)
+      .gte('created_at', resetAt)
+
+    if (checkError) {
+      console.error('[registrarVotoNegativo] Error verificando voto:', checkError.message)
+      return { success: false, error: 'Error al verificar el voto.' }
+    }
+
+    if ((votosExistentes ?? 0) > 0) {
+      return { success: false, yaVoto: true, error: 'Ya has votado en esta ronda.' }
+    }
+
+    // 3. Insertar el voto con dispositivo_id
+    const { error } = await supabase
+      .from('evento_semaforo_votos')
+      .insert({ evento_id: eventoId, dispositivo_id: dispositivoId })
+
+    if (error) {
+      console.error('[registrarVotoNegativo] Error:', error.message)
+      return { success: false, error: error.message }
+    }
+
+    return { success: true }
+  } catch (err) {
+    console.error('[registrarVotoNegativo] Exception:', err)
+    return { success: false, error: 'Error inesperado al registrar el voto.' }
+  }
+}
+
+/**
+ * Verifica si un dispositivo ya emitió un voto en el ciclo actual del semáforo.
+ * Útil para el cliente al cargar la página o al recibir un reset por Realtime.
+ */
+export async function verificarVotoDispositivo(
+  eventoId: string,
+  dispositivoId: string
+): Promise<{ yaVoto: boolean; error?: string }> {
+  try {
+    if (!dispositivoId || !dispositivoId.trim()) {
+      return { yaVoto: false }
+    }
+
+    const supabase = await createClient()
+
+    // 1. Obtener semaforo_last_reset_at
+    const { data: eventoData, error: eventoError } = await supabase
+      .from('eventos')
+      .select('semaforo_last_reset_at')
+      .eq('id', eventoId)
+      .single()
+
+    if (eventoError || !eventoData) {
+      return { yaVoto: false, error: 'Evento no encontrado.' }
+    }
+
+    const resetAt: string = eventoData.semaforo_last_reset_at ?? new Date(0).toISOString()
+
+    // 2. Contar votos de este dispositivo desde el último reset
+    const { count, error } = await supabase
+      .from('evento_semaforo_votos')
+      .select('id', { count: 'exact', head: true })
+      .eq('evento_id', eventoId)
+      .eq('dispositivo_id', dispositivoId)
+      .gte('created_at', resetAt)
+
+    if (error) {
+      console.error('[verificarVotoDispositivo] Error:', error.message)
+      return { yaVoto: false, error: error.message }
+    }
+
+    return { yaVoto: (count ?? 0) > 0 }
+  } catch (err) {
+    console.error('[verificarVotoDispositivo] Exception:', err)
+    return { yaVoto: false, error: 'Error inesperado al verificar voto.' }
+  }
+}
+
+/**
+ * Obtiene el estado actual del semáforo para un evento:
+ * - totalAcreditados: COUNT de rows en eventos_asistentes
+ * - votosNegativos: COUNT de votos desde semaforo_last_reset_at
+ * - porcentajeNegativo: ratio calculado
+ * - estado: 'VERDE' | 'AMARILLO' | 'ROJO'
+ */
+export async function obtenerEstadoSemaforo(
+  eventoId: string
+): Promise<EstadoSemaforoResult> {
+  const empty: EstadoSemaforoResult = {
+    totalAcreditados: 0,
+    votosNegativos: 0,
+    porcentajeNegativo: 0,
+    estado: 'VERDE',
+  }
+
+  try {
+    const supabase = await createClient()
+
+    // 1. Obtener semaforo_last_reset_at del evento
+    const { data: eventoData, error: eventoError } = await supabase
+      .from('eventos')
+      .select('semaforo_last_reset_at')
+      .eq('id', eventoId)
+      .single()
+
+    if (eventoError || !eventoData) {
+      console.error('[obtenerEstadoSemaforo] Evento no encontrado:', eventoError?.message)
+      return empty
+    }
+
+    const resetAt: string = eventoData.semaforo_last_reset_at ?? new Date(0).toISOString()
+
+    // 2. COUNT de acreditados
+    const { count: totalAcreditados, error: asistError } = await supabase
+      .from('eventos_asistentes')
+      .select('id', { count: 'exact', head: true })
+      .eq('evento_id', eventoId)
+
+    if (asistError) {
+      console.error('[obtenerEstadoSemaforo] Error asistentes:', asistError.message)
+      return empty
+    }
+
+    // 3. COUNT de votos negativos desde la última ventana de tiempo
+    const { count: votosNegativos, error: votosError } = await supabase
+      .from('evento_semaforo_votos')
+      .select('id', { count: 'exact', head: true })
+      .eq('evento_id', eventoId)
+      .gte('created_at', resetAt)
+
+    if (votosError) {
+      console.error('[obtenerEstadoSemaforo] Error votos:', votosError.message)
+      return empty
+    }
+
+    const total = totalAcreditados ?? 0
+    const votos = votosNegativos ?? 0
+    const { estado, porcentaje } = calcularEstadoSemaforo(votos, total)
+
+    return { totalAcreditados: total, votosNegativos: votos, porcentajeNegativo: porcentaje, estado }
+  } catch (err) {
+    console.error('[obtenerEstadoSemaforo] Exception:', err)
+    return empty
+  }
+}
+
+/**
+ * Reinicia el semáforo actualizando semaforo_last_reset_at = now().
+ * Requiere rol admin o coordinador.
+ */
+export async function resetearSemaforo(
+  eventoId: string
+): Promise<{ success: boolean; error?: string }> {
+  try {
+    const member = await getCurrentMember()
+    if (!member || !['admin', 'coordinador'].includes(member.role)) {
+      return { success: false, error: 'No autorizado. Se requiere rol admin o coordinador.' }
+    }
+
+    const supabase = await createClient()
+
+    const { error } = await supabase
+      .from('eventos')
+      .update({ semaforo_last_reset_at: new Date().toISOString() })
+      .eq('id', eventoId)
+
+    if (error) {
+      console.error('[resetearSemaforo] Error:', error.message)
+      return { success: false, error: error.message }
+    }
+
+    return { success: true }
+  } catch (err) {
+    console.error('[resetearSemaforo] Exception:', err)
+    return { success: false, error: 'Error inesperado al reiniciar el semáforo.' }
+  }
+}

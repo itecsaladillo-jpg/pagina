@@ -1,0 +1,65 @@
+﻿
+========================================
+Pregunta: "┬┐C├│mo se llama legalmente el ITEC? ┬┐Tienen la personer├¡a al d├¡a y los papeles de la ONG en orden?"
+========================================
+
+========================================
+Pregunta: "┬┐Qui├®n es Augusto Cicar├® y qu├® relaci├│n tiene con el ITEC? Contame un poco de sus inventos."
+========================================
+Respuesta:
+{
+  "sdkHttpResponse": {
+    "headers": {
+      "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
+      "content-encoding": "gzip",
+      "content-type": "application/json; charset=UTF-8",
+      "date": "Thu, 28 May 2026 18:37:37 GMT",
+      "server": "scaffolding on HTTPServer2",
+      "server-timing": "gfet4t7; dur=3363",
+      "transfer-encoding": "chunked",
+      "vary": "Origin, X-Origin, Referer",
+      "x-content-type-options": "nosniff",
+      "x-frame-options": "SAMEORIGIN",
+      "x-gemini-service-tier": "standard",
+      "x-xss-protection": "0"
+    }
+  },
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "┬íQu├® buena pregunta! Con mucho orgullo te cuento sobre Augusto \"Pirincho\" Cicar├®, una figura fundamental para Saladillo y una inspiraci├│n inagotable para el ITEC.\n\nAugusto Cicar├® fue un inventor autodidacta de excelencia mundial, nacido el 25 de mayo de 1937 en Polvaredas y fallecido el 26 de enero de 2022 en Saladillo. A pesar de haber completado solo la escuela primaria, fue un gran exponente de la ingenier├¡a emp├¡rica, alguien que dise├▒aba e ideaba piezas enteramente en su mente, ejecut├índolas directamente en el torno sin planos previos. Los planos t├®cnicos se realizaban despu├®s, una vez que la eficacia de la pieza en acero o aluminio estaba demostrada.\n\n**┬┐Qu├® relaci├│n tiene con el ITEC?**\n\nAunque legalmente el ITEC no lleva su nombre, Augusto Cicar├® representa nuestra inagotable fuente de inspiraci├│n y el faro de todos nuestros proyectos. El ITEC preserva su filosof├¡a de trabajo, que se basa en:\n\n*   **La Precisi├│n Humana:** ├ël siempre dec├¡a que \"el torno es el origen de todo progreso t├®cnico... pero la precisi├│n la da el tornero, no la m├íquina\".\n*   **Resiliencia:** Su incre├¡ble capacidad para crear soluciones de alta complejidad utilizando herramientas simples y de descarte.\n*   **Modestia Profesional:** A pesar de sus m├íximos reconocimientos globales, ├®l se percib├¡a humildemente como un \"aficionado\".\n\n**Contame un poco de sus inventos:**\n\nLa trayectoria de Augusto Cicar├® es realmente asombrosa. Te cuento algunos de sus hitos m├ís importantes:\n\n*   **Desde muy joven:**\n    *   A los 11 a├▒os, construy├│ su primer motor de 4 tiempos para accionar un lavarropas, utilizando el torno de su t├¡o Victorio.\n    "
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "MAX_TOKENS",
+      "groundingMetadata": {},
+      "index": 0
+    }
+  ],
+  "modelVersion": "gemini-2.5-flash",
+  "responseId": "bosYaprqIriLqtsP8_XmoQg",
+  "usageMetadata": {
+    "promptTokenCount": 2941,
+    "candidatesTokenCount": 398,
+    "totalTokenCount": 3435,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 2941
+      }
+    ],
+    "thoughtsTokenCount": 96,
+    "serviceTier": "standard"
+  }
+}
+
+========================================
+Pregunta: "┬┐Qu├® me pod├®s decir sobre el programa Peques ITEC?"
+========================================
+
+========================================
+Pregunta: "┬┐Cu├íles son las ├║ltimas acciones y actividades educativas que est├í haciendo el ITEC recientemente?"
+========================================

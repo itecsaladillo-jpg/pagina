@@ -1,0 +1,36 @@
+import { createClient } from '@/lib/supabase/server'
+import { NextResponse } from 'next/server'
+
+export async function GET() {
+  const supabase = await createClient()
+  const { data, error } = await supabase
+    .from('notas_medios')
+    .select('*')
+    .eq('is_published', true)
+    .order('created_at', { ascending: false })
+
+  if (error) {
+    return NextResponse.json([])
+  }
+
+  const flaques = (data ?? []).map((n: any) => ({
+    id: n.id,
+    created_at: n.created_at,
+    updated_at: n.updated_at,
+    autor_id: n.autor_id,
+    titulo: n.titulo,
+    datos_crudos: '',
+    texto_publico: '',
+    texto_miembros: '',
+    texto_sponsors: '',
+    texto_medios: n.contenido,
+    media_urls: n.media_urls ?? [],
+    is_published: n.is_published,
+    para_publico: false,
+    para_miembros: false,
+    para_sponsors: false,
+    para_medios: true,
+  }))
+
+  return NextResponse.json(flaques)
+}

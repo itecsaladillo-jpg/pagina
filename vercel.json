@@ -1,0 +1,11 @@
+{
+  "framework": "nextjs",
+  "functions": {
+    "src/app/api/asistente/route.ts": {
+      "maxDuration": 90
+    },
+    "src/app/api/news/process/route.ts": {
+      "maxDuration": 90
+    }
+  }
+}

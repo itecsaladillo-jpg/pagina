@@ -1,0 +1,832 @@
+import { createClient } from '@/lib/supabase/server'
+import { getSettingValue } from '@/lib/settings'
+
+type ProviderError = Error & { status?: number }
+
+function providerError(msg: string, status?: number): ProviderError {
+  const e = new Error(msg) as ProviderError
+  e.status = status
+  return e
+}
+
+const OPENCODE_MODEL = 'mimo-v2.5-free'
+const OPENROUTER_MODEL = 'nvidia/nemotron-3.5-lightning:free'
+const GEMINI_MODELS = ['gemini-3.8-flash', 'gemini-3.6-flash', 'gemini-flash-latest']
+
+async function callOpenRouter(messages: { role: string; content: string }[], preResolvedKeys?: string[]): Promise<string> {
+  // Usar keys pre-resueltas si se proveen, sino resolver aquí
+  let allKeys: string[]
+  if (preResolvedKeys && preResolvedKeys.length > 0) {
+    allKeys = preResolvedKeys
+  } else {
+    const dbKeys = await Promise.all([
+      getSettingValue('openrouter_api_key'),
+      getSettingValue('openrouter_api_key_2'),
+    ])
+    const envKeys = [process.env.OPENROUTER_API_KEY || '', process.env.OPENROUTER_API_KEY_2 || '']
+    const seen = new Set<string>()
+    allKeys = []
+    for (const k of [...envKeys, ...dbKeys]) {
+      if (k && k.trim() !== '' && !seen.has(k)) { seen.add(k); allKeys.push(k) }
+    }
+  }
+  if (allKeys.length === 0) throw providerError('OPENROUTER_API_KEY not set')
+
+  console.log(`[OpenRouter] ${allKeys.length} keys: ${allKeys.map(k => `...${k.slice(-6)}`).join(', ')}`)
+
+  const models = [OPENROUTER_MODEL, 'openrouter/free', 'meta-llama/llama-4-scout:free', 'google/gemma-3-27b-it:free']
+
+  const attempts: Promise<string>[] = []
+  for (const apiKey of allKeys) {
+    for (const model of models) {
+      attempts.push(
+        fetch('https://openrouter.ai/api/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${apiKey}`,
+            'Content-Type': 'application/json',
+            'HTTP-Referer': 'https://itecsaladillo.org.ar',
+            'X-Title': 'ITEC Comunicacion',
+          },
+          body: JSON.stringify({
+            model,
+            messages,
+            stream: false,
+            temperature: 0.7,
+            max_tokens: 8192,
+          }),
+          signal: AbortSignal.timeout(10000),
+        })
+        .then(async (res) => {
+          const bodyText = await res.text().catch(() => '')
+          if (!res.ok) {
+            throw new Error(`${model} key...${apiKey.slice(-6)} ${res.status}: ${bodyText.slice(0, 120)}`)
+          }
+          let data: any
+          try { data = JSON.parse(bodyText) } catch { throw new Error(`${model} key...${apiKey.slice(-6)} respuesta no-JSON: ${bodyText.slice(0, 120)}`) }
+          const texto = limpiarRespuestaIA(data.choices?.[0]?.message?.content || '', `${model} key...${apiKey.slice(-6)}`)
+          if (!texto.trim()) throw new Error(`${model} key...${apiKey.slice(-6)} vacía`)
+          return texto
+        })
+      )
+    }
+  }
+
+  const results = await Promise.allSettled(attempts)
+  const errors: string[] = []
+  for (const r of results) {
+    if (r.status === 'fulfilled') return r.value
+    errors.push(r.reason?.message || 'error')
+  }
+  throw providerError(`[OpenRouter] ${errors.join(' | ')}`)
+}
+
+async function callOpenCode(messages: { role: string; content: string }[], apiKey: string): Promise<string> {
+  if (!apiKey) throw providerError('OPENCODE_API_KEY not set')
+
+  console.log(`[OpenCode] ${OPENCODE_MODEL}: ${messages.length} msgs`)
+
+  const response = await fetch('https://opencode.ai/zen/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+      'x-session-id': `ses_${Math.random().toString(36).substring(2)}`,
+    },
+    body: JSON.stringify({
+      model: OPENCODE_MODEL,
+      messages,
+      stream: false,
+      temperature: 0.7,
+      max_tokens: 8192
+    }),
+    signal: AbortSignal.timeout(13000),
+  })
+
+  const bodyText = await response.text().catch(() => '')
+  if (!response.ok) {
+    throw providerError(`OpenCode ${response.status}: ${bodyText.slice(0, 200)}`, response.status)
+  }
+
+  let data: any
+  try { data = JSON.parse(bodyText) } catch { throw providerError(`OpenCode respuesta no-JSON: ${bodyText.slice(0, 200)}`) }
+  const texto = limpiarRespuestaIA(data.choices?.[0]?.message?.content || '', 'OpenCode')
+  if (!texto.trim()) throw providerError('OpenCode respuesta vacía')
+  return texto
+}
+
+async function callGemini(
+  messages: { role: string; content: string }[],
+  temperature: number,
+  preResolvedKeys?: string[]
+): Promise<string> {
+  // Usar keys pre-resueltas si se proveen, sino resolver aquí
+  let allKeys: string[]
+  if (preResolvedKeys && preResolvedKeys.length > 0) {
+    allKeys = preResolvedKeys
+  } else {
+    const dbKeys = await Promise.all([
+      getSettingValue('gemini_api_key'),
+      getSettingValue('gemini_api_key_2'),
+      getSettingValue('gemini_api_key_3'),
+      getSettingValue('gemini_api_key_4'),
+    ])
+    const envKeys = [
+      process.env.GEMINI_API_KEY || '',
+      process.env.GEMINI_API_KEY_2 || '',
+      process.env.GEMINI_API_KEY_3 || '',
+      process.env.GEMINI_API_KEY_4 || '',
+    ]
+    const seen = new Set<string>()
+    allKeys = []
+    for (const k of [...envKeys, ...dbKeys]) {
+      if (k && k.trim() !== '' && !seen.has(k)) {
+        seen.add(k)
+        allKeys.push(k)
+      }
+    }
+  }
+  if (allKeys.length === 0) throw providerError('[Gemini] no API key configurada')
+
+  console.log(`[Gemini] ${allKeys.length} keys disponibles: ${allKeys.map(k => `...${k.slice(-6)}`).join(', ')}`)
+
+  const systemMsg = messages.find(m => m.role === 'system')?.content || ''
+  const userMsg = messages.filter(m => m.role === 'user').map(m => m.content).join('\n')
+
+  // Lanzar TODAS las keys y modelos Gemini EN PARALELO, la primera que responda gana
+  const keyErrors: string[] = []
+  const attempts = allKeys.flatMap((key) =>
+    GEMINI_MODELS.map(async (model) => {
+      try {
+        const res = await fetch(
+          `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`,
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              systemInstruction: systemMsg ? { parts: [{ text: systemMsg }] } : undefined,
+              contents: [{ parts: [{ text: userMsg }] }],
+              generationConfig: { temperature, maxOutputTokens: 8192 },
+            }),
+            signal: AbortSignal.timeout(25000),
+          },
+        )
+
+        const bodyText = await res.text().catch(() => '')
+        if (!res.ok) {
+          throw new Error(`${model} key ...${key.slice(-6)} ${res.status}: ${bodyText.slice(0, 120)}`)
+        }
+
+        let data: any
+        try { data = JSON.parse(bodyText) } catch { throw new Error(`${model} key ...${key.slice(-6)} respuesta no-JSON: ${bodyText.slice(0, 120)}`) }
+        const texto = limpiarRespuestaIA(data.candidates?.[0]?.content?.parts?.[0]?.text || '', `${model} key ...${key.slice(-6)}`)
+        if (!texto.trim()) throw new Error(`${model} key ...${key.slice(-6)} respuesta vacía`)
+        return texto
+      } catch (err: any) {
+        keyErrors.push(err?.message || 'error')
+        throw err
+      }
+    })
+  )
+
+  const results = await Promise.allSettled(attempts)
+  for (const r of results) {
+    if (r.status === 'fulfilled') return r.value
+  }
+  throw providerError(`[Gemini] ${keyErrors.join(' | ')}`)
+}
+
+async function callAI(messages: { role: string; content: string }[], temperature = 0.7): Promise<string> {
+  // Lanzar todos los providers EN PARALELO. El primero que responda gana.
+  const candidates: { nombre: string; promise: Promise<string> }[] = []
+
+  // Resolver keys de la BD para todos los providers (DB tiene prioridad sobre env)
+  const dbKeysResults = await Promise.all([
+    getSettingValue('openrouter_api_key'),
+    getSettingValue('openrouter_api_key_2'),
+    getSettingValue('groq_api_key'),
+    getSettingValue('hf_api_key'),
+  ])
+  const opencodeKeyValue = process.env.OPENCODE_API_KEY || ''
+  const openrouterKeys: string[] = [
+    dbKeysResults[0],
+    dbKeysResults[1],
+    process.env.OPENROUTER_API_KEY || '',
+    process.env.OPENROUTER_API_KEY_2 || '',
+  ].filter((k): k is string => !!k && k.trim() !== '')
+
+  if (opencodeKeyValue) {
+    candidates.push({ nombre: 'opencode', promise: callOpenCode(messages, opencodeKeyValue) })
+  }
+
+  if (openrouterKeys.length > 0) {
+    candidates.push({ nombre: 'openrouter', promise: callOpenRouter(messages, openrouterKeys) })
+  }
+
+  // Groq (usa modelo openai/gpt-oss-20b, gratuito)
+  const groqKey = dbKeysResults[2] || process.env.GROQ_API_KEY || ''
+  if (groqKey) {
+    candidates.push({ nombre: 'groq', promise: callGroq(messages, groqKey) })
+  }
+
+  // Hugging Face (usa modelo facebook/opt-125m o google/pegasus-xsum, gratuitos)
+  const hfKey = dbKeysResults[3] || process.env.HF_API_KEY || ''
+  if (hfKey) {
+    candidates.push({ nombre: 'hf', promise: callHuggingFace(messages, hfKey) })
+  }
+
+  // Resolver Gemini keys UNA SOLA VEZ (DB + env, deduplicadas)
+  const geminiDbKeys = await Promise.all([
+    getSettingValue('gemini_api_key', 'GEMINI_APY_KEY'),
+    getSettingValue('gemini_api_key_2', 'GEMINI_API_KEY_2'),
+    getSettingValue('gemini_api_key_3', 'GEMINI_API_KEY_3'),
+    getSettingValue('gemini_api_key_4', 'GEMINI_API_KEY_4'),
+  ])
+  const geminiEnvKeys = [
+    process.env.GEMINI_API_KEY || '',
+    process.env.GEMINI_API_KEY_2 || '',
+    process.env.GEMINI_API_KEY_3 || '',
+    process.env.GEMINI_API_KEY_4 || '',
+  ]
+  const geminiSeen = new Set<string>()
+  const allGeminiKeys: string[] = []
+  for (const k of [...geminiEnvKeys, ...geminiDbKeys]) {
+    if (k && k.trim() !== '' && !geminiSeen.has(k)) { geminiSeen.add(k); allGeminiKeys.push(k) }
+  }
+
+  if (allGeminiKeys.length > 0) {
+    candidates.push({ nombre: 'gemini', promise: callGemini(messages, temperature, allGeminiKeys) })
+  }
+
+  if (candidates.length === 0) {
+    throw new Error('[AI Service] Ningún provider disponible (sin API keys)')
+  }
+
+  console.log(`[AI Service] Lanzando ${candidates.length} providers en paralelo: ${candidates.map(c => c.nombre).join(', ')}`)
+
+  // Usar Promise.any: resuelve con el primer成功, rechaza si TODOS fallan
+  const errores: string[] = []
+  const results = await Promise.allSettled(candidates.map(c =>
+    c.promise.then(ok => ({ ok: true, nombre: c.nombre, texto: ok } as const))
+      .catch(err => { throw { nombre: c.nombre, error: err } })
+  ))
+
+  for (const r of results) {
+    if (r.status === 'fulfilled' && r.value.ok) {
+      console.log(`[AI Service] OK con ${r.value.nombre}`)
+      return r.value.texto
+    }
+    if (r.status === 'rejected') {
+      const e = r.reason
+      const msg = e?.error?.message || e?.message || 'error desconocido'
+      errores.push(`${e?.nombre || 'unknown'}: ${msg}`)
+      console.error(`[AI Service] ${e?.nombre} falló:`, msg)
+    }
+  }
+
+  console.error(`[AI Service] TODOS los providers fallaron. Errores:\n${errores.join('\n')}`)
+  throw new Error(`[AI Service] Todos los providers fallaron:\n${errores.join('\n')}`)
+}
+
+/**
+ * Prompt de sistema — Estilo ITEC
+ * Técnico, Humano, Vanguardista.
+ * Palabras prohibidas: viste, che, pibe, hoy, ayer, mañana
+ */
+/**
+ * Limpia metadata de seguridad que algunos proveedores (OpenCode/GLM) devuelven
+ * como encabezado antes del contenido real. Si después del encabezado hay
+ * contenido significativo, lo usa; si no, lanza error.
+ */
+function limpiarRespuestaIA(texto: string, provider: string): string {
+  const limpio = (texto || '').trim()
+  const safetyHeader = /^(User Safety|Response Safety|Safety|safe|unsafe|Content [Aa]nalysis)[:\s]*/i
+  const matchHeader = limpio.match(safetyHeader)
+  let contenidoReal = limpio
+
+  if (matchHeader) {
+    contenidoReal = limpio.slice(matchHeader[0].length).trim()
+    if (contenidoReal.length >= 10) {
+      console.log(`[AI Service] ${provider}: encabezado de seguridad detectado, usando contenido real (${contenidoReal.length} chars)`)
+      return contenidoReal
+    }
+  }
+
+  if (!contenidoReal || contenidoReal.length < 10) {
+    throw new Error(`${provider} respuesta inválida: ${limpio.slice(0, 200)}`)
+  }
+  return contenidoReal
+}
+
+async function callGroq(messages: { role: string; content: string }[], apiKey: string): Promise<string> {
+  if (!apiKey) throw providerError('GROQ_API_KEY not set')
+
+  console.log(`[Groq] openai/gpt-oss-20b: ${messages.length} msgs`)
+
+  const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      model: 'openai/gpt-oss-20b',
+      messages,
+      stream: false,
+      temperature: 0.7,
+      max_tokens: 8192,
+    }),
+    signal: AbortSignal.timeout(13000),
+  })
+
+  const bodyText = await response.text().catch(() => '')
+  if (!response.ok) {
+    throw providerError(`Groq ${response.status}: ${bodyText.slice(0, 200)}`, response.status)
+  }
+
+  let data: any
+  try { data = JSON.parse(bodyText) } catch { throw providerError(`Groq respuesta no-JSON: ${bodyText.slice(0, 200)}`) }
+  const texto = limpiarRespuestaIA(data.choices?.[0]?.message?.content || '', 'Groq')
+  if (!texto.trim()) throw providerError('Groq respuesta vacía')
+  return texto
+}
+
+async function callHuggingFace(messages: { role: string; content: string }[], apiKey: string): Promise<string> {
+  if (!apiKey) throw providerError('HF_API_KEY not set')
+
+  const userMsg = messages.filter(m => m.role === 'user').map(m => m.content).join('\n')
+  console.log(`[HuggingFace] ${userMsg.length} chars`)
+
+  // Usar un modelo de resumen/suma que es gratuito en HF
+  const response = await fetch('https://api-inference.huggingface.co/models/facebook/bart-large-cnn', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      inputs: userMsg.slice(0, 1000),
+      parameters: { max_length: 500, min_length: 50, do_sample: false },
+    }),
+    signal: AbortSignal.timeout(15000),
+  })
+
+  const bodyText = await response.text().catch(() => '')
+  if (!response.ok) {
+    throw providerError(`HuggingFace ${response.status}: ${bodyText.slice(0, 200)}`, response.status)
+  }
+
+  let data: any
+  try { data = JSON.parse(bodyText) } catch { throw providerError(`HuggingFace respuesta no-JSON: ${bodyText.slice(0, 200)}`) }
+
+  const texto = Array.isArray(data) ? (data[0]?.summary_text || '') : (data.summary_text || '')
+  const limpio = limpiarRespuestaIA(texto, 'HuggingFace')
+  if (!limpio.trim()) throw providerError('HuggingFace respuesta vacía')
+  return limpio
+}
+
+const ITEC_SYSTEM_PROMPT = `
+Sos un asistente de comunicación interna para ITEC Saladillo, 
+una organización tecnológica y comunitaria de Saladillo, Buenos Aires.
+
+Tu estilo de escritura es:
+- TÉCNICO: usás terminología precisa y profesional
+- HUMANO: cálido, cercano, que conecta con las personas
+- VANGUARDISTA: dinámico, orientado al futuro, innovador
+
+PALABRAS Y ESTRUCTURAS COMPLETAMENTE PROHIBIDAS (nunca las uses):
+- "el ITEC", "la ITEC" (Nombrá a la organización únicamente como "ITEC").
+- "viste", "che", "pibe", "hoy", "ayer", "mañana".
+
+En su lugar, usá alternativas como:
+- En lugar de "hoy": "esta jornada", "en la sesión actual", "durante este encuentro"
+- En lugar de "ayer": "en la sesión anterior", "en el encuentro previo"
+- En lugar de "mañana": "en la próxima instancia", "en el siguiente encuentro"
+- En lugar de "che": nada, empezá directo con el mensaje
+- En lugar de "viste": "como se mencionó", "según lo tratado"
+- En lugar de "pibe": nada, usá el nombre o "miembro"
+
+Siempre escribís en español rioplatense formal, con vos y sus conjugaciones correctas.
+Nunca utilizás lenguaje informal ni regionalismos fuera de los autorizados.
+`
+
+export interface AIProcessResult {
+  summary: string
+  action_items: string[]
+}
+
+export async function processWithAI(
+  text: string,
+  sourceType: 'meet' | 'capacitacion' | 'reunion' | 'manual',
+  commissionName?: string
+): Promise<AIProcessResult> {
+  const contextLabel = {
+    meet: 'transcripción de una reunión virtual de Google Meet',
+    capacitacion: 'descripción de una capacitación',
+    reunion: 'acta de reunión presencial',
+    manual: 'texto de comunicación interna',
+  }[sourceType]
+
+  const commissionContext = commissionName
+    ? `La información pertenece a la Comisión de ${commissionName}.`
+    : ''
+
+  const userPrompt = `Se te entrega la ${contextLabel} de ITEC Saladillo.
+${commissionContext}
+
+TEXTO A PROCESAR:
+"""
+${text}
+"""
+
+Generá exactamente dos elementos en formato JSON puro (sin markdown, sin bloques de código):
+
+{
+  "summary": "Resumen ejecutivo de 3-5 oraciones, capturando los puntos principales tratados.",
+  "action_items": [
+    "Tarea concreta 1 con responsable si se menciona",
+    "Tarea concreta 2",
+    "..."
+  ]
+}
+
+Respondés ÚNICAMENTE con el JSON, sin ningún texto adicional antes o después.`
+
+  const raw = await callAI([
+    { role: 'system', content: ITEC_SYSTEM_PROMPT },
+    { role: 'user', content: userPrompt }
+  ])
+
+  const cleaned = raw.replace(/^```json\s*/i, '').replace(/^```\s*/i, '').replace(/\s*```$/i, '').trim()
+
+  const parsed = JSON.parse(cleaned) as AIProcessResult
+  return parsed
+}
+
+export async function generateFlash(text: string): Promise<string> {
+  const userPrompt = `Con base en el siguiente texto, redactá un Flash Informativo de máximo 2 oraciones 
+para el muro interno de ITEC. Dinámico, motivador, en Estilo ITEC.
+Respondé únicamente con el texto del flash, sin comillas ni etiquetas.
+
+TEXTO:
+"""
+${text}
+"""`
+  const result = await callAI([
+    { role: 'system', content: ITEC_SYSTEM_PROMPT },
+    { role: 'user', content: userPrompt }
+  ], 0.8)
+  return result
+}
+
+export async function generateExecutiveSummary(notes: string): Promise<string> {
+  const result = await processWithAI(notes, 'reunion')
+  return result.summary
+}
+
+export async function generateActionItems(notes: string): Promise<string> {
+  const result = await processWithAI(notes, 'reunion')
+  return result.action_items.map((item, i) => `${i + 1}. ${item}`).join('\n')
+}
+
+export async function generateMulticanalNews(rawFacts: string): Promise<{
+  titulo: string
+  texto_publico: string
+  texto_miembros: string
+  texto_sponsors: string
+  texto_medios: string
+}> {
+  // Timeout global de 50s para no exceder el maxDuration del serverless (60s)
+  const GENERATION_TIMEOUT = 50000
+
+  const systemPrompt = `${ITEC_SYSTEM_PROMPT}
+  
+  Generás textos profesionales para diferentes audiencias de ITEC.
+  Respondés ÚNICAMENTE con un JSON válido, sin markdown, sin bloques de código.`
+
+  const CANAL_INSTRUCTIONS: Record<string, string> = {
+    publico: `=== CANAL PÚBLICO ===
+Propósito: Noticia para la página web oficial.
+Tono: Tercera persona, institucional pero accesible. Sin "nosotros".
+Estructura: TITULAR atractivo → COPETE (5W) → DESARROLLO (2-3 párrafos) → CITA TEXTUAL → CIERRE positivo → CTA final.
+Prohibido: balance económico. Separar secciones con \n\n.`,
+    miembros: `=== CANAL MIEMBROS ===
+Propósito: Comunicación interna para el equipo ITEC.
+Tono: PRIMERA PERSONA DEL PLURAL ("nosotros"), cercano, entusiasta, con emojis moderados (🎉💪✨🚀).
+Estructura: ASUNTO → SALUDO → AGRADECIMIENTO (nominar personas) → LO QUE FUNCIONÓ (2-4 items) → LO QUE MEJORAR (2-4 items) → CONEXIÓN CON COMETIDO → CITA DE LIDERAZGO → INVITACIÓN a fotos → CIERRE "Equipo ITEC".
+Prohibido: balance económico. Separar secciones con \n\n.`,
+    sponsors: `=== CANAL SPONSORS ===
+Propósito: Reporte de valor para sponsors (socios estratégicos, NO donantes).
+Tono: Profesional, formal B2B, orientado a resultados. SIN emojis.
+Estructura: ASUNTO con "Resultados" → SALUDO formal → AGRADECIMIENTO → IMPORTANCIA DE LA ALIANZA → IMPACTO EN COMUNIDAD → BALANCE ECONÓMICO ([Monto] si no hay dato) → HIGHLIGHTS cuantitativos → VISIBILIDAD DE MARCA → EVIDENCIA ADJUNTA → INVITACIÓN A FUTURO → Cierre formal.
+Prohibido: tratar al sponsor como donante, emojis. Separar secciones con \n\n.`,
+    medios: `=== CANAL MEDIOS ===
+Propósito: Gacetilla de prensa para medios periodísticos.
+Tono: Periodístico objetivo, tercera persona estricta, SIN emojis, SIN adjetivos subjetivos.
+Estructura: ENCABEZADO "GACETILLA DE PRENSA – PARA PUBLICACIÓN INMEDIATA" → LUGAR Y FECHA → TITULAR INFORMATIVO → LEAD (5W) → CUERPO → PRÓXIMOS EVENTOS → CITA ATRIBUIBLE → CIERRE con fotos disponibles → ACERCA DE ITEC (2-3 líneas).
+PROHIBIDO: NO incluyas sección de "CONTACTO DE PRENSA", "Para más información", "contactá a", ni datos de contacto de ninguna persona. No uses "María López", "prensa@itec.com", ni ningún nombre o email de contacto. El cierre es solo con información institucional.
+Prohibido: información interna, emojis, balance económico. Separar secciones con \n\n.`
+  }
+
+  // Generar todos los canales + titular en UN SOLA LLAMADA para evitar
+  // saturar los providers con múltiples solicitudes concurrentes.
+  const canalesListado = Object.entries(CANAL_INSTRUCTIONS)
+    .map(([canal, instrucciones]) => `- ${canal.toUpperCase()}: ${instrucciones.split('\n')[0]}`)
+    .join('\n')
+
+  const fullPrompt = `Generá un titular y 4 textos para diferentes audiencias de ITEC Saladillo, basándote en las notas crudas proporcionadas.
+
+${Object.entries(CANAL_INSTRUCTIONS).map(([canal, instrucciones]) => `### ${canal.toUpperCase()}\n${instrucciones}`).join('\n\n')}
+
+NOTAS CRUDAS:
+"""${rawFacts}"""
+
+Respondé ÚNICAMENTE con este JSON (sin markdown, sin bloques de código):
+{
+  "titulo": "Titular periodístico con verbo de acción, máximo 8 palabras",
+  "texto_publico": "Texto para el canal PÚBLICO",
+  "texto_miembros": "Texto para el canal MIEMBROS",
+  "texto_sponsors": "Texto para el canal SPONSORS",
+  "texto_medios": "Texto para el canal MEDIOS"
+}`
+
+  const timeoutPromise = new Promise<never>((_, reject) =>
+    setTimeout(() => reject(new Error(`Timeout: generación multicanal excedió ${GENERATION_TIMEOUT / 1000}s`)), GENERATION_TIMEOUT)
+  )
+
+  const result = await Promise.race([
+    callAI([
+      { role: 'system', content: systemPrompt },
+      { role: 'user', content: fullPrompt }
+    ], 0.8),
+    timeoutPromise
+  ])
+
+  // Limpiar posibles envoltorios de markdown
+  let cleaned = result.trim()
+  cleaned = cleaned.replace(/^```json\s*/i, '').replace(/^```\s*/i, '').replace(/\s*```$/i, '').trim()
+
+  let parsed: any
+  try {
+    parsed = JSON.parse(cleaned)
+  } catch {
+    // Si falla el parse, intentar extraer los campos manualmente
+    const campos: Record<string, string> = {}
+    for (const key of ['titulo', 'texto_publico', 'texto_miembros', 'texto_sponsors', 'texto_medios']) {
+      const regex = new RegExp(`"${key}"\\s*:\\s*"([^"]*(?:\\.[^"]*)*)"`, 'i')
+      const match = cleaned.match(regex)
+      campos[key] = match ? match[1] : ''
+    }
+    parsed = campos
+  }
+
+  const titulo = parsed.titulo || 'Novedad ITEC'
+  const texto_publico = parsed.texto_publico || 'Error al generar texto para público.'
+  const texto_miembros = parsed.texto_miembros || 'Error al generar texto para miembros.'
+  const texto_sponsors = parsed.texto_sponsors || 'Error al generar texto para sponsors.'
+  const texto_medios = parsed.texto_medios || 'Error al generar texto para medios.'
+
+  return { titulo, texto_publico, texto_miembros, texto_sponsors, texto_medios }
+}
+
+export async function generateVideoSummary(title: string, description: string): Promise<string> {
+  const userPrompt = `Generá un resumen profesional y atractivo para un video de ITEC Saladillo.
+  
+  ROL: Periodista social.
+  OBJETIVO: Generar orgullo y pertenencia en Saladillo.
+  TONO: Aspiracional, accesible y humano.
+  ENFOQUE: Traducir la técnica a beneficios comunitarios. Evitá tecnicismos innecesarios.
+  CERRAR: Frase que invite a sumarse al ecosistema ITEC.
+  
+  TÍTULO DEL VIDEO: ${title}
+  DESCRIPCIÓN ORIGINAL: ${description}
+  
+  REQUISITOS CRÍTICOS:
+  - PRECISIÓN Y CONTENIDO REAL: Basarte en lo disponible sin inventar datos.
+  - IDENTIFICACIÓN DE PROTAGONISTAS: Mencionar quién es el entrevistado/orador.
+  - LONGITUD: Máximo 200 palabras.
+  - ESTILO ITEC: Técnico, Humano y Vanguardista.
+  - IDIOMA: Español rioplatense formal (usando "vos").
+  
+  Respondé únicamente con el texto del resumen, sin títulos adicionales ni comillas.`
+
+  const result = await callAI([
+    { role: 'system', content: ITEC_SYSTEM_PROMPT },
+    { role: 'user', content: userPrompt }
+  ], 0.8)
+  return result
+}
+
+export async function generarEmbedding(texto: string): Promise<number[]> {
+  const [geminiKey1, geminiKey2, geminiKey3, geminiKey4, hfKey] = await Promise.all([
+    getSettingValue('gemini_api_key', 'GEMINI_APY_KEY'),
+    getSettingValue('gemini_api_key_2', 'GEMINI_API_KEY_2'),
+    getSettingValue('gemini_api_key_3', 'GEMINI_API_KEY_3'),
+    getSettingValue('gemini_api_key_4', 'GEMINI_API_KEY_4'),
+    getSettingValue('hf_api_key', 'HF_API_KEY'),
+  ])
+  const geminiKey = geminiKey1 || geminiKey2 || geminiKey3 || geminiKey4 || process.env.GOOGLE_GENERATIVE_AI_API_KEY || ''
+  
+  if (geminiKey) {
+    try {
+      const response = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:embedContent?key=${geminiKey}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            content: { parts: [{ text: texto }] },
+            outputDimensionality: 768,
+          })
+        }
+      )
+
+      if (response.ok) {
+        const data = await response.json()
+        if (data.embedding?.values && data.embedding.values.length > 0) {
+          return data.embedding.values as number[]
+        }
+      }
+      console.error('[AI Service] Gemini embedding failed:', response.status)
+    } catch (error) {
+      console.error('[AI Service] Gemini embedding error:', error)
+    }
+  }
+
+  try {
+    if (!hfKey) throw new Error('No HF_API_KEY configured')
+    
+    const response = await fetch('https://api-inference.huggingface.co/models/sentence-transformers/all-MiniLM-L6-v2', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${hfKey}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ inputs: texto })
+    })
+
+    if (!response.ok) throw new Error(`HF embedding error: ${response.status}`)
+    
+    const data = await response.json()
+    const hfEmbedding: number[] = data[0]?.embedding || []
+    
+    if (hfEmbedding.length === 0) return []
+    
+    // HuggingFace all-MiniLM-L6-v2 produces 384-dim vectors, but our DB expects 768.
+    // Pad with zeros to maintain compatibility with pgvector vector(768).
+    const TARGET_DIM = 768
+    if (hfEmbedding.length < TARGET_DIM) {
+      const padded = new Array(TARGET_DIM).fill(0)
+      for (let i = 0; i < hfEmbedding.length; i++) {
+        padded[i] = hfEmbedding[i]
+      }
+      return padded
+    }
+    
+    return hfEmbedding
+  } catch (error) {
+    console.error('[AI Service] All embedding providers failed:', error)
+    return []
+  }
+}
+
+export interface FeedbackSimilar {
+  id: string
+  created_at: string
+  historial: any
+  calificacion: string
+  comentario: string | null
+  tema_principal: string
+  lo_mas_util: string
+  similarity: number
+}
+
+export async function buscarFeedbacksSimilares(
+  mensaje: string,
+  limit = 5,
+  threshold = 0.3
+): Promise<FeedbackSimilar[]> {
+  try {
+    const embedding = await generarEmbedding(mensaje)
+    const supabase = await createClient()
+    const { data, error } = await supabase.rpc('buscar_feedbacks_similares', {
+      query_embedding: embedding,
+      similarity_threshold: threshold,
+      match_count: limit,
+    })
+
+    if (error) {
+      console.error('[AI Service] Error al invocar la RPC buscar_feedbacks_similares:', error)
+      return []
+    }
+
+    return (data as FeedbackSimilar[]) || []
+  } catch (error) {
+    console.error('[AI Service] Error en buscarFeedbacksSimilares:', error)
+    return []
+  }
+}
+
+export interface ResultadoAuditoria {
+  tieneViolacion: boolean
+  respuestaFinal: string
+}
+
+export async function auditarRespuestaIA(
+  mensajeUsuario: string,
+  respuestaIA: string,
+  sessionId?: string
+): Promise<ResultadoAuditoria> {
+  try {
+    let tieneViolacion = false
+    let respuestaFinal = respuestaIA
+    let reglaViolada: string | null = null
+    let nivelGravedad: 'bajo' | 'medio' | 'alto' = 'bajo'
+
+    interface ReglaAuditoria {
+      nombre: string
+      regex: RegExp
+      gravedad: 'bajo' | 'alto'
+      /** Texto de reemplazo total (solo si la respuesta debe anularse). */
+      fallback?: string
+      /** Si está definido: redacta las coincidencias con este texto en vez de anular la respuesta. */
+      redactar?: string
+    }
+
+    const reglas: ReglaAuditoria[] = [
+      {
+        nombre: 'Mención de Peques ITEC (monitoreo)',
+        // ago 2026: el prompt maestro (ai_prompt_settings.asistente_global) define
+        // Peques ITEC como programa PÚBLICO difundible ("podés brindarle difusión e
+        // información abierta a la comunidad"). Antes esta regla tenía gravedad
+        // 'alto' y reemplazaba TODA la respuesta por una negativa genérica cada vez
+        // que el modelo mencionaba legítimamente el programa — era la causa
+        // principal de las negativas frecuentes del asistente. Ahora solo se
+        // registra para monitoreo, sin alterar la respuesta.
+        regex: /peques\s+itec/i,
+        gravedad: 'bajo' as const
+      },
+      {
+        nombre: 'Exposición de rutas internas del código',
+        regex: /(?:src\/|components\/|app\/|lib\/|pages\/|api\/|services\/|contexts\/)[a-zA-Z0-9_/-]+\.(?:ts|tsx|js|jsx)/i,
+        gravedad: 'alto' as const,
+        // ago 2026: en vez de anular toda la respuesta (perdía información útil),
+        // se redacta únicamente la ruta detectada.
+        redactar: 'Sección interna del sitio ITEC'
+      },
+      {
+        nombre: 'Uso de regionalismos informales',
+        regex: /\b(viste|che|pibe)\b/i,
+        gravedad: 'bajo' as const
+      },
+      {
+        nombre: 'Uso de palabras temporales genéricas',
+        regex: /\b(hoy|ayer|mañana)\b/i,
+        gravedad: 'bajo' as const
+      }
+    ]
+
+    for (const regla of reglas) {
+      if (regla.regex.test(respuestaIA)) {
+        tieneViolacion = true
+        reglaViolada = regla.nombre
+        nivelGravedad = regla.gravedad
+
+        if (regla.redactar && regla.gravedad === 'alto') {
+          const regexGlobal = new RegExp(regla.regex.source, 'gi')
+          respuestaFinal = respuestaFinal.replace(regexGlobal, regla.redactar)
+        } else if (regla.gravedad === 'alto' && regla.fallback) {
+          respuestaFinal = regla.fallback
+          break
+        }
+      }
+    }
+
+    if (tieneViolacion && reglaViolada) {
+      const registroViolacion = {
+        session_id: sessionId || null,
+        mensaje_usuario: mensajeUsuario,
+        respuesta_ia: respuestaIA,
+        regla_violada: reglaViolada,
+        nivel_gravedad: nivelGravedad
+      }
+
+      createClient().then(async (supabase) => {
+        const { error } = await supabase
+          .from('ai_auditoria_violaciones')
+          .insert(registroViolacion)
+        
+        if (error) {
+          console.error('[AI Audit] Error al persistir la violación de seguridad:', error.message)
+        }
+      }).catch(err => {
+        console.error('[AI Audit] Error al crear el cliente de Supabase para auditoría:', err)
+      })
+    }
+
+    return { tieneViolacion, respuestaFinal }
+  } catch (error) {
+    console.error('[AI Audit] Error inesperado en auditarRespuestaIA:', error)
+    return { tieneViolacion: false, respuestaFinal: respuestaIA }
+  }
+}

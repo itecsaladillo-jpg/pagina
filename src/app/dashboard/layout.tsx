@@ -1,0 +1,352 @@
+import type { Metadata } from 'next'
+import Image from 'next/image'
+import Link from 'next/link'
+import { getCurrentMember, isAdmin } from '@/services/auth'
+import { createClient } from '@/lib/supabase/server'
+import { SidebarIdeasLink } from '@/components/dashboard/SidebarIdeasLink'
+
+export const metadata: Metadata = {
+  title: 'Panel de Control — ITEC Saladillo',
+}
+
+const navItems = [
+  {
+    label: 'Muro de Noticias',
+    href: '/dashboard/muro',
+    icon: 'M12 7.5h1.5m-1.5 3h1.5m-7.5 3h7.5m-7.5 3h7.5m3-9h3.375c.621 0 1.125.504 1.125 1.125V18a2.25 2.25 0 0 1-2.25 2.25M16.5 7.5V18a2.25 2.25 0 0 0 2.25 2.25M16.5 7.5V4.875c0-.621-.504-1.125-1.125-1.125H4.125C3.504 3.75 3 4.254 3 4.875V18a2.25 2.25 0 0 0 2.25 2.25h13.5M6 7.5h3v3H6v-3Z',
+  },
+  {
+    label: 'Sala de Reuniones',
+    href: '/dashboard/reuniones',
+    icon: 'M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z',
+  },
+  {
+    label: 'Aula Virtual',
+    href: '/clases/demostracion',
+    icon: 'M2.25 6.75c0-.828.672-1.5 1.5-1.5h16.5c.828 0 1.5.672 1.5 1.5v9.75c0 .828-.672 1.5-1.5 1.5H3.75c-.828 0-1.5-.672-1.5-1.5V6.75ZM12 18.75v-1.5M9 21h6',
+  },
+  {
+    label: 'Pasaporte Digital',
+    href: '/dashboard/certificados',
+    icon: 'M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 0 1-1.043 3.296 3.745 3.745 0 0 1-3.296 1.043A3.745 3.745 0 0 1 12 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 0 1-3.296-1.043 3.745 3.745 0 0 1-1.043-3.296A3.745 3.745 0 0 1 3 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 0 1 1.043-3.296 3.746 3.746 0 0 1 3.296-1.043A3.746 3.746 0 0 1 12 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 0 1 3.296 1.043 3.746 3.746 0 0 1 1.043 3.296A3.745 3.745 0 0 1 21 12Z',
+  },
+  {
+    label: 'Buzón de Ideas',
+    href: '/dashboard/ideas',
+    icon: 'M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z',
+  },
+  {
+    label: 'Mi Perfil',
+    href: '/dashboard/perfil',
+    icon: 'M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z',
+  },
+  {
+    label: 'Nube de Archivos',
+    href: '/dashboard/drive',
+    icon: 'M2.25 15a4.5 4.5 0 0 0 4.5 4.5H18a3.75 3.75 0 0 0 .496-7.467 5.25 5.25 0 0 0-10.433-1.425 4.5 4.5 0 0 0-5.813 4.392Z',
+  },
+]
+
+const adminNavItems = [
+  {
+    label: 'Gestión de Miembros',
+    href: '/dashboard/miembros',
+    icon: 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z',
+  },
+  {
+    label: 'Encuestas ITEC',
+    href: '/dashboard/encuestas',
+    icon: 'M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z',
+  },
+  {
+    label: 'Sistema de Preguntas',
+    href: '/dashboard/eventos',
+    icon: 'M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 0 1 .865-.501 48.172 48.172 0 0 0 3.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v5.03Z',
+  },
+  {
+    label: 'Nube de Ideas',
+    href: '/dashboard/nubes',
+    icon: 'M2.25 15a4.5 4.5 0 0 0 4.5 4.5H18a3.75 3.75 0 0 0 .496-7.467 5.25 5.25 0 0 0-10.433-1.425 4.5 4.5 0 0 0-5.813 4.392Z',
+  },
+  {
+    label: 'Comunicación',
+    href: '/dashboard/comunicacion',
+    icon: 'M12 7.5h1.5m-1.5 3h1.5m-7.5 3h7.5m-7.5 3h7.5m3-9h3.375c.621 0 1.125.504 1.125 1.125V18a2.25 2.25 0 0 1-2.25 2.25M16.5 7.5V18a2.25 2.25 0 0 0 2.25 2.25M16.5 7.5V4.875c0-.621-.504-1.125-1.125-1.125H4.125C3.504 3.75 3 4.254 3 4.875V18a2.25 2.25 0 0 0 2.25 2.25h13.5M6 7.5h3v3H6v-3Z',
+  },
+  {
+    label: 'Ajustes del Sitio',
+    href: '/dashboard/settings',
+    icon: 'M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z M15 12a3 3 0 11-6 0 3 3 0 016 0z',
+  },
+  {
+    label: 'Entrenamiento Asistente',
+    href: '/dashboard/entrenamiento-asistente',
+    icon: 'M12 18v-5.25m0 0a6.01 6.01 0 0 0 1.5-.189m-1.5.189a6.01 6.01 0 0 1-1.5-.189m3.75 7.478a12.06 12.06 0 0 1-4.5 0m3.75 2.383a14.406 14.406 0 0 1-3 0M14.25 18v-.192c0-.983.658-1.823 1.508-2.316a7.5 7.5 0 1 0-7.517 0c.85.493 1.509 1.333 1.509 2.316V18',
+  },
+  {
+    label: 'Videoteca',
+    href: '/dashboard/videoteca',
+    icon: 'M15.75 10.5l4.72-4.72a.75.75 0 011.28.53v11.38a.75.75 0 01-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25h-9A2.25 2.25 0 002.25 7.5v9a2.25 2.25 0 002.25 2.25z',
+  },
+  {
+    label: 'Streaming',
+    href: '/dashboard/streaming',
+    icon: 'M9.348 14.651a3.75 3.75 0 010-5.303m5.304 0a3.75 3.75 0 010 5.303m-7.425 2.122a6.75 6.75 0 010-9.546m9.546 0a6.75 6.75 0 010 9.546M10.5 12a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0z',
+  },
+  {
+    label: 'WhatsApp',
+    href: '/dashboard/whatsapp',
+    icon: 'M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zM12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.978-1.406A9.944 9.944 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18a7.946 7.946 0 0 1-4.333-1.279l-.31-.184-3.118.88.846-3.048-.201-.313A7.954 7.954 0 0 1 4 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8z',
+  },
+  {
+    label: 'Crear Evento',
+    href: '/dashboard/eventos-presenciales',
+    icon: 'M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z',
+  },
+  {
+    label: 'Saladillo for Export',
+    href: '/dashboard/saladillo-for-export',
+    icon: 'M12 21a9.004 9.004 0 0 0 8.716-6.747M12 21a9.004 9.004 0 0 1-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 0 1 7.843 4.582M12 3a8.997 8.997 0 0 0-7.843 4.582m15.686 0A11.953 11.953 0 0 1 12 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0 1 21 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0 1 12 16.5a17.92 17.92 0 0 1-8.716-2.247m0 0A9.015 9.015 0 0 1 3 12c0-1.605.42-3.113 1.157-4.418',
+  },
+]
+
+export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
+  const member = await getCurrentMember()
+  const isUserAdmin = isAdmin(member)
+
+  const supabase = await createClient()
+  const { count } = await supabase
+    .from('ideas')
+    .select('*', { count: 'exact', head: true })
+    .eq('status', 'pendiente')
+  const hasPendingIdeas = (count ?? 0) > 0
+  const pendingIdeasCount = count ?? 0
+
+  return (
+    <div className="min-h-screen bg-black flex">
+      {/* Sidebar */}
+      <aside className="w-64 bg-[var(--bg-surface)] border-r border-[var(--border-subtle)] flex-shrink-0 flex flex-col">
+        {/* Logo */}
+        <div className="p-5 border-b border-[var(--border-subtle)]">
+          <Link href="/" className="block">
+            <Image
+              src="/logoitectrans_v2.png"
+              alt="ITEC Saladillo"
+              width={140}
+              height={52}
+              className="h-9 w-auto object-contain"
+            />
+          </Link>
+          <p className="text-[10px] text-[var(--text-muted)] mt-1 tracking-wider uppercase">
+            Panel de Miembros
+          </p>
+        </div>
+
+        {/* Nav principal */}
+        <nav className="flex-1 p-3 flex flex-col gap-0.5 overflow-y-auto">
+          {navItems.map((item) =>
+            item.label === 'Buzón de Ideas' ? (
+              <SidebarIdeasLink
+                key={item.href}
+                hasPendingIdeas={hasPendingIdeas}
+                pendingCount={pendingIdeasCount}
+              />
+            ) : (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[var(--text-secondary)] hover:text-white hover:bg-white/5 transition-all text-sm font-medium group"
+              >
+                <svg
+                  className="w-4 h-4 flex-shrink-0 group-hover:text-[var(--accent-primary-2)] transition-colors"
+                  fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d={item.icon} />
+                </svg>
+                {item.label}
+              </Link>
+            )
+          )}
+
+          {/* Sección HERRAMIENTAS (Solo Admins) */}
+          {isUserAdmin && (
+            <>
+              <div className="pt-6 pb-2 px-3">
+                <span className="text-[10px] text-[var(--text-muted)] uppercase tracking-[0.2em] font-bold">
+                  HERRAMIENTAS
+                </span>
+              </div>
+
+              {/* Render items that are not Event or Prensa related */}
+              {adminNavItems
+                .filter((item) => item.label !== 'Encuestas ITEC' && item.label !== 'Sistema de Preguntas' && item.label !== 'Nube de Ideas' && item.label !== 'Crear Evento')
+                .map((item) => (
+                  <Link
+                    key={item.href}
+                    href={item.href} scroll={false}
+                    className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-purple-400/70 hover:text-purple-300 hover:bg-purple-500/5 transition-all text-sm font-medium group border border-transparent hover:border-purple-500/10"
+                  >
+                    <svg
+                      className="w-4 h-4 flex-shrink-0 transition-colors"
+                      fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" d={item.icon} />
+                    </svg>
+                    {item.label}
+                  </Link>
+                ))}
+
+              {/* Submenu: Prensa */}
+              <details className="group mt-2 border-t border-cyan-500/10 pt-2" open>
+                <summary className="flex items-center justify-between gap-3 px-3 py-2.5 rounded-lg text-cyan-400/80 hover:text-cyan-300 hover:bg-cyan-500/5 transition-all text-sm font-bold uppercase tracking-wider cursor-pointer list-none select-none [&::-webkit-details-marker]:hidden">
+                  <div className="flex items-center gap-3">
+                    <svg className="w-4 h-4 flex-shrink-0 text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z" />
+                    </svg>
+                    <span>Prensa</span>
+                  </div>
+                  <svg className="w-3.5 h-3.5 transition-transform duration-200 group-open:rotate-180 text-cyan-400/60" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                  </svg>
+                </summary>
+                <div className="pl-4 pt-1 space-y-1">
+                  <Link
+                    href="/dashboard/prensaNews" scroll={false}
+                    className="flex items-center gap-3 px-3 py-2 rounded-lg text-cyan-400/60 hover:text-cyan-300 hover:bg-cyan-500/5 transition-all text-xs font-semibold group border border-transparent hover:border-cyan-500/5"
+                  >
+                    <svg className="w-3.5 h-3.5 flex-shrink-0 transition-colors text-cyan-400/55 group-hover:text-cyan-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 7.5h1.5m-1.5 3h1.5m-7.5 3h7.5m-7.5 3h7.5m3-9h3.375c.621 0 1.125.504 1.125 1.125V18a2.25 2.25 0 0 1-2.25 2.25M16.5 7.5V18a2.25 2.25 0 0 0 2.25 2.25M16.5 7.5V4.875c0-.621-.504-1.125-1.125-1.125H4.125C3.504 3.75 3 4.254 3 4.875V18a2.25 2.25 0 0 0 2.25 2.25h13.5M6 7.5h3v3H6v-3Z" />
+                    </svg>
+                    Gacetillas
+                  </Link>
+                  <Link
+                    href="/dashboard/prensa" scroll={false}
+                    className="flex items-center gap-3 px-3 py-2 rounded-lg text-cyan-400/60 hover:text-cyan-300 hover:bg-cyan-500/5 transition-all text-xs font-semibold group border border-transparent hover:border-cyan-500/5"
+                  >
+                    <svg className="w-3.5 h-3.5 flex-shrink-0 transition-colors text-cyan-400/55 group-hover:text-cyan-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    Gestión de Prensa
+                  </Link>
+                </div>
+              </details>
+
+              {/* Submenu: Sponsors */}
+              <details className="group mt-2 border-t border-amber-500/10 pt-2" open>
+                <summary className="flex items-center justify-between gap-3 px-3 py-2.5 rounded-lg text-amber-400/80 hover:text-amber-300 hover:bg-amber-500/5 transition-all text-sm font-bold uppercase tracking-wider cursor-pointer list-none select-none [&::-webkit-details-marker]:hidden">
+                  <div className="flex items-center gap-3">
+                    <svg className="w-4 h-4 flex-shrink-0 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18.75a60.07 60.07 0 0 1 15.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 0 1 3 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 0 0-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 0 1-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 0 0 3 15h-.75M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm3 0h.008v.008H18V10.5Zm-12 0h.008v.008H6V10.5Z" />
+                    </svg>
+                    <span>Sponsors</span>
+                  </div>
+                  <svg className="w-3.5 h-3.5 transition-transform duration-200 group-open:rotate-180 text-amber-400/60" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                  </svg>
+                </summary>
+                <div className="pl-4 pt-1 space-y-1">
+                  <Link
+                    href="/dashboard/sponsorsNews" scroll={false}
+                    className="flex items-center gap-3 px-3 py-2 rounded-lg text-amber-400/60 hover:text-amber-300 hover:bg-amber-500/5 transition-all text-xs font-semibold group border border-transparent hover:border-amber-500/5"
+                  >
+                    <svg className="w-3.5 h-3.5 flex-shrink-0 transition-colors text-amber-400/55 group-hover:text-amber-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 7.5h1.5m-1.5 3h1.5m-7.5 3h7.5m-7.5 3h7.5m3-9h3.375c.621 0 1.125.504 1.125 1.125V18a2.25 2.25 0 0 1-2.25 2.25M16.5 7.5V18a2.25 2.25 0 0 0 2.25 2.25M16.5 7.5V4.875c0-.621-.504-1.125-1.125-1.125H4.125C3.504 3.75 3 4.254 3 4.875V18a2.25 2.25 0 0 0 2.25 2.25h13.5M6 7.5h3v3H6v-3Z" />
+                    </svg>
+                    Muro Sponsors
+                  </Link>
+                  <Link
+                    href="/dashboard/sponsors" scroll={false}
+                    className="flex items-center gap-3 px-3 py-2 rounded-lg text-amber-400/60 hover:text-amber-300 hover:bg-amber-500/5 transition-all text-xs font-semibold group border border-transparent hover:border-amber-500/5"
+                  >
+                    <svg className="w-3.5 h-3.5 flex-shrink-0 transition-colors text-amber-400/55 group-hover:text-amber-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    Gestión de Sponsors
+                  </Link>
+                </div>
+              </details>
+
+              {/* Submenu: Herramientas para Eventos */}
+              <details className="group mt-2 border-t border-purple-500/10 pt-2" open>
+                <summary className="flex items-center justify-between gap-3 px-3 py-2.5 rounded-lg text-purple-400/80 hover:text-purple-300 hover:bg-purple-500/5 transition-all text-sm font-bold uppercase tracking-wider cursor-pointer list-none select-none [&::-webkit-details-marker]:hidden">
+                  <div className="flex items-center gap-3">
+                    <svg className="w-4 h-4 flex-shrink-0 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5m-9-6h.008v.008H12v-.008ZM12 15h.008v.008H12V15Zm0 2.25h.008v.008H12v-.008ZM9.75 15h.008v.008H9.75V15Zm0 2.25h.008v.008H9.75v-.008ZM7.5 15h.008v.008H7.5V15Zm0 2.25h.008v.008H7.5v-.008Zm6.75-4.5h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V15Zm0 2.25h.008v.008h-.008v-.008Zm2.25-4.5h.008v.008H16.5v-.008Zm0 2.25h.008v.008H16.5V15Z" />
+                    </svg>
+                    <span>Herramientas para Eventos</span>
+                  </div>
+                  <svg className="w-3.5 h-3.5 transition-transform duration-200 group-open:rotate-180 text-purple-400/60" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                  </svg>
+                </summary>
+                <div className="pl-4 pt-1 space-y-1">
+                  {adminNavItems
+                    .filter((item) => item.label === 'Encuestas ITEC' || item.label === 'Sistema de Preguntas' || item.label === 'Nube de Ideas' || item.label === 'Crear Evento')
+                    .sort((a, b) => {
+                      const order = ['Crear Evento', 'Encuestas ITEC', 'Sistema de Preguntas', 'Nube de Ideas']
+                      return order.indexOf(a.label) - order.indexOf(b.label)
+                    })
+                    .map((item) => (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        className="flex items-center gap-3 px-3 py-2 rounded-lg text-purple-400/60 hover:text-purple-300 hover:bg-purple-500/5 transition-all text-xs font-semibold group border border-transparent hover:border-purple-500/5"
+                      >
+                        <svg
+                          className="w-3.5 h-3.5 flex-shrink-0 transition-colors text-purple-400/55 group-hover:text-purple-300"
+                          fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}
+                        >
+                          <path strokeLinecap="round" strokeLinejoin="round" d={item.icon} />
+                        </svg>
+                        {item.label}
+                      </Link>
+                    ))}
+                </div>
+              </details>
+            </>
+          )}
+        </nav>
+
+        {/* Mapa Productivo — acceso rápido destacado */}
+        <div className="mx-3 mb-3">
+           <Link
+            href="/mapa-productivo" scroll={false}
+            className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl
+              bg-gradient-to-r from-blue-600/15 to-cyan-600/10
+              border border-blue-500/20 hover:border-blue-500/40
+              text-blue-300 hover:text-white transition-all duration-200 text-sm font-semibold"
+          >
+            <svg className="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 6.75V15m6-6v8.25m.503 3.498 4.875-2.437c.381-.19.622-.58.622-1.006V4.82c0-.836-.88-1.38-1.628-1.006l-3.869 1.934c-.317.159-.69.159-1.006 0L9.503 3.252a1.125 1.125 0 0 0-1.006 0L3.622 5.689C3.24 5.88 3 6.27 3 6.695V19.18c0 .836.88 1.38 1.628 1.006l3.869-1.934c.317-.159.69-.159 1.006 0l4.994 2.497c.317.158.69.158 1.006 0Z" />
+            </svg>
+            <div className="flex-1 min-w-0">
+              <p className="text-xs font-bold leading-none">Mapa Productivo</p>
+              <p className="text-[10px] text-blue-400/60 mt-0.5">Sector privado + escuelas</p>
+            </div>
+            <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse flex-shrink-0" />
+          </Link>
+        </div>
+
+        {/* Signout */}
+        <div className="p-3 border-t border-[var(--border-subtle)]">
+          <form action="/auth/signout" method="post">
+            <button
+              type="submit"
+              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-[var(--text-muted)] hover:text-red-300 hover:bg-red-900/10 transition-all text-sm"
+            >
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
+              </svg>
+              Cerrar sesión
+            </button>
+          </form>
+        </div>
+      </aside>
+
+      {/* Contenido principal */}
+      <main className="flex-1 overflow-auto bg-black grid-bg">
+        <div className="max-w-5xl mx-auto p-8">{children}</div>
+      </main>
+    </div>
+  )
+}
