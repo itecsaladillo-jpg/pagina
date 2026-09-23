@@ -2,7 +2,7 @@ import { getCurrentMember } from '@/services/auth'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { WhatsAppUnifiedAgenda } from '@/components/whatsapp/WhatsAppUnifiedAgenda'
-import type { WhatsAppTemplate, WhatsAppContact, WhatsAppGroup } from './actions'
+import type { WhatsAppTemplate, WhatsAppContact, WhatsAppGroup } from './types'
 
 export default async function WhatsAppPage() {
   const admin = await getCurrentMember()

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import type { WhatsAppTemplate } from '@/app/dashboard/whatsapp/actions'
+import type { WhatsAppTemplate } from '@/app/dashboard/whatsapp/types'
 import { useToast } from './Toast'
 import { BookOpen, X, Copy, ChevronRight, ChevronDown } from 'lucide-react'
 
