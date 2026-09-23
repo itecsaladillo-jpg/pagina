@@ -482,7 +482,9 @@ function GroupDetail({ group, allContacts, templates, onBack, onGroupUpdated, on
           allContacts={allContacts}
           onClose={() => setShowMembers(false)}
           onSaved={async (newContacts) => {
+            console.log('[onSaved] newContacts:', newContacts.map((c: any) => c.telefono))
             const refreshed = await getGroupWithContactsAction(group.id)
+            console.log('[onSaved] refreshed:', refreshed.success, 'contacts:', refreshed.contacts?.length)
             if (refreshed.success && refreshed.contacts) {
               setFullGroup({ ...fullGroup, contacts: refreshed.contacts })
               onGroupUpdated({ ...group, contact_count: refreshed.contacts.length } as any)
@@ -522,7 +524,9 @@ function GroupMembersModal({ group, currentMembers, allContacts, onClose, onSave
   const save = () => {
     startTransition(async () => {
       const contactsToSync = allContacts.filter(c => selectedPhones.has(c.telefono))
+      console.log('[Modal save] group.id:', group.id, 'selected:', contactsToSync.map(c => c.telefono))
       const res = await setGroupContactsAction(group.id, contactsToSync as any)
+      console.log('[Modal save] response:', res)
       if (res.success) {
         onSaved(contactsToSync)
         toast('success', 'Miembros actualizados.')

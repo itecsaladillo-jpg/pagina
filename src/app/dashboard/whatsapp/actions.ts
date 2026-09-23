@@ -263,14 +263,32 @@ export async function setGroupContactsAction(
   try {
     const admin = await getCurrentMember()
     if (!admin || admin.role !== 'admin') throw new Error('No autorizado')
+    if (!groupId) throw new Error('groupId es requerido')
 
     const contactIds = contacts.map(c => c.id).filter(Boolean)
+    console.log('[setGroupContactsAction] groupId:', groupId, 'contacts:', contactIds.length)
+
     const supabase = await createClient()
-    await supabase.from('whatsapp_group_contacts').delete().eq('group_id', groupId)
+    const { error: deleteError } = await supabase
+      .from('whatsapp_group_contacts')
+      .delete()
+      .eq('group_id', groupId)
+    if (deleteError) {
+      console.error('[setGroupContactsAction] delete error:', deleteError)
+      throw new Error(deleteError.message)
+    }
+
     const rows = contactIds.map(contact_id => ({ group_id: groupId, contact_id }))
     if (rows.length > 0) {
-      await supabase.from('whatsapp_group_contacts').insert(rows)
+      const { error: insertError } = await supabase
+        .from('whatsapp_group_contacts')
+        .insert(rows)
+      if (insertError) {
+        console.error('[setGroupContactsAction] insert error:', insertError)
+        throw new Error(insertError.message)
+      }
     }
+
     revalidatePath('/dashboard/whatsapp')
     return { success: true }
   } catch (err: unknown) {
