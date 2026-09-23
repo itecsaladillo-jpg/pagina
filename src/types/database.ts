@@ -262,6 +262,35 @@ export interface Database {
         Insert: Omit<Evento, 'id' | 'created_at' | 'updated_at'>
         Update: Partial<Omit<Evento, 'id' | 'created_at'>>
       }
+      whatsapp_groups: {
+        Row: WhatsAppGroup
+        Insert: Omit<WhatsAppGroup, 'id' | 'created_at' | 'updated_at'>
+        Update: Partial<Omit<WhatsAppGroup, 'id' | 'created_at' | 'updated_at'>>
+      }
+      whatsapp_contacts: {
+        Row: WhatsAppContact
+        Insert: Omit<WhatsAppContact, 'id' | 'created_at' | 'updated_at'>
+        Update: Partial<Omit<WhatsAppContact, 'id' | 'created_at' | 'updated_at'>>
+      }
     }
   }
+}
+
+export interface WhatsAppGroup {
+  id: string
+  created_at: string
+  updated_at: string
+  nombre: string
+  descripcion: string | null
+}
+
+export interface WhatsAppContact {
+  id: string
+  created_at: string
+  updated_at: string
+  nombre: string
+  apellido: string
+  telefono: string
+  grupo_id: string | null
+  notas: string | null
 }

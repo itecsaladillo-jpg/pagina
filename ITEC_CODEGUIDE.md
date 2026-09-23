@@ -10,7 +10,7 @@ Plataforma web full-stack de **ITEC Saladillo** (Asociación Civil de Ciencia y 
 - **React:** 19.2.4
 - **Lenguaje:** TypeScript (strict)
 - **Estilos:** Tailwind CSS v4 + CSS custom properties (tema oscuro)
-- **Base de datos:** Supabase PostgreSQL (61 migraciones)
+- **Base de datos:** Supabase PostgreSQL (59 migraciones)
 - **Auth:** Supabase Auth + Google OAuth
 - **Despliegue:** Vercel
 - **Path alias:** `@/` → `./src/`
@@ -163,6 +163,7 @@ D:\ITEC\
 │   ├── lib/
 │   │   ├── supabase/           # Clientes Supabase (server, browser, admin)
 │   │   ├── rag/                # RAG cascade (P1-P4), conversaciones guardadas
+│   │   ├── settings.ts         # Resolución de settings/API keys (DB → env → vacío)
 │   │   ├── drive.ts            # Configuración de carpetas Drive por comisión
 │   │   ├── email.ts            # Servicio de emails con Resend
 │   │   ├── email/              # Templates HTML de emails
@@ -176,7 +177,7 @@ D:\ITEC\
 │   │   └── LanguageContext.tsx  # Contexto de idioma
 │   └── proxy.ts                # Next.js middleware (auth, protección de rutas)
 ├── supabase/
-│   └── migrations/             # 55 migraciones de base de datos
+│   └── migrations/             # 59 migraciones de base de datos
 ├── AGENTS.md                   # Instrucciones para agentes IA (Next.js)
 ├── CLAUDE.md                   # Instrucciones para Claude
 ├── ITEC_CODEGUIDE.md           # Esta guía
@@ -262,6 +263,7 @@ D:\ITEC\
 - **Service role key** (servidor): Solo se usa en Server Components y API routes, nunca en el cliente.
 - **Sponsors `private_token`:** UUID único por sponsor para acceso a portal exclusivo. No se expone en URLs públicas.
 - **Google Service Account:** Almacenada en `site_settings` (no en `.env.local`) para permitir rotación sin redeploy.
+- **API Keys centralizadas (nuevo):** Todas las keys de IA y servicios externos (OpenRouter, Gemini, Groq, HuggingFace, Ollama, Resend) se almacenan en la columna `api_keys` (JSONB) de la tabla `site_settings`. El módulo `src/lib/settings.ts` provee `getSettingValue(key, envVar)` con estrategia de fallback: DB → `process.env` → string vacío. Las keys se gestiona desde el panel `/dashboard/settings` (componente `ApiKeysSettingsForm` + server actions `getApiKeysAction` / `updateApiKeyAction`). Las keys se enmascaran al cliente (solo primeros 6 + últimos 4 caracteres).
 
 ### Headers de Seguridad
 - **CSP (Content Security Policy):** Configurado en `next.config.ts` para restringir orígenes de scripts, estilos y frames.
@@ -292,7 +294,7 @@ D:\ITEC\
 | `members` | Perfiles de usuario | `id(uuid PK→auth.users)`, `full_name`, `email(UNIQUE)`, `avatar_url`, `role`(admin\|coordinador\|miembro\|colaborador), `status`(activo\|inactivo\|pendiente), `bio`, `linkedin_url`, `phone`, `join_date`, `frase_itec`, `tareas_itec` |
 | `commissions` | Grupos de trabajo | `id(uuid PK)`, `name`, `slug(UNIQUE)`, `description`, `icon`, `color`, `is_active`, `coordinator_id(FK→members)`, `meet_link`, `drive_folder_id` |
 | `commission_members` | Relación miembros-comisiones | `commission_id(FK→commissions)`, `member_id(FK→members)`, `joined_at`, `is_coordinator` — Unique(commission_id, member_id) |
-| `site_settings` | Configuración global | Clave-valor para settings del sitio (Google service account, Drive root folder, etc.) |
+| `site_settings` | Configuración global | Clave-valor para settings del sitio (Google service account, Drive root folder, etc.). Incluye columna `api_keys` (JSONB) con todas las API keys de servicios externos (OpenRouter, Gemini, Groq, HuggingFace, Ollama, Resend). |
 | `allowed_emails` | Emails pre-aprobados | `email(UNIQUE)`, `role`, `commission_id` |
 
 ### Noticias y Comunicación (Multicanal)
@@ -448,6 +450,8 @@ El flujo de creación de noticias funciona así:
 | `buscarFeedbacksSimilares()` | Búsqueda semántica de feedbacks similares |
 | `auditarRespuestaIA()` | Audita respuestas por violaciones de policy (4 categorías) |
 
+> **Nota (commit `0afddae`):** Todas las funciones de IA ahora resuelven sus API keys vía `getSettingValue()` de `src/lib/settings.ts` en lugar de `process.env` directamente. Esto permite que las keys se actualizen sin redeploy, a través del panel `/dashboard/settings`.
+
 ### RAG Cascade (`src/lib/rag/ragCascade.ts`)
 Sistema de recuperación de 4 niveles con scoring por solapamiento de tokens (estilo Jaccard):
 1. **P1** (score >= 0.45) — Documentos locales pre-parseados (`DOCS_CONTEXT` generado por `npm run sync-docs`)
@@ -521,8 +525,14 @@ Sistema completo de interacción en vivo:
 - **Concepto de Charla dinámico** — El operador configura un concepto (`nube_concepto`) desde la Consola ITEC que se muestra en celulares y pantalla gigante en tiempo real vía Realtime
 - **Encuestas** — Votación en tiempo real con resultados visibles, un voto por dispositivo
 - **Semáforo de Comprensión** — Sistema de alertas anónimas desde celulares (v3, migración 054):
-  - **Tabla `evento_semaforo_votos`:** Solo columnas `id(uuid)` + `evento_id(uuid FK)` + `created_at(timestamptz)`. Sin `visitor_id`, sin columna `voto` — cada fila ES un voto negativo. Append-only, sin UPDATE/DELETE.
-  - **Botón "NO ENTIENDO, ME PERDÍ (Anonimo)"** en `eventos/[id]/page.tsx`: inserta fila en `evento_semaforo_votos`. Cooldown de 5s por dispositivo (solo client-side, sin server dedup).
+- **Tabla `evento_semaforo_votos`:** Columnas `id(uuid PK)` + `evento_id(uuid FK)` + `created_at(timestamptz)` + `dispositivo_id TEXT NOT NULL`. Cada fila ES un voto negativo. Append-only, sin UPDATE/DELETE.
+  - **Un voto por dispositivo por ciclo (v3 + migración 057):** Se agrega columna `dispositivo_id` (TEXT) y un server action `registrarVotoNegativo(eventoId, dispositivoId)` que:
+    1. Obtiene `semaforo_last_reset_at` del evento.
+    2. Verifica si el dispositivo ya votó desde ese reset (`COUNT ... WHERE created_at >= resetAt`).
+    3. Si ya votó, retorna `{ yaVoto: true }` y el cliente muestra estado "Voto registrado en esta ronda".
+    4. Si no, inserta el voto con `dispositivo_id`.
+  - **Función `verificarVotoDispositivo(eventoId, dispositivoId)`** (nueva): verifica si un dispositivo ya votó en el ciclo actual. Se usa al cargar la página y al detectar un reset por Realtime.
+  - **Botón "NO ENTIENDO, ME PERDÍ (Anonimo)"** en `eventos/[id]/page.tsx`: deshabilitado si `semaforoYaVoto` o `cooldown > 0`. Cooldown de 5s client-side.
   - **Cálculo de porcentaje:** `votosNegativos / Math.max(totalAcreditados, votosNegativos, 1) * 100`. El denominator seguro previene división por cero y maneja el caso de más votos que acreditados.
   - **Umbrales de estado:**
     - VERDE: < 30% de alertas
@@ -531,12 +541,13 @@ Sistema completo de interacción en vivo:
   - **Función `calcularEstado()`** duplicada idénticamente en 4 archivos: `semaforoActions.ts`, `PanelOradorClient.tsx`, `eventos/[id]/page.tsx`, `pantalla/page.tsx`.
   - **Reset (`resetearSemaforo()`):** Requiere rol admin/coordinador. Actualiza `semaforo_last_reset_at` a `now()` en tabla `eventos`. NO borra votos — el COUNT filtra por `created_at >= resetAt`.
   - **3 suscripciones Realtime por cliente:**
-    1. `evento_semaforo_votos` INSERT → incrementa contador optimista (consola) o recalcula desde DB (móvil/pantalla)
-    2. `eventos` UPDATE (filtro `id=eq.{eventoId}`) → detecta cambio en `semaforo_last_reset_at` y recalcula
+    1. `evento_semaforo_votos` INSERT → recalcula desde DB (móvil/pantalla)
+    2. `eventos` UPDATE (filtro `id=eq.{eventoId}`) → detecta cambio en `semaforo_last_reset_at`, recalcula y re-verifica voto del dispositivo
     3. `eventos_asistentes` INSERT/DELETE → actualiza denominator (solo consola y pantalla, NO móvil)
   - **Arquitectura:** 3 clientes independientes (móvil, consola orador, pantalla gigante) que suscriben los mismos canales Realtime y calculan estado localmente. El orador puede reiniciar desde `PanelOradorClient.tsx`.
   - **RLS:** SELECT e INSERT públicos (sin auth). Sin políticas UPDATE/DELETE (votos inmutables).
   - **Nota de tipo:** `HerramientasActivas` en `database.ts` NO incluye `semaforo: boolean` — los componentes trabajan around this con `(evento as any).herramientas_activas.semaforo`.
+  - **Migración 057 (`057_semaforo_dispositivo_id.sql`):** Agrega columna `dispositivo_id TEXT NOT NULL DEFAULT ''` e índice compuesto `idx_semaforo_votos_evento_dispositivo_created` para optimizar la consulta de verificación de voto único.
 - **Big Screen Display** (`/pantalla`) — Pantalla completa para proyector con múltiples modos:
   - **Modo Bienvenida** — Código QR + conteo de asistentes
   - **Modo Encuestas** — Barras animadas con resultados en vivo
@@ -612,6 +623,13 @@ Crear/editar comisiones con nombre, slug, descripción, icono, color, coordinado
 ### Settings del Sitio (`/dashboard/settings`)
 Configuración global: Google Service Account JSON, Drive root folder ID, y otras settings clave-valor.
 
+### Gestión de API Keys (`/dashboard/settings`)
+Sección nueva (agregada en commit `0afddae`). Permite administrar todas las credenciales de servicios externos de forma centralizada en la columna `api_keys` (JSONB) de `site_settings`:
+- **Componente:** `ApiKeysSettingsForm.tsx` (352 líneas) — interfaz cliente con 13 keys organizadas en 2 categorías (IA & Comunicaciones), con posibilidad de mostrar/ocultar valor, editar, guardar y ver estado de origen (base de datos vs variable de entorno).
+- **Server actions:** `getApiKeysAction()` (lista keys enmascaradas) y `updateApiKeyAction(keyName, newValue)` (actualiza o elimina una key del JSONB).
+- **Módulo `src/lib/settings.ts`:** Función `getSettingValue(key, envVarName)` con caché por request y estrategia de fallback DB → `process.env` → string vacío. Todas las llamadas a servicios IA (OpenRouter, Gemini, Groq, HuggingFace, Ollama, Resend) usan esta función en lugar de `process.env` directamente.
+- **Migración 058 (`057_site_settings_api_keys.sql`):** Agrega columna `api_keys jsonb NOT NULL DEFAULT '{}'::jsonb` a `site_settings`.
+
 ### Prompts de IA (`/dashboard/entrenamiento-asistente`)
 Configuración de system prompts dinámicos para cada modelo IA (keyed por `clave_prompt` en tabla `ai_prompt_settings`).
 
@@ -670,7 +688,7 @@ Formulario para crear nuevas acciones de impacto (capacitaciones, eventos social
 ## Integraciones Externas
 
 ### Supabase
-- **Database:** PostgreSQL con 56 migraciones, RLS policies
+- **Database:** PostgreSQL con 59 migraciones, RLS policies
 - **Auth:** Supabase Auth con Google OAuth, manejo de sesiones via cookies SSR
 - **Storage:** 3 buckets: `article-media` (imágenes artículos), `avatars` (fotos perfil), `training-docs` (PDFs entrenamiento IA)
 - **Realtime:** Suscripciones `postgres_changes` para:
@@ -754,21 +772,23 @@ Formulario para crear nuevas acciones de impacto (capacitaciones, eventos social
 
 ## Variables de Entorno Requeridas
 
+> **Nota (nueva):** Las API keys de IA y servicios externos ya no dependen exclusivamente de `.env.local`. Todas se almacenan en la columna `api_keys` (JSONB) de `site_settings` y se gestiona desde el panel de ajustes (`/dashboard/settings`). La función `getSettingValue()` usa estrategia de fallback: DB → `process.env` → vacío. Las variables de entorno siguen siendo válidas como fallback.
+
 | Variable | Propósito |
 |----------|-----------|
 | `NEXT_PUBLIC_SUPABASE_URL` | URL del proyecto Supabase |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Key anónima de Supabase |
 | `SUPABASE_SERVICE_ROLE_KEY` | Service role key (admin) |
-| `GROQ_API_KEY` | API key de Groq |
-| `RESEND_API_KEY` | API key de Resend |
-| `RESEND_FROM_PRENSA` | Email remitente para prensa |
-| `OPENROUTER_API_KEY` | API key de OpenRouter |
-| `GEMINI_APY_KEY` | API key de Google Gemini (nota: typo intencional en el nombre real) |
+| `GROQ_API_KEY` | API key de Groq (fallback si no está en DB) |
+| `RESEND_API_KEY` | API key de Resend (fallback si no está en DB) |
+| `RESEND_FROM_PRENSA` | Email remitente para prensa (fallback si no está en DB) |
+| `OPENROUTER_API_KEY` | API key de OpenRouter (fallback si no está en DB) |
+| `GEMINI_API_KEY` | API key de Google Gemini (fallback si no está en DB) |
 | `GEMINI_API_KEY_2`, `GEMINI_API_KEY_3`, `GEMINI_API_KEY_4` | API keys adicionales de Gemini (fallback chain) |
-| `GOOGLE_GENERATIVE_AI_API_KEY` | API key alternativa de Gemini |
-| `OLLAMA_API_BASE_URL` | URL del servidor Ollama self-hosted |
-| `OLLAMA_MODEL` | Nombre del modelo Ollama |
-| `HF_API_KEY` | API key de HuggingFace |
+| `GOOGLE_GENERATIVE_AI_API_KEY` | API key alternativa de Gemini (fallback si no está en DB) |
+| `OLLAMA_API_BASE_URL` | URL del servidor Ollama self-hosted (fallback si no está en DB) |
+| `OLLAMA_MODEL` | Nombre del modelo Ollama (fallback si no está en DB) |
+| `HF_API_KEY` | API key de HuggingFace (fallback si no está en DB) |
 | `NEXT_PUBLIC_SITE_URL` | URL pública del sitio |
 | `NEXT_PUBLIC_MEET_LINK` | Link default de Google Meet para reuniones y streaming |
 
@@ -865,7 +885,11 @@ Server Action     →  getCurrentMember()  →  validate Zod  →  mutate DB  �
 - **Concepto de Nube Dinámico:** Campo `nube_concepto` en tabla `eventos`. Se actualiza vía Server Action `actualizarConceptoNube()` (requiere rol admin/coordinador). Se propaga en tiempo real a celulares y pantalla gigante via suscripción Realtime a tabla `eventos`.
 - **Migración 055_nube_concepto.sql:** Agrega columna `nube_concepto TEXT DEFAULT ''` a tabla `eventos`. Debe ejecutarse en Supabase después del deploy.
 - **Migración 056_fix_rls_critical.sql:** Corrige políticas RLS en `clases_virtuales`, `clase_interacciones`, `certificados_digitales`, `saved_conversations`. Debe ejecutarse en Supabase.
+- **Migración 057_semaforo_dispositivo_id.sql:** Agrega columna `dispositivo_id TEXT NOT NULL DEFAULT ''` a `evento_semaforo_votos` + índice compuesto `idx_semaforo_votos_evento_dispositivo_created` + elimina índice antiguo `idx_semaforo_votos_evento_created`. Permite un voto por dispositivo por ciclo (desde `semaforo_last_reset_at`).
+- **Migración 058_site_settings_api_keys.sql:** Agrega columna `api_keys jsonb NOT NULL DEFAULT '{}'::jsonb` a `site_settings`. Almacena todas las API keys de servicios externos de forma centralizada.
+- **Migración 059_whatsapp_groups.sql:** Crea tablas `whatsapp_groups` y `whatsapp_contacts` para gestión de grupos de contactos con los que se envían invitaciones por WhatsApp Web. RLS: SELECT para autenticados, INSERT/UPDATE/DELETE solo admin.
 - **Migración 031 (actualizada):** RPC `obtener_miembros_publicos` ya no retorna `email` ni `phone` para proteger PII.
 - **ChatWidget lazy-loaded:** Se carga con `next/dynamic({ ssr: false })` para no impactar carga inicial de páginas.
+- **API Keys centralizadas:** Todas las keys de IA (OpenRouter, Gemini, Groq, HuggingFace, Ollama, Resend) se resuelven vía `getSettingValue()` de `src/lib/settings.ts` con fallback DB → `process.env` → vacío. Para cambiar una key sin redeploy, usar el panel `/dashboard/settings`.
 - **Dead code cleanup:** Eliminados archivos huérfanos (`test-grok`, `test-gemini`, `news-multicanal.ts`, `aiConfig.json`), 22+ funciones nunca importadas, dependencia `dotenv` innecesaria, assets públicos default de Next.js.
 - **Security hardening (jul 2026):** RPC `obtener_miembros_publicos` ya no retorna `email` ni `phone` (PII leak). LivePoll usa server action con cookie dedup en vez de update client-side directo. Errores de providers IA sanitizados (no exponen detalles internos). `createSponsorAction` tipado explícito en vez de `Record<string, unknown>`.
