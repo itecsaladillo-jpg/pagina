@@ -5,13 +5,14 @@ import Link from 'next/link'
 
 export const dynamic = 'force-dynamic'
 
-export default async function TrainingDetailPage({ params }: { params: { id: string } }) {
+export default async function TrainingDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   const supabase = await createClient()
   
   const { data: training } = await supabase
     .from('trainings')
     .select('*')
-    .eq('id', params.id)
+    .eq('id', id)
     .single()
 
   if (!training) notFound()

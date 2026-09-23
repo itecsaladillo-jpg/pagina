@@ -53,5 +53,17 @@ create policy "Cualquiera puede insertar votos"
 create policy "Miembros pueden gestionar votos" 
   on public.poll_votes for all using (auth.role() = 'authenticated');
 
--- ¡IMPORTANTE! Habilitar Realtime para la tabla poll_votes
-alter publication supabase_realtime add table public.poll_votes;
+-- ¡IMPORTANTE! Habilitar Realtime para la tabla poll_votes (idempotente)
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_publication_tables
+    WHERE pubname = 'supabase_realtime'
+      AND schemaname = 'public'
+      AND tablename = 'poll_votes'
+  ) THEN
+    ALTER PUBLICATION supabase_realtime ADD TABLE public.poll_votes;
+  END IF;
+END
+$$;

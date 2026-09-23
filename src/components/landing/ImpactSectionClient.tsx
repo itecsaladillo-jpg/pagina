@@ -7,6 +7,7 @@ import { format } from 'date-fns'
 import { es, enUS, pt } from 'date-fns/locale'
 import Link from 'next/link'
 import { useLanguage } from '@/contexts/LanguageContext'
+import { toUtcLocalDate } from '@/lib/dates'
 
 interface ImpactCardProps {
   item: any
@@ -120,7 +121,7 @@ function ImpactCard({ item, idx }: ImpactCardProps) {
       {/* Text Content */}
       <div className="p-6 flex-1 flex flex-col">
         <div className="text-[10px] text-[var(--text-muted)] font-black uppercase tracking-[0.2em] mb-1">
-          {format(new Date(item.date), language === 'en' ? "MMMM d, yyyy" : "d 'de' MMMM, yyyy", { 
+          {format(toUtcLocalDate(item.date), language === 'en' ? "MMMM d, yyyy" : "d 'de' MMMM, yyyy", { 
             locale: language === 'en' ? enUS : language === 'pt' ? pt : es 
           })}
         </div>
@@ -182,7 +183,7 @@ export function ImpactSectionClient({ actions, articles }: any) {
   ].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
 
   return (
-    <section id="acciones" className="pt-7 pb-14 relative overflow-hidden bg-black scroll-mt-16">
+    <section id="seccion-impacto" className="pt-24 pb-14 relative overflow-hidden bg-black scroll-mt-16">
       <div className="max-w-7xl mx-auto w-full px-6 relative z-10">
         
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 items-start">
@@ -201,7 +202,7 @@ export function ImpactSectionClient({ actions, articles }: any) {
             </p>
           </div>
 
-          <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-10">
+          <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-10 mt-12 lg:mt-0">
             {feedItems.slice(0, 2).map((item: any, idx: number) => (
               <ImpactCard key={idx} item={item} idx={idx} />
             ))}

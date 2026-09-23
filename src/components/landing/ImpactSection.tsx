@@ -31,8 +31,8 @@ export async function ImpactSection() {
   return (
     <ImpactSectionClient 
       news={[]} 
-      actions={JSON.parse(JSON.stringify(actions))} 
-      articles={JSON.parse(JSON.stringify(uniqueArticles))} 
+      actions={actions} 
+      articles={uniqueArticles} 
     />
   )
 }

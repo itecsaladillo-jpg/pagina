@@ -18,6 +18,13 @@ export async function updateProfileAction(data: {
     const member = await getCurrentMember()
     if (!member) return { success: false, error: 'No autenticado' }
 
+    // Normalizar linkedin_url: quitar "Ej:" si lo pegaron, agregar https:// si falta
+    let linkedinUrl = data.linkedin_url || ''
+    linkedinUrl = linkedinUrl.replace(/^Ej:\s*/i, '').trim()
+    if (linkedinUrl && !linkedinUrl.startsWith('http')) {
+      linkedinUrl = 'https://' + linkedinUrl
+    }
+
     const supabase = await createClient()
     const { error } = await supabase
       .from('members')
@@ -27,7 +34,7 @@ export async function updateProfileAction(data: {
         phone: data.phone,
         bio: data.bio || null,
         avatar_url: data.avatar_url || null,
-        linkedin_url: data.linkedin_url || null,
+        linkedin_url: linkedinUrl || null,
         frase_itec: data.frase_itec || null,
         tareas_itec: data.tareas_itec || null,
         updated_at: new Date().toISOString()

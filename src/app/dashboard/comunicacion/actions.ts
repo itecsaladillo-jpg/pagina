@@ -1,6 +1,7 @@
 'use server'
 
 import { createClient } from '@/lib/supabase/server'
+import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 import { getCurrentMember } from '@/services/auth'
 import { revalidatePath } from 'next/cache'
 
@@ -155,6 +156,7 @@ export async function updateNotaAction(data: {
   variant: 'publico' | 'miembros' | 'sponsors' | 'medios'
   contenido: string
   media_urls?: string[]
+  titulo?: string
 }) {
   const member = await getCurrentMember()
   if (!member || !['admin', 'coordinador'].includes(member.role)) throw new Error('No autorizado')
@@ -171,6 +173,7 @@ export async function updateNotaAction(data: {
   // 1. Actualizar tabla por canal
   const table = tableMap[data.variant]
   const payload: any = { contenido: data.contenido }
+  if (data.titulo) payload.titulo = data.titulo
   if (data.media_urls) {
     payload.media_urls = data.media_urls
   }
@@ -187,6 +190,11 @@ export async function updateNotaAction(data: {
 
   // 2. Actualizar news_flashes (para que se vea en Comunicación Estratégica)
   const newsUpdate: any = {}
+  if (data.titulo) {
+    newsUpdate.titulo = data.titulo
+    newsUpdate.title = data.titulo
+    newsUpdate.flash_text = `📋 ${data.titulo}. ${data.contenido?.slice(0, 100) || ''}...`
+  }
   if (data.media_urls) {
     newsUpdate.media_urls = data.media_urls
   }
@@ -207,14 +215,19 @@ export async function updateNotaAction(data: {
     console.error('[updateNotaAction] Error en news_flashes:', newsError.message)
   }
 
-  // 3. Actualizar public_articles si es la variante público
+  // 3. Actualizar public_articles (variante público)
   if (data.variant === 'publico') {
+    const articleUpdate: any = {
+      content: data.contenido,
+      media_urls: data.media_urls || [],
+    }
+    if (data.titulo) {
+      articleUpdate.title = data.titulo
+      articleUpdate.excerpt = data.titulo
+    }
     const { error: articleError } = await supabase
       .from('public_articles')
-      .update({
-        content: data.contenido,
-        media_urls: data.media_urls || [],
-      })
+      .update(articleUpdate)
       .eq('news_flash_id', data.newsFlashId)
 
     if (articleError) {
@@ -233,16 +246,23 @@ export async function deleteNotaAction(newsFlashId: string) {
   const member = await getCurrentMember()
   if (!member || !['admin', 'coordinador'].includes(member.role)) throw new Error('No autorizado')
 
-  const supabase = await createClient()
+  // Usar service-role para eliminar de todas las tablas (bypass RLS)
+  const supabaseAdmin = createSupabaseClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  )
 
-  // Borrar de tablas secundarias primero
-  const tables = ['public_articles', 'notas_publico', 'notas_miembros', 'notas_sponsors', 'notas_medios']
+  const tables = ['notas_publico', 'notas_miembros', 'notas_sponsors', 'notas_medios']
   for (const table of tables) {
-    await supabase.from(table).delete().eq('news_flash_id', newsFlashId)
+    const { error } = await supabaseAdmin.from(table).delete().eq('news_flash_id', newsFlashId)
+    if (error) {
+      console.error(`[deleteNotaAction] Error eliminando de ${table}:`, error.message)
+      return { success: false, error: `Error eliminando de ${table}: ${error.message}` }
+    }
   }
 
   // Borrar de tabla principal
-  const { error } = await supabase.from('news_flashes').delete().eq('id', newsFlashId)
+  const { error } = await supabaseAdmin.from('news_flashes').delete().eq('id', newsFlashId)
 
   if (error) {
     console.error('[deleteNotaAction] Error:', error.message)

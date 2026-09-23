@@ -55,9 +55,9 @@ export function PublicIdeasForm() {
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.35 }}
-        className="glass rounded-2xl p-8 text-center border border-emerald-500/20 max-w-xl mx-auto"
+        className="glass rounded-2xl p-8 text-left border border-emerald-500/20 w-full"
       >
-        <div className="w-16 h-16 rounded-full bg-emerald-500/10 flex items-center justify-center mx-auto mb-5 shadow-[0_0_24px_-4px_rgba(16,185,129,0.3)]">
+        <div className="w-16 h-16 rounded-full bg-emerald-500/10 flex items-center justify-center mb-5 shadow-[0_0_24px_-4px_rgba(16,185,129,0.3)]">
           <CheckCircle2 className="w-8 h-8 text-emerald-400" />
         </div>
         <h3 className="text-white font-semibold text-xl mb-3">¡Muchas gracias por aportar tu idea!</h3>
@@ -81,7 +81,7 @@ export function PublicIdeasForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="glass rounded-2xl p-6 border border-[var(--border-subtle)] text-left max-w-xl mx-auto">
+    <form onSubmit={handleSubmit} className="glass rounded-2xl p-6 border border-[var(--border-subtle)] text-left w-full">
       <h3 className="text-white font-semibold text-base mb-4">Dejá tu propuesta</h3>
 
       <div className="mb-4">

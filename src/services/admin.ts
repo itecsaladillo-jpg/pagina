@@ -1,6 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import type { Member } from '@/types/database'
-import { unstable_cache, revalidateTag } from 'next/cache'
+import { unstable_cache } from 'next/cache'
 
 /**
  * Aprueba a un miembro pendiente cambiándole el estado a 'activo'.

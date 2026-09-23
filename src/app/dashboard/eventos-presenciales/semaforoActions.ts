@@ -2,28 +2,17 @@
 
 import { createClient } from '@/lib/supabase/server'
 import { getCurrentMember } from '@/services/auth'
+import { calcularEstadoSemaforo, type EstadoSemaforo } from '@/lib/eventos/semaforo'
 
 // ============================================================
-// Tipos
+// Tipos (respuesta de la server action)
 // ============================================================
-
-export type EstadoSemaforo = 'verde' | 'amarillo' | 'rojo'
 
 export interface EstadoSemaforoResult {
   totalAcreditados: number
   votosNegativos: number
   porcentajeNegativo: number
   estado: EstadoSemaforo
-}
-
-// ============================================================
-// Helpers
-// ============================================================
-
-function calcularEstado(porcentajeNegativo: number): EstadoSemaforo {
-  if (porcentajeNegativo >= 50) return 'rojo'
-  if (porcentajeNegativo >= 30) return 'amarillo'
-  return 'verde'
 }
 
 // ============================================================
@@ -146,7 +135,7 @@ export async function verificarVotoDispositivo(
  * - totalAcreditados: COUNT de rows en eventos_asistentes
  * - votosNegativos: COUNT de votos desde semaforo_last_reset_at
  * - porcentajeNegativo: ratio calculado
- * - estado: 'verde' | 'amarillo' | 'rojo'
+ * - estado: 'VERDE' | 'AMARILLO' | 'ROJO'
  */
 export async function obtenerEstadoSemaforo(
   eventoId: string
@@ -155,7 +144,7 @@ export async function obtenerEstadoSemaforo(
     totalAcreditados: 0,
     votosNegativos: 0,
     porcentajeNegativo: 0,
-    estado: 'verde',
+    estado: 'VERDE',
   }
 
   try {
@@ -200,10 +189,9 @@ export async function obtenerEstadoSemaforo(
 
     const total = totalAcreditados ?? 0
     const votos = votosNegativos ?? 0
-    const porcentajeNegativo = total > 0 ? Math.round((votos / total) * 100) : 0
-    const estado = calcularEstado(porcentajeNegativo)
+    const { estado, porcentaje } = calcularEstadoSemaforo(votos, total)
 
-    return { totalAcreditados: total, votosNegativos: votos, porcentajeNegativo, estado }
+    return { totalAcreditados: total, votosNegativos: votos, porcentajeNegativo: porcentaje, estado }
   } catch (err) {
     console.error('[obtenerEstadoSemaforo] Exception:', err)
     return empty

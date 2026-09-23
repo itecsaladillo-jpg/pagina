@@ -6,6 +6,22 @@ import { generateExecutiveSummary, generateActionItems } from '@/services/ai'
 import { revalidatePath } from 'next/cache'
 
 /**
+ * Obtiene la URL del enlace general de la Sala de Reuniones desde site_settings.
+ */
+export async function getGeneralMeetUrlAction(): Promise<string | null> {
+  try {
+    const supabase = await createClient()
+    const { data } = await supabase
+      .from('site_settings')
+      .select('general_meet_url')
+      .single()
+    return data?.general_meet_url || null
+  } catch {
+    return null
+  }
+}
+
+/**
  * Guarda o actualiza las notas activas de una sesión de reunión.
  */
 export async function saveNotesAction(commissionId: string, content: string) {

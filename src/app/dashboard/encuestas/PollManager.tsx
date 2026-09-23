@@ -2,9 +2,10 @@
 
 import { useState, useEffect } from 'react'
 import { createPollAction, togglePollStatusAction, deletePollAction, updatePollAction } from './actions'
-import { Plus, Trash2, Power, Play, BarChart2, Loader2, AlertCircle, Download, QrCode, Pencil, X } from 'lucide-react'
+import { Plus, Trash2, Power, Play, BarChart2, Loader2, AlertCircle, Download, Pencil, X } from 'lucide-react'
 import Link from 'next/link'
-import QRCode from 'react-qr-code'
+import dynamic from 'next/dynamic'
+const QRCode = dynamic(() => import('react-qr-code'), { ssr: false })
 
 interface PollOption {
   id: string

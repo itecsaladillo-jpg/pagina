@@ -149,11 +149,6 @@ export async function guardarConversacion(
       return false
     }
 
-    console.log(
-      `[GuardarConversacion] ✓ Guardado (${historial.length} msgs,` +
-      ` turnos=${Math.floor(historial.length / 2)},` +
-      ` manual=${guardadoManualmente})`
-    )
     return true
   } catch (err) {
     console.error('[GuardarConversacion] Error inesperado:', err)
@@ -213,6 +208,5 @@ export async function buscarConversacionesSimilares(
     .join('\n---\n')
     .slice(0, MAX_CONTEXT_CHARS)
 
-  console.log(`[RAG P4] ${rows.length} conversación(es) recuperada(s), score=${mejorScore.toFixed(3)}`)
   return { contexto, score: mejorScore }
 }

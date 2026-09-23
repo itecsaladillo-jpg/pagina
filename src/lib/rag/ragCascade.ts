@@ -2,11 +2,12 @@
  * ragCascade.ts
  * Módulo de Recuperación de Contexto con Cascada de Prioridades — Asistente ITEC
  *
- *   P1 (score ≥ 0.45) → Documentos locales pre-parseados (DOCS_CONTEXT en memoria)
- *   P2 (score ≥ 0.40) → Bucket Supabase Storage "training-docs"
- *   P3              → Conversaciones Guardadas (historial previo relevante)
- *   P4              → Web search (DuckDuckGo fallback)
- *   Soft fallback   → Mejor resultado encontrado aunque esté por debajo del threshold
+ *   P1 (score ≥ 0.15) → pgvector: búsqueda semántica en documents (Gemini text-embedding-004)
+ *   P2 (score ≥ 0.22) → Documentos locales pre-parseados (DOCS_CONTEXT en memoria, keyword scoring)
+ *   P3 (score ≥ 0.22) → Bucket Supabase Storage "training-docs"
+ *   P4              → Conversaciones Guardadas (historial previo relevante)
+ *   Soft fallback   → Mejor resultado propio aunque esté por debajo del threshold (PRIORIDAD sobre web)
+ *   P5              → Web search (DuckDuckGo Instant Answer + scraping nativo DDG Lite)
  *
  * Nota de diseño: el contexto se inyecta sin etiquetas de fuente para que el LLM
  * no sepa de dónde proviene la información.
@@ -20,12 +21,21 @@ import { buscarConversacionesSimilares } from './conversacionesGuardadas'
 // Configuración y thresholds
 // ============================================================
 
-const THRESHOLD_LOCAL    = 0.45   // Umbral de confianza para docs locales
-const THRESHOLD_SUPABASE = 0.40   // Umbral de confianza para bucket Supabase
-const CHUNK_SIZE         = 900    // Tamaño de chunk en caracteres para scoring
-const CHUNK_OVERLAP      = 120    // Solapamiento entre chunks
-const MAX_CONTEXT_CHARS  = 3200   // Máximo de chars inyectados al prompt
-const WEB_QUERY_SUFFIX   = 'itec saladillo Cicaré expo itec'
+const THRESHOLD_VECTOR    = 0.15   // Umbral bajo para no descartar info relevante (calibrado ago 2026: antes 0.20)
+const THRESHOLD_LOCAL     = 0.22   // Umbral docs locales (ago 2026: antes 0.40 — descartaba matches útiles del keyword scoring)
+const THRESHOLD_SUPABASE  = 0.22   // Umbral bucket Supabase (ago 2026: antes 0.35)
+const CHUNK_SIZE          = 900    // Tamaño de chunk en caracteres para scoring
+const CHUNK_OVERLAP       = 120    // Solapamiento entre chunks
+const MAX_CONTEXT_CHARS   = 3200   // Máximo de chars inyectados al prompt
+const WEB_QUERY_SUFFIX    = 'itec saladillo Cicaré expo itec'
+
+// ── Cache nivel P3 (bucket training-docs) ──────────────────────
+// Los documentos del bucket cambian raramente: cachear el texto combinado
+// evita N descargas de storage en cada request del asistente.
+const P3_CACHE_TTL_MS = 5 * 60 * 1000 // 5 minutos
+
+let p3Cache: { texto: string; timestamp: number } | null = null
+let p3FetchPromise: Promise<string> | null = null
 
 // ============================================================
 // Scoring de relevancia — Overlap de tokens (estilo Jaccard)
@@ -105,7 +115,75 @@ function encontrarMejoresChunks(query: string, texto: string, topK: number = 3):
 }
 
 // ============================================================
-// P1 — Documentos Locales (DOCS_CONTEXT en memoria)
+// P1 — Búsqueda Semántica pgvector (documents)
+// ============================================================
+
+/**
+ * Busca contexto en la tabla documents usando pgvector.
+ * Genera embedding de la query con Gemini text-embedding-004 y ejecuta
+ * match_documents RPC para encontrar chunks similares por coseno.
+ * Compatible con Edge Runtime (fetch nativo a Supabase REST + Gemini API).
+ */
+async function buscarEnVectorStore(
+  query: string,
+  supabase: SupabaseClient
+): Promise<{ contexto: string; score: number }> {
+  try {
+    // Importar generarEmbedding dinámicamente para no romper Edge Runtime
+    const { generarEmbedding } = await import('@/services/ai')
+    const queryEmbedding = await generarEmbedding(query)
+    
+    if (!queryEmbedding || queryEmbedding.length === 0) {
+      console.warn('[RAG P1] No se pudo generar embedding para la query')
+      return { contexto: '', score: 0 }
+    }
+
+    // Formatear embedding como string para pgvector
+    const embeddingStr = `[${queryEmbedding.join(',')}]`
+
+    // Llamar a match_documents RPC
+    const { data, error } = await supabase.rpc('match_documents', {
+      query_embedding: embeddingStr,
+      match_threshold: THRESHOLD_VECTOR,
+      match_count: 6,
+    })
+
+    if (error) {
+      console.error('[RAG P1] Error en match_documents RPC:', error.message)
+      return { contexto: '', score: 0 }
+    }
+
+    interface MatchRow {
+      chunk_content: string
+      similarity: number
+    }
+
+    const validRows: MatchRow[] = ((data as any[]) || []).filter((r) => {
+      const sim = Number(r?.similarity)
+      return typeof r?.chunk_content === 'string' && !isNaN(sim) && sim > 0
+    })
+
+    if (validRows.length === 0) {
+      return { contexto: '', score: 0 }
+    }
+
+    // Concatenar los chunks más relevantes
+    const contexto = validRows
+      .map((r) => r.chunk_content)
+      .join('\n...\n')
+      .slice(0, MAX_CONTEXT_CHARS)
+
+    const maxScore = Math.max(...validRows.map((r) => Number(r.similarity)))
+
+    return { contexto, score: maxScore }
+  } catch (err) {
+    console.error('[RAG P1] Error en búsqueda vectorial:', err)
+    return { contexto: '', score: 0 }
+  }
+}
+
+// ============================================================
+// P2 — Documentos Locales (DOCS_CONTEXT en memoria, keyword)
 // ============================================================
 
 /**
@@ -127,53 +205,77 @@ function buscarEnDocsLocales(query: string): { contexto: string; score: number }
 }
 
 // ============================================================
-// P2 — Supabase Storage Bucket (training-docs)
+// P3 — Supabase Storage Bucket
 // ============================================================
 
 /**
  * Lista y descarga los documentos de texto del bucket "training-docs".
  * Solo descarga .txt, .md y .json — ignora PDFs y binarios.
  * Implementado con fetch nativo para compatibilidad con Edge Runtime.
+ *
+ * Con caché en memoria (TTL 5 min) + deduplicación de descargas concurrentes:
+ * el bucket solo se consulta una vez por ventana de tiempo, no por request.
  */
 async function obtenerTextoDesupabaseBucket(supabase: SupabaseClient): Promise<string> {
-  const { data: archivos, error } = await supabase.storage
-    .from('training-docs')
-    .list('', { limit: 30, sortBy: { column: 'updated_at', order: 'desc' } })
+  const ahora = Date.now()
 
-  if (error || !archivos || archivos.length === 0) {
-    if (error) console.warn('[RAG P2] Error al listar bucket training-docs:', error.message)
-    return ''
+  // 1. Cache válido → devolver sin I/O
+  if (p3Cache && ahora - p3Cache.timestamp < P3_CACHE_TTL_MS) {
+    return p3Cache.texto
   }
 
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? ''
-  
-  const fetchPromises = archivos
-    .filter(archivo => archivo.name.match(/\.(txt|md|json)$/i))
-    .map(async (archivo) => {
-      const publicUrl = `${supabaseUrl}/storage/v1/object/public/training-docs/${encodeURIComponent(archivo.name)}`
-      try {
-        const res = await fetch(publicUrl, { signal: AbortSignal.timeout(4000) })
-        if (!res.ok) return ''
+  // 2. Descarga en curso → reutilizar la misma promesa (evita stampede)
+  if (p3FetchPromise) {
+    return p3FetchPromise
+  }
 
-        const texto = await res.text()
+  p3FetchPromise = (async () => {
+    const { data: archivos, error } = await supabase.storage
+      .from('training-docs')
+      .list('', { limit: 30, sortBy: { column: 'updated_at', order: 'desc' } })
 
-        if (archivo.name.endsWith('.json')) {
-          try {
-            const parsed = JSON.parse(texto) as Record<string, unknown>
-            return typeof parsed.text === 'string' ? parsed.text : JSON.stringify(parsed)
-          } catch {
-            return texto
+    if (error || !archivos || archivos.length === 0) {
+      if (error) console.warn('[RAG P2] Error al listar bucket training-docs:', error.message)
+      return ''
+    }
+
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? ''
+
+    const fetchPromises = archivos
+      .filter(archivo => archivo.name.match(/\.(txt|md|json)$/i))
+      .map(async (archivo) => {
+        const publicUrl = `${supabaseUrl}/storage/v1/object/public/training-docs/${encodeURIComponent(archivo.name)}`
+        try {
+          const res = await fetch(publicUrl, { signal: AbortSignal.timeout(4000) })
+          if (!res.ok) return ''
+
+          const texto = await res.text()
+
+          if (archivo.name.endsWith('.json')) {
+            try {
+              const parsed = JSON.parse(texto) as Record<string, unknown>
+              return typeof parsed.text === 'string' ? parsed.text : JSON.stringify(parsed)
+            } catch {
+              return texto
+            }
           }
+          return texto
+        } catch (err) {
+          console.warn(`[RAG P2] No se pudo descargar "${archivo.name}":`, err)
+          return ''
         }
-        return texto
-      } catch (err) {
-        console.warn(`[RAG P2] No se pudo descargar "${archivo.name}":`, err)
-        return ''
-      }
-    })
+      })
 
-  const textosArray = await Promise.all(fetchPromises)
-  return textosArray.filter(t => t.length > 0).join('\n\n')
+    const textosArray = await Promise.all(fetchPromises)
+    const textoTotal = textosArray.filter(t => t.length > 0).join('\n\n')
+
+    p3Cache = { texto: textoTotal, timestamp: Date.now() }
+    return textoTotal
+  })().finally(() => {
+    p3FetchPromise = null
+  })
+
+  return p3FetchPromise
 }
 
 /**
@@ -193,13 +295,15 @@ async function buscarEnSupabaseBucket(
 }
 
 // ============================================================
-// P3 — Web Search Fallback (DuckDuckGo Instant Answer)
+// P5 — Web Search Fallback (DuckDuckGo Instant Answer)
 // ============================================================
 
 /**
  * Búsqueda vía DuckDuckGo Instant Answer API.
  * Sin API key requerida. Enriquece la query con términos del dominio ITEC.
  * Retorna AbstractText y hasta 3 RelatedTopics si están disponibles.
+ * Si la Instant Answer no produce resultados (habitual en consultas en
+ * español de nicho), hace scraping nativo de DuckDuckGo Lite.
  */
 async function buscarEnWeb(query: string): Promise<string> {
   const queryEnriquecida = `${query} ${WEB_QUERY_SUFFIX}`
@@ -221,9 +325,58 @@ async function buscarEnWeb(query: string): Promise<string> {
       if (topic.Text) partes.push(topic.Text)
     }
 
-    return partes.join('\n').slice(0, MAX_CONTEXT_CHARS)
+    const instant = partes.join('\n').trim()
+    if (instant.length >= 80) return instant.slice(0, MAX_CONTEXT_CHARS)
+
+    // Instant Answer vacío o muy pobre → scraping nativo (sin APIs de terceros)
+    return await buscarEnWebScraping(queryEnriquecida)
   } catch (err) {
-    console.warn('[RAG P3] DuckDuckGo falló:', err)
+    console.warn('[RAG P5] DuckDuckGo falló:', err)
+    return ''
+  }
+}
+
+/**
+ * Scraping nativo de DuckDuckGo Lite (HTML simple, sin JS).
+ * Extrae los snippets de los primeros resultados orgánicos.
+ * Compatible con Edge Runtime: solo fetch + regex.
+ */
+async function buscarEnWebScraping(queryEnriquecida: string): Promise<string> {
+  try {
+    const res = await fetch(`https://lite.duckduckgo.com/lite/?q=${encodeURIComponent(queryEnriquecida)}`, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+        'Accept-Language': 'es-AR,es;q=0.9',
+      },
+      signal: AbortSignal.timeout(6000),
+    })
+    if (!res.ok) return ''
+
+    const html = await res.text()
+    const resultados: string[] = []
+
+    // DuckDuckGo Lite renderiza snippets en <td class="result-snippet">
+    const regexSnippet = /<td[^>]*class="result-snippet"[^>]*>([\s\S]*?)<\/td>/gi
+    let match: RegExpExecArray | null
+    while ((match = regexSnippet.exec(html)) !== null && resultados.length < 4) {
+      const texto = match[1]
+        .replace(/<[^>]+>/g, ' ')
+        .replace(/&amp;/g, '&')
+        .replace(/&quot;/g, '"')
+        .replace(/&#x27;/g, "'")
+        .replace(/&lt;/g, '<')
+        .replace(/&gt;/g, '>')
+        .replace(/\s+/g, ' ')
+        .trim()
+      if (texto.length > 40) resultados.push(texto)
+    }
+
+    if (resultados.length > 0) {
+      console.log(`[RAG P5] Scraping DDG Lite: ${resultados.length} snippets`)
+    }
+    return resultados.join('\n').slice(0, MAX_CONTEXT_CHARS)
+  } catch (err) {
+    console.warn('[RAG P5] Scraping DDG Lite falló:', err)
     return ''
   }
 }
@@ -232,7 +385,7 @@ async function buscarEnWeb(query: string): Promise<string> {
 // Orquestador principal — Cascada RAG
 // ============================================================
 
-export type NivelRAG = 'local' | 'supabase' | 'web' | 'conversaciones' | 'soft_fallback' | 'ninguno'
+export type NivelRAG = 'vector' | 'local' | 'supabase' | 'web' | 'conversaciones' | 'soft_fallback' | 'ninguno'
 
 export interface RAGResult {
   /** Texto de contexto listo para inyectar al prompt (sin etiquetas de fuente). */
@@ -266,71 +419,81 @@ export async function recuperarContextoRAG(
     nivel: 'ninguno',
   }
 
-  // ── P1: Documentos Locales ─────────────────────────────────
-  const p1 = buscarEnDocsLocales(query)
-  console.log(`[RAG P1] score=${p1.score.toFixed(3)} threshold=${THRESHOLD_LOCAL}`)
-
-  if (p1.score >= THRESHOLD_LOCAL && p1.contexto) {
-    return { contexto: p1.contexto, nivel: 'local', score: p1.score }
-  }
-
-  // Actualizar soft best si mejoró
-  if (p1.score > softBest.score && p1.contexto) {
-    softBest = { contexto: p1.contexto, score: p1.score, nivel: 'local' }
-  }
-
-  // ── P2: Supabase Storage Bucket ────────────────────────────
+  // ── P1: Búsqueda Semántica pgvector ─────────────────────────
   try {
-    const p2 = await buscarEnSupabaseBucket(query, supabase)
-    console.log(`[RAG P2] score=${p2.score.toFixed(3)} threshold=${THRESHOLD_SUPABASE}`)
+    const p1 = await buscarEnVectorStore(query, supabase)
 
-    if (p2.score >= THRESHOLD_SUPABASE && p2.contexto) {
-      return { contexto: p2.contexto, nivel: 'supabase', score: p2.score }
+    if (p1.score >= THRESHOLD_VECTOR && p1.contexto) {
+      return { contexto: p1.contexto, nivel: 'vector', score: p1.score }
     }
 
-    if (p2.score > softBest.score && p2.contexto) {
-      softBest = { contexto: p2.contexto, score: p2.score, nivel: 'supabase' }
+    if (p1.score > softBest.score && p1.contexto) {
+      softBest = { contexto: p1.contexto, score: p1.score, nivel: 'vector' }
     }
   } catch (err) {
-    console.error('[RAG P2] Error en Supabase Storage, pasando a P3:', err)
+    console.error('[RAG P1-vector] Error, pasando a P2:', err)
   }
 
-  // ── P3: Conversaciones Guardadas ───────────────────────────
+  // ── P2: Documentos Locales (keyword scoring) ────────────────
+  const p2 = buscarEnDocsLocales(query)
+
+  if (p2.score >= THRESHOLD_LOCAL && p2.contexto) {
+    return { contexto: p2.contexto, nivel: 'local', score: p2.score }
+  }
+
+  if (p2.score > softBest.score && p2.contexto) {
+    softBest = { contexto: p2.contexto, score: p2.score, nivel: 'local' }
+  }
+
+  // ── P3: Supabase Storage Bucket ────────────────────────────
+  try {
+    const p3 = await buscarEnSupabaseBucket(query, supabase)
+
+    if (p3.score >= THRESHOLD_SUPABASE && p3.contexto) {
+      return { contexto: p3.contexto, nivel: 'supabase', score: p3.score }
+    }
+
+    if (p3.score > softBest.score && p3.contexto) {
+      softBest = { contexto: p3.contexto, score: p3.score, nivel: 'supabase' }
+    }
+  } catch (err) {
+    console.error('[RAG P3-supabase] Error en Supabase Storage, pasando a P4:', err)
+  }
+
+  // ── P4: Conversaciones Guardadas ───────────────────────────
   if (sessionId) {
     try {
-      const p3_conv = await buscarConversacionesSimilares(query, sessionId, supabase)
-      console.log(`[RAG P3] score=${p3_conv.score.toFixed(3)} (threshold=0.35)`)
+      const p4_conv = await buscarConversacionesSimilares(query, sessionId, supabase)
 
-      // El umbral (0.35) ya se aplica en buscarConversacionesSimilares (RPC),
-      // por lo que si retorna contexto, asumimos que superó la relevancia mínima.
-      if (p3_conv.contexto) {
-        return { contexto: p3_conv.contexto, nivel: 'conversaciones', score: p3_conv.score }
+      if (p4_conv.contexto) {
+        return { contexto: p4_conv.contexto, nivel: 'conversaciones', score: p4_conv.score }
       }
 
-      if (p3_conv.score > softBest.score && p3_conv.contexto) {
-        softBest = { contexto: p3_conv.contexto, score: p3_conv.score, nivel: 'conversaciones' }
+      if (p4_conv.score > softBest.score && p4_conv.contexto) {
+        softBest = { contexto: p4_conv.contexto, score: p4_conv.score, nivel: 'conversaciones' }
       }
     } catch (err) {
-      console.error('[RAG P3] Error buscando conversaciones:', err)
+      console.error('[RAG P4-conv] Error buscando conversaciones:', err)
     }
   }
 
-  // ── P4: Web Search Fallback ────────────────────────────────
+  // ── Soft Fallback: mejor resultado propio aunque esté bajo el threshold ──
+  // Prioridad sobre web search: los documentos institucionales, incluso con
+  // score bajo, son más confiables que resultados genéricos de internet.
+  if (softBest.contexto) {
+    console.warn(`[RAG] Usando soft fallback (${softBest.nivel}, score=${softBest.score.toFixed(3)})`)
+    return { contexto: softBest.contexto, nivel: 'soft_fallback', score: softBest.score }
+  }
+
+  // ── P5: Web Search Fallback (solo si nada propio fue encontrado) ──
   try {
     const webContexto = await buscarEnWeb(query)
-    console.log(`[RAG P4] ${webContexto ? `${webContexto.length} chars recuperados` : 'sin resultados'}`)
 
     if (webContexto) {
       return { contexto: webContexto, nivel: 'web', score: 0 }
     }
   } catch (err) {
-    console.error('[RAG P4] Error en búsqueda web:', err)
-  }
-
-  // ── Soft Fallback: mejor resultado aunque esté bajo el threshold ──
-  if (softBest.contexto) {
-    console.warn(`[RAG] Usando soft fallback (${softBest.nivel}, score=${softBest.score.toFixed(3)})`)
-    return { contexto: softBest.contexto, nivel: 'soft_fallback', score: softBest.score }
+    console.error('[RAG P5-web] Error en búsqueda web:', err)
   }
 
   console.warn('[RAG] Sin contexto recuperado en ningún nivel.')

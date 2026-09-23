@@ -53,6 +53,21 @@ body {
 ::-webkit-scrollbar-thumb { background: var(--accent-primary); border-radius: 3px; }
 
 /* ─── Animaciones globales ─── */
+@keyframes marquee-left {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee-infinite {
+  display: flex !important;
+  width: max-content !important;
+  animation: marquee-left 63s linear infinite; /* 15% más lento */
+}
+
+.animate-marquee-infinite:hover {
+  animation-play-state: paused;
+}
+
 @keyframes float {
   0%, 100% { transform: translateY(0px); }
   50%       { transform: translateY(-12px); }
@@ -112,13 +127,19 @@ body {
   50%       { opacity: 0; }
 }
 
+@keyframes slide-in-right {
+  from { opacity: 0; transform: translateX(24px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
 /* ─── Clases utilitarias personalizadas ─── */
-.animate-float      { animation: float 6s ease-in-out infinite; }
+.animate-float      { animation: float 6s ease-in-out infinite; will-change: transform; }
 .animate-pulse-glow { animation: pulse-glow 3s ease-in-out infinite; }
-.animate-fade-up    { animation: fade-up 0.7s ease-out both; }
-.animate-spin-slow  { animation: spin-slow 20s linear infinite; }
-.animate-fade-in    { animation: fade-up 0.5s ease-out both; }
-.animate-slide-up   { animation: slide-up 0.4s ease-out both; }
+.animate-fade-up    { animation: fade-up 0.7s ease-out both; will-change: opacity, transform; }
+.animate-spin-slow  { animation: spin-slow 20s linear infinite; will-change: transform; }
+.animate-fade-in    { animation: fade-up 0.5s ease-out both; will-change: opacity, transform; }
+.animate-slide-up   { animation: slide-up 0.4s ease-out both; will-change: opacity, transform; }
+.animate-slide-in-right { animation: slide-in-right 0.3s ease-out both; will-change: opacity, transform; }
 
 
 .text-gradient {
@@ -135,10 +156,12 @@ body {
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--border-subtle);
+  contain: layout style paint;
 }
 
 .card-hover {
   transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  contain: layout style;
 }
 .card-hover:hover {
   transform: translateY(-4px);

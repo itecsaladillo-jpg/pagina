@@ -11,13 +11,28 @@ import { getSettingValue } from '@/lib/settings'
 const medioSchema = z.object({
   nombre_medio: z.string().min(1, 'Nombre del medio requerido'),
   tipo_medio: z.enum(['Radio', 'Diario Papel', 'Portal Web', 'TV']),
-  url_web: z.string().url('URL inválida').optional().or(z.literal('')),
+  url_web: z.string().optional().or(z.literal('')).transform(val => {
+    if (!val || val === '') return ''
+    if (!/^https?:\/\//i.test(val)) {
+      return 'https://' + val
+    }
+    return val
+  }).refine(val => {
+    if (!val || val === '') return true
+    try {
+      new URL(val)
+      return true
+    } catch {
+      return false
+    }
+  }, 'URL inválida').optional(),
   dial_radio: z.string().optional(),
   zona_influencia: z.string().optional(),
   nombre_contacto: z.string().min(1, 'Nombre contacto requerido'),
   apellido_contacto: z.string().optional(),
   telefono: z.string().optional(),
   email: z.string().email('Email inválido').min(1, 'Email requerido'),
+  logo_url: z.string().optional().or(z.literal('')),
 })
 
 export async function createMedioAction(data: z.infer<typeof medioSchema>) {
@@ -113,7 +128,17 @@ export async function sendGacetillaToMedios(payload: SendGacetillaPayload) {
     fecha,
   })
 
-  const apiKey = await getSettingValue('RESEND_API_KEY', 'RESEND_API_KEY')
+  const supabaseServer = await createClient()
+  const { data: resendData } = await supabaseServer
+    .from('api_settings')
+    .select('value')
+    .eq('key', 'resend_api_key')
+    .single()
+  
+  const apiKey = (resendData?.value && typeof resendData.value === 'string' && resendData.value.trim() !== '')
+    ? resendData.value.trim()
+    : (process.env.RESEND_API_KEY || '')
+  
   if (!apiKey || apiKey === 're_123456789...') {
     console.warn('[sendGacetillaToMedios] RESEND_API_KEY no configurada. Simulando envíos.')
   }

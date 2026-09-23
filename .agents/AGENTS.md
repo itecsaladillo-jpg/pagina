@@ -30,3 +30,20 @@ Alongside the RAG Cascade, the assistant endpoint (`/api/asistente/route.ts`) mu
 ## Edge Runtime Restrictions
 - The `/api/asistente` route is built for the Edge runtime.
 - You **cannot** use the Node.js `fs` module inside the route. Any static files like `/docs` must be pre-compiled into strings (like `docsContext.ts`) via the `npm run sync-docs` script.
+
+## Equipo de Agentes Especializados (Matriz de Responsabilidades ITEC)
+Basado en la arquitectura completa de `ITEC_CODEGUIDE.md`, las tareas del proyecto se distribuyen entre los siguientes 11 agentes especializados:
+
+1. **`itec-ai-architect`**: Arquitectura del Asistente Virtual (`/api/asistente`, `/api/chat`), cascada RAG 5 niveles, modelos gratuitos (Groq, OpenCode, OpenRouter, Gemini), latencia < 48s y prompts en `ai_prompt_settings`.
+2. **`itec-db-security-admin`**: Administrador de base de datos Supabase, esquema relacional, migraciones SQL en `supabase/migrations/` y auditoría de políticas RLS.
+3. **`itec-frontend-next16`**: Lógica de frontend, App Router (Next.js 16.3.0), Server y Client Components, middleware `proxy.ts`, layout responsivo y sistema i18n custom.
+4. **`itec-ui-designer`**: Dirección estética y diseño visual, sistema de diseño "Técnica · Humana · Vanguardista", paleta de colores, glassmorphism, micro-interacciones y animaciones Framer Motion / CSS.
+5. **`itec-multichannel-comm`**: Sistema de comunicación multicanal (una noticia -> 4 versiones en 4 tablas), gacetillas de prensa con Resend y reportes de impacto.
+6. **`itec-realtime-events-dev`**: Eventos presenciales (QR, encuestas en vivo, nubes de palabras, semáforo v3 con `dispositivo_id`) y Aula Virtual híbrida en tiempo real (`clases_virtuales` + Supabase Realtime).
+7. **`itec-whatsapp-crm`**: Módulo masivo de WhatsApp, plantillas con variables dinámicas, normalización telefónica internacional (`+54 9 ...`), agenda unificada consolidada de 6 fuentes y grupos N:M.
+8. **`itec-partners-sponsors`**: Gestión de sponsors por tiers (platino, oro, plata, bronce), portal privado con `private_token`, alianzas estratégicas (`strategic_partners`), canales de medios y moderación de "Saladillo for Export".
+9. **`itec-education-certificates`**: Pasaporte Digital, generación y validación pública de certificados con código único QR (`/certificados/[codigo]`), módulo de capacitaciones (`trainings`, LivePoll) y Mapa Productivo (`mapa_empresas`, `alumnos_talentos`).
+10. **`itec-integrations-cloud`**: Servicios cloud externos: Google Drive API via Service Account (`site_settings.google_service_account_json`), enlaces Meet, YouTube Live Streaming y Videoteca con thumbnails automáticos, Resend Email API y Supabase Storage buckets.
+11. **`itec-qa-auditor`**: Auditoría técnica de calidad, verificación estricta de breaking changes de Next.js 16, control de seguridad en Server Actions (`getCurrentMember()`, Zod), resolución de gotchas históricos y validación de builds (`npm run build`).
+
+

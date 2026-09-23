@@ -17,8 +17,6 @@ import {
   X,
   CheckCircle,
   Upload,
-  Video,
-  ImageIcon
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import type { NewsFlashMulticanal } from '@/services/news'
@@ -63,6 +61,7 @@ export function NewsFlashMulticanalEditor({ onSave, onCancel }: NewsFlashMultica
   const [errorBanner, setErrorBanner] = useState<string | null>(null)
   const [successBanner, setSuccessBanner] = useState<string | null>(null)
   const [media, setMedia] = useState<MediaItem[]>([])
+  const [editTitulo, setEditTitulo] = useState('')
   const fileInputRef = useRef<HTMLInputElement>(null)
   const supabase = createClient()
   
@@ -72,7 +71,7 @@ export function NewsFlashMulticanalEditor({ onSave, onCancel }: NewsFlashMultica
   const [paraSponsors, setParaSponsors] = useState(true)
   const [paraMedios, setParaMedios] = useState(true)
 
-  const handleProcess = async () => {
+  const handleProcess = async (retryCount: number = 0) => {
     setErrorBanner(null)
     if (!rawFacts.trim() || rawFacts.length < 20) {
       alert('Ingresá al menos 20 caracteres en las notas crudas')
@@ -80,23 +79,64 @@ export function NewsFlashMulticanalEditor({ onSave, onCancel }: NewsFlashMultica
     }
 
     setIsProcessing(true)
+    const MAX_RETRIES = 0 // Los reintentos se manejan en el backend
+    const FETCH_TIMEOUT = 100000 // 100s para dar margen al serverless de 90s
     try {
+      const controller = new AbortController()
+      const timeoutId = setTimeout(() => controller.abort(), FETCH_TIMEOUT)
+
       const res = await fetch('/api/news/process', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ datos_crudos: rawFacts })
+        body: JSON.stringify({ datos_crudos: rawFacts }),
+        signal: controller.signal,
       })
 
-      const data = await res.json()
+      clearTimeout(timeoutId)
+
+      const text = await res.text()
+      let data: any
+      try {
+        data = JSON.parse(text)
+      } catch {
+        console.error('[Procesar IA] Respuesta no es JSON:', text.slice(0, 200))
+        setErrorBanner('Error del servidor: respuesta inválida.')
+        return
+      }
       
       if (data.success && data.result) {
+        // Verificar que al menos uno de los textos no sea un string de error
+        const errorChannels: string[] = []
+        const channelMap = { texto_publico: 'Público', texto_miembros: 'Miembros', texto_sponsors: 'Sponsors', texto_medios: 'Medios' }
+        for (const [key, label] of Object.entries(channelMap)) {
+          const val = (data.result as any)[key]
+          if (!val || val.startsWith('Error al generar')) {
+            errorChannels.push(label)
+          }
+        }
+        if (errorChannels.length === 4) {
+          console.error('[Procesar IA] Todos los canales fallaron:', JSON.stringify(data.result, null, 2))
+          setErrorBanner('Todos los providers de IA fallaron. Verificá las API keys en Configuración > API Keys.')
+          return
+        }
+        if (errorChannels.length > 0) {
+          console.warn(`[Procesar IA] Canales con error: ${errorChannels.join(', ')}`)
+        }
         setResult(data.result)
         setActiveTab('preview')
+        setEditTitulo(data.result.titulo || '')
       } else {
-        setErrorBanner(data.error || 'Error desconocido al procesar con IA')
+        // Error definitivo (sin reintentos en el frontend)
+        const errorMsg = data.error || 'Error desconocido'
+        console.error('[Procesar IA] Error de la API:', errorMsg)
+        setErrorBanner(errorMsg)
       }
     } catch (err: any) {
-      setErrorBanner('Error de conexión: ' + (err.message || 'Verifique su conexión'))
+      const msg = err.name === 'AbortError'
+        ? 'Timeout: el servidor tardó demasiado (>65s). Intentá con menos texto.'
+        : 'Error de conexión: ' + (err.message || 'Verifique su conexión')
+      console.error('[Procesar IA] Excepción:', err)
+      setErrorBanner(msg)
     } finally {
       setIsProcessing(false)
     }
@@ -113,7 +153,7 @@ export function NewsFlashMulticanalEditor({ onSave, onCancel }: NewsFlashMultica
     
     try {
       const res = await onSave({
-        titulo: result.titulo,
+        titulo: editTitulo || result.titulo,
         datos_crudos: rawFacts,
         texto_publico: result.texto_publico,
         texto_miembros: result.texto_miembros,
@@ -130,6 +170,48 @@ export function NewsFlashMulticanalEditor({ onSave, onCancel }: NewsFlashMultica
         setErrorBanner(res.error)
       } else {
         setSuccessBanner('Noticia publicada exitosamente en los muros')
+        setTimeout(() => {
+          setSuccessBanner(null)
+          onCancel?.()
+        }, 3000)
+      }
+    } catch (err: any) {
+      setErrorBanner('Error al guardar en base de datos: ' + (err.message || 'Error desconocido'))
+    } finally {
+      setIsSaving(false)
+    }
+  }
+
+  const handlePublishRaw = async () => {
+    setErrorBanner(null)
+    if (!rawFacts.trim() || rawFacts.length < 20) {
+      alert('Ingresá al menos 20 caracteres en las notas crudas')
+      return
+    }
+
+    setIsSaving(true)
+    setErrorBanner(null)
+    
+    try {
+      const titulo = editTitulo || rawFacts.split('\n')[0].slice(0, 100) || 'Noticia sin título'
+      const res = await onSave({
+        titulo,
+        datos_crudos: rawFacts,
+        texto_publico: rawFacts,
+        texto_miembros: rawFacts,
+        texto_sponsors: rawFacts,
+        texto_medios: rawFacts,
+        para_publico: paraPublico,
+        para_miembros: paraMiembros,
+        para_sponsors: paraSponsors,
+        para_medios: paraMedios,
+        media_urls: media.map(m => m.url)
+      })
+
+      if (res?.error) {
+        setErrorBanner(res.error)
+      } else {
+        setSuccessBanner('Noticia publicada textualmente en los muros')
         setTimeout(() => {
           setSuccessBanner(null)
           onCancel?.()
@@ -297,11 +379,11 @@ export function NewsFlashMulticanalEditor({ onSave, onCancel }: NewsFlashMultica
             {media.length > 0 && (
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-2">
                 {media.map((item, idx) => (
-                  <div key={idx} className="relative group rounded-lg overflow-hidden border border-white/10">
+                  <div key={idx} className="relative group rounded-lg overflow-hidden border border-white/10 bg-black/40">
                     {item.type === 'video' ? (
-                      <video src={item.url} className="w-full h-24 object-cover" />
+                      <video src={item.url} className="w-full h-24 object-contain" />
                     ) : (
-                      <img src={item.url} alt={item.name} className="w-full h-24 object-cover" />
+                      <img src={item.url} alt={item.name} className="w-full h-24 object-contain" />
                     )}
                     <button
                       onClick={() => removeMedia(idx)}
@@ -317,7 +399,7 @@ export function NewsFlashMulticanalEditor({ onSave, onCancel }: NewsFlashMultica
         </div>
 
         <button
-          onClick={handleProcess}
+          onClick={() => handleProcess()}
           disabled={isProcessing || rawFacts.length < 20}
           className="w-full py-4 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold text-sm flex items-center justify-center gap-3 hover:scale-[1.02] transition-all disabled:opacity-30 shadow-xl"
         >
@@ -330,6 +412,24 @@ export function NewsFlashMulticanalEditor({ onSave, onCancel }: NewsFlashMultica
             <>
               <Sparkles size={18} />
               Procesar con IA
+            </>
+          )}
+        </button>
+
+        <button
+          onClick={handlePublishRaw}
+          disabled={isSaving || rawFacts.length < 20}
+          className="w-full py-3 rounded-2xl bg-green-600 hover:bg-green-500 text-white font-bold text-xs uppercase tracking-widest flex items-center justify-center gap-3 transition-all disabled:opacity-30 shadow-lg"
+        >
+          {isSaving ? (
+            <>
+              <Loader2 size={14} className="animate-spin" />
+              Publicando...
+            </>
+          ) : (
+            <>
+              <Send size={14} />
+              Publicar sin procesar
             </>
           )}
         </button>
@@ -372,8 +472,14 @@ export function NewsFlashMulticanalEditor({ onSave, onCancel }: NewsFlashMultica
                   <p className="text-xs text-white/40">Previsualización - Editá abajo antes de guardar</p>
                   
                   <div>
-                    <h4 className="text-xs font-bold text-indigo-400 uppercase mb-2">Título Generado por IA</h4>
-                    <p className="text-lg font-bold text-white mb-4">{result.titulo}</p>
+                    <h4 className="text-xs font-bold text-indigo-400 uppercase mb-2">Título</h4>
+                    <textarea
+                      value={editTitulo}
+                      onChange={(e) => setEditTitulo(e.target.value)}
+                      rows={2}
+                      className="w-full bg-white/[0.02] border border-white/10 rounded-xl p-3 text-base font-bold text-white focus:outline-none focus:border-indigo-500/50 resize-none"
+                      placeholder="Título de la noticia..."
+                    />
                   </div>
                   
                   {paraPublico && (

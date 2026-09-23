@@ -9,7 +9,6 @@ import {
   User, 
   FileCheck, 
   ShieldAlert, 
-  Download, 
   Share2, 
   Cpu, 
   Code, 
@@ -19,9 +18,10 @@ import {
   Workflow,
   Smartphone,
   ExternalLink,
-  ChevronRight
+  Printer,
 } from 'lucide-react'
-import QRCode from 'react-qr-code'
+import dynamic from 'next/dynamic'
+const QRCode = dynamic(() => import('react-qr-code'), { ssr: false })
 
 interface Certificado {
   codigo: string
@@ -50,6 +50,7 @@ const getHabilidadIcon = (habilidad: string) => {
 
 export default function CertificadoViewer({ certificado, codigo }: CertificadoViewerProps) {
   const diplomaRef = useRef<HTMLDivElement>(null)
+  const [copied, setCopied] = React.useState(false)
 
   const handleShare = () => {
     if (navigator.share) {
@@ -60,7 +61,8 @@ export default function CertificadoViewer({ certificado, codigo }: CertificadoVi
       }).catch(err => console.log('Error compartiendo:', err))
     } else {
       navigator.clipboard.writeText(window.location.href)
-      alert('¡Enlace copiado al portapapeles!')
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2500)
     }
   }
 
@@ -146,11 +148,23 @@ export default function CertificadoViewer({ certificado, codigo }: CertificadoVi
 
           <div className="flex gap-2">
             <button 
+              onClick={() => window.print()}
+              className="py-2 px-4 rounded-xl bg-[#0d131f] border border-slate-800 hover:border-slate-700 hover:bg-slate-800/50 text-xs font-semibold flex items-center gap-2 transition-all duration-200 text-slate-300 print:hidden cursor-pointer"
+              title="Imprimir o guardar en PDF"
+            >
+              <Printer className="w-3.5 h-3.5" />
+              Imprimir / PDF
+            </button>
+            <button 
               onClick={handleShare}
-              className="py-2 px-4 rounded-xl bg-[#0d131f] border border-slate-800 hover:border-slate-700 hover:bg-slate-800/50 text-xs font-semibold flex items-center gap-2 transition-all duration-200 text-slate-300"
+              className={`py-2 px-4 rounded-xl border text-xs font-semibold flex items-center gap-2 transition-all duration-200 print:hidden cursor-pointer ${
+                copied
+                  ? 'bg-emerald-500/20 border-emerald-500/50 text-emerald-300'
+                  : 'bg-[#0d131f] border-slate-800 hover:border-slate-700 hover:bg-slate-800/50 text-slate-300'
+              }`}
             >
               <Share2 className="w-3.5 h-3.5" />
-              Compartir Validación
+              {copied ? '¡Enlace Copiado!' : 'Compartir Validación'}
             </button>
           </div>
         </div>

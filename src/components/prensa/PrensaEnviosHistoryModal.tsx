@@ -31,6 +31,7 @@ export function PrensaEnviosHistoryModal({ newsFlashId, titulo, onClose }: Prens
       year: 'numeric',
       hour: '2-digit',
       minute: '2-digit',
+      timeZone: 'UTC',
     })
   }
 

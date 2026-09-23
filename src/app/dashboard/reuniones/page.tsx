@@ -3,12 +3,11 @@ import { getCurrentMember } from '@/services/auth'
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { GeneralMeetingRoom } from '@/components/reuniones/GeneralMeetingRoom'
+import { getGeneralMeetUrlAction } from './actions'
 
 export const metadata: Metadata = {
-  title: 'Sala de Reuniones General — ITEC',
+  title: 'Sala de Reuniones — ITEC',
 }
-
-const MEET_LINK = process.env.NEXT_PUBLIC_MEET_LINK ?? 'https://meet.google.com/itec-general'
 
 export default async function ReunionesPage() {
   const member = await getCurrentMember()
@@ -17,23 +16,24 @@ export default async function ReunionesPage() {
   const supabase = await createClient()
   const today = new Date().toISOString().split('T')[0]
 
-  // 1. Cargar nota activa (General)
-  const { data: notes } = await supabase
-    .from('meeting_notes')
-    .select('content')
-    .is('commission_id', null)
-    .eq('session_date', today)
-    .eq('is_active', true)
-    .single()
-
-  // 2. Cargar historial de reuniones (General) - desde meeting_notes
-  const { data: history } = await supabase
-    .from('meeting_notes')
-    .select('id, content, session_date, created_at')
-    .is('commission_id', null)
-    .eq('is_published', true)
-    .order('created_at', { ascending: false })
-    .limit(6)
+  // ago 2026: las 3 consultas son independientes → en paralelo (antes en serie)
+  const [meetUrl, { data: notes }, { data: history }] = await Promise.all([
+    getGeneralMeetUrlAction(),
+    supabase
+      .from('meeting_notes')
+      .select('content')
+      .is('commission_id', null)
+      .eq('session_date', today)
+      .eq('is_active', true)
+      .single(),
+    supabase
+      .from('meeting_notes')
+      .select('id, content, session_date, created_at')
+      .is('commission_id', null)
+      .eq('is_published', true)
+      .order('created_at', { ascending: false })
+      .limit(6),
+  ])
 
   return (
     <div className="space-y-6">
@@ -47,8 +47,8 @@ export default async function ReunionesPage() {
       <GeneralMeetingRoom
         member={member}
         initialContent={notes?.content || ''}
-        meetLink={MEET_LINK}
         history={history || []}
+        meetUrl={meetUrl}
       />
     </div>
   )

@@ -10,7 +10,6 @@ import {
   Copy, 
   Trash2, 
   Play, 
-  Eye, 
   Check, 
   AlertTriangle,
   X,
@@ -26,6 +25,7 @@ interface Evento {
   slug_qr: string;
   estado_activo: boolean;
   modalidad: "presencial" | "virtual";
+  meet_url: string | null;
   herramienta_activa: string;
   created_at: string;
 }
@@ -45,6 +45,7 @@ export default function EventosPresencialesClient({ initialEventos }: { initialE
   const [fechaTime, setFechaTime] = useState("");
   const [slugQr, setSlugQr] = useState("");
   const [modalidad, setModalidad] = useState<"presencial" | "virtual">("presencial");
+  const [meetUrl, setMeetUrl] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -142,12 +143,16 @@ export default function EventosPresencialesClient({ initialEventos }: { initialE
       return;
     }
     const anioCompleto = anio.length === 2 ? `20${anio}` : anio;
-    const fechaISO = new Date(`${anioCompleto}-${mes}-${dia}T${fechaTime}:00`).toISOString();
+    const mesP = mes.padStart(2, "0");
+    const diaP = dia.padStart(2, "0");
+    const fechaDateObj = new Date(`${anioCompleto}-${mesP}-${diaP}T${fechaTime}:00`);
 
-    if (isNaN(new Date(fechaISO).getTime())) {
+    if (isNaN(fechaDateObj.getTime())) {
       setError("La fecha ingresada no es válida.");
       return;
     }
+
+    const fechaISO = fechaDateObj.toISOString();
 
     setLoading(true);
     setError("");
@@ -161,6 +166,7 @@ export default function EventosPresencialesClient({ initialEventos }: { initialE
           fecha: fechaISO,
           estado_activo: true,
           modalidad: modalidad,
+          meet_url: modalidad === 'virtual' ? meetUrl.trim() || null : null,
           herramienta_activa: "encuestas"
         })
         .select()
@@ -179,6 +185,7 @@ export default function EventosPresencialesClient({ initialEventos }: { initialE
         setFechaDate("");
         setFechaTime("");
         setSlugQr("");
+        setMeetUrl("");
       }
     } catch (err) {
       console.error(err);
@@ -396,135 +403,91 @@ export default function EventosPresencialesClient({ initialEventos }: { initialE
 
       {/* MODAL DE CREACIÓN */}
       {showModal && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-zinc-950 border border-zinc-850 w-full max-w-md rounded-3xl p-6 shadow-2xl space-y-5 relative">
-            <button
-              onClick={() => { setShowModal(false); setError(""); }}
-              className="absolute top-4 right-4 text-zinc-500 hover:text-white p-1 rounded-xl bg-white/[0.03] border border-white/[0.05] cursor-pointer"
-            >
-              <X size={16} />
-            </button>
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-zinc-950 border border-zinc-850 w-full max-w-sm rounded-2xl shadow-2xl relative">
 
-            <div className="space-y-1">
-              <h3 className="text-lg font-black text-white uppercase tracking-tight">
+            {/* Header */}
+            <div className="px-5 pt-5 pb-3 relative">
+              <button
+                onClick={() => { setShowModal(false); setError(""); }}
+                className="absolute top-3 right-3 text-zinc-500 hover:text-white p-1 rounded-lg bg-white/[0.03] border border-white/[0.05] cursor-pointer z-10"
+              >
+                <X size={14} />
+              </button>
+              <h3 className="text-sm font-black text-white uppercase tracking-tight">
                 Crear Nuevo Evento
               </h3>
-              <p className="text-xs text-zinc-500">
-                Define los datos del evento presencial o virtual para habilitar tu código QR e interactividad en vivo.
-              </p>
             </div>
 
-            <form onSubmit={handleCreateEvento} className="space-y-4">
+            {/* Formulario compacto */}
+            <form id="form-crear-evento" onSubmit={handleCreateEvento} className="px-5 pb-5 space-y-3">
               {error && (
-                <div className="p-3.5 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs font-semibold flex items-center gap-2.5">
-                  <AlertTriangle size={16} className="shrink-0" />
+                <div className="p-2 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-[10px] font-semibold flex items-center gap-2">
+                  <AlertTriangle size={12} className="shrink-0" />
                   <span>{error}</span>
                 </div>
               )}
 
-              {/* Selector de Modalidad */}
-              <div className="space-y-1.5">
-                <label className="text-[10px] uppercase font-bold tracking-wider text-zinc-400 block px-1">
-                  Modalidad del Evento
-                </label>
-                <div className="flex bg-zinc-900 border border-zinc-800 p-1 rounded-2xl">
-                  <button
-                    type="button"
-                    onClick={() => setModalidad("presencial")}
-                    className={`flex-1 py-2 px-3 rounded-xl text-xs font-extrabold uppercase tracking-wider transition-all cursor-pointer ${
-                      modalidad === "presencial"
-                        ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-black shadow-md"
-                        : "text-zinc-500 hover:text-zinc-300"
-                    }`}
-                  >
+              {/* Modalidad + Meet URL en fila */}
+              <div className="space-y-1">
+                <label className="text-[9px] uppercase font-bold tracking-wider text-zinc-400 block">Modalidad</label>
+                <div className="flex bg-zinc-900 border border-zinc-800 p-0.5 rounded-xl">
+                  <button type="button" onClick={() => setModalidad("presencial")}
+                    className={`flex-1 py-1.5 rounded-lg text-[10px] font-extrabold uppercase tracking-wider transition-all cursor-pointer ${
+                      modalidad === "presencial" ? "bg-indigo-600 text-white" : "text-zinc-500 hover:text-zinc-300"
+                    }`}>
                     Presencial
                   </button>
-                  <button
-                    type="button"
-                    onClick={() => setModalidad("virtual")}
-                    className={`flex-1 py-2 px-3 rounded-xl text-xs font-extrabold uppercase tracking-wider transition-all cursor-pointer ${
-                      modalidad === "virtual"
-                        ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-black shadow-md"
-                        : "text-zinc-500 hover:text-zinc-300"
-                    }`}
-                  >
+                  <button type="button" onClick={() => setModalidad("virtual")}
+                    className={`flex-1 py-1.5 rounded-lg text-[10px] font-extrabold uppercase tracking-wider transition-all cursor-pointer ${
+                      modalidad === "virtual" ? "bg-indigo-600 text-white" : "text-zinc-500 hover:text-zinc-300"
+                    }`}>
                     Virtual
                   </button>
                 </div>
               </div>
 
+              {modalidad === "virtual" && (
+                <div className="space-y-1">
+                  <label className="text-[9px] uppercase font-bold tracking-wider text-zinc-400 block">Meet URL</label>
+                  <input type="url" placeholder="https://meet.google.com/xxx-xxxx-xxx" value={meetUrl}
+                    onChange={(e) => setMeetUrl(e.target.value)}
+                    className="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 focus:border-indigo-500/50 rounded-xl text-white placeholder-zinc-600 focus:outline-none transition-colors text-xs h-9" />
+                </div>
+              )}
+
               <div className="space-y-1">
-                <label className="text-[10px] uppercase font-bold tracking-wider text-zinc-400 block px-1">
-                  Nombre del Evento
-                </label>
-                <input
-                  type="text"
-                  required
-                  placeholder="Ej. Charla de Ciberseguridad ITEC"
-                  value={nombre}
+                <label className="text-[9px] uppercase font-bold tracking-wider text-zinc-400 block">Nombre</label>
+                <input type="text" required placeholder="Ej. Charla de Ciberseguridad" value={nombre}
                   onChange={(e) => handleNombreChange(e.target.value)}
-                  className="w-full px-4 py-3 bg-zinc-900 border border-zinc-800 focus:border-indigo-500/50 rounded-2xl text-white placeholder-zinc-650 focus:outline-none transition-colors text-sm h-[48px]"
-                />
+                  className="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 focus:border-indigo-500/50 rounded-xl text-white placeholder-zinc-600 focus:outline-none transition-colors text-xs h-9" />
               </div>
 
               <div className="space-y-1">
-                <label className="text-[10px] uppercase font-bold tracking-wider text-zinc-400 block px-1">
-                  Slug URL del QR (ej: charla-ciber-2026)
-                </label>
+                <label className="text-[9px] uppercase font-bold tracking-wider text-zinc-400 block">Slug QR</label>
                 <div className="relative flex items-center">
-                  <span className="absolute left-4 text-xs text-zinc-600 font-extrabold select-none">
-                    /eventos/
-                  </span>
-                  <input
-                    type="text"
-                    required
-                    placeholder="mi-charla-2026"
-                    value={slugQr}
+                  <span className="absolute left-3 text-[10px] text-zinc-600 font-extrabold select-none">/ev/</span>
+                  <input type="text" required placeholder="charla-ciber" value={slugQr}
                     onChange={(e) => setSlugQr(e.target.value)}
-                    className="w-full pl-[72px] pr-4 py-3 bg-zinc-900 border border-zinc-800 focus:border-indigo-500/50 rounded-2xl text-white placeholder-zinc-650 focus:outline-none transition-colors text-sm h-[48px]"
-                  />
+                    className="w-full pl-8 pr-3 py-2 bg-zinc-900 border border-zinc-800 focus:border-indigo-500/50 rounded-xl text-white placeholder-zinc-600 focus:outline-none transition-colors text-xs h-9" />
                 </div>
               </div>
 
               <div className="space-y-1">
-                <label className="text-[10px] uppercase font-bold tracking-wider text-zinc-400 block px-1">
-                  Fecha y Hora del Evento
-                </label>
+                <label className="text-[9px] uppercase font-bold tracking-wider text-zinc-400 block">Fecha y Hora</label>
                 <div className="flex gap-2">
-                  <input
-                    type="text"
-                    required
-                    placeholder="dd/mm/aa"
-                    value={fechaDate}
-                    onChange={(e) => {
-                      const val = e.target.value.replace(/[^0-9/]/g, "")
-                      if (val.length <= 8) setFechaDate(val)
-                    }}
-                    className="flex-1 px-4 py-3 bg-zinc-900 border border-zinc-800 focus:border-indigo-500/50 rounded-2xl text-white placeholder-zinc-600 focus:outline-none transition-colors text-sm h-[48px]"
-                  />
-                  <input
-                    type="time"
-                    required
-                    value={fechaTime}
+                  <input type="text" required placeholder="dd/mm/aa" value={fechaDate}
+                    onChange={(e) => { const v = e.target.value.replace(/[^0-9/]/g, ""); if (v.length <= 8) setFechaDate(v); }}
+                    className="flex-1 px-3 py-2 bg-zinc-900 border border-zinc-800 focus:border-indigo-500/50 rounded-xl text-white placeholder-zinc-600 focus:outline-none transition-colors text-xs h-9" />
+                  <input type="time" required value={fechaTime}
                     onChange={(e) => setFechaTime(e.target.value)}
-                    className="w-[140px] px-4 py-3 bg-zinc-900 border border-zinc-800 focus:border-indigo-500/50 rounded-2xl text-white focus:outline-none transition-colors text-sm h-[48px] [color-scheme:dark]"
-                  />
+                    className="w-[120px] px-3 py-2 bg-zinc-900 border border-zinc-800 focus:border-indigo-500/50 rounded-xl text-white focus:outline-none transition-colors text-xs h-9 [color-scheme:dark]" />
                 </div>
               </div>
 
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 disabled:from-zinc-900 disabled:to-zinc-900 disabled:text-zinc-600 text-white font-extrabold text-xs uppercase tracking-wider py-4 px-6 rounded-2xl transition-all shadow-lg active:scale-[0.97] cursor-pointer h-[50px] mt-3"
-              >
-                {loading ? (
-                  <span className="animate-pulse">Insertando Evento...</span>
-                ) : (
-                  <>
-                    <Plus size={16} />
-                    Crear Evento en Base
-                  </>
-                )}
+              <button type="submit" disabled={loading}
+                className="w-full flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-500 disabled:bg-zinc-900 disabled:text-zinc-600 text-white font-extrabold text-[10px] uppercase tracking-wider py-2.5 rounded-xl transition-all mt-1 h-9 cursor-pointer">
+                {loading ? <span className="animate-pulse">Creando...</span> : <><Plus size={13} /> Crear Evento</>}
               </button>
             </form>
           </div>

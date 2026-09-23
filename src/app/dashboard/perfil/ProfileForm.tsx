@@ -373,7 +373,7 @@ export function ProfileForm({ member }: Props) {
           <h2 className="text-xl font-bold text-white leading-tight truncate px-2">{formData.full_name || 'Miembro ITEC'}</h2>
           <div className="flex flex-wrap gap-2 justify-center">
             <span className="text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
-              {member.role || 'Miembro'}
+              {member.role === 'admin' ? 'Socios Fundador' : member.role === 'coordinador' ? 'Comisión Directiva' : member.role === 'colaborador' ? 'Voluntario' : member.role === 'miembro' ? 'Voluntario' : member.role || 'Voluntario'}
             </span>
             <span className="text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
               {member.status || 'Activo'}
@@ -459,10 +459,10 @@ export function ProfileForm({ member }: Props) {
               <span>LinkedIn</span>
             </label>
             <input
-              type="url"
+              type="text"
               value={formData.linkedin_url}
               onChange={(e) => setFormData({ ...formData, linkedin_url: e.target.value })}
-              placeholder="Ej: https://linkedin.com/in/usuario"
+              placeholder="https://linkedin.com/in/usuario"
               className="w-full bg-white/5 border border-[var(--border-subtle)] rounded-xl px-4 py-3 text-white text-sm focus:border-[var(--accent-primary)] outline-none transition-all"
             />
           </div>
@@ -473,13 +473,13 @@ export function ProfileForm({ member }: Props) {
           <label className="text-[var(--text-secondary)] text-xs uppercase tracking-wider font-bold ml-1 flex items-center gap-1.5">
             <Camera size={12} className="text-zinc-550" /> Enlace de la Foto de Perfil (Opcional)
           </label>
-          <input
-            type="url"
-            value={formData.avatar_url}
-            onChange={(e) => setFormData({ ...formData, avatar_url: e.target.value })}
-            placeholder="Ej: https://ejemplo.com/mi-foto.jpg (o cargá una foto desde la credencial de la izquierda)"
-            className="w-full bg-white/5 border border-[var(--border-subtle)] rounded-xl px-4 py-3 text-white text-sm focus:border-[var(--accent-primary)] outline-none transition-all"
-          />
+            <input
+              type="text"
+              value={formData.avatar_url}
+              onChange={(e) => setFormData({ ...formData, avatar_url: e.target.value })}
+              placeholder="https://ejemplo.com/mi-foto.jpg (o cargá una foto desde la credencial de la izquierda)"
+              className="w-full bg-white/5 border border-[var(--border-subtle)] rounded-xl px-4 py-3 text-white text-sm focus:border-[var(--accent-primary)] outline-none transition-all"
+            />
         </div>
 
         {/* Frase personal ITEC */}

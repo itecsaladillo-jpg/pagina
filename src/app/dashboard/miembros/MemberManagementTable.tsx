@@ -237,10 +237,10 @@ export function MemberManagementTable({ members, commissions, currentUserRole = 
                             disabled={loadingId === m.id}
                             className="bg-transparent text-[var(--text-secondary)] text-xs focus:text-white outline-none cursor-pointer hover:underline disabled:opacity-30"
                           >
-                            <option value="miembro">Miembro</option>
-                            <option value="coordinador">Coordinador</option>
-                            <option value="admin">Admin</option>
-                            <option value="colaborador">Colaborador</option>
+                            <option value="miembro">Voluntario</option>
+                            <option value="coordinador">Comisión Directiva</option>
+                            <option value="admin">Socios Fundador</option>
+                            <option value="colaborador">Voluntario</option>
                           </select>
                         ) : (
                           <span className="text-[var(--text-secondary)] text-xs capitalize">{m.role}</span>

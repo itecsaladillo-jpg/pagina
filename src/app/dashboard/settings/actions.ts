@@ -8,6 +8,7 @@ export async function updateSiteSettingsAction(formData: {
   hero_title: string
   hero_subtitle: string
   contact_email: string
+  general_meet_url?: string
   google_drive_email?: string
   google_drive_password?: string
   google_drive_root_id?: string
@@ -21,7 +22,6 @@ export async function updateSiteSettingsAction(formData: {
 
     const supabase = await createClient()
 
-    // Buscamos el ID del primer registro (solo debería haber uno)
     const { data: currentSettings } = await supabase
       .from('site_settings')
       .select('id')
@@ -31,10 +31,28 @@ export async function updateSiteSettingsAction(formData: {
       return { success: false, error: 'No se encontró la configuración del sitio.' }
     }
 
+    // Seguridad (ago 2026): los campos sensibles viajan VACÍOS desde el cliente
+    // cuando no se los edita. Solo se sobrescriben si el admin escribió algo nuevo
+    // (no se pueden limpiar desde el formulario; hacerlo requeriría edición directa en DB).
+    const payload: Record<string, unknown> = {
+      hero_title: formData.hero_title,
+      hero_subtitle: formData.hero_subtitle,
+      contact_email: formData.contact_email,
+      general_meet_url: formData.general_meet_url,
+      google_drive_email: formData.google_drive_email,
+      google_drive_root_id: formData.google_drive_root_id,
+    }
+    if (formData.google_drive_password?.trim()) {
+      payload.google_drive_password = formData.google_drive_password
+    }
+    if (formData.google_service_account_json?.trim()) {
+      payload.google_service_account_json = formData.google_service_account_json
+    }
+
     const { error } = await supabase
       .from('site_settings')
       .update({
-        ...formData,
+        ...payload,
         updated_at: new Date().toISOString()
       })
       .eq('id', currentSettings.id)
@@ -45,170 +63,108 @@ export async function updateSiteSettingsAction(formData: {
     }
 
     revalidatePath('/dashboard/settings')
+    revalidatePath('/dashboard/reuniones')
     revalidatePath('/dashboard/drive')
-    revalidatePath('/') // Para actualizar la landing
+    revalidatePath('/')
     
     return { success: true }
-  } catch (err) {
+  } catch {
     return { success: false, error: 'Ocurrió un error inesperado.' }
   }
 }
 
-// ─────────────────────────────────────────
-// API KEYS
-// ─────────────────────────────────────────
+const ENV_FALLBACKS: Record<string, string> = {
+  openrouter_api_key: 'OPENROUTER_API_KEY',
+  gemini_api_key: 'GEMINI_APY_KEY',
+  resend_api_key: 'RESEND_API_KEY',
+  groq_api_key: 'GROQ_API_KEY',
+  hf_api_key: 'HF_API_KEY',
+}
 
-/** Configuración de keys conocidas: nombre, variable de entorno, categoría, label */
-export const API_KEY_DEFINITIONS = [
-  { key: 'OPENROUTER_API_KEY', envVar: 'OPENROUTER_API_KEY', label: 'OpenRouter API Key', category: 'ai' as const },
-  { key: 'GEMINI_API_KEY', envVar: 'GEMINI_API_KEY', label: 'Gemini API Key (1)', category: 'ai' as const },
-  { key: 'GEMINI_API_KEY_2', envVar: 'GEMINI_API_KEY_2', label: 'Gemini API Key (2)', category: 'ai' as const },
-  { key: 'GEMINI_API_KEY_3', envVar: 'GEMINI_API_KEY_3', label: 'Gemini API Key (3)', category: 'ai' as const },
-  { key: 'GEMINI_API_KEY_4', envVar: 'GEMINI_API_KEY_4', label: 'Gemini API Key (4)', category: 'ai' as const },
-  { key: 'GOOGLE_GENERATIVE_AI_API_KEY', envVar: 'GOOGLE_GENERATIVE_AI_API_KEY', label: 'Gemini API Key (Alternativa)', category: 'ai' as const },
-  { key: 'GROQ_API_KEY', envVar: 'GROQ_API_KEY', label: 'Groq API Key', category: 'ai' as const },
-  { key: 'HF_API_KEY', envVar: 'HF_API_KEY', label: 'HuggingFace API Key', category: 'ai' as const },
-  { key: 'OLLAMA_API_BASE_URL', envVar: 'OLLAMA_API_BASE_URL', label: 'Ollama URL del servidor', category: 'ai' as const },
-  { key: 'OLLAMA_MODEL', envVar: 'OLLAMA_MODEL', label: 'Ollama Modelo', category: 'ai' as const },
-  { key: 'RESEND_API_KEY', envVar: 'RESEND_API_KEY', label: 'Resend API Key', category: 'comms' as const },
-  { key: 'RESEND_FROM_EMAIL', envVar: 'RESEND_FROM_PRENSA', label: 'Resend Email Remitente', category: 'comms' as const },
-] as const
-
-export type ApiKeyDefinition = (typeof API_KEY_DEFINITIONS)[number]
-export type ApiKeyCategory = 'ai' | 'comms'
-
-export interface ApiKeyStatus {
-  key: string
-  label: string
-  category: ApiKeyCategory
-  masked: string
-  source: 'database' | 'env' | 'none'
-  configured: boolean
+/** Enmascara una credencial para display: conserva solo 4 chars iniciales y 3 finales. */
+function enmascararCredencial(v: string): string {
+  if (v.length <= 8) return '••••••••'
+  return `${v.slice(0, 4)}••••••${v.slice(-3)}`
 }
 
 /**
- * Enmascara una API key mostrando solo primeros 6 y últimos 4 caracteres.
- * Si la key es muy corta, muestra solo asteriscos.
+ * SEGURIDAD (ago 2026): devuelve SOLO máscaras, nunca valores reales.
+ * Antes retornaba las API keys completas y viajaban serializadas al navegador
+ * dentro del payload RSC (visibles en devtools para cualquier sesión admin).
  */
-function maskKey(value: string): string {
-  if (!value || value.length < 12) return '••••••••'
-  return `${value.slice(0, 6)}••••••••${value.slice(-4)}`
-}
+export async function getSettingsAction(): Promise<Record<string, string>> {
+  const admin = await getCurrentMember()
+  if (!admin || admin.role !== 'admin') return {}
 
-/**
- * Obtiene el estado de todas las API keys configuradas.
- * Retorna la información necesaria para que el UI las renderice
- * sin exponer los valores reales al cliente.
- */
-export async function getApiKeysAction(): Promise<{
-  success: boolean
-  keys?: ApiKeyStatus[]
-  error?: string
-}> {
-  try {
-    const admin = await getCurrentMember()
-    if (!admin || admin.role !== 'admin') {
-      return { success: false, error: 'No tenés permisos para realizar esta acción.' }
-    }
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from('api_settings')
+    .select('key, value')
 
-    const supabase = await createClient()
-    const { data: settings } = await supabase
-      .from('site_settings')
-      .select('api_keys')
-      .limit(1)
-      .single()
+  const map: Record<string, string> = {}
 
-    const apiKeys = (settings?.api_keys as Record<string, string>) || {}
-
-    const keys: ApiKeyStatus[] = API_KEY_DEFINITIONS.map((def) => {
-      const dbValue = apiKeys[def.key]
-      const envValue = process.env[def.envVar] || ''
-
-      const hasDbValue = typeof dbValue === 'string' && dbValue.trim() !== ''
-      const hasEnvValue = envValue.trim() !== ''
-      const rawValue = hasDbValue ? dbValue : envValue
-
-      return {
-        key: def.key,
-        label: def.label,
-        category: def.category,
-        masked: hasDbValue || hasEnvValue ? maskKey(rawValue) : '••••••••',
-        source: hasDbValue ? 'database' : hasEnvValue ? 'env' : 'none',
-        configured: hasDbValue || hasEnvValue,
-      }
-    })
-
-    return { success: true, keys }
-  } catch (err) {
-    return { success: false, error: 'Error al obtener las API keys.' }
+  for (const [settingKey, envVar] of Object.entries(ENV_FALLBACKS)) {
+    const dbRow = data?.find((r) => r.key === settingKey)
+    const dbValue = dbRow?.value?.trim() || ''
+    const envValue = process.env[envVar] || ''
+    const real = dbValue || envValue
+    map[settingKey] = real ? enmascararCredencial(real) : ''
   }
+
+  return map
 }
 
-/**
- * Actualiza o inserta una API key en la columna api_keys de site_settings.
- * Si el valor está vacío, elimina la clave del JSONB.
- */
-export async function updateApiKeyAction(
-  keyName: string,
-  newValue: string
+export async function updateSettingAction(
+  key: string,
+  value: string
 ): Promise<{ success: boolean; error?: string }> {
-  try {
-    const admin = await getCurrentMember()
-    if (!admin || admin.role !== 'admin') {
-      return { success: false, error: 'No tenés permisos para realizar esta acción.' }
-    }
+  const admin = await getCurrentMember()
+  if (!admin || admin.role !== 'admin') {
+    return { success: false, error: 'No tenés permisos para realizar esta acción.' }
+  }
 
-    // Validar que la key esté en la lista de keys permitidas
-    type AllowedKey = (typeof API_KEY_DEFINITIONS)[number]['key']
-    const allowedKeys: string[] = API_KEY_DEFINITIONS.map((d) => d.key)
-    if (!allowedKeys.includes(keyName)) {
-      return { success: false, error: 'Nombre de clave no válido.' }
-    }
-    const validKey = keyName as AllowedKey
+  const allowedKeys = [
+    'openrouter_api_key',
+    'gemini_api_key',
+    'resend_api_key',
+    'groq_api_key',
+    'hf_api_key',
+  ]
 
-    // Sanitizar: remover caracteres peligrosos para JSONB
-    const sanitized = newValue.replace(/[\x00-\x1f\x7f]/g, '').trim()
+  if (!allowedKeys.includes(key)) {
+    return { success: false, error: 'Clave no válida.' }
+  }
 
-    const supabase = await createClient()
+  const supabase = await createClient()
+  const now = new Date().toISOString()
 
-    // Obtener el registro actual
-    const { data: currentSettings } = await supabase
-      .from('site_settings')
-      .select('id, api_keys')
-      .limit(1)
-      .single()
+  const { data: existing } = await supabase
+    .from('api_settings')
+    .select('id')
+    .eq('key', key)
+    .maybeSingle()
 
-    if (!currentSettings) {
-      return { success: false, error: 'No se encontró la configuración del sitio.' }
-    }
-
-    const currentKeys = (currentSettings.api_keys as Record<string, string>) || {}
-
-    // Actualizar o eliminar la key
-    let updatedKeys: Record<string, string>
-    if (sanitized === '') {
-      const { [validKey]: _, ...rest } = currentKeys
-      updatedKeys = rest
-    } else {
-      updatedKeys = { ...currentKeys, [validKey]: sanitized }
-    }
-
+  if (existing) {
     const { error } = await supabase
-      .from('site_settings')
-      .update({
-        api_keys: updatedKeys,
-        updated_at: new Date().toISOString(),
-      })
-      .eq('id', currentSettings.id)
+      .from('api_settings')
+      .update({ value, updated_at: now })
+      .eq('key', key)
 
     if (error) {
-      console.error('[updateApiKey] Error:', error.message)
-      return { success: false, error: 'Error al guardar la API key.' }
+      console.error('[updateSetting] Error updating:', error.message)
+      return { success: false, error: 'Error al actualizar.' }
     }
+  } else {
+    const { error } = await supabase
+      .from('api_settings')
+      .insert({ key, value, updated_at: now })
 
-    revalidatePath('/dashboard/settings')
-    return { success: true }
-  } catch (err) {
-    return { success: false, error: 'Ocurrió un error inesperado.' }
+    if (error) {
+      console.error('[updateSetting] Error inserting:', error.message)
+      return { success: false, error: 'Error al crear.' }
+    }
   }
+
+  revalidatePath('/dashboard/settings')
+  return { success: true }
 }

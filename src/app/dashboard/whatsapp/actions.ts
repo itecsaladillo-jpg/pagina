@@ -3,214 +3,485 @@
 import { createClient } from '@/lib/supabase/server'
 import { getCurrentMember } from '@/services/auth'
 import { revalidatePath } from 'next/cache'
-import { z } from 'zod'
-import type { WhatsAppGroup, WhatsAppContact } from '@/types/database'
 
-const groupSchema = z.object({
-  nombre: z.string().min(1, 'El nombre es requerido'),
-  descripcion: z.string().optional(),
-})
+// ─── Tipos ──────────────────────────────────────────────────
 
-const contactSchema = z.object({
-  nombre: z.string().min(1, 'El nombre es requerido'),
-  apellido: z.string().default(''),
-  telefono: z.string().min(6, 'El teléfono es requerido'),
-  grupo_id: z.string().uuid().nullable().optional(),
-  notas: z.string().optional(),
-})
-
-// ─────────────────────────────────────────
-// GRUPOS
-// ─────────────────────────────────────────
-
-export async function createGroupAction(data: z.infer<typeof groupSchema>) {
-  const admin = await getCurrentMember()
-  if (!admin || admin.role !== 'admin') throw new Error('No autorizado')
-
-  const validated = groupSchema.parse(data)
-
-  const supabase = await createClient()
-  const { data: result, error } = await supabase
-    .from('whatsapp_groups')
-    .insert(validated)
-    .select()
-    .single()
-
-  if (error) throw new Error(error.message)
-  revalidatePath('/dashboard/whatsapp')
-  return { success: true, data: result }
+export interface WhatsAppTemplate {
+  id: string
+  titulo: string
+  cuerpo: string
+  categoria: 'general' | 'evento' | 'socio' | 'sponsor' | 'medio'
+  autor_id: string | null
+  created_at: string
+  updated_at: string
 }
 
-export async function updateGroupAction(id: string, data: Partial<z.infer<typeof groupSchema>>) {
-  const admin = await getCurrentMember()
-  if (!admin || admin.role !== 'admin') throw new Error('No autorizado')
+// ─── Queries ─────────────────────────────────────────────────
 
-  const validated = groupSchema.partial().parse(data)
+export async function getTemplatesAction(): Promise<WhatsAppTemplate[]> {
+  const member = await getCurrentMember()
+  if (!member || member.role !== 'admin') return []
 
   const supabase = await createClient()
-  const { error } = await supabase
-    .from('whatsapp_groups')
-    .update({ ...validated, updated_at: new Date().toISOString() })
-    .eq('id', id)
+  const { data, error } = await supabase
+    .from('whatsapp_templates')
+    .select('*')
+    .order('categoria')
+    .order('titulo')
 
-  if (error) throw new Error(error.message)
+  if (error) {
+    console.error('[whatsapp] getTemplatesAction error:', error.message)
+    return []
+  }
+
+  return data ?? []
+}
+
+// ─── Mutations ───────────────────────────────────────────────
+
+export async function saveTemplateAction(data: {
+  id?: string
+  titulo: string
+  cuerpo: string
+  categoria: WhatsAppTemplate['categoria']
+}): Promise<{ success: boolean; error?: string; id?: string }> {
+  const member = await getCurrentMember()
+  if (!member || member.role !== 'admin') {
+    return { success: false, error: 'No autorizado' }
+  }
+
+  const supabase = await createClient()
+
+  if (data.id) {
+    // UPDATE
+    const { error } = await supabase
+      .from('whatsapp_templates')
+      .update({ titulo: data.titulo, cuerpo: data.cuerpo, categoria: data.categoria })
+      .eq('id', data.id)
+
+    if (error) {
+      console.error('[whatsapp] saveTemplateAction update error:', error.message)
+      return { success: false, error: error.message }
+    }
+  } else {
+    // INSERT
+    const { data: inserted, error } = await supabase
+      .from('whatsapp_templates')
+      .insert({ titulo: data.titulo, cuerpo: data.cuerpo, categoria: data.categoria, autor_id: member.id })
+      .select('id')
+      .single()
+
+    if (error) {
+      console.error('[whatsapp] saveTemplateAction insert error:', error.message)
+      return { success: false, error: error.message }
+    }
+
+    revalidatePath('/dashboard/whatsapp')
+    return { success: true, id: inserted.id }
+  }
+
   revalidatePath('/dashboard/whatsapp')
   return { success: true }
 }
 
-export async function deleteGroupAction(id: string) {
-  const admin = await getCurrentMember()
-  if (!admin || admin.role !== 'admin') throw new Error('No autorizado')
+export async function deleteTemplateAction(id: string): Promise<{ success: boolean; error?: string }> {
+  const member = await getCurrentMember()
+  if (!member || member.role !== 'admin') {
+    return { success: false, error: 'No autorizado' }
+  }
 
   const supabase = await createClient()
   const { error } = await supabase
-    .from('whatsapp_groups')
+    .from('whatsapp_templates')
     .delete()
     .eq('id', id)
 
-  if (error) throw new Error(error.message)
-  revalidatePath('/dashboard/whatsapp')
-  return { success: true }
-}
-
-export async function getGroupsAction(): Promise<{ success: boolean; groups?: WhatsAppGroup[]; error?: string }> {
-  try {
-    const admin = await getCurrentMember()
-    if (!admin || admin.role !== 'admin') {
-      return { success: false, error: 'No autorizado' }
-    }
-
-    const supabase = await createClient()
-    const { data, error } = await supabase
-      .from('whatsapp_groups')
-      .select('id, nombre, descripcion, created_at, updated_at')
-      .order('created_at', { ascending: true })
-
-    if (error) return { success: false, error: error.message }
-    return { success: true, groups: data }
-  } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : 'Error desconocido'
-    return { success: false, error: message }
+  if (error) {
+    console.error('[whatsapp] deleteTemplateAction error:', error.message)
+    return { success: false, error: error.message }
   }
-}
 
-// ─────────────────────────────────────────
-// CONTACTOS
-// ─────────────────────────────────────────
-
-export async function createContactAction(data: z.infer<typeof contactSchema>) {
-  const admin = await getCurrentMember()
-  if (!admin || admin.role !== 'admin') throw new Error('No autorizado')
-
-  const validated = contactSchema.parse(data)
-
-  const supabase = await createClient()
-  const { data: result, error } = await supabase
-    .from('whatsapp_contacts')
-    .insert(validated)
-    .select()
-    .single()
-
-  if (error) throw new Error(error.message)
-  revalidatePath('/dashboard/whatsapp')
-  return { success: true, data: result }
-}
-
-export async function updateContactAction(id: string, data: Partial<z.infer<typeof contactSchema>>) {
-  const admin = await getCurrentMember()
-  if (!admin || admin.role !== 'admin') throw new Error('No autorizado')
-
-  const validated = contactSchema.partial().parse(data)
-
-  const supabase = await createClient()
-  const { error } = await supabase
-    .from('whatsapp_contacts')
-    .update({ ...validated, updated_at: new Date().toISOString() })
-    .eq('id', id)
-
-  if (error) throw new Error(error.message)
   revalidatePath('/dashboard/whatsapp')
   return { success: true }
 }
 
-export async function deleteContactAction(id: string) {
-  const admin = await getCurrentMember()
-  if (!admin || admin.role !== 'admin') throw new Error('No autorizado')
+/**
+ * Registra en auditoría que se generó/abrió un link de WhatsApp.
+ */
+export async function logWhatsAppSendAction(data: {
+  destinatario_numero: string
+  destinatario_nombre?: string
+  template_id?: string
+  mensaje_enviado: string
+}): Promise<{ success: boolean }> {
+  const member = await getCurrentMember()
+  if (!member || member.role !== 'admin') return { success: false }
 
   const supabase = await createClient()
-  const { error } = await supabase
-    .from('whatsapp_contacts')
-    .delete()
-    .eq('id', id)
-
-  if (error) throw new Error(error.message)
-  revalidatePath('/dashboard/whatsapp')
-  return { success: true }
-}
-
-export async function getContactsByGroupAction(grupoId: string): Promise<{
-  success: boolean
-  contacts?: WhatsAppContact[]
-  error?: string
-}> {
-  try {
-    const supabase = await createClient()
-    const { data, error } = await supabase
-      .from('whatsapp_contacts')
-      .select('id, nombre, apellido, telefono, grupo_id, notas, created_at, updated_at')
-      .eq('grupo_id', grupoId)
-      .order('created_at', { ascending: true })
-
-    if (error) return { success: false, error: error.message }
-    return { success: true, contacts: data }
-  } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : 'Error desconocido'
-    return { success: false, error: message }
-  }
-}
-
-// ─────────────────────────────────────────
-// INVITACIONES POR WHATSAPP
-// ─────────────────────────────────────────
-
-export async function generateWhatsAppInvitationsAction(data: {
-  grupoId: string
-  type: 'sponsor' | 'training'
-  title: string
-  linkId: string
-}) {
-  const admin = await getCurrentMember()
-  if (!admin || admin.role !== 'admin') throw new Error('No autorizado')
-
-  const supabase = await createClient()
-  const { data: contacts, error } = await supabase
-    .from('whatsapp_contacts')
-    .select('id, nombre, apellido, telefono')
-    .eq('grupo_id', data.grupoId)
-
-  if (error) throw new Error(error.message)
-  if (!contacts || contacts.length === 0) throw new Error('El grupo no tiene contactos.')
-
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://pagina-eight-alpha.vercel.app'
-  const fullLink = `${baseUrl}/${data.type === 'sponsor' ? 'sponsors' : 'capacitaciones'}/${data.linkId}`
-
-  const invitations = contacts.map((contact) => {
-    const fullName = `${contact.nombre} ${contact.apellido}`.trim()
-
-    let message = ''
-    if (data.type === 'sponsor') {
-      message = `Estimado/a ${fullName}, es un placer saludarte. Adjuntamos el Reporte de Impacto Estratégico de ITEC Saladillo correspondiente a vuestra alianza: ${fullLink}. Gracias por vuestra apuesta por la excelencia técnica.`
-    } else {
-      message = `Hola ${fullName}, te invitamos a sumarte a nuestra próxima capacitación en vivo: "${data.title}". Podés participar y votar en tiempo real ingresando aquí: ${fullLink}. ¡Te esperamos!`
-    }
-
-    return {
-      contactId: contact.id,
-      contactName: fullName,
-      phone: contact.telefono,
-      whatsappUrl: `https://wa.me/${contact.telefono.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(message)}`,
-    }
+  await supabase.from('whatsapp_logs').insert({
+    destinatario_numero: data.destinatario_numero,
+    destinatario_nombre: data.destinatario_nombre ?? null,
+    template_id: data.template_id ?? null,
+    mensaje_enviado: data.mensaje_enviado,
+    enviado_por: member.id,
   })
 
-  return { success: true, invitations }
+  return { success: true }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// CONTACTOS EXTERNOS
+// ═══════════════════════════════════════════════════════════════
+
+export interface WhatsAppContact {
+  id: string
+  nombre: string
+  telefono: string
+  email: string | null
+  fuente: 'manual' | 'vcf' | 'csv' | 'device'
+  es_agenda_itec: boolean
+  creado_por: string | null
+  created_at: string
+}
+
+export interface WhatsAppGroup {
+  id: string
+  nombre: string
+  descripcion: string | null
+  color: string
+  creado_por: string | null
+  created_at: string
+  updated_at: string
+  contact_count?: number
+}
+
+export interface WhatsAppGroupWithContacts extends WhatsAppGroup {
+  contacts: WhatsAppContact[]
+}
+
+// ─── Queries de contactos ────────────────────────────────────
+
+export async function getContactsAction(): Promise<WhatsAppContact[]> {
+  const member = await getCurrentMember()
+  if (!member || member.role !== 'admin') return []
+
+  const supabase = await createClient()
+  const { data, error } = await supabase
+    .from('whatsapp_contacts')
+    .select('*')
+    .order('nombre')
+
+  if (error) {
+    console.error('[whatsapp] getContactsAction error:', error.message)
+    return []
+  }
+
+  return data ?? []
+}
+
+export async function getGroupsAction(): Promise<WhatsAppGroup[]> {
+  const member = await getCurrentMember()
+  if (!member || member.role !== 'admin') return []
+
+  const supabase = await createClient()
+  const { data, error } = await supabase
+    .from('whatsapp_groups')
+    .select(`
+      *,
+      whatsapp_group_contacts(count)
+    `)
+    .order('nombre')
+
+  if (error) {
+    console.error('[whatsapp] getGroupsAction error:', error.message)
+    return []
+  }
+
+  return (data ?? []).map((g: any) => ({
+    ...g,
+    contact_count: g.whatsapp_group_contacts?.[0]?.count ?? 0,
+  }))
+}
+
+export async function getGroupWithContactsAction(groupId: string): Promise<WhatsAppGroupWithContacts | null> {
+  const member = await getCurrentMember()
+  if (!member || member.role !== 'admin') return null
+
+  const supabase = await createClient()
+  const { data, error } = await supabase
+    .from('whatsapp_groups')
+    .select(`
+      *,
+      whatsapp_group_contacts(
+        whatsapp_contacts(*)
+      )
+    `)
+    .eq('id', groupId)
+    .single()
+
+  if (error || !data) {
+    console.error('[whatsapp] getGroupWithContactsAction error:', error?.message)
+    return null
+  }
+
+  const contacts: WhatsAppContact[] = (data.whatsapp_group_contacts ?? [])
+    .map((r: any) => r.whatsapp_contacts)
+    .filter(Boolean)
+
+  return { ...data, contacts }
+}
+
+// ─── Mutations de contactos ──────────────────────────────────
+
+export async function saveContactAction(data: {
+  id?: string
+  nombre: string
+  telefono: string
+  email?: string
+  fuente?: WhatsAppContact['fuente']
+}): Promise<{ success: boolean; error?: string; id?: string }> {
+  const member = await getCurrentMember()
+  if (!member || member.role !== 'admin') return { success: false, error: 'No autorizado' }
+
+  const supabase = await createClient()
+  const payload = {
+    nombre: data.nombre.trim(),
+    telefono: data.telefono.trim(),
+    email: data.email?.trim() || null,
+    fuente: data.fuente ?? 'manual',
+    es_agenda_itec: true,
+    creado_por: member.id,
+  }
+
+  if (data.id) {
+    const { error } = await supabase
+      .from('whatsapp_contacts')
+      .update({ nombre: payload.nombre, telefono: payload.telefono, email: payload.email })
+      .eq('id', data.id)
+
+    if (error) return { success: false, error: error.message }
+  } else {
+    const { data: inserted, error } = await supabase
+      .from('whatsapp_contacts')
+      .insert(payload)
+      .select('id')
+      .single()
+
+    if (error) return { success: false, error: error.message }
+    revalidatePath('/dashboard/whatsapp')
+    return { success: true, id: inserted.id }
+  }
+
+  revalidatePath('/dashboard/whatsapp')
+  return { success: true }
+}
+
+/**
+ * Importa múltiples contactos de una sola vez (post vCard/CSV/device).
+ * Ignora duplicados por teléfono (upsert).
+ */
+export async function saveContactsBulkAction(
+  contacts: Array<{ nombre: string; telefono: string; email?: string }>,
+  fuente: WhatsAppContact['fuente']
+): Promise<{
+  success: boolean
+  inserted: number
+  contacts: WhatsAppContact[]
+  error?: string
+}> {
+  const member = await getCurrentMember()
+  if (!member || member.role !== 'admin') return { success: false, inserted: 0, contacts: [], error: 'No autorizado' }
+
+  if (contacts.length === 0) return { success: true, inserted: 0, contacts: [] }
+
+  const supabase = await createClient()
+  const rows = contacts.map(c => ({
+    nombre: c.nombre.trim(),
+    telefono: c.telefono.trim(),
+    email: c.email?.trim() || null,
+    fuente,
+    es_agenda_itec: true,
+    creado_por: member.id,
+  }))
+
+  const { data, error } = await supabase
+    .from('whatsapp_contacts')
+    .upsert(rows, { onConflict: 'telefono', ignoreDuplicates: true })
+    .select('*')
+
+  if (error) {
+    console.error('[whatsapp] saveContactsBulkAction error:', error.message)
+    return { success: false, inserted: 0, contacts: [], error: error.message }
+  }
+
+  revalidatePath('/dashboard/whatsapp')
+  const insertedContacts: WhatsAppContact[] = (data ?? []).map((row: any) => ({
+    id: row.id,
+    nombre: row.nombre,
+    telefono: row.telefono,
+    email: row.email ?? null,
+    fuente: row.fuente as WhatsAppContact['fuente'],
+    es_agenda_itec: row.es_agenda_itec,
+    creado_por: row.creado_por ?? null,
+    created_at: row.created_at,
+  }))
+  return { success: true, inserted: insertedContacts.length, contacts: insertedContacts }
+}
+
+export async function deleteContactAction(id: string): Promise<{ success: boolean; error?: string }> {
+  const member = await getCurrentMember()
+  if (!member || member.role !== 'admin') return { success: false, error: 'No autorizado' }
+
+  const supabase = await createClient()
+  const { error } = await supabase.from('whatsapp_contacts').delete().eq('id', id)
+
+  if (error) return { success: false, error: error.message }
+
+  revalidatePath('/dashboard/whatsapp')
+  return { success: true }
+}
+
+// ─── Mutations de grupos ──────────────────────────────────────
+
+export async function saveGroupAction(data: {
+  id?: string
+  nombre: string
+  descripcion?: string
+  color?: string
+}): Promise<{ success: boolean; error?: string; id?: string }> {
+  const member = await getCurrentMember()
+  if (!member || member.role !== 'admin') return { success: false, error: 'No autorizado' }
+
+  const supabase = await createClient()
+  const payload = {
+    nombre: data.nombre.trim(),
+    descripcion: data.descripcion?.trim() || null,
+    color: data.color ?? '#25d366',
+    creado_por: member.id,
+  }
+
+  if (data.id) {
+    const { error } = await supabase
+      .from('whatsapp_groups')
+      .update({ nombre: payload.nombre, descripcion: payload.descripcion, color: payload.color })
+      .eq('id', data.id)
+
+    if (error) return { success: false, error: error.message }
+  } else {
+    const { data: inserted, error } = await supabase
+      .from('whatsapp_groups')
+      .insert(payload)
+      .select('id')
+      .single()
+
+    if (error) return { success: false, error: error.message }
+    revalidatePath('/dashboard/whatsapp')
+    return { success: true, id: inserted.id }
+  }
+
+  revalidatePath('/dashboard/whatsapp')
+  return { success: true }
+}
+
+export async function deleteGroupAction(id: string): Promise<{ success: boolean; error?: string }> {
+  const member = await getCurrentMember()
+  if (!member || member.role !== 'admin') return { success: false, error: 'No autorizado' }
+
+  const supabase = await createClient()
+  const { error } = await supabase.from('whatsapp_groups').delete().eq('id', id)
+
+  if (error) return { success: false, error: error.message }
+
+  revalidatePath('/dashboard/whatsapp')
+  return { success: true }
+}
+
+export async function setGroupContactsAction(
+  groupId: string,
+  contactsToSync: { id: string, nombre: string, telefono: string, email: string | null, tipo: string }[]
+): Promise<{ success: boolean; error?: string }> {
+  const member = await getCurrentMember()
+  if (!member || member.role !== 'admin') return { success: false, error: 'No autorizado' }
+
+  const supabase = await createClient()
+
+  // 1. Asegurar que todos existan en whatsapp_contacts para respetar la FK
+  let phoneToId = new Map<string, string>()
+  if (contactsToSync.length > 0) {
+    const rowsToUpsert = contactsToSync.map(c => ({
+      nombre: c.nombre,
+      telefono: c.telefono,
+      email: c.email,
+      fuente: c.tipo === 'miembro' ? 'manual' : c.tipo,
+      es_agenda_itec: true,
+      creado_por: member.id
+    }))
+
+    const { data: upsertedContacts, error: upsertError } = await supabase
+      .from('whatsapp_contacts')
+      .upsert(rowsToUpsert, { onConflict: 'telefono' })
+      .select('id, telefono')
+
+    if (upsertError) {
+      console.error('[whatsapp] upsert error in setGroupContactsAction:', upsertError.message)
+      return { success: false, error: upsertError.message }
+    }
+
+    if (upsertedContacts) {
+      for (const uc of upsertedContacts) {
+        phoneToId.set(uc.telefono, uc.id)
+      }
+    }
+  }
+
+  // 2. Reemplazar todos los miembros del grupo
+  const { error: delError } = await supabase
+    .from('whatsapp_group_contacts')
+    .delete()
+    .eq('group_id', groupId)
+
+  if (delError) return { success: false, error: delError.message }
+
+  if (contactsToSync.length > 0) {
+    const rows = contactsToSync.map(c => ({
+      group_id: groupId,
+      contact_id: phoneToId.get(c.telefono) || c.id
+    }))
+    const { error: insError } = await supabase.from('whatsapp_group_contacts').insert(rows)
+    if (insError) return { success: false, error: insError.message }
+  }
+
+  revalidatePath('/dashboard/whatsapp')
+  return { success: true }
+}
+
+export async function updateUnifiedContactAction(id: string, tipo: string, payload: { nombre: string, telefono: string, email: string | null }) {
+  const member = await getCurrentMember()
+  if (!member || member.role !== 'admin') return { success: false, error: 'No autorizado' }
+  const supabase = await createClient()
+
+  if (tipo === 'miembro') {
+    const { error } = await supabase.from('members').update({ full_name: payload.nombre, phone: payload.telefono, email: payload.email }).eq('id', id)
+    if (error) return { success: false, error: error.message }
+  } else {
+    const { error } = await supabase.from('whatsapp_contacts').update({ nombre: payload.nombre, telefono: payload.telefono, email: payload.email }).eq('id', id)
+    if (error) return { success: false, error: error.message }
+  }
+  revalidatePath('/dashboard/whatsapp')
+  return { success: true }
+}
+
+export async function deleteUnifiedContactAction(id: string, tipo: string) {
+  const member = await getCurrentMember()
+  if (!member || member.role !== 'admin') return { success: false, error: 'No autorizado' }
+  const supabase = await createClient()
+
+  if (tipo === 'miembro') {
+    return { success: false, error: 'No se puede eliminar un miembro desde la agenda de WhatsApp.' }
+  } else {
+    const { error } = await supabase.from('whatsapp_contacts').delete().eq('id', id)
+    if (error) return { success: false, error: error.message }
+  }
+  revalidatePath('/dashboard/whatsapp')
+  return { success: true }
 }

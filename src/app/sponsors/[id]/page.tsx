@@ -28,25 +28,28 @@ function formatCurrency(n: number) {
 // ─────────────────────────────────────────
 // Page
 // ─────────────────────────────────────────
-export default async function SponsorPortalPage({ params }: { params: { id: string } }) {
+export default async function SponsorPortalPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   const supabase = await createClient()
 
-  const { data: sponsor } = await supabase
-    .from('sponsors')
-    .select('*')
-    .eq('id', params.id)
-    .single()
+  // Sponsor y reporte más reciente en paralelo (ambos dependen solo del id).
+  // Antes: params síncrono (roto en Next 16, siempre undefined) y queries en serie.
+  const [{ data: sponsor }, { data: reporte }] = await Promise.all([
+    supabase
+      .from('sponsors')
+      .select('*')
+      .eq('id', id)
+      .single(),
+    supabase
+      .from('sponsor_reportes')
+      .select('*')
+      .eq('sponsor_id', id)
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .single(),
+  ])
 
   if (!sponsor) notFound()
-
-  // Obtener el reporte más reciente del sponsor
-  const { data: reporte } = await supabase
-    .from('sponsor_reportes')
-    .select('*')
-    .eq('sponsor_id', sponsor.id)
-    .order('created_at', { ascending: false })
-    .limit(1)
-    .single()
 
   // Obtener todas las acciones del período (si hay reporte), o las últimas 6
   let acciones: any[] = []
@@ -162,8 +165,8 @@ export default async function SponsorPortalPage({ params }: { params: { id: stri
                 <div key={accion.id} className="group border border-white/5 rounded-2xl overflow-hidden bg-white/[0.02] hover:bg-white/[0.04] hover:border-white/10 transition-all">
                   {/* Foto o placeholder */}
                   {accion.galeria_fotos?.[0] ? (
-                    <div className="aspect-video relative overflow-hidden">
-                      <img src={accion.galeria_fotos[0]} alt={accion.titulo} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                    <div className="aspect-video relative overflow-hidden bg-black/40 flex items-center justify-center p-2">
+                      <img src={accion.galeria_fotos[0]} alt={accion.titulo} className="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-500" />
                     </div>
                   ) : (
                     <div className="aspect-video flex items-center justify-center bg-white/5">

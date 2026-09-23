@@ -5,7 +5,8 @@ import { createClient } from "@/lib/supabase/client";
 import { Sparkles, CloudLightning, Activity, Award, QrCode, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
-import QRCode from "react-qr-code";
+import dynamic from "next/dynamic";
+const QRCode = dynamic(() => import("react-qr-code"), { ssr: false });
 
 interface PalabrasConteo {
   [key: string]: number;
@@ -171,7 +172,7 @@ export default function PantallaNubePage({ params }: { params: Promise<{ id: str
       <div className="absolute top-[-20%] left-[-10%] w-[60%] h-[60%] rounded-full bg-indigo-500/10 blur-[150px] pointer-events-none" />
       <div className="absolute bottom-[-20%] right-[-10%] w-[60%] h-[60%] rounded-full bg-purple-500/10 blur-[150px] pointer-events-none" />
 
-      <div className="max-w-[95rem] mx-auto w-full px-8 py-8 flex flex-col h-screen relative z-10">
+      <div className="max-w-full mx-auto w-full px-8 xl:px-12 py-8 flex flex-col h-screen relative z-10">
         
         {/* Header - Auditorio con Logo ITEC Independiente */}
         <header className="flex items-center justify-between mb-8 shrink-0 border-b border-white/[0.05] pb-6 gap-6">

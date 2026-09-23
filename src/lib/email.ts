@@ -10,7 +10,8 @@ export async function sendEventWelcomeEmail(
   eventName: string,
   eventSlug: string
 ) {
-  const apiKey = await getSettingValue('RESEND_API_KEY', 'RESEND_API_KEY')
+  const apiKey = await getSettingValue('resend_api_key', 'RESEND_API_KEY')
+  const fromEmail = await getSettingValue('resend_from_email', 'RESEND_FROM_EMAIL')
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://pagina-eight-alpha.vercel.app'
   const eventLink = `${siteUrl}/eventos/${eventSlug}`
 
@@ -24,8 +25,9 @@ export async function sendEventWelcomeEmail(
 
   try {
     const resend = new Resend(apiKey)
+    const from = fromEmail || 'ITEC Saladillo <eventos@resend.dev>'
     const { data, error } = await resend.emails.send({
-      from: 'ITEC Saladillo <eventos@resend.dev>',
+      from,
       to: [toEmail],
       subject: `¡Registro Exitoso! - ${eventName}`,
       html: `
@@ -74,4 +76,3 @@ export async function sendEventWelcomeEmail(
     return { success: false, error: err }
   }
 }
-

@@ -1,57 +1,59 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { 
-  Video, 
-  ListChecks, 
-  History, 
-  Sparkles, 
-  Mic, 
-  MicOff, 
-  VideoOff, 
-  Settings,
-  Users,
-  ExternalLink,
-  FileText,
-  CheckCircle2,
-  Loader2,
-  Clock
+import { useState, useRef } from 'react'
+import { useRouter } from 'next/navigation'
+import {
+  Video, ListChecks, History, Sparkles,
+  Users, FileText, Loader2, Clock, ExternalLink,
+  Copy, Settings
 } from 'lucide-react'
-import { createClient } from '@/lib/supabase/client'
 import { saveNotesAction, finalizeAndPublishAction } from '@/app/dashboard/reuniones/actions'
 
-interface Props {
-  member: any
-  initialContent: string
-  meetLink: string
-  history: any[]
+
+interface Member {
+  full_name: string
+  email: string
+  role: string
 }
 
-export function GeneralMeetingRoom({ member, initialContent, meetLink, history }: Props) {
+interface MeetingHistory {
+  id: string
+  content: string
+  session_date: string
+  created_at: string
+}
+
+interface Props {
+  member: Member
+  initialContent: string
+  history: MeetingHistory[]
+  meetUrl?: string | null
+}
+
+export function GeneralMeetingRoom({ member, initialContent, history, meetUrl: initialMeetUrl }: Props) {
+  const router = useRouter()
   const [content, setContent] = useState(initialContent)
   const [isSaving, setIsSaving] = useState(false)
   const [isFinalizing, setIsFinalizing] = useState(false)
   const [lastSaved, setLastSaved] = useState<Date | null>(null)
-  const [micOn, setMicOn] = useState(true)
-  const [camOn, setCamOn] = useState(true)
-  const [onlineCount, setOnlineCount] = useState(1)
-  
-  const saveTimer = useRef<NodeJS.Timeout>(undefined)
-  const supabase = createClient()
-  
-  const canEdit = ['admin', 'coordinador'].includes(member.role)
+  const [copiedName, setCopiedName] = useState(false)
 
-  // Auto-guardado
+  // Estado del enlace Meet
+  const [meetUrl, setMeetUrl] = useState(initialMeetUrl)
+
+  const saveTimer = useRef<NodeJS.Timeout>(undefined)
+
+  const canEdit = ['admin', 'coordinador'].includes(member.role)
+  const isAdmin = member.role === 'admin'
+
   const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     if (!canEdit) return
     const newContent = e.target.value
     setContent(newContent)
-    
+
     clearTimeout(saveTimer.current)
     saveTimer.current = setTimeout(async () => {
       setIsSaving(true)
-      // Usamos 'general' como ID especial o null si el action lo permite
       await saveNotesAction('general', newContent)
       setLastSaved(new Date())
       setIsSaving(false)
@@ -71,86 +73,104 @@ export function GeneralMeetingRoom({ member, initialContent, meetLink, history }
     setIsFinalizing(false)
   }
 
+  const copiarNombre = () => {
+    navigator.clipboard.writeText(member.full_name)
+    setCopiedName(true)
+    setTimeout(() => setCopiedName(false), 2000)
+  }
+
   return (
-    <div className="space-y-10 animate-fade-in">
-      {/* ─── LOBBY ESTILO MEET ─── */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-        {/* Lado Izquierdo: Cámara */}
-        <div className="space-y-4">
-          <div className="relative aspect-video bg-[#0a0f1e] rounded-3xl border border-white/5 overflow-hidden flex items-center justify-center shadow-2xl">
-            {camOn ? (
-              <div className="flex flex-col items-center gap-4">
-                <div className="w-20 h-20 rounded-full bg-blue-500/20 border border-blue-500/40 flex items-center justify-center text-3xl font-bold text-white shadow-lg">
-                  {member.full_name.charAt(0)}
+    <div className="space-y-8 animate-fade-in">
+
+      {/* ─── TARJETA PRINCIPAL: ACCESO A VIDEOLLAMADA ─── */}
+      <div className="space-y-4">
+        {meetUrl ? (
+          <div className="bg-gradient-to-r from-emerald-950/60 to-cyan-950/40 border border-emerald-500/20 rounded-3xl p-6 relative">
+            {/* Botón editar (solo admin) */}
+            {isAdmin && (
+              <button onClick={() => router.push('/dashboard/settings')}
+                className="absolute top-4 right-4 p-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-slate-400 hover:text-white transition-all"
+                title="Configurar enlace en Ajustes">
+                <Settings className="w-4 h-4" />
+              </button>
+            )}
+
+            <div className="flex flex-col sm:flex-row items-center gap-4">
+              <div className="flex-1 flex items-center gap-4">
+                <div className="w-14 h-14 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center shrink-0">
+                  <Video className="w-7 h-7 text-emerald-400" />
                 </div>
-                <div className="flex items-center gap-2 px-3 py-1 bg-green-500/10 border border-green-500/20 rounded-full">
-                  <div className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
-                  <span className="text-green-400 text-[10px] font-bold uppercase tracking-widest">Listo para unirte</span>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+                    <span className="text-[10px] font-extrabold text-red-400 uppercase tracking-widest">Sala Activa</span>
+                  </div>
+                  <h3 className="text-lg font-bold text-white mt-1">Sala de Reuniones ITEC</h3>
+                  <p className="text-xs text-emerald-300/70 mt-0.5">Google Meet — Enlace persistente para el staff</p>
                 </div>
               </div>
-            ) : (
-              <VideoOff className="w-12 h-12 text-white/10" />
+              <div className="flex items-center gap-2 shrink-0">
+                <a href={meetUrl} target="_blank" rel="noopener noreferrer"
+                  className="py-3 px-6 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm flex items-center gap-2 transition-all duration-200 shadow-lg hover:shadow-emerald-600/20">
+                  <ExternalLink className="w-4 h-4" />
+                  Unirse a la Reunión
+                </a>
+              </div>
+            </div>
+
+            {/* Módulo de ayuda */}
+            <div className="mt-4 pt-4 border-t border-emerald-500/10 flex flex-wrap items-center gap-4 text-xs">
+              <div className="flex items-center gap-2">
+                <Users className="w-3.5 h-3.5 text-emerald-400" />
+                <span className="text-emerald-300/70">Tu nombre:</span>
+                <span className="font-bold text-white">{member.full_name}</span>
+                <button onClick={copiarNombre}
+                  className="text-emerald-400/60 hover:text-emerald-400 transition-colors" title="Copiar nombre">
+                  <Copy className="w-3 h-3" />
+                </button>
+                {copiedName && <span className="text-[9px] text-emerald-400 font-bold">¡Copiado!</span>}
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="relative bg-[#0a0f1e] rounded-3xl border border-white/5 overflow-hidden shadow-2xl flex flex-col items-center justify-center py-16 px-6">
+            {isAdmin && (
+              <button onClick={() => router.push('/dashboard/settings')}
+                className="absolute top-4 right-4 p-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-slate-400 hover:text-white transition-all"
+                title="Configurar enlace en Ajustes">
+                <Settings className="w-4 h-4" />
+              </button>
             )}
-            
-            {/* Controles flotantes simulados */}
-            <div className="absolute bottom-6 flex items-center gap-3">
-              <button onClick={() => setMicOn(!micOn)} className={`p-3 rounded-full border transition-all ${micOn ? 'bg-white/5 border-white/10 text-white' : 'bg-red-500/20 border-red-500/40 text-red-400'}`}>
-                {micOn ? <Mic size={20} /> : <MicOff size={20} />}
-              </button>
-              <button onClick={() => setCamOn(!camOn)} className={`p-3 rounded-full border transition-all ${camOn ? 'bg-white/5 border-white/10 text-white' : 'bg-red-500/20 border-red-500/40 text-red-400'}`}>
-                {camOn ? <Video size={20} /> : <VideoOff size={20} />}
-              </button>
-              <button className="p-3 rounded-full bg-white/5 border border-white/10 text-white hover:bg-white/10 transition-all">
-                <Settings size={20} />
-              </button>
+            <div className="w-16 h-16 rounded-full bg-blue-500/10 border border-blue-500/30 flex items-center justify-center mb-4">
+              <Video className="w-7 h-7 text-blue-400" />
             </div>
-          </div>
-        </div>
-
-        {/* Lado Derecho: Info y Acceso */}
-        <div className="space-y-6 lg:pl-6">
-          <div className="space-y-2">
-            <h1 className="text-4xl font-black text-white tracking-tight">Reunión General ITEC</h1>
-            <p className="text-[var(--text-secondary)] text-sm flex items-center gap-2">
-              <Users size={14} className="text-blue-400" />
-              <span>Espacio abierto para todo el staff</span>
+            <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-2">Sala de Reuniones</h3>
+            <p className="text-xs text-[var(--text-muted)] leading-relaxed max-w-[300px] text-center mb-4">
+              {isAdmin
+                ? 'Configurá el enlace de Google Meet para activar la sala.'
+                : 'El enlace de Google Meet será configurado por un administrador.'}
             </p>
-          </div>
-
-          <div className="p-5 rounded-2xl bg-white/[0.02] border border-white/5 space-y-4">
-            <div className="flex items-center justify-between text-xs uppercase tracking-widest text-[var(--text-muted)]">
-              <span>Estado de la sala</span>
-              <span className="text-green-400 font-bold">Disponible</span>
+            <div className="flex items-center gap-2 px-3 py-1.5 bg-amber-500/10 border border-amber-500/20 rounded-full">
+              <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
+              <span className="text-[10px] font-bold text-amber-400 uppercase tracking-widest">En espera</span>
             </div>
-            <a 
-              href={meetLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full py-4 px-6 rounded-2xl bg-green-600 hover:bg-green-500 text-white font-bold text-lg flex items-center justify-center gap-3 transition-all shadow-xl shadow-green-900/20 group"
-            >
-              <ExternalLink size={20} />
-              Unirse ahora
-              <Video className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity" />
-            </a>
           </div>
-        </div>
+        )}
       </div>
 
-      <div className="section-divider" />
-
       {/* ─── PANEL DE MINUTA ─── */}
-      <div className="space-y-6">
+      <div className="space-y-5">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center">
               <ListChecks className="text-amber-500" size={20} />
             </div>
             <div>
-              <h2 className="text-xl font-bold text-white">Minuta Colaborativa</h2>
+              <h2 className="text-xl font-bold text-white">Orden del Día / Notas</h2>
               <p className="text-[var(--text-muted)] text-xs uppercase tracking-widest">Memoria Institucional</p>
             </div>
           </div>
-          
+
           <div className="flex items-center gap-4 text-[10px] uppercase tracking-widest">
             {isSaving ? (
               <span className="text-amber-400 flex items-center gap-2">
@@ -167,8 +187,8 @@ export function GeneralMeetingRoom({ member, initialContent, meetLink, history }
             value={content}
             onChange={handleContentChange}
             disabled={!canEdit}
-            placeholder={canEdit ? "Escribí aquí los puntos tratados, decisiones y acuerdos de la reunión general..." : "Solo administradores y coordinadores pueden editar la minuta activa."}
-            className="w-full min-h-[300px] bg-[var(--bg-surface)] border border-white/5 rounded-3xl p-8 text-[var(--text-secondary)] text-sm leading-relaxed focus:outline-none focus:border-blue-500/30 transition-all resize-none shadow-inner font-mono"
+            placeholder={canEdit ? "Escribí aquí los puntos tratados, decisiones y acuerdos de la reunión..." : "Solo administradores y coordinadores pueden editar las notas."}
+            className="w-full min-h-[250px] bg-[var(--bg-surface)] border border-white/5 rounded-3xl p-6 text-[var(--text-secondary)] text-sm leading-relaxed focus:outline-none focus:border-blue-500/30 transition-all resize-none shadow-inner font-mono"
           />
           {!canEdit && (
             <div className="absolute inset-0 bg-black/20 backdrop-blur-[1px] flex items-center justify-center rounded-3xl border border-white/5">
@@ -181,7 +201,7 @@ export function GeneralMeetingRoom({ member, initialContent, meetLink, history }
           <button
             onClick={handleFinalize}
             disabled={isFinalizing || content.length < 20}
-            className="w-full py-4 rounded-2xl bg-gradient-to-r from-purple-600/20 to-blue-600/20 border border-purple-500/30 text-purple-300 font-bold text-sm flex items-center justify-center gap-3 hover:from-purple-600/30 hover:to-blue-600/30 transition-all disabled:opacity-30 group"
+            className="w-full py-3 rounded-2xl bg-gradient-to-r from-purple-600/20 to-blue-600/20 border border-purple-500/30 text-purple-300 font-bold text-sm flex items-center justify-center gap-3 hover:from-purple-600/30 hover:to-blue-600/30 transition-all disabled:opacity-30 group"
           >
             {isFinalizing ? (
               <>
@@ -199,15 +219,15 @@ export function GeneralMeetingRoom({ member, initialContent, meetLink, history }
       </div>
 
       {/* ─── HISTORIAL ─── */}
-      <div className="space-y-6 pt-10">
-        <div className="flex items-center gap-3 mb-6">
+      <div className="space-y-5 pt-6">
+        <div className="flex items-center gap-3 mb-4">
           <History className="text-[var(--text-muted)]" size={20} />
           <h2 className="text-lg font-bold text-white">Historial de Encuentros</h2>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {history.length > 0 ? (
-            history.map((item: any) => (
+            history.map((item) => (
               <div key={item.id} className="glass border border-white/5 rounded-2xl p-5 hover:border-white/10 transition-all group">
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center gap-2 text-blue-400">
@@ -218,9 +238,11 @@ export function GeneralMeetingRoom({ member, initialContent, meetLink, history }
                   </div>
                   <FileText size={16} className="text-[var(--text-muted)] group-hover:text-white transition-colors" />
                 </div>
-                <h3 className="text-white font-semibold text-sm mb-2 line-clamp-1">{item.title}</h3>
+                <h3 className="text-white font-semibold text-sm mb-2 line-clamp-1">
+                  Reunión — {new Date(item.session_date).toLocaleDateString('es-AR')}
+                </h3>
                 <p className="text-[var(--text-muted)] text-xs line-clamp-2 leading-relaxed">
-                  {item.summary || 'Ver contenido completo'}
+                  {item.content?.slice(0, 120) || 'Ver contenido completo'}...
                 </p>
               </div>
             ))
@@ -231,6 +253,7 @@ export function GeneralMeetingRoom({ member, initialContent, meetLink, history }
           )}
         </div>
       </div>
+
     </div>
   )
 }

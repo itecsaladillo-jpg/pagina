@@ -2,8 +2,8 @@ import { Metadata } from 'next'
 import { getCurrentMember } from '@/services/auth'
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
-import { DRIVE_FOLDERS, getDriveFolderBySlug } from '@/lib/drive'
-import { Folder, ExternalLink, Cloud, ShieldCheck, Clock, Share2, FileCode } from 'lucide-react'
+import { getDriveFolderBySlug } from '@/lib/drive'
+import { Folder, ExternalLink, Cloud, ShieldCheck, Clock, Share2 } from 'lucide-react'
 import { FileList } from './FileList'
 
 export const metadata: Metadata = {
@@ -16,19 +16,19 @@ export default async function DrivePage() {
 
   const supabase = await createClient()
 
-  // Obtener la comisión del miembro
-  const { data: memberCommissions } = await supabase
-    .from('commission_members')
-    .select(`
-      commissions ( slug, name )
-    `)
-    .eq('member_id', member.id)
-
-  // Obtener configuración global (para el ID de la carpeta raíz)
-  const { data: settings } = await supabase
-    .from('site_settings')
-    .select('google_drive_root_id')
-    .single()
+  // ago 2026: comisión del miembro y settings globales son independientes → paralelo
+  const [{ data: memberCommissions }, { data: settings }] = await Promise.all([
+    supabase
+      .from('commission_members')
+      .select(`
+        commissions ( slug, name )
+      `)
+      .eq('member_id', member.id),
+    supabase
+      .from('site_settings')
+      .select('google_drive_root_id')
+      .single(),
+  ])
 
   // Manejar el hecho de que Supabase puede devolver un objeto o un array para la relación
   const firstCommission = memberCommissions?.[0]?.commissions

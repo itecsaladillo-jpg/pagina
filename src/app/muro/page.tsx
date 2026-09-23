@@ -13,9 +13,10 @@ export const metadata: Metadata = {
 
 export default async function MuroPage() {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-
-  const allFlashes = await getAllMulticanalNewsFlashes()
+  const [{ data: { user } }, allFlashes] = await Promise.all([
+    supabase.auth.getUser(),
+    getAllMulticanalNewsFlashes()
+  ])
 
   const publicFlashes = allFlashes.filter(f => 
     (f.para_publico || Boolean(f.texto_publico?.trim())) && f.is_published !== false

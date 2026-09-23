@@ -12,7 +12,7 @@ export const dictionary = {
       aulaEnVivo: 'Aula Virtual (En Vivo)',
     },
     hero: {
-      badge: 'ONG · Saladillo, Buenos Aires',
+      badge: 'INNOVACION TECNOLOGIA EMPRENDEDURISMO\nY CIENCIA DE SALADILLO ASOCIACION CIVIL',
       headingStart: 'Ciencia y tecnología para',
       headingGradient: 'desarrollar el futuro',
       headingEnd: 'desde Saladillo',
@@ -126,7 +126,6 @@ export const dictionary = {
       headingGradient: 'ciencia cobra vida',
       desc1: 'ITEC Saladillo nació con una misión clara: democratizar el acceso al conocimiento científico y tecnológico en Saladillo. Somos una ONG formada por personas apasionadas que creen en el poder transformador de la ciencia.',
       desc2: 'Nuestra esencia rinde homenaje a Augusto Cicaré, el inventor argentino de Saladillo reconocido mundialmente por sus innovaciones en helicópteros — un símbolo de que la creatividad y la perseverancia no tienen límites geográficos.',
-      fundacion: 'Fundado en Saladillo, Buenos Aires',
       pilares: {
         innovacion: {
           title: 'Innovación',
@@ -148,35 +147,43 @@ export const dictionary = {
     },
     comisiones: {
       badge: 'Equipos de Trabajo',
-      heading: 'Comisiones de Innovación',
-      desc: 'Grupos especializados formados por docentes, alumnos y profesionales dedicados a resolver desafíos técnicos concretos.',
+      heading: 'Nuestro Equipo de trabajo',
+      desc: 'Un equipo interdisciplinario que conecta saberes,\ innovación y comunidad para transformar\ny crecer juntos.',
       miembros: 'miembros activos',
       verMiembros: 'Ver perfiles',
       comisionesList: {
         innovacion: {
-          title: 'Innovación & Tecnología',
-          desc: 'Exploramos nuevas tecnologías y desarrollamos proyectos de software, hardware y sistemas embebidos para la comunidad.'
+          title: 'Área Socioproductiva',
+          desc: 'Fortalece el vínculo con empresas, emprendedores y el sector productivo, promoviendo proyectos de innovación y desarrollo local.'
         },
         educacion: {
-          title: 'Educación & Capacitación',
-          desc: 'Diseñamos y dictamos talleres, cursos y programas formativos en ciencia y tecnología para todas las edades.'
+          title: 'Área Educación y Formación Continua',
+          desc: 'Impulsa propuestas de capacitación y aprendizaje permanente, vinculadas con las nuevas tecnologías y las demandas del mundo laboral.'
+        },
+        finanzas: {
+          title: 'Área Finanzas y Sponsoreo',
+          desc: 'Gestiona recursos y genera alianzas estratégicas que permiten sostener y desarrollar los proyectos de ITEC.'
         },
         vinculacion: {
-          title: 'Vinculación Comunitaria',
-          desc: 'Conectamos a ITEC con instituciones, empresas y organizaciones para generar impacto real en Saladillo y la región.'
+          title: 'Área Vinculación Comunitaria',
+          desc: 'Acerca ITEC a la comunidad, generando espacios de participación y acceso al conocimiento, la ciencia y la tecnología.'
         },
         difusion: {
-          title: 'Comunicación & Difusión',
-          desc: 'Contamos la historia de ITEC al mundo: redes sociales, prensa, eventos y contenido que inspira vocaciones científicas.'
+          title: 'Área Comunicación y Difusión',
+          desc: 'Visibiliza las acciones y proyectos de ITEC, fortaleciendo su identidad y acercando sus propuestas a la comunidad.'
+        },
+        museo: {
+          title: 'Área Museo Interactivo de Ciencia (MIC)',
+          desc: 'Promueve el acercamiento a la ciencia y la tecnología mediante experiencias interactivas que despiertan la curiosidad y el pensamiento científico.'
         }
       }
     },
     ideas: {
       badge: 'Buzón de Ideas',
       headingStart: 'Tu idea puede ser',
-      headingGradient: 'el próximo proyecto',
-      headingEnd: 'de ITEC',
-      desc: 'Tenemos un espacio abierto para que cualquier persona —miembro o no— pueda proponer proyectos, talleres, mejoras o cualquier idea que quiera ver hecha realidad.',
+      headingGradient: 'el próximo',
+      headingEnd: 'proyecto de ITEC',
+      desc: 'Tenemos un espacio abierto para que\ncualquier persona —miembro o no— pueda proponer\nproyectos, talleres, mejoras o cualquier idea\nque quiera ver hecha realidad.',
       beneficios: [
         { title: 'Anónimo o con nombre', desc: 'Elegís cómo enviar tu propuesta' },
         { title: 'Sistema de votos', desc: 'La comunidad prioriza las mejores ideas' },
@@ -495,7 +502,6 @@ export const dictionary = {
       headingGradient: 'science comes to life',
       desc1: 'ITEC Saladillo was born with a clear mission: to democratize access to scientific and technological knowledge in Saladillo. We are an NGO made up of passionate people who believe in the transforming power of science.',
       desc2: 'Our essence pays tribute to Augusto Cicaré, the Argentine inventor from Saladillo recognized worldwide for his innovations in helicopters — a symbol that creativity and perseverance have no geographical boundaries.',
-      fundacion: 'Founded in Saladillo, Buenos Aires',
       pilares: {
         innovacion: {
           title: 'Innovation',
@@ -517,35 +523,43 @@ export const dictionary = {
     },
     comisiones: {
       badge: 'Work Teams',
-      heading: 'Innovation Commissions',
-      desc: 'Specialized groups made up of teachers, students and professionals dedicated to solving concrete technical challenges.',
+      heading: 'Our Work Team',
+      desc: 'An interdisciplinary team that connects knowledge,\ninnovation and community to transform\nand grow together.',
       miembros: 'active members',
       verMiembros: 'View profiles',
       comisionesList: {
         innovacion: {
-          title: 'Innovation & Technology',
-          desc: 'We explore new technologies and develop software, hardware and embedded systems projects for the community.'
+          title: 'Socioproductive Area',
+          desc: 'Strengthens the link with companies, entrepreneurs and the productive sector, promoting innovation and local development projects.'
         },
         educacion: {
-          title: 'Education & Training',
-          desc: 'We design and deliver workshops, courses and educational programs in science and technology for all ages.'
+          title: 'Education and Continuing Training Area',
+          desc: 'Drives permanent training and learning proposals, linked to new technologies and the demands of the labor market.'
+        },
+        finanzas: {
+          title: 'Finance and Sponsorship Area',
+          desc: 'Manages resources and generates strategic alliances that allow sustaining and developing ITEC projects.'
         },
         vinculacion: {
-          title: 'Community Linkage',
-          desc: 'We connect ITEC with institutions, companies and organizations to generate a real impact in Saladillo and the region.'
+          title: 'Community Outreach Area',
+          desc: 'Brings ITEC closer to the community, generating spaces for participation and access to knowledge, science and technology.'
         },
         difusion: {
-          title: 'Communication & Outreach',
-          desc: 'We tell the ITEC story to the world: social media, press, events and content that inspires scientific vocations.'
+          title: 'Communication and Outreach Area',
+          desc: 'Makes ITEC actions and projects visible, strengthening its identity and bringing its proposals closer to the community.'
+        },
+        museo: {
+          title: 'Interactive Science Museum Area (MIC)',
+          desc: 'Promotes approach to science and technology through interactive experiences that awaken curiosity and scientific thinking.'
         }
       }
     },
     ideas: {
       badge: 'Ideas Box',
       headingStart: 'Your idea can be',
-      headingGradient: 'the next project',
-      headingEnd: 'of ITEC',
-      desc: 'We have an open space so that anyone —member or not— can propose projects, workshops, improvements or any idea they want to see come to life.',
+      headingGradient: 'the next',
+      headingEnd: 'project of ITEC',
+      desc: 'We have an open space so that anyone\n—member or not— can propose projects,\nworkshops, improvements or any idea\nthey want to see come to life.',
       beneficios: [
         { title: 'Anonymous or named', desc: 'You choose how to send your proposal' },
         { title: 'Voting system', desc: 'The community prioritizes the best ideas' },
@@ -750,7 +764,7 @@ export const dictionary = {
       aulaEnVivo: 'Aula Virtual (Ao Vivo)',
     },
     hero: {
-      badge: 'ONG · Saladillo, Buenos Aires',
+      badge: 'INNOVACION TECNOLOGIA EMPRENDEDURISMO\nY CIENCIA DE SALADILLO ASOCIACION CIVIL',
       headingStart: 'Ciência e tecnologia para',
       headingGradient: 'desenvolver o futuro',
       headingEnd: 'desde Saladillo',
@@ -864,7 +878,6 @@ export const dictionary = {
       headingGradient: 'ciência ganha vida',
       desc1: 'ITEC Saladillo nasceu com uma missão clara: democratizar o acesso ao conhecimento científico e tecnológico em Saladillo. Somos uma ONG formada por pessoas apaixonadas que acreditam no poder transformador da ciência.',
       desc2: 'Nossa essência homenageia Augusto Cicaré, o inventor argentino de Saladillo reconhecido mundialmente por suas inovações em helicópteros — um símbolo de que a criatividade e a perseverança não têm limites geográficos.',
-      fundacion: 'Fundado em Saladillo, Buenos Aires',
       pilares: {
         innovacion: {
           title: 'Inovação',
@@ -886,35 +899,43 @@ export const dictionary = {
     },
     comisiones: {
       badge: 'Equipes de Trabalho',
-      heading: 'Comissões de Inovação',
-      desc: 'Grupos especializados formados por professores, alunos e profissionais dedicados a resolver desafios técnicos concretos.',
+      heading: 'Nosso Equipe de Trabalho',
+      desc: 'Uma equipe interdisciplinar que conecta saberes,\ninovação e comunidade para transformar\ne crescer juntos.',
       miembros: 'membros ativos',
       verMiembros: 'Ver perfis',
       comisionesList: {
         innovacion: {
-          title: 'Inovação & Tecnologia',
-          desc: 'Exploramos novas tecnologias e desenvolvemos projetos de software, hardware e sistemas embarcados para a comunidade.'
+          title: 'Área Socioprodutiva',
+          desc: 'Fortalece o vínculo com empresas, empreendedores e o setor produtivo, promovendo projetos de inovação e desenvolvimento local.'
         },
         educacion: {
-          title: 'Educação & Capacitação',
-          desc: 'Projetamos e ministramos oficinas, cursos e programas de treinamento em ciência e tecnologia para todas as idades.'
+          title: 'Área Educação e Formação Continuada',
+          desc: 'Impulsiona propostas de capacitação e aprendizagem permanente, vinculadas às novas tecnologias e às demandas do mundo do trabalho.'
+        },
+        finanzas: {
+          title: 'Área Finanças e Patrocínio',
+          desc: 'Gestiona recursos e gera alianças estratégicas que permitem sustentar e desenvolver os projetos do ITEC.'
         },
         vinculacion: {
-          title: 'Vinculação Comunitária',
-          desc: 'Conectamos o ITEC com instituições, empresas e organizações para gerar impacto real em Saladillo e região.'
+          title: 'Área Vinculação Comunitária',
+          desc: 'Aproxima o ITEC da comunidade, gerando espaços de participação e acesso ao conhecimento, ciência e tecnologia.'
         },
         difusion: {
-          title: 'Comunicação & Divulgação',
-          desc: 'Contamos a história do ITEC ao mundo: redes sociais, imprensa, eventos e conteúdos que inspiram vocações científicas.'
+          title: 'Área Comunicação e Divulgação',
+          desc: 'Torna visíveis as ações e projetos do ITEC, fortalecendo sua identidade e aproximando suas propostas da comunidade.'
+        },
+        museo: {
+          title: 'Área Museu Interativo de Ciência (MIC)',
+          desc: 'Promove o aproximação à ciência e à tecnologia mediante experiências interactivas que despertam a curiosidade e o pensamento científico.'
         }
       }
     },
     ideas: {
       badge: 'Caixa de Ideias',
       headingStart: 'Sua ideia pode ser',
-      headingGradient: 'o próximo projeto',
-      headingEnd: 'do ITEC',
-      desc: 'Temos um espaço aberto para que qualquer pessoa —membro ou não— possa propor projetos, oficinas, melhorias ou qualquer ideia que queira ver realizada.',
+      headingGradient: 'o próximo',
+      headingEnd: 'projeto do ITEC',
+      desc: 'Temos um espaço aberto para que\nqualquer pessoa —membro ou não— possa propor\nprojetos, oficinas, melhorias ou qualquer ideia\nque queira ver realizada.',
       beneficios: [
         { title: 'Anônimo ou com nome', desc: 'Você escolhe como enviar sua proposta' },
         { title: 'Sistema de votos', desc: 'A comunidade prioriza as melhores ideias' },

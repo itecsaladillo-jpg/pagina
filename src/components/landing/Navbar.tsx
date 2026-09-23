@@ -16,10 +16,9 @@ export function Navbar() {
   const pathname = usePathname()
 
   const dynamicLinks = [
-    { label: dict.navbar.acciones, href: '/#acciones' },
     { label: dict.navbar.videoteca, href: '/#videoteca' },
-    { label: dict.navbar.nosotros, href: '/#nosotros' },
-    { label: dict.navbar.sponsors, href: '/#sponsors' },
+    { label: dict.navbar.nosotros, href: '/#equipo' },
+    { label: dict.navbar.sponsors, href: '/#socios' },
     { label: dict.navbar.ideas, href: '/#ideas' },
     { label: dict.navbar.mapa, href: '/mapa-productivo', highlight: true },
     { label: dict.navbar.miembros, href: '/login' },
@@ -81,7 +80,7 @@ export function Navbar() {
   return (
     <nav
       className={`sticky top-0 z-50 w-full transition-all duration-300 border-b border-[var(--border-subtle)] flex items-center ${
-        showSolidNavbar ? 'h-20' : 'h-24'
+        showSolidNavbar ? 'h-[60px]' : 'h-[72px]'
       }`}
       style={{
         background: showSolidNavbar 
@@ -94,7 +93,7 @@ export function Navbar() {
         {/* Logo */}
         <Link href="/" className="group relative shrink-0 block">
           {/* Iluminación puntual debajo del logo */}
-          <div className="absolute left-1/2 -translate-x-1/2 -bottom-2 w-20 h-8 bg-[#3b82f6] blur-[30px] opacity-40 -z-10 rounded-full" />
+          <div className="absolute left-1/2 -translate-x-1/2 -bottom-1.5 w-16 h-6 bg-[#3b82f6] blur-[24px] opacity-40 -z-10 rounded-full" />
           
           <Image
             src="/logoitectrans_v2.png"
@@ -102,7 +101,7 @@ export function Navbar() {
             width={200}
             height={76}
             className={`w-auto object-contain group-hover:opacity-90 transition-all duration-300 relative z-10 shrink-0 ${
-              showSolidNavbar ? 'h-[42px]' : 'h-[54px]'
+              showSolidNavbar ? 'h-[40px]' : 'h-[48px]'
             }`}
             priority
             loading="eager"
@@ -167,7 +166,7 @@ export function Navbar() {
           <MembersAccessButton
             className="text-[9px] uppercase tracking-wider px-1.5 opacity-75 hover:opacity-100 hover:text-blue-400 transition-all flex items-center justify-center text-center w-auto whitespace-normal leading-[1.15] shrink-0 bg-transparent border-none cursor-pointer"
           >
-            <span>{dynamicLinks[6].label}</span>
+            <span>{dynamicLinks[5].label}</span>
           </MembersAccessButton>
         </div>
 
@@ -238,7 +237,7 @@ export function Navbar() {
           <MembersAccessButton
             className="btn-outline text-xs py-2 px-4 w-fit justify-end text-right leading-tight bg-transparent cursor-pointer"
           >
-            <span>{dynamicLinks[6].label}</span>
+            <span>{dynamicLinks[5].label}</span>
           </MembersAccessButton>
         </div>
       )}

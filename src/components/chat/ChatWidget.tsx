@@ -9,19 +9,52 @@ interface Mensaje {
   texto: string;
 }
 
+const STORAGE_KEY = 'itec_chat_mensajes';
+const MAX_STORAGE_MENSAJES = 50;
+
+function cargarMensajesStorage(): Mensaje[] {
+  if (typeof window === 'undefined') return [];
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+  } catch { /* ignore */ }
+  return [];
+}
+
+function guardarMensajesStorage(mensajes: Mensaje[]) {
+  if (typeof window === 'undefined') return;
+  try {
+    const aGuardar = mensajes.slice(-MAX_STORAGE_MENSAJES);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(aGuardar));
+  } catch { /* quota exceeded — ignore */ }
+}
+
+const MENSAJE_BIENVENIDA: Mensaje = { rol: 'bot', texto: '¡Hola! Soy el Asistente Virtual del ITEC. ¿En qué puedo ayudarte hoy?' };
+
 export default function ChatWidget() {
   const [abierto, setAbierto] = useState(false);
-  const [mensajes, setMensajes] = useState<Mensaje[]>([
-    { rol: 'bot', texto: '¡Hola! Soy el Asistente Virtual del ITEC. ¿En qué puedo ayudarte hoy?' }
-  ]);
+  // ago 2026: el historial se carga en useEffect (NO en el initializer del
+  // useState) — leer localStorage durante el render causaba hydration mismatch
+  // (el HTML server muestra el mensaje de bienvenida y el cliente reemplazaba
+  // todo por el historial guardado).
+  const [mensajes, setMensajes] = useState<Mensaje[]>([MENSAJE_BIENVENIDA]);
   const [input, setInput] = useState('');
   const [cargando, setCargando] = useState(false);
   const [avatarUrl, setAvatarUrl] = useState<string>('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><rect width="40" height="40" rx="20" fill="%233b82f6"/><text x="20" y="26" text-anchor="middle" fill="white" font-size="18" font-weight="bold">IT</text></svg>');
   const [conversacionGuardada, setConversacionGuardada] = useState(false);
   const [sessionId, setSessionId] = useState<string>('');
+  const [scrollOculto, setScrollOculto] = useState(false);
   const mensajesRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const intercambiosRef = useRef(0);
+
+  // Cargar historial persistido después de la hidratación
+  useEffect(() => {
+    const guardados = cargarMensajesStorage();
+    if (guardados.length > 0) setMensajes(guardados);
+  }, []);
 
   // Generar o recuperar sessionId
   useEffect(() => {
@@ -51,6 +84,11 @@ export default function ChatWidget() {
     fetchAvatar();
   }, []);
 
+  // Persistir mensajes en localStorage cuando cambian
+  useEffect(() => {
+    guardarMensajesStorage(mensajes);
+  }, [mensajes]);
+
   // Auto-scroll logic
   useEffect(() => {
     if (!mensajesRef.current) return;
@@ -69,6 +107,16 @@ export default function ChatWidget() {
       }
     }
   }, [mensajes, cargando]);
+
+  // Fade out al hacer scroll
+  useEffect(() => {
+    function onScroll() {
+      setScrollOculto(window.scrollY > 10);
+    }
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   // Foco al abrir
   useEffect(() => {
@@ -121,19 +169,45 @@ export default function ChatWidget() {
     }
   }
 
+  // Cerrar con Escape cuando esté abierto
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && abierto) {
+        setAbierto(false)
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [abierto])
+
   return (
     <>
       {/* Botón flotante */}
       <button
         id="itec-chat-btn"
-        className="itec-chat-btn"
+        className={`itec-chat-btn${!abierto && scrollOculto ? ' itec-chat-btn--hidden' : ''}`}
         onClick={() => setAbierto(v => !v)}
-        aria-label="Abrir asistente ITEC"
+        aria-label={abierto ? "Cerrar asistente ITEC" : "Abrir asistente ITEC"}
+        aria-expanded={abierto}
       >
         {abierto ? (
           <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
         ) : (
-          <svg viewBox="0 0 24 24"><path d="M20 2H4a2 2 0 0 0-2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2z"/></svg>
+          <img
+            src={avatarUrl}
+            alt="Asistente ITEC"
+            style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }}
+            onError={(e) => {
+              (e.target as HTMLImageElement).style.display = 'none';
+              const parent = (e.target as HTMLImageElement).parentElement;
+              if (parent && !parent.querySelector('svg')) {
+                const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                svg.setAttribute('viewBox', '0 0 24 24');
+                svg.innerHTML = '<path d="M20 2H4a2 2 0 0 0-2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2z"/>';
+                parent.appendChild(svg);
+              }
+            }}
+          />
         )}
       </button>
 
@@ -142,6 +216,7 @@ export default function ChatWidget() {
         className={`itec-chat-window${abierto ? ' open' : ''}`}
         role="dialog"
         aria-label="Asistente ITEC"
+        aria-modal="true"
       >
         {/* Header */}
         <div className="itec-chat-header">
@@ -150,7 +225,7 @@ export default function ChatWidget() {
           </div>
           <div className="itec-header-info">
             <div className="itec-header-name">Asistente ITEC</div>
-            <div className="itec-header-status">En línea · iTec LLaMA 3.1</div>
+            <div className="itec-header-status">En línea · IA ITEC</div>
           </div>
           <button
             className="itec-close-btn"

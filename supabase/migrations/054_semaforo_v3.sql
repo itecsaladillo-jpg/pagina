@@ -63,4 +63,16 @@ ALTER TABLE public.eventos
 -- SUPABASE REALTIME
 -- ============================================================
 
-ALTER PUBLICATION supabase_realtime ADD TABLE public.evento_semaforo_votos;
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_publication_tables
+    WHERE pubname = 'supabase_realtime'
+      AND schemaname = 'public'
+      AND tablename = 'evento_semaforo_votos'
+  ) THEN
+    ALTER PUBLICATION supabase_realtime ADD TABLE public.evento_semaforo_votos;
+  END IF;
+END
+$$;

@@ -1,12 +1,15 @@
 'use client'
 
 import { usePathname } from 'next/navigation'
-import ChatWidget from '@/components/chat/ChatWidget'
+import dynamic from 'next/dynamic'
+
+const ChatWidget = dynamic(() => import('@/components/chat/ChatWidget'), { ssr: false })
 
 const EVENT_ROUTES = [
   '/eventos',
   '/dashboard/eventos-presenciales',
   '/dashboard/eventos',
+  '/clases',
 ]
 
 export default function ChatWidgetWrapper() {

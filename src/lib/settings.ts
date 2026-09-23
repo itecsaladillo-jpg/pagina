@@ -1,60 +1,46 @@
 import { createClient } from '@/lib/supabase/server'
 
 /**
- * Caché a nivel de request para evitar queries repetidas a site_settings
- * durante el ciclo de vida de una sola petición server-side.
+ * Helper centralizado de servidor para resolver valores de configuración.
+ * Estrategia FALLBACK HYBRID:
+ * 1. Consulta la tabla `api_settings` (tabla genérica clave/valor).
+ * 2. Si no existe o está vacía → retorna `process.env[envVarName]`.
+ * 3. Caché a nivel de request para no saturar la BD en llamadas consecutivas.
  */
-let _settingsCache: Record<string, unknown> | null = null
 
-async function getSiteSettings(): Promise<Record<string, unknown>> {
-  if (_settingsCache) return _settingsCache
+let _settingsCache: Map<string, string> | null = null
 
-  const supabase = await createClient()
-  const { data } = await supabase
-    .from('site_settings')
-    .select('api_keys')
-    .limit(1)
-    .single()
-
-  _settingsCache = (data?.api_keys as Record<string, unknown>) || {}
+function getCache(): Map<string, string> {
+  if (!_settingsCache) {
+    _settingsCache = new Map()
+  }
   return _settingsCache
 }
 
-/**
- * Resuelve un valor de configuración con estrategia de fallback:
- * 1. Busca en la columna `api_keys` de la tabla `site_settings` (Supabase).
- * 2. Si no existe o está vacío, retorna `process.env[envVarName]`.
- * 3. Si no hay envVarName, retorna cadena vacía.
- *
- * @param key - Nombre de la clave en el JSONB api_keys (ej: "OPENROUTER_API_KEY")
- * @param envVarName - Nombre de la variable de entorno como fallback (ej: "OPENROUTER_API_KEY")
- * @returns El valor resuelto, o cadena vacía si no se encuentra.
- *
- * @example
- * const apiKey = await getSettingValue('OPENROUTER_API_KEY', 'OPENROUTER_API_KEY')
- */
 export async function getSettingValue(
   key: string,
   envVarName?: string
 ): Promise<string> {
-  const settings = await getSiteSettings()
-  const dbValue = settings[key]
+  const cache = getCache()
+  if (cache.has(key)) return cache.get(key)!
 
-  if (typeof dbValue === 'string' && dbValue.trim() !== '') {
-    return dbValue
+  try {
+    const supabase = await createClient()
+    const { data, error } = await supabase
+      .from('api_settings')
+      .select('key, value')
+      .eq('key', key)
+      .single()
+
+    if (!error && data && data.value && typeof data.value === 'string' && data.value.trim() !== '') {
+      cache.set(key, data.value)
+      return data.value
+    }
+  } catch {
+    // Si la tabla no existe o hay error, caemos al fallback de env
   }
 
-  if (envVarName && process.env[envVarName]) {
-    return process.env[envVarName]!
-  }
-
-  return ''
-}
-
-/**
- * Invalida la caché de settings. Útil después de un update
- * para que la siguiente lectura obtenga los valores frescos.
- */
-export function invalidateSettingsCache(): void {
-  _settingsCache = null
+  const envValue = envVarName ? (process.env[envVarName] || '') : ''
+  cache.set(key, envValue)
+  return envValue
 }

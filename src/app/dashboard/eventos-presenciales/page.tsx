@@ -6,7 +6,7 @@ import { Calendar } from "lucide-react";
 import EventosPresencialesClient from "./EventosPresencialesClient";
 
 export const metadata: Metadata = {
-  title: "Eventos Presenciales QR — ITEC",
+  title: "Gestión de Eventos — ITEC",
 };
 
 export default async function EventosPresencialesDashboard() {

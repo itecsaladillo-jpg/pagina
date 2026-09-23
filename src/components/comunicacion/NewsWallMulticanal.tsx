@@ -6,6 +6,7 @@ import { Globe, Users, Building2, Newspaper, ChevronLeft, ChevronRight, Download
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
 import type { NewsFlashMulticanal } from '@/services/news'
+import { toUtcLocalDate } from '@/lib/dates'
 
 interface NewsWallMulticanalProps {
   publicFlashes: NewsFlashMulticanal[]
@@ -43,12 +44,12 @@ function MediaSlideshow({ mediaUrls }: { mediaUrls: string[] }) {
   const isVideo = current >= images.length
 
   return (
-    <div className="relative group rounded-xl overflow-hidden bg-black/20">
-      <div className="aspect-video max-h-[125px] flex items-center justify-center">
+    <div className="relative group rounded-xl overflow-hidden bg-black/40">
+      <div className="flex items-center justify-center min-h-[120px] max-h-[300px] p-2">
         {isVideo ? (
-          <video src={videos[current - images.length]} controls className="w-full h-full object-contain" />
+          <video src={videos[current - images.length]} controls className="max-w-full max-h-[280px] object-contain" />
         ) : (
-          <img src={images[current]} alt="" className="w-full h-full object-contain transition-opacity duration-500" />
+          <img src={images[current]} alt="" className="max-w-full max-h-[280px] object-contain transition-opacity duration-500" />
         )}
       </div>
       {allMedia.length > 1 && (
@@ -109,13 +110,15 @@ export function NewsWallMulticanal({
       try {
         const parsed = JSON.parse(m)
         if (Array.isArray(parsed)) return parsed
-      } catch {}
+      } catch (err) {
+        console.warn('[NewsWall] media_urls corrupto en flash:', flash.id, err)
+      }
     }
     return []
   }
 
   const formatDate = (dateString: string) => {
-    return format(new Date(dateString), 'd MMMM, yyyy', { locale: es })
+    return format(toUtcLocalDate(dateString), 'd MMMM, yyyy', { locale: es })
   }
 
   const getEmptyMessage = () => {
@@ -229,7 +232,7 @@ export function NewsWallMulticanal({
                         const isImage = /\.(jpg|jpeg|png|gif|webp|bmp|svg)/i.test(url.split('?')[0])
                         return isImage ? (
                           <div key={i} className='group relative w-24 h-24 rounded-lg overflow-hidden border border-white/10 bg-black/30'>
-                            <img src={url} alt={`Imagen ${i + 1}`} className='w-full h-full object-cover' />
+                            <img src={url} alt={`Imagen ${i + 1}`} className='w-full h-full object-contain' />
                             <button
                               onClick={() => {
                                 const a = document.createElement('a')

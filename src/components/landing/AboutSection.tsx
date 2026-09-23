@@ -2,7 +2,12 @@
 
 import { useLanguage } from '@/contexts/LanguageContext'
 import { useEffect, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { createClient } from '@/lib/supabase/client'
+import { motion, AnimatePresence } from 'framer-motion'
+import { X, Mail, Phone, ExternalLink, Calendar } from 'lucide-react'
+import { NuestrosSociosSection } from '@/components/home/NuestrosSociosSection'
+import { SaladilloExportSection } from '@/components/saladillo-export/SaladilloExportSection'
 
 interface Member {
   id: string;
@@ -12,12 +17,51 @@ interface Member {
   frase_itec: string | null;
   tareas_itec: string | null;
   bio: string | null;
+  email: string | null;
+  phone: string | null;
+  linkedin_url: string | null;
+  join_date: string | null;
+  status: string | null;
+}
+
+function MemberCard({ member, onOpen }: { member: Member; onOpen: () => void }) {
+  return (
+    <div onClick={onOpen} className="glass rounded-2xl p-5 card-hover border border-[var(--border-subtle)] relative overflow-hidden group cursor-pointer">
+      <div className="absolute inset-0 bg-gradient-to-r from-[var(--accent-warm)]/0 to-[var(--accent-warm)]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+      <div className="float-left mr-4 mb-1">
+        <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-[var(--border-subtle)] group-hover:border-[var(--accent-warm)]/50 transition-colors shadow-lg shadow-black/20">
+          {member.avatar_url ? (
+            <img src={member.avatar_url} alt={member.full_name} className="w-full h-full object-cover" />
+          ) : (
+            <div className="w-full h-full bg-white/5 flex items-center justify-center text-white text-2xl font-bold">
+              {member.full_name.charAt(0).toUpperCase()}
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div className="flex items-center gap-2 flex-wrap mb-1">
+        <h4 className="text-white font-semibold text-lg">{member.full_name}</h4>
+        <span className="text-[10px] font-medium text-[var(--accent-warm)] bg-[var(--accent-warm)]/10 px-2.5 py-0.5 rounded-full border border-[var(--accent-warm)]/20">
+          {member.role === 'admin' ? 'Socios Fundador' : member.role === 'coordinador' ? 'Comisión Directiva' : member.role === 'colaborador' ? 'Voluntario' : 'Voluntario'}
+        </span>
+      </div>
+
+      {(member.frase_itec || member.bio) && (
+        <p className="text-[var(--text-secondary)] text-sm leading-relaxed italic clear-both">
+          &quot;{member.frase_itec || member.bio}&quot;
+        </p>
+      )}
+    </div>
+  )
 }
 
 export function AboutSection() {
   const { dict } = useLanguage()
   const [members, setMembers] = useState<Member[]>([])
   const [loading, setLoading] = useState(true)
+  const [selectedMember, setSelectedMember] = useState<Member | null>(null)
 
   useEffect(() => {
     const fetchMembers = async () => {
@@ -30,6 +74,22 @@ export function AboutSection() {
     }
     fetchMembers()
   }, [])
+
+  useEffect(() => {
+    if (!selectedMember) return
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setSelectedMember(null)
+    }
+
+    document.body.style.overflow = 'hidden'
+    window.addEventListener('keydown', onKeyDown)
+
+    return () => {
+      window.removeEventListener('keydown', onKeyDown)
+      document.body.style.overflow = ''
+    }
+  }, [selectedMember])
 
   const valores = [
     {
@@ -62,6 +122,19 @@ export function AboutSection() {
     },
   ]
 
+  const roleOrder: Record<string, number> = {
+    coordinador: 1,  // Comisión Directiva
+    admin: 2,        // Socios Fundador
+    colaborador: 3,  // Voluntario
+    miembro: 3,      // Voluntario
+  }
+
+  const sortedMembers = [...members].sort((a, b) => {
+    const orderA = roleOrder[a.role ?? ''] ?? 4
+    const orderB = roleOrder[b.role ?? ''] ?? 4
+    return orderA - orderB
+  })
+
   return (
     <section id="nosotros" className="py-16 relative">
       {/* Orbe decorativo */}
@@ -74,7 +147,7 @@ export function AboutSection() {
             <span className="inline-block text-xs font-bold tracking-[0.2em] text-[var(--accent-warm)] uppercase mb-4 px-4 py-1.5 rounded-full border border-[var(--accent-warm)]/20 bg-[var(--accent-warm)]/5">
               {dict.about.badge}
             </span>
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-white mb-6 leading-[1.1] tracking-tighter">
               {dict.about.headingStart}{' '}
               <span className="text-gradient">{dict.about.headingGradient}</span>
             </h2>
@@ -84,11 +157,6 @@ export function AboutSection() {
             <p className="text-[var(--text-secondary)] leading-relaxed mb-8">
               {dict.about.desc2}
             </p>
-
-            <div className="flex items-center gap-3">
-              <div className="h-px flex-1 bg-gradient-to-r from-[var(--border-glow)] to-transparent" />
-              <span className="text-[var(--text-muted)] text-sm">{dict.about.fundacion}</span>
-            </div>
           </div>
 
           {/* Valores */}
@@ -106,56 +174,184 @@ export function AboutSection() {
           </div>
         </div>
 
+        {/* Sección SALADILLO FOR EXPORT */}
+        <SaladilloExportSection />
+
+        {/* Sección NUESTROS SOCIOS: entre NUESTRA IDENTIDAD y NUESTRO EQUIPO */}
+        <NuestrosSociosSection />
+
         {/* Sección de Miembros ITEC */}
-        <div className="mt-24">
-          <div className="text-center mb-12">
-            <h3 className="text-3xl font-bold text-white mb-4">Nuestro Equipo</h3>
-            <p className="text-[var(--text-secondary)] max-w-2xl mx-auto">
-              Conoce a los miembros que hacen posible el ITEC Augusto Cicaré. Personas apasionadas por la tecnología, la innovación y la educación.
+        <div id="equipo" className="mt-16 grid grid-cols-1 lg:grid-cols-[minmax(0,340px)_1fr] gap-10 lg:gap-14 items-start">
+          <div className="text-left">
+            <h3 className="text-4xl md:text-5xl lg:text-6xl font-black text-white mb-4 leading-[1.1] tracking-tighter">
+              Quienes hacen <span className="text-gradient">ITEC</span>
+            </h3>
+            <p className="text-[var(--text-secondary)] text-2xl leading-snug max-w-[280px]">
+              Diferentes saberes y experiencias unidos por un mismo propósito: transformar y crecer.
             </p>
           </div>
-          
+
           {loading ? (
             <div className="flex justify-center py-12">
               <div className="w-10 h-10 border-4 border-[var(--accent-warm)] border-t-transparent rounded-full animate-spin"></div>
             </div>
-          ) : members.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {members.map((member, index) => (
-                <div key={member.id || `member-${index}`} className="glass rounded-2xl p-6 flex flex-col items-center text-center card-hover border border-[var(--border-subtle)] relative overflow-hidden group">
-                  <div className="absolute inset-0 bg-gradient-to-b from-[var(--accent-warm)]/0 to-[var(--accent-warm)]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  
-                  <div className="w-24 h-24 rounded-full overflow-hidden mb-5 border-2 border-[var(--border-subtle)] group-hover:border-[var(--accent-warm)]/50 transition-colors shadow-lg shadow-black/20">
-                    {member.avatar_url ? (
-                      <img src={member.avatar_url} alt={member.full_name} className="w-full h-full object-cover" />
-                    ) : (
-                      <div className="w-full h-full bg-white/5 flex items-center justify-center text-white text-3xl font-bold">
-                        {member.full_name.charAt(0).toUpperCase()}
-                      </div>
-                    )}
-                  </div>
-                  
-                  <h4 className="text-white font-semibold text-lg mb-1">{member.full_name}</h4>
-                  
-                  <span className="text-xs font-medium text-[var(--accent-warm)] bg-[var(--accent-warm)]/10 px-3 py-1 rounded-full mb-2 border border-[var(--accent-warm)]/20">
-                    {member.role === 'admin' ? 'Administrador' : member.role === 'coordinador' ? 'Coordinador' : member.role === 'colaborador' ? 'Colaborador' : 'Miembro'}
-                  </span>
-                  
-                  {(member.frase_itec || member.bio) && (
-                    <p className="text-[var(--text-secondary)] text-sm line-clamp-4 leading-relaxed flex-1 italic">
-                      "{member.frase_itec || member.bio}"
-                    </p>
-                  )}
-                </div>
-              ))}
-            </div>
-          ) : (
+          ) : members.length === 0 ? (
             <div className="text-center text-[var(--text-secondary)] py-12 glass rounded-2xl border border-[var(--border-subtle)]">
               No hay miembros públicos disponibles en este momento.
             </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {sortedMembers.slice(0, 6).map((member, index) => (
+                <MemberCard
+                  key={member.id || `member-${index}`}
+                  member={member}
+                  onOpen={() => setSelectedMember(member)}
+                />
+              ))}
+            </div>
           )}
         </div>
+
+        {sortedMembers.length > 6 && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-10">
+            {sortedMembers.slice(6).map((member, index) => (
+              <MemberCard
+                key={member.id || `member-wide-${index}`}
+                member={member}
+                onOpen={() => setSelectedMember(member)}
+              />
+            ))}
+          </div>
+        )}
       </div>
+
+      {/* Modal de Perfil del Miembro */}
+      {typeof document !== 'undefined' && createPortal(
+        <AnimatePresence>
+          {selectedMember && (
+            <motion.div
+              key="member-modal-backdrop"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+              onClick={() => setSelectedMember(null)}
+            >
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ duration: 0.2 }}
+                onClick={(e) => e.stopPropagation()}
+                className="bg-[#0a0f1e] border border-white/10 rounded-3xl w-full max-w-lg overflow-y-auto shadow-2xl max-h-[calc(100vh-2rem)] flex flex-col"
+              >
+              {/* Header con imagen de fondo */}
+              <div className="relative h-32 bg-gradient-to-r from-[var(--accent-warm)]/20 to-violet-600/20 flex-shrink-0">
+                <button
+                  onClick={() => setSelectedMember(null)}
+                  className="absolute top-4 right-4 w-8 h-8 bg-black/40 backdrop-blur-sm rounded-full flex items-center justify-center text-white/70 hover:text-white hover:bg-black/60 transition-colors"
+                >
+                  <X size={16} />
+                </button>
+              </div>
+
+              {/* Avatar centrado */}
+              <div className="flex justify-center -mt-16 flex-shrink-0">
+                <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-[#0a0f1e] shadow-xl">
+                  {selectedMember.avatar_url ? (
+                    <img
+                      src={selectedMember.avatar_url}
+                      alt={selectedMember.full_name}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-white/10 flex items-center justify-center text-white text-4xl font-bold">
+                      {selectedMember.full_name.charAt(0).toUpperCase()}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Contenido */}
+              <div className="px-6 pt-4 pb-6 space-y-4 flex-1">
+                {/* Nombre y Rol */}
+                <div className="text-center mb-4">
+                  <h3 className="text-2xl font-bold text-white mb-2">{selectedMember.full_name}</h3>
+                  <span className="text-xs font-medium text-[var(--accent-warm)] bg-[var(--accent-warm)]/10 px-4 py-1.5 rounded-full border border-[var(--accent-warm)]/20">
+                    {selectedMember.role === 'admin' ? 'Socios Fundador' : selectedMember.role === 'coordinador' ? 'Comisión Directiva' : selectedMember.role === 'colaborador' ? 'Voluntario' : 'Voluntario'}
+                  </span>
+                </div>
+
+                {/* Bio / Frase */}
+                {(selectedMember.frase_itec || selectedMember.bio) && (
+                  <div className="p-4 bg-white/5 rounded-xl border border-white/5">
+                    <p className="text-[var(--text-secondary)] text-sm leading-relaxed italic">
+                      &quot;{selectedMember.frase_itec || selectedMember.bio}&quot;
+                    </p>
+                  </div>
+                )}
+
+                {/* Tareas ITEC */}
+                {selectedMember.tareas_itec && (
+                  <div className="p-4 bg-white/5 rounded-xl border border-white/5">
+                    <h4 className="text-white text-sm font-semibold mb-2">Tareas en ITEC</h4>
+                    <p className="text-[var(--text-secondary)] text-sm leading-relaxed">
+                      {selectedMember.tareas_itec}
+                    </p>
+                  </div>
+                )}
+
+                {/* Información de contacto */}
+                <div className="space-y-3">
+                  {selectedMember.email && (
+                    <div className="flex items-center gap-3 text-sm">
+                      <Mail size={16} className="text-[var(--accent-warm)]" />
+                      <a href={`mailto:${selectedMember.email}`} className="text-[var(--text-secondary)] hover:text-white transition-colors">
+                        {selectedMember.email}
+                      </a>
+                    </div>
+                  )}
+
+                  {selectedMember.phone && (
+                    <div className="flex items-center gap-3 text-sm">
+                      <Phone size={16} className="text-[var(--accent-warm)]" />
+                      <a href={`tel:${selectedMember.phone}`} className="text-[var(--text-secondary)] hover:text-white transition-colors">
+                        {selectedMember.phone}
+                      </a>
+                    </div>
+                  )}
+
+                  {selectedMember.linkedin_url && (
+                    <div className="flex items-center gap-3 text-sm">
+                      <ExternalLink size={16} className="text-[var(--accent-warm)]" />
+                      <a
+                        href={selectedMember.linkedin_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-[var(--text-secondary)] hover:text-white transition-colors"
+                      >
+                        LinkedIn
+                      </a>
+                    </div>
+                  )}
+
+                  {selectedMember.join_date && (
+                    <div className="flex items-center gap-3 text-sm">
+                      <Calendar size={16} className="text-[var(--accent-warm)]" />
+                      <span className="text-[var(--text-secondary)]">
+                        Ingreso: {new Date(selectedMember.join_date).toLocaleDateString('es-AR', { month: 'long', year: 'numeric' })}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>,
+        document.body
+      )}
     </section>
   )
 }

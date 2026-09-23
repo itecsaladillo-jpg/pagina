@@ -12,9 +12,71 @@ export type MemberRole = 'admin' | 'coordinador' | 'miembro' | 'colaborador'
 export type MemberStatus = 'activo' | 'inactivo' | 'pendiente'
 export type TrainingStatus = 'planificada' | 'en_curso' | 'finalizada' | 'cancelada'
 export type IdeaStatus = 'pendiente' | 'en_revision' | 'aprobada' | 'descartada'
-export type SponsorTier = 'platino' | 'oro' | 'plata' | 'bronce'
+export type SponsorTier = 'platino' | 'oro' | 'plata' | 'bronce' | 'standard'
 export type ActionType = 'capacitacion' | 'evento_social' | 'divulgacion'
 export type ActionStatus = 'planificacion' | 'en_curso' | 'finalizada' | 'cancelada'
+
+// ─────────────────────────────────────────
+// PARTNERS: Clasificación de socios
+// ─────────────────────────────────────────
+
+export type PartnerType = 'SPONSOR' | 'STRATEGIC_ALLIANCE' | 'DIFFUSION_CHANNEL'
+
+// Tipo de entidad para el modal público de la landing
+export type PartnerEntityType = 'sponsor' | 'alianza' | 'difusion'
+
+export interface PublicPartner {
+  id: string
+  name: string
+  type: PartnerType
+  tier: SponsorTier | null
+  logo_color_url: string | null
+  logo_url: string | null
+  resena: string | null
+  website_url: string | null
+  email: string | null
+  category: string | null
+  actions_description: string | null
+  // Sponsors extras
+  rubro: string | null
+  description: string | null
+  contacto_nombre: string | null
+  contacto_telefono: string | null
+  actividad: string | null
+  zona_influencia: string | null
+  telefono: string | null
+  // Medios de prensa extras
+  nombre_contacto: string | null
+  apellido_contacto: string | null
+  dial_radio: string | null
+}
+
+// Entidades soportadas por el modal público unificado (SponsorModal).
+// Los campos de visualización son opcionales para aceptar tanto filas
+// crudas de las tablas como proyecciones normalizadas (ej. PublicPartner,
+// RPC obtener_socios_publicos).
+export type PartnerEntity = Sponsor | StrategicPartner | MediaChannel
+
+export interface StrategicPartner {
+  id: string
+  created_at?: string
+  updated_at?: string
+  name: string
+  category?: string | null
+  actions_description?: string | null
+  logo_url?: string | null
+  is_active?: boolean
+}
+
+export interface MediaChannel {
+  id: string
+  name?: string
+  nombre_medio?: string | null
+  tipo_medio?: string | null
+  url_web?: string | null
+  email?: string | null
+  logo_url?: string | null
+}
 
 // ─────────────────────────────────────────
 // TABLA: members
@@ -131,6 +193,32 @@ export interface Sponsor {
   is_active: boolean
   description: string | null
   private_token: string
+  rubro: string | null
+  resena: string | null
+  contacto_nombre: string | null
+  contacto_telefono: string | null
+  logo_monocromo_url: string | null
+  logo_color_url: string | null
+  // Columnas legacy (migración 036) — usadas por la ficha del admin y SponsorForm
+  nombre_empresa?: string | null
+  actividad?: string | null
+  zona_influencia?: string | null
+  nombre_contacto?: string | null
+  apellido_contacto?: string | null
+  telefono?: string | null
+}
+
+export interface SponsorFormData {
+  name: string
+  tier: SponsorTier
+  rubro: string
+  resena: string
+  website_url?: string
+  contact_name: string
+  contact_phone: string
+  contact_email: string
+  logo_monocromo?: File
+  logo_color?: File
 }
 
 // ─────────────────────────────────────────
@@ -183,6 +271,7 @@ export type HerramientasActivas = {
   encuestas: boolean
   preguntas: boolean
   nube: boolean
+  semaforo: boolean
 }
 
 export type ModoPantallaGigante = 'bienvenida' | 'nube' | 'encuestas' | 'preguntas'
@@ -196,6 +285,7 @@ export interface Evento {
   fecha: string
   estado_activo: boolean
   modalidad: 'presencial' | 'virtual' | null
+  meet_url: string | null
   herramienta_activa: 'encuestas' | 'preguntas' | 'nube_ideas'
   encuesta_activa_id: string | null
   nube_activa_id: string | null
@@ -203,6 +293,215 @@ export interface Evento {
   modo_pantalla_gigante: ModoPantallaGigante
   semaforo_last_reset_at: string | null
   nube_concepto: string | null
+}
+
+// ─────────────────────────────────────────
+// TABLAS DE INTERACCIÓN REALTIME (Esquema Híbrido)
+// ─────────────────────────────────────────
+
+export interface ClaseVirtual {
+  id: string
+  titulo: string
+  url_stream: string
+  estado_sidebar: 'chat' | 'modometro'
+  modalidad: 'presencial' | 'virtual'
+  meet_url: string | null
+  en_vivo?: boolean
+  created_at: string
+}
+
+export type ModometroEstado = 'voy_bien' | 'me_perdi' | 'muy_rapido'
+
+export interface ClaseModometroVoto {
+  id: string
+  clase_id: string
+  member_id: string | null
+  nombre_completo: string
+  estado: ModometroEstado
+  created_at: string
+  updated_at: string
+}
+
+export type ManoAlzadaEstado = 'esperando' | 'atendido'
+
+export interface ClaseManoAlzada {
+  id: string
+  clase_id: string
+  member_id: string | null
+  nombre_completo: string
+  estado: ManoAlzadaEstado
+  created_at: string
+}
+
+export interface ClasePregunta {
+  id: string
+  clase_id: string
+  member_id: string | null
+  nombre_completo: string
+  pregunta: string
+  votos_count: number
+  resuelta: boolean
+  created_at: string
+}
+
+export interface ClasePreguntaVoto {
+  id: string
+  pregunta_id: string
+  member_id: string
+  created_at: string
+}
+
+export interface ClaseEncuesta {
+  id: string
+  clase_id: string
+  pregunta: string
+  opciones: string[]
+  activa: boolean
+  created_at: string
+}
+
+export interface ClaseEncuestaRespuesta {
+  id: string
+  encuesta_id: string
+  member_id: string
+  nombre_completo: string
+  opcion_index: number
+  created_at: string
+}
+
+export type SemaforoColor = 'verde' | 'amarillo' | 'rojo'
+
+export interface ClaseSemaforoVoto {
+  id: string
+  clase_id: string
+  member_id: string | null
+  nombre_completo: string
+  color: SemaforoColor
+  created_at: string
+  updated_at: string
+}
+
+// ─────────────────────────────────────────
+// TABLA: api_settings (key/value para API keys)
+// ─────────────────────────────────────────
+
+export interface ApiSetting {
+  id: string
+  key: string
+  value: string
+  updated_at: string
+}
+
+export type ApiSettingKey =
+  | 'openrouter_api_key'
+  | 'gemini_api_key'
+  | 'resend_api_key'
+  | 'groq_api_key'
+  | 'hf_api_key'
+
+// ─────────────────────────────────────────
+// WHATSAPP CRM
+// ─────────────────────────────────────────
+
+export type WhatsAppCategory = 'general' | 'evento' | 'socio' | 'sponsor' | 'medio'
+export type WhatsAppContactSource = 'manual' | 'vcf' | 'csv' | 'device'
+
+export interface WhatsAppTemplate {
+  id: string
+  titulo: string
+  cuerpo: string
+  categoria: WhatsAppCategory
+  autor_id: string | null
+  created_at: string
+  updated_at: string
+}
+
+export interface WhatsAppContact {
+  id: string
+  nombre: string
+  telefono: string
+  email: string | null
+  fuente: WhatsAppContactSource
+  es_agenda_itec: boolean
+  creado_por: string | null
+  created_at: string
+}
+
+export interface WhatsAppGroup {
+  id: string
+  nombre: string
+  descripcion: string | null
+  color: string
+  creado_por: string | null
+  created_at: string
+  updated_at: string
+}
+
+export interface WhatsAppGroupContact {
+  id: string
+  group_id: string
+  contact_id: string
+  created_at: string
+}
+
+export interface WhatsAppLog {
+  id: string
+  destinatario_numero: string
+  destinatario_nombre: string | null
+  template_id: string | null
+  mensaje_enviado: string
+  enviado_por: string
+  created_at: string
+}
+
+// ─────────────────────────────────────────
+// SALADILLO FOR EXPORT
+// ─────────────────────────────────────────
+
+export type TestimonioEstado = 'pendiente' | 'aprobado' | 'rechazado'
+
+export interface SaladilloForExport {
+  id: string
+  created_at: string
+  nombre: string
+  foto_url: string | null
+  ciudad_residencia: string
+  pais_residencia: string
+  escuela_origen: string | null
+  profesion_rol: string
+  mensaje_gratitud: string
+  es_embajador: boolean
+  orden_embajador: number | null
+  estado: TestimonioEstado
+}
+
+// ─────────────────────────────────────────
+// CERTIFICADOS DIGITALES
+// ─────────────────────────────────────────
+
+export interface CertificadoDigital {
+  id: string
+  codigo: string
+  titulo: string
+  alumno_nombre: string
+  alumno_email?: string | null
+  fecha: string
+  competencias: string[]
+  horas_catedra: number
+  thumbnail_url?: string | null
+  created_at: string
+}
+
+// ─────────────────────────────────────────
+// DOCUMENTOS Y VECTOR EMBEDDINGS (pgvector)
+// ─────────────────────────────────────────
+
+export interface DocumentRow {
+  id: number
+  file_path: string
+  chunk_content: string
+  embedding: string
+  created_at: string
 }
 
 // ─────────────────────────────────────────
@@ -252,6 +551,11 @@ export interface Database {
         Insert: Omit<Sponsor, 'id' | 'created_at' | 'updated_at' | 'private_token'>
         Update: Partial<Omit<Sponsor, 'id' | 'created_at' | 'private_token'>>
       }
+      strategic_partners: {
+        Row: StrategicPartner
+        Insert: Omit<StrategicPartner, 'id' | 'created_at' | 'updated_at'>
+        Update: Partial<Omit<StrategicPartner, 'id' | 'created_at'>>
+      }
       sponsor_reports: {
         Row: SponsorReport
         Insert: Omit<SponsorReport, 'id' | 'created_at' | 'updated_at'>
@@ -262,35 +566,92 @@ export interface Database {
         Insert: Omit<Evento, 'id' | 'created_at' | 'updated_at'>
         Update: Partial<Omit<Evento, 'id' | 'created_at'>>
       }
-      whatsapp_groups: {
-        Row: WhatsAppGroup
-        Insert: Omit<WhatsAppGroup, 'id' | 'created_at' | 'updated_at'>
-        Update: Partial<Omit<WhatsAppGroup, 'id' | 'created_at' | 'updated_at'>>
+      api_settings: {
+        Row: ApiSetting
+        Insert: Omit<ApiSetting, 'id' | 'updated_at'>
+        Update: Partial<Omit<ApiSetting, 'id' | 'updated_at'>>
+      }
+      clases_virtuales: {
+        Row: ClaseVirtual
+        Insert: Omit<ClaseVirtual, 'id' | 'created_at'>
+        Update: Partial<Omit<ClaseVirtual, 'id' | 'created_at'>>
+      }
+      clase_modometro_votos: {
+        Row: ClaseModometroVoto
+        Insert: Omit<ClaseModometroVoto, 'id' | 'created_at' | 'updated_at'>
+        Update: Partial<Omit<ClaseModometroVoto, 'id' | 'created_at'>>
+      }
+      clase_mano_alzada: {
+        Row: ClaseManoAlzada
+        Insert: Omit<ClaseManoAlzada, 'id' | 'created_at'>
+        Update: Partial<Omit<ClaseManoAlzada, 'id' | 'created_at'>>
+      }
+      clase_preguntas: {
+        Row: ClasePregunta
+        Insert: Omit<ClasePregunta, 'id' | 'created_at' | 'votos_count' | 'resuelta'>
+        Update: Partial<Omit<ClasePregunta, 'id' | 'created_at'>>
+      }
+      clase_pregunta_votos: {
+        Row: ClasePreguntaVoto
+        Insert: Omit<ClasePreguntaVoto, 'id' | 'created_at'>
+        Update: Partial<Omit<ClasePreguntaVoto, 'id' | 'created_at'>>
+      }
+      clase_encuestas: {
+        Row: ClaseEncuesta
+        Insert: Omit<ClaseEncuesta, 'id' | 'created_at' | 'activa'>
+        Update: Partial<Omit<ClaseEncuesta, 'id' | 'created_at'>>
+      }
+      clase_encuesta_respuestas: {
+        Row: ClaseEncuestaRespuesta
+        Insert: Omit<ClaseEncuestaRespuesta, 'id' | 'created_at'>
+        Update: Partial<Omit<ClaseEncuestaRespuesta, 'id' | 'created_at'>>
+      }
+      clase_semaforo_votos: {
+        Row: ClaseSemaforoVoto
+        Insert: Omit<ClaseSemaforoVoto, 'id' | 'created_at' | 'updated_at'>
+        Update: Partial<Omit<ClaseSemaforoVoto, 'id' | 'created_at'>>
+      }
+      whatsapp_templates: {
+        Row: WhatsAppTemplate
+        Insert: Omit<WhatsAppTemplate, 'id' | 'created_at' | 'updated_at'>
+        Update: Partial<Omit<WhatsAppTemplate, 'id' | 'created_at'>>
       }
       whatsapp_contacts: {
         Row: WhatsAppContact
-        Insert: Omit<WhatsAppContact, 'id' | 'created_at' | 'updated_at'>
-        Update: Partial<Omit<WhatsAppContact, 'id' | 'created_at' | 'updated_at'>>
+        Insert: Omit<WhatsAppContact, 'id' | 'created_at'>
+        Update: Partial<Omit<WhatsAppContact, 'id' | 'created_at'>>
+      }
+      whatsapp_groups: {
+        Row: WhatsAppGroup
+        Insert: Omit<WhatsAppGroup, 'id' | 'created_at' | 'updated_at'>
+        Update: Partial<Omit<WhatsAppGroup, 'id' | 'created_at'>>
+      }
+      whatsapp_group_contacts: {
+        Row: WhatsAppGroupContact
+        Insert: Omit<WhatsAppGroupContact, 'id' | 'created_at'>
+        Update: Partial<Omit<WhatsAppGroupContact, 'id' | 'created_at'>>
+      }
+      whatsapp_logs: {
+        Row: WhatsAppLog
+        Insert: Omit<WhatsAppLog, 'id' | 'created_at'>
+        Update: Partial<Omit<WhatsAppLog, 'id' | 'created_at'>>
+      }
+      saladillo_for_export: {
+        Row: SaladilloForExport
+        Insert: Omit<SaladilloForExport, 'id' | 'created_at'>
+        Update: Partial<Omit<SaladilloForExport, 'id' | 'created_at'>>
+      }
+      certificados_digitales: {
+        Row: CertificadoDigital
+        Insert: Omit<CertificadoDigital, 'id' | 'created_at'>
+        Update: Partial<Omit<CertificadoDigital, 'id' | 'created_at'>>
+      }
+      documents: {
+        Row: DocumentRow
+        Insert: Omit<DocumentRow, 'id' | 'created_at'>
+        Update: Partial<Omit<DocumentRow, 'id' | 'created_at'>>
       }
     }
   }
 }
 
-export interface WhatsAppGroup {
-  id: string
-  created_at: string
-  updated_at: string
-  nombre: string
-  descripcion: string | null
-}
-
-export interface WhatsAppContact {
-  id: string
-  created_at: string
-  updated_at: string
-  nombre: string
-  apellido: string
-  telefono: string
-  grupo_id: string | null
-  notas: string | null
-}

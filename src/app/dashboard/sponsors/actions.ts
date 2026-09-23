@@ -154,27 +154,39 @@ export async function updateSponsorAction(id: string, formData: UpdateSponsorDat
   if (!admin || admin.role !== 'admin') throw new Error('No autorizado')
 
   const supabase = await createClient()
-  const { error } = await supabase.from('sponsors').update(formData).eq('id', id)
+  const { data, error } = await supabase
+    .from('sponsors')
+    .update(formData)
+    .eq('id', id)
+    .select()
+    .single()
   if (error) throw new Error(error.message)
 
   revalidatePath('/dashboard/sponsors')
   revalidatePath('/dashboard/sponsorsNews')
-  return { success: true }
+  return { success: true, data }
 }
 
 export async function createSponsorAction(formData: {
   name: string
-  nombre_empresa?: string
-  actividad?: string
-  zona_influencia?: string
-  nombre_contacto?: string
-  apellido_contacto?: string
-  telefono?: string
-  email?: string
-  logo_url?: string | null
+  tier: string
+  rubro?: string | null
+  resena?: string | null
   website_url?: string | null
-  tier?: string
+  contacto_nombre?: string | null
+  contacto_telefono?: string | null
+  email?: string | null
+  logo_monocromo_url?: string | null
+  logo_color_url?: string | null
+  is_active?: boolean
   description?: string | null
+  // Columnas legacy (migración 036) — para consistencia con la ficha del admin
+  nombre_empresa?: string
+  actividad?: string | null
+  zona_influencia?: string | null
+  nombre_contacto?: string | null
+  apellido_contacto?: string | null
+  telefono?: string | null
 }) {
   const admin = await getCurrentMember()
   if (!admin || admin.role !== 'admin') throw new Error('No autorizado')

@@ -4,7 +4,8 @@ import { useEffect, useState, useMemo } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { motion, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
-import QRCode from 'react-qr-code'
+import dynamic from 'next/dynamic'
+const QRCode = dynamic(() => import('react-qr-code'), { ssr: false })
 import { ChevronLeft, ChevronRight, Layers, BarChart2 as BarChartIcon } from 'lucide-react'
 import { 
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
