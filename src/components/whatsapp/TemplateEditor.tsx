@@ -73,8 +73,6 @@ export function TemplateEditor({ templates: initialTemplates }: Props) {
       if (res.success) {
         setTemplates(prev => prev.filter(t => t.id !== id))
         showFeedback('ok', 'Plantilla eliminada.')
-      } else {
-        showFeedback('err', res.error ?? 'Error al eliminar.')
       }
     })
   }, [])

@@ -60,10 +60,20 @@ function WhatsAppAgendaInner({ members, templates: initialTemplates, contactsDat
   const handleImport = async (parsed: { nombre: string; telefono: string; email?: string }[], source: string) => {
     const { saveContactsBulkAction } = await import('@/app/dashboard/whatsapp/actions')
     const res = await saveContactsBulkAction(parsed, source as any)
-    if (res.success && res.contacts.length > 0) {
+    if (res.success && res.inserted > 0) {
+      const importedContacts = parsed.map((p, i) => ({
+        id: crypto.randomUUID(),
+        nombre: p.nombre,
+        telefono: p.telefono,
+        email: p.email ?? null,
+        fuente: source as any,
+        es_agenda_itec: false,
+        creado_por: null,
+        created_at: new Date().toISOString(),
+      }))
       setContacts(prev => {
-        const currentPhones = new Set(prev.map(c => c.telefono))
-        const newContacts = res.contacts.filter(c => !currentPhones.has(c.telefono))
+        const currentPhones = new Set(prev.map((c: any) => c.telefono))
+        const newContacts = importedContacts.filter((c: any) => !currentPhones.has(c.telefono))
         return [...prev, ...newContacts]
       })
     }

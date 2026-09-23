@@ -39,11 +39,6 @@ export default async function SettingsPage() {
         </p>
       </div>
 
-      {/* Sección: API Keys */}
-      <div className="glass border border-violet-500/10 rounded-2xl p-8">
-        <ApiKeysSettingsForm />
-      </div>
-
       {/* Sección: Configuración General */}
       <div className="glass border border-[var(--border-subtle)] rounded-2xl p-8">
         <SettingsForm

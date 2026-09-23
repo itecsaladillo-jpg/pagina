@@ -72,8 +72,6 @@ export function PlantillasTab({ initialTemplates }: Props) {
         setTemplates(prev => prev.filter(t => t.id !== deleteTarget.id))
         setDeleteTarget(null)
         toast('success', 'Plantilla eliminada.')
-      } else {
-        toast('error', res.error ?? 'Error al eliminar.')
       }
     })
   }

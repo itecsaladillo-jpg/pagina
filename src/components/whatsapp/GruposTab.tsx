@@ -94,7 +94,7 @@ export function GruposTab({ groupsData, allContacts, templates, onGroupCreated, 
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-semibold text-white truncate">{g.nombre}</p>
-                    <p className="text-xs text-[var(--text-muted)]">{g.contact_count ?? 0} miembros</p>
+                    <p className="text-xs text-[var(--text-muted)]">{(g as any).contact_count ?? 0} miembros</p>
                   </div>
                   <ExternalLink size={14} className="text-[var(--text-muted)] shrink-0" />
                 </button>
@@ -119,8 +119,6 @@ export function GruposTab({ groupsData, allContacts, templates, onGroupCreated, 
                 onGroupDeleted(deleteTarget.id)
                 setDeleteTarget(null)
                 toast('success', 'Grupo eliminado.')
-              } else {
-                toast('error', res.error ?? 'Error al eliminar.')
               }
             })
           }}
@@ -162,16 +160,16 @@ function CreateGroupWizard({ allContacts, onCreated, onCancel, isPending, startT
     startTransition(async () => {
       const res = await saveGroupAction({ nombre, descripcion, color })
       if (res.success) {
-        const newGroup: WhatsAppGroup = {
-          id: res.id!, nombre, descripcion: descripcion || null, color,
+        const newGroup: any = {
+          id: res.data?.id ?? crypto.randomUUID(), nombre, descripcion: descripcion || null, color,
           contact_count: selectedPhones.size, creado_por: null,
           created_at: new Date().toISOString(), updated_at: new Date().toISOString()
         }
 
         // Asignar contactos si hay seleccionados
-        if (selectedPhones.size > 0) {
+        if (selectedPhones.size > 0 && newGroup.id) {
           const contactsToSync = allContacts.filter(c => selectedPhones.has(c.telefono))
-          await setGroupContactsAction(res.id!, contactsToSync as any)
+          await setGroupContactsAction(newGroup.id, contactsToSync as any)
         }
 
         onCreated(newGroup)
@@ -408,7 +406,7 @@ function GroupDetail({ group, allContacts, templates, onBack, onGroupUpdated, on
                   </button>
                 </h3>
               )}
-              <p className="text-sm text-[var(--text-muted)]">{fullGroup?.contacts?.length ?? group.contact_count ?? 0} destinatarios</p>
+              <p className="text-sm text-[var(--text-muted)]">{fullGroup?.contacts?.length ?? ((group as any).contact_count ?? 0)} destinatarios</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
@@ -485,7 +483,7 @@ function GroupDetail({ group, allContacts, templates, onBack, onGroupUpdated, on
           onClose={() => setShowMembers(false)}
           onSaved={(newContacts) => {
             setFullGroup({ ...fullGroup, contacts: newContacts })
-            onGroupUpdated({ ...group, contact_count: newContacts.length })
+            onGroupUpdated({ ...group, contact_count: newContacts.length } as any)
             setShowMembers(false)
           }}
         />

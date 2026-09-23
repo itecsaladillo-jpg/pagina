@@ -227,7 +227,7 @@ export function ContactosTab({ members, contactsData, onContactUpdated, onContac
                   initial={c}
                   onSave={(data) => {
                     startTransition(async () => {
-                      const res = await updateUnifiedContactAction(c.id, c.tipo, data)
+                      const res = await updateUnifiedContactAction(c.id, c.tipo, { ...data, email: data.email ?? undefined })
                       if (res.success) {
                         onContactUpdated({ ...c, ...data })
                         setEditingId(null)
