@@ -481,9 +481,12 @@ function GroupDetail({ group, allContacts, templates, onBack, onGroupUpdated, on
           currentMembers={fullGroup?.contacts ?? []}
           allContacts={allContacts}
           onClose={() => setShowMembers(false)}
-          onSaved={(newContacts) => {
-            setFullGroup({ ...fullGroup, contacts: newContacts })
-            onGroupUpdated({ ...group, contact_count: newContacts.length } as any)
+          onSaved={async (newContacts) => {
+            const refreshed = await getGroupWithContactsAction(group.id)
+            if (refreshed.success && refreshed.contacts) {
+              setFullGroup({ ...fullGroup, contacts: refreshed.contacts })
+              onGroupUpdated({ ...group, contact_count: refreshed.contacts.length } as any)
+            }
             setShowMembers(false)
           }}
         />
