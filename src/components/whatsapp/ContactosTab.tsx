@@ -65,7 +65,7 @@ function parseCsv(text: string): { nombre: string; telefono: string; email?: str
     const cols = line.split(',')
     if (cols.length >= 2) {
       const nombre = cols[0].trim().replace(/^"|"$/g, '')
-      let telefono = cols[1].trim().replace(/^"|"$/g, '').replace(/\D/g, '')
+       const telefono = cols[1].trim().replace(/^"|"$/g, '').replace(/\D/g, '')
       const email = cols[2]?.trim().replace(/^"|"$/g, '') || undefined
       if (nombre && telefono) contacts.push({ nombre, telefono, email })
     }
