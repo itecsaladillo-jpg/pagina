@@ -34,39 +34,11 @@ export interface SociosData {
   canalesDifusion: SocioCanalDifusion[]
 }
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-)
-
-export const getSociosData = async (): Promise<SociosData> => {
-  if (!supabase || !process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
-    throw new Error('Supabase configuration missing')
-  }
-  
-  const { data: sponsors } = await supabase
-    .from('sponsors')
-    .select('*')
-    .order('orden')
-  
-  const { data: alianzas } = await supabase
-    .from('alianzas')
-    .select('*')
-    .order('nombre')
-  
-  const { data: canalesDifusion } = await supabase
-    .from('canales_difusion')
-    .select('*')
-    .order('nombre_medio')
-  
-  return {
-    sponsors: sponsors || [],
-    alianzas: alianzas || [],
-    canalesDifusion: canalesDifusion || []
-  }
-}
-
 export async function getSociosData(): Promise<SociosData> {
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  )
   const [sponsorsResult, alianzasResult, canalesResult] = await Promise.all([
     supabase.rpc('obtener_sponsors_publicos'),
     supabase
