@@ -3,6 +3,7 @@ import { NuestrosSociosSection } from '@/components/home/NuestrosSociosSection'
 import { getSociosData } from '@/lib/data/socios'
 
 export const revalidate = 3600
+export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
   title: 'Nuestros Socios — ITEC',
