@@ -6,8 +6,6 @@ import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
 import type { WhatsAppContact, WhatsAppGroup, WhatsAppTemplate, WhatsAppCategory, WhatsAppContactSource } from '@/types/database'
 
-export type { WhatsAppContact, WhatsAppGroup, WhatsAppTemplate, WhatsAppCategory, WhatsAppContactSource }
-
 type GroupContactRow = {
   contact_id: string
   whatsapp_contacts: WhatsAppContact

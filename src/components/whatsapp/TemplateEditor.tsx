@@ -2,7 +2,7 @@
 
 import { useState, useTransition, useCallback } from 'react'
 import { saveTemplateAction, deleteTemplateAction } from '@/app/dashboard/whatsapp/actions'
-import type { WhatsAppTemplate } from '@/app/dashboard/whatsapp/actions'
+import type { WhatsAppTemplate } from '@/app/dashboard/whatsapp/types'
 import { Loader2, Plus, Pencil, Trash2, X, Save, ChevronDown, Eye } from 'lucide-react'
 
 const CATEGORIAS: { value: WhatsAppTemplate['categoria']; label: string; color: string }[] = [
@@ -294,3 +294,4 @@ export function TemplateEditor({ templates: initialTemplates }: Props) {
     </div>
   )
 }
+

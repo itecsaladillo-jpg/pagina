@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useMemo, useTransition, useRef } from 'react'
-import type { WhatsAppTemplate, WhatsAppContact } from '@/app/dashboard/whatsapp/actions'
+import type { WhatsAppTemplate, WhatsAppContact } from '@/app/dashboard/whatsapp/types'
 import { saveContactAction, saveContactsBulkAction, updateUnifiedContactAction, deleteUnifiedContactAction } from '@/app/dashboard/whatsapp/actions'
 import { buildWaLink, normalizeArgentinaPhone, WhatsAppIcon } from './WhatsAppLinkGenerator'
 import { ConfirmDialog } from './ConfirmDialog'
@@ -376,3 +376,4 @@ function InlineContactForm({
     </div>
   )
 }
+

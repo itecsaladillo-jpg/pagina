@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useMemo } from 'react'
-import type { WhatsAppTemplate, WhatsAppContact, WhatsAppGroup } from '@/app/dashboard/whatsapp/actions'
+import type { WhatsAppTemplate, WhatsAppContact, WhatsAppGroup } from '@/app/dashboard/whatsapp/types'
 import { ContactosTab } from './ContactosTab'
 import { GruposTab } from './GruposTab'
 import { PlantillasTab } from './PlantillasTab'
@@ -188,3 +188,4 @@ function WhatsAppAgendaInner({ members, templates: initialTemplates, contactsDat
     </div>
   )
 }
+

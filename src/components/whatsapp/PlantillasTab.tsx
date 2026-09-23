@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from 'react'
 import { saveTemplateAction, deleteTemplateAction } from '@/app/dashboard/whatsapp/actions'
-import type { WhatsAppTemplate } from '@/app/dashboard/whatsapp/actions'
+import type { WhatsAppTemplate } from '@/app/dashboard/whatsapp/types'
 import { ConfirmDialog } from './ConfirmDialog'
 import { useToast } from './Toast'
 import { Plus, Pencil, Trash2, X, Save, ChevronDown, Eye, Loader2 } from 'lucide-react'
@@ -257,3 +257,4 @@ export function PlantillasTab({ initialTemplates }: Props) {
     </div>
   )
 }
+

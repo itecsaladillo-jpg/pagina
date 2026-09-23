@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useTransition } from 'react'
-import type { WhatsAppTemplate, WhatsAppGroup, WhatsAppContact } from '@/app/dashboard/whatsapp/actions'
+import type { WhatsAppTemplate, WhatsAppGroup, WhatsAppContact } from '@/app/dashboard/whatsapp/types'
 import { saveGroupAction, deleteGroupAction, getGroupWithContactsAction, setGroupContactsAction } from '@/app/dashboard/whatsapp/actions'
 import { buildWaLink, normalizeArgentinaPhone } from './WhatsAppLinkGenerator'
 import { ConfirmDialog } from './ConfirmDialog'
@@ -578,3 +578,4 @@ function GroupMembersModal({ group, currentMembers, allContacts, onClose, onSave
     </div>
   )
 }
+
