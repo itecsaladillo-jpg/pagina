@@ -52,19 +52,21 @@ export function GroupsSection({ groups, contacts, onGroupsChange, onContactsChan
     importMembersToAgendaAction()
       .then(async (res) => {
         if (res.success && res.data) {
-          const { imported, updated, skipped } = res.data
+          const { imported, updated, skipped, reasons, samples } = res.data
           const fresh = await getContactsAction()
           if (fresh.success && fresh.data) onContactsChange(fresh.data)
           const parts: string[] = []
           if (imported) parts.push(`${imported} nuevos`)
           if (updated) parts.push(`${updated} actualizados`)
-          if (skipped) parts.push(`${skipped} sin teléfono`)
-          toast(
-            'success',
-            parts.length
-              ? `Miembros importados: ${parts.join(', ')}.`
-              : 'No hay miembros nuevos para importar.'
-          )
+          toast('success', parts.length ? `Miembros importados: ${parts.join(', ')}.` : 'Agenda ya al día.')
+          if (skipped > 0) {
+            const detail: string[] = []
+            if (reasons.no_phone) detail.push(`${reasons.no_phone} sin teléfono`)
+            if (reasons.no_name) detail.push(`${reasons.no_name} sin nombre`)
+            if (reasons.invalid_phone) detail.push(`${reasons.invalid_phone} teléfono inválido`)
+            toast('info', `Omitidos ${skipped}: ${detail.join(', ')}.`)
+            if (samples.length) toast('info', samples[0])
+          }
         } else {
           toast('error', res.error ?? 'Error al importar miembros')
         }

@@ -161,7 +161,13 @@ export async function getContactsAction(): Promise<Result<WhatsAppContact[]>> {
 }
 
 export async function importMembersToAgendaAction(): Promise<
-  Result<{ imported: number; updated: number; skipped: number }>
+  Result<{
+    imported: number
+    updated: number
+    skipped: number
+    reasons: { no_phone: number; no_name: number; invalid_phone: number; inactive: number }
+    samples: string[]
+  }>
 > {
   const admin = await requireAdmin()
   if (!admin) return { success: false, error: 'No autorizado' }
@@ -171,8 +177,6 @@ export async function importMembersToAgendaAction(): Promise<
   const { data: members, error: mErr } = await supabase
     .from('members')
     .select('full_name, email, phone, status')
-    .eq('status', 'activo')
-    .not('phone', 'is', null)
 
   if (mErr) return { success: false, error: mErr.message }
 
@@ -193,41 +197,60 @@ export async function importMembersToAgendaAction(): Promise<
     creado_por: string
   }[] = []
   const toUpdate: { id: string; nombre: string; email: string | null }[] = []
-  let skipped = 0
+  const batchPhones = new Map<string, string>() // tel → nombre (dedup dentro del lote)
+  const reasons = { no_phone: 0, no_name: 0, invalid_phone: 0, inactive: 0 }
+  const samples: string[] = []
 
   for (const m of members ?? []) {
-    const raw = m.phone?.trim()
-    if (!raw) {
-      skipped++
-      continue
-    }
-    const tel = normalizeWhatsAppPhone(raw)
-    if (!tel || tel.length < 8) {
-      skipped++
+    const nombre = (m.full_name || '').trim()
+    const email = m.email?.trim() || null
+    const status = m.status || ''
+
+    if (!nombre) {
+      reasons.no_name++
+      if (samples.length < 8) samples.push(`Sin nombre: ${m.email ?? '(sin email)'}`)
       continue
     }
 
-    const nombre = (m.full_name || '').trim()
-    const email = m.email?.trim() || null
-    if (!nombre) {
-      skipped++
+    const raw = m.phone?.trim()
+    if (!raw) {
+      reasons.no_phone++
+      if (samples.length < 8) samples.push(`Sin teléfono: ${nombre}`)
       continue
+    }
+
+    const tel = normalizeWhatsAppPhone(raw)
+    if (!tel || tel.length < 8) {
+      reasons.invalid_phone++
+      if (samples.length < 8) samples.push(`Teléfono inválido: ${nombre} → "${raw}"`)
+      continue
+    }
+
+    if (status && status !== 'activo') {
+      reasons.inactive++
+      // igualmente lo importamos: la agenda puede querer todos los miembros
     }
 
     const existingId = byPhone.get(tel)
-    if (existingId) {
+    if (existingId && existingId !== 'pending') {
       toUpdate.push({ id: existingId, nombre, email })
-    } else {
-      toInsert.push({
-        nombre,
-        telefono: tel,
-        email,
-        fuente: 'miembro',
-        es_agenda_itec: true,
-        creado_por: admin.id,
-      })
-      byPhone.set(tel, 'new')
+      continue
     }
+
+    if (batchPhones.has(tel)) {
+      // otro miembro del mismo lote ya va a insertar este teléfono
+      continue
+    }
+    batchPhones.set(tel, nombre)
+
+    toInsert.push({
+      nombre,
+      telefono: tel,
+      email,
+      fuente: 'miembro',
+      es_agenda_itec: true,
+      creado_por: admin.id,
+    })
   }
 
   if (toInsert.length) {
@@ -243,10 +266,18 @@ export async function importMembersToAgendaAction(): Promise<
     if (error) return { success: false, error: error.message }
   }
 
+  const skipped = reasons.no_phone + reasons.no_name + reasons.invalid_phone
+
   revalidatePath('/dashboard/whatsapp')
   return {
     success: true,
-    data: { imported: toInsert.length, updated: toUpdate.length, skipped },
+    data: {
+      imported: toInsert.length,
+      updated: toUpdate.length,
+      skipped,
+      reasons,
+      samples,
+    },
   }
 }
 
