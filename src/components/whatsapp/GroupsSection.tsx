@@ -14,7 +14,7 @@ import {
 import { useToast } from './shared/Toast'
 import { ConfirmDialog } from './shared/ConfirmDialog'
 import {
-  Search, Users, Plus, Check, Loader2, Pencil, Trash2, X, Save, Phone, Mail,
+  Search, Users, Plus, Check, Loader2, Pencil, Trash2, X, Save, Phone, Mail, UserPlus,
 } from 'lucide-react'
 
 interface Props {
@@ -111,13 +111,25 @@ export function GroupsSection({ groups, contacts, onGroupsChange, onContactsChan
           <h3 className="text-xs font-bold text-[var(--text-muted)] uppercase tracking-wider">
             Grupos ({groups.length})
           </h3>
-          <button
-            onClick={() => setShowNewGroup(true)}
-            className="p-1.5 rounded-lg bg-[#25d366]/15 text-[#25d366] hover:bg-[#25d366]/25 transition-colors"
-            title="Nuevo grupo"
-          >
-            <Plus size={14} />
-          </button>
+          <div className="flex gap-1">
+            <button
+              onClick={() => {
+                setEditContact(null)
+                setShowContactForm(true)
+              }}
+              className="p-1.5 rounded-lg bg-white/5 text-[var(--text-secondary)] hover:bg-white/10 transition-colors border border-white/10"
+              title="Nuevo contacto en la agenda"
+            >
+              <UserPlus size={14} />
+            </button>
+            <button
+              onClick={() => setShowNewGroup(true)}
+              className="p-1.5 rounded-lg bg-[#25d366]/15 text-[#25d366] hover:bg-[#25d366]/25 transition-colors"
+              title="Nuevo grupo"
+            >
+              <Plus size={14} />
+            </button>
+          </div>
         </div>
 
         <div className="flex-1 overflow-y-auto p-2 space-y-1 custom-scrollbar">
@@ -181,8 +193,18 @@ export function GroupsSection({ groups, contacts, onGroupsChange, onContactsChan
       {/* ── Detalle: selector de contactos ── */}
       <section className="flex-1 flex flex-col min-w-0">
         {!selectedGroup ? (
-          <div className="flex-1 flex items-center justify-center text-[var(--text-muted)] text-sm">
-            Seleccioná un grupo para asignar contactos.
+          <div className="flex-1 flex flex-col items-center justify-center text-[var(--text-muted)] text-sm gap-4">
+            <Users size={40} className="opacity-30" />
+            <p>Seleccioná un grupo para asignar contactos.</p>
+            <button
+              onClick={() => {
+                setEditContact(null)
+                setShowContactForm(true)
+              }}
+              className="px-4 py-2 text-xs font-bold text-black bg-[#25d366] hover:bg-[#1fae53] rounded-lg transition-colors flex items-center gap-1.5"
+            >
+              <UserPlus size={14} /> Nuevo contacto en la agenda
+            </button>
           </div>
         ) : (
           <>
@@ -426,11 +448,19 @@ export function GroupsSection({ groups, contacts, onGroupsChange, onContactsChan
                   onContactsChange(
                     contacts.map((c) => (c.id === editContact.id ? res.data! : c))
                   )
-                  // Si el contacto estaba en la selección, mantenerlo
                   toast('success', 'Contacto actualizado.')
                 } else {
                   onContactsChange([...contacts, res.data])
-                  toast('success', 'Contacto creado.')
+                  // Si hay un grupo abierto, pre-seleccionar el contacto nuevo
+                  if (selectedId) {
+                    setSelection((prev) => {
+                      const next = new Set(prev)
+                      next.add(res.data!.id)
+                      return next
+                    })
+                    setDirty(true)
+                  }
+                  toast('success', 'Contacto dado de alta en la agenda.')
                 }
                 setShowContactForm(false)
                 setEditContact(null)
@@ -581,12 +611,18 @@ function ContactFormModal({
 }: {
   initial?: WhatsAppContact | null
   onClose: () => void
-  onSave: (data: { nombre: string; telefono: string; email: string | null }) => void
+  onSave: (data: {
+    nombre: string
+    telefono: string
+    email: string | null
+    es_agenda_itec: boolean
+  }) => void
   isPending: boolean
 }) {
   const [nombre, setNombre] = useState(initial?.nombre ?? '')
   const [telefono, setTelefono] = useState(initial?.telefono ?? '')
   const [email, setEmail] = useState(initial?.email ?? '')
+  const [esAgenda, setEsAgenda] = useState(initial?.es_agenda_itec ?? true)
 
   return (
     <div
@@ -598,8 +634,9 @@ function ContactFormModal({
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-xl font-bold text-white">
-            {initial ? 'Editar contacto' : 'Nuevo contacto'}
+          <h3 className="text-xl font-bold text-white flex items-center gap-2">
+            <UserPlus size={18} className="text-[#25d366]" />
+            {initial ? 'Editar contacto' : 'Nuevo contacto en la agenda'}
           </h3>
           <button onClick={onClose} className="text-[var(--text-muted)] hover:text-white">
             <X size={20} />
@@ -634,8 +671,18 @@ function ContactFormModal({
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="email@ejemplo.com"
-          className="w-full bg-black/40 border border-[var(--border-subtle)] rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-[#25d366] mb-5"
+          className="w-full bg-black/40 border border-[var(--border-subtle)] rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-[#25d366] mb-4"
         />
+
+        <label className="flex items-center gap-2.5 cursor-pointer mb-5 select-none">
+          <input
+            type="checkbox"
+            checked={esAgenda}
+            onChange={(e) => setEsAgenda(e.target.checked)}
+            className="w-4 h-4 accent-[#25d366] rounded cursor-pointer"
+          />
+          <span className="text-sm text-white">Parte de la agenda ITEC</span>
+        </label>
 
         <div className="flex justify-end gap-2 pt-4 border-t border-[var(--border-subtle)]">
           <button
@@ -645,12 +692,19 @@ function ContactFormModal({
             Cancelar
           </button>
           <button
-            onClick={() => onSave({ nombre: nombre.trim(), telefono: telefono.trim(), email: email.trim() || null })}
+            onClick={() =>
+              onSave({
+                nombre: nombre.trim(),
+                telefono: telefono.trim(),
+                email: email.trim() || null,
+                es_agenda_itec: esAgenda,
+              })
+            }
             disabled={isPending || !nombre.trim() || !telefono.trim()}
             className="px-4 py-2 bg-[#25d366] text-black font-bold text-sm rounded-lg hover:bg-[#1fae53] disabled:opacity-50 flex items-center gap-2"
           >
             {isPending ? <Loader2 size={14} className="animate-spin" /> : <Check size={14} />}
-            {initial ? 'Actualizar' : 'Crear'}
+            {initial ? 'Actualizar' : 'Dar de alta'}
           </button>
         </div>
       </div>

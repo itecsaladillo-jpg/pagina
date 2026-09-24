@@ -166,6 +166,7 @@ export async function saveContactAction(input: {
   telefono: string
   email?: string | null
   fuente?: string
+  es_agenda_itec?: boolean
 }): Promise<Result<WhatsAppContact>> {
   const admin = await requireAdmin()
   if (!admin) return { success: false, error: 'No autorizado' }
@@ -178,6 +179,7 @@ export async function saveContactAction(input: {
     nombre: input.nombre.trim(),
     telefono: normalizeWhatsAppPhone(input.telefono),
     email: input.email?.trim() || null,
+    ...(input.es_agenda_itec !== undefined ? { es_agenda_itec: input.es_agenda_itec } : {}),
   }
 
   if (input.id) {
