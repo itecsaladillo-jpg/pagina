@@ -1970,7 +1970,7 @@ Para los usuarios que tienen un rol dentro de ITEC y que han iniciado sesión co
 * **Perfil:** Edición de datos personales, avatar, biografía y la frase motivacional "ITEC".
 * **Buzón de Ideas Interno:** Para proponer o revisar mejoras operativas.
 * **Saladillo for Export:** Los miembros pueden revisar testimonios y designar a los embajadores (las 4 posiciones destacadas).
-* Los administradores y coordinadores tienen acceso a herramientas adicionales (como gestión de encuestas, nubes, moderación de eventos, prensa, envíos de WhatsApp y edición de noticias multicanal).
+* Los administradores y coordinadores tienen acceso a herramientas adicionales (como gestión de encuestas, nubes, moderación de eventos, prensa y edición de noticias multicanal).
 
 ### Portal de Sponsors (\`/sponsors/[id]\`)
 * Acceso mediante token privado (ruta segura sin contraseña).

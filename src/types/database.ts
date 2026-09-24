@@ -400,61 +400,6 @@ export type ApiSettingKey =
   | 'hf_api_key'
 
 // ─────────────────────────────────────────
-// WHATSAPP CRM
-// ─────────────────────────────────────────
-
-export type WhatsAppCategory = 'general' | 'evento' | 'socio' | 'sponsor' | 'medio'
-export type WhatsAppContactSource = 'manual' | 'vcf' | 'csv' | 'device'
-
-export interface WhatsAppTemplate {
-  id: string
-  titulo: string
-  cuerpo: string
-  categoria: WhatsAppCategory
-  autor_id: string | null
-  created_at: string
-  updated_at: string
-}
-
-export interface WhatsAppContact {
-  id: string
-  nombre: string
-  telefono: string
-  email: string | null
-  fuente: WhatsAppContactSource
-  es_agenda_itec: boolean
-  creado_por: string | null
-  created_at: string
-}
-
-export interface WhatsAppGroup {
-  id: string
-  nombre: string
-  descripcion: string | null
-  color: string
-  creado_por: string | null
-  created_at: string
-  updated_at: string
-}
-
-export interface WhatsAppGroupContact {
-  id: string
-  group_id: string
-  contact_id: string
-  created_at: string
-}
-
-export interface WhatsAppLog {
-  id: string
-  destinatario_numero: string
-  destinatario_nombre: string | null
-  template_id: string | null
-  mensaje_enviado: string
-  enviado_por: string
-  created_at: string
-}
-
-// ─────────────────────────────────────────
 // SALADILLO FOR EXPORT
 // ─────────────────────────────────────────
 
@@ -610,31 +555,6 @@ export interface Database {
         Row: ClaseSemaforoVoto
         Insert: Omit<ClaseSemaforoVoto, 'id' | 'created_at' | 'updated_at'>
         Update: Partial<Omit<ClaseSemaforoVoto, 'id' | 'created_at'>>
-      }
-      whatsapp_templates: {
-        Row: WhatsAppTemplate
-        Insert: Omit<WhatsAppTemplate, 'id' | 'created_at' | 'updated_at'>
-        Update: Partial<Omit<WhatsAppTemplate, 'id' | 'created_at'>>
-      }
-      whatsapp_contacts: {
-        Row: WhatsAppContact
-        Insert: Omit<WhatsAppContact, 'id' | 'created_at'>
-        Update: Partial<Omit<WhatsAppContact, 'id' | 'created_at'>>
-      }
-      whatsapp_groups: {
-        Row: WhatsAppGroup
-        Insert: Omit<WhatsAppGroup, 'id' | 'created_at' | 'updated_at'>
-        Update: Partial<Omit<WhatsAppGroup, 'id' | 'created_at'>>
-      }
-      whatsapp_group_contacts: {
-        Row: WhatsAppGroupContact
-        Insert: Omit<WhatsAppGroupContact, 'id' | 'created_at'>
-        Update: Partial<Omit<WhatsAppGroupContact, 'id' | 'created_at'>>
-      }
-      whatsapp_logs: {
-        Row: WhatsAppLog
-        Insert: Omit<WhatsAppLog, 'id' | 'created_at'>
-        Update: Partial<Omit<WhatsAppLog, 'id' | 'created_at'>>
       }
       saladillo_for_export: {
         Row: SaladilloForExport
