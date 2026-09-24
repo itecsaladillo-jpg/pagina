@@ -235,13 +235,11 @@ export async function importMembersToAgendaAction(): Promise<
     if (error) return { success: false, error: error.message }
   }
 
-  if (toUpdate.length) {
+  for (const u of toUpdate) {
     const { error } = await supabase
       .from('whatsapp_contacts')
-      .upsert(
-        toUpdate.map((u) => ({ id: u.id, nombre: u.nombre, email: u.email })),
-        { onConflict: 'id' }
-      )
+      .update({ nombre: u.nombre, email: u.email })
+      .eq('id', u.id)
     if (error) return { success: false, error: error.message }
   }
 
