@@ -10,11 +10,14 @@ import {
   setGroupContactsAction,
   saveContactAction,
   deleteContactAction,
+  importMembersToAgendaAction,
+  getContactsAction,
 } from '@/app/dashboard/whatsapp/actions'
 import { useToast } from './shared/Toast'
 import { ConfirmDialog } from './shared/ConfirmDialog'
 import {
   Search, Users, Plus, Check, Loader2, Pencil, Trash2, X, Save, Phone, Mail, UserPlus,
+  DownloadCloud,
 } from 'lucide-react'
 
 interface Props {
@@ -39,8 +42,35 @@ export function GroupsSection({ groups, contacts, onGroupsChange, onContactsChan
   const [deleteContactTarget, setDeleteContactTarget] = useState<WhatsAppContact | null>(null)
   const toast = useToast()
   const reqIdRef = useRef(0)
+  const [isImporting, setIsImporting] = useState(false)
 
   const selectedGroup = groups.find((g) => g.id === selectedId) ?? null
+
+  const handleImportMembers = () => {
+    if (isImporting) return
+    setIsImporting(true)
+    importMembersToAgendaAction()
+      .then(async (res) => {
+        if (res.success && res.data) {
+          const { imported, updated, skipped } = res.data
+          const fresh = await getContactsAction()
+          if (fresh.success && fresh.data) onContactsChange(fresh.data)
+          const parts: string[] = []
+          if (imported) parts.push(`${imported} nuevos`)
+          if (updated) parts.push(`${updated} actualizados`)
+          if (skipped) parts.push(`${skipped} sin teléfono`)
+          toast(
+            'success',
+            parts.length
+              ? `Miembros importados: ${parts.join(', ')}.`
+              : 'No hay miembros nuevos para importar.'
+          )
+        } else {
+          toast('error', res.error ?? 'Error al importar miembros')
+        }
+      })
+      .finally(() => setIsImporting(false))
+  }
 
   // Seleccionar grupo → cargar y pre-seleccionar sus contactos
   const selectGroup = (id: string | null) => {
@@ -112,6 +142,14 @@ export function GroupsSection({ groups, contacts, onGroupsChange, onContactsChan
             Grupos ({groups.length})
           </h3>
           <div className="flex gap-1">
+            <button
+              onClick={handleImportMembers}
+              disabled={isImporting}
+              className="p-1.5 rounded-lg bg-[#3b82f6]/15 text-[#3b82f6] hover:bg-[#3b82f6]/25 transition-colors border border-[#3b82f6]/20 disabled:opacity-50"
+              title="Importar miembros ITEC a la agenda"
+            >
+              {isImporting ? <Loader2 size={14} className="animate-spin" /> : <DownloadCloud size={14} />}
+            </button>
             <button
               onClick={() => {
                 setEditContact(null)
@@ -196,15 +234,34 @@ export function GroupsSection({ groups, contacts, onGroupsChange, onContactsChan
           <div className="flex-1 flex flex-col items-center justify-center text-[var(--text-muted)] text-sm gap-4">
             <Users size={40} className="opacity-30" />
             <p>Seleccioná un grupo para asignar contactos.</p>
-            <button
-              onClick={() => {
-                setEditContact(null)
-                setShowContactForm(true)
-              }}
-              className="px-4 py-2 text-xs font-bold text-black bg-[#25d366] hover:bg-[#1fae53] rounded-lg transition-colors flex items-center gap-1.5"
-            >
-              <UserPlus size={14} /> Nuevo contacto en la agenda
-            </button>
+            <div className="flex flex-col items-center gap-2">
+              <button
+                onClick={handleImportMembers}
+                disabled={isImporting}
+                className="px-4 py-2 text-xs font-bold text-black bg-[#3b82f6] hover:bg-[#2563eb] rounded-lg transition-colors flex items-center gap-1.5 disabled:opacity-50"
+              >
+                {isImporting ? (
+                  <Loader2 size={14} className="animate-spin" />
+                ) : (
+                  <DownloadCloud size={14} />
+                )}
+                Importar miembros ITEC a la agenda
+              </button>
+              <button
+                onClick={() => {
+                  setEditContact(null)
+                  setShowContactForm(true)
+                }}
+                className="px-4 py-2 text-xs font-bold text-black bg-[#25d366] hover:bg-[#1fae53] rounded-lg transition-colors flex items-center gap-1.5"
+              >
+                <UserPlus size={14} /> Nuevo contacto en la agenda
+              </button>
+            </div>
+            {contacts.length > 0 && (
+              <p className="text-[11px] text-[var(--text-muted)]">
+                {contacts.length} contactos en la agenda
+              </p>
+            )}
           </div>
         ) : (
           <>
@@ -229,6 +286,19 @@ export function GroupsSection({ groups, contacts, onGroupsChange, onContactsChan
                   <span className="text-xs font-bold text-[#25d366] bg-[#25d366]/10 px-2.5 py-1 rounded-full border border-[#25d366]/20">
                     {selection.size} seleccionados
                   </span>
+                  <button
+                    onClick={handleImportMembers}
+                    disabled={isImporting}
+                    className="px-2.5 py-1.5 text-xs font-bold text-[#3b82f6] bg-[#3b82f6]/10 hover:bg-[#3b82f6]/20 rounded-lg transition-colors border border-[#3b82f6]/20 flex items-center gap-1 disabled:opacity-50"
+                    title="Importar miembros ITEC a la agenda"
+                  >
+                    {isImporting ? (
+                      <Loader2 size={12} className="animate-spin" />
+                    ) : (
+                      <DownloadCloud size={12} />
+                    )}
+                    Miembros
+                  </button>
                   <button
                     onClick={() => setShowContactForm(true)}
                     className="px-2.5 py-1.5 text-xs font-bold text-[var(--text-secondary)] bg-white/5 hover:bg-white/10 rounded-lg transition-colors border border-white/10 flex items-center gap-1"

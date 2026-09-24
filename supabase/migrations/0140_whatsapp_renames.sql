@@ -86,6 +86,28 @@ BEGIN
   END IF;
 END $$;
 
+-- Permite fuente = 'miembro' (importación desde tabla members)
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1 FROM pg_constraint
+    WHERE conname = 'whatsapp_contacts_fuente_check'
+      AND pg_get_constraintdef(oid) LIKE '%vcf%'
+  ) THEN
+    ALTER TABLE whatsapp_contacts DROP CONSTRAINT whatsapp_contacts_fuente_check;
+  END IF;
+
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_constraint
+    WHERE conname = 'whatsapp_contacts_fuente_check'
+      AND pg_get_constraintdef(oid) LIKE '%miembro%'
+  ) THEN
+    ALTER TABLE whatsapp_contacts
+      ADD CONSTRAINT whatsapp_contacts_fuente_check
+      CHECK (fuente IN ('manual', 'vcf', 'csv', 'device', 'miembro'));
+  END IF;
+END $$;
+
 -- ── whatsapp_groups ─────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS whatsapp_groups (
   id            uuid        PRIMARY KEY DEFAULT gen_random_uuid(),

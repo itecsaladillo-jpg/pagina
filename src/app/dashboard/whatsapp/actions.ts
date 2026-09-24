@@ -160,6 +160,98 @@ export async function getContactsAction(): Promise<Result<WhatsAppContact[]>> {
   return { success: true, data: data as WhatsAppContact[] }
 }
 
+export async function importMembersToAgendaAction(): Promise<
+  Result<{ imported: number; updated: number; skipped: number }>
+> {
+  const admin = await requireAdmin()
+  if (!admin) return { success: false, error: 'No autorizado' }
+
+  const supabase = await createClient()
+
+  const { data: members, error: mErr } = await supabase
+    .from('members')
+    .select('full_name, email, phone, status')
+    .eq('status', 'activo')
+    .not('phone', 'is', null)
+
+  if (mErr) return { success: false, error: mErr.message }
+
+  const { data: existing, error: eErr } = await supabase
+    .from('whatsapp_contacts')
+    .select('id, telefono')
+
+  if (eErr) return { success: false, error: eErr.message }
+
+  const byPhone = new Map<string, string>((existing ?? []).map((c) => [c.telefono, c.id]))
+
+  const toInsert: {
+    nombre: string
+    telefono: string
+    email: string | null
+    fuente: 'miembro'
+    es_agenda_itec: boolean
+    creado_por: string
+  }[] = []
+  const toUpdate: { id: string; nombre: string; email: string | null }[] = []
+  let skipped = 0
+
+  for (const m of members ?? []) {
+    const raw = m.phone?.trim()
+    if (!raw) {
+      skipped++
+      continue
+    }
+    const tel = normalizeWhatsAppPhone(raw)
+    if (!tel || tel.length < 8) {
+      skipped++
+      continue
+    }
+
+    const nombre = (m.full_name || '').trim()
+    const email = m.email?.trim() || null
+    if (!nombre) {
+      skipped++
+      continue
+    }
+
+    const existingId = byPhone.get(tel)
+    if (existingId) {
+      toUpdate.push({ id: existingId, nombre, email })
+    } else {
+      toInsert.push({
+        nombre,
+        telefono: tel,
+        email,
+        fuente: 'miembro',
+        es_agenda_itec: true,
+        creado_por: admin.id,
+      })
+      byPhone.set(tel, 'new')
+    }
+  }
+
+  if (toInsert.length) {
+    const { error } = await supabase.from('whatsapp_contacts').insert(toInsert)
+    if (error) return { success: false, error: error.message }
+  }
+
+  if (toUpdate.length) {
+    const { error } = await supabase
+      .from('whatsapp_contacts')
+      .upsert(
+        toUpdate.map((u) => ({ id: u.id, nombre: u.nombre, email: u.email })),
+        { onConflict: 'id' }
+      )
+    if (error) return { success: false, error: error.message }
+  }
+
+  revalidatePath('/dashboard/whatsapp')
+  return {
+    success: true,
+    data: { imported: toInsert.length, updated: toUpdate.length, skipped },
+  }
+}
+
 export async function saveContactAction(input: {
   id?: string
   nombre: string

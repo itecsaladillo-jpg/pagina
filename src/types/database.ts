@@ -404,7 +404,7 @@ export type ApiSettingKey =
 // ─────────────────────────────────────────
 
 export type WhatsAppCategory = 'general' | 'evento' | 'socio' | 'sponsor' | 'medio'
-export type WhatsAppContactSource = 'manual' | 'vcf' | 'csv' | 'device'
+export type WhatsAppContactSource = 'manual' | 'vcf' | 'csv' | 'device' | 'miembro'
 
 export interface WhatsAppContact {
   id: string
