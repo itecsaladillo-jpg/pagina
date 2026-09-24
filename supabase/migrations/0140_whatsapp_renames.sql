@@ -59,7 +59,7 @@ CREATE TABLE IF NOT EXISTS whatsapp_contacts (
   telefono    text        NOT NULL,
   email       text,
   fuente      text        NOT NULL DEFAULT 'manual'
-              CHECK (fuente IN ('manual', 'vcf', 'csv', 'device')),
+              CHECK (fuente IN ('manual', 'vcf', 'csv', 'device', 'miembro')),
   creado_por  uuid        REFERENCES members(id) ON DELETE SET NULL,
   created_at  timestamptz NOT NULL DEFAULT now()
 );
