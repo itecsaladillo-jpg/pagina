@@ -6,7 +6,7 @@ import { saveGroupAction, deleteGroupAction, getGroupWithContactsAction, setGrou
 import { buildWaLink, normalizeArgentinaPhone } from './WhatsAppLinkGenerator'
 import { ConfirmDialog } from './ConfirmDialog'
 import { useToast } from './Toast'
-import { Search, Users, Plus, X, Loader2, ChevronLeft, Check, ExternalLink, Copy, Pencil } from 'lucide-react'
+import { Search, Users, Plus, X, Loader2, ChevronLeft, Check, ExternalLink, Copy, Pencil, Save } from 'lucide-react'
 
 type UnifiedContact = {
   id: string
@@ -331,6 +331,7 @@ function GroupDetail({ group, allContacts, templates, onBack, onGroupUpdated, on
   const [isLoading, setIsLoading] = useState(true)
   const [msg, setMsg] = useState('')
   const [showMembers, setShowMembers] = useState(false)
+  const [showAddContacts, setShowAddContacts] = useState(false)
   const [editingName, setEditingName] = useState(false)
   const [groupName, setGroupName] = useState(group.nombre)
   const [isPending, startTransition] = useTransition()
@@ -342,6 +343,28 @@ function GroupDetail({ group, allContacts, templates, onBack, onGroupUpdated, on
       setIsLoading(false)
     })
   }, [group.id])
+
+  const handleAddContactsToGroup = (contactsToAdd: UnifiedContact[]) => {
+    startTransition(async () => {
+      const currentPhones = new Set(fullGroup?.contacts?.map((c: any) => c.telefono) ?? [])
+      const newContacts = allContacts.filter(c => contactsToAdd.some(a => a.id === c.id) && !currentPhones.has(c.telefono))
+      if (newContacts.length === 0) {
+        toast('info', 'Los contactos ya están en el grupo.')
+        setShowAddContacts(false)
+        return
+      }
+      const allGroupContacts = [...(fullGroup?.contacts ?? []), ...newContacts]
+      const res = await setGroupContactsAction(group.id, allGroupContacts as any)
+      if (res.success) {
+        setFullGroup({ ...fullGroup, contacts: allGroupContacts })
+        onGroupUpdated({ ...group, contact_count: allGroupContacts.length } as any)
+        toast('success', `${newContacts.length} contactos agregados al grupo.`)
+      } else {
+        toast('error', res.error ?? 'Error al agregar contactos.')
+      }
+      setShowAddContacts(false)
+    })
+  }
 
   const handleCopyAll = async () => {
     if (!fullGroup?.contacts?.length) return
@@ -422,6 +445,14 @@ function GroupDetail({ group, allContacts, templates, onBack, onGroupUpdated, on
 
       {/* Contenido */}
       <div className="flex-1 overflow-y-auto p-4 custom-scrollbar space-y-4">
+        {/* Botón Guardar contactos */}
+        <button
+          onClick={() => setShowAddContacts(true)}
+          className="w-full px-4 py-3 bg-[#25d366]/10 hover:bg-[#25d366]/20 border border-[#25d366]/30 rounded-xl flex items-center justify-center gap-2 text-[#25d366] font-bold text-sm transition-colors"
+        >
+          <Save size={16} /> Agregar contactos al grupo
+        </button>
+
         {/* Redactor */}
         <div className="bg-white/5 border border-[var(--border-subtle)] rounded-xl p-4">
           <label className="text-xs font-bold text-[var(--text-muted)] uppercase tracking-wider mb-2 block">Mensaje Masivo</label>
@@ -473,6 +504,18 @@ function GroupDetail({ group, allContacts, templates, onBack, onGroupUpdated, on
           )}
         </div>
       </div>
+
+      {/* Modal: Agregar contactos al grupo */}
+      {showAddContacts && (
+        <AddContactsModal
+          group={group}
+          currentContacts={fullGroup?.contacts ?? []}
+          allContacts={allContacts}
+          onClose={() => setShowAddContacts(false)}
+          onAdd={handleAddContactsToGroup}
+          isPending={isPending}
+        />
+      )}
 
       {/* Modal de miembros */}
       {showMembers && (
@@ -579,6 +622,100 @@ function GroupMembersModal({ group, currentMembers, allContacts, onClose, onSave
           <button onClick={save} disabled={isPending} className="px-4 py-2 bg-[#25d366] text-black font-bold text-sm rounded-lg hover:bg-[#1fae53] disabled:opacity-50 flex items-center gap-2">
             {isPending ? <Loader2 size={14} className="animate-spin" /> : <Check size={14} />}
             {isPending ? 'Guardando...' : `Guardar (${selectedPhones.size})`}
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function AddContactsModal({ group, currentContacts, allContacts, onClose, onAdd, isPending }: {
+  group: WhatsAppGroup
+  currentContacts: any[]
+  allContacts: UnifiedContact[]
+  onClose: () => void
+  onAdd: (contacts: UnifiedContact[]) => void
+  isPending: boolean
+}) {
+  const currentPhones = new Set(currentContacts.map(c => c.telefono))
+  const availableContacts = allContacts.filter(c => !currentPhones.has(c.telefono))
+  const [selected, setSelected] = useState<Set<string>>(new Set())
+  const [search, setSearch] = useState('')
+
+  const toggle = (id: string) => {
+    const next = new Set(selected)
+    next.has(id) ? next.delete(id) : next.add(id)
+    setSelected(next)
+  }
+
+  const filtered = availableContacts.filter(c =>
+    c.nombre.toLowerCase().includes(search.toLowerCase()) || c.telefono.includes(search)
+  )
+
+  const handleSave = () => {
+    const toAdd = availableContacts.filter(c => selected.has(c.id))
+    onAdd(toAdd)
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4" onClick={onClose}>
+      <div className="glass border border-[var(--border-subtle)] rounded-2xl w-full max-w-md p-6 relative flex flex-col max-h-[80vh]" onClick={e => e.stopPropagation()}>
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <h3 className="text-xl font-bold text-white">Agregar al grupo</h3>
+            <p className="text-sm text-[var(--text-muted)]">{group.nombre}</p>
+          </div>
+          <button onClick={onClose} className="text-[var(--text-muted)] hover:text-white"><X size={20} /></button>
+        </div>
+
+        <div className="relative mb-4">
+          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" />
+          <input
+            type="text"
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            placeholder="Buscar contactos..."
+            className="w-full bg-black/40 border border-[var(--border-subtle)] rounded-lg pl-9 pr-3 py-2 text-white text-sm placeholder:text-[var(--text-muted)] focus:border-[#25d366] outline-none"
+          />
+        </div>
+
+        <p className="text-xs text-[var(--text-muted)] mb-2">{availableContacts.length} contactos disponibles</p>
+
+        <div className="flex-1 overflow-y-auto space-y-1 mb-4 custom-scrollbar">
+          {filtered.length === 0 ? (
+            <p className="text-sm text-[var(--text-muted)] text-center py-4">
+              {availableContacts.length === 0 ? 'Todos los contactos ya están en el grupo.' : 'No se encontraron contactos.'}
+            </p>
+          ) : (
+            filtered.map(c => (
+              <label key={c.id} className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-white/5 cursor-pointer border border-transparent hover:border-white/10 transition-colors">
+                <input
+                  type="checkbox"
+                  checked={selected.has(c.id)}
+                  onChange={() => toggle(c.id)}
+                  className="w-4 h-4 accent-[#25d366] rounded cursor-pointer"
+                />
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm text-white font-medium truncate">{c.nombre}</p>
+                  <p className="text-xs text-[var(--text-muted)] font-mono">+{c.telefono}</p>
+                </div>
+                <span className={`text-[10px] px-2 py-0.5 rounded-full ${c.tipo === 'miembro' ? 'bg-blue-500/10 text-blue-400' : 'bg-slate-500/10 text-slate-400'}`}>
+                  {c.tipo}
+                </span>
+              </label>
+            ))
+          )}
+        </div>
+
+        <div className="flex justify-end gap-2 pt-4 border-t border-[var(--border-subtle)]">
+          <button onClick={onClose} className="px-4 py-2 text-sm text-[var(--text-muted)] hover:text-white transition-colors">Cancelar</button>
+          <button
+            onClick={handleSave}
+            disabled={isPending || selected.size === 0}
+            className="px-4 py-2 bg-[#25d366] text-black font-bold text-sm rounded-lg hover:bg-[#1fae53] disabled:opacity-50 flex items-center gap-2"
+          >
+            {isPending ? <Loader2 size={14} className="animate-spin" /> : <Check size={14} />}
+            {isPending ? 'Guardando...' : `Agregar (${selected.size})`}
           </button>
         </div>
       </div>
