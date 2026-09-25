@@ -36,7 +36,7 @@ export function HistoricalActionsYears() {
   const actions: HistoricalAction[] = selectedYear ? (HISTORICAL_ACTIONS_DATA[selectedYear] || []) : []
 
   return (
-    <div className="mt-16 pt-12 border-t border-white/10 relative z-10">
+    <div className="mt-14 relative z-10">
       {/* Título interactivo solicitado: AÑOS ANTERIORES: 2022, 2023, 2024, 2025 */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-2">
         <div className="flex flex-wrap items-center gap-x-2 gap-y-3">
