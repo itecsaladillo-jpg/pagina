@@ -46,6 +46,11 @@ export const dictionary = {
       leerHistoria: 'Leer historia completa',
       noticiaInst: 'Noticia Institucional',
       verVideoteca: 'Ver en Videoteca:',
+      aniosAnteriores: 'AÑOS ANTERIORES:',
+      accionesDe: 'Acciones de',
+      verEnRedes: 'Ver publicación en redes',
+      verPublicacionInstagram: 'Ver publicación en Instagram',
+      sinAcciones: 'No hay acciones registradas para este año.',
       feedData: {
         '272cfa1f-37c7-4d1c-9ac0-c82940e856f6': {
           title: 'Expo ITEC',
@@ -422,6 +427,11 @@ export const dictionary = {
       leerHistoria: 'Read full story',
       noticiaInst: 'Institutional News',
       verVideoteca: 'Watch in Video Library:',
+      aniosAnteriores: 'PREVIOUS YEARS:',
+      accionesDe: 'Actions from',
+      verEnRedes: 'View on social media',
+      verPublicacionInstagram: 'View Instagram post',
+      sinAcciones: 'No actions recorded for this year.',
       feedData: {
         '272cfa1f-37c7-4d1c-9ac0-c82940e856f6': {
           title: 'ITEC Expo',
@@ -798,6 +808,11 @@ export const dictionary = {
       leerHistoria: 'Ler história completa',
       noticiaInst: 'Notícia Institucional',
       verVideoteca: 'Ver na Videoteca:',
+      aniosAnteriores: 'ANOS ANTERIORES:',
+      accionesDe: 'Ações de',
+      verEnRedes: 'Ver nas redes sociais',
+      verPublicacionInstagram: 'Ver publicação no Instagram',
+      sinAcciones: 'Nenhuma ação registrada para este ano.',
       feedData: {
         '272cfa1f-37c7-4d1c-9ac0-c82940e856f6': {
           title: 'Expo ITEC',

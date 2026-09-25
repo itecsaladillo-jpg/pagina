@@ -8,6 +8,7 @@ import { es, enUS, pt } from 'date-fns/locale'
 import Link from 'next/link'
 import { useLanguage } from '@/contexts/LanguageContext'
 import { toUtcLocalDate } from '@/lib/dates'
+import { HistoricalActionsYears } from './HistoricalActionsYears'
 
 interface ImpactCardProps {
   item: any
@@ -177,10 +178,21 @@ function ImpactCard({ item, idx }: ImpactCardProps) {
 export function ImpactSectionClient({ actions, articles }: any) {
   const { dict } = useLanguage()
 
-  const feedItems = [
+  const currentYear = new Date().getFullYear()
+
+  const allFeedItems = [
     ...actions.filter((a: any) => a.start_date).map((a: any) => ({ ...a, feedType: 'action' as const, date: a.start_date })),
     ...articles.map((art: any) => ({ ...art, feedType: 'article' as const, date: art.created_at }))
   ].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+
+  // Filtrar las acciones y novedades del año en curso para el feed superior
+  const currentYearItems = allFeedItems.filter((item: any) => {
+    const itemYear = new Date(item.date).getFullYear()
+    return isNaN(itemYear) || itemYear >= currentYear
+  })
+
+  // Mostrar los del año en curso, o los más recientes si el año en curso tiene pocas publicaciones
+  const displayItems = currentYearItems.length > 0 ? currentYearItems : allFeedItems
 
   return (
     <section id="seccion-impacto" className="pt-24 pb-14 relative overflow-hidden bg-black scroll-mt-16">
@@ -203,20 +215,23 @@ export function ImpactSectionClient({ actions, articles }: any) {
           </div>
 
           <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-10 mt-12 lg:mt-0">
-            {feedItems.slice(0, 2).map((item: any, idx: number) => (
+            {displayItems.slice(0, 2).map((item: any, idx: number) => (
               <ImpactCard key={idx} item={item} idx={idx} />
             ))}
           </div>
         </div>
 
         {/* Filas siguientes: 3 Cards por fila — sin límite */}
-        {feedItems.length > 2 && (
+        {displayItems.length > 2 && (
           <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-            {feedItems.slice(2).map((item: any, idx: number) => (
+            {displayItems.slice(2).map((item: any, idx: number) => (
               <ImpactCard key={idx + 2} item={item} idx={idx + 2} />
             ))}
           </div>
         )}
+
+        {/* Debajo de la última acción del año en curso: AÑOS ANTERIORES: 2022, 2023, 2024, 2025 */}
+        <HistoricalActionsYears />
       </div>
 
       {/* Decorative Orbs */}
