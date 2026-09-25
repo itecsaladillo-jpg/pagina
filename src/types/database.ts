@@ -492,6 +492,23 @@ export interface CertificadoDigital {
 }
 
 // ─────────────────────────────────────────
+// ARCHIVO DE ACCIONES Y EVENTOS HISTÓRICOS
+// ─────────────────────────────────────────
+
+export type ArchivoYear = 2022 | 2023 | 2024 | 2025
+
+export interface ArchivoAccion {
+  id: string
+  title: string
+  social_url: string
+  year: ArchivoYear
+  category: string | null
+  description: string | null
+  created_at: string
+  created_by: string | null
+}
+
+// ─────────────────────────────────────────
 // DOCUMENTOS Y VECTOR EMBEDDINGS (pgvector)
 // ─────────────────────────────────────────
 
@@ -649,6 +666,11 @@ export interface Database {
         Row: DocumentRow
         Insert: Omit<DocumentRow, 'id' | 'created_at'>
         Update: Partial<Omit<DocumentRow, 'id' | 'created_at'>>
+      }
+      archivo_acciones: {
+        Row: ArchivoAccion
+        Insert: Omit<ArchivoAccion, 'id' | 'created_at'>
+        Update: Partial<Omit<ArchivoAccion, 'id' | 'created_at'>>
       }
     }
   }

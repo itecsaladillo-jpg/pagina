@@ -175,7 +175,7 @@ function ImpactCard({ item, idx }: ImpactCardProps) {
   )
 }
 
-export function ImpactSectionClient({ actions, articles }: any) {
+export function ImpactSectionClient({ actions, articles, historicalActions }: any) {
   const { dict } = useLanguage()
 
   const currentYear = new Date().getFullYear()
@@ -231,7 +231,7 @@ export function ImpactSectionClient({ actions, articles }: any) {
         )}
 
         {/* Debajo de la última acción del año en curso: AÑOS ANTERIORES: 2022, 2023, 2024, 2025 */}
-        <HistoricalActionsYears />
+        <HistoricalActionsYears historicalActions={historicalActions} />
       </div>
 
       {/* Decorative Orbs */}

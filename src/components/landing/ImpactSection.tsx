@@ -1,12 +1,14 @@
 import { getPublicArticles, getAllMulticanalNewsFlashes } from '@/services/news'
 import { getPublicActions } from '@/services/actions'
+import { getHistoricalActions } from '@/services/historicalActions'
 import { ImpactSectionClient } from './ImpactSectionClient'
 
 export async function ImpactSection() {
-  const [actions, articles, multicanalFlashes] = await Promise.all([
+  const [actions, articles, multicanalFlashes, historicalActions] = await Promise.all([
     getPublicActions(),
     getPublicArticles(),
-    getAllMulticanalNewsFlashes()
+    getAllMulticanalNewsFlashes(),
+    getHistoricalActions()
   ])
 
   // Filtrar solo las noticias públicas y mapearlas al formato esperado
@@ -33,6 +35,7 @@ export async function ImpactSection() {
       news={[]} 
       actions={actions} 
       articles={uniqueArticles} 
+      historicalActions={historicalActions}
     />
   )
 }

@@ -25,15 +25,21 @@ function InstagramIcon({ className = "w-4 h-4" }: { className?: string }) {
   )
 }
 
-export function HistoricalActionsYears() {
+interface HistoricalActionsYearsProps {
+  historicalActions?: Record<number, HistoricalAction[]>
+}
+
+export function HistoricalActionsYears({ historicalActions }: HistoricalActionsYearsProps = {}) {
   const { dict } = useLanguage()
   const [selectedYear, setSelectedYear] = useState<number | null>(null)
+
+  const data = historicalActions || HISTORICAL_ACTIONS_DATA
 
   const handleYearClick = (year: number) => {
     setSelectedYear(prev => (prev === year ? null : year))
   }
 
-  const actions: HistoricalAction[] = selectedYear ? (HISTORICAL_ACTIONS_DATA[selectedYear] || []) : []
+  const actions: HistoricalAction[] = selectedYear ? (data[selectedYear] || []) : []
 
   return (
     <div className="mt-14 relative z-10">
