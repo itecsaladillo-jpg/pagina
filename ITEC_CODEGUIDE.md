@@ -91,7 +91,7 @@ La landing incluye streaming en vivo de YouTube y barra inferior de sponsors con
 | `build` | `next build` | Build de producción |
 | `start` | `next start` | Servidor de producción |
 | `lint` | `eslint` | Linting (ESLint 9 flat config + eslint-config-next) |
-| `sync-docs` | `node scripts/generateDocsContext.mjs` | Lee PDF/TXT/MD de `/docs` → limpia texto → genera `src/lib/docsContext.ts` (constante `DOCS_CONTEXT`) + `docsContext.json` (~187k chars). Alimenta nivel P2 del RAG. Ejecutar después de subir documentos nuevos. |
+| `sync-docs` | `node scripts/generateDocsContext.mjs` | Lee PDF/TXT/MD de `/docs` → limpia texto → genera `src/lib/docsContext.ts` (constante `DOCS_CONTEXT`) + `docsContext.json` (~1.73M chars). Alimenta nivel P2 del RAG con corpus institucional completo, anuarios estadísticos oficiales de Saladillo (N° 1, 2 y 3 año 2025), censos INDEC e indicadores socioeconómicos locales. Ejecutar después de subir documentos nuevos. |
 | `extract-docs` | `node scripts/extractPdfText.js` | Predecesor simple: extrae texto plano de PDFs a JSON (CommonJS, pdf-parse) |
 | `ingest-vector` | `node --dns-result-order=ipv4first --env-file=.env.local scripts/ingestDocsToVector.mjs [archivo.md]` | Pipeline pgvector: limpia embeddings previos (o solo del archivo si se pasa argumento) → chunking 900 chars/overlap 120 → embeddings Gemini `gemini-embedding-001` (batches de 20, 768 dims) → inserta en tabla `documents` vía REST con service_role. |
 | `agent-get-context` | `node scripts/agent-get-context.mjs` | Script de diagnóstico que consulta `news_flashes` y `itec_actions` para ver contexto dinámico de la BD |
@@ -104,9 +104,10 @@ La landing incluye streaming en vivo de YouTube y barra inferior de sponsors con
 D:\ITEC\
 ├── .env.local                   # Variables de entorno (gitignored, única env file)
 ├── docs/                        # Corpus institucional (PDFs, Markdown y DOCX):
-│                                #   Expo ITEC 2023-2025, ordenanza, educación, ArgenBio,
-│                                #   AAVEA electromovilidad, INTI panificación, fallas electrónicas,
-│                                #   Congreso Agroalimentos Cazón 2026, contexto Saladillo → RAG
+│                                #   Anuarios Estadísticos de Saladillo (N° 1, 2 y 3 año 2025),
+│                                #   Censos INDEC (Población y Agropecuario), ordenanzas,
+│                                #   Expo ITEC 2023-2025, educación, ArgenBio, AAVEA electromovilidad,
+│                                #   INTI panificación, fallas electrónicas, Congreso Agroalimentos Cazón 2026 → RAG
 ├── public/
 │   ├── favicon.ico              # Multi-resolución RGBA (16x16 → 256x256)
 │   ├── favicon-32x32.png        # Icono PNG 32x32 nítido para pestañas
@@ -131,9 +132,9 @@ D:\ITEC\
 │   ├── lib/                     # Utilidades core (supabase, rag, eventos, email, settings…)
 │   ├── locales/dictionary.ts    # Diccionario ES/EN/PT (~1100 líneas, 16 secciones/idioma)
 │   ├── proxy.ts                 # Middleware Next.js 16 (reemplaza middleware.ts)
-│   ├── services/                # Capa de servicios (auth, ai, admin, news, drive, videos…)
+│   ├── services/                # Capa de servicios (auth, ai, admin, news, drive, videos, historicalActions…)
 │   └── types/database.ts        # Tipos 100% sincronizados con Supabase (~570 líneas)
-├── supabase/migrations/         # 77+ archivos SQL (001 → 077 + fix_storage_policies.sql)
+├── supabase/migrations/         # 78+ archivos SQL (001 → 078_archivo_acciones.sql + fix_storage_policies.sql)
 ├── AGENTS.md                    # Advertencia breaking changes Next.js 16
 ├── CLAUDE.md                    # Solo "@AGENTS.md" (referencia)
 ├── ITEC_CODEGUIDE.md            # Esta guía
@@ -181,6 +182,7 @@ D:\ITEC\
 |------|-------|---------------|
 | `/dashboard` | — | Solo redirecciones: sin sesión→`/login`, no activo→`/acceso-pendiente`, resto→`/dashboard/muro`. |
 | `/dashboard/ai` | admin/coordinador | Procesador IA: transcripción → resumen + tareas + flash (`processTextAction`). |
+| `/dashboard/archivo` | admin/coordinador | Archivo Histórico de Acciones ITEC (2022-2025): ABM de eventos/acciones con título, link a red social (Instagram/web), año, categoría y descripción (`ArchivoClient`). |
 | `/dashboard/certificados` | miembro activo | "Pasaporte de Habilidades Digitales": diplomas interactivos con QR (búsqueda `ilike` por nombre en `certificados_digitales`). |
 | `/dashboard/comunicacion` | admin, `force-dynamic` | Centro de comunicación estratégica: tabs creación + lista de notas multicanal. |
 | `/dashboard/drive` | miembro activo | Explorador Google Drive por comisión (mapeo slug→folder + carpeta general configurable). |
@@ -381,11 +383,12 @@ Todas las actions administrativas verifican `getCurrentMember()` antes de ejecut
 
 ⚠️ Las actions de comunicación escriben en tabla dinámica según canal (`notas_publico`/`notas_miembros`/`notas_sponsors`/`notas_medios`).
 
-#### Acciones de Impacto
+#### Acciones de Impacto y Archivo Histórico
 | Tabla | Descripción |
 |-------|-------------|
 | `itec_actions` | Acciones (capacitacion\|evento_social\|divulgacion) con `title`, `description`, `type`, `status`, `target_audience`, `capacity`, `cost`, fechas, `location`, `thumbnail_url`, `tags(text[])`, `responsible_id`, `commission_id`, `materials_urls(text[])`, `media_urls(text[])`. ⚠️ En algunos módulos se referencia como `acciones_itec` (ver gotchas §22) |
 | `action_registrations` | Inscripciones públicas a acciones |
+| `archivo_acciones` (mig. 078) | Archivo de acciones y eventos históricos (2022 a 2025): `id(uuid PK)`, `title`, `social_url`, `year(CHECK in 2022,2023,2024,2025)`, `category`, `description`, `created_at`, `created_by(FK members)`. RLS: SELECT público, INSERT/UPDATE/DELETE solo admin/coordinador. Alimenta la sección "Acciones de ITEC desde su nacimiento" en la landing (`HistoricalActionsYears.tsx`) y el módulo admin `/dashboard/archivo`. |
 
 #### Eventos Presenciales
 | Tabla | Descripción |
@@ -471,7 +474,7 @@ Todas las tablas realtime de clase están en publicación `supabase_realtime`. R
 | `insert_idea` | Alta idea pública |
 | `reiniciar_semaforo_clase` / `toggle_pregunta_voto` | Interacción aula virtual |
 
-### 8.4 Migraciones — historial resumido (75+ archivos SQL, 001→075 + fix_storage_policies.sql)
+### 8.4 Migraciones — historial resumido (78+ archivos SQL, 001→078 + fix_storage_policies.sql)
 
 ⚠️ Hay números duplicados (014, 024, 025, 026, 032, 036 tienen dos archivos c/u). No hay carpeta de rollback. Aplicar manualmente en Supabase tras cambios de schema.
 
@@ -484,7 +487,7 @@ Todas las tablas realtime de clase están en publicación `supabase_realtime`. R
 | 041–050 | chat_conocimiento, training_docs storage (+fix policies), buscar_docs_similares, saved_conversations, ideas (+delete policy), prensa_envios_log, evento_semaforo v1, fix modalidad, herramientas JSONB, default false |
 | 051–060 | remove_semaforo (053) → **054 semaforo v3** (tabla mínima append-only + reset_at + realtime) → 055 nube_concepto → **056 fix RLS critical** → **057 semaforo dispositivo_id** (dedup server-side) → **058 api_settings** → 059 modalidad eventos → **060 esquema híbrido virtual** (modalidad clases, meet_url, 7 tablas realtime de aula + RPCs + realtime publication) |
 | 061–068 | 061 general_meet_url → **062/063 pgvector RAG** (extensión vector, documents, HNSW, match_documents) → **064 streaming config** (keys `streaming_active`/`streaming_youtube_url` en api_settings) → 065 sponsors update (rubro/resena/contactos/logos/tier standard) → 066 RPC sponsors públicos → **067 strategic_partners** → **068 partner_classification** (col. type + RPC unificado obtener_socios_publicos) |
-| 069–077 | **069** expand_socios_rpc_fields (campos adicionales en obtener_socios_publicos) → **070** fix_storage_policies (políticas bucket sponsors-logos) → **0701** fix_sponsors_type_column (columna type + recreación RPC) → **071 saladillo_for_export** (tabla testimonios saladillenses en el mundo, embajadores 1–4, RLS SELECT aprobados/INSERT público, storage bucket `saladillo-export-photos`). Integrada en AboutSection landing + admin dashboard. → **072/073 enforce_matias_admin** (trigger permanente que asegura que `matiasvidal11972@gmail.com` siempre tenga rol admin). → **074 add_logo_to_medios_prensa** (columna `logo_url` en `medios_prensa` + actualización RPC `obtener_socios_publicos` para retornar `logo_url`). → **075_add_saladillo_data_to_assistant_prompt** (bloque de datos demográficos Censo 2022 al system_prompt de `asistente_global` en BD: población 35.656 hab., 6 localidades, estructura por sexo/edad, viviendas, precipitaciones, conectividad vial, código postal). → **076_delete_huertas_comunitarias_article** (limpieza de artículo desactualizado) → **077_delete_legacy_public_articles** (purgado de artículos públicos legacy). |
+| 069–078 | **069** expand_socios_rpc_fields (campos adicionales en obtener_socios_publicos) → **070** fix_storage_policies (políticas bucket sponsors-logos) → **0701** fix_sponsors_type_column (columna type + recreación RPC) → **071 saladillo_for_export** (tabla testimonios saladillenses en el mundo, embajadores 1–4, RLS SELECT aprobados/INSERT público, storage bucket `saladillo-export-photos`). Integrada en AboutSection landing + admin dashboard. → **072/073 enforce_matias_admin** (trigger permanente que asegura que `matiasvidal11972@gmail.com` siempre tenga rol admin). → **074 add_logo_to_medios_prensa** (columna `logo_url` en `medios_prensa` + actualización RPC `obtener_socios_publicos` para retornar `logo_url`). → **075_add_saladillo_data_to_assistant_prompt** (bloque de datos demográficos Censo 2022 al system_prompt de `asistente_global` en BD: población 35.656 hab., 6 localidades, estructura por sexo/edad, viviendas, precipitaciones, conectividad vial, código postal). → **076_delete_huertas_comunitarias_article** (limpieza de artículo desactualizado) → **077_delete_legacy_public_articles** (purgado de artículos públicos legacy) → **078_archivo_acciones** (tabla `archivo_acciones` para hitos/eventos 2022-2025 con links a redes, RLS pública lectura / admin escritura). |
 
 ---
 
@@ -531,7 +534,7 @@ Recuperación de contexto en 5 niveles. **Orden de resolución:** P1 → P2 → 
 | Nivel | Fuente | Threshold | Método |
 |-------|--------|-----------|--------|
 | **P1** | pgvector `documents` | ≥ 0.15 | Embedding Gemini (`outputDimensionality: 768`) de la query + RPC `match_documents` (cosine, 6 chunks). Sanitizado para descartar similitudes `NaN` o no-numéricas. Contiene todo el corpus institucional histórico y reciente (incluyendo 49 chunks de las últimas 10 temáticas 2025/2026). |
-| **P2** | `DOCS_CONTEXT` local (docsContext.ts autogenerado) | ≥ 0.22 | Chunking 900/120 + scoring overlap de tokens estilo Jaccard modificado `|A∩B|/min(|A|,|B|)` con stopwords español. Base de ~187k chars generada desde PDFs y Markdowns estructurados. |
+| **P2** | `DOCS_CONTEXT` local (docsContext.ts autogenerado) | ≥ 0.22 | Chunking 900/120 + scoring overlap de tokens estilo Jaccard modificado `|A∩B|/min(|A|,|B|)` con stopwords español. Base en memoria de ~1.73M de caracteres generada desde PDFs y Markdowns estructurados (incluye anuarios estadísticos oficiales de Saladillo N° 1, 2 y 3 año 2025, censos INDEC de población/agropecuario y datos socioproductivos locales). |
 | **P3** | Bucket Storage `training-docs` (.txt/.md/.json) | ≥ 0.22 | Token overlap. **Caché memoria TTL 5 min (`P3_CACHE_TTL_MS`) + deduplicación de descargas concurrentes** (`p3FetchPromise` compartida + `.finally()`) — anti-stampede |
 | **P4** | Conversaciones guardadas del propio sessionId | any | RPC `buscar_conversaciones_similares` (threshold 0.35) |
 | **Soft fallback** | Mejor resultado propio bajo threshold | < threshold | Se retorna ANTES de consultar web |
@@ -625,16 +628,17 @@ Sistema de comunicación masiva vía WhatsApp para difusión de noticias, evento
 
 **Página admin:** `/dashboard/whatsapp` (solo admin)
 
-**Server Actions** (`src/app/dashboard/whatsapp/actions.ts`, ~487 líneas):
+**Server Actions** (`src/app/dashboard/whatsapp/actions.ts`, ~520 líneas):
 - `getTemplatesAction`, `saveTemplateAction`, `deleteTemplateAction` — CRUD de plantillas reutilizables
 - `logWhatsAppSendAction` — auditoría de envíos
 - `getContactsAction`, `getGroupsAction`, `getGroupWithContactsAction` — lectura de agenda
 - `saveContactAction`, `saveContactsBulkAction` (upsert por teléfono), `deleteContactAction` — gestión contactos
+- `importMembersToContactsAction` — sincronización masiva de miembros activos con teléfono válido hacia la agenda (`fuente = 'miembro'`), normalización telefónica internacional (`+54 9 ...`), deduplicación en batches y desglose de razones (agregados, omitidos por duplicado, sin teléfono)
 - `saveGroupAction`, `deleteGroupAction`, `setGroupContactsAction` — gestión grupos
 - `updateUnifiedContactAction`, `deleteUnifiedContactAction` — agenda unificada
 
 **Componentes** (`src/components/whatsapp/`):
-- `WhatsAppUnifiedAgenda` — vista unificada de miembros + contactos externos
+- `WhatsAppUnifiedAgenda` — vista unificada de miembros + contactos externos con botón permanente de sincronización de miembros
 - `WhatsAppLinkGenerator` — generador de links de difusión masiva
 - `TemplateEditor` — editor de plantillas con preview
 - `PlantillasTab`, `GruposTab`, `ContactosTab` — pestañas de gestión
@@ -645,11 +649,11 @@ Sistema de comunicación masiva vía WhatsApp para difusión de noticias, evento
 |-------|-------------|
 | `whatsapp_templates` | Plantillas reutilizables: `titulo`, `body`, `categoria` (general\|evento\|socio\|sponsor\|medio) |
 | `whatsapp_logs` | Auditoría de envíos con estado y destinatarios |
-| `whatsapp_contacts` | Contactos externos: `telefono` (UNIQUE), `nombre`, `fuente` (manual\|vcf\|csv\|device), `es_agenda_itec` |
+| `whatsapp_contacts` | Contactos externos y miembros sincronizados: `telefono` (UNIQUE), `nombre`, `fuente` (manual\|vcf\|csv\|device\|miembro), `es_agenda_itec` |
 | `whatsapp_groups` | Grupos de contactos: `nombre`, `descripcion` |
 | `whatsapp_group_contacts` | Relación N:M grupo-contacto |
 
-**Migraciones:** 0121 (whatsapp_templates), 0131 (whatsapp_contacts), 0132 (whatsapp_groups), 0133 (whatsapp_agenda)
+**Migraciones:** 0121 (whatsapp_templates), 0131 (whatsapp_contacts — check constraint actualizado para admitir `fuente = 'miembro'`), 0132 (whatsapp_groups), 0133 (whatsapp_agenda)
 
 ---
 
@@ -668,6 +672,14 @@ Características clave:
 - **NUESTROS SOCIOS** (`NuestrosSociosSection.tsx`): grillas dinámicas por tier con **alturas diferenciadas**: platino 120px, oro 100px, plata 80px, bronce 60px, standard 50px. Logos con `h-full w-auto object-contain` para ocupar toda la altura del contenedor. Títulos animados "ITEC en red" y "Medios que nos ayudan a llegar más lejos" con `font-black text-gradient animate-gradient`. **Estilos especiales**: AAVEA con `scale-125` para verse más grande; UNICEN con fondo oscuro gradiente (`bg-gradient-to-br from-gray-800 to-gray-900`) para visibilidad de letras blancas. Datos del RPC `obtener_socios_publicos`. Click abre `SponsorModal`.
 - **ALIANZAS ESTRATÉGICAS** (sub-sección): grid responsive 3–6 columnas de `strategic_partners` activos; modal unificado con badge de categoría y bloque "Acciones conjuntas".
 - **Métricas de Impacto:** patrón server-data → client-UI (`ImpactSection.tsx` server async fetch → `ImpactSectionClient.tsx` animado con contadores y carrusel de novedades, tabs, locales date-fns por idioma).
+- **Acciones de ITEC desde su nacimiento (`HistoricalActionsYears.tsx` en `ImpactSectionClient.tsx`):**
+  - **Título y tratamiento estético:** Mismo tratamiento visual que el titular de impacto con degradado `text-gradient` (`ACCIONES DE ITEC` + `<span className="text-gradient">DESDE SU NACIMIENTO</span>`), con un tamaño 60% más compacto (`text-lg sm:text-xl md:text-2xl font-black`).
+  - **Texto descriptivo:** Formateado estrictamente en 3 renglones mediante `whitespace-pre-line`: *"Explorá los proyectos, eventos e iniciativas\nque forjaron la historia de ITEC\ndesde sus primeros pasos."*
+  - **Distribución en 2 columnas:** Cuadrícula balanceada (`grid grid-cols-1 lg:grid-cols-2 items-center`):
+    - *Columna Izquierda (centrada):* Badge `MEMORIA INSTITUCIONAL`, título con degradado y descripción de 3 líneas centrados (`flex flex-col items-center text-center`).
+    - *Columna Derecha (centrada):* Selector interactivo de años (`2022`, `2023`, `2024`, `2025`) y botón `X Cerrar` centrados (`flex flex-col sm:flex-row items-center justify-center`).
+  - **Acordeón interactivo:** Despliegue animado mediante Framer Motion (`AnimatePresence`) con tarjetas que presentan el hito, categoría, fecha formateada, descripción y botón directo a la publicación en Instagram/redes sociales (`social_url`).
+  - **Servicio y datos híbridos:** `getHistoricalActions()` (`src/services/historicalActions.ts`) consulta la tabla `archivo_acciones` de Supabase y combina los registros dinámicos con la base histórica estática de `src/data/historicalActions.ts`, deduplicando por título y ordenando cronológicamente.
 - **Comisiones:** grid visual estático con colores/iconos por comisión, textos i18n.
 - **Buzón de Ideas** (`IdeasSection.tsx`): 2 columnas desktop. Izquierda: título 3 líneas + descripción + beneficios (flex horizontal). Derecha: formulario `PublicIdeasForm` (textarea, checkbox anónimo, contacto opcional) + beneficio "Seguimiento real". Envío a `POST /api/ideas` (RPC `insert_idea`, mín. 10 chars).
 - **Videoteca** (`VideotecaSection.tsx`): búsqueda y filtro por categoría usando `videoService.getPublicVideos()`; thumbnails mqdefault; resúmenes IA.
@@ -747,6 +759,7 @@ Ver tabla de rutas en §4. Resumen funcional:
 - **Capacitaciones** (gestión): CRUD con dashboard de estadísticas; creación de acciones en `/dashboard/acciones/nueva`.
 - **Streaming**: centro de transmisión (ver §13).
 - **Saladillo for Export** (`/dashboard/saladillo-for-export`): gestión de testimonios de saladillenses en el mundo — aprobar/rechazar, asignar embajadores (posición 1–4), crear testimonios, eliminar.
+- **Archivo Histórico** (`/dashboard/archivo`): gestión y carga de eventos históricos de ITEC (2022-2025) con título, link a redes sociales, año, categoría y descripción.
 - **AI Processor** (`/dashboard/ai`): pegar transcripciones → `processTextAction` → resumen + tareas + flash noticioso (guarda en `news_flashes` con commission).
 
 ---
@@ -757,10 +770,11 @@ Sidebar con submenús `<details>` colapsables color-coded:
 - **Prensa** (cyan): Gacetillas (`prensaNews`), Gestión de Prensa (`prensa`)
 - **Sponsors** (amber): Muro Sponsors (`sponsorsNews`), Gestión de Sponsors (`sponsors`)
 - **Herramientas para Eventos** (púrpura): Encuestas, Sistema Preguntas, Nube Ideas, Semáforo, Crear/Editar Evento
-- Items sueltos: Miembros, Comunicación, Settings, Entrenamiento Asistente, Videoteca, AI, Streaming, Saladillo for Export
+- Items sueltos: Miembros, Comunicación, Archivo, Settings, Entrenamiento Asistente, Videoteca, AI, Streaming, Saladillo for Export
 
 Detalle:
 - **Miembros** (`/dashboard/miembros`): aprobar/rechazar/activar/desactivar, roles, comisiones. Integra correos pre-aprobados (`allowed_emails`) como filas sintéticas `status:'pre-aprobado'`. Modelo 1 miembro → 1 comisión.
+- **Archivo Histórico de Acciones** (`/dashboard/archivo`): ABM de eventos y proyectos históricos (2022 a 2025) mediante `ArchivoClient`. Formulario con validación Zod (`createArchivoAccionAction`): título (min 3 caracteres), URL a redes sociales válida (Instagram, Facebook, LinkedIn, YouTube, X o web institucional), año restringido estrictamente a `2022 | 2023 | 2024 | 2025`, categoría y descripción opcional. Filtro interactivo por año en tiempo real y eliminación con confirmación (`deleteArchivoAccionAction`). Revalida instantáneamente `/dashboard/archivo` y `/`.
 - **Settings** (`/dashboard/settings`): identidad visual del sitio + gestión de API keys (`api_settings`) con prioridad sobre env vars (forms: `SettingsForm`, `ApiKeysSettingsForm`).
 - **Entrenamiento del Asistente**: editar system prompt (`ai_prompt_settings`), upload/delete/list docs del bucket, botón sync (`syncDocsAction`).
 - **Encuestas en Vivo**: CRUD (`PollManager`), activar/desactivar, pantalla de proyección, analytics históricas (Recharts), marcar completada.
@@ -802,7 +816,8 @@ Detalle:
 | 18 | `app/dashboard/eventos-presenciales/herramientasActions.ts` | `actualizarHerramientasActivasAction`, `actualizarModoPantallaAction`, `actualizarConceptoNube` |
 | 19 | `app/dashboard/eventos-presenciales/semaforoActions.ts` | `registrarVotoNegativo`, `verificarVotoDispositivo`, `obtenerEstadoSemaforo`, `resetearSemaforo` |
 | 20 | `app/dashboard/saladillo-for-export/actions.ts` | `aprobarTestimonioAction`, `rechazarTestimonioAction`, `setEmbajadorAction`, `crearTestimonioAdminAction`, `eliminarTestimonioAction` (requieren admin) |
-| 21 | `app/dashboard/whatsapp/actions.ts` | `getTemplatesAction`, `saveTemplateAction`, `deleteTemplateAction`, `logWhatsAppSendAction`, `getContactsAction`, `getGroupsAction`, `getGroupWithContactsAction`, `saveContactAction`, `saveContactsBulkAction`, `deleteContactAction`, `saveGroupAction`, `deleteGroupAction`, `setGroupContactsAction`, `updateUnifiedContactAction`, `deleteUnifiedContactAction` (admin) |
+| 21 | `app/dashboard/whatsapp/actions.ts` | `getTemplatesAction`, `saveTemplateAction`, `deleteTemplateAction`, `logWhatsAppSendAction`, `getContactsAction`, `getGroupsAction`, `getGroupWithContactsAction`, `saveContactAction`, `saveContactsBulkAction`, `deleteContactAction`, `importMembersToContactsAction`, `saveGroupAction`, `deleteGroupAction`, `setGroupContactsAction`, `updateUnifiedContactAction`, `deleteUnifiedContactAction` (admin) |
+| 22 | `app/dashboard/archivo/actions.ts` | `createArchivoAccionAction`, `deleteArchivoAccionAction` (admin/coordinador: validación Zod año 2022-2025, link red social, revalida `/dashboard/archivo` y `/`) |
 | — | `app/actions/saladillo-export.ts` | `crearTestimonioSaladilloExport` (pública, upload foto a Storage + insert estado pendiente) |
 | — | `components/capacitaciones/actions.ts` | `voteLivePollAction` (cookie dedup httpOnly 24h) |
 
@@ -834,11 +849,11 @@ Detalle:
 
 ## 16. Inventario de Componentes
 
-`src/components/` — 10 subdirectorios, 31 .tsx + 1 css + 1 actions.ts. Balance: ~29 client components, 1 server (`ImpactSection.tsx`). Patrón dominante: client + framer-motion + Supabase browser SDK.
+`src/components/` — 10 subdirectorios, 32 .tsx + 1 css + 1 actions.ts. Balance: ~30 client components, 1 server (`ImpactSection.tsx`). Patrón dominante: client + framer-motion + Supabase browser SDK.
 
 | Carpeta | Archivos | Rol |
 |---------|----------|-----|
-| `landing/` | `Navbar` (client, estado sesión, menú móvil, i18n), `HeroSection` (client, consulta clase en vivo, StreamingPlayer condicional), `AboutSection` (título "Quienes hacen ITEC" + mapeo roles UI + grid adaptativo 3-4 cols + modal perfil + SaladilloExportSection), `ImpactSection` (**server**, fetch acciones/artículos/flashes), `ImpactSectionClient` (contadores/carrusel animado, i18n), `ComisionesSection` (grid estático con "Nuestro Equipo de trabajo" 6 áreas), `IdeasSection` (2 columnas), `VideotecaSection` (búsqueda/categoría), `StreamingPlayer` (URL→embed YouTube), `Footer` (i18n + acceso miembros), `FloatingLanguageSelector` (FAB es/en/pt, bottom 59px, fade out scroll) | Landing |
+| `landing/` | `Navbar` (client, estado sesión, menú móvil, i18n), `HeroSection` (client, consulta clase en vivo, StreamingPlayer condicional), `AboutSection` (título "Quienes hacen ITEC" + mapeo roles UI + grid adaptativo 3-4 cols + modal perfil + SaladilloExportSection), `ImpactSection` (**server**, fetch acciones/artículos/flashes), `ImpactSectionClient` (contadores/carrusel animado, i18n), `HistoricalActionsYears` (acordeón y selector interactivo de años 2022-2025 en 2 columnas centradas, tarjetas con links a publicaciones en Instagram/redes), `ComisionesSection` (grid estático con "Nuestro Equipo de trabajo" 6 áreas), `IdeasSection` (2 columnas), `VideotecaSection` (búsqueda/categoría), `StreamingPlayer` (URL→embed YouTube), `Footer` (i18n + acceso miembros), `FloatingLanguageSelector` (FAB es/en/pt, bottom 59px, fade out scroll) | Landing |
 | `home/` | `SponsorHeaderBar` (marquesina fixed bottom), `NuestrosSociosSection` (grillas por tier con alturas diferenciadas + títulos animados "ITEC en red"/"Medios que nos ayudan a llegar más lejos" + estilos especiales AAVEA/UNICEN + alianzas + canales, tabs, fetch cliente si no vienen props), `SponsorModal` (modal unificado `ModalItem` discriminador `_kind: 'sponsor'\|'partner'`, cierre Escape) | Socios landing |
 | `comunicacion/` | `ComunicacionTabs`, `NewsFlashMulticanalEditor` (editor IA 4 canales), `NewsWallMulticanal` (tabs canal + slideshow medios object-contain), `NotasMulticanalList` (editar/borrar/publicar/reordenar) | Comunicación |
 | `chat/` | `ChatWidget` (widget flotante, localStorage historial), `ChatWidgetWrapper` (lazy `ssr:false` + oculta en EVENT_ROUTES), `ChatWidget.css` | Asistente |
@@ -851,7 +866,7 @@ Detalle:
 | `saladillo-export/` | `SaladilloExportSection` (embajadores grid + testimonios + formulario pública, fetch client si no vienen props) | Saladillo for Export |
 | `whatsapp/` | `WhatsAppUnifiedAgenda`, `WhatsAppLinkGenerator`, `TemplateEditor`, `PlantillasTab`, `GruposTab`, `ContactosTab`, `PlantillaSidebar`, `ConfirmDialog`, `Toast` | WhatsApp |
 
-Componentes inline en carpetas de rutas (no en `components/`): `ArticleDetailClient`, `CertificadoViewer`, `VotingClient`, `AIProcessorForm`, `certificados-interactive`, `FileList`, `PollManager`, `AnalyticsClient`, `PresentationClient`, `EntrenamientoForm`, `EventListClient`, `EventosPresencialesClient`, `PanelOradorClient`, `IdeasManagementClient`, `MemberManagementTable`, `MediosAdmin`, `MedioForm`, `ProfileForm`, `SponsorsAdmin`, `SponsorForm`, `StreamingControls`, `VideotecaManager`, `SettingsForm`, `ApiKeysSettingsForm`.
+Componentes inline en carpetas de rutas (no en `components/`): `ArticleDetailClient`, `CertificadoViewer`, `VotingClient`, `AIProcessorForm`, `certificados-interactive`, `FileList`, `PollManager`, `AnalyticsClient`, `PresentationClient`, `EntrenamientoForm`, `EventListClient`, `EventosPresencialesClient`, `PanelOradorClient`, `IdeasManagementClient`, `MemberManagementTable`, `MediosAdmin`, `MedioForm`, `ProfileForm`, `SponsorsAdmin`, `SponsorForm`, `StreamingControls`, `VideotecaManager`, `SettingsForm`, `ApiKeysSettingsForm`, `ArchivoClient`.
 
 ---
 
