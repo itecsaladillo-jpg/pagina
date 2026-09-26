@@ -134,7 +134,7 @@ D:\ITEC\
 │   ├── proxy.ts                 # Middleware Next.js 16 (reemplaza middleware.ts)
 │   ├── services/                # Capa de servicios (auth, ai, admin, news, drive, videos, historicalActions…)
 │   └── types/database.ts        # Tipos 100% sincronizados con Supabase (~570 líneas)
-├── supabase/migrations/         # 78+ archivos SQL (001 → 078_archivo_acciones.sql + fix_storage_policies.sql)
+├── supabase/migrations/         # 79+ archivos SQL (001 → 079_preponderancia_temporal_documentos_rag.sql + fix_storage_policies.sql)
 ├── AGENTS.md                    # Advertencia breaking changes Next.js 16
 ├── CLAUDE.md                    # Solo "@AGENTS.md" (referencia)
 ├── ITEC_CODEGUIDE.md            # Esta guía
@@ -474,7 +474,7 @@ Todas las tablas realtime de clase están en publicación `supabase_realtime`. R
 | `insert_idea` | Alta idea pública |
 | `reiniciar_semaforo_clase` / `toggle_pregunta_voto` | Interacción aula virtual |
 
-### 8.4 Migraciones — historial resumido (78+ archivos SQL, 001→078 + fix_storage_policies.sql)
+### 8.4 Migraciones — historial resumido (79+ archivos SQL, 001→079 + fix_storage_policies.sql)
 
 ⚠️ Hay números duplicados (014, 024, 025, 026, 032, 036 tienen dos archivos c/u). No hay carpeta de rollback. Aplicar manualmente en Supabase tras cambios de schema.
 
@@ -487,7 +487,7 @@ Todas las tablas realtime de clase están en publicación `supabase_realtime`. R
 | 041–050 | chat_conocimiento, training_docs storage (+fix policies), buscar_docs_similares, saved_conversations, ideas (+delete policy), prensa_envios_log, evento_semaforo v1, fix modalidad, herramientas JSONB, default false |
 | 051–060 | remove_semaforo (053) → **054 semaforo v3** (tabla mínima append-only + reset_at + realtime) → 055 nube_concepto → **056 fix RLS critical** → **057 semaforo dispositivo_id** (dedup server-side) → **058 api_settings** → 059 modalidad eventos → **060 esquema híbrido virtual** (modalidad clases, meet_url, 7 tablas realtime de aula + RPCs + realtime publication) |
 | 061–068 | 061 general_meet_url → **062/063 pgvector RAG** (extensión vector, documents, HNSW, match_documents) → **064 streaming config** (keys `streaming_active`/`streaming_youtube_url` en api_settings) → 065 sponsors update (rubro/resena/contactos/logos/tier standard) → 066 RPC sponsors públicos → **067 strategic_partners** → **068 partner_classification** (col. type + RPC unificado obtener_socios_publicos) |
-| 069–078 | **069** expand_socios_rpc_fields (campos adicionales en obtener_socios_publicos) → **070** fix_storage_policies (políticas bucket sponsors-logos) → **0701** fix_sponsors_type_column (columna type + recreación RPC) → **071 saladillo_for_export** (tabla testimonios saladillenses en el mundo, embajadores 1–4, RLS SELECT aprobados/INSERT público, storage bucket `saladillo-export-photos`). Integrada en AboutSection landing + admin dashboard. → **072/073 enforce_matias_admin** (trigger permanente que asegura que `matiasvidal11972@gmail.com` siempre tenga rol admin). → **074 add_logo_to_medios_prensa** (columna `logo_url` en `medios_prensa` + actualización RPC `obtener_socios_publicos` para retornar `logo_url`). → **075_add_saladillo_data_to_assistant_prompt** (bloque de datos demográficos Censo 2022 al system_prompt de `asistente_global` en BD: población 35.656 hab., 6 localidades, estructura por sexo/edad, viviendas, precipitaciones, conectividad vial, código postal). → **076_delete_huertas_comunitarias_article** (limpieza de artículo desactualizado) → **077_delete_legacy_public_articles** (purgado de artículos públicos legacy) → **078_archivo_acciones** (tabla `archivo_acciones` para hitos/eventos 2022-2025 con links a redes, RLS pública lectura / admin escritura). |
+| 069–079 | **069** expand_socios_rpc_fields (campos adicionales en obtener_socios_publicos) → **070** fix_storage_policies (políticas bucket sponsors-logos) → **0701** fix_sponsors_type_column (columna type + recreación RPC) → **071 saladillo_for_export** (tabla testimonios saladillenses en el mundo, embajadores 1–4, RLS SELECT aprobados/INSERT público, storage bucket `saladillo-export-photos`). Integrada en AboutSection landing + admin dashboard. → **072/073 enforce_matias_admin** (trigger permanente que asegura que `matiasvidal11972@gmail.com` siempre tenga rol admin). → **074 add_logo_to_medios_prensa** (columna `logo_url` en `medios_prensa` + actualización RPC `obtener_socios_publicos` para retornar `logo_url`). → **075_add_saladillo_data_to_assistant_prompt** (bloque de datos demográficos Censo 2022 al system_prompt de `asistente_global` en BD: población 35.656 hab., 6 localidades, estructura por sexo/edad, viviendas, precipitaciones, conectividad vial, código postal). → **076_delete_huertas_comunitarias_article** (limpieza de artículo desactualizado) → **077_delete_legacy_public_articles** (purgado de artículos públicos legacy) → **078_archivo_acciones** (tabla `archivo_acciones` para hitos/eventos 2022-2025 con links a redes, RLS pública lectura / admin escritura) → **079_preponderancia_temporal_documentos_rag** (inyección en el prompt maestro de la regla que prioriza categóricamente la información de documentos RAG con fecha de publicación más cercana al presente ante divergencias históricas). |
 
 ---
 
