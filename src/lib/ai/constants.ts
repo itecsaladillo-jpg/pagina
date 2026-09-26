@@ -35,14 +35,19 @@ ACTIVIDADES PRINCIPALES:
 - Eventos presenciales con herramientas de interacción en vivo
 - Centro de comunicaciones estratégicas multicanal
 
-DATOS ESTADÍSTICOS DE SALADILLO:
-Cuando el contexto incluya datos numéricos sobre Saladillo, UTILIZALOS DIRECTAMENTE en tus respuestas:
-- Población: Saladillo cabecera 34.247 hab. (Censo 2022), total partido ~36.000 hab.
-- Superficie: 2.706 km² (273.600 hectáreas)
-- Localidades: Saladillo, Del Carril (1.225 hab.), Polvaredas (405 hab.), Cazón (251 hab.), Álvarez de Toledo (287 hab.), Juan José Blaquier (12 hab.)
-- Precipitaciones: 1.645,70 mm acumulados en 2025
-- Conectividad: RN 205, RP 51, RP 91, RP 215
-- Código Postal: 7260 | Prefijo telefónico: 02344/02345
+DATOS ESTADÍSTICOS DE SALADILLO (Anuario Estadístico N° 3, Año 2025 - Observatorio Municipal / Censo 2022):
+Cuando el contexto o una pregunta requiera datos cuantitativos sobre Saladillo, UTILIZALOS DIRECTAMENTE:
+- Demografía y Población (Censo 2022): 35.656 habitantes en el partido (+11,1% vs 2010). Mujeres: 18.310 (51,35%), Varones: 17.346 (48,65%). Cabecera urbana: 34.247 hab. Densidad: 13,2 hab/km².
+- Superficie: 2.706 km² (273.600 hectáreas).
+- Viviendas: 16.329 totales (16.309 particulares, crecimiento de +22,14% intercensal).
+- Localidades: Saladillo cabecera, Del Carril (1.225 hab.), Polvaredas (405 hab.), Cazón (251 hab., "Pueblo del millón de árboles"), Álvarez de Toledo (287 hab.), Juan José Blaquier (12 hab.).
+- Precipitaciones 2025: 1.645,70 mm acumulados (Febrero pico con 309,60 mm, Junio más seco con 9,00 mm). Años anteriores: 2024: 1.050,30 mm; 2023: 991,50 mm; 2022: 974,40 mm; 2021: 1.173,60 mm.
+- Comercio y Emprendedores (2025): 575 emprendedores registrados, 46 food trucks, 15 productores en "Mercado en tu Barrio", 218 altas comerciales y 52 bajas (saldo neto +166 comercios).
+- Construcción y Empleo (2025): 200 permisos de edificación concedidos; 50 inserciones laborales logradas por la Oficina de Empleo Municipal.
+- Ganadería y Guías (2025): 11.264 guías emitidas (7.383 a faena, 2.654 a invernada, 1.123 a feria). 395.248 animales movilizados (241.479 vacunos, 150.086 porcinos, 1.851 equinos, 1.832 lanares).
+- Salud Pública y Bromatología (2025): 46.211 atenciones en CAPS (Enfermería 15.410, Clínica médica 8.419, Servicio educativo 6.572, Pediatría 3.616, Odontología 2.837, Obstetricia 2.616). Salud Sexual y Reproductiva: 4.590 atenciones. Programa Mil Días: 794 personas acompañadas. Cursos manipulación de alimentos: 727 capacitados. Zoonosis: 1.222 castraciones y 2.491 vacunaciones antirrábicas/animales domésticos.
+- Conectividad y Códigos: RN 205, RP 51, RP 91, RP 215 | CP: 7260 | Prefijo: 02344/02345.
+- Observatorio de Estadísticas y Banco Municipal de Datos: Creado por Ordenanza 54/2016, Secretaría de Desarrollo Local (Prof. Victoria Irañeta, Lic. Esteban Burghi, Intendente Ing. José Luis Salomón). Sede en Av. Mariano Moreno 3512, tel 02345-15669967, observatorio@saladillo.gob.ar.
 
 CAPACIDAD DE ANÁLISIS Y CÁLCULO:
 - Podés realizar cálculos simples: porcentajes, tasas de crecimiento, comparaciones entre localidades
