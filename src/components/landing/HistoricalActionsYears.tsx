@@ -42,26 +42,25 @@ export function HistoricalActionsYears({ historicalActions }: HistoricalActionsY
   const actions: HistoricalAction[] = selectedYear ? (data[selectedYear] || []) : []
 
   return (
-    <div className="mt-20 pt-12 border-t border-white/10 relative z-10">
-      {/* Título con idéntico tratamiento estético a "UN MOTOR QUE MUEVE A SALADILLO" */}
-      <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-10">
-        <div className="space-y-3 max-w-2xl">
-          <span className="inline-block text-[10px] font-bold tracking-[0.18em] text-[var(--accent-warm)] uppercase px-3 py-1 rounded-full border border-[var(--accent-warm)]/20 bg-[var(--accent-warm)]/5">
-            {dict.impactSection.accionesBadge || 'MEMORIA INSTITUCIONAL'}
-          </span>
-          <h2 className="text-lg sm:text-xl md:text-2xl font-black text-white leading-tight tracking-tight">
-            {dict.impactSection.accionesTitleStart || 'ACCIONES DE ITEC'} <br className="hidden sm:inline" />
-            <span className="text-gradient">
-              {dict.impactSection.accionesTitleEnd || 'DESDE SU NACIMIENTO'}
-            </span>
-          </h2>
-          <p className="text-[var(--text-muted)] text-xs sm:text-sm leading-relaxed whitespace-pre-line">
-            {dict.impactSection.accionesDesc || 'Explorá los proyectos, eventos e iniciativas\nque forjaron la historia de ITEC\ndesde sus primeros pasos.'}
-          </p>
-        </div>
+    <div className="mt-16 relative z-10">
+      {/* Badge superior */}
+      <div className="mb-3">
+        <span className="inline-block text-[10px] font-bold tracking-[0.18em] text-[var(--accent-warm)] uppercase px-3 py-1 rounded-full border border-[var(--accent-warm)]/20 bg-[var(--accent-warm)]/5">
+          {dict.impactSection.accionesBadge || 'MEMORIA INSTITUCIONAL'}
+        </span>
+      </div>
 
-        {/* Selector interactivo de años (2022, 2023, 2024, 2025) */}
-        <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+      {/* Fila con el título y los años a la misma altura */}
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-3">
+        <h2 className="text-lg sm:text-xl md:text-2xl font-black text-white leading-tight tracking-tight">
+          {dict.impactSection.accionesTitleStart || 'ACCIONES DE ITEC'} <br className="hidden sm:inline" />
+          <span className="text-gradient">
+            {dict.impactSection.accionesTitleEnd || 'DESDE SU NACIMIENTO'}
+          </span>
+        </h2>
+
+        {/* Selector interactivo de años (2022, 2023, 2024, 2025) a la misma altura del título */}
+        <div className="flex flex-wrap items-center gap-3">
           <div className="flex flex-wrap items-center gap-2 p-1.5 rounded-2xl bg-white/[0.03] border border-white/10 backdrop-blur-md">
             {HISTORICAL_YEARS.map((year) => {
               const isSelected = selectedYear === year
@@ -96,7 +95,7 @@ export function HistoricalActionsYears({ historicalActions }: HistoricalActionsY
             <button
               type="button"
               onClick={() => setSelectedYear(null)}
-              className="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-white px-3.5 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 transition-colors cursor-pointer self-start sm:self-auto"
+              className="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-white px-3.5 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 transition-colors cursor-pointer"
             >
               <X size={14} />
               <span>Cerrar</span>
@@ -104,6 +103,11 @@ export function HistoricalActionsYears({ historicalActions }: HistoricalActionsY
           )}
         </div>
       </div>
+
+      {/* Texto descriptivo en 3 renglones debajo del título */}
+      <p className="text-[var(--text-muted)] text-xs sm:text-sm leading-relaxed whitespace-pre-line mb-8 max-w-2xl">
+        {dict.impactSection.accionesDesc || 'Explorá los proyectos, eventos e iniciativas\nque forjaron la historia de ITEC\ndesde sus primeros pasos.'}
+      </p>
 
       {/* Listado desplegable animado de acciones del año seleccionado */}
       <AnimatePresence mode="wait">
