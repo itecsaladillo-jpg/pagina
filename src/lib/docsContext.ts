@@ -7264,6 +7264,72 @@ Organizadores ITEC - Área de Formación permanente
 --- Fin del documento: capacitacion-harina-panificacion-inti.md ---
 
 
+--- Inicio del documento: cazon_calles.pdf ---
+Río Negro
+Córdoba
+Entre Ríos
+San Juan
+Corrientes
+Salta
+Santa Fe
+Santiago del Estero
+Tucuman
+Catamarca
+La Rioja
+Jujuy
+Buenos Aires
+Mendoza
+San Luis
+Acceso
+Acceso
+Acceso
+Estación Cazón
+Vivero Municipal
+Eduardo L. Holberg
+Base de Campamento
+NORTE
+900
+800
+1000
+
+1100
+
+1200
+
+1300
+2000
+
+1900
+
+1800
+
+1700
+1600
+
+1500
+
+1400
+
+1300
+
+1200
+
+1100
+1000
+
+700
+a
+Santa CruzAcceso Gdor. Dr. Alejandro Armendariz
+LOCALIDAD DE CAZON
+PLANTA URBANA
+PARTIDO DE SALADILLO
+SISTEMA DE INFORMACIÓN GEOGRÁFICO
+SUB. SECRETARÍA DE OBRAS PÚBLICAS Y
+PLANEAMIENTO
+MUNICIPALIDAD DE SALADILLO
+--- Fin del documento: cazon_calles.pdf ---
+
+
 --- Inicio del documento: censo_2022_informe_condiciones_habitacionales_de_las_viviendas_partido_de_saladillo_ano_2023.pdf ---
 AUTORIDADES
 Municipalidad de Saladillo
@@ -8012,6 +8078,4942 @@ Jornada al aire libre e interactiva a partir de las 16:00 hs:
 --- Inicio del documento: correr para entrenar.txt ---
 node --env-file=.env scripts/uploadDocsToGemini.mjs
 --- Fin del documento: correr para entrenar.txt ---
+
+
+--- Inicio del documento: cou_partido_de_saladillo_planos.pdf ---
+1
+
+2
+INDICE
+
+3
+INTRODUCCIÓN .............................................................................................................................................. 5
+OBJETIVOS ..................................................................................................................................................... 6
+OBJETIVOS ESPECÍFICOS ............................................................................................................................ 6
+AUTORIDADES + EQUIPO DE TRABAJO ..................................................................................................... 6
+CAPITULO I DISPOSICIONES GENERALES ................................................................................................. 7
+I.1 – ALCANCES DE LAS NORMAS ............................................................................................................... 8
+I.2 – AMBITO DE VIGENCIA ........................................................................................................................... 8
+I.3 – DEFINICIONES DE TERMINOS TECNICOS ........................................................................................... 8
+I.4 – ABREVIATURAS ................................................................................................................................... 13
+CAPITULO II TRAMITACIONES.................................................................................................................... 14
+II.2 - OBLIGACIONES DE LOS PROPIETARIOS, PROFESIONALES, CONSTRUCTORES Y
+EMPRESAS ................................................................................................................................................... 15
+II.3 - SANCIONES .......................................................................................................................................... 15
+II.4 – CERTIFICADO URBANISTICO (CU) .................................................................................................... 15
+II.5 - CERTIFICADO DE SUBSISTENCIA DE ACTIVIDADES NO INDUSTRIALES ..................................... 15
+II.6 - CONSTANCIA DE ZONIFICACIÓN ....................................................................................................... 16
+II.7 - LIMITACION A LA VALIDEZ DE LOS TRÁMITES Y/O PERMISOS DE CONSTRUCCION
+OTORGADOS CON ANTERIORIDAD A LA PUESTA EN VIGENCIA DEL PRESENTE CODIGO .............. 16
+II.8 CATEGORIZACION Y APTITUD AMBIENTAL PARA USO INDUSTRIAL ............................................. 16
+II.9 EVALUACION DE IMPACTO................................................................................................................... 16
+CAPITULO III NORMAS GENERALES ......................................................................................................... 19
+III.1 – SUBDIVISION DEL SUELO ................................................................................................................. 20
+III.2 – MORFOLOGIA URBANA..................................................................................................................... 23
+III.3 INFRAESTRUCTURA DE SERVICIOS ................................................................................................... 29
+III.4 ESTACIONAMIENTO DE VEHICULOS .................................................................................................. 29
+CAPITULO IV USOS DEL SUELO ................................................................................................................ 31
+IV.1. CLASIFICACION DEL TERRITORIO .................................................................................................... 32
+IV.2. NOMENCLADORES .............................................................................................................................. 33
+IV.3. DELIMITACION DE ZONAS .................................................................................................................. 37
+IV.4. PLANO DE ZONIFICACION .................................................................................................................. 37
+IV.5. NOMENCLADOR DE USOS.................................................................................................................. 37
+CAPITULO V MOVILIZACION DEL SUELO URBANO ................................................................................. 47
+V.1 MECANISMO DE MOVILIZACION DEL SUELO URBANO .................................................................... 48
+CAPITULO VI CONDICIONES AMBIENTALES ............................................................................................ 49
+VI.1 CONCEPTO ................................................................................................. 50
+VI.2 DEFINICIONES DE TERMINOS TECNICOS .............................................................. 50
+VI.3 NORMAS DE APLICACIÓN ................................................................................ 50
+VI.4 NORMAS COMPLEMENTARIAS .......................................................................... 50
+VI.5 RESIDUOS PELIGROSOS .................................................................................. 50
+VI.6 CONTROL AMBIENTAL DE LOCALIZACIÓN DE NUEVAS ACTIVIDADES ........................... 51
+CAPITULO VII ................................................................................................................................................ 52
+ESPACIO PÚBLICO ...................................................................................................................................... 52
+VII.1 OBJETIVOS GENERALES ................................................................................ 53
+
+4
+VII.2. DEFINICIÓN .............................................................................................. 53
+VII.3. ALCANCE DE LAS INTERVENCIONES SOBRE EL ESPACIO PÚBLICO ............................ 53
+VII.4. ESPACIO PÚBLICO EN ÁREAS URBANAS ............................................................ 53
+VII.5. DE LA AUTORIDAD MUNICIPAL ....................................................................... 53
+VII.6. FORESTACIÓN ........................................................................................... 53
+VII.7. ACERAS ................................................................................................... 55
+VII.8. ILUMINACION ............................................................................................ 56
+VII.9. SEÑALIZACION .......................................................................................... 56
+VII.10. ESPACIO PÚBLICO EN ÁREAS COMPLEMENTARIAS Y RURALES ............................... 56
+CAPITULO VIII ZONIFICACION, CARÁCTER Y NORMAS ESPECÍFICAS DE AREAS Y ZONAS
+....................................................................................................................................................................... 57
+CAPITULO IX CLASIFICACION DE USOS ................................................................................................ 96
+CAPITULO X DELIMITACION CATASTRAL DE AREAS Y ......................................................................... 99
+ZONAS ........................................................................................................................................................... 99
+IDENTIFICACION CATASTRAL .............................................................................. 100
+CAPITULO XI PROCEDIMIENTO DE MODIFICACION DEL CODIGO DE ORDENAMIENTO
+URBANO ...................................................................................................................................................... 104
+XI.1 INICIATIVA INSTITUCIONAL ........................................................................... 105
+XI.2 INICIATIVA DE LA COMUNIDAD ....................................................................... 105
+XI.3 ACTUALIZACION PERIODICA .......................................................................... 105
+XI.4 COMPATIBILIDAD ENTRE EL CODIGO VIGENTE Y SU MODIFICACION .......................... 105
+XI.5 DIFUSION DE LAS MODIFICACIONES ................................................................. 105
+CAPITULO XII .............................................................................................................................................. 106
+SISTEMA CIRCULATORIO ......................................................................................................................... 106
+XII.2. CLASIFICACIÓN ........................................................................................ 107
+CAPITULO XIII PATRIMONIO ..................................................................................................................... 108
+XIII.2. BIENES PATRIMONIALES ............................................................................ 109
+XIII.3. DECLARACION DE INTERES PATRIMONIAL ....................................................... 109
+XIII.4. ALCANCES DE LA DECLARACIÓN DE INTERÉS PATRIMONIAL ................................ 110
+XIII.5. CATALOGO PATRIMONIAL .......................................................................... 110
+XIII.6. PROCEDIMIENTOS DE PROTECCIÓN .............................................................. 110
+XIV.7. ESCALAS DE PROTECCIÓN.......................................................................... 110
+XIII.8. TIPOS DE ACTUACIONES ............................................................................ 111
+XIII.9. GRADOS DE INTERVENCIÓN ........................................................................ 111
+XIII.10. CONVENIO URBANÍSTICO ......................................................................... 112
+XIII.11. DEL PROCEDIMIENTO PARA LA APROBACIÓN DE INTERVENCIONES EN BIENES
+INVENTARIADOS .............................................................................................. 112
+XIII.12. REGISTRO ÚNICO DE BIENES PATRIMONIALES. ............................................... 113
+CERTIFICADO URBANÍSTICO (CU) ........................................................................................................ 114
+PLANOS DE ZONIFICACIÓN ......................................................................... ¡Error! Marcador no definido.
+SEGÚN USOS (ANEXO I) .................................................................................... ¡Error! Marcador no definido.
+
+5
+INTRODUCCIÓN
+
+6
+Una Ordenanza es un acto normativo emitido por el Honorable Concejo Deliberante para cuestiones de organización y control relativas al gobierno del Municipio, en temas que revisten interés general y permanente para la población.
+Representa la norma de mayor jerarquía emanada de dicho Cuerpo Legislativo, aunque está subordinada a las leyes Provinciales y Nacionales por ser de rango inferior.
+Son originadas por proyectos efectuados por el Departamento Ejecutivo o por cualquiera de los concejales y los debates para su redacción se dan en primer término en el marco de comisiones temáticas del HCD, como paso previo a su tratamiento en el plenario.
+Se reglamenta a través de Decretos del Poder Ejecutivo, que puede realizar cambios en el marco de lo establecido originariamente por el HCD e incluso vetar la misma.
+Su aplicación y cumplimiento es de carácter obligatorio desde su publicación en el boletín oficial y se encontrará vigente mientras no sea derogada o abrogada.
+Es el instrumento regulatorio que expresa las directrices generales de ordenamiento territorial y urbano, definiendo las facultades urbanísticas autorizadas sobre los bienes inmuebles y el ejercicio de la propiedad del suelo, con el objeto de custodiar el interés general urbano y ambiental de la comunidad.
+OBJETIVOS
+El objetivo de este Código es proporcionar racionalidad al proceso de desarrollo urbano con el propósito de mejorar las condiciones de calidad de vida de la población y asegurar un adecuado desenvolvimiento de las actividades económicas y sociales que se manifiestan en el territorio.
+Por otra parte, y en el mismo sentido, el carácter flexible y con posibilidades de revisión, apunta a entender desde un principio que las normas que aquí se enuncian deben considerarse como ordenadoras de un proceso de desarrollo urbano que ya reconoce particularidades y preexistencias, y que asimismo deberán adecuarse a nuevas condiciones imposibles de predecir. En este sentido, cabe destacar la necesidad de reconocer como premisas básicas, el espíritu de las normas, así como los objetivos generales que deberán salvaguardarse en virtud de mantener un rumbo cierto.
+OBJETIVOS ESPECÍFICOS
+• Cubrir las necesidades mínimas de ordenamiento físico territorial, determinando la estructura general para cada una de las áreas y zonas constitutivas, estableciendo normas de uso, ocupación y subdivisión del suelo, y dotación de infraestructura básica y morfológica para cada una de ellas.
+• Proteger la calidad ambiental a partir de estructurar la localización de las actividades en los distintos sectores de la ciudad.
+• Consolidar el tejido urbano.
+• Establecer políticas económicas, sociales, culturales y ecológicas de la sociedad, permitiendo como objetivo principal, el desarrollo socioeconómico, el mejoramiento de la calidad de vida de sus habitantes, la gestión y protección del medio ambiente y el uso racional del territorio.
+• Preservar las áreas y bienes de valor patrimonial, representativos y significativos del acervo histórico y cultural de la comunidad.
+• Mantener la identidad sociocultural.
+• Promover las tendencias de desarrollo para garantizar un adecuado crecimiento y ordenamiento territorial.
+AUTORIDADES + EQUIPO DE TRABAJO
+Intendente: Ing. José Luis Salomón
+Director de Planeamiento Tierra Y Vivienda: Arq. Lisandro González Ojinaga
+Subsecretaria Legal y Técnica: Dra. Yamila Artigas
+Oficina Técnica: Ing. Ángeles Benítez
+Oficina de Información geográfica: Prof. Diego Cotignola
+Asistencia Técnica: Dirección Provincial de Ordenamiento Urbano y Territorial de la Pcia.
+
+7
+CAPITULO I
+DISPOSICIONES
+GENERALES
+
+8
+I.1 – ALCANCES DE LAS NORMAS
+El presente Código configura una pieza legal necesaria para la puesta en práctica de los objetivos del Código de Ordenamiento Urbano, en lo referido a zonificación, uso, ocupación, subdivisión del suelo, densidad poblacional, morfología edilicia e infraestructura de servicios, así como a la protección de ámbitos del territorio rural y urbano, que por sus características y valores ambientales y patrimoniales así lo requieran.
+I.2 – AMBITO DE VIGENCIA
+Las disposiciones de este Código son de aplicación para la propiedad privada y bienes del dominio público y privado del Estado para las Áreas Urbana y Complementaria de la Ciudad de Saladillo.
+I.3 – DEFINICIONES DE TERMINOS TECNICOS
+Las palabras y expresiones del presente Código tienen los siguientes significados:
+ALTURA DE EDIFICACION:
+Medida vertical de la construcción tomada sobre la línea municipal a partir de la cota ± 0.00 de la acera.
+AMPLIAR:
+Modificar una construcción, aumentando la superficie y/o volumen edificado. Modificar una instalación aumentando la capacidad productiva de la existente.
+AREA COMPLEMENTARIA:
+Zona destinada a la localización de usos agropecuarios intensivos, espacios deportivos y/o recreativos, y ciertas actividades de servicios para las áreas urbanas y rurales.
+AREA RURAL:
+Zona destinada a usos relacionados con la producción agropecuaria extensiva, forestal y otros.
+AREA URBANA:
+Zona destinada a asentamientos humanos intensivos, en la que se desarrollen usos vinculados con la residencia, las actividades terciarias y las de producción compatible.
+BLOQUE:
+Unidad de terreno rodeado de vía pública.
+CENTRO LIBRE DE MANZANA:
+Se denomina Centro Libre de Manzana al espacio libre de edificación definido en forma y ubicación por las líneas de fachada de frente interno.
+CONSERVACIÓN:
+Comprende aquellas obras cuya finalidad es la de mantener, cuidar y salvaguardar un bien cultural, en correctas condiciones de seguridad, habitabilidad, confortabilidad y ornato, con el fin de prolongar su vida útil sin alterar sus características morfológicas, funcionales o de distribución.
+CORREDORES COMERCIALES:
+Espacio destinado a la localización de actividades de prestaciones de servicio al transporte automotor de carga y de pasajeros, las relacionadas a las actividades comerciales, así como de servicios en general vinculadas a los correderos viales.
+DENSIDAD POBLACIONAL NETA:
+Es la relación entre la población de un área o zona y la superficie de sus espacios edificables.
+DENSIDAD POBLACIONAL BRUTA:
+Es la relación entre la población de un área o zona y la superficie total de la misma.
+DISTRITO DE URBANIZACIÓN ESPECIAL:
+Sector urbano destinado a Conjuntos Habitaciones de carácter social a los que se les asignan normas e indicadores específicos.
+
+9
+ESPACIO URBANO:
+Espacio aéreo comprendido entre elementos artificiales y naturales que determinan el ámbito urbano de una ciudad.
+ESPACIO LIBRE URBANO:
+Parte del espacio urbano, que permite la iluminación y ventilación de locales de habitación y trabajo.
+ESTABLECIMIENTOS HABITACIONALES DE USO COLECTIVO:
+Comprende establecimientos tales como asilos, conventos, hogares infantiles y de ancianos. Se incluyen en esta definición los hoteles y pensiones.
+FACTOR DE OCUPACION DEL SUELO (F.O.S.):
+Coeficiente que multiplicado por la superficie total de la parcela establece la superficie máxima que puede ser ocupada con edificación en cada predio.
+FACTOR DE OCUPACION TOTAL (F.O.T.):
+Coeficiente que multiplicado por la superficie total de la parcela establece la superficie cubierta máxima construible en cada predio. El volumen máximo edificable en altura será el resultante de aplicar el FOT
+máximo.
+INDICE DE PERMEABILIDAD (IP):
+Porcentaje de la superficie total de la parcela que establece la superficie mínima libre de todo tipo de construcción, solado o impedimento a la absorción directa de agua por el suelo.
+LINEA DE EDIFICACION:
+Límite o paramento exterior de una construcción.
+LINEA DE FRENTE DE LA PARCELA:
+Línea comprendida entre las divisorias laterales y el límite de la parcela con la vía o lugar público.
+LINEA DIVISORIA DE FONDO DE LA PARCELA:
+La que completa el cierre del polígono definido por las líneas divisorias laterales y la línea de frente.
+LINEA DIVISORIA LATERAL DE LA PARCELA:
+La que intercepta la Línea Municipal o la línea divisoria de fondo.
+LINEA MUNICIPAL (L.M.):
+Línea que deslinda la parcela de la vía pública actual o la línea señalada por la Municipalidad para la futura vía pública. Es la línea que deslinda el dominio público del privado.
+LOCAL:
+Cada una de las partes cubiertas y cerradas en que se subdivide o compartimenta una construcción.
+LOCAL DE 1ra, 2da, 3ra, 4ta o 5ta CLASE:
+Denominación establecida, según el destino o uso de cada parte de una edificación.
+LOCAL DE PRIMERA CLASE:
+Local que debe iluminar y ventilar a espacio libre urbano. Dormitorios, comedores, salas de estar, living-rooms, bibliotecas, estudios, oficinas, comercios y todo otro local habitable.
+LOCAL DE SEGUNDA CLASE:
+Local que puede iluminar y ventilar a espacio libre urbano o a patio de segunda categoría, cuartos de baño, retretes, lavaderos, guardarropas. Las cocinas deben iluminar y ventilar a espacio libre urbano o patio de segunda categoría.
+LOCAL DE TERCERA CLASE:
+Local que puede iluminar artificialmente y puede ventilar a espacio libre urbano o por medios mecánicos que aseguren la renovación del aire y el acondicionamiento de la temperatura y la humedad interior. Locales para depósitos comerciales e industriales, vestuarios y baños colectivos de clubes y asociaciones, gimnasios y demás locales para deportes, galerías comerciales, laboratorio de análisis clínicos, sala de cirugía, sala de rayos x, etc.
+LOCAL DE CUARTA CLASE:
+Escaleras secundarias, pasajes y corredores, vestíbulos, salas de espera anexas a oficinas, vestidores anexos a dormitorios, despensas, depósitos no comerciales, ni industriales, guardacoches, locales auxiliares para servicios generales de una edificación, etc.
+
+10
+LOCAL DE QUINTA CLASE:
+Los locales auxiliares para servicios generales de una edificación y sin valor locativo independiente, como ser: portería, administración, cuarto de máquinas, dependencias del personal de servicio.
+LOCAL HABITABLE:
+El que sea destinado para propósitos normales de habitación, trabajo o permanencia continuada de personas, con exclusión de cocinas, lavaderos, cuartos de baños, retretes, despensas, depósitos, roperos, pasajes, vestíbulos y similares.
+MANZANA:
+Unidad de terreno rodeada de vía pública o traza ferroviaria de superficie comprendida aproximadamente entre 1 y 1 ½ Ha. registrada como tal en la Dirección de Catastro.
+MODULO DE ESTACIONAMIENTO:
+Superficie necesaria para el estacionamiento de un vehículo y su desplazamiento para ingreso y egreso desde y hacia la vía pública.
+NIVEL DE VEREDA:
+Cota de nivel de la vereda medida en el punto medio de la Línea Municipal que corresponde al frente de la parcela.
+NIVEL DE LA PARCELA:
+Plano ubicado como máximo a + 1,50 m. sobre el Nivel de Vereda.
+OCUPACION DEL SUELO:
+Conjunto de normas que regulan la ocupación del suelo, definiendo el volumen edificable máximo sobre cada parcela y las posibilidades de ubicación en la misma.
+PARCELA - PREDIO – LOTE:
+Superficie indivisa de terreno, considerada unidad a los fines de esta reglamentación. Se consideran sinónimos.
+PARCELA PASANTE:
+Aquella conectada por dos frentes opuestos a la vía pública.
+PATIO:
+Es el espacio descubierto y libre de construcciones, que forma parte del espacio urbano, al cual ventilan e iluminan los locales de un edificio.
+PATIO APENDICULAR:
+Es el espacio descubierto, limitado por tres lados construidos, cuyo lado abierto limita con el espacio libre urbano, con el centro libre de manzana y/o patios entre bloques; con dimensiones aptas para la iluminación y ventilación de locales.
+PATIO DE FONDO:
+Es el espacio libre determinado por el retiro voluntario de la edificación de la línea divisoria de fondo producido en todo el ancho de la parcela. Puede coincidir con la superficie afectada a la restricción para conformar centro libre de manzana.
+PATIO DE PRIMERA CATEGORIA:
+Es el espacio descubierto, cuyas dimensiones resultan aptas para iluminar y ventilar locales de primera clase
+(de habitación y trabajo, respectivamente). Se considera como Espacio Libre Urbano.
+PATIO DE SEGUNDA CATEGORIA:
+Es el espacio descubierto, cuyas dimensiones resultan aptas para iluminar y ventilar locales de segunda, tercera y cuarta clase.
+PATIO INTERNO:
+Es el espacio descubierto cerrado en todo su perímetro por construcción o que, estando incorporado por uno de sus lados a otros espacios libres dentro de una parcela, no cumplimente las exigencias en cuanto a dimensiones y mínimos, o relaciones, fijadas en este Código.
+PLANTA LIBRE:
+Defínase como planta libre la totalidad de la superficie de un edificio ubicada en cualquier nivel con dos lados como mínimo abiertos y que no constituya ningún tipo de local habitable.
+
+11
+PRESERVACIÓN:
+Implica toda acción que, sin determinar un modo concreto de intervención, pone a cubierto anticipadamente a un bien cultural para evitar su deterioro y/o destrucción parcial o total.
+PUESTA EN VALOR:
+Incluye las diversas intervenciones posibles para dotar a la obra de las condiciones objetivas y ambientales que, sin desvirtuar sus características, permitan su óptimo aprovechamiento.
+RETIRO DE FRENTE:
+Distancia medida en forma perpendicular a la Línea Municipal que define el espacio libre de edificación en el frente de la parcela.
+RETIRO DE FONDO:
+Distancia medida en forma perpendicular al eje divisorio de fondo, opuesto a la Línea Municipal, que define el espacio libre de edificación en el fondo de la parcela.
+RETIRO LATERAL:
+Distancia medida en forma perpendicular a un eje divisorio lateral que define el espacio lateral libre de edificación.
+RECICLAJE:
+Constituye toda obra dirigida a acondicionar un bien cultural para reiniciar un nuevo período de vida útil, variando su función original.
+RECONSTRUIR:
+Edificar de nuevo y en el mismo lugar lo que antes estaba. Rehacer una instalación.
+REFORMAR:
+Modificar una edificación sin aumentar el volumen edificado. Modificar una instalación sin aumentar la capacidad productiva.
+REFUNCIONALIZACIÓN:
+Significa volver a poner en funcionamiento un bien cultural, sin que implique necesariamente un cambio total de sus funciones.
+REHABILITACIÓN:
+Comprende aquellas obras o intervenciones sobre un bien patrimonial que mejoren sus condiciones de seguridad, habitabilidad, confortabilidad y ornato con el fin de prolongar su vida útil, y/o modifiquen su distribución y/o introduzcan cambios morfológicos neutros o no agresivos en algunos de sus aspectos morfológicos, a fin de posibilitar una nueva puesta en funcionamiento del bien, manteniendo la función original del mismo.
+RENOVACIÓN:
+Comprende toda acción destinada a volver una cosa a su estado original o hacerla nuevamente. Es inadmisible en el campo de la conservación arquitectónica, no así en cambio en términos urbanísticos en los que se concibe la posibilidad de remudar o reemplazar una obra por otra nueva.
+RESTAURACIÓN:
+Comprende aquellas obras que tienen por objeto la restitución del bien o parte del mismo, a sus condiciones o estado original a fin de recuperarlo como bien patrimonial. Es una intervención específica de conservación.
+SERVICIOS PÚBLICOS ESENCIALES:
+Son aquellos sin los cuales resulta inconveniente el normal funcionamiento de una zona y cuya dotación corresponde ser promovida o realizada desde una esfera oficial. La ley provincial 8912/77 define para ampliación de áreas urbanas que los servicios esenciales son: agua corriente, cloacas, pavimentos, energía eléctrica domiciliaria, alumbrado público y desagües pluviales y para zonas residenciales extraurbana de densidad menor a 150 hab/ha: agua corriente, alumbrado público, energía eléctrica, pavimento en vías principales de circulación y tratamiento y estabilización de calles o mejorado en secundarias, desagües pluviales de acuerdo a las características de cada caso.
+SUBDIVISION:
+Cualquier clase de fraccionamiento de lotes, parcelas o predios urbanos o rurales que modifique el catastro.
+
+12
+URBANIZACION:
+Toda subdivisión donde fuera necesario abrir nuevas calles o prolongar las existentes, con el objeto de crear lotes, parcelas o predios.
+USOS DEL SUELO:
+Es la función asignada a las parcelas o unidades de terreno de cada zona con relación a la actividad o conjunto de actividades posibles de desarrollar en las mismas.
+USO PREDOMINANTE:
+Actividad a desarrollar con las máximas posibilidades que contará con el estímulo de la acción oficial y prioridad respecto de los usos complementarios.
+USO COMPLEMENTARIO:
+Actividad a desarrollar destinada a satisfacer los requerimientos de los usos predominantes dentro de la misma parcela o la misma zona.
+USO ADMITIDO:
+Son usos que no son predominantes ni complementarios, pero que pueden localizarse en una zona si están expresamente indicados en las hojas de zona o planillas de uso del suelo.
+USO NO CONFORME:
+Uso no permitido en una zona, pero que constituye un hecho previo a la vigencia de este Código. Según los casos, se adoptarán medidas para neutralizar sus efectos negativos y, si fuese necesario, lograr su erradicación. Su existencia no posibilita el permiso de construcciones o habilitación de otros usos iguales o similares.
+USO CONDICIONADO:
+Uso no conforme cuya subsistencia puede admitirse, determinando pautas y criterios con respecto al control de sus efectos negativos, para no afectar los requerimientos de los usos predominantes y complementarios.
+USO PROHIBIDO:
+Todo lo que no está específicamente permitido. Es una actividad que se considera inaceptable para una zona, y que no puede localizarse bajo ningún concepto.
+USO NO CONSIGNADO:
+Son todos aquellos usos no mencionados expresamente en el listado de usos y que pueden ser resueltos por analogía con otros permitidos en la zona, siempre que por las características de la actividad y por su funcionamiento sean compatibles con la misma.
+USO ESPECÍFICO:
+Se refiere a localizaciones de usos puntuales que no generan zonas, pues no depende de su agrupamiento sino del radio de captación de su actividad.
+VIA PÚBLICA:
+Espacio de cualquier naturaleza abierto al tránsito peatonal o vehicular por la Municipalidad incorporado al dominio público.
+VIVIENDA UNIFAMILIAR:
+Unidad de vivienda que ocupa un lote único con accesos y servicios independientes.
+VIVIENDA MULTIFAMILIAR:
+Dos o más unidades habitacionales en una parcela, que pueden tener acceso independiente o bien, el acceso y circulación interna de distribución a cada vivienda es común a todas o varias de ellas, y/o también son comunes los servicios de infraestructura (electricidad, gas, desagües, agua).
+ZONA:
+Polígono territorial delimitado que se pretende consolidar con características homogéneas al cual se le asignan usos y factores de ocupación del suelo, densidad poblacional, dimensiones mínimas de parcelas, características morfológicas y servicios públicos esenciales.
+ZONIFICACION:
+Delimitación de zonas o polígonos territoriales que se caracterizan por su uso, grado de ocupación y subdivisión del suelo, dotación de servicios de infraestructura, morfología y densidad de población.
+
+13
+I.4 – ABREVIATURAS
+Las abreviaturas utilizadas en el presente Código, tienen los siguientes significados:
+D.E.: Departamento Ejecutivo
+O.T.M.: Oficina Técnica Municipal
+A.A.: Autoridad de Aplicación
+L.M.: Línea Municipal
+L.E.: Línea de Edificación
+L.D.L.: Línea Divisoria Lateral
+F.O.T.: Factor de Ocupación Total
+F.O.S.: Factor de Ocupación de Suelo
+D.B.: Densidad Bruta
+D.N.: Densidad Neta
+H. máx.: Altura máxima
+Hab.: Habitante m.: Metro lineal m2: Metro cuadrado
+Ha.: Hectárea
+E.I.A.: Estudio de Impacto Ambiental
+E.I.U.: Estudio de Impacto Urbanístico
+
+14
+CAPITULO II
+TRAMITACIONES
+
+15
+II.1 – RESPONSABILIDADES Y SANCIONES
+Estarán sometidas al cumplimiento de este Código las personas físicas y jurídicas, públicas o privadas, con la única excepción de razones de seguridad y defensa según lo establecido en el Art. 4 de la Ley Nº8912/77
+y su Decreto Reglamentario Nº1549/83.
+II.2 - OBLIGACIONES DE LOS PROPIETARIOS, PROFESIONALES, CONSTRUCTORES
+Y EMPRESAS
+Todo propietario, profesional, constructor o empresa constructora al estar comprendidos en el alcance de este
+Código, deben tener conocimiento de las condiciones que en él se exigen, quedando sujetos a las responsabilidades que se deriven de su aplicación. Serán responsables de las construcciones sin permiso o modificaciones en obra de planos aprobados que se opongan a las normas establecidas en el presente
+Código. Se consideran responsables de la documentación los profesionales actuantes y los propietarios.
+II.3 - SANCIONES
+Las sanciones a aplicar a los infractores del presente Código, serán las establecidas en los Artículos 93º a
+97º del Título V de la Ley 8912/77, reglamentadas por la Municipalidad, e ingresarán a la cuenta Fondo de
+Desarrollo Urbano.
+El Departamento Ejecutivo Municipal podrá imponer multas, medidas accesorias y disponer la suspensión de obras, remoción y demolición o adecuación de construcciones erigidas indebidamente.
+Cuando fuere responsable de la infracción algún profesional, la autoridad municipal competente enviará los antecedentes al Consejo o entidad profesional respectiva, a los efectos de su juzgamiento. Podrá disponerse independientemente de ello la exclusión del infractor en las actuaciones donde se constate la falta. Serán solidariamente responsables por las infracciones cometidas propietarios, empresas promotoras o constructoras y profesionales, en su caso.
+II.4 – CERTIFICADO URBANISTICO (CU)
+Será obligatorio requerir este certificado para usar una parcela, edificio, estructura, instalación o parte de ellos, con destino a cualquier uso del suelo y para efectuar subdivisiones de acuerdo al modelo obrante.
+La solicitud especificará: a) Nombre y apellido del peticionante.
+b) Ubicación de la parcela.
+c) Medidas y superficie de la parcela.
+d) Superficie cubierta existente y/o a proyecta.
+e) Especificaciones de la actividad a desarrollar o del parcelamiento a realizar.
+f) Todo otro dato que la O.T.M considere necesario para la evaluación del uso que se desea desarrollar.
+La solicitud tendrá el carácter de declaración jurada y como tal se hallará sujeta a sanciones en caso de falseamiento de datos, tergiversación y/u omisión.
+En caso de ser aprobada la solicitud, se extenderá el certificado urbanístico, que tendrá una validez de 60
+días desde su otorgamiento.
+No se admitirá el inicio de ningún trámite que no cuente con el Certificado Urbanístico aprobado.
+II.5 - CERTIFICADO DE SUBSISTENCIA DE ACTIVIDADES NO INDUSTRIALES
+Todos los edificios y/o instalaciones donde la actividad que en ellos se desarrolla no se encuadre dentro de los usos permitidos para la zona en que se emplazan según especificaciones de este Código, pasarán a constituir usos no conforme. Los casos que no cuenten con permiso de localización regularizada, deberán gestionar el certificado de subsistencia, que será otorgado por la O.T.M posteriormente a la evaluación de situación respecto a instalaciones y/o funcionamiento.
+Si a un uso no conforme se lo considera inadmisible por el grado de incompatibilidad con la zona en que se halle emplazado, constituirá un uso prohibido, debiendo la O.T.M. determinar en cada caso, el
+
+16
+acondicionamiento de instalaciones que se requiere para evitar molestias a la población circundante y establecer un plazo, acorde a las características de la actividad, para su definitiva erradicación.
+II.6 - CONSTANCIA DE ZONIFICACIÓN
+En la intervención que le compete a la Municipalidad previa a la transferencia de dominio, se dejará constancia, mediante la expedición del correspondiente Certificado Urbanístico, de la norma de zonificación que lo afecta con los correspondientes indicadores urbanísticos y/o de su condición de edificio o uso no conforme.
+II.7 - LIMITACION A LA VALIDEZ DE LOS TRÁMITES Y/O PERMISOS DE
+CONSTRUCCION OTORGADOS CON ANTERIORIDAD A LA PUESTA EN VIGENCIA
+DEL PRESENTE CODIGO
+Los trámites o actuaciones relativos a proyectos de obra que cuenten con fecha cierta de iniciación anterior a la vigencia del presente Código, que hubieren cumplimentado todos los recaudos, se regirán por las disposiciones que poseía la municipalidad al momento de la presentación.
+Los permisos de construcción otorgados caducarán automáticamente si no se diera inicio a la obra dentro de los 180 días contados a partir de la fecha de puesta en vigencia del presente Código. Pasado ese lapso deberán adecuarse, si correspondiere, a las exigencias de la presente reglamentación.
+Todo proyecto de construcción o reconstrucción total o parcial que afecte por lo menos al 60% de la superficie cubierta existente, deberá ajustarse a las normas del presente Código. Para todos los casos de reconstrucción parcial la O.T.M., en función de la índole del proyecto presentado, podrá exigir la cumplimentación de alguno o todos los indicadores correspondientes a la zona.
+Los proyectos de ampliación de edificios existentes aprobados según normas anteriores a la vigencia de la
+Ley Nº8912 y/o al presente Código podrán ser admitidos, para el caso de que ya estén excedidos de los valores admisibles por la aplicación del F.O.S. si no aumenta la ocupación en planta o se respetan los topes máximos de F.O.T. y densidad poblacional, y se cumplen las siguientes condiciones: a) Que la construcción tenga planos aprobados o empadronados.
+b) La superficie cubierta a adicionar no sea mayor que la construida.
+c) No se amplíe la superficie cubierta en las plantas existentes que superen el F.O.S. admitido y se respete el valor máximo de las plantas superiores.
+d) Las obras a ejecutar no desmejoren las condiciones de ventilación e iluminación de la construcción existente.
+Los proyectos de reformas de edificios existentes podrán mantener la ocupación y uso existentes autorizados con anterioridad a la vigencia de este Código, quedando a criterio de la O.T.M la exigencia de complementación de algunos de los indicadores urbanísticos, excepto para uso industrial que se rige por la
+Ley Nº11.459/93 y su reglamentación.
+En los casos de transformación de edificios existentes se utilizará el siguiente método: a) La ocupación del suelo y morfología se regirá por lo establecido para los casos de reconstrucción o reforma según le corresponda.
+b) El cambio de destino (en el caso de que se tratara de la transformación de un uso condicionado o prohibido)
+podrá ser admitido por la O.T.M. para la localización de otro uso no permitido de grado de incompatibilidad menor, si fueran aprovechadas por lo menos el 60% de la superficie cubierta e instalaciones existentes.
+II.8 CATEGORIZACION Y APTITUD AMBIENTAL PARA USO INDUSTRIAL
+Toda actividad industrial existente o a instalarse, deberá solicitar Categorización y Certificado de Aptitud
+Ambiental si correspondiere, de acuerdo a lo establecido en la Ley 11.459/93 y el Decreto Reglamentario
+Nº1.741/96.
+A los fines específicos de la aplicación de la Ley N.º 11.459/93 y el Decreto Reglamentario Nº1.741/96, regirá la homologación de zonas previstas en el presente Código, Capítulo IV, inciso 1
+II.9 EVALUACION DE IMPACTO
+Deberán presentar estudio de impacto todos aquellos proyectos cuya exigencia esté establecida por la Ley
+Provincial de Medio Ambiente 11.723, por el presente Código, y en todos los casos que la autoridad de aplicación municipal lo considere necesario por considerar que la actividad podría generar cierto riesgo o molestia al medio y la población circundante, presunción que deberá ser fundamentada técnicamente.
+
+17
+La evaluación de impacto será aprobada por la Autoridad Provincial de competencia o por la Municipalidad según corresponda.
+Los estudios de impacto con resultado negativo serán rechazados, excepto que se propongan medidas de mitigación que aseguren la corrección de esos efectos. En todos los casos de instalaciones con potencialidad o riesgo de contaminación, se deberá establecer el sistema de monitoreo y control permanente.
+II.9.1 EVALUACIÓN DE IMPACTO URBANO (EIU)
+Se exigirá un Estudio de Impacto Urbano en los siguientes casos, aun cuando las propuestas encuadren dentro de la normativa vigente: a) Complejos deportivos en parcelas mayores a dos mil metros cuadrados (2.000 m2) salvo en zonas de esparcimiento. Estadios deportivos ubicados en cualquiera de las zonas admitidas por este código.
+b) Depósitos en parcelas mayores a cinco mil metros cuadrados (5.000 m2) ubicados dentro del Área
+Urbana c) Estaciones de servicio con expendio de combustible, líquido o gaseoso.
+d) Emprendimientos habitacionales o de equipamiento que a juicio de la O.T.M. impliquen una alteración del medio natural, de la morfología existente en el entorno, de los flujos circulatorios y del transporte.
+e) Galerías y centros comerciales ubicados en cualquier zona del Área Urbana con una superficie de parcela igual o mayor a dos mil quinientos metros cuadrados (2.500 m2) y/o superficie cubierta de quinientos metros cuadrados (500 m2), según lo dispuesto por la Ley Provincial 12.573 (o Ley provincial 12.088) y sus reglamentaciones y/o modificaciones.
+f) Supermercados con una superficie cubierta igual o mayor a quinientos metros cuadrados (500 m2), según lo dispuesto por la Ley Provincial 12.573 y sus reglamentaciones o modificaciones.
+g) Parques de diversiones, complejos de entretenimiento, de esparcimiento nocturno con instalaciones preparadas para mega-eventos, salones de convenciones, de recepción y fiestas, y complejos de múltiples salas de cine.
+Presentación del EIU
+La presentación de un Estudio de Impacto Urbano constará de la siguiente documentación: a) Nota de presentación firmada por el propietario o persona debidamente autorizada por el mismo y por el profesional actuante.
+b) Copia de la plancheta catastral y subdivisión prevista si la hubiera.
+c) Plano de subdivisión aprobado por autoridad provincial competente, en los casos que corresponda.
+d) Antecedentes de construcción y/o habilitación si los hubiera.
+e) Informe con relevamiento del entorno de los siguientes aspectos:
+Usos del suelo por parcela con identificación de la parcela objeto de la intervención, incluidos los de las manzanas frentistas al sitio de emplazamiento. En el caso de predios incluidos en el área complementaria se deberá definir los usos del suelo existentes en un radio de 500 m. de la parcela objeto de la intervención.
+Alturas de edificación existentes en cada parcela, incluyendo las manzanas aledañas frentistas. En los casos de intervenciones colindantes a inmuebles declarados como patrimoniales o a preservar, definición de criterios compositivos (alturas, retiros, etc.) para su mejor integración.
+Retiros de edificación (frente y lateral) existentes en cada parcela.
+Fotograma de la manzana, si lo hubiera, a fin de determinar afectación de fondos libres existentes y patios.
+Anteproyecto: plantas, cortes y vistas.
+Foto de maqueta volumétrica, o volumetría que incluya las construcciones de las manzanas.
+f) Esquema de circulación peatonal y vehicular. Tratamiento de calles de acceso en los casos que corresponda. Memoria descriptiva detallando la resolución de los distintos aspectos conflictivos, según el caso
+(acceso, estacionamiento, carga y descarga, etc.).
+g) Esquema de servicios públicos previstos en casos de ser necesarias extensiones de redes existentes.
+En el caso de inexistencia de redes, memoria detallando servicios a proveer y forma de eliminación de excretas.
+h) Parquización de espacios abiertos, arbolado urbano y tratamiento del espacio público.
+i) Condiciones de seguridad previstos para el desarrollo de la actividad (incendio, siniestros, etc.).
+j) Matriz de Evaluación de Impacto.
+k) Informe final. Recomendaciones. Medidas de mitigación previstas.
+
+18
+II.9.2 EVALUACIÓN DE IMPACTO AMBIENTAL (EIA)
+Se exigirá Estudio de Impacto Ambiental en todos aquellos casos en que la O.T.M considere que puede afectarse potencialmente los recursos agua, suelo, aire, flora y fauna del lugar, las condiciones del medio físico (usos actuales existentes en el entorno, preexistencias, etc.) o el medio social (consecuencias positivas y negativas sobre la población existente en el entorno).
+Presentación del EIA
+La presentación de un Estudio de Impacto Ambiental constará de la siguiente documentación: a) Nota de presentación firmada por el propietario o persona debidamente autorizada por el mismo y por el profesional actuante.
+b) Copia de la plancheta catastral y subdivisión prevista si la hubiera.
+c) Plano de subdivisión aprobado por autoridad provincial competente, en los casos que corresponda.
+d) Antecedentes de construcción y /o habilitación si los hubiera.
+e) Memoria descriptiva de la actividad a desarrollar detallando cuestiones relativas a consumos, operación, transporte, disposición de elementos, etc., así como la resolución de los distintos aspectos conflictivos, según el caso (acceso, estacionamiento, carga y descarga, etc.).
+f) Anteproyecto de las instalaciones: plantas, cortes y vistas de instalaciones cubiertas y semi-cubiertas que se han previsto.
+g) Esquema de circulación peatonal y vehicular. Tratamiento de calles de acceso en los casos que corresponda.
+h) Esquema de servicios públicos previstos en casos de ser necesarias extensiones de redes existentes.
+En el caso de inexistencia de redes, memoria detallando servicios a proveer y forma de eliminación de excretas.
+i) Consumos previstos: energía, agua, otros y disponibilidad en el sitio de emplazamiento.
+j) Parquización de espacios abiertos, arbolado urbano y tratamiento del espacio público.
+k) Condiciones de seguridad previstos para el desarrollo de la actividad (incendio, siniestros, etc.).
+l) Construcción de Matriz de Impacto considerando la afectación al medio natural (agua superficial y subterránea, suelo, topografía, aire, flora, fauna, paisaje), al medio construido y al medio social.
+m) Medidas de mitigación previstas.
+
+19
+CAPITULO III NORMAS
+GENERALES
+
+20
+III.1 – SUBDIVISION DEL SUELO
+III.1.1. CRITERIO GENERAL
+La subdivisión de la tierra se ajustará a lo establecido en la Ley N.º 8912/77, Capítulo III, y en el Decreto
+Reglamentario N.º 1.549/83 para cada una de las Áreas Urbana, Complementaria y Rural, conforme a los lineamientos fijados en el presente capítulo.
+III.1.2. SUBDIVISIÓN EN LAS ÁREAS URBANAS Y COMPLEMENTARIAS
+Las subdivisiones en las áreas urbanas y complementarias se regirán por lo establecido en este Código para cada zona en particular. En áreas urbanas se admiten las subdivisiones de manzana y/o manzanas existentes sin parcelar o parcialmente parceladas, cuando se cumplan los siguientes requisitos:
+• Se asegure la dotación de agua corriente potable y que la eliminación de excretas no contamine la fuente de aprovisionamiento. Cuando la zona esté servida por red o ésta pase por el límite de la manzana deberá efectuarse la extensión correspondiente.
+• En los casos en que la O.T.M. considere necesario, el organismo técnico provincial de competencia deberá certificar la Aptitud Hidráulica del (de los) predio(s).
+• Cuando se realice un conjunto habitacional en manzanas ya creadas será obligatoria la ejecución de la infraestructura de servicios esenciales requeridos para la Zona de pertenencia.
+• Realización de las obras solicitadas por la O.T.M.
+III.1.3 SUBDIVISIÓN EN ÁREAS RURALES
+En áreas rurales las parcelas no podrán ser inferiores a una unidad económica de explotación extensiva o intensiva y sus dimensiones mínimas serán determinadas en la forma establecida por el Código Rural, como también las de aquellas parcelas destinadas a usos complementarios de la actividad rural.
+III.1.4. NUEVOS AMANZANAMIENTOS
+Los nuevos amanzanamientos deberán integrarse armónicamente a la trama de las zonas circundantes. Para los sectores a subdividir circundados por fracciones amanzanadas en tres o más de sus lados, la O.T.M.
+exigirá que se respeten las dimensiones y/o características de la trama existente.
+La O.T.M. será la responsable en la determinación mediante estudio particularizado, de la estructura general del trazado y localización de reservas correspondientes a las zonas de Reserva para Ampliación Urbana, así como de las respectivas etapas para su habilitación.
+III.1.5. APERTURA DE CALLES
+Todo proceso de ampliación urbana, materialización del uso urbano, parcelamiento de fracciones o chacras ubicadas en el área urbana o en el área complementaria, y/o localización de actividades o ejecución de obras, deberá efectuar las cesiones obligatorias a la Municipalidad para apertura de calles y reservas para espacios verdes y equipamiento comunitario.
+Cuando una modificación del fraccionamiento produzca la creación de una o más calles, éstas tendrán los anchos mínimos que establece el Artículo 12º de la Ley Nº8.912/77 y el Decreto Reglamentario 1.549/83, según su longitud.
+Cuando sea continuación de las calles existentes o avenidas, conservarán su misma dimensión, excepto que sean inferiores a los anchos mínimos o el Código determine otro ancho.
+La O.T.M. determinará con precisión la superficie a ceder en cada caso, para asegurar la traza, el ancho y la superficie mínima de cada cesión. La afectación para futuras calles corresponde a las siguientes situaciones: a) Apertura de nuevas calles completando el perímetro de manzanas existentes.
+b) Ensanche de calles existentes para conformación de anchos totales en casos de medias calles existentes y de diferencias de ancho, para lograr las dimensiones mínimas establecidas por este Código.
+c) Incorporación de nuevas manzanas o bloques en Zonas de Expansión Urbana.
+d) Materialización del uso en fracciones ubicadas en el área urbana, complementaria o rural, según lo establecido en el presente Código y los artículos 2º y 3º del Decreto 1.549/83.
+Las restricciones al dominio significan, además de la afectación al uso futuro de calle pública, la prohibición de realizar edificaciones sobre las trazas de afectación definidas y la obligatoriedad de ceder gratuitamente a la Municipalidad su superficie, al momento de efectuar mensura y/o mensura y división, o materialización del uso.
+
+21
+III.1.6. PARCELAMIENTO
+Las dimensiones mínimas de parcelas serán las determinadas para cada zona, conforme a lo establecido en el presente Código. En todos los casos la relación entre ancho y fondo de parcela no será inferior a un tercio
+(1/3).
+En ninguna zona se permitirán las subdivisiones que alteren las condiciones de frente y superficies fijadas para cada una de ellas.
+Las parcelas deberán ser preferentemente de forma rectangular; cuando no pueda serlo por razones de trazado o por situaciones de hecho, deberán cumplir con los siguientes requisitos:
+1) El promedio ponderado de sus anchos no deberá ser inferior al ancho mínimo exigido en la zona.
+2) El frente no debe ser inferior a doce (12) metros.
+3) La superficie de la parcela deberá ser apta (por su forma y dimensiones) para el adecuado desarrollo de un proyecto que utilice los valores máximos de los indicadores urbanísticos de la zona, considerando las restricciones que la pudiera afectar.
+Podrá admitirse la creación de parcelas de dimensiones menores que las establecidas para la zona respectiva, con el fin de anexarlas a lotes linderos, cuando la operación tenga por objeto: a) Sanear un título afectado por una invasión de linderos materializada por una construcción de difícil y costosa remoción.
+b) Evitar que entre los edificios construidos en lotes linderos queden espacios que conformen pasillos de dimensiones menores a las exigidas en los reglamentos de construcción.
+c) Corregir una baja relación frente - fondo, entendiendo por tal a la relación inferior a 1/3. En estos casos el lote remanente deberá mantener la superficie mínima establecida para la zona.
+d) Transferir superficies entre lotes linderos para permitir soluciones que desde el punto de vista urbanístico sean superiores o equivalentes a la anterior.
+Solo se permitirá crear parcelas interiores sin salida a la vía pública cuando tengan por objeto incorporarse a una parcela lindera, pero siempre que no se originen quiebres o martillos que representen una inconveniente solución urbanística. La parcela remanente deberá tener superficie mínima establecida para la zona.
+Al subdividir parcelas edificadas (con o sin plano de construcción previamente aprobado) las parcelas resultantes deberán cumplir con la densidad, los factores de ocupación del suelo y ocupación total y las dimensiones mínimas de parcelas admitidas en la zona. La relación máxima entre ancho y fondo de un tercio
+(1/3), no será obligatoria en todos los casos de subdivisión de manzanas y macizos existentes, lo mismo que los que se creen de iguales dimensiones a fin de dar continuidad a la trama urbana del sector circundante.
+III.1.7. COTA DE PISO
+La determinación de la cota de piso para construcciones permanentes será determinada por la O.T.M. Quedan prohibidos los rellenos y/o movimientos de suelos en las parcelas de dominio privado que no cuenten con autorización expresa de la O.T.M. En los casos que los mismos se requieran, el propietario deberá elevar una solicitud donde consten en forma detallada los trabajos a realizar. Las tareas que, eventualmente, se autoricen serán controladas mediante la respectiva inspección municipal. En caso de no solicitar autorización, o de no respetar lo determinado por la OTM se procederá a la sanción correspondiente.
+III.1.8. ZONAS DE CRECIMIENTO URBANO
+Las zonas o sectores de Expansión Urbana previstos son:
+1- Las manzanas creadas ubicadas en áreas urbanas que no se encuentran parceladas.
+En las manzanas creadas la autorización es automática, si se cumplen las exigencias generales para presentación de planos y si no estuvieran realizadas con anterioridad la ejecución de obras de apertura de calles, resolución de desagües pluviales y provisión de servicios esenciales existentes en el entorno.
+2- Las Reservas para Expansión Urbana (REU) establecidas en la Zonificación.
+Para los sectores denominados REU se podrán solicitar normas especiales para realización de proyectos urbanísticos integrales, que incluyan la ejecución de la totalidad de las edificaciones e infraestructura de servicios urbanos. La aprobación de normas especiales tendrá que estar fundamentada en un estudio particularizado del proyecto y su impacto urbanístico en el entorno, y garantice la compatibilidad con los
+
+22
+lineamientos de desarrollo urbano establecidos. La magnitud de las cesiones y obras de infraestructura de servicios se calcularán en base a la población a localizar o las demandas específicas de los usos a emplazar, en caso que esas cesiones resulten superiores a las establecidas para la zona.
+Para Sectores de REU son de aplicación los Artículos 16º, 17º y 18º del Decreto Ley Nº8.912/77. Dicha situación será verificada por la O.T.M. ante la propuesta de un particular o si la Municipalidad promueve ante los particulares la incorporación, por necesidad emergente de demandas reales de desarrollo urbano.
+La declaración de Zona de Reserva para Expansión Urbana definida en el Código de Ordenamiento Urbano significa que constituyen sitios planificados para crecimiento urbano y en principio presentan condiciones de aptitud. Resta establecer la oportunidad de proceder a la ampliación, certificar la aptitud hidráulica de los predios, y verificar la factibilidad de cumplimiento de las exigencias establecidas.
+La autorización para las ampliaciones queda sujeta a:
+• Realización de estudio de situación de las zonas linderas, particularmente en cuanto a ocupación de suelo.
+• Diseño particularizado según Lineamientos del presente Código.
+• Factibilidad técnica y cumplimiento de exigencias en materia de cesiones obligatorias, apertura de calles, y ejecución de infraestructura de servicios esenciales, prevista para la zona, según lo establecido en
+III.1.2.
+La Localización definitiva de las cesiones, su superficie, dimensionado e infraestructura será determinado por las áreas técnicas municipales. Corresponde la apertura de calles y ejecución de las obras de infraestructura de servicios esenciales a cargo del promotor o propietario.
+Para proyectos integrales deberá establecerse una garantía de ejecución, caución, seguro u otro, que permita a la Municipalidad dar continuidad a las obras en caso de impedimento eventual del propietario garantizar así la incorporación del conjunto a efectivo uso urbano.
+III.1.9. CESIONES
+III.1.9.1. Obligación de los propietarios
+En el momento de la efectiva incorporación al área urbana de las zonas de ampliación establecidas, y en parcelamientos de fracciones o materialización del uso urbano (Art. 4º Decreto 1549/83) que no hayan efectuado cesiones obligatorias registradas en el plano antecedente, y en reestructuraciones dentro del área urbana, los propietarios de los predios involucrados cederán gratuitamente a la Municipalidad las superficies destinadas a los espacios circulatorios, verdes y libres públicos y a reservas para la localización de equipamiento comunitario de uso público, de acuerdo con los mínimos establecidos en el artículo 56º de la
+Ley 8.912/77, en el Decreto 1.549/83 y las reglamentaciones particulares del presente Código.
+III.1.9.2 Parcelamiento de manzanas preexistentes
+Para el caso de manzanas originadas con anterioridad a la Ley 8.912/77 se exigirán cesiones a partir de una superficie mínima a subdividir de 10.000 m2, compensándose la densidad neta y el F.O.T máximo según lo indica el artículo 57º de la Ley 8.912/77. Las cesiones en este caso se asimilarán a reestructuración de áreas urbanas, correspondiendo la cesión de un 10% de la superficie a subdividir para espacio verde y el 4% de reserva para equipamiento comunitario.
+Asimismo, se exigirán cesiones de calles si las mismas no contaran con los anchos mínimos establecidos por el presente Código.
+III.1.9.3 Subdivisiones linderas a cursos o espejos de agua
+Todos los predios que, estando incluidos en las zonas de ampliación urbana establecidas, limiten con cursos o espejos de agua permanentes, naturales o artificiales, quedan sujetos al cumplimiento de la cesión establecida en el Art. 59º de la Ley 8.912/77 y su Decreto Reglamentario Nº1549/83, a materializarse en el momento de su efectiva incorporación al área urbana.
+III.1.9.4 Conservación de desagües naturales
+Quedan sujetos al cumplimiento de la restricción establecida en la Ley Nº6.253/60, de Conservación de
+Desagües Naturales y su Decreto Reglamentario Nº11.368/61, todos los predios incluidos en las Áreas urbanas, Residenciales Extraurbanas y Complementarias definidas por este Código.
+
+23
+III.1.10. PROPAGANDA
+Para proceder a la venta de tierra se exigirá al vendedor la exhibición del plano de subdivisión aprobado, el número y fecha de aprobación o la escritura pública que lo certifique, así como todas las restricciones que lo afecten surgidas del presente Código. Aplicándose en caso de incumplimiento las sanciones correspondientes.
+Igual criterio se exigirá para cualquier operación tendiente a la venta de bienes inmuebles en general.
+Para efectuar la publicidad respectiva se controlará el estricto cumplimiento del Dto. Ley Provincial Nº9078/78
+y su modificatoria N.º 9240/79 que rigen la materia.
+III.1.11 RÉGIMEN DE PROPIEDAD HORIZONTA
+Será de aplicación el régimen de Propiedad Horizontal dispuesto por el Código Civil y Comercial de la Nación
+(Título V, Libro Cuatro), exclusivamente para la subdivisión de edificios y casos expresamente admitidos en esa legislación. No será de aplicación para crear parcelamientos o urbanizaciones en las zonas que no admiten vivienda multifamiliar.
+En áreas Complementaria y Rural se permitirá una vivienda unifamiliar por parcela con el número de dormitorios que corresponda a las necesidades del núcleo familiar de su titular, en el marco del art. 37° DL
+8912/77 y su reglamentación, más los locales y/o dependencias complementarias a la misma, constituyendo una unidad funcional inescindible. Esta condición será incorporada como anotación en la carátula en todos los planos municipales de visado y/o aprobación de construcción en dichas áreas.
+El resto de los parcelamientos se rigen exclusivamente por el régimen de la Ley N.º 8.912/77 y normas complementarias, de la aprobación municipal y de la Dirección de Geodesia de la Provincia de Buenos Aires.
+III.1.12 PARCELAS MENORES
+En todas las parcelas pertenecientes a las áreas rurales y complementarias que no estén afectadas como
+Corredor de Servicio de Ruta, sólo se autorizará la creación de parcelas de dimensiones inferiores a la unidad económica de explotación establecida para el uso dominante, siempre que se cumplimenten la totalidad de los recaudos establecidos en el Artículo 7º del Decreto N.º 1.549/83, y que constituya un único desmembramiento de la parcela de origen y su uso se corresponda con actividades agropecuarias extensivas o intensivas.
+La OTM será responsable de la evaluación de los casos de creación de parcelas inferiores a la unidad económica de explotación del Área Rural, y de la verificación efectiva de la materialización de dicho uso.
+III.2 – MORFOLOGIA URBANA
+III.2.1 OCUPACIÓN DEL SUELO
+Para cada zona el presente Código establece los indicadores urbanísticos que regularán la ocupación del suelo en términos de intensidad máxima admitida. Estos son el Factor de Ocupación del Suelo (F.O.S.), el
+Factor de Ocupación Total (F.O.T.), el índice de permeabilidad (I.P.), la Densidad Poblacional Neta, y la
+Superficie Cubierta Mínima por persona.
+III.2.2 FACTOR DE OCUPACIÓN DEL SUELO (F.O.S.)
+Se denomina Factor de Ocupación del Suelo a la relación entre la superficie máxima del suelo ocupada por el edificio y la superficie de la parcela.
+A los efectos del cálculo del FOS deberá considerarse la proyección del edificio sobre el terreno, computando las superficies cubiertas y semi-cubiertas.
+Será computable para el F.O.S.: a) La superficie edificada por sobre el nivel de la parcela.
+b) La superficie conformada por voladizos, aleros, balcones o salientes que superen los 0.80 metros medidos desde el plano límite de la edificación.
+F.O.S. = Superficie máxima del suelo ocupada por el edificio (CUB+S/CUB) ≤ FOS MAX
+Superficie Lote según zona
+
+24
+III.2.3 FACTOR DE OCUPACIÓN TOTAL (F.O.T.)
+Se denomina Factor de Ocupación Total a la relación entre la superficie cubierta máxima edificable y la superficie de la parcela.
+Se considera superficie cubierta edificable en una parcela, a la suma de todas las áreas cubiertas en cada planta, ubicadas por encima del nivel de la parcela, incluyendo espesores de tabiques, muros interiores y exteriores.
+A los efectos del cómputo del F.O.T., no será considerada como superficie cubierta la correspondiente a: a) La superficie conformada por voladizos, aleros, balcones o salientes hasta 0.60 metros medidos desde el plano límite de la edificación; y la superficie de aquellos locales cuya cota superior de techo sea igual o inferior a +1.50 metros respecto a la cota de parcela.
+b) Locales complementarios tales como sala de máquinas, tanques, lavaderos y depósitos ubicados en azoteas, siempre y cuando en su conjunto no superen una superficie equivalente al 50% de la superficie de la azotea, cocheras semicubiertas u otro espacio destinado a servicio común que sea complementario al uso preponderante.
+c) La planta libre, entendiéndose por tal a la totalidad del edificio ubicada en cualquier nivel, con dos lados mínimos abiertos, y que no constituya ningún tipo de local habitable.
+d) Hall central de acceso y distribución, circulaciones comunes, escaleras, ascensores, conductos de ventilación, montantes de cañerías e instalaciones para el encargado, ayudante, suplente u otro espacio común destinado al uso del personal de servicio y/o de los ocupantes del edificio.
+F.O.T. = Superficie máxima edificada (CUB de todos los niveles) ≤ FOS MAX
+Superficie Lote según zona
+III.2.4 INDICE DE PERMEABILIDAD (I.P.)
+La superficie libre que resulte de la aplicación del FOS, deberá destinarse, de acuerdo a los porcentajes de
+IP determinados en las respectivas Hojas de Zona, a terreno natural absorbente, forestado y parquizado, libre de toda edificación.
+III.2.5. DENSIDAD POBLACIONAL NETA
+Se denomina Densidad Poblacional Neta a la relación entre la población de una zona y la superficie de sus espacios edificables, es decir, libre de los espacios circulatorios y verdes públicos.
+DENSIDAD MAXIMA. = Indicador s/ Zona X Superficie Lote = N° HABITANTES
+10.000
+Para cada zona el presente Código establece la densidad poblacional neta. La aplicación de las densidades establecidas se hará con independencia de la resultante de las edificaciones existentes y será de aplicación para cada parcela motivo de nuevas construcciones.
+Se utiliza la densidad para distribuir racionalmente la población. En la aplicación se verificará la densidad neta resultante por parcela (según el método que se explicita en los párrafos siguientes), solo cuando se realice más de una unidad de vivienda por parcela, se trate de proyectos de algún tipo de vivienda colectiva, o en zonas carentes de servicios para usos puntuales que puedan generar riesgo de contaminación.
+“Según Ord. Municipal 26/14, Cap. 39: Cuando el uso es no residencial, la resultante indica la cantidad de habitantes que será distribuido un habitante cada 20m2.”
+Las densidades netas para usos distintos del residencial se regirán por el Art. 41º del Decreto N.º 1549,
+Reglamentario de la Ley N.º 8912/77.
+
+25
+III.2.5.1 Densidad potencial
+Tendrán carácter de densidades netas potenciales las establecidas en este Código que superen los 150
+hab./Ha, para las zonas que no cuenten todavía con el servicio de desagües cloacales en funcionamiento, así como las superiores de 130 hab./Ha, cuando la zona no cuente con servicio de agua corriente y desagües cloacales.
+En los casos que las obras de provisión de las redes de servicios mencionados se hallen licitadas, podrán aprobarse planos de obra calculados con la densidad potencial, pudiendo realizarse las fundaciones correspondientes al total de la obra.
+Para los casos en que la provisión de la o las redes se hallen en ejecución se podrá realizar el total de la obra proyectada y aprobada, no pudiendo ser habilitada hasta tanto no entren en funcionamiento los servicios en cuestión.
+III.2.5.2. Cantidad Máxima de personas por parcela
+Para determinar la cantidad máxima de personas por parcela se utilizará la siguiente fórmula:
+NÚMERO DE HABITANTES = SUPERFICIE DE LA PARCELA (m2) por DENSIDAD NETA (hab./m2) Se tomará la densidad neta de la zona reducida a m2.
+A efectos de establecer la cantidad de personas que pueda alojar un edificio se computarán dos personas por dormitorio. Si la unidad fuera de un (1) solo ambiente se computarán dos (2) personas. La fracción impar del número de personas por parcela, permitirá la realización de un dormitorio más.
+III.2.5.3 Cantidad máxima de viviendas por parcela
+Para las zonas que carezcan de agua corriente y cloacas podrá realizarse una (1) vivienda unifamiliar por parcela correspondiente al grupo familiar, o el equivalente de una (1) vivienda cada trescientos metros cuadrados (300 m2) de superficie.
+Para las zonas donde se permita la vivienda multifamiliar el número de unidades será la que surja de la densidad establecida.
+III.2.6. SUPERFICIE CUBIERTA MÍNIMA POR PERSONA
+Se establece la superficie cubierta mínima por persona según el siguiente cuadro:
+VIVIENDA UNIFAMILIAR Hasta 2 ambientes: 15 m2/persona
+Más de 2 ambientes: 12 m2/persona
+VIVIENDA MULTIFAMILIAR O
+COLECTIVA
+Hasta 2 ambientes: 18 m2/persona
+Más de 2 ambientes: 15 m2/persona
+III.2.7. VOLÚMENES EDIFICABLES
+Las características de los volúmenes edificables quedan definidas en las hojas de zona, respondiendo a las posibilidades de las subdivisiones existentes y a la conformación morfológica de cada zona.
+III.2.8. ALTURA MÁXIMA
+La altura máxima de edificación queda definida en las correspondientes hojas de zona. Quedará a criterio de la O.T.M., la aprobación de proyectos que superen la altura máxima admitida, siempre que presenten soluciones urbanísticas más favorables que la aplicación de la norma general y cumplimenten todos los otros indicadores urbanísticos que lo afecten.
+Podrán superar la altura máxima admitida los cuartos de máquinas, cajas de escalera, tanques, depósitos y lavaderos colectivos en las azoteas.
+Es la medida vertical comprendida entre la cota del nivel de vereda y la cota del techo y/o cubierta terminada del último local habitable ubicado en la parte más alta de la edificación. -
+No se computa dentro de la medida vertical máxima el nivel que se encuentre en la parte superior de la edificación retirado como mínimo tres (3) metros de la Línea de Fachada de Frente, accesible desde un espacio común del edificio, con una superficie igual o menor al cincuenta por ciento (50%) de la planta
+
+26
+total; y tenga como único destino los siguientes usos: tanques de aguas, sala de máquinas de ascensores, sala de máquinas de equipos de acondicionamiento térmico, cajas de escaleras, chimeneas, calderas, depósito de los servicios comunes, salón de usos múltiples.
+Este nivel no podrá superar los cinco metros (5m) de altura y deberá ser tratado con los mismos materiales de la fachada formando parte del conjunto edilicio.
+Las antenas de uso exclusivo del edificio, los pararrayos y conductores de ventilación no se computan dentro de la altura máxima. –
+III.2.9. CONFORMACIÓN DE CENTRO LIBRE DE MANZANA (RETIRO DE FONDO)
+III.2.9.1 Disposiciones Generales
+A los efectos de materializar el centro libre de manzana se establece un retiro de la línea divisoria de fondo de la parcela, mayor o igual al veinte por ciento ( 20 %) del largo de la misma. En ningún caso el retiro de fondo será inferior a 3 m.
+Se permitirá la ocupación del espacio conformado por el retiro de fondo con instalaciones complementarias tales como, quincho, parrilla, vestuarios o similares, siempre que los mismos sean exclusivamente de uso familiar, de acuerdo con el siguiente cuadro:
+SUPERFICIE DE LOTE m2 SUPERFICIE DE OCUPACION
+CENTRO LIBRE m2
+Hasta 500 m2 15
+500 a 800 20
+800 o más 25
+No se deberá ocupar más de 1/3 sobre el eje medianero de fondo o un máximo de 3 m. en aquellos en que el tercio resulte menorEl plano límite de altura para estas construcciones será 3,5 m. Sobre esta altura sólo se permitirán conductos de ventilación o humos. La cubierta no podrá ser accesible.
+Los cercos divisorios de predios en dicho espacio podrán ser de mampostería o cercos vivos hasta 2,00m.
+En las construcciones cuya altura es mayor a 3,5 m y menor a 12 m la fachada posterior deberá estar separada de la línea de fondo o de la línea construcción más próxima a una distancia igual o mayor a 1/3 de su altura con un mínimo de 6 m. Mientras que en los casos en los que la altura sea mayor a 12 m., la fachada posterior debe estar separada del eje medianero de fondo a una distancia igual o mayor a: 0,35 h + 8 m. Siendo h, la altura máxima del edificio.
+Quedan exceptuados de la formación de centro libre de manzana aquellos casos previstos para planes integrales en los que se proyecten edificios aislados y la ampliación o reforma de edificios existentes destinados a equipamientos o infraestructura comunitaria, que no puedan - por razones funcionales- dar solución a este aspecto, casos en los que se deberán plantear alternativas de valor equivalente.
+III.2.9.2. Retiro de Fondo para Lotes Interiores
+Se denomina lote interior al comprendido entre líneas divisorias de parcela y con acceso indirecto desde la vía pública
+Se aplicará el siguiente esquema:
+Para L1 = o < de 10 m. no se exige fondo
+Para L1 = 10 m. y hasta 20 m. de fondo será de 3 m.
+Para L1 = o > de 20 m. se aplica la fórmula = 0,3 (L-20)
+
+27
+En caso que, para la configuración del centro libre de manzana sea indiferente el sentido del espacio libre, podrá adoptarse la solución que favorezca una mejor orientación de la edificación.
+En lotes interiores se podrá construir únicamente una vivienda o una unidad correspondiente a otro uso permitido.
+III.2.9.3. Retiro de fondo de lotes con frentes a dos o más calles
+Quedará a estudio de la O.T.M. la forma de determinar el retiro de fondo, quien resolverá en cada caso particular según la solución del proyecto presentado y el uso a que se destine. Cualquiera sea la solución adoptada, ésta no deberá crear situaciones perjudiciales con respecto al centro libre de manzana.
+III.2.9.4 Retiro de fondo para lotes esquineros
+Las parcelas dejarán el espacio libre que surja de la aplicación de la fórmula general según el siguiente esquema:
+Se aplicará la fórmula para ambos frentes y se dejará libre el sector creado por la intersección de las dos líneas de fondo. Cuando en uno de los dos sentidos corresponda una dimensión inferior a 3 m., éste será el retiro mínimo.
+III.2.10. PATIOS
+III.2.10.1. Clasificación de los Patios
+Los patios que sirvan para proporcionar iluminación y ventilación a los locales, según sus dimensiones y su función se clasifican en: a) Patio de primera categoría b) Patio de segunda categoría c) Espacio libre urbano
+III.2.10.2. Patio de Primera categoría
+Es el que sirve como medio de iluminación y ventilación de locales de primera y tercera clase para viviendas unifamiliares. A tales fines se lo considera como Espacio Libre Urbano.
+Dimensiones del patio de primera categoría:
+Superficie mínima: 16 m2 - Lado mínimo: 4m
+III.2.10.3. Patio de Segunda Categoría
+Es el que sirve como medio de iluminación y ventilación de locales de segunda, cuarta y quinta clase:
+Dimensiones del patio de segunda categoría:
+Superficie mínima: 10 m2 - Lado mínimo: 2.50 m
+
+28
+III.2.10.4. Espacio Libre Urbano
+Es el que sirve como medio de ventilación e iluminación de locales de habitación (primera clase) y de trabajo
+(tercera clase)
+Conforman el espacio libre urbano:
+1) El espacio de la vía pública
+2) El centro libre de manzana
+3) El espacio entre paramentos retirados de la línea divisoria lateral del predio, que vincule el centro libre de manzana con el espacio de la vía pública, con un retiro mínimo de 3m.
+4) El espacio entre bloques de edificación dentro de una misma parcela, cuando la separación comprenda todo el ancho de la parcela y la distancia (D) entre paramentos verticales (h), sea como mínimo de 6 m y cumpla con la siguiente relación:
+D = h > 6 m
+2
+5) El patio apendicular, considerando como tal: a) El patio que se asimile por uno de sus lados al espacio de la vía pública, retiro de frente, centro libre de manzana o patio de fondo. La abertura (A) de este patio deberá ser igual a dos veces la profundidad (B)
+del mismo (A > 2B). Se exceptúa de cumplir esta relación la vivienda unifamiliar cuando dicho espacio se destine a cochera, debiendo ser el lado mínimo de 3 metros.
+b) El patio que se asimile por uno de sus lados al espacio entre paramentos retirados como mínimo 3m de la línea divisoria lateral del predio, cuando entre la abertura (A) y la profundidad (B) del mismo se cumpla con la relación A > 2 B.
+
+29
+c) El patio que se asimile por uno de sus lados al espacio entre bloques de edificación de una misma parcela, que cumpla con la siguiente relación entre profundidad (B) y abertura (A): A > 2B.
+III.2.11 RETIROS DE EDIFICACIÓN DE LA LÍNEA MUNICIPAL Y LÍNEAS DIVISORIAS
+LATERALES
+Estos retiros se prohíben, son obligatorios u optativos según lo establecido en las normas generales sobre volumetría edilicia y en las especificaciones particulares contenidas en las hojas de zona, de igual manera que las distancias mínimas que deben respetar.
+III.2.12. MUROS Y CERCOS DE FRENTE
+En los casos que exista retiro de Línea Municipal, los cercos al frente no podrán tener muros que excedan de
+2.50 m. de altura exigiéndose el tratamiento arquitectónico de los mismos. Podrán sobre elevarse hasta una altura de 2.50 m. como máximo los cerramientos tales como cercos vivos, alambre tejido o verjas, no pudiendo hacer uso del espacio determinado.
+III.3 INFRAESTRUCTURA DE SERVICIOS
+En las Hojas de Zona se establecen los servicios considerados esenciales y complementarios, siendo fundamental la provisión de los de agua corriente, cloacas, energía eléctrica y tratamiento de las vías de circulación, en relación con la aplicación de densidad poblacional neta máxima según lo establecido en el presente Código, la Ley 8912/77 y su Decreto Reglamentario 1549/83.
+III.4 ESTACIONAMIENTO DE VEHICULOS
+En la construcción de nuevos edificios deberá dejarse lugar para estacionamiento de acuerdo con las especificaciones de este artículo y cumpliendo los siguientes requisitos:
+1) El estacionamiento podrá ser abierto, semi - cubierto o cubierto.
+2) Para viviendas unifamiliares deberá preverse un módulo mínimo de 15 m2.
+3) Las cocheras colectivas se calcularán con un módulo de 25 m2., estando incluidas en el mismo las circulaciones necesarias para el desplazamiento de otros vehículos. Los espacios destinados a cocheras deberán figurar en los planos de obra.
+4) En ningún caso la superficie destinada a estacionamiento podrá ser inferior a 3.5 m2.por habitante.
+5) La superficie destinada a estacionamiento se calculará de la siguiente manera: a) Vivienda unifamiliar: un módulo por cada unidad.
+b) Vivienda unifamiliar transitoria (cabañas, departamentos en alquiler para turismo, etc.): un módulo por cada unidad.
+c) Vivienda multifamiliar: 3.5 m2 por habitante. Módulo mínimo = 25 m2.
+d) Hoteles, moteles, apart- hotel u otros lugares de alojamiento temporario: Un módulo por cada habitación, para edificios cuya capacidad exceda las diez habitaciones.
+e) Edificios de administración pública y/o privada: Un módulo cada 50 m2. De superficie cubierta, para edificios de superficie igual o mayor a 250 m2.
+f) Edificios industriales o almacenaje: Un módulo cada cuatro empleados y/u obreros a partir de cinco por turno. Se tomará para la aplicación de este ítem al turno que cuente con mayor cantidad de personal.
+g) Salas de espectáculos: Un módulo cada 20 asientos, para edificios cuya capacidad sea igual o superior a doscientas personas.
+h) Lugares para prácticas deportivas recreativas: Un módulo cada diez espectadores i) Establecimientos de enseñanza: Un módulo cada cuatro docentes y no docentes, para establecimientos con más de quince personas empleadas.
+
+30
+j) Establecimientos sanitarios: Un módulo cada 100 m2. de superficie cubierta a partir de 500 m2. y/ o un módulo cada cinco camas. La O.T.M. determinará qué criterio utilizar en función de las características del establecimiento.
+k) En edificios comerciales: un módulo cada 100 m2. de superficie cubierta, para edificios cuya superficie exceda los 200 m2.
+En caso de autoservicios, supermercados y/ o lotes con depósito cuyo salón de venta exceda los 200 m2
+cubiertos, deberán solucionarse las maniobras de carga y descarga dentro de los límites de la parcela.
+En otros locales e instalaciones distintos de los mencionados precedentemente la O.T.M determinará las exigencias al respecto, según el uso del proyecto particular presentado y conservando el espíritu de la presente norma.
+6) En los casos de ampliación, reforma, transformación o reconstrucción de edificios, la O.T.M.
+determinará la superficie que debe destinarse para estacionamiento, de acuerdo al criterio general y lo establecido en el Capítulo 2 (permisos de construcción, reconstrucción, etc.)
+7) Queda prohibido estacionar ómnibus, casas rodantes y/o camiones en la vía pública, fuera de los lugares específicamente autorizados, las paradas reglamentarias y los horarios asignados para carga y descarga.
+8) Toda disminución de la superficie destinada a estacionamiento o cocheras de edificios de vivienda multifamiliar, u otros usos que así lo requieran, derivada de impedimentos constructivos dará lugar a la disminución proporcional del número de habitantes a razón de uno de ellos por cada 3,5 m2. de disminución.
+En estos casos y con el fin de evitar tal disminución podrá admitirse la previsión de construcción de espacios para igual destino en parcelas ubicadas en un radio máximo de doscientos metros (200 m) contados a partir del perímetro del respectivo edificio. La habilitación del edificio estará condicionada a la que previamente se otorgue a los espacios de estacionamiento.
+9) La O.T.M estudiará la posibilidad de construir cocheras invadiendo los retiros de frente y laterales cuando por razones de proyecto y/o construcciones existentes no se puedan respetar los mismos.
+Se mantendrá el concepto de espacio libre y transparencias respetando las siguientes condiciones:
+• La superficie cubierta máxima será de 30 m2 y la ocupación de Línea Municipal no mayor de 3 m.
+• La altura máxima será la necesaria para sus fines y la cubierta no será transitable.
+• Se deberán respetar las características arquitectónicas de la construcción principal y no se harán paramentos verticales excepto los permitidos por este Código.
+“Ordenanza 26/14 Art: 46: El estacionamiento privado es el destinado a la provisión de lugares exigidos como equipamiento de servicios de los edificios. -
+El estacionamiento se debe realizar de manera directa desde la vía pública a través de un acceso cada doce (12) metros lineales, tomados en el ancho total de la parcela, con un ancho máximo igual a dos metros con cincuenta centímetros (2,50m) cada uno.
+En las parcelas de esquina se permite doble acceso siempre que respeten la distancia mínima de doce metros (12m) de perímetro de separación entre los mismos. Cada acceso vehicular debe estar correctamente señalizado. -
+En usos no residenciales, el estacionamiento mínimo es aquel de uso no permanente, destinado a las personas que utilicen el servicio. - No se computa como estacionamiento mínimo el destinado al personal del lugar. -“
+“Decreto Ley 8912/77 Art. 49: En zonas con densidad mayor de ciento cincuenta (150) habitantes por hectárea y en la construcción de edificios multifamiliares será obligatoria la previsión de espacios para estacionamiento o de cocheras, cuando las parcelas tengan doce (12) metros o más de ancho, previéndose una superficie de tres y medio (3,50) metros cuadrados por persona como mínimo. Los municipios podrán establecer excepciones a esta disposición cuando las característica-cas de la zona y del proyecto así lo justifiquen.”
+
+31
+CAPITULO IV USOS DEL
+SUELO
+
+32
+IV.1. CLASIFICACION DEL TERRITORIO
+AREA ZONAS (Según Código) NOMENCLADORES
+HOMOLOGACION (Según
+Ley 11.459/93)
+URBANA
+COMERCIAL / ADMINISTRATIVO CA ZONA A
+CORREDOR COMERCIAL 1 CCI ZONA A
+CORREDOR COMERCIAL 2 CC2 ZONA A
+CORREDOR COMERCIAL 3 CC3 ZONA A
+CORREDOR DE SERVIVIOS
+URBANO
+CSU ZONA B
+RESIDENCIAL R ZONA B
+RESIDENCIAL 1 R1 ZONA A
+RESIDENCIAL 2 R2 ZONA B
+RESIDENCIAL 3 R3 ZONA B
+RESIDENCIAL 4 R4 ZONA B
+USOS ESPECIFICOS UE ZONA SEGÚN USO
+DISTRITO DE URBANIZACIÓN
+ESPECIAL
+DUE ZONA A
+ESPACIO VERDE PUBLICO EVP ZONA A
+PARQUE URBANO PU ZONA A
+DISTRITO INDUSTRIAL DI ZONA C
+ZONA DE RECUPERACIÒN REC -
+DISTRITO ESPECIAL SILOS DES ZONA C
+DEPORTIVO RECREATIVO DR ZONA A
+COMPLEMENTARIA
+INDUSTRIAL MIXTA IM ZONA B
+INDUSTRIAL 1 I1 ZONA B
+INDUSTRIAL 2 I2 ZONA C
+RESIDENCIAL EXTRAURBANA R ZONA A
+RESIDENCIAL EXTRAURBANA 1 RE 1 ZONA A
+RESIDENCIAL EXTRAURBANA 2 RE 2 ZONA A
+CORREDOR DE SERVICIO CS ZONA B
+CORREDOR DE SERVICIO
+COMPLEMENTARIO
+CSC ZONA D
+AREA COMPLEMENTARIA AC ZONA D
+AREA COMPLEMENTARIA 1 AC1 ZONA D
+AREA COMPLEMENTARIA 2 AC2 ZONA D
+RESERVA DE ENSANCHE URBANO REU ZONA A
+PARQUE URBANO PU ZONA A
+ESPACIO VERDE PUBLICO EVP ZONA A
+DISTRITO INDUSTRIAL DI ZONA C
+DEPORTIVO RECREATIVO DR ZONA A
+USOS ESPECIFICOS UE ZONA SEGÚN USO
+RURAL AREA RURAL AR ZONA D
+
+33
+Con el objeto de cumplimentar los propósitos y previsiones contenidos en este Capítulo, la Ciudad de
+Saladillo se divide en las siguientes áreas y zonas, para las cuales se define el carácter y se regula la subdivisión de la tierra, el tejido urbano, la intensidad de ocupación y los usos del suelo.
+En función de la delimitación de competencias entre la Provincia y el Municipio en cuanto a los tramites de habilitación por categoría de industria y a los efectos de dar cumplimiento a lo establecido en los artículos
+40º y 41º de la Ley 11.459/93 y su Decreto Reglamentario 539/19, en cumplimientos de las atribuciones municipales otorgadas por Decreto Ley N 8912/77, se establece la equivalencia de zonas.
+Aclaración: para los casos de las zonas homologadas como B solo se admite industria de primera categoría.
+IV.2. NOMENCLADORES
+CA – COMERCIAL ADMINISTRATIVO
+Zona con alta coexistencia de usos institucionales, administrativos, financieros, culturales, comerciales, de servicios y residenciales.
+CC – CORREDOR COMERCIAL (CC1-CC2-CC3)
+Sector destinado a la localización preferente del uso comercial y de servicios, y de vivienda unifamiliar y multifamiliar.
+CC1 - COR REDOR COMERCIAL 1
+CC2 - CORREDOR COMERCIAL 2
+CC3 – CORREDOR COMERCIAL 3
+CSU – CORREDOR DE SERVICIOS URBANO
+Zona destinada a la localización de actividades comerciales, estaciones de servicio, gomerías, hoteles, restaurantes y demás servicios complementarios.
+CSC – CORREDOR DE SERVICIOS COMPLEMENTARIO
+R - RESIDENCIAL (R1-R2-R3-R4)
+Zona destinada predominantemente al uso residencial. Se admite la localización de usos compatibles con el residencial, con diversos niveles de intensidad de ocupación.
+R - RESIDENCIAL
+R1 - RESIDENCIAL 1
+R2 - RESIDENCIAL 2
+R3 - RESIDENCIAL 3
+R4 - RESIDENCIAL 4
+IM - INDUSTRIAL MIXTA
+Zona destinada predominantemente al uso industrial y de servicios.
+RE – RESIDENCIAL EXTRAURBANA
+Zona destinada predominantemente al uso residencial unifamiliar.
+RE - RESIDENCIAL EXTRAURBANA
+RE1 – RESIDENCIAL EXTRAURBANA 1
+RE2 – RESIDENCIAL EXTRAURBANA 2
+REU – RESERVA DE ENSANCHE URBANO
+Es la zona de reserva fuera del Área Urbana, destinadas a la extensión de la ciudad una vez que se hubieran cumplimentado las condiciones para su ampliación. La misma se destinará a la localización predominante de la vivienda, con el fin de garantizar y preservar las buenas condiciones de habitabilidad.
+En caso de no estar subdividida requerirá de una propuesta de subdivisión, apertura de calles, cesión de espacios verdes y de reservas de uso público que deberá continuar con la trama urbana. Ver art. 17 Decreto
+Ley 8912/77. La aprobación del proyecto permitirá su habilitación e incorporación a partir de la especificación de las etapas de urbanización y su efectiva ocupación.
+
+34
+CS – CORREDOR DE SERVICIO
+Constituyen zonas destinadas a la localización de actividades comerciales, estaciones de servicio, gomerías, hoteles, restaurantes y demás servicios complementarios.
+I – ZONA INDUSTRIAL (I1-I2)
+Zona destinada a la localización de establecimientos industriales, de almacenaje y depósitos.
+I1 – INDUSTRIAL 1 (industrias de primera y segunda categoría)
+I2 – INDUSTRIAL 2 (industrias de tercera categoría)
+EVP – ESPACIO VERDE
+Espacios destinados al esparcimiento y la recreación de la población de dominio y uso público.
+Saladillo
+EVP1 – Plaza “25 de mayo” (Calle Emparanza, Calle Taborda. Moreno, Av. Belgrano, Av. Rivadavia, Av. San
+Martín)
+EVP2 – Plaza “Falucho” (Calle Taborda, Calle Emparanza, Av. Cabral, y Av. Bozán)
+EVP3 – Plaza “España” (Calle Taborda, Calle Ingenieros, Av. Mariano Acosta, y Av. Cabral)
+EVP4 – Plaza “Parque Cooperación” (Calle Lisandro de la Torre, y Av. Saavedra)
+EVP5 – Plaza “Parque Del Carmen” (Calle Alem, Calle Sarmiento, y Calle De Santibáñez)
+EVP6 – Plaza “Parque Barrio Esperanza” (Calle Dasatti, Calle Posadas, y Calle Mariotto)
+EVP7 – Plaza “17 de octubre” (Av. Saavedra, Av. Bozán, Calle Suquía, y Calle Emparanza)
+EVP8 – Plaza “Islas Malvinas” (Av. Rivadavia, Calle Zamorano, y Calle Toledo)
+EVP9 – Plaza “Parque Dieguito” (Calle Medina, y Calle Demaría)
+EVP10 – Plaza “Parque CUEC” (Calle Emparanza, y Av. Frocham)
+EVP11 – Plaza “Armendariz” (Av. Frocham, Calle Peña, Calle Av. Bozán, y Calle Emparanza)
+EVP12 – Plaza “Parque Bicentenario” (Av. Ledesma, Calle L. Serrano, y Av. Frocham)
+EVP13 – Plaza “Parque Pte. Perón” (Av. Bozán, Calle Estrada, y Av. Pereyra)
+EVP14 – Plaza “Parque Eduardo Galeano” (Calle Vergara, y Calle Taborda)
+EVP15 – Plaza “Parque Los Pibes” (Calle J. B. Justo, Calle Volonté, y Calle Ibarbia)
+EVP16 – Plaza “Parque 31 de Julio” (Calle Volonté, y Calle Sojo)
+EVP17 – Plaza “Pasaje Bomberos” (Av. Rivadavia, Calle Estrada, y Calle Roca)
+EVP18 – Plaza “Parque Saladillo Norte” (Calle Papa Francisco, Calle La Araucaria, y Calle El Ceibo)
+EVP 19 – Plaza “Raed” (Av. J. D. Perón, Calle J. Seguí, Calle I. Medina, y Calle M. Villanueva)
+EVP 20 - Plaza “Plazoleta H. Yrigoyen” (Calle L. N. Alem y Calle Paseo de los inmigrantes)
+EVP 21 – Plaza “Susana Esther Soba” (Calle Los Sauces, y Calle Los Nogales)
+EVP 22 – Parque Republica de Italia (Av. Moreno y Calle Alem)
+Localidad de Cazón
+EVP-1: Plaza “De la Juventud” – (Calle Mendoza – San Juan – Catamarca – Tucumán)
+Localidad de Del Carril
+EVP-1: Plaza “Gral. José de San Martín” – (Calle Sarmiento – Mitre – Moreno – Dellecave)
+Localidad de Polvaredas
+EVP-1: Plaza “17 de agosto” – (Calle Los Plátanos – Los Paraísos – La Morera – Las Araucarias)
+Localidad de Toledo
+EVP-1: Plaza “Gral. José de San Martín” – (Calle Belgrano – 9 de Julio – 25 de mayo – Moreno)
+PU – PARQUE URBANO
+Espacios de gran escala destinados al esparcimiento y la recreación de la población de dominio y uso público.
+Saladillo
+PU1 – Parque Ex Ferrocarril Roca (Calle 12 de octubre, Av. Mariano Acosta, Calle Roca, y Calle Alem)
+
+35
+PU2 – Parque Ex Ferrocarril Provincial (Calle J. Etchegoyen, Calle E. Echeverría, Calle E. De Santibáñez, y
+Calle R. Zamorano)
+PU3 – Parque Dr. Emparanza (Av. Moreno, Calle Dellatorre, Calle Roca, y Calle Lenzi)
+Localidad de Cazón
+PU 1: Parque “Estación Ferrocarril Don Joaquín Cazón”
+Localidad de Del Carril
+PU 1: Parque “Estación Ferrocarril Del Carril”
+Localidad de Polvaredas
+PU 1: Parque “Estación Ferrocarril Polvaredas”
+Localidad de Toledo
+PU 1: Parque “Estación Ferrocarril Toledo”
+UE – USOS ESPECIFICOS
+Se denominan así aquellas parcelas destinadas a usos puntuales en relación a su propia actividad que es única e identificable para la población.
+Saladillo
+UE1 – Hospital Zonal Dr. Alejandro Posadas (Calle Dr. F. Emparanza, Av. A. Bozan, Av. D. Pereyra, y Calle
+J. M. Estrada)
+UE2 – Comisaria Saladillo (Calle F. A. De Toledo, Av. M. Moreno y Av. J. M. Belgrano)
+UE3 – Obras Sanitarias (Av. M. Moreno, Calle J. A. Roca, y Calle J. C. Dellatorre)
+UE4 – Corralón Municipal (Av. M. Ledesma, Av. D. Pereyra, y Calle Maestro L. Serrano)
+UE5 – Planta de Clasificación y Tratamiento de Residuos Sólidos Urbanos (Calle Intendente A. Armendariz,
+Calle C. Arrospide, Calle 25 de mayo, y Calle sin Nombre)
+UE6 –Cementerio Santa Morada de la Esperanza (Av. M. Ledesma, Calle E. Che Guevara, Calle Maestro L.
+Serrano, y Calle M. Ibáñez Frocham)
+UE7 – Terminal de Ómnibus (Calle B. Mitre, y Calle J. M. Estrada)
+UE8 – Aeródromo Pcial. Ing. Eugenio Taravella (Ac. A. Cicaré, Calle B. de la Independencia)
+UE9 – Planta de Tratamiento de Residuos Cloacales (Ac. N. Kirchner, Calle Intendente H. Inda, Calle H.
+Rolando, y Calle U. B. Demarco)
+UE10 – Sociedad Rural de Saladillo (Calle J. C. Dellatorre, Calle A. Palacios, Av. J. M. Belgrano, y Av. M.
+Cabral)
+UE11 – Tiro Federal (Calle Las Acacias, y Av. J. M. Belgrano)
+UE12 – Cooperativa eléctrica Saladillo. (Av. Saavedra, Calle Dellatorre y Calle José Ingenieros)
+Localidad de Cazón
+UE 1: Base de Campamento
+UE 2: Destacamento Policial
+UE 3: Centro Atención Primaria de la Salud - CAPS
+UE 4: Vivero Municipal Eduardo Holmberg
+Localidad de Del Carril
+UE 1: Delegación Municipal
+UE 2: Destacamento Policial
+UE 3: Unidad Sanitaria Esteban Dellecave
+UE 4: Cooperativa de Agua
+UE 5: Cementerio
+Localidad de Polvaredas
+UE 1: Delegación Municipal
+UE 2: Destacamento Policial
+UE 3: Centro Atención Primaria de la Salud - CAPS
+UE 4: Cooperativa Eléctrica
+
+36
+Localidad de Toledo
+UE 1: Delegación Municipal
+UE 2: Destacamento Policial
+UE 3: Centro Atención Primaria de la Salud – CAPS
+DR – DEPORTIVO RECREATIVO
+Saladillo
+DR1 – Club Argentinos (Av. M. Acosta, Calle J. Ingenieros, Av. D. Pereyra, y Calle J. M. Estrada)
+DR2 – Club La Lola (Av. Mariano Acosta y Calle Alem)
+DR3 – Club Oro Verde (Calle Emparanza, Calle Martin Fierro, Calle Viale, y Av. Bozan)
+DR4 – Club Huracán (Av. Rivadavia, Calle Armendáriz, Calle Arrospide, y Calle Sarmiento)
+DR5 – Club Jacobo Urso (Calle Mariotto, Calle Armendariz, Calle Alisal, y Calle Rojas)
+DR6 – Club Atucha (Calle Los Álamos, Av. Sanguinetti, y Av. Aureliano Roight)
+DR7 – Club Apeadero (Calle Yrigoyen, Calle Toledo, Av. Roight, Calle Medina)
+DR8 – Automóvil Club de Saladillo (RP N° 51, Calle H. Yrigoyen)
+Localidades
+DR1 – Cazón (Club social y deportivo – Circ VI Sec A, Mz 12 Pc 1A
+DR1 – Del Carril (Club Defensores de Del Carril – Circ IV Sec A Mz 11 Pcs 18 A-20-21-22-23)
+DR2 – Del Carril (Estadio Joaquín Benítez – Circ IV Sec A Fr I)
+DR1 – Polvaredas (Club Atlético Pampero – Cir IV Pc 1514)
+DR1 – Toledo (Club de Toledo – Cir II Sec A Mz 28 y 29)
+DI – DISTRITO INDUSTRIAL
+Se denomina así a las industrias que por distintos motivos han quedado dentro del área urbana. De esta manera se pretende restringir su crecimiento y/o mitigar su impacto, para poder erradicarlas en un futuro.
+Saladillo
+DI1 - Petfood (Av. M. Ibáñez Frocham, Av. M. Acosta, y Calle J. Ingenieros).
+DI2 - Frigorífico Angelani (Av. D. Pereyra, y Calle Dr. A. Posadas).
+DI3 - CICSA Molino Harinero (Av. B. Rivadavia, y Calle H. A. Taborda).
+DI4 – Frigorífico CLC (Calle Graduazo, y Av. Moreno)
+DI5 – SIPSA Sector Industrial Planificado (Ac. A. Cicaré, y A. Palacios)
+DI6 – Silos Trezza (Calle Alem, y Av. Saavedra)
+DI7 – Silos Cooperativa Agrícola Ganadera Saladillo (Av. Saavedra, RN 205, y Calle Volonté)
+Localidad de Toledo
+DI 1: Fábrica de Tuercas
+DES – DISTRITO ESPECIAL SILOS
+Localidad de Del Carril
+DES 1: Silos Cargill
+DES 2: Silos Ferrocarril
+Localidad de Polvaredas
+DES 1: Planta de Silos
+DUE – DISTRITO DE URBANIZACIÓN ESPECIAL.
+Zonas de dominio público o privado, que por su inserción en el tejido urbano están destinadas a absorber el crecimiento inmediato de la ciudad y que por tratarse de proyectos urbanísticos integrales que signifiquen la construcción de la totalidad de las edificaciones, dotación de infraestructura y equipamiento comunitario, podrán tener indicadores urbanísticos especiales, art.52 de la Ley 8.912
+Saladillo
+DUE1 – Barrio 96 viviendas (Calle Jaime Seguí, calle Álvarez de Toledo, calle Isidoro Medina, y calle Manuel
+Villanueva)
+
+37
+DUE2 – Barrio Empleados de Comercio (Calle Lope Serrano, calle Marcelo T. de Alvear, Calle Emparanza, y Av. Bozán)
+DUE3 – Barrio 77 viviendas (Calle Alem entre calle Estrada, Calle M. Sojo y las vías del Ferrocarril Roca; y
+Calle Alem entre Av. Belgrano, calle Taborda y las vías del Ferrocarril Roca)
+DUE4 – Barrio FONAVI (Av. San Martin, calle Al. De Toledo, calle J. V. González, y calle Martín Fierro)
+Localidades
+DUE1 - “Barrio 96 Viviendas” (Circ I, Sección H, Ch 198 MZ: 198H)
+DUE2 - “Barrio 77 viviendas” (Circ I, Sección B, Qta 9, Mz. 9p, y parte de la Mz. 9d)
+DUE3 - “Barrio Empleados de Comercio” (Circ I, Sección A, Mz 86,87 94 y 96)
+DUE4 - “Barrio FONAVI” (Parte de Circ I, Sección B, Qta 55, Mz. 55d)
+DUE 5 – “Saladillo Norte” (Circ I, Sección G, Ch 166 PC 14a y Circ I, Sección G, Ch 165, Fr 2, Pc 2a)
+AC – AREA COMPLEMENTARIA
+Los sectores circundantes o adyacentes al área urbana, en los que se delimiten zonas destinadas a reserva para ensanche de la misma o de sus partes constitutivas, y a otros usos específicos.
+AC – AREA COMPLEMENTARIA
+AC1 – AREA COMPLEMENTARIA 1
+AC2 – AREA COMPLEMENTARIA 2
+Los sectores circundantes o adyacentes a la zona de amortiguación, y a usos relacionados con la producción agropecuaria intensiva, y otros usos.
+REC – ZONA DE RECUPERACIÓN
+AR – AREA RURAL
+Espacio destinado a usos relacionados con la producción agropecuaria extensiva, forestal, minera y otros.
+IV.3. DELIMITACION DE ZONAS
+La ubicación y deslindes de las zonas están indicados en el plano de delimitación de zonas, que se designa como Plano de Zonificación que a todos sus efectos forma parte del presente Código.
+Los deslindes entre zonas que corresponden a manzanas completas deben ser interpretados como referidos al eje de la calle.
+Los deslindes que bordean una calle deben ser interpretados como correspondientes a las parcelas frentistas a dicha calle.
+Usos en parcelas frentistas a deslinde de zonas
+En el caso de lotes pasantes con frente a dos o más calles, los usos de la zona correspondiente a cada frente, no podrán extenderse más allá de la línea virtual de la zona correspondiente a la mitad de la parcela y la
+Autoridad de Aplicación dictaminará con respecto a las características de ocupación de las mismas.
+IV.4. PLANO DE ZONIFICACION
+En él se indica la ubicación y los deslindes de las zonas en las que se clasifica el territorio, con objeto de su regulación y desarrollo. Adjunto como Anexo I del presente Código.
+“El plano prevalece sobre la delimitación catastral”.
+IV.5. NOMENCLADOR DE USOS
+El Nomenclador de Usos sintetiza un gran número de usos posibles en un conjunto acotado de casos o tipos, tomando como criterio de agrupamiento los rasgos que caracterizan actualmente el desarrollo de las diferentes actividades, según su condición de usos permitidos y no permitidos y otros requerimientos.
+IV.5.1 USO RESIDENCIAL
+El uso Residencial comprende actividades destinadas al alojamiento permanente o temporario de personas, familias y/o grupo de personas.
+
+38
+IV.5. 1.1. Vivienda Unifamiliar
+Uso habitacional destinado al alojamiento de una persona o grupo familiar en forma estable, en una unidad funcional de tipo residencial.
+Requisitos y limitaciones:
+• En cualquiera de las zonas donde se admita el uso habitacional y aun cuando no cumpla con los indicadores urbanísticos y limitaciones establecidos en la misma, se permitirá la construcción de una vivienda unifamiliar por parcela con el número de dormitorios que corresponda a las necesidades del núcleo familiar de su titular sin superar el Factor de Ocupación del Suelo –F.O.S.- máximo de 0.6 establecido por el Decreto
+Ley 8912/77 en su Artículo 46º.”
+IV.5.1.2. Vivienda Multifamiliar
+Uso habitacional destinado al alojamiento de personas o grupos familiares en forma estable, en dos o más unidades funcionales de tipo residencial regulados bajo el régimen de Propiedad Horizontal. Comparten accesos, circulación interna de distribución y servicios de infraestructura.
+Requisitos y limitaciones:
+• Estacionamiento mínimo: un box (espacio de estacionamiento para un vehículo) cada dos Unidades
+Funcionales, debiendo respetar una superficie mínima de 12,5 m2 por cada unidad funcional y no inferior a
+3,50 m2 por habitante. Podrá admitirse una superficie total menor a la resultante de calcular 12,5 m2 por UF, cuando por características de proyecto o utilización de tecnologías alternativas se reduzca la misma, sin disminuir la cantidad mínima de boxes exigidos.
+IV.5.1.3. Vivienda Comunitaria
+Uso habitacional destinado al alojamiento de personas en forma estable con servicios e instalaciones comunes y régimen de relación interna comunitario. Incluye residencias de niños, jóvenes, madres, discapacitados, estudiantes y comunidades religiosas.
+Requisitos y limitaciones:
+• Estacionamiento mínimo: cantidad de módulos equivalentes a la superficie que resulte de considerar
+3,5 m2. de superficie de estacionamiento por habitante. (1 módulo = 25 m2.)
+• Carga y descarga: un módulo de 28 m2. cada 1.000 m2. de superficie cubierta total y un módulo como mínimo.
+IV.5.1.4. Vivienda Transitoria
+Uso habitacional destinado al alojamiento circunstancial de personas sin régimen común de relación interna.
+1. Hoteles: establecimientos destinados al albergue de personas, incluye hoteles en todas sus categorías, apart-hotel, pensiones, hospedajes, hotel rural.
+Requisitos y limitaciones:
+• Estacionamiento mínimo: un módulo cada 4 unidades de habitación (1 módulo = 25 m2) Quedando prohibido el estacionamiento por encima del nivel + 0.00 metros. El Departamento Ejecutivo podrá convalidar propuestas que incluyan estacionamiento en cualquier planta hasta + 1.50 metros, cuando las condiciones de ingreso, egreso, perturbación lumínica y sonora u otra característica que hace a tal uso, estén resueltas satisfactoriamente”.
+• Carga y descarga: un módulo de 28 m2 cada 1.000 m2 de superficie cubierta total y un módulo como mínimo.
+2. Moteles: establecimientos destinados al albergue de personas en tránsito, vinculados a las vías de comunicación de carácter regional.
+Requisitos y limitaciones:
+• Estacionamiento mínimo: un módulo por cada unidad de habitación. (1 módulo = 25 m2.)
+• Carga y descarga: un módulo de 28 m2. cada 1.000 m2. de superficie cubierta total y un módulo como mínimo.
+IV.5.1.5. Vivienda Temporaria
+Uso residencial destinado a alojamiento temporal de personas o grupos de personas con servicios e instalaciones comunes.
+1. Casa de retiros: comprende hasta una unidad funcional de tipo habitacional en predios destinados a desarrollar retiros espirituales y actividades relacionadas. Requisitos y limitaciones:
+• Superficie máxima de las parcelas: 1 ha. o parcela de superficie igual o inferior a la manzana de la zona.
+
+39
+2. Clubes de campo: área territorial de extensión limitada que no conforme un núcleo urbano y reúna las características establecidas en la Ley 8912 y sus normas reglamentarias.
+Requisitos y limitaciones: • Requiere Factibilidad de Localización y demás requisitos establecidos en el
+Decreto-Ley 8912 y normas reglamentarias.
+IV.5.2 USO COMERCIAL
+El uso Comercial comprende actividades de intercambio, exposición, venta y/o reventa con destino a cualquier otro sector de actividad, sin que medie la transformación de materias primas, productos intermedios o productos finales. El D.E. podrá autorizar la radicación y habilitación de comercios minoristas de carácter cotidiano y/o esencial en áreas no estipuladas en la normativa general en aquellos casos en los que la densidad poblacional y la distancia a las centralidades urbanas más cercanas sea tal que signifique un perjuicio para sus habitantes.
+IV.5.2.1. Comercios minoristas
+Comprende establecimientos comerciales de rubros diferentes o similares, dispuestos en un mismo local, conformando galerías comerciales o centros de gran escala (“shopping”). También, los destinados a la exposición y reventa de productos comestibles y artículos asociados dispuestos en un mismo o diferentes locales. Incluye casas de comidas, heladerías, panaderías, fábrica de pastas frescas, así como las categorías comercio integral, autoservicio, supermercado e hipermercado.
+Comprende, entre otros, Locales destinados a la venta de productos alimenticios y bebidas, verdulerías y fruterías, carnicerías y pescaderías, carnicerías con elaboración de chacinados, productos de granja, lácteos, almacén, despensa, panadería con elaboración, artículos de limpieza y tocador, diarios y revistas, artículos escolares, farmacias, kioscos, expendio de productos de panadería, pastas frescas, heladerías, fiambrerías y rotisería, comidas para llevar.
+IV.5.2.1.1. De pequeña escala
+Establecimientos cuya superficie cubierta total no supera los 120 m2.
+Requisitos y limitaciones:
+• Locales comerciales: Superficie mínima 24 m2.
+IV.5.2.1.2 De mediana escala
+Establecimientos superficie cubierta mayor a 120 m2 y menor a 500m2
+IV.5.2.1.3 De Grandes Superficies
+Establecimientos con una superficie cubierta mayor a 500 m2.
+IV.5.2.2 Comercios mayoristas
+Comprende establecimientos comerciales destinados a la exposición y venta al por mayor con depósitos y/o distribución de productos dispuestos en un mismo o diferentes locales.
+IV.5.2.2.1. De pequeña escala
+Establecimientos cuya superficie cubierta total no supera los 120m2.
+Requisitos y limitaciones:
+• Locales comerciales: Superficie mínima 24 m2.
+IV.5.2.2.2. De mediana escala
+Establecimientos cuya superficie cubierta total es mayor a 120 m2 y no supera los 500 m2.
+Requisitos y limitaciones:
+• Requiere “Factibilidad de Localización”.
+IV.5.2.2.3 De Grandes Superficies
+Establecimientos con una superficie cubierta total mayor a 500 m2.
+Requisitos y limitaciones:
+• Requiere “Factibilidad de Localización” con Evaluación de Impacto Ambiental.
+• Requiere “Factibilidad técnica”
+
+40
+IV.5.2.3. Comercio minorista y/o mayorista incómodo y/o peligroso
+Presentan riesgos de contaminación, molestias y/o peligro. Comprende establecimientos destinados a la exposición, venta y/o reventa de productos y objetos, incluyendo aquellos con playas de acopio al aire libre, cuando por sus características y/o magnitud puedan resultar incompatibles con otros usos.
+Incluye cualquiera de las categorías comerciales antes enunciadas cuando se trate de venta de productos combustibles, inflamables, explosivos y/o tóxicos. Requisitos y limitaciones:
+• Requiere “Factibilidad de Localización” con Evaluación de Impacto Ambiental.
+• Requiere “Factibilidad técnica”
+IV.5.3 EQUIPAMIENTOS
+El uso Equipamiento comprende al conjunto de actividades destinadas a satisfacer las necesidades sociales y culturales en sus distintas formas, la atención social y la vida de relación.
+IV.5.3.1. EQUIPAMIENTOS EN GENERAL
+IV.5.3.1.1 De pequeña escala
+Establecimientos cuya superficie cubierta total no supera los 500 m2.
+IV.5.3.1.2 De gran escala
+Establecimientos cuya superficie cubierta total supera los 500 m2.
+Requisitos y limitaciones:
+• Requiere “Factibilidad de Localización”. Se requerirá “Factibilidad de Localización” con Evaluación de
+Impacto Ambiental.
+IV.5.3.1.3 Peligroso o molesto
+Establecimientos cuya superficie actividad presente riesgos de molestias y o peligro.
+Requisitos y limitaciones:
+• Requiere “Factibilidad de Localización”. Se requerirá “Factibilidad de Localización” con Evaluación de
+Impacto Ambiental.
+IV.5.4 SERVICIOS
+El uso Servicios comprende al conjunto de actividades destinadas a servicios con prestación directa o a través de intermediarios incluyendo los servicios públicos y los privados en sus distintas escalas.
+IV.5.4.1. Básicos y Generales
+Usos destinados a la prestación de servicios básicos y complementarios del uso habitacional, así como servicios de carácter general.
+Incluye servicios tales como reparaciones en general, tintorerías y lavaderos de ropa, alquiler de videos, cerrajerías, estafetas postales, peluquerías, farmacias, así como oficinas en general, agencias de viajes y turismo, inmobiliarias, alquiler de vehículos, etc.
+Requisitos y limitaciones:
+Aquellos establecimientos que requieran unidades móviles para prestar servicios a domicilio deberán contar con el espacio de estacionamiento correspondiente dentro del predio en el que se desarrolla la actividad.
+IV.5.4.1.1. Servicios básicos y generales de pequeña escala
+Establecimientos cuya superficie cubierta total no supera los 120 m2.
+Requisitos y limitaciones:
+• Locales: Superficie mínima 24 m2.
+IV.5.4.1.2. Servicios básicos y generales de mediana escala
+Establecimientos cuya superficie cubierta total supera los 120 m2 y es menor a los 500 m2.
+Requisitos y limitaciones:
+• Requiere “Factibilidad de localización”.
+IV.5.4.1.3. Servicios básicos y generales de gran escala
+Establecimientos cuya superficie cubierta total supera los 500 m2.
+
+41
+Requisitos y limitaciones:
+• Requiere “Factibilidad de Localización” con Evaluación de Impacto Ambiental.
+• Requiere –“Factibilidad Técnica”
+IV.5.4.2. Centrales
+Uso de servicios que comprende sedes de administraciones, organismos y/o entidades públicas o privadas con funciones de centralidad urbana o destinadas a la prestación de servicios bancarios o financieros, así como sedes y delegaciones de administraciones públicas en sus diferentes niveles, consejos profesionales, sedes gremiales, etc.
+IV.5.4.2.1. Servicios centrales de pequeña escala
+Establecimientos cuya superficie cubierta total no supera los 120 m2. Requisitos y limitaciones:
+• Locales: superficie mínima 24m2
+IV.5.4.2.2. Servicios centrales de mediana y gran escala
+Establecimientos cuya superficie cubierta total es superior a 120m2.
+Requisitos y limitaciones:
+• Requiere “Factibilidad de Localización” con Evaluación de Impacto Ambiental cuando su superficie cubierta total sea mayor a 500 m2.
+IV.5.4.3. Recreativos
+Uso de servicios destinado a actividades de ocio, relación social, deportivo, y actividades asociadas. Incluye bares, confiterías, restaurantes.
+IV.5.4.3.1. SERVICIOS RECREATIVOS
+IV.5.4.3.1.1. De pequeña escala
+Establecimientos cuya superficie cubierta total no supera los 120 m2.
+• Locales: superficie mínima 24m2
+IV.5.4.3.1.2. De mediana y gran escala
+Establecimientos cuya superficie cubierta total es superior a 120 m2, así como establecimientos, cualquiera sea su superficie cubierta, destinados a bares con manifestaciones artísticas, salones y casas de fiestas, salas de juegos, salas de juegos electrónicos, bingos. Requisitos y limitaciones:
+• Requiere “Factibilidad de Localización”. Cuando su superficie cubierta total sea mayor a 500 m2 se requerirá Evaluación de Impacto Ambiental.
+• Los bares con manifestaciones artísticas, salones y casas de fiestas, salas de juegos, salas de juegos, requieren tratamiento y acondicionamiento acústico y de seguridad y la realización de un Registro de
+Oposición previo al otorgamiento del Certificado de “Factibilidad de Localización”.
+IV.5.4.3.2. SERVICIOS RECREATIVOS CON ACTIVIDADES INCOMODAS
+Incluye confiterías bailables, discotecas.
+Requisitos y limitaciones:
+• Requieren tratamiento y acondicionamiento acústico y de seguridad, y la realización de un Registro de Oposición previo al otorgamiento del Certificado de “Factibilidad de Localización”.
+IV.5.4.3.2.1. De pequeña escala
+Establecimientos cuya superficie cubierta no supera los 120 m2.
+Requisitos y limitaciones:
+• Requiere “Factibilidad de Localización”.
+IV.5.4.3.2.2. De mediana y gran escala
+Establecimientos cuya superficie cubierta es superior a 120 m2.
+Requisitos y limitaciones:
+• Requiere “Factibilidad de Localización” con Evaluación de Impacto Ambiental.
+•
+
+42
+IV.5.4.3.3. DEPORTIVO
+Espacios cubiertos o libres que permiten el desarrollo de actividades deportivas. Por ejemplo, clubes, complejos polideportivos, natatorios, canchas, pistas, y actividades afines.
+Equipamiento, requisitos y limitaciones:
+• Se deberá cumplimentar con los requisitos y limitaciones generales del uso.
+• Para cualquier categoría se requerirá inscripción en el registro de actividades sociales y deportivas dependiente de la Dirección de Deportes antes de otorgarse la habilitación correspondiente. Las actividades que resultaren fiscalizadas por organismos provinciales deberán gestionar factibilidad ante estos organismos.
+• Aquellos establecimientos que incluyan manifestaciones artísticas con asistencia de público y que signifiquen espectáculos en vivo con participación real y directa de intérpretes, espectáculos musicales y/o danzas, requerirán tratamiento y acondicionamiento acústico y de seguridad.
+IV.5.4.3.3.1. De pequeña escala
+• Comprende actividades a desarrollarse en locales cubiertos o al aire libre en predios cuya superficie total no supera los 1.500 m2.
+IV.5.4.3.3.2 De mediana y gran escala
+Comprende actividades a desarrollarse en locales cubiertos o al aire libre en predios cuya superficie total no supera la superficie de la manzana tipo del sector urbano a localizarse. También comprende establecimientos en predios de hasta 10.000 m2. de superficie cuando se trate de sectores urbanos en los que aún no se han conformado las manzanas.
+Requisitos y limitaciones:
+• Requiere “Factibilidad de Localización”.
+• Cuando su superficie cubierta total sea mayor a 5000 m2 se requerirá Evaluación de Impacto
+Ambiental.
+• Estacionamiento: un módulo cada 500 m2. de superficie de predio destinado a la actividad y no menos de 2,5 m2. de estacionamiento por espectador. (1 módulo = 25 m2.)
+IV.5.4.3.3.3 Peligroso o molesto
+Presentan riesgos de molestias y/o peligro a causa de su superficie, afluencia masiva de público o requerir el complemento de animales, vehículos, etc.
+Incluye estadios, hipódromos, kartódromos, autódromos, aeroclubes, polígono de tiro, campos de golf.
+Requisitos y limitaciones:
+• Requiere “Factibilidad de Localización” con Evaluación de Impacto Ambiental.
+• Su regulación se regirá por ordenanza particular, sancionada por el Concejo Deliberante.
+IV.5.4.4.1. TALLERES MECANICOS
+Para todos los casos:
+• Los talleres mecánicos que realicen venta, instalación, revisión, modificación, desmontaje o baja de equipos de GNC para vehículos automotores, además de la presente norma, serán regulados por la
+Resolución N.º 3196/05, la norma Técnica NAG-408 del ENARGAS –o las normas que rijan en su reemplazo.
+• Accesos: se deberá asegurar un acceso directo y exclusivo desde la línea municipal, de un ancho mínimo libre de 2,50 metros, debidamente demarcado y provisto de piso sólido para el movimiento vehicular.
+• Requisitos Técnico-Constructivos: las actividades propias de estos establecimientos se deberán realizar dentro de los locales cerrados.
+• Deberán poseer, como mínimo, una unidad sanitaria construida de acuerdo a lo indicado por el Código de Construcción vigente. Cuando la parcela afectada incluya vivienda y taller, se deberán cumplimentar los siguientes recaudos:
+• Accesos independientes para el taller y para la vivienda;
+• Cuando existieran patios a los cuales ventilen locales de la vivienda y el taller, los mismos deberán ser independizados mediante la construcción de muros divisorios de mampostería, de 0,15 mts. De espesor y 2 metros de altura como mínimo. Esta situación sólo será admitida si los patios resultantes cumplen con las medidas mínimas establecidas para iluminar y ventilar los locales respectivos.
+• Se podrá admitir, en los casos en que el titular del taller habite la vivienda, la vinculación entre ambas propiedades a través de una puerta ciega.
+
+43
+IV.5.4.4.1.1. Talleres mecánicos de pequeña escala y menor complejidad
+Establecimientos cuya superficie cubierta total no supera los 300 m2. Incluye establecimientos destinados a la atención de vehículos de pequeño y mediano porte. A los fines de su localización y en los casos que su complejidad, escala, potencia instalada y cantidad de personal ocupado así lo permitan, podrán homologarse a “Industrias 1 de pequeña escala”.
+Aquellos establecimientos de pequeña escala y menor complejidad que desarrollen actividades de mecánica como servicio complementario a una actividad comercial dominante se localizarán y evaluarán conforme lo regulado para esta última actividad. Lo establecido en el párrafo precedente no es aplicable a los locales que comercializan equipos o artículos de GNC.
+Deberán contar con un área destinada a exposición y venta de los productos vinculada a la vía pública que no podrá ser inferior al 10% de la superficie total afectada a la actividad, pudiendo, únicamente, prestar el servicio de colocación y reparación de los artículos comercializados en el local de venta.
+Requisitos y limitaciones:
+• Requiere “Factibilidad de Localización”.
+IV.5.4.4.1.2. Talleres mecánicos de mediana y gran escala y mayor complejidad
+Establecimientos cuya superficie cubierta total es superior a los 300 m2. o establecimientos de cualquier superficie destinados a la atención de vehículos de gran porte.
+Requisitos y limitaciones:
+• Se requerirá “Factibilidad de Localización” con Evaluación de Impacto Ambiental.
+IV.5.4.4.2. LAVADEROS
+Los lavaderos se clasifican en:
+IV.5.4.4.2.1. Lavaderos de pequeña escala
+Establecimientos destinados exclusivamente al lavado de automóviles, en predios cuya superficie total no supera los 500 m2.
+IV.5.4.4.2.2. Lavaderos de mediana y gran escala
+Establecimientos destinados al lavado de automóviles, camionetas, camiones, ómnibus y otros vehículos pesados, en predios cuya superficie total supera los 500 m2.
+Requisitos y limitaciones:
+• Requieren “Factibilidad de Localización” con Evaluación de Impacto Ambiental, y su regulación será establecida por vía reglamentaria.
+IV.5.4.4.3. PLAYAS DE ESTACIONAMIENTO DE USO PÚBLICO Y COCHERAS
+Establecimientos destinados exclusivamente al estacionamiento de automóviles.
+Requisitos y limitaciones:
+• Requieren “Factibilidad de Localización”.
+• Parcelas: No se permitirá su localización en parcelas en las que se hubieran efectuado demoliciones no autorizadas o sin la declaración de destino correspondiente.
+• Cantidad máxima: un establecimiento por cara de manzana.
+• Módulos de estacionamiento: se establece como valor mínimo del módulo, una superficie de 25 m2
+la que incluye el lugar para estacionar propiamente dicho y los espacios necesarios para la circulación.
+• Autorización de Funcionamiento: las correspondientes autorizaciones de funcionamiento tendrán carácter precario, debiendo, los permisionarios comprometerse a cesar en sus funciones cuando el
+Departamento Ejecutivo así lo requiera, en apoyo de las necesidades de implementar en el sector medidas de tránsito y/o cuando se adviertan distorsiones incompatibles con los propósitos fijados en los planes y programas sobre la materia.
+• Sólo se otorgarán autorizaciones de funcionamiento con carácter definitivo, cuando se trate de edificios destinados a cocheras, con un número mínimo de 30 vehículos y presenten especial cuidado en la resolución arquitectónica del establecimiento.
+Requisitos Técnico-Constructivos:
+Las actividades se desarrollarán en predios totalmente cerrados perimetralmente, por muros o cercas opacas fijas, de altura suficiente como para evitar molestias a los linderos o a la vía pública, debiendo recomponer la línea municipal con un plano de cierre de altura no inferior a un nivel (3 m) a fin de no generar vacíos en la morfología urbana, que alteren la conformación de la manzana compacta. Asimismo, podrán incorporar al
+
+44
+frente un local con destino a actividad comercial a fin de generar actividades que ello implique la movilización de ningún otro rodado. La espera de los automotores debe ser resuelta dentro de la parcela, prohibiéndose esperas fuera del predio.
+• Accesos: se admitirá un sólo acceso vehicular por parcela y como máximo dos (entrada y salida)
+cuando la parcela presente una medida sobre línea municipal igual o mayor a 20 m. El corte de cordón correspondiente admitirá un ancho de hasta 2,40 m. por cada uno de los mismos. En todos los accesos y sobre la línea municipal deberán instalarse elementos de prevención, seguridad y advertencia al peatón acerca de la finalidad de aquellos y su uso para desplazamiento de vehículos. Dichos elementos deberán ser señales perfectamente visibles, basada en dispositivos de aviso de tipo luminoso y sonoro (semáforos, campanillas, luz intermitente, carteles.). Deberá diferenciarse el acceso vehicular del acceso peatonal demarcando este con un ancho mínimo de 0.70 mts.
+• Requerimientos de los módulos de Carga y Descarga: los módulos exigidos para cada caso deberán estar resueltos obligatoriamente dentro de la parcela, de tal manera que no afecten el tránsito en la vía pública y aseguren la facilidad de maniobras y espera del vehículo. Dichos espacios deberán resultar fácilmente identificables desde la vía pública, vinculada directamente con los puntos de acceso del edificio y resuelto de tal manera que no interfieran la circulación peatonal.
+IV.5.4.4.4. ESTACIONES DE SERVICIOS
+Son estaciones de servicio del automotor de combustibles líquidos, gas natural comprimido (GNC) y mixtas.
+Podrá admitirse su localización e instalación a una distancia menor de quinientos (500) metros - medidos mediante una línea recta imaginaria entre los límites de parcela más próximos- de otra ya autorizada cuando existan condiciones de trazado vial o de tránsito que justifiquen dicha implantación. El DE evaluará mediante estudio particularizado dichas circunstancias, pudiendo autorizar mediante Resolución en el expediente el proyecto que así lo justifique. Esta particularidad se hará extensiva a los predios ubicados en zonas industriales y rurales.
+IV.5.4.5. DEPOSITOS
+Uso de servicios destinado a actividades cuyo fin principal es el almacenaje de artículos y productos, se clasifican conforme a la escala del establecimiento, destino del almacenaje y grado de molestia o riesgo.
+Aquellos depósitos de carácter complementario y asociados directamente a una actividad comercial dominante se regularán conforme a lo establecido para el uso comercial, no quedando alcanzado por la clasificación, requisitos y limitaciones establecidos en el presente artículo.
+IV.5.4.5.1 – Deposito Pequeña escala
+Locales cuya superficie cubierta total no supera los 100 m2. y que en virtud de las características de los artículos a almacenar no genere ningún tipo de perturbación al entorno.
+Los artículos a almacenar deben albergarse en locales cubiertos y cerrados, no quedando comprendidos en esta categoría aquellos que cuenten con playas de acopio o depósito de materiales al aire libre.
+• Requieren “Factibilidad de Localización”.
+IV.5.4.5.2 – Deposito Mediana escala
+Locales cuya superficie cubierta total no supera los 200 m2. Admite almacenaje de artículos para el equipamiento urbano o comercial.
+Requisitos y limitaciones:
+• Requieren “Factibilidad de Localización”.
+IV.5.4.5.3 - Depósitos Gran escala
+Locales cuya superficie cubierta total no supera los 300 m2. Admite almacenaje de artículos para el equipamiento urbano o comercial, pudiendo generar en pequeña magnitud y de manera controlada, ruidos, polvos y olores.
+Requisitos y limitaciones:
+• Requieren “Factibilidad de Localización”.
+V.5.4.5.4 - Depósitos Peligrosos
+Establecimientos que superan los 300 m2, y que independientemente de su superficie cubierta, registren sustancias que ofrezcan ciertos riesgos para la población, o puedan generar focos de infección y/o
+
+45
+proliferación de insectos o roedores. Que registren existencia de líquidos agresivos, contaminantes, productos inflamables o productos explosivos. Requisitos y limitaciones:
+• Requiere “Factibilidad de Localización” con Evaluación de Impacto Ambiental.”
+IV.5.5- USO PRODUCTIVO
+Comprende los usos destinados a la producción u obtención de materias primas y a la producción de bienes, equipos y servicios industriales.
+IV.5.5.1 Industrial
+Uso productivo destinado a actividades de elaboración y/o transformación de materias primas y bienes; pueden tener actividades complementarias de almacenamiento de productos. Quedan exceptuados de este uso panaderías, heladerías y fábricas de pastas, cuando se trate de establecimientos de escala barrial y todo lo que allí se elabore sea para venta directa al público en el mismo. Las mismas se regularán según lo dispuesto para el uso comercial. La Ley Provincial 11.459/93 y sus normas reglamentarias serán de aplicación para la radicación territorial, ampliación y habilitación de todos los establecimientos industriales instalados o que se instalen en el Partido de Saladillo, requiriéndose “Evaluación de Impacto Ambiental” en los casos que así lo establezca dicha Ley y sus normas reglamentarias.
+Requisitos y limitaciones:
+• Distancias mínimas: Las industrias categorizadas como “3” no podrán instalarse a una distancia menor de 200 mts. respecto de establecimientos preexistentes destinados a educación, salud y esparcimiento y de sectores donde exista uso residencial consolidado.
+Esta distancia se medirá entre los dos puntos más próximos de las respectivas parcelas.
+• Estacionamiento: un módulo por cada 100 m2. de superficie cubierta del establecimiento y/o un módulo cada cuatro operarios, computándose un mínimo de 25 m2. por módulo. • Carga y Descarga: para la superficie destinada a carga y descarga se requerirá un módulo
+(28 m2.) por cada 200 m2 de superficie cubierta del establecimiento. El Departamento Ejecutivo podrá incrementar las superficies destinadas a estacionamiento y carga y descarga, cuando la demanda de la actividad propuesta así lo requiera.
+• Accesos: sobre vías pertenecientes a la Red Regional, Regional Metropolitana, Rutas Nacionales y
+Provinciales, deberá cumplir con condiciones de seguridad referidas al acceso y egreso de vehículos y contar con los visados correspondientes de la Dirección de Vialidad Provincial.
+IV.5.5.1.1. Industrias de Primera Categoría
+Incluye aquellos establecimientos que se consideran inocuos porque su funcionamiento no constituye riesgo o molestia a la seguridad, salubridad e higiene de la población, ni ocasiona daños a sus bienes materiales ni al medio ambiente. Aquellos establecimientos que se consideran inocuos, resultarán admitidos en zonas de uso dominante residencial y todas aquellas dentro del casco urbano fundacional cuando cumplan con al menos dos condiciones según detalle: a. Los establecimientos pertenecientes a la primera categoría que empleen menos de cinco (5) personas como dotación total, incluyendo a todas las categorías laborales y a los propietarios, b. Los establecimientos pertenecientes a la primera categoría que dispongan de una capacidad de generación inferior a los quince (15) HP, si bien deberán ajustarse a las exigencias de la ley 11459
+c. Los establecimientos pertenecientes a la primera categoría que atento al Nivel de Complejidad
+Ambiental (NCA) que resulten con Efluentes y residuos (ER) no superior al Tipo 1. Decreto reglamentario
+1741/96 ley 11459
+d. Los establecimientos pertenecientes a la primera categoría que atento al Nivel de Complejidad
+Ambiental (NCA) que resulten con riesgo ambiental (RA) no superior dos unidades de riesgo. Decreto reglamentario 1741/96 ley 11459.
+En todos los casos que no se cumpla la condición a) o b), no deberán incluirse establecimientos que desarrollen un proceso productivo continuo, limitando para esta categoría como banda horaria el límite de 6
+a 20 hs.
+Requieren Informe de Zonificación:
+Los establecimientos pertenecientes a la primera categoría que empleen menos de cinco (5) personas como dotación total, incluyendo a todas las categorías laborales y a los propietarios, y que dispongan de una capacidad de generación inferior a los quince (15) HP, si bien deberán ajustarse a las exigencias de la ley
+11459, estarán exceptuadas de obtener la previa Aptitud Ambiental y podrán solicitar la habilitación industrial
+
+46
+con sólo brindar un informe bajo declaración jurada de las condiciones de su ubicación y características de su funcionamiento en orden a no afectar al medio ambiente, al personal y a la población debiendo en el término de 180 días contar con certificado de aptitud ambiental tramitado ante la Agencia Ambiental.
+IV.5.5.1.2. Industrias de Segunda Categoría
+Incluye aquellos establecimientos que se consideran incómodos porque su funcionamiento constituye una molestia para la salubridad e higiene de la población u ocasiona daños a los bienes materiales y al medio ambiente.
+Requieren Informe de Zonificación y Evaluación de Impacto Ambiental.
+IV.5.5.1.3. Industrias de Tercera Categoría
+Incluye aquellos establecimientos que se consideran peligrosos porque su funcionamiento constituye un riesgo para la seguridad, salubridad e higiene de la población u ocasiona daños graves a los bienes y al medio ambiente.
+Requieren “Informe de Zonificación” y “Certificado de Aptitud Ambiental” con Evaluación de Impacto
+Ambiental.
+IV.5.5.1.4. Parques Industriales
+Incluye parques industriales, sectores industriales planificados, polígonos industriales y toda otra forma de agrupación industrial.
+Requieren “Informe de Zonificación” y “Certificado de Aptitud Ambiental” con Evaluación de Impacto
+Ambiental.
+IV.5.5.2. Agropecuario
+Uso productivo destinado a actividades tales como agricultura intensiva y extensiva, horticultura, ganadería y otras asociadas o complementarias. Incluye producción florícola, frutícola, apícola, granjas, avícola y otros criaderos.
+Los criaderos que incluyan matanza y faena de animales deberán clasificarse como establecimientos industriales según lo dispuesto por la normativa provincial.
+IV.5.5.2.1. Agropecuario Intensivo
+Comprende explotaciones de tipo agropecuario en parcelas menores a 30 ha.
+IV.5.5.2.2. Agropecuario Extensivo
+Comprende explotaciones de tipo agropecuario en parcelas no menores a las 30 ha.
+En todo uso agropecuario, cuando se construyan invernaderos para la protección de la producción frutihortícola, estos deberán ser declarados mediante croquis ante la Dirección de Obras Particulares. adjuntando a los mismos, constancia de intervención ante la Autoridad del Agua., organismo que requerirá las condiciones mínimas para el escurrimiento de las aguas conforme a los estudios hidráulicos y geológicos pertinentes. El vertido de agua de origen pluvial hacia las redes de drenajes existentes deberá ser autorizado por parte de la
+A.D.A. en el marco de la LEY 12257 y su decreto reglamentario. Así mismo este organismo será quien otorgará el correspondiente permiso de uso del recurso hídrico subterráneo. En todos los casos queda absolutamente prohibida la evacuación de agua sobre linderos y calles públicas. La Dirección de Obras
+Particulares podrá fijar indicador F.O.S. máximo para la localización de estas estructuras.
+
+47
+CAPITULO V
+MOVILIZACION DEL
+SUELO URBANO
+
+48
+V.1 MECANISMO DE MOVILIZACION DEL SUELO URBANO
+Los mecanismos de movilización del suelo urbano son de dos tipos:
+I - Los que necesitan declaración específica y son:
+• Parcelamiento y/o edificación obligatorios.
+• Reajuste de tierras
+• Englobamiento parcelario.
+Por Ordenanza Municipal se podrá declarar la afectación de sectores a los mecanismos de movilización indicados precedentemente si no estuvieran previstos en la Zonificación.
+II- Los que no necesitan declaración por estar identificados en la Zonificación y son:
+• Las Reservas Urbanas (R. U.) fijadas por este Código.
+V.1.1 DECLARACIÓN DE PARCELAMIENTO Y/O EDIFICACIÓN OBLIGATORIOS
+El Municipio, mediante ordenanzas específicas podrá declarar el parcelamiento y/o la edificación obligatorios de los inmuebles urbanos baldíos o con edificación derruida o paralizada, y determinada según los parámetros que se establecen en el art.º 84 y 85º DL 8912/77 sustituidos por la Ley 14449/12.
+Cuando las obras de infraestructura están ejecutadas, la Municipalidad podrá establecer un gravamen especial a las parcelas baldías, que permanezcan como tales sin causa justificada, a fin de lograr el aprovechamiento pleno de las inversiones realizadas. La recaudación correspondiente se destinará a ejecución de nuevas obras de infraestructura o Equipamiento Comunitario, en concordancia con lo dispuesto en los artículos: 86, 87, 88 y 89 del DL 8912/77 sustituidos por la Ley 14449/12
+La O.T.M. realizará los estudios para establecer los programas de ejecución, y su correlatividad, así como la definición del tipo y nivel de equipamiento que requiere cada una de las zonas afectadas por la declaración.
+V.1.2 REAJUSTE DE TIERRAS
+Se refiere al sistema mediante el cual los propietarios de predios en un área o zona debidamente determinada, transfieran su respectivo derecho de propiedad a una entidad gestora o le permiten que bajo cualquier modalidad jurídicamente posible, utilice y ocupe temporalmente sus inmuebles, con el fin exclusivo de que desarrolle y lleve a cabo un plan específico de construcción, ampliación, reposición y mejoramiento de edificios y/o de infraestructura urbana básica, con la obligación, una vez concluidas las obras, de redefinir las unidades prediales y realizar las operaciones de transferencia de dominio de carácter compensatorio, que sean indispensables para ese mismo efecto. Deberá ajustarse a lo establecido en el art. 90º del DL 8912/77
+sustituidos por la Ley 14449/12
+V.1.3 ZONAS DE ENGLOBAMIENTO PARCELARIO
+Consiste en la delimitación de sectores donde debe unificarse el parcelamiento a fin de posibilitar un cambio de uso o un proceso de reestructuración urbana (nuevo trazado, apertura de calles, cesiones y reconformación parcelaria)
+La declaración de englobamiento parcelario respecto de un determinado sector por parte del Municipio, implica la declaración de utilidad pública y sujeta a expropiación por parte del mismo de acuerdo a lo dispuesto en el art. 91º de la Ley 8.912/77
+La Municipalidad favorecerá todos los procesos de permuta de inmuebles, compra, venta de calles, permuta por cesiones de Espacios Verdes y de Equipamiento Comunitario que sea menester, para facilitar los procesos de reconformación urbana.
+V.1.4 RESERVAS URBANAS
+Los sectores así designados en la Zonificación quedan sujetos para su efectiva incorporación al Área Urbana según lo establecido en el presente código. Las ampliaciones deberán encuadrarse en los artículos 17º y 18º
+del Decreto Ley 8.912/77 mientras tanto conservarán su subdivisión actual y los usos del Área que correspondan y sean compatibles con la Zona Urbana.
+Queda expresamente prohibida la materialización de construcciones de carácter permanente sobre la prolongación de las trazas de la red circulatoria urbana existente, de las trazas planificadas en el Esquema director y de las que surjan del estudio particularizado para la Reserva para Expansión Urbana según lo estipulado presente código.
+Las construcciones que se realicen sobre las trazas de las restricciones establecidas, no serán objeto de compensación alguna, en caso de que la Municipalidad declare la utilidad pública de la apertura de la calle.
+
+49
+CAPITULO VI
+CONDICIONES
+AMBIENTALES
+
+50
+VI.1 CONCEPTO
+El nivel de desarrollo de los asentamientos humanos, así como el tipo de producción dominante, favorece el logro de condiciones básicas de calidad del medio a los fines del desarrollo económico, social y físico –
+ambiental.
+VI.2 DEFINICIONES DE TERMINOS TECNICOS
+Se adapta a los efectos de la aplicación del presente capítulo, el glosario de términos que constituye el Anexo
+I de la Ley 11.723/95.
+Se incluye el término desarrollo sostenible, entendiendo por tal al crecimiento constante o sostenido en el tiempo que compatibiliza la protección del ambiente con el desarrollo económico.
+VI.3 NORMAS DE APLICACIÓN
+• El derecho a un ambiente sano está consagrado por la Constitución Nacional en el Artículo 14º, que viene acompañado de una herramienta idónea como el amparo y reconoce la legitimación amplia para la protección.
+• La Ley Provincial Nº11.723/95, que se encuadra en el artículo 28º de la Constitución de la Provincia tiene por objeto la protección, conservación, mejoramiento y restauración de los recursos naturales y del medio en general a fin de preservar la vida en su sentido más amplio, asegurando a las generaciones presentes y futuras la conservación de la calidad ambiental y la diversidad biológica.
+• El Decreto 8.751/77 T.O. Nº8.526/86 es de aplicación con las modificaciones que se introducen con la Ley N.º 11.723/95.
+• Las fuentes fijas de contaminación atmosféricas se regirán por lo establecido en la Ley Provincial
+Nº5.965, Decreto 2009/60 y sus modificatorias y la ley 11459/96 y Decreto Reglamentario.
+• Ley Nacional Nº20.284/73 sobre Condiciones Atmosféricas y Efluentes Gaseosos.
+• Ley Provincial Nº6.253/60 y Decreto Reglamentario Nº11.368/61 sobre Conservación de Desagües
+Naturales.
+• Ley Provincial Nº11.720/95 de Residuos Especiales para Establecimientos Asistenciales de todo tipo y su Decreto Reglamentario.
+• Ley Nacional Nº11.347/92 y su Decreto Reglamentario 450/94 sobre Residuos Patogénicos que regulan todo lo atinente a la generación, manipuleo, transporte, tratamiento y disposición final de una manera sostenible, de los residuos derivados de los establecimientos asistenciales de todo tipo.
+• La Ley Nacional Nº24.051 de Residuos Peligrosos.
+Ley 20284/73
+Ley Provincial N.º 12257/99. Código de Aguas
+Decreto Provincial N.º 890/98 de Almacenamiento de Silos
+VI.4 NORMAS COMPLEMENTARIAS
+Las normas complementarias para detección, control y sanciones correspondientes serán establecidas por
+Ordenanza específica, en función a los estudios que se realicen, a los Convenios que realice el Municipio con la Autoridad de Aplicación y las reales posibilidades de control local.
+Se referirán como mínimo a los siguientes ítems:
+• Efluentes Gaseosos: fuentes contaminantes, fijas y móviles.
+• Efluentes Líquidos: fuentes contaminantes, fijas y móviles. Ruidos molestos.
+• Residuos Sólidos (domiciliarios, industriales, patogénicos): límites máximos de emisión, formas de medición, sanciones equivalentes a la Ley de Orden Nacional.
+VI.5 RESIDUOS PELIGROSOS
+a) Se prohíbe la instalación, radicación y habilitación de toda planta de almacenamiento transitorio y/o tratamiento de residuos peligrosos comprendidos en la Ley Provincial Nº11.720 de Residuos Especiales no originados en la ciudad de Saladillo, quedando exceptuadas las industrias que se incluyen en el punto h).
+
+51
+b) La entrada y tránsito de Residuos Peligrosos incluidos en los Anexos I y II de la Ley 11.720, no originados en la ciudad de Saladillo, será permitida siempre y cuando, cumpliendo con las normas vigentes, tengan su destino final fuera del Municipio o se encuentren contemplados en el punto h).
+c) Prohíbase la disposición final de los Residuos Peligrosos incluidos en los Anexos I y II de la Ley
+11.720, cualquiera fuera su origen, aún los generados en la ciudad d Saladillo.
+d) Prohíbase la entrada, tránsito, vertido, depósito y/o tratamiento de materiales o desechos radioactivos sin importar su origen. Se excluyen aquellos materiales radiactivos utilizados en medicina.
+e) Prohíbase la entrada, tránsito, vertido, depósito y/o tratamiento de residuos domiciliarios o industriales no comprendidos en los Anexos I y II de la ley Nº11.720, que no hayan sido generados dentro de la ciudad de Saladillo, salvo expresa autorización proveniente del Departamento Ejecutivo Municipal.
+f) Se exceptúan de esta prohibición los desechos de carácter inerte y no contaminante que sean utilizados como materia prima. Quedan asimismo exceptuados los subproductos de la Industria Frigorífica que tengan como destino un establecimiento para su industrialización.
+g) Prohíbase el vertido de productos tóxicos, contaminantes, así como residuos de desechos en redes cloacales o cualquier otro sitio que implique riesgo.
+h) Podrá permitirse la radicación y habilitación dentro del Municipio, de industrias que utilicen como materias primas, desechos industriales comprendidos dentro de la Ley Nº11.720. Se incluyen aquí las industrias cuyas operaciones conduzcan a la recuperación de recursos, el reciclado, la generación o la reutilización directa de los desechos antes mencionados. Los residuos provenientes de estas industrias, cuando los tuviesen, no podrán ser los considerados como peligrosos ni contaminantes del medio ambiente, ni poseer una o varias de las características indicadas en el Anexo II de la Ley Nº11.720.
+i) Toda industria debidamente radicada y habilitada dentro de la ciudad de Saladillo, que originase como consecuencia de su operación cualquier desecho incluido en la Ley Nº11.720, deberá tener su propia planta de tratamiento, de acuerdo a las normas vigentes. Si los residuos generados, luego de su tratamiento, aún conservarán características de peligrosidad que se incluyen en el Anexo II de la Ley Nº11720, o no pudieran ser tratados y se requiriese efectuar la disposición final como relleno de seguridad u otro depósito permanente, de acuerdo a lo establecido en el punto c).
+j) Toda industria que genere residuos especiales y no tuviese prevista la planta de tratamiento de los mismos, previo a su habilitación en el Municipio, deberá asegurar, mediante Declaración Jurada, la factibilidad de trata y disponer los residuos a través de un tercero contratado.
+VI.6 CONTROL AMBIENTAL DE LOCALIZACIÓN DE NUEVAS ACTIVIDADES
+Para evitar y prevenir sobre problemas ambientales, se ha establecido la obligatoriedad de obtener Certificado
+Urbanístico en forma previa a la localización de actividades, presentando planos o ejecución de obras. En caso de actividades que por su naturaleza puedan potencialmente generar problemas ambientales, se les solicitará Evaluación de Impacto Ambiental (EIA) y Evaluación de Impacto Urbano (EIU) en el entorno.
+Podrá ser denegada la localización de actividades que puedan generar perjuicios al medio, aunque este rubro esté permitido en la zona por este Código, debiendo fundar técnicamente la denegatoria.
+La Municipalidad también podrá condicionar la aprobación de localización y/o habilitación de establecimientos al cumplimiento de ciertos requisitos que establezca y que aseguren un funcionamiento ambiental satisfactorio. Asimismo, podrá condicionar la permanencia de actividades localizadas y habilitadas con anterioridad a la vigencia de este Código, al cumplimiento de medidas de mitigación y remediación de sus efectos sobre el medio. En casos de perjuicios comprobados e imposibilidad de corrección de los efectos ambientales negativos, se autoriza la clausura de la actividad.
+
+52
+CAPITULO VII
+ESPACIO PÚBLICO
+
+53
+VII.1 OBJETIVOS GENERALES
+Las presentes disposiciones tienen como objetivo la protección, rehabilitación y materialización de acciones sobre el espacio público de las Áreas Urbanas, Complementarias y Rurales del Partido.
+VII.2. DEFINICIÓN
+Se considera al espacio público como aquella parte perteneciente al espacio urbano determinada a partir de los límites del espacio privado y definida como bienes públicos por el Código Civil (Art. 2340 y 2341), la Ley
+Provincial de Ordenamiento Territorial y Uso del Suelo 8912/77, así como por el resto de los instrumentos legales concurrentes a la misma y vigentes en la materia. Se encuentran comprendidos entre otros: las calles, avenidas, ramblas, bulevares, plazas, plazoletas, parques, riberas de Arroyos y Ríos, etc.
+A tales efectos este Capítulo contempla la variedad de actuaciones que deben ser tenidas en cuenta para: a) Potencializar al espacio público como el ámbito de mayor expresión de la ciudadanía b) Incrementar su aprovechamiento intensivo en términos simbólicos, sociales, culturales, turísticos, de uso e intercambio, recreativos y de esparcimiento c) Orientar las acciones públicas para su protección, rehabilitación y puesta en valor.
+d) Orientar las acciones privadas a fin de preservar la identidad y el carácter de las distintas Zonas y
+Áreas con el propósito de incrementar su calidad espacial y ambiental e) Preservar los sitios, zonas, edificios y monumentos, incluidos en este Código como de interés patrimonial, considerando al espacio público como elemento indisoluble de los bienes a proteger.
+f) Intervenir sobre el espacio público a través de estudios y proyectos específicos con el fin de equilibrar la estructura urbana, neutralizar la fragmentación socio-espacial, corregir conflictos ambientales y preparar sectores y zonas para recibir acciones de desarrollo y mejoramiento urbano- ambiental.
+VII.3. ALCANCE DE LAS INTERVENCIONES SOBRE EL ESPACIO PÚBLICO
+A los efectos definidos en los objetivos de este Capítulo se formulan normas atinentes a los elementos componentes del espacio público de acuerdo a su grado de pertenencia a:
+• Las Áreas Urbanas
+• Las Áreas Complementarias y Rurales del Partido
+VII.4. ESPACIO PÚBLICO EN ÁREAS URBANAS
+Constituyen elementos de regulación: a) Arbolado y Forestación (de calles, avenidas, parques, plazas, etc.)
+b) Aceras y calzadas c) Iluminación d) Señalización e) Publicidad f) Toldos g) Marquesinas h) Muros y Cercos de frente
+VII.5. DE LA AUTORIDAD MUNICIPAL
+La Secretaría de Obras Públicas, la OTM y las respectivas Direcciones de línea de la Municipalidad de
+Saladillo serán en forma concurrente y solidaria la Autoridad de Aplicación de las normas contenidas en el presente Capítulo.
+VII.6. FORESTACIÓN
+VII.6.1. GENERALIDADES
+El arbolado y la forestación de los espacios urbanos constituyen un elemento primordial del equilibrio ecológico del territorio y sus áreas urbanas.
+
+54
+Declárase patrimonio forestal y bien protegido de interés público, al conjunto de especies arbóreas y arbustivas ubicadas en los espacios públicos pertenecientes al territorio de la ciudad de Saladillo.
+Lo dispuesto en el presente apartado resulta complementario y no deroga la reglamentación específica existente en la materia.
+VII.6.2. PROHIBICIONES
+Prohíbase la extracción, poda y tala no autorizadas expresamente, así como cualquier acción que pueda infligir algún daño a los bienes mencionados en el Art. VII.6.1.
+VII.6.3 DEFINICIONES
+Con tal objeto se define: a) Entiéndase por extracción la acción de desarraigar los ejemplares del lugar de implantación.
+b) Entiéndase por poda el corte de ramas que se separen definitivamente de la planta madre.
+c) Entiéndase por daño la poda de raíces, las heridas, aplicación de sustancias tóxicas, quemaduras por fuego, fijación de elementos extraños y todo tipo de agresión que altere el desarrollo de los ejemplares en forma normal o cause la muerte.
+VII.6.4 FORESTACIÓN EN LOS ESPACIOS PÚBLICOS
+Declárese de interés público la preservación, ampliación y mejoramiento de las especies arbóreas y arbustivas ubicadas en propiedad pública, incluidos las plazas, plazoletas, parques, aceras de calles de la localidad de
+Saladillo.
+VII.6.5 RESPONSABILIDADES
+Es responsabilidad de todos los habitantes frentistas (propietarios o no), la conservación, cuidado y reposición de los árboles colocados en la acera respectiva.
+En los edificios de propiedad horizontal, el responsable del cumplimiento de los requisitos antes mencionados, será el consorcio o su administración; de no existir, lo será quien usufructúa la planta baja del inmueble.
+VII.6.7. PLANTACIÓN Y REPOSICIÓN
+La plantación o reposición de los ejemplares de vereda se hará con las especies y en el lugar que la autoridad de Aplicación determine.
+Cuando la variedad implantada no se ajuste a la anterior o a la que determine la Autoridad de Aplicación, el responsable deberá proceder a su retiro y sustitución por otra autorizada de acuerdo a lo expresado en VII.6.8.
+VII.6.8. ESPECIES ARBÓREAS
+Las especies arbóreas posibles de ser plantadas serán definidas por la Municipalidad para las Zonas establecidas en este Código, atendiendo al carácter de las mismas, forma de ocupación, usos permitidos y ejemplares existentes.
+VII.6.9. ELIMINACIÓN O SUSTITUCIÓN DE ÁRBOLES Y PODA
+Cuando razones de interés público o privado, de carácter excepcional, hagan imprescindible la eliminación definitiva o cambio de uno o más ejemplares deberá, en todos los casos, obtenerse el permiso municipal correspondiente.
+La poda de ejemplares arbóreos estará a cargo de la Municipalidad, por ejecución directa o a través de terceros y se ejecutará dando cuenta previamente a la población de los motivos que lo justifican.
+VII.6.10 DISPOSICIÓN DE LOS EJEMPLARES
+No se aprobará la construcción de veredas, cualquiera sea el material a emplear en las mismas, si no se ha efectuado la reserva del espacio para la plantación de árboles, según los criterios que establezca la Autoridad de Aplicación.
+VII.6.11 COLOCACIÓN DE CANTEROS Y VEREDAS
+En las zonas donde se disponga la parcial parquización de las aceras, la conservación y cuidado de las mismas será de responsabilidad del titular de la parcela frentista. La superficie parquizada deberá estar nivelada con la superficie pavimentada de la acera, no admitiéndose la construcción de muretes, cordones de borde o cualquier otro elemento físico que la delimite y que obstruya o dificulte el tránsito peatonal, así como el ascenso y descenso de pasajeros.
+
+55
+VII.6.12 PROVISIÓN DE LOS EJEMPLARES
+Se alentará la plantación en veredas existentes, mediante la provisión por parte de la Municipalidad, de ejemplares aptos según OTM, para lo cual anualmente en la época propicia, se publicarán variedades.
+VII.6.13 PODA O EXTRACCIÓN
+Únicamente se admitirá la poda o extracción de ejemplares, previa autorización municipal por la Autoridad de
+Aplicación en los siguientes casos:
+PODA O EXTRACCION POR RAZONES DE PROYECTO
+Defínase como razones de proyecto a toda solicitud de construcción, reconstrucción, ampliación, remodelación, refacción, transformación y/o reforma de edificios, destinados a cualquier uso o actividad que se encontrare incluido en las Áreas Urbanas del partido. La misma deberá acompañarse con un plano en el que consten la cantidad, ubicación, nombre y edad aproximada de todas las especies arbóreas y/o arbustivas que contenga la parcela, con indicación, si correspondiere, de aquellas cuya poda o extracción se solicite, debidamente justificada, firmada por profesional responsable con incumbencias en la materia.
+PODA O EXTRACCION POR RAZONES DE SEGURIDAD
+Defínase como razones de seguridad, a los siguientes casos: a) Estado de decrepitud o decaimiento del vigor, irrecuperables.
+b) Ciclo biológico cumplido.
+c) Cuando pudieran ocasionar daños que amenacen la seguridad de las personas o bienes.
+d) Cuando se trate de especies o variedades que la experiencia demuestre que no son aptas para arbolado urbano.
+e) Cuando la inclinación del ejemplar amenace con su caída o provoque trastornos a las personas o bienes.
+VII.6.14 SANCIONES Y/O MULTAS
+Toda trasgresión a las normas establecidas en el presente Capítulo, hará pasible a los responsables de las mismas de aplicar las sanciones y/o multas a: a) Aquel que pode o dañe en cualquiera de sus formas las especies arbóreas o arbustivas alterando el desarrollo normal de cada uno de los ejemplares que hubieren sido podados o dañados.
+b) Aquel que extraiga, tale o cause a las especies arbóreas o arbustivas un daño tal que sea irreparable u ocasione su muerte, más la obligatoriedad de reposición de diez (10) ejemplares de idéntica especie, por cada uno de los que hubieren sido extraídos, talados o dañados, debiendo asimismo reponer en el lugar y con la especie que disponga la autoridad de aplicación.
+En caso de reincidencia, los valores de las multas se duplicarán sucesivamente.
+VII.6.15 RESPONSABILIDAD SOLIDARIA
+Se consideran solidariamente responsables de cualquier trasgresión a lo establecido en el presente Capítulo, a los propietarios de los espacios parcelarios privados, sus inquilinos u ocupantes y los que por cualquier causa lo detenten, exploten o tengan su cuidado, siendo facultad de la Autoridad de Aplicación, accionar contra uno o varios responsables, conjunta o sucesivamente.
+VII.7. ACERAS
+Todo propietario está obligado a la materialización, mantenimiento y/o reconstrucción de las aceras de calles y Avenidas de las áreas urbanas de la ciudad, las calles mantendrán las dimensiones actuales de las mismas.
+La Autoridad de Aplicación determinará los materiales, disposición, dimensiones y colores de los elementos componentes de las aceras para las diferentes Zonas. No se admitirán materiales ni elementos componentes diferentes de los establecidos para cada Zona. En los casos de construcción total o reconstrucción parcial de la acera, los materiales a utilizar serán homogéneos y similares a los establecidos para las diferentes Zonas.
+VII.7.1 PROHIBICIÓN DE CONSTRUCCIÓN SOBRE LAS ACERAS
+Queda prohibida en todas las Áreas Urbanas la construcción de jardineras, maceteros, o la inclusión de cualquier elemento fijo (columnas, cartelería, bicicleteros, etc.) que afecte la libre circulación peatonal y dificulte el libre descenso – ascenso de pasajeros a un vehículo estacionado en la vía pública.
+
+56
+Solo se admitirán la colocación de maceteros móviles, siempre que apoyen la estética del lugar, con tamaños y disposiciones que no afecten el libre tránsito peatonal.
+VII.7.2 PROHIBICIÓN DE OCUPACIÓN DE LA ACERA
+Prohíbase la ocupación de la acera con artículos de venta de cualquier naturaleza. Las ferias artesanales, puestos de venta de diarios, revistas, flores etc. estarán expresamente autorizados por la Autoridad de
+Aplicación en las Zonas y sectores que la misma determine.
+La ocupación de aceras con equipamiento móvil (sillas, mesas, sombrillas, etc.) deberá ser autorizada por la
+Autoridad de Aplicación quien determinará la superficie permitida de ocupar y forma de disposición de dichos elementos a fin de no obstruir el tránsito peatonal.
+VII.7.3 RAMPAS DE ACCESO
+En la ejecución de obras públicas y privadas se evitará la generación de barreras arquitectónicas. El espacio público urbano deberá garantizar la accesibilidad, circulación y adecuada funcionalidad para permitir el libre desplazamiento de personas con capacidades reducidas. Será de aplicación la Ley Nacional. N.º 24.314.
+Los edificios de acceso público (administrativos, culturales, educativos, institucionales, etc.) deberán prever la colocación de rampas de acceso para discapacitados. En el caso de obras construidas y de dificultad para su materialización en el acceso al edificio, deberán efectuar la consulta respectiva a la Autoridad de
+Aplicación, a fin de minimizar la ocupación de la acera.
+VII.8. ILUMINACION
+Los artefactos o luminarias que se propongan dentro del espacio público y en los que sus elementos de soporte superen la Línea Municipal ubicándose dentro del espacio aéreo de la calle, deberán contar con la aprobación de la O.T.M.
+VII.9. SEÑALIZACION
+La O.T.M. definirá los criterios de localización, diseño y forma de cartelería y señalización urbana públicas.
+VII.10. ESPACIO PÚBLICO EN ÁREAS COMPLEMENTARIAS Y RURALES
+VII.10.1. TRATAMIENTO DE CALLES EN LAS ÁREAS COMPLEMENTARIAS Y RURALES
+En el Área Complementaria y Rural la Autoridad de Aplicación determinará el tratamiento particular de calles colectoras, accesos, y caminos rurales donde definirá la señalización, mobiliario, iluminación, etc. adecuados a su función específica.
+VII.10.2. PUBLICIDAD EN EL SISTEMA CIRCULATORIO PRINCIPAL
+Se prohíbe la publicidad en las calles colectoras, vías principales de acceso y salida a las localidades del
+Partido, así como señalización no autorizada expresamente por la Autoridad de Aplicación, quien estará facultada para su retiro en caso de incumplimiento de esta cláusula.
+
+57
+CAPITULO VIII
+ZONIFICACION,
+CARÁCTER Y NORMAS
+ESPECÍFICAS DE AREAS
+Y ZONAS
+
+58
+AC
+AREA
+COMPLEMENTARIA
+LOCALIDADES
+DEL PARTIDO DE
+SALADILLO
+CARÁCTER
+Zona destinada predominantemente al uso agropecuario orgánico no intensivo.
+OBJETIVO A
+LOGRAR
+Fomentar el incremento de producción intensiva, forestal, hortícola, frutícola, florícola y viveros.
+Incorporar parcelas al uso efectivo.
+USOS
+PREDOMINANTE Agropecuario orgánico no intensivo.
+COMPLEMENTARIO Vivienda unifamiliar.
+USOS ADMITIDOS Ver planilla de usos
+MORFOLOGÍA
+RETIROS: Frente: Mínimo 4m
+Lateral: Mínimo 4m
+Fondo: Mínimo 4m
+Altura de edif. Máxima: 10.50m
+Normas Generales Capitulo III
+ESPACIO PÚBLICO Y PAISAJE
+Consolidar la imagen extra urbana a partir de acciones de mejoramiento y definición del espacio público relativa a forestación, iluminación, y parquización del espacio público y privado.
+INDICADORES
+F.O.S 0,4 I.P.: 0,30
+F.O.T 0,4 Densidad: 1 viv. x Parc.
+PARCELA
+MINIMA:
+Frente: 40m
+Superficie: 2000 m2
+- Ver Disposiciones Particulares
+SERVICIOS
+Red de energía eléctrica – Alumbrado público – Desagües pluviales – Proyecto de eliminación de excretas - Mejorado de calles.
+DISPOSICIONES PARTICULARES
+* La conformación del espacio público se regirá por lo dispuesto en el capítulo VII.
+* Se admite una (1) Vivienda unifamiliar.
+
+59
+AC 1
+AREA
+COMPLEMENTARIA1
+SALADILLO
+CARÁCTER
+Zona destinada predominantemente al uso agropecuario orgánico no intensivo.
+OBJETIVO A
+LOGRAR
+Fomentar el incremento de producción intensiva, forestal, hortícola, frutícola, florícola y viveros.
+Incorporar parcelas al uso efectivo.
+USOS
+PREDOMINANTE Agropecuario orgánico no intensivo.
+COMPLEMENTARIO Vivienda unifamiliar.
+USOS ADMITIDOS Ver planilla de usos
+MORFOLOGÍA
+RETIROS: Frente: Mínimo 4m
+Lateral: Mínimo 4m
+Fondo: Mínimo 4m
+Altura de edif. Máxima: 10.50m
+Normas Generales Capitulo III
+ESPACIO PÚBLICO Y PAISAJE
+Consolidar la imagen extra urbana a partir de acciones de mejoramiento y definición del espacio público relativa a forestación, iluminación, y parquización del espacio público y privado.
+INDICADORES
+F.O.S 0,4 I.P.: 0,30
+F.O.T 0,4 Densidad: 1 viv. x Parc.
+PARCELA
+MINIMA:
+Frente: 40m
+Superficie: 2000 m2
+- Ver Disposiciones Particulares
+SERVICIOS
+Red de energía eléctrica – Alumbrado público – Desagües pluviales – Proyecto de eliminación de excretas - Mejorado de calles.
+DISPOSICIONES PARTICULARES
+* La conformación del espacio público se regirá por lo dispuesto en el capítulo VII.
+* Se admite una (1) Vivienda unifamiliar.
+
+60
+AC2
+AREA
+COMPLEMENTARIA 2
+SALADILLO
+CARÁCTER
+Zona destinada predominantemente al uso agropecuario intensivo
+OBJETIVO A
+LOGRAR
+Fomentar el incremento de producción intensiva.
+Incorporar parcelas al uso efectivo.
+USOS
+PREDOMINANTE Agropecuario intensivo.
+COMPLEMENTARIO Vivienda unifamiliar como complementario del uso predominante.
+USOS ADMITIDOS Ver planilla de usos
+MORFOLOGÍA
+RETIROS: Frente: 4m
+Lateral: 4m
+Fondo: 4m
+Altura de edif. Máxima: 15m
+Normas Generales Capitulo III
+ESPACIO PÚBLICO Y PAISAJE
+INDICADORES
+F.O.S 0,40 I.P.: 0,30
+F.O.T 0,40 Densidad: 1 viv. x Parc.
+PARCELA
+MINIMA:
+Frente: 100m
+Superficie: 40.000 m2
+- Ver Disposiciones Particulares
+SERVICIOS
+– Red de energía eléctrica – Alumbrado público – Desagües pluviales -.
+DISPOSICIONES PARTICULARES
+* La conformación del espacio público se regirá por lo dispuesto en el capítulo VII.
+* Se admite una vivienda unifamiliar como complementaria al uso principal.
+* Toda actividad que pueda comprometer la calidad de los recursos del agua y suelo quedaran prohibidas.
+* Las actividades que produzcan algún tipo de efluente, deberán ejecutar las instalaciones de tratamiento dentro de los límites de la parcela.
+Si supera la altura de 15m, queda sujeto a las condiciones que establezca la O.T.M.
+
+61
+AR AREA RURAL SALADILLO
+CARÁCTER
+Espacio destinado a usos relacionados con la producción agropecuaria extensiva, forestal, y otros
+OBJETIVO A
+LOGRAR
+Garantizar el adecuado desenvolvimiento de las actividades económicas y sociales que se manifiestan en las áreas rurales.
+Asegurar un adecuado uso de los recursos naturales en el marco de la sustentabilidad.
+Mejorar la conectividad de las áreas rurales del partido con sus localidades y con la región.
+USOS
+PREDOMINANTE Agropecuario intensivo y extensivo
+COMPLEMENTARIO Vivienda unifamiliar como complementario del uso predominante.
+USOS ADMITIDOS Ver planilla de usos
+MORFOLOGÍA
+RETIROS: Frente:
+Lateral:
+Fondo:
+Altura de edif. Máxima:
+Normas Generales Capitulo III
+ESPACIO PÚBLICO Y PAISAJE
+INDICADORES
+F.O.S I.P.:
+F.O.T Densidad:
+PARCELA
+MINIMA:
+Frente:
+Superficie:
+- Ver Disposiciones en Código Rural
+SERVICIOS
+DISPOSICIONES PARTICULARES
+* Se admite la vivienda unifamiliar como complementaria al uso principal.
+* Toda actividad que pueda comprometer la calidad de los recursos del agua y suelo quedaran prohibidas.
+* Las actividades que puedan producir algún tipo de molestias al área urbana o extraurbana quedarán restringidas por los radios establecidos en el capítulo III.
+* Las intervenciones sobre los bienes patrimoniales sujetos a preservación y rehabilitación declarados dentro del catálogo patrimonial y comprendido en el área rural quedarán sujetos a las condiciones que establezca la O.T.M. Como lo establecido en el capítulo XIV de este código.
+
+62
+CA
+COMERCIAL
+ADMINISTRATIVO
+SALADILLO
+CARÁCTER
+Zona con alta coexistencia de usos institucionales, administrativos, financieros, culturales, comerciales, de servicios y residenciales.
+OBJETIVO A
+LOGRAR
+Conformar un centro con identidad.
+Promover su valor simbólico como zona de uso permanente intensivo, generando zócalos comerciales.
+Preservar sus valores patrimoniales.
+Promover los procesos de renovación urbana orientada a la inversión.
+Privada.
+USOS
+PREDOMINANTE Institucional – Administrativo - Comercial – Servicios – Financiero –
+Social – Equipamientos culturales y educativos.
+COMPLEMENTARIO Residencial unifamiliar y multifamiliar.
+USOS ADMITIDOS Ver planilla de usos
+MORFOLOGÍA
+RETIROS: Frente:
+Lateral:
+Fondo: 20% del largo de lote
+Mínimo 3m
+Altura de edif. Máxima: Frente a avenidas: 18m
+Frente a calles: 15m
+Normas Generales Capitulo III
+ESPACIO PÚBLICO Y PAISAJE
+Consolidar la imagen urbana de la zona a partir de acciones de mejoramiento y definición del espacio público relativa a forestación, iluminación, construcción y arreglos de aceras, y parquización del espacio público y privado.
+INDICADORES
+F.O.S 0,6 I.P.: 0,15
+F.O.T 2.1 Densidad: 1000 hab/ha
+PARCELA
+MINIMA:
+Frente: 25m
+Superficie: 750 m2
+- Ver Disposiciones Particulares
+SERVICIOS
+Red de agua corriente – Red cloacal – Red de energía eléctrica domiciliaria – Alumbrado público – Desagües pluviales – Pavimento.
+DISPOSICIONES PARTICULARES
+* La conformación del espacio público se regirá por lo dispuesto en el capítulo VII.
+* No será obligatorio el estacionamiento a toda edificación con frente en avenidas; que no posea separación de ejes divisorios de predios y Línea Municipal; y con planta baja destinada exclusivamente a uso comercial y accesos.
+
+63
+CC1
+CORREDOR
+COMERCIAL 1
+SALADILLO
+CARÁCTER
+Sector destinado a la localización preferente de uso comercial administrativo y de servicios, y de vivienda unifamiliar y multifamiliar.
+OBJETIVO A
+LOGRAR
+Conformar un alineamiento de las actividades comerciales y de servicio complementario de la zona administrativo comercial.
+Consolidar una imagen urbana de calidad en avenidas de acceso a la zona central.
+Preservar sus valores patrimoniales.
+Promover los procesos de renovación urbana orientada a la inversión.
+Privada.
+USOS
+PREDOMINANTE Comercial – Administrativo - Servicios
+COMPLEMENTARIO Residencial unifamiliar y multifamiliar.
+USOS ADMITIDOS Ver planilla de usos
+MORFOLOGÍA
+RETIROS: Frente:
+Lateral:
+Fondo: 20% del largo de lote.
+Mínimo 3m
+Altura de edif. Máxima: 15m
+Normas Generales Capitulo III
+ESPACIO PÚBLICO Y PAISAJE
+Consolidar la imagen urbana de la zona a partir de acciones de mejoramiento y definición del espacio público relativa a forestación, iluminación, construcción y arreglos de aceras, y parquización del espacio público y privado.
+INDICADORES
+F.O.S 0,6 I.P.: 0,15
+F.O.T 2.0 Densidad: 700 hab/ha **
+PARCELA
+MINIMA:
+Frente: 20m
+Superficie: 600 m2
+- Ver Disposiciones Particulares
+SERVICIOS
+Red de agua corriente – Red cloacal – Red de energía eléctrica domiciliaria – Alumbrado público
+– Desagües pluviales – Pavimento.
+DISPOSICIONES PARTICULARES
+
+64
+CC2
+CORREDOR
+COMERCIAL 2
+SALADILLO
+CARÁCTER
+Sector destinado a la localización preferente de uso comercial administrativo y de servicios, y de vivienda unifamiliar y multifamiliar.
+OBJETIVO A
+LOGRAR
+Conformar un alineamiento de las actividades comerciales y de servicio complementario de la zona administrativo comercial.
+Consolidar una imagen urbana de calidad en avenidas de acceso a la zona central.
+Preservar sus valores patrimoniales.
+Promover los procesos de renovación urbana orientada a la inversión.
+Privada.
+USOS
+PREDOMINANTE Comercial – Administrativo - Servicios
+COMPLEMENTARIO Residencial unifamiliar y multifamiliar.
+USOS ADMITIDOS Ver planilla de usos
+MORFOLOGÍA
+RETIROS: Frente:
+Lateral:
+Fondo: 20% del largo de lote
+Mínimo 3m
+Altura de edif. Máxima: 12m
+Normas Generales Capitulo III
+ESPACIO PÚBLICO Y PAISAJE
+Consolidar la imagen urbana de la zona a partir de acciones de mejoramiento y definición del espacio público relativa a forestación, iluminación, construcción y arreglos de aceras, y parquización del espacio público y privado.
+INDICADORES
+F.O.S 0,6 I.P.: 0,15
+F.O.T 1,8 Densidad: 500 hab/ha
+PARCELA
+MINIMA:
+Frente: 15m
+Superficie: 375 m2
+- Ver Disposiciones Particulares
+SERVICIOS
+Red de agua corriente – Red cloacal – Red de energía eléctrica domiciliaria – Alumbrado público
+– Desagües pluviales – Pavimento.
+DISPOSICIONES PARTICULARES
+* La conformación del espacio público se regirá por lo dispuesto en el capítulo VII.
+
+65
+CC3
+CORREDOR
+COMERCIAL 3
+SALADILLO
+CARÁCTER
+Sector destinado a la localización preferente de uso comercial administrativo y de servicios, y de vivienda unifamiliar y multifamiliar.
+OBJETIVO A
+LOGRAR
+Conformar un alineamiento de las actividades comerciales y de servicio complementario de la zona administrativo comercial.
+Consolidar una imagen urbana de calidad en avenidas de acceso a la zona central.
+Preservar sus valores patrimoniales.
+Promover los procesos de renovación urbana orientada a la inversión.
+Privada.
+USOS
+PREDOMINANTE Comercial – Administrativo - Servicios
+COMPLEMENTARIO Residencial unifamiliar y multifamiliar.
+USOS ADMITIDOS Ver planilla de usos
+MORFOLOGÍA
+RETIROS: Frente:
+Lateral:
+Fondo: 20% del largo de lote
+Mínimo 3m
+Altura de edif. Máxima: 10,5m
+Normas Generales Capitulo III
+ESPACIO PÚBLICO Y PAISAJE
+Consolidar la imagen urbana de la zona a partir de acciones de mejoramiento y definición del espacio público relativo a: forestación, iluminación, construcción y arreglos de aceras, y parquización del espacio público y privado.
+INDICADORES
+F.O.S 0,6 I.P.: 0,20
+F.O.T 1,0 Densidad: 200 hab/ha
+PARCELA
+MINIMA:
+Frente: 12m
+Superficie: 300 m2
+- Ver Disposiciones Particulares
+SERVICIOS
+Red de agua corriente – Red cloacal – Red de energía eléctrica domiciliaria – Alumbrado público
+– Desagües pluviales – Pavimento.
+DISPOSICIONES PARTICULARES
+* La conformación del espacio público se regirá por lo dispuesto en el capítulo VII.
+
+66
+CS
+CORREDOR DE
+SERVICIO
+SALADILLO
+CARÁCTER
+Sector destinado a la localización de actividades comerciales vinculadas al sistema vial principal, turismo, y servicios a escala local y regional.
+OBJETIVO A
+LOGRAR
+Definir un ámbito que permita orientar la inversión privada destinada a actividades vinculadas al sistema vial principal.
+Contar con espacios adecuados para la localización de grandes equipamientos comerciales y actividades asociadas al turismo y el esparcimiento.
+USOS
+PREDOMINANTE Comercial, de servicios y turismo a escala local y regional.
+COMPLEMENTARIO Equipamiento complementario del uso predominante
+USOS ADMITIDOS Ver planilla de usos
+MORFOLOGÍA
+RETIROS: Frente:
+Lateral:
+Fondo: 20% del largo de lote (mínimo)
+Altura de edif. Máxima: 10,5m
+Normas Generales Capitulo III
+ESPACIO PÚBLICO Y PAISAJE
+Parquización de los espacios libres-verdes públicos y privados.
+Los volúmenes edificatorios deberán proveer una imagen armónica y deberán además tratar la forestación de calles colectoras y plazoletas con iluminación y arbolado acorde al carácter de la zona.
+INDICADORES
+F.O.S 0,60 I.P.: 0,30
+F.O.T 0,60 Densidad: 200 hab/ha
+PARCELA
+MINIMA:
+Frente: 20m
+Superficie: 600 m2
+- Ver Disposiciones Particulares
+SERVICIOS
+Red de agua corriente – Red cloacal – Red de energía eléctrica – Alumbrado público –
+Desagües pluviales – Proyecto de eliminación de excretas - pavimento
+DISPOSICIONES PARTICULARES
+* La conformación del espacio público se regirá por lo dispuesto en el capítulo VII.
+* Se admite una vivienda unifamiliar por parcela como complementaria del uso dominante.
+* Exclusivamente para el rubro hotelería se admite una densidad de 300 hab/ha sujeto a la aprobación de conexión a red cloacal o sistema equivalente.
+
+67
+CSC
+CORREDOR DE
+SERVICIOS
+COMPLEMENTARIA
+LOCALIDADES
+DEL PARTIDO DE
+SALADILLO
+CARÁCTER
+Sector destinado a la localización de actividades comerciales vinculadas al sistema vial principal, turismo, y servicios a escala local y regional.
+OBJETIVO A
+LOGRAR
+Definir un ámbito que permita orientar la inversión privada destinada a actividades vinculadas al sistema vial principal.
+Contar con espacios adecuados para la localización de grandes equipamientos comerciales y actividades asociadas al turismo y el esparcimiento.
+USOS
+PREDOMINANTE Comercial, de servicios y turismo a escala local y regional.
+COMPLEMENTARIO Equipamiento complementario del uso predominante
+USOS ADMITIDOS Ver planilla de usos
+MORFOLOGÍA
+RETIROS: Frente:
+Lateral:
+Fondo: 20% del largo de lote (mínimo)
+Altura de edif. Máxima: 10,5m
+Normas Generales Capitulo III
+ESPACIO PÚBLICO Y PAISAJE
+Parquización de los espacios libres-verdes públicos y privados.
+Los volúmenes edificatorios deberán proveer una imagen armónica y deberán además tratar la forestación de calles colectoras y plazoletas con iluminación y arbolado acorde al carácter de la zona.
+INDICADORES
+F.O.S 0,60 I.P.: 0,30
+F.O.T 0,60 Densidad: 1 viv. x Parc.
+PARCELA
+MINIMA:
+Frente: 20m
+Superficie: 600 m2
+- Ver Disposiciones Particulares
+SERVICIOS
+Red de agua corriente – Red cloacal – Red de energía eléctrica – Alumbrado público –
+Desagües pluviales – Proyecto de eliminación de excretas - pavimento
+DISPOSICIONES PARTICULARES
+* La conformación del espacio público se regirá por lo dispuesto en el capítulo VII.
+* Se admite una vivienda unifamiliar por parcela como complementaria del uso dominante.
+* Exclusivamente para el rubro hotelería se admite una densidad de 300 hab/ha sujeto a la aprobación de conexión a red cloacal o sistema equivalente.
+
+68
+CSU
+CORREDOR DE
+SERVICIO URBANO
+LOCALIDADES DEL
+PARTIDO DE
+SALADILLO
+CARÁCTER
+Sector destinado a la localización de actividades comerciales vinculadas al sistema vial principal, turismo, y servicios a escala local y regional.
+OBJETIVO A
+LOGRAR
+Definir un ámbito que permita orientar la inversión privada destinada a actividades vinculadas al sistema vial principal.
+Contar con espacios adecuados para la localización de grandes equipamientos comerciales y actividades asociadas al turismo y el esparcimiento.
+USOS
+PREDOMINANTE Comercial, de servicios y turismo a escala local y regional.
+COMPLEMENTARIO Equipamiento complementario del uso predominante
+USOS ADMITIDOS Ver planilla de usos
+MORFOLOGÍA
+RETIROS: Frente:
+Lateral:
+Fondo: 20% del largo de lote (mínimo)
+Altura de edif. Máxima: 10,5m
+Normas Generales Capitulo III
+ESPACIO PÚBLICO Y PAISAJE
+Parquización de los espacios libres-verdes públicos y privados.
+Los volúmenes edificatorios deberán proveer una imagen armónica y deberán además tratar la forestación de calles colectoras y plazoletas con iluminación y arbolado acorde al carácter de la zona.
+INDICADORES
+F.O.S 0,60 I.P.: 0,30
+F.O.T 0,60 Densidad: 150 hab/ha
+PARCELA
+MINIMA:
+Frente: 20m
+Superficie: 600 m2
+- Ver Disposiciones Particulares
+SERVICIOS
+Red de agua corriente – Red cloacal – Red de energía eléctrica – Alumbrado público –
+Desagües pluviales – Proyecto de eliminación de excretas - pavimento
+DISPOSICIONES PARTICULARES
+* La conformación del espacio público se regirá por lo dispuesto en el capítulo VII.
+* Se admite una vivienda unifamiliar por parcela como complementaria del uso dominante.
+* Exclusivamente para el rubro hotelería se admite una densidad de 300 hab/ha sujeto a la aprobación de conexión a red cloacal o sistema equivalente.
+
+69
+DR
+DEPORTIVO
+RECREATIVO
+SALADILLO
+CARÁCTER
+Parcelas destinadas al uso deportivo-recreativo, con usos puntuales en relación a su actividad única e identificable por la sociedad.
+OBJETIVO A
+LOGRAR
+Mantener la actividad desarrollada en funcionamiento dando flexibilidad suficiente para su adecuación y mejoramiento del área.
+USOS
+DR1 Club Argentinos (Av. M. Acosta, Calle J. Ingenieros, Av. D. Pereyra, y
+Calle J. M. Estrada)
+DR2 Club La Lola (Av. Mariano Acosta y Calle Alem)
+DR3 Club Oro Verde (Calle Emparanza, Calle Martin Fierro, Calle Viale, y
+Av. Bozan)
+DR4 Club Huracán (Av. Rivadavia, Calle Armendáriz, Calle Arospide, y
+Calle Sarmiento)
+DR5 Club Jacobo Urso (Calle Mariotto, Calle Armendariz, Calle Alisal, y
+Calle Rojas)
+DR6 Club defensores de Atucha (Esquina, Av. Sanguinetti, y calle Papa
+Francisco)
+DR7 Club Apeadero (Calle Yrigoyen, Calle Toledo, Av. Roight, Calle
+Medina)
+DR8 Automóvil Club de Saladillo (RP N° 51, Calle H. Yrigoyen)
+MORFOLOGÍA PAISAJE E INDICADORES
+En el área urbana son de aplicación los indicadores correspondientes a la zona de pertenencia.
+Por ser localizaciones puntuales conservan el estado parcelario y las construcciones existentes.
+En caso de remodelación o ampliación pedirán evaluación particular de la OTM para definir las condiciones a cumplir.
+En todos los casos se preservarán las construcciones patrimoniales y se tratará de mejorar las condiciones de habitabilidad edificatoria y urbana.
+Se deberá realizar el tratamiento paisajístico del predio y del espacio público. Veredas, cartelería, mobiliario urbano, e iluminación a definir por la OTM.
+SERVICIOS
+DISPOSICIONES PARTICULARES
+*La OTM solicitara para futuros usos específicos o ampliación de las instalaciones, la elaboración de un EIU Y/O EIA, según corresponda.
+
+70
+DUE
+DISTRITO DE
+URBANIZACION
+ESPECIAL
+SALADILLO
+CARÁCTER Distrito de urbanización
+OBJETIVO A
+LOGRAR
+Delimitar los sectores destinados a proyectos urbanísticos integrales
+USOS
+DUE 1
+“Barrio 96 viviendas”
+Circ. I, Sección H, Ch. 198 MZ: 198H.
+DUE 2
+“Barrio 77 viviendas”
+Circ. I, Sección B, Qta. 9, Mz.9p, y parte de la Mz. 9d.
+DUE 3
+“Barrio Empleados de
+Comercio”
+Circ. I, Sección A, Mz.86, 87 94 y 96.
+DUE 4
+“Barrio FONAVI”
+Parte de Circ. I, Sección B, Qta. 55, Mz.55d.
+DUE 5
+“Saladillo Norte”
+Circ 1, Sec G, CH 166, Pc 14a, Circ 1, Sec G, Ch 165, Fr 2, Pc 2a
+SERVICIOS
+Red de agua corriente y cloacas, energía eléctrica domiciliaria, alumbrado público, desagües pluviales, pavimento y gas natural.
+DISPOSICIONES PARTICULARES
+Deberán mantener su uso y subdivisión actual.
+Los indicadores, morfología y ocupación del suelo se regularán por la ordenanza que les dio origen. En caso de no tener ordenanza previa, se regirá por los indicadores propios de la zona.
+
+71
+DUE
+DISTRITO DE
+URBANIZACION
+ESPECIAL
+LOCALIDADES DEL
+PARTIDO DE
+SALADILLO
+CARÁCTER Distrito de urbanización
+OBJETIVO A
+LOGRAR
+Delimitar los sectores destinados a proyectos urbanísticos integrales
+USOS
+DUE 1 “Barrio 96
+Viviendas”
+Circ I, Sección H, Ch 198 MZ: 198H
+DUE 2 “Barrio 77
+viviendas”
+Circ I, Sección B, Qta 9, Mz. 9p, y parte de la Mz. 9d
+DUE 3 “Barrio
+Empleados de
+Comercio”
+Circ I, Sección A, Mz 86,87 94 y 96
+DUE 4 “ Barrio
+FONAVI”
+Parte de Circ I, Sección B, Qta 55, Mz. 55d.
+SERVICIOS
+DISPOSICIONES PARTICULARES
+Deberán mantener su uso y subdivisión actual.
+Los indicadores, morfología y ocupación del suelo se regularán por la ordenanza que les dio origen. En caso de no tener ordenanza previa, se regirá por los indicadores propios de la zona.
+
+72
+DI
+DISTRITO
+INDUSTRIAL
+LOCALIDADES DEL
+PARTIDO DE
+SALADILLO
+CARÁCTER
+Establecimiento Industrial preexistente cuyo funcionamiento dentro del Área Urbana exige recaudos y controles especiales ya que la actividad es incompatible con el uso residencial
+OBJETIVO A
+LOGRAR
+Propiciar su desactivación, traslado y/o mejoramiento de la situación medioambiental.
+USOS
+DI1 – A. de Toledo Fábrica de Arandelas – Cir II Sec A Mz 42 Pc 5
+INDICADORES
+F.O.S * C.A.S *
+F.O.T * Densidad *
+Parc. Min
+Ver Disposiciones Particulares• *Mantiene la superficie cubierta existente
+SERVICIOS
+Red de Agua Corriente y cloacas, energía eléctrica domiciliaria, alumbrado público, desagües pluviales, pavimento.
+DISPOSICIONES PARTICULARES
+*La actividad emplazada en este distrito tiene la obligación de contar con certificado de aptitud ambiental. No se permiten ampliaciones de las instalaciones existentes excepto que se trate de obras complementarias destinadas al tratamiento de efluentes o a mejorar las condiciones de funcionamiento para resolver problemas medioambientales.
+*Será objeto de control permanente de efluentes y residuos sólidos, y demás condiciones de funcionamiento.
+*Movimiento de carga, descarga y estacionamiento dentro de los límites del predio.
+*Prohibido el estacionamiento de camiones en la vía pública
+*Se propicia la materialización de cercos y de doble cortina forestal en el perímetro del predio.
+*En caso de cesar el uso, se deberá propiciar el cambio de zona acorde a usos admitidos en el
+Área Urbana mediante ordenanza convalidada por el P.E.
+
+73
+DES
+DISTRITO
+ESPECIAL SILOS
+LOCALIDADES DEL
+PARTIDO DE
+SALADILLO
+CARÁCTER
+Distrito en el que se encuentran en actividad plantas de silos preexistentes, son actividades de almacenamiento, clasificación, acondicionamiento y conservación de granos que exhiben una ubicación incompatible con el uso residencial.
+OBJETIVO A
+LOGRAR
+Propiciar su desactivación, traslado y/o mejoramiento de la situación medioambiental.
+USOS
+DES1 – Del Carril Silos Cargill Circ IV Pc 396B
+DES2 – Del Carril Ferrocarril Cir IV Sec A Fr I
+DES1 - Polvaredas Planta de Silos Cir IV Pc 536F
+INDICADORES
+F.O.S * C.A.S *
+F.O.T * Densidad *
+Parc. Min
+Ver Disposiciones Particulares• *Mantiene la superficie cubierta existente
+SERVICIOS
+Red de Agua Corriente y cloacas, energía eléctrica domiciliaria, alumbrado público, desagües pluviales, pavimento.
+DISPOSICIONES PARTICULARES
+*La actividad emplazada en este distrito tiene la obligación de contar con certificado de Aptitud
+Ambiental. No se admitirá la instalación de nuevos silos.
+*No se permiten ampliaciones de las instalaciones existentes excepto que se trate de obras complementarias destinadas al tratamiento de efluentes o a mejorar las condiciones de funcionamiento para resolver problemas medioambientales.
+*Será objeto de control de efluentes y residuos sólidos, y además condiciones de funcionamiento. Movimiento de carga y descarga: dentro de los límites del predio.
+Estacionamiento de camiones: dentro de la parcela.
+*Prohibido el estacionamiento de camiones en la vía pública.
+*Se propicia la materialización de cercos y doble cortina forestal en el perímetro del predio.
+*Se deberá dar cumplimiento a los requerimientos de la Ley 12605 Ley de Almacenamiento, clasificación, acondicionamiento y conservación de granos.
+
+74
+DR
+DEPORTIVO
+RECREATIVO
+LOCALIDADES DEL
+PARTIDO DE SALADILLO
+CARÁCTER
+Parcelas destinadas al uso deportivo-recreativo, con usos puntuales en relación a su actividad única e identificable por la sociedad.
+OBJETIVO A
+LOGRAR
+Mantener la actividad desarrollada en funcionamiento dando flexibilidad suficiente para su adecuación y mejoramiento del área.
+USOS
+DR1 - Cazón Club Social y Deportivo – Cir VI Sec A Mz 12 Pc 1A
+DR1 – Del Carril Club Defensores de Del Carril – Cir IV Sec A Mz 11 Pcs 18 A-2021-22-23
+DR2 – Del Carril Estadio Joaquín Benítez – Circ IV Sec A Fr I
+DR1 - Polvaredas Club Atlético Pampero – Cir IV Pc 1514
+DR1 - Toledo Club de Toledo – Cir II Sec A Mz 28 y 29
+MORFOLOGÍA PAISAJE E INDICADORES
+En el área urbana son de aplicación los indicadores correspondientes a la zona de pertenencia.
+Por ser localizaciones puntuales conservan el estado parcelario y las construcciones existentes.
+En caso de remodelación o ampliación pedirán evaluación particular de la OTM para definir las condiciones a cumplir.
+En todos los casos se preservarán las construcciones patrimoniales y se tratará de mejorar las condiciones de habitabilidad edificatoria y urbana.
+Se deberá realizar el tratamiento paisajístico del predio y del espacio público. Veredas, cartelería, mobiliario urbano, e iluminación a definir por la OTM.
+SERVICIOS
+DISPOSICIONES PARTICULARES
+*La OTM solicitara para futuros usos específicos o ampliación de las instalaciones, la elaboración de un EIU Y/O EIA, según corresponda.
+
+75
+EVP
+ESPACIO VERDE
+PUBLICO
+SALADILLO
+CARÁCTER
+Espacios verdes públicos destinados al esparcimiento y recreación de la población.
+OBJETIVO A
+LOGRAR
+Dotar a cada uno de los barrios de espacios de escala adecuados para el esparcimiento.
+Mejorar las condiciones medioambientales urbanas y contrarrestar la polución propia de la ciudad.
+USOS
+PREDOMINANTE Esparcimiento y recreación
+COMPLEMENTARIO Servicios acordes
+LOCALIZACION
+LOCALIZACION Espacios verdes (plazas) que funcionan como tal en la actualidad, sesiones y futuras sesiones emergentes de la subdivisión de fracciones o lotes bacantes.
+EVP 1 Plaza “25 de mayo” (Calle Emparanza, Calle Taborda. Moreno, Av.
+Belgrano, Av. Rivadavia, Av. San Martín)
+EVP 2 Plaza “Falucho” (Calle Taborda, Calle Taborda, Av. Cabral, y Av.
+Bozán)
+EVP3 Plaza “España” (Calle Taborda, Calle Ingenieros, Av. Mariano Acosta, y Av. Cabral)
+EVP4 Plaza “Parque Cooperación” (Calle Lisandro de la Torre, y Av.
+Saavedra)
+EVP5 Plaza “Parque Del Carmen” (Calle Alem, Calle Sarmiento, y Calle De
+Santibáñez)
+EVP6 Plaza “Parque Barrio Esperanza” (Calle Dasatti, Calle Posadas, y
+Calle Mariotto)
+EVP7 Plaza “17 de octubre” (Av. Saavedra, Av. Bozán, Calle Suquia, y Calle
+Emparanza)
+EVP8 Plaza “Islas Malvinas” (Av. Rivadavia, Calle Zamorano, y Calle Toledo)
+EVP9 Plaza “Parque Dieguito” (Calle Medina, y Calle Demaría)
+EVP10 Plaza “Parque CUEC” (Calle Emparanza, y Av. Frocham)
+EVP11 Plaza “Armendariz” (Av. Frocham, Calle Peña, Calle Av. Bozán, y
+Calle Emparanza)
+EVP12 Plaza “Parque Bicentenario” (Av. Ledesma, Calle L. Serrano, y Av.
+Frocham)
+EVP13 Plaza “Parque Pte. Perón” (Av. Bozán, Calle Estrada, y Av. Pereyra)
+EVP14 EVP14 – Plaza “Parque Eduardo Galeano” (Calle Vergara, y Calle
+Taborda)
+EVP15 Plaza “Parque Los Pibes” (Calle J. B. Justo, Calle Volonté, y Calle
+Ibarbia)
+EVP16 Plaza “Parque 31 de Julio” (Calle Volonté, y Calle Sojo)
+EVP17 Plaza “Pasaje Bomberos” (Av. Rivadavia, Calle Estrada, y Calle Roca)
+EVP18 Plaza “Parque Saladillo Norte” (Calle Papa Francisco, Calle La
+Araucaria, y Calle El Ceibo)
+EVP19 Plaza “Raed” (Av. J. D. Perón, Calle J. Seguí, Calle I. Medina, y Calle
+M. Villanueva)
+EVP20 Plaza “Plazoleta H. Yrigoyen” (Calle L. N. Alem y Calle Paseo de los inmigrantes)
+EVP21 Plaza “Susana Esther Soba” (Calle Los Sauces, y Calle Los Nogales)
+EVP22 Plaza “Parque República de Italia” (Av. Moreno, y Calle Alem)
+
+76
+EVP
+ESPACIO VERDE
+PUBLICO
+LOCALIDADES DEL
+PARTIDO DE
+SALADILLO
+CARÁCTER
+Espacios verdes públicos destinados al esparcimiento y recreación de la población.
+OBJETIVO A
+LOGRAR
+Dotar a cada uno de los barrios de espacios de escala adecuados para el esparcimiento.
+Mejorar las condiciones medioambientales urbanas y contrarrestar la polución propia de la ciudad.
+USOS
+PREDOMINANTE Esparcimiento y recreación
+COMPLEMENTARIO Servicios acordes
+LOCALIZACION
+LOCALIZACION Espacios verdes (plazas) que funcionan como tal en la actualidad, sesiones y futuras sesiones emergentes de la subdivisión de fracciones o lotes bacantes.
+EVP 1 - Cazón Plaza de la Juventud – Cir VI Sec A Mz 11
+EVP 1 – Del Carril Plaza General José de San Martín – Cir IV Sec A Mz 15
+EVP 1 - Polvaredas Plaza 17 de agosto – Cir IV Sec B Qta 3 Pc 3B
+EVP 1 - Toledo Plaza General José de San Martín – Cir II Sec A Mz 43
+ESPACIO PÚBLICO Y PAISAJE
+Parquizado y dotado de mobiliario urbano, equipamiento recreativo y de esparcimiento apropiados para el uso.
+DISPOSICIONES PARTICULARES
+El Código articula los espacios verdes públicos y parques urbanos en un sistema integrado de recorridos conformando una red que abarca toda la ciudad, diferenciándolos por tipo, ubicación y servicios, asignando a tratamiento y equipamiento adecuado para cada uno.
+Queda prohibido erigir cualquier tipo de construcción con superficie cubierta, a excepción de instalaciones complementarias indispensables según proyectos de la OTM aprobados por ordenanza.
+
+77
+IM INDUSTRIAL MIXTA SALADILLO
+CARÁCTER
+Zona destinada predominantemente al uso industrial y de servicios acordes al uso predominante.
+OBJETIVO A
+LOGRAR
+Fomentar la relocalización de todo emprendimiento que por su escala o molestia no pueda estar en el área urbana o próximo a ella.
+USOS
+PREDOMINANTE Industrial
+COMPLEMENTARIO Vivienda unifamiliar
+USOS ADMITIDOS Ver planilla de usos
+MORFOLOGÍA
+RETIROS: Frente: Mínimo 4m
+Lateral: Mínimo 4m
+Fondo: Mínimo 4m
+Altura de edif. Máxima: 15m
+Normas Generales Capitulo III
+ESPACIO PÚBLICO Y PAISAJE
+Consolidar la imagen urbana de la zona a partir de acciones de mejoramiento y definición del espacio público relativa a forestación, iluminación, y parquización del espacio público y privado.
+INDICADORES
+F.O.S 0,60 I.P.: 0,30
+F.O.T 0,60 Densidad: 1 viv. x Parc.
+PARCELA
+MINIMA:
+Frente: 40m
+Superficie: 2000 m2
+- Ver Disposiciones Particulares
+SERVICIOS
+Red de agua corriente – Red de energía eléctrica – Alumbrado público – Desagües pluviales –
+Proyecto de eliminación de excretas - Mejorado de calles.
+DISPOSICIONES PARTICULARES
+* La conformación del espacio público se regirá por lo dispuesto en el capítulo VII.
+** Se admite una (1) Vivienda unifamiliar.
+*** Si la altura de edificación supera quince metros (15m), su aprobación quedará sujeta a las condiciones que establezca la O.T.M.
+
+78
+I1 INDUSTRIAL 1 SALADILLO
+CARÁCTER
+Zona destinada a la localización de establecimientos industriales de 1ra y 2da categoría, de almacenaje y depósitos.
+OBJETIVO A
+LOGRAR
+Orientar la inversión privada en un sitio donde se puedan localizar usos molestos o incompatibles con el uso residencial.
+Fomentar la relocalización de todo emprendimiento que por su escala o molestia no pueda estar en el área urbana o próximo a ella.
+USOS
+PREDOMINANTE Industrial 1ra y 2da categoría y depósitos.
+COMPLEMENTARIO Servicios y equipamiento de industria.
+USOS ADMITIDOS Ver planilla de usos
+MORFOLOGÍA
+RETIROS: Frente: Mínimo 4m
+Lateral: Mínimo 4m
+Fondo: Mínimo 4m
+Altura de edif. Máxima: 15m
+Normas Generales Capitulo III
+ESPACIO PÚBLICO Y PAISAJE
+Parquización de los espacios libres-verdes públicos y privados.
+Los volúmenes edificatorios deberán proveer una imagen armónica y deberán además tratar la forestación de calles colectoras y plazoletas con iluminación y arbolado acorde al carácter de la zona. Forestación en todo perímetro mediante doble cortina forestal.
+INDICADORES
+F.O.S 0,40 I.P.: 0,30
+F.O.T 0,40 Densidad: 1 viv. x Parc.
+PARCELA
+MINIMA:
+Frente: 40m
+Superficie: 2000 m2
+- Ver Disposiciones Particulares
+SERVICIOS
+Red de energía eléctrica – Alumbrado público – Desagües pluviales – Proyecto de eliminación de excretas y tratamiento de efluentes industriales- mejorado de calles públicas y calles internas – acceso pavimentado -
+DISPOSICIONES PARTICULARES
+* La conformación del espacio público se regirá por lo dispuesto en el capítulo VII.
+* Se admite una vivienda unifamiliar por parcela como complementaria del uso dominante.
+* Se admitirán industrias de clase 1 y 2. El tratamiento de efluentes será dentro de la parcela, así como los movimientos de carga y descarga.
+* El estacionamiento de vehículos se realizará dentro del predio.
+
+79
+I2 INDUSTRIAL 2 SALADILLO
+CARÁCTER
+Zona destinada a la localización de establecimientos industriales de 1ra 2da y 3ra categoría, de almacenaje y depósitos.
+OBJETIVO A
+LOGRAR
+Orientar la inversión privada en un sitio donde se puedan localizar usos molestos o incompatibles con el uso residencial.
+Fomentar la relocalización de todo emprendimiento que por su escala o molestia no pueda estar en el área urbana o próximo a ella.
+USOS
+PREDOMINANTE Industrial 1ra, 2da y 3ra categoría y depósitos.
+COMPLEMENTARIO Servicios y equipamiento de industria.
+USOS ADMITIDOS Ver planilla de usos
+MORFOLOGÍA
+RETIROS: Frente: Mínimo 4m
+Lateral: Mínimo 4m
+Fondo: Mínimo 4m
+Altura de edif. Máxima: 15m
+Normas Generales Capitulo III
+ESPACIO PÚBLICO Y PAISAJE
+Parquizacion de los espacios libres-verdes públicos y privados.
+Los volúmenes edificatorios deberán proveer una imagen armónica y deberán además tratar la forestación de calles colectoras y plazoletas con iluminación y arbolado acorde al carácter de la zona. Forestación en todo perímetro mediante doble cortina forestal.
+INDICADORES
+F.O.S 0,40 I.P.: 0,30
+F.O.T 0,40 Densidad: 1 viv. x Parc.
+PARCELA
+MINIMA:
+Frente: 40m
+Superficie: 2000 m2
+- Ver Disposiciones Particulares
+SERVICIOS
+Red de energía eléctrica – Alumbrado público – Desagües pluviales – Proyecto de eliminación de excretas y tratamiento de efluentes industriales- mejorado de calles públicas y calles internas – acceso pavimentado -
+DISPOSICIONES PARTICULARES
+* La conformación del espacio público se regirá por lo dispuesto en el capítulo VII.
+* Se admite una vivienda unifamiliar por parcela como complementaria del uso dominante.
+* El estacionamiento de vehículos se realizará dentro del predio.
+
+80
+PU
+PARQUE
+URBANO
+LOCALIDADES DEL
+PARTIDO DE
+SALADILLO
+CARÁCTER
+Espacios verdes públicos destinados al esparcimiento y recreación de la población.
+OBJETIVO A
+LOGRAR
+Dotar a la ciudad de espacios de escala adecuados para el esparcimiento.
+Mejorar las condiciones medioambientales urbanas y contrarrestar la polución propia de la ciudad.
+USOS
+PREDOMINANTE Esparcimiento y recreación
+COMPLEMENTARIO Servicios acordes
+LOCALIZACION
+PU1 - Cazón Parque Estación Ferrocarril Don Joaquín Cazón
+PU1 – Del Carril Parque Estación Ferrocarril Del Carril – Cir IV Sec A Fr I
+PU1 - Polvaredas Parque Estación Ferrocarril Polvaredas – Cir IV Pc 515A
+PU1 - Toledo Parque Estación Ferrocarril Toledo – Cir II
+ESPACIO PÚBLICO Y PAISAJE
+Parquizado y dotado de mobiliario urbano, equipamiento recreativo y de esparcimiento apropiados para el uso.
+DISPOSICIONES PARTICULARES
+El Código articula los espacios verdes públicos y parques urbanos en un sistema integrado de recorridos conformando una red que abarca toda la ciudad, diferenciándolos por tipo, ubicación y servicios, asignando a tratamiento y equipamiento adecuado para cada uno.
+Queda prohibido erigir cualquier tipo de construcción con superficie cubierta, a excepción de instalaciones complementarias indispensables según proyectos de la OTM aprobados por ordenanza.
+
+81
+PU PARQUE URBANO SALADILLO
+CARÁCTER
+Espacios verdes públicos destinados al esparcimiento y recreación de la población.
+OBJETIVO A
+LOGRAR
+Dotar a la ciudad de espacios de escala adecuados para el esparcimiento.
+Mejorar las condiciones medioambientales urbanas y contrarrestar la polución propia de la ciudad.
+USOS
+PREDOMINANTE Esparcimiento y recreación
+COMPLEMENTARIO Servicios acordes
+LOCALIZACION
+PU1 Parque Ex Ferrocarril Roca (Calle 12 de octubre, Av. Mariano Acosta,
+Calle Roca, y Calle Alem)
+PU2 Parque Ex Ferrocarril Provincial (Calle J. Etchegoyen, Calle E.
+Echeverría, Calle E. De Santibáñez, y Calle R. Zamorano)
+PU3 Parque Dr. Emparanza (Av. Moreno, Calle Dellatorre, Calle Roca, y
+Calle Lenzi)
+ESPACIO PÚBLICO Y PAISAJE
+Parquizado y dotado de mobiliario urbano, equipamiento recreativo y de esparcimiento apropiados para el uso.
+DISPOSICIONES PARTICULARES
+El Código articula los espacios verdes públicos y parques urbanos en un sistema integrado de recorridos conformando una red que abarca toda la ciudad, diferenciándolos por tipo, ubicación y servicios, asignando a tratamiento y equipamiento adecuado para cada uno.
+Queda prohibido erigir cualquier tipo de construcción con superficie cubierta, a excepción de instalaciones complementarias indispensables según proyectos de la OTM aprobados por ordenanza.
+
+82
+R RESIDENCIAL
+Localidades del Partido de
+Saladillo
+CARÁCTER
+Zona destinada predominantemente al uso residencial, comercial diario, periódico, y servicios acordes al uso predominante.
+OBJETIVO A
+LOGRAR
+Consolidar el tejido urbano promoviendo el completamiento de parcelas y fracciones libres mediante la edificación de viviendas.
+Preservar los valores patrimoniales.
+Mejorar y promover el desarrollo de una alta calidad urbana, del paisaje urbano y el cuidado del espacio público.
+USOS
+PREDOMINANTE Residencial unifamiliar.
+COMPLEMENTARIO Comercial y servicios acordes
+USOS ADMITIDOS Ver planilla de usos
+MORFOLOGÍA
+RETIROS: Frente:
+Lateral:
+Fondo: 20% del largo de lote
+Mínimo 3m
+Altura de edif. Máxima: Frente a avenidas: 10,50m
+Frente a calles: 7,50m
+Normas Generales Capitulo III
+ESPACIO PÚBLICO Y PAISAJE
+Consolidar la imagen urbana de la zona a partir de acciones de mejoramiento y definición del espacio público relativa a forestación, iluminación, construcción y arreglos de aceras, y parquización del espacio público y privado.
+INDICADORES
+F.O.S 0,6 I.P. 0,20
+F.O.T 1,0 Densidad: 150 hab/ha
+PARCELA
+MINIMA:
+Frente: 12m
+Superficie: 300 m2
+- Ver Disposiciones Particulares
+SERVICIOS
+Red de agua corriente – Red cloacal – Red de energía eléctrica domiciliaria – Alumbrado público
+– Desagües pluviales – Pavimento.
+DISPOSICIONES PARTICULARES
+* La conformación del espacio público se regirá por lo dispuesto en el capítulo VII.
+
+83
+R1 RESIDENCIAL 1 SALADILLO
+CARÁCTER
+Zona destinada predominantemente al uso residencial unifamiliar y multifamiliar. Admite el uso comercial diario, periódico, y servicios acordes al uso predominante.
+OBJETIVO A
+LOGRAR
+Consolidar el tejido urbano promoviendo el completamiento de parcelas y fracciones libres mediante la edificación de viviendas.
+Preservar los valores patrimoniales.
+Mejorar y promover el desarrollo de una alta calidad urbana, del paisaje urbano y el cuidado del espacio público.
+USOS
+PREDOMINANTE Residencial unifamiliar y multifamiliar.
+COMPLEMENTARIO Comercial y servicios acordes
+USOS ADMITIDOS Ver planilla de usos
+MORFOLOGÍA
+RETIROS: Frente:
+Lateral:
+Fondo: 20% del largo de lote
+Mínimo 3m
+Altura de edif. Máxima: Frente a avenidas: 15m
+Frente a calles: 12m
+Normas Generales Capitulo III
+ESPACIO PÚBLICO Y PAISAJE
+Consolidar la imagen urbana de la zona a partir de acciones de mejoramiento y definición del espacio público relativa a forestación, iluminación, construcción y arreglos de aceras, y parquización del espacio público y privado.
+INDICADORES
+F.O.S 0,6 I.P. 0,15
+F.O.T 2,0 Densidad: 500 hab/ha
+PARCELA
+MINIMA:
+Frente: 15m
+Superficie: 375 m2
+- Ver Disposiciones Particulares
+SERVICIOS
+Red de agua corriente – Red cloacal – Red de energía eléctrica domiciliaria – Alumbrado público
+– Desagües pluviales – Pavimento.
+DISPOSICIONES PARTICULARES
+* La conformación del espacio público se regirá por lo dispuesto en el capítulo VII.
+
+84
+R2 RESIDENCIAL 2 SALADILLO
+CARÁCTER
+Zona destinada predominantemente al uso residencial, comercial diario, periódico, y servicios acordes al uso predominante.
+OBJETIVO A
+LOGRAR
+Consolidar el tejido urbano promoviendo el completamiento de parcelas y fracciones libres mediante la edificación de viviendas.
+Preservar los valores patrimoniales.
+Mejorar y promover el desarrollo de una alta calidad urbana, del paisaje urbano y el cuidado del espacio público.
+USOS
+PREDOMINANTE Residencial unifamiliar y multifamiliar.
+COMPLEMENTARIO Comercial y servicios acordes
+USOS ADMITIDOS Ver planilla de usos
+MORFOLOGÍA
+RETIROS: Frente:
+Lateral:
+Fondo: 20% del largo de lote
+Mínimo 3m
+Altura de edif. Máxima: Frente a avenidas: 12m
+Frente a calles: 9m
+Normas Generales Capitulo III
+ESPACIO PÚBLICO Y PAISAJE
+Consolidar la imagen urbana de la zona a partir de acciones de mejoramiento y definición del espacio público relativa a forestación, iluminación, construcción y arreglos de aceras, y parquización del espacio público y privado.
+INDICADORES
+F.O.S 0,6 I.P. 0,2
+F.O.T 1,6 Densidad: 350 hab/ha
+PARCELA
+MINIMA:
+Frente: 15m
+Superficie: 375 m2
+- Ver Disposiciones Particulares
+SERVICIOS
+Red de agua corriente – Red cloacal – Red de energía eléctrica domiciliaria – Alumbrado público
+– Desagües pluviales – Pavimento.
+DISPOSICIONES PARTICULARES
+* La conformación del espacio público se regirá por lo dispuesto en el capítulo VII.
+
+85
+R3 RESIDENCIAL 3 SALADILLO
+CARÁCTER
+Zona destinada predominantemente al uso residencial, comercial diario, periódico, y servicios acordes al uso predominante.
+OBJETIVO A
+LOGRAR
+Consolidar el tejido urbano promoviendo el completamiento de parcelas y fracciones libres mediante la edificación de viviendas.
+Preservar los valores patrimoniales.
+Mejorar y promover el desarrollo de una alta calidad urbana, del paisaje urbano y el cuidado del espacio público.
+USOS
+PREDOMINANTE Residencial unifamiliar y multifamiliar.
+COMPLEMENTARIO Comercial y servicios acordes
+USOS ADMITIDOS Ver planilla de usos
+MORFOLOGÍA
+RETIROS: Frente:
+Lateral:
+Fondo: 20% del largo de lote
+Mínimo 3m
+Altura de edif. Máxima: Frente a avenidas: 12m
+Frente a calles: 9m
+Normas Generales Capitulo III
+ESPACIO PÚBLICO Y PAISAJE
+Consolidar la imagen urbana de la zona a partir de acciones de mejoramiento y definición del espacio público relativa a forestación, iluminación, construcción y arreglos de aceras, y parquización del espacio público y privado.
+INDICADORES
+F.O.S 0,6 I.P. 0,2
+F.O.T 1,6 Densidad: 350 hab/ha
+PARCELA
+MINIMA:
+Frente: 15m
+Superficie: 375 m2
+- Ver Disposiciones Particulares
+SERVICIOS
+Red de agua corriente – Red cloacal – Red de energía eléctrica domiciliaria – Alumbrado público
+– Desagües pluviales – Pavimento.
+DISPOSICIONES PARTICULARES
+* La conformación del espacio público se regirá por lo dispuesto en el capítulo VII.
+
+86
+R4 RESIDENCIAL 4 SALADILLO
+CARÁCTER
+Zona destinada predominantemente al uso residencial, comercial diario, periódico, y servicios acordes al uso predominante.
+OBJETIVO A
+LOGRAR
+Consolidar el tejido urbano promoviendo el completamiento de parcelas y fracciones libres mediante la edificación de viviendas.
+Preservar los valores patrimoniales.
+Mejorar y promover el desarrollo de una alta calidad urbana, del paisaje urbano y el cuidado del espacio público.
+USOS
+PREDOMINANTE Residencial unifamiliar.
+COMPLEMENTARIO Comercial y servicios acordes
+USOS ADMITIDOS Ver planilla de usos
+MORFOLOGÍA
+RETIROS: Frente:
+Lateral:
+Fondo: 20% del largo de lote
+Mínimo 3m
+Altura de edif. Máxima: Frente a avenidas: 10,50m
+Frente a calles: 7,50m
+Normas Generales Capitulo III
+ESPACIO PÚBLICO Y PAISAJE
+Consolidar la imagen urbana de la zona a partir de acciones de mejoramiento y definición del espacio público relativa a forestación, iluminación, construcción y arreglos de aceras, y parquización del espacio público y privado.
+INDICADORES
+F.O.S 0,6 I.P. 0,20
+F.O.T 1,0 Densidad: 200 hab/ha
+PARCELA
+MINIMA:
+Frente: 12m
+Superficie: 300 m2
+- Ver Disposiciones Particulares
+SERVICIOS
+Red de agua corriente – Red cloacal – Red de energía eléctrica domiciliaria – Alumbrado público
+– Desagües pluviales – Pavimento.
+DISPOSICIONES PARTICULARES
+* La conformación del espacio público se regirá por lo dispuesto en el capítulo VII.
+
+87
+REU
+RESERVA DE
+ENSANCHE URBANO
+SALADILLO
+CARÁCTER
+Zona prevista para la ampliación urbana según el crecimiento detectado y factibilidad de acceso a servicios esenciales para dicho fin.
+OBJETIVO A
+LOGRAR
+Ampliación y consolidación planificada del área urbana
+USOS
+PREDOMINANTE Conserva el uso actual hasta el momento de su habilitación.
+COMPLEMENTARIO
+USOS ADMITIDOS
+MORFOLOGÍA
+RETIROS: Frente:
+Lateral:
+Fondo:
+Altura de edif. Máxima:
+Normas Generales
+ESPACIO PÚBLICO Y PAISAJE
+INDICADORES
+F.O.S I.P.
+F.O.T Densidad:
+PARCELA
+MINIMA:
+Frente:
+Superficie:
+- Conserva los indicadores actuales.
+SERVICIOS
+DISPOSICIONES PARTICULARES
+* Zona sujeta a estudio particularizado por parte de la OTM según lo dispuesto en el Dto, Ley
+8912/77. Hasta tanto conservara su uso e indicadores actuales.
+
+88
+RE 1
+RESIDENCIAL
+EXTRAURBANA 1
+SALADILLO
+CARÁCTER
+Zona destinada predominantemente al uso residencial de baja densidad.
+OBJETIVO A
+LOGRAR
+Consolidar la imagen residencial con predominio del espacio abierto.
+USOS
+PREDOMINANTE Residencial unifamiliar.
+COMPLEMENTARIO
+USOS ADMITIDOS Ver planilla de usos
+MORFOLOGÍA
+RETIROS: Frente: Mínimo 3m
+Lateral: Mínimo 3m
+Fondo: Mínimo 3m
+Altura de edif. Máxima: 7,5m
+Normas Generales Capitulo III
+ESPACIO PÚBLICO Y PAISAJE
+Consolidar la imagen urbana de la zona a partir de acciones de mejoramiento y definición del espacio público relativa a forestación, iluminación, y parquización del espacio público y privado.
+INDICADORES
+F.O.S 0,4 I.P.: 0,30
+F.O.T 0,4 Densidad: 60 hab/ha
+PARCELA
+MINIMA:
+Frente: 25m
+Superficie: 1500 m2
+- Ver Disposiciones Particulares
+SERVICIOS
+Red de agua corriente – Red de energía eléctrica domiciliaria – Alumbrado público – Desagües pluviales – Proyecto de eliminación de excretas - Mejorado de calles.
+DISPOSICIONES PARTICULARES
+* La conformación del espacio público se regirá por lo dispuesto en el capítulo VII.
+* Se admite una (1) Vivienda unifamiliar.
+
+89
+RE 2
+RESIDENCIAL
+EXTRAURBANA 2
+SALADILLO
+CARÁCTER
+Zona destinada predominantemente al uso residencial de baja densidad.
+OBJETIVO A
+LOGRAR
+Consolidar la imagen residencial con predominio del espacio abierto.
+USOS
+PREDOMINANTE Residencial
+COMPLEMENTARIO
+USOS ADMITIDOS Ver planilla de usos
+MORFOLOGÍA
+RETIROS: Frente:
+Lateral:
+Fondo: 20% largo de parcela
+Altura de edif. Máxima: 7,5m
+Normas Generales Capitulo III
+ESPACIO PÚBLICO Y PAISAJE
+Consolidar la imagen urbana de la zona a partir de acciones de mejoramiento y definición del espacio público relativa a forestación, iluminación, y parquización del espacio público y privado.
+INDICADORES
+F.O.S 0,6 I.P.: 0.20
+F.O.T 0,6
+PARCELA
+MINIMA:
+Frente: 20m
+Superficie: 600 m2
+- Ver Disposiciones Particulares
+SERVICIOS
+Red de agua corriente – Red de energía eléctrica domiciliaria – Alumbrado público – Desagües pluviales – Proyecto de eliminación de excretas - Mejorado de calles.
+DISPOSICIONES PARTICULARES
+* La conformación del espacio público se regirá por lo dispuesto en el capítulo VII.
+
+90
+RE 3
+RESIDENCIAL
+EXTRAURBANA 3
+SALADILLO
+CARÁCTER
+Zona destinada predominantemente al uso residencial de baja densidad.
+OBJETIVO A
+LOGRAR
+Consolidar la imagen residencial con predominio del espacio abierto.
+USOS
+PREDOMINANTE Residencial
+COMPLEMENTARIO
+USOS ADMITIDOS Ver planilla de usos
+MORFOLOGÍA
+RETIROS: Frente: Mínimo 4m
+Lateral: Mínimo 4m
+Fondo: Mínimo 4m
+Altura de edif. Máxima: 10,5m
+Normas Generales Capitulo III
+ESPACIO PÚBLICO Y PAISAJE
+Consolidar la imagen urbana de la zona a partir de acciones de mejoramiento y definición del espacio público relativa a forestación, iluminación, y parquización del espacio público y privado.
+INDICADORES
+F.O.S 0,4 I.P.: 0.30
+F.O.T 0,4 Densidad: 1viv x parcela
+PARCELA
+MINIMA:
+Frente: 40m
+Superficie: 2000 m2
+- Ver Disposiciones Particulares
+SERVICIOS
+Red de energía eléctrica - Alumbrado público – Desagües pluviales – Proyecto de eliminación de excretas – Mejorado de calles
+DISPOSICIONES PARTICULARES
+* La conformación del espacio público se regirá por lo dispuesto en el capítulo VII.
+Se admite 1 vivienda Unifamiliar.
+
+91
+REC
+ZONA DE
+RECUPERACIÓN
+LOCALIDADES DEL
+PARTIDO DE
+SALADILLO
+CARÁCTER
+Sector destinado al saneamiento y rehabilitación de las parcelas que por su estado actual no resultan aptas para el uso urbano.
+OBJETIVO A
+LOGRAR
+Propiciar el mejoramiento de su situación medioambiental.
+USOS
+REC – Del Carril Circ IV Sec A Manz 54-55-58-59
+INDICADORES
+F.O.S * C.A.S *
+F.O.T * Densidad *
+Parc. Min
+Ver Disposiciones Particulares• *Mantiene la superficie cubierta existente
+SERVICIOS
+DISPOSICIONES PARTICULARES
+*La actividad emplazada tiene la obligación de contar con Certificado de Aptitud Ambiental.
+* Toda propuesta de subdivisión, uso y ocupación deberá estar precedida por la ejecución de las obras de saneamiento necesarias que aseguren los niveles considerados como aptos para el uso a radicar, y certificadas a través de los estudios y/o análisis particularizados correspondientes, aprobados por la Autoridad competente.
+
+92
+RE
+RESIDENCIAL
+EXTRAURBANA
+LOCALIDADES DEL
+PARTIDO DE
+SALADILLO
+CARÁCTER
+Zona destinada predominantemente al uso residencial de baja densidad.
+OBJETIVO A
+LOGRAR
+Consolidar la imagen residencial con predominio del espacio abierto.
+USOS
+PREDOMINANTE Residencial unifamiliar.
+COMPLEMENTARIO
+USOS ADMITIDOS Ver planilla de usos
+MORFOLOGÍA
+RETIROS: Frente: Mínimo 3m
+Lateral: Mínimo 3m
+Fondo: Mínimo 3m
+Altura de edif. Máxima: 7,5m
+Normas Generales Capitulo III
+ESPACIO PÚBLICO Y PAISAJE
+Consolidar la imagen urbana de la zona a partir de acciones de mejoramiento y definición del espacio público relativa a forestación, iluminación, y parquización del espacio público y privado.
+INDICADORES
+F.O.S 0,4 I.P.: 0,30
+F.O.T 0,4 Densidad: 60 hab/ha
+PARCELA
+MINIMA:
+Frente: 25m
+Superficie: 1500 m2
+- Ver Disposiciones Particulares
+SERVICIOS
+Red de agua corriente – Red de energía eléctrica domiciliaria – Alumbrado público – Desagües pluviales – Proyecto de eliminación de excretas - Mejorado de calles.
+DISPOSICIONES PARTICULARES
+* La conformación del espacio público se regirá por lo dispuesto en el capítulo VII.
+* Se admite una (1) Vivienda unifamiliar.
+
+93
+UE USOS
+ESPECIFICOS
+LOCALIDADES DEL PARTIDO
+DE SALADILLO
+CARÁCTER
+Parcelas destinadas a usos puntuales en relación a su actividad única e identificable por la sociedad.
+OBJETIVO
+A
+LOGRAR
+Mantener la actividad desarrollada en funcionamiento dando flexibilidad suficiente para su adecuación y mejoramiento del área.
+USOS
+UE 1 - Cazón Base de Campamento – Cir. VI Sec A Ch 8
+UE 2 - Cazón Destacamento Policial – Cir VI Sec A Mz 8 Pc 4
+UE 3 - Cazón Centro Atención Primaria de la Salud (CAPS) - Cir VI Sec A Mz 8
+Pc 4
+UE 4 - Cazón Vivero Municipal Eduardo Holmberg - Cir. VI Sec A Ch 8
+UE 1 – Del Carril Delegación Municipal – Cir IV Sec A Mz 11 P 13ª
+UE 2 – Del Carril Destacamento Policial – Cir IV Sec A Mz 19 Pc 3
+UE 3 – Del Carril Unidad Sanitaria Esteban Dellecave – Cir IV Sec A Mz 18 Pcs 910-11-12
+UE 4 – Del Carril Cooperativa de Agua – Cir IV Sec A Mz 17 Pc 15
+UE 5 - Del Carril Cementerio – Cir IV Sec A Ch 10 Pc 3A
+UE 1 - Polvaredas Delegación Municipal – Cir IV Sec B Mz 3 Pcs 4D
+UE 2 -Polvaredas Destacamento Policial – Cir IV Sec B Qta 4 Mz 4A Pcs 4b-3
+UE 3 -Polvaredas Centro de Atención Primaria de la Salud (CAPS) - Cir IV Sec B Mz
+3 Pcs 4C
+UE 4 – Polvaredas Cooperativa Eléctrica – Cir IV Sec B Mz 2 Pc 5
+UE 1 -Toledo Delegación Municipal – Cir II
+UE 2 -Toledo Destacamento Policial – Cir II Sec A Mz 44 Pc 5 A
+UE 3 -Toledo Centro de Atención Primaria de la Salud (CAPS) – Cir II Sec A Mz
+37
+MORFOLOGÍA PAISAJE E INDICADORES
+En el área urbana son de aplicación los indicadores correspondientes a la zona de pertenencia.
+Por ser localizaciones puntuales conservan el estado parcelario y las construcciones existentes.
+En caso de remodelación o ampliación pedirán evaluación particular de la OTM para definir las condiciones a cumplir.
+En todos los casos se preservarán las construcciones patrimoniales y se tratará de mejorar las condiciones de habitabilidad edificatoria y urbana.
+Se deberá realizar el tratamiento paisajístico del predio y del espacio público. Veredas, cartelería, mobiliario urbano, e iluminación a definir por la OTM.
+SERVICIOS
+DISPOSICIONES PARTICULARES
+*La OTM solicitara para futuros usos específicos o ampliación de las instalaciones, la elaboración de un EIU Y/O EIA, según corresponda.
+
+94
+UE USOS ESPECIFICOS SALADILLO
+CARÁCTER
+Parcelas destinadas a usos puntuales en relación a su actividad única e identificable por la sociedad.
+OBJETIVO A
+LOGRAR
+Mantener la actividad desarrollada en funcionamiento dando flexibilidad suficiente para su adecuación y mejoramiento del área.
+USOS
+UE 1 Hospital Zonal Dr. Alejandro Posadas (Calle Dr. F. Emparanza, Av.
+A. Bozan, Av. D. Pereyra, y Calle J. M. Estrada
+UE2 Comisaria Saladillo (Calle F. A. De Toledo, Av. M. Moreno y Av. J. M.
+Belgrano)
+UE3 Obras Sanitarias (Av. M. Moreno, Calle J. A. Roca, y Calle J. C.
+Dellatorre)
+UE4 Corralón Municipal (Av. M. Ledesma, Av. D. Pereyra, y Calle Maestro
+L. Serrano)
+UE5 Planta de Clasificación y Tratamiento de Residuos Sólidos Urbanos
+(Calle Intendente A. Armendariz, Calle C. Arrospide, Calle 25 de
+Mayo, y Calle sin Nombre)
+UE6 Cementerio Santa Morada de la Esperanza (Av. M. Ledesma, Calle E.
+Che Guevara, Calle Maestro L. Serrano, y Calle M. Ibáñez Frocham)
+UE7 Terminal de Ómnibus (Calle B. Mitre, y Calle J. M. Estrada)
+UE8 Aeródromo Pcial. Ing. Eugenio Taravella (Ac. A. Cicaré, Calle B. de la
+Independencia)
+UE9 Planta de Tratamiento de Residuos Cloacales (Ac. N. Kirchner, Calle
+Intendente H. Inda, Calle H. Rolando, y Calle U. B. Demarco)
+UE10 Sociedad Rural de Saladillo (Calle J. C. Dellatorre, Calle A. Palacios,
+Av. J. M. Belgrano, y Av. M. Cabral)
+UE11 Tiro Federal (Calle Las Acacias, y Av J. M. Belgrano)
+UE12 Cooperativa Eléctrica Saladillo. (Av. Saavedra, Calle Dellatorre y Calle
+José Ingenieros)
+MORFOLOGÍA PAISAJE E INDICADORES
+En el área urbana son de aplicación los indicadores correspondientes a la zona de pertenencia.
+Por ser localizaciones puntuales conservan el estado parcelario y las construcciones existentes.
+En caso de remodelación o ampliación pedirán evaluación particular de la OTM para definir las condiciones a cumplir.
+En todos los casos se preservarán las construcciones patrimoniales y se tratará de mejorar las condiciones de habitabilidad edificatoria y urbana.
+Se deberá realizar el tratamiento paisajístico del predio y del espacio público. Veredas, cartelería, mobiliario urbano, e iluminación a definir por la OTM.
+SERVICIOS
+DISPOSICIONES PARTICULARES
+*La OTM solicitara para futuros usos específicos o ampliación de las instalaciones, la elaboración de un EIU Y/O EIA, según corresponda.
+
+95
+ESPACIO PÚBLICO Y PAISAJE
+Parquizado y dotado de mobiliario urbano, equipamiento recreativo y de esparcimiento apropiados para el uso.
+DISPOSICIONES PARTICULARES
+El Código articula los espacios verdes públicos y parques urbanos en un sistema integrado de recorridos conformando una red que abarca toda la ciudad, diferenciándolos por tipo, ubicación y servicios, asignando a tratamiento y equipamiento adecuado para cada uno.
+Queda prohibido erigir cualquier tipo de construcción con superficie cubierta, a excepción de instalaciones complementarias indispensables según proyectos de la OTM aprobados por ordenanza.
+
+96
+CAPITULO IX
+CLASIFICACION DE
+USOS
+
+97
+o CERTIFICADO URBANISTICO
+• EVAL. IMPACTO AMBIENTAL E INFORME DE ZONIFICACIÓN
+>> FACTIBILIDAD TECNICA MUNICIPAL
+ ESTUDIO AGROECONÓMICO
+Requisitos CA CC1 CC2 CC3 R1 R2-R3 R4 IM RE1 RE2 AC1 AC2 I1 I2 CR R
+1
+1.1
+o
+X X X X X X X X X X X X X X X X
+1.2
+o >>
+X X X X X X X
+1.3
+o >>
+X X X X X X X
+HOTELES / HOSTERIAS o >>
+X X X X X X
+MOTELES o >>
+X X
+CASAS DE RETIRO o
+X
+CLUB DE CAMPO o
+X X
+2
+PEQUEÑA ESCALA o
+X X X X X X X X X X X X
+MEDIANA ESCALA o
+X X X X X X X X X X X X
+GRAN ESCALA o
+X X X
+PEQUENA ESCALA o
+X X X X X X
+MEDIANA ESCALA o
+X X X X
+GRAN ESCALA o >>
+X X X
+2.3  • 
+X X X
+3
+PEQUEÑA ESCALA o
+X X X X X X X X X
+GRAN ESCALA  •  X X X X
+PELIGROSO O MOLESTO  •  X X X X
+4
+PEQUEÑA ESCALA o
+X X X X X X X X X X X
+MEDIANA ESCALA o >>
+X X X X X X X X X X
+GRAN ESCALA  • 
+X X X X
+PEQUEÑA ESCALA o
+X X X X X X X
+MEDIANA Y GRAN ESCALA o
+X X X X X X X
+PEQUEÑA ESCALA o
+X X X X X X X X X
+MEDIANA Y GRAN ESCALA o X X X X X X
+PEQUEÑA ESCALA  •  X
+MEIANA Y GRAN ESCALA  • 
+X
+PEQUEÑA ESCALA o
+X X X X X X X
+MEDIANA Y GRAN ESCALA o
+X X X X X X
+PEQUEÑA ESCALA o
+X X X X X X X
+MEDIANA Y GRAN ESCALA o
+X X X X X X
+PLAYAS DE ESTACIONEMIENTO / COCHERAS o
+X X X X X
+ESTACIONES DE SERVICIO  • 
+X X X X X X X
+PEQUEÑA ESCALA o
+X X X X X X X X X
+MEDIANA ESCALA o
+X X X X X X X X
+GRAN ESCALA o
+X X X X X X X
+PELIGROSO O MOLESTO  • 
+X X X X
+5
+PRIMERA CATEGORIA o
+X X X X X X
+SEGUNDA CATEGORIA o
+X X
+TERCERA CATEGORIA  • 
+X
+PARQUES INDUSTRIALES  • 
+X X
+INTENSIVO   
+X X
+EXTENSIVO   
+X
+NO PERMITIDO
+AREA RURAL
+DETERMINACIÒN DE USOS PERMITIDOS PARA LA CIUDAD DE SALADILLO
+REQUISITOS SEGUN USO
+X
+REFERENCIAS
+PERMITIDO
+ÁREA URBANA ÁREA COMPLEMENTARIA
+Servicios del automotor
+4.4
+4.5
+Depósitos
+Talleres
+Lavaderos
+Recreativos molestos
+4.3
+4.1
+Básicos y Generales
+Recreativos
+Centrales
+PRODUCTIVO
+5.1
+Industrias
+5.2
+Agropecuario
+EQUIPAMIENTOS
+Comercio Peligroso o molesto
+SERVICIOS
+Comercio Mayorista
+4.2
+3.5 Equipamientos en general.
+2.2
+USOS
+RESIDENCIAL
+Vivienda temporaria
+1.5
+Comercio Minorista2.1
+COMERCIAL
+Vivienda transitoria
+1.4
+Vivienda Multifamiliar
+Vivienda Unifamiliar
+Vivienda comunitaria
+
+98
+CAPITULO IX
+o CERTIFICADO URBANISTICO
+• EVAL. IMPACTO AMBIENTAL E INFORME DE ZONIFICACIÓN
+>> FACTIBILIDAD TECNICA MUNICIPAL
+
+ESTUDIO AGROECONÓMICO
+Requisitos R DUE CSU RE CSC AC
+1
+1.1
+o
+X X X X X X
+1.2
+o >>
+X X X
+1.3
+o >>
+X X X
+HOTELES / HOSTERIAS o >>
+X X
+MOTELES o >>
+X X X
+CASAS DE RETIRO o
+X X
+CLUB DE CAMPO o X
+2
+PEQUEÑA ESCALA o
+X X X X X X
+MEDIANA ESCALA o
+X X X X X
+GRAN ESCALA o >>
+X X
+PEQUENA ESCALA o
+X X X X X X
+MEDIANA ESCALA o
+X X X X
+GRAN ESCALA o >>
+X X
+2.3  • 
+X X
+3
+PEQUEÑA ESCALA o X X X X X X
+GRAN ESCALA  •  X X X X
+PELIGROSO O MOLESTO  •  X X X X
+4
+PEQUEÑA ESCALA o
+X X X X X X
+MEDIANA ESCALA o >>
+X X X X
+GRAN ESCALA  • 
+X X X X
+PEQUEÑA ESCALA o
+X X X X X
+MEDIANA Y GRAN ESCALA o >>
+X X X X
+PEQUEÑA ESCALA o
+X X X X X
+MEDIANA Y GRAN ESCALA o >> X X X X
+PEQUEÑA ESCALA  •  X X X
+MEDIANA Y GRAN ESCALA  • 
+X X X
+PEQUEÑA ESCALA o
+X X X X
+MEDIANA Y GRAN ESCALA o
+X X X X
+PEQUEÑA ESCALA o
+X X X X
+MEDIANA Y GRAN ESCALA o
+X X X X
+PLAYAS DE ESTACIONEMIENTO / COCHERAS o
+X X X X
+ESTACIONES DE SERVICIO  • 
+X X X X
+PEQUEÑA ESCALA o
+X X X X
+MEDIANA ESCALA o
+X X X X
+GRAN ESCALA o
+X X X X
+PELIGROSO O MOLESTO  • 
+X X
+5
+PRIMERA CATEGORIA  • 
+X X X
+SEGUNDA CATEGORIA  • 
+X X
+TERCERA CATEGORIA  • 
+PARQUES INDUSTRIALES  • 
+INTENSIVO   
+EXTENSIVO   
+NO PERMITIDO
+DETERMINACIÓN DE USOS PERMITIDOS PARA LAS LOCALIDADES DEL PARTIDO DE SALADILLO
+REQUISITOS SEGUN USO
+X
+REFERENCIAS
+PERMITIDO
+ÁREA URBANA
+ÁREA
+COMPLEMENTARIA
+Servicios del automotor
+4.4
+4.5 Depósitos
+Talleres
+Lavaderos
+Recreativos molestos
+4.3
+4.1 Básicos y Generales
+Recreativos
+Centrales
+PRODUCTIVO
+5.1 Industrias
+5.2 Agropecuario
+EQUIPAMIENTOS
+Comercio Peligroso o molesto
+SERVICIOS
+Comercio Mayorista
+4.2
+3.5 Equipamientos en general.
+2.2
+USOS
+RESIDENCIAL
+Vivienda temporaria1.5
+Comercio Minorista2.1
+COMERCIAL
+Vivienda transitoria1.4
+Vivienda Multifamiliar
+Vivienda Unifamiliar
+Vivienda comunitaria
+
+99
+CAPITULO X
+DELIMITACION
+CATASTRAL DE AREAS Y
+ZONAS
+
+100
+IDENTIFICACION CATASTRAL
+COMERCIAL ADMINISTRATIVO (CA)
+Circunscripción Sección A, Mz, 36, 37, 38, 46, 47, 48, 56, 57, y 58 y se encuentra delimitada por las siguientes calles; Bartolomé Mitre de 12 de octubre a Ministro Sojo, Ministro Sojo de Bartolomé Mitre a Álvarez de Toledo,
+Álvarez de Toledo de Ministro Sojo a 12 de octubre y 12 de octubre de Álvarez de Toledo a Bartolomé Mitre.
+También comprenden esta zona las parcelas frentistas a la calle Bartolomé Mitre pertenecientes a la Circ I,
+Sección A, Mz 35, 45, 55. Las parcelas frentistas a la calle Ministro Sojo pertenecientes a la Circ. I, Sección
+A, Mz. 26, 27 y 28. Las parcelas frentistas a la calle Álvarez de Toledo pertenecientes a la Circ. I, Sección A,
+Mz 39, 49, 59 y las parcelas frentistas a la calle 12 de Octubre pertenecientes a la Circ. I, Sección A, Mz. 66,
+67 y 68.
+CORREDOR COMERCIAL 1 (CC1)
+Esta zona comprende las parcelas frentistas a la avenida Rivadavia pertenecientes a la Circ I, Sección A, Mz.
+66, 67, 78 y 79 delimitada entre las calles 12 de octubre y Av. Cabral. Las parcelas frentistas a la Avenida
+Rivadavia, pertenecientes a la Circ I, Sección A, Mz 26, 27,16, 17, 6 y 7 delimitada entre la calle Ministro Sojo y Av. Pereyra. Las parcelas frentistas a la avenida Moreno pertenecientes a la Circ.I, Sección A , Mz 39, 49,
+40, 50, 41, 42, 51 y 52, delimitada entre la calle Álvarez de Toledo y Avenida Bozán. Las parcelas frentistas a la Avenida Moreno perteneciente a la Circ.I, Sección A, Mz 35, 45, 34, 44, 33, y 43 delimitada entre las calles Bartolomé Mitre y Leandro N. Alem. Las parcelas frentistas a la avenida Belgrano pertenecientes a la
+Circ.I, Sección A, Mz. 49, 59, 50, 60, 51, 61, 52 y 62 delimitada por la calle Álvarez de Toledo y avenida Bozán.
+Las parcelas frentistas a la avenida Belgrano perteneciente a la Circ.I, Sección A, Mz. 45, 55, 44, 54, 43 y 53
+delimitada por las calles Bartolomé Mitre y Alem. Las parcelas frentistas a la calle Dr. Posadas pertenecientes a la Circ.I, Sección A, Mz 49 y 50.Las parcelas frentistas a la calle Sarmiento pertenecientes a la Circ.I,
+Sección A, Mz. 44 y 45. .Las parcelas frentistas a la calle Alem pertenecientes a la Circ.I, Sección A, Mz. 43
+delimitada por la avenida Moreno y avenida Belgrano.
+CORREDOR COMERCIAL 2 (CC2)
+Esta zona comprende las parcelas frentistas a la avenida Rivadavia pertenecientes a la Circ.I, Sección B, Mz
+54b, 55a, 54d, 55c, 66b, 67a, 66d y 67c, delimitada entre las avenidas Máximo Cabral y Mariano Saavedra.
+Las parcelas frentistas a la avenida Rivadavia pertenecientes a la Circ.I, Sección B, Mz 18d, 19c, 18b, 19a,
+6d, 7c, 6b y 7 a, delimitada entre las avenidas Pereyra e Ibáñez Frocham.
+CORREDOR COMERCIAL 3 (CC3)
+Esta zona comprende las parcelas frentistas a la avenida Rivadavia pertenecientes a la Circ.I, Sección H, Mz
+205h, 205f, 205d, 205b, 208, Ch 203 Fr 3, Ch 206 Fr 1, delimitada entre las avenidas Ivañez Frocham Y
+orlando sanguinetti. Las parcelas frentistas a la avenida Moreno pertenecientes a la Circ.I, Sección B, Qta
+33 Mz 33c, 33d, Qta 32 Mz: 32c, 32d, Qta 31 Mz: 31c, 31d, Qta 38 Mz: 38a, 38b, Qta 39 Mz: 39a, 39b, Qta
+37: Mz: 37a, 37b, delimitada entre las avenidas Mariano acosta y Dellatorre. Las Parcelas frentistas a la avenida Rivadavia pertenecientes a la Circ.I, Sección B, Qta 34 Mz: 34c, 34d, Qta 35 Mz: 35c, 35d, Qta 36
+Mz: 36c, 36d, Qta 40 Mz: 40a, 40b, Qta 41 Mz: 41ª, 41b,Qta 42 Mz: 42a, 42b, delimitada entre las avenidas
+Bozan y Ledesma.
+RESIDENCIAL 1 (R1)
+Circ. I, Sección A, Mz. 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 22, 32, 42, 52, 62, 72, 83, 82, 81, 80, 79, 78, 77, 76, 75,
+74, 13, 14, 15,16, 17, 18, 19, 20, 21, 31,41, 51, 61, 71, 70, 69, 68, 67, 66, 65, 64, 63, 23, 24, 25, 26, 27, 28,
+29, 30, 40, 50, 60, 59, 55, 54, 53, 43, 33, 34, 35, 39, 49, 45 y 44 y se encuentra delimitada por las siguientes avenidas, Mariano Acosta desde Máximo Cabral a Pereyra, Pereyra desde Mariano Acosta a Bazán, Bazán desde Pereyra a Máximo Cabral y Máximo Cabral desde Bazán a Mariano Acosta. También comprenden esta zona las parcelas frentistas a la Avenida Mariano Acosta perteneciente a la Circ. I, Sección B, Mz. 45c, 45b,
+39b, 39d, 33b, 33d, 27b y 27d. Las parcelas frentistas a la avenida Pereyra pertenecientes a la Circ. I, Sección
+B, Mz. 16c, 16d, 17c, 17d, 18c, 18d, 19c, 19d, 20c, 20d, 21c y 21d. Las parcelas frentistas a la avenida Bozán pertenecientes a la Circ. I, Sección B, Mz. 28a, 28c, 34a, 34c, 40a, 40c, 46a y 46c. Las parcelas frentistas a la avenida Máximo Cabral pertenecientes a la Circ. I, Sección B, Mz. 57b, 57a, 56b, 56a, 55b, 55a, 54b, 54a,
+53b, 53a, Qta. 52 Fr I y II, Mz 52e. Se exceptúan las pertenecientes a la zona Administrativa Comercial,
+Corredor Comercial 1 (C1) y al Corredor Comercial 2 (C2).-
+
+101
+RESIDENCIAL 2 (R2)
+Circ. I, Sección B, Qta. 52 Fr I y II, Mz 52e, 53a, 53b, 54a, 54b, 55a, 55b, 56a, 56b, 57a, 57b, 57d, 69b, 69d,
+69c, 68d, 68c, 67d, 67c, 66d, 66c, 65d, 65c, 64f, 64e, 64d, 64a, 64b, 64c, 53c, 53d, 54c, 54d, 55c, 55d, 56c,
+56d, 57c, 69a, 68b, 68a, 67b, 67a, 66b, 66a, 65b y 65a y se encuentra delimitada por las siguientes avenidas,
+Mariano Acosta desde Mariano Saavedra a Máximo Cabral, Máximo Cabral de Mariano Acosta a Bazán,
+Bozán desde Máximo Cabral a Mariano Saavedra y Mariano Saavedra desde Bozán a Mariano Acosta.
+También comprenden esta zona las parcelas frentistas a la avenida Mariano Acosta pertenecientes a la Circ.
+I, Sección B, Mz. 51b, 51d, 63b y 63d. Las parcelas frentistas a la avenida Mariano Saavedra pertenecientes a la Circ. I Sección M, Mz 334n, 334t, 335a, 335b, 335c, 335d, 336a y 336b. Las parcelas frentistas a la avenida Bozán pertenecientes a la Circ. I, Sección B, Mz. 70c, 70a, 58c y 58a. Se exceptúan las pertenecientes al corredor Comercial 2 (C2) y a Residencial 1 (R1).-
+RESIDENCIAL 3 (R3)
+Circ. I, Sección B, Mz. 4a, 4b, 5a, 5b, 6a, 6b, 7a, 7b, 8a, 8b, 9e, 9b, 9d, 21b, 21d, 21c, 20d, 20c, 19d, 19c,
+18d, 18c, 17d, 17c, 16d, 16c, 16a, 4c, 4d, 5d, 5c, 6c, 6d, 7c, 7d, 8c, 8d, 9g, 9h, 9f, 21a, 20b, 20a, 19b, 19a,
+18b, 18a, 17b, 17a y 16b y se encuentra delimitada por las siguientes avenidas, Mariano Acosta desde
+Pereyra a avenida Ibáñez Frocham, Ibáñez Frocham desde Mariano Acosta a Bazán, Bozán desde Ibáñez
+Frocham a Pereyra, Pereyra desde Bozán a Mariano Acosta. También comprende ésta zona, los frentistas a la avenida Mariano Acosta pertenecientes a la Circ. I, Sección B, Mz. 15d, 15b, 3b y 3d. Los frentistas de la avenida Ibáñez Frocham pertenecientes a la Circ. I, Sección B, Ch 205 y 172, Mz. 172v, 205u, 205v, 205g,
+205h, Ch. 206 Fr. I y II, Mz. 206s, 206t, 207r y 207s. Los frentistas a la avenida Bozán pertenecientes a la
+Circ. I, Sección B, Mz. 10a, 10c, 22a y 22c. Se exceptúan las pertenecientes al corredor Comercial 2 (C2), y a Residencial 1 (R1).-
+RESIDENCIAL 4 (R4)
+Circ. I, Sección B, Qta. 61, 60, 49, 50, 43 y 44, Mz. 1a, 1b, 2a, 2b, 3c, 3d, 3b, 15b, 15d, 27d, 27b, 33d, 33b,
+39d, 39b, 45b, 45c, 51, 63b, 63d, 63c, 62d, 62c, 50d, 50e, 62b, 63a, 51c, 51a, 45d, 45a, 39a, 39c, 33c, 33a,
+27c, 27a, 15c, 15a, 3a, 2d, 2c, 1d, 1c, 13a, 13c, 25a, 25c, 31a, 31c, 37a, 37c, 38d, 38b, 32d, 32b, 26d, 26b,
+14d, 14b, 14a, 13b, 13d, 25b, 25d, 31b, 31d, 37b, 37d, 38c, 38a, 32c, 32a, 26c, 26a, 14c, 10a, 10b, 11a, 11b,
+12d, 12b, 12a, 24b, 24d, 30b, 30d, 36b, 36d, 42b, 42d, 48d, 48c, 48a, 47d, 47c, 46d, 46c, 46a, 40c, 40a, 34c,
+34a, 28c, 28a, 22c, 22a, 10c, 10d, 11d, 11c, 12c, 24a, 24c, 30a, 30c, 36a, 36c, 42a, 42c, 48b, 47b, 47a, 46b,
+40d, 40b, 34d, 34b, 28d, 28b, 22d, 22b, 23a, 23b, 23d, 29b, 29d, 35b, 35d, 41b, 41d, 41c, 41a, 35c, 35a, 29c,
+29a, 23c, 58a, 58b, 58c, 58d, 70a, 70b, 70c y 70d, 71a, 71b, 71c, 71d, 59a, 59b, 59c, 59d, 60a, 60b, 60c,
+60d, 72a, 72b, 72c y 72d. Circ. I, Sección L, Fr 1 y 2, Mz. 291a, Circ. I, Sección L, Mz. 292c, 292d, 292g,
+292h, 292s, 292m, 292t, 292n, 292w, 292x, 292p, 292r, y Qta 292. Circ. I, Sección M, Mz. 334n, 334t, 335a,
+335b, 335c, 335d, 336a, 336b, 336c, 336d, 336g, 336n, 336t, 336s, 336r, 336k, 336e, 336f, 336m, 335w,
+335t, 335k, 335e, 334s, 334m, 335m, 335n, 335p, 335h, 335g, 335f, Qta. 336 Fr. I. Circ. I, Sección H, Qta.
+205, 197, 206 Fr. I, II, III y IV, 208 Fr IV, 198 Fr. I, Mz 205u, 205s, 197ac, 197ad, 197ae, 197x, 197y, 197z,
+198b, 198a, 197ab, 197af, 198f, 198g, 197r, 197s, 198m, 197v, 197w, 198s, 198t, 198u, 198v, 198w, 198y,
+198x, 198r, 198h, 198k, 198z, 198aa, 207a, 207b, 207c, 207d, 207h, 207r, 206t, 206s, 205h, 205g, 205v,
+205t, 205a, 205b, 205d, 205c, 205e, 205f, 206m, 206n, 207m, 207n, 207g, 207f, 207e, 206h, 206d. Parte de
+Circ. I, Sección H, Ch. 206 Fracción 1. Circ. I, Sección E, 101u, 102k, 102m, 102r, 102s, 102i, 102j, 102p y
+102n. Circ. I, Sección G, Qta 172 y Qta 171 Fr II, Mz. 171n, 171i, 171e, 171c, 172a, 172b, 172c, 172i, 172t,
+172u, 172v, 172p, 172n, 171ªa, 171b, 171s, 171r, 171p, 171j, 171f, 171g, 171h, 172d, 172e, 172j, 172h,
+171m y 171k. Circ. I, Sección G, Ch. 171, Fracción: 2. Parte de Circ. I, Sección G, Ch. 172. Circ. 1 Sección
+E, Ch 103, Parcela 3. Circ. 2, Sección H, Parcelas: 2, 3, 4b, 4c, 4d, 4e, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15, 16,
+Mz: 208a, 208b, 208k. Circ. I, Sección M, Ch 337, Mz. 337ª, 337b, 337c, 337d, 337e, 337f, 337g, 337h, 337m,
+337n, 337r, 337s, 337t, 337w, 337x, 337y. Se encuentra delimitada por las siguientes calles y avenidas,
+Dellatorre desde avenida Máximo Cabral a avenida Orlando Sanguinetti, avenida Orlando Sanguinetti desde calle Dellatorre a calle Leandro N. Alem, Leandro N. Alem desde avenida Orlando Sanguinetti hasta. A.
+Roigth, A. Roigth desde calle Leandro N. Alem hasta calle Bartolomé Mitre, calle Bartolomé Mitre desde calle
+A Roigth hasta calle González y San Millán, calle González y San Millán desde calle Bartolomé Mitre hasta avenida Juan Domingo Perón, avenida Juan Domingo Perón desde calle González y San Millán hasta calle
+Benjamín Butteler, calle Benjamín Butteler desde avenida Juan Domingo Perón hasta calle Rojas, Calle
+Rojas desde Benjamín Butteler hasta calle A. Roight, A. Roight desde calle R. Rojas hasta calle Demaría,
+Demaría desde Roight hasta Av. O. Sanguinetti, Av. O. Sanguinetti desde calle Demaria hasta Av. Ledesma,
+Av. Ledesma desde O. Sanguinetti hasta calle Armendariz, Calle Armendariz desde Av. Ledesma hasta Av.
+Rivadavia, Av. Rivadavia desde Calle Armendariz hasta calle Dassatti, calle Dassatti desde Av. Rivadavia hasta calle Sarmiento, calle Sarmiento desde Av. Dassatti hasta Av. Saavedra, Av. Saavedra desde calle
+
+102
+Sarmiento hasta calle Dellatorre, calle Dellatorre desde Av. Saavedra hasta calle Armendariz, calle
+Armendariz desde calle Dellatorre hasta Rn 205, Rn 205 desde calle Armendariz hasta Dellatorre y Av.
+Maximo Cabral. Se exceptúan lo afectado para Residencial 1 (R1) Residencial 2 (R2), Residencial 3 (R3),
+Corredores comerciales 1, 2, y 3 (C1, C2, C3)
+DISTRITO DE URBANIZACIÓN ESPECIAL (DUE)
+1- Circ. I, Sección H, Ch. 198 MZ: 198H.
+2- Circ. I, Sección B, Qta. 9, Mz.9p, y parte de la Mz. 9d.
+3- Circ. I, Sección A, Mz.86, 87 94 y 96.
+4- Parte de Circ. I, Sección B, Qta. 55, Mz.55d.
+INDUSTRIAL MIXTA (IM)
+Circunscripción I - Sección G - parte de la 168, Ch 169, 170, parte de la Ch 177, y parte de la Ch 178.
+CORREDOR DE SERVICIO (CS)
+Esta Zona pertenece a los siguientes tramos de ruta y sus frentistas: Ruta Nacional 205 y sus colectoras, desde la avenida Dr. Alejandro Armendáriz hasta la avenida O. Sanguinetti.-
+PARQUE URBANO (PU)
+Considérese Parques Urbanos de la ciudad de Saladillo a los siguientes:
+1. Parque Urbano 1 (PU1) es el formado por los Terrenos del Ferrocarril Roca de la ciudad de Saladillo, comprendidos entre las calles Mariano Acosta, Estrada, Vías del Ferrocarril y calle Taborda. Así como también el sector comprendido por las vías desde Estrada hasta Santibáñez.
+2. Parque Urbano 2 (PU 2) es el formado por los Terrenos del ex-Ferrocarril Provincial de la ciudad de
+Saladillo en el Sector limitado por las siguientes calles y sus proyecciones: A. De Toledo, Zamorano,
+Santibáñez y L. N. Alem.-
+3. Parque Urbano 3 (PU3) es el correspondiente al Parque Dr. Esperanza en el sector limitado la Av. M.
+Moreno, Calle L. Lenzi, y J. A. Roca.
+AREA COMPLEMENTARIA DE SALADILLO
+ZONA INDUSTRIAL 1 (I1)
+Circunscripción I - Sección D - Chacras 19, 20, 27, 28, 35, 36, 43, 44, 51, 52, 59 y 60.-
+ZONA INDUSTRIAL 2 (I2)
+Circunscripción I - Sección L - Chacras 304, 311, 312, 313, 318, 319, 320, 326, 327, 328.-
+RESIDENCIAL EXTRAURBANA 1 (RE1)
+Circunscripción I - Sección M - Chacras 338, 342, 343, 344, 345, 346, 350, 351, 358, 359, 366, 367, 374 y
+375; Circunscripción I - Sección H - Chacras 209, 217, 221, Y 225; Circunscripción I - Sección L – Chacras
+299, 300, 301.-
+RESIDENCIAL EXTRAURBANA 2 (RE2)
+Circunscripción I - Sección G - Chacra 167 – Mz. 167e, 167f, 167g, 167h, 167k, 167m, 167n, 167p, 167r,
+167s, 167t, y 167u.
+AREA COMPLENTARIA 1 (AC1)
+Circunscripción I - Sección E - chacras, 86, 87, 88, 89, 97, 105, 85, parte de la 93 , y parte de la 101;
+Circunscripción I - Sección G - Chacras 157, 158, 159, 160, 161, 162, 163, 164, 166, parte de la 167, parte de la 168, Mz. 182, 183, 188, 194,195, 196, 165, 173, 174, 175, 176, parte de la 177, parte de la 178, parte de la 184; Circunscripción I - Sección H – chacras 201, 210, 211, 214, 215, 226, 227, parte de las chacras
+218, 219, 220, 222, 223 y 224; Circunscripción I - Sección J - chacras 257, 265, 253, 254, 255, 256, 257,
+261, 262, 263 y 264; Circunscripción I, Sección L - Chacras 289, 290, 297, 298 305, 306, 307, 308, 309, 317,
+325 y 333; Circunscripción I - Sección M - chacras 339, 340, 347, 348, 352, 353, 354, 355, 356, 360, 361,
+368, 369 y 377; Circunscripción I - Sección D - chacras 42, 50 Y 58.-
+
+103
+AREA COMPLEMENTARIA 2 (AC2)
+Circunscripción I - Sección D - Chacras 17, 18, 25, 26, 33, 34, 41, 49, 53, 54, 55, 56, y 57; Circunscripción I
+- Sección E – Chacras 61, 62, 63, 64, 65, 69, 70, 71, 72, 73, 77, 78, 79, 80, 81; Circunscripción I - Sección
+G – Chacras 185, 187, 191, 192, 193, 179, 180, 181, 186, y 187; Circunscripción I - Sección H - Chacras
+212, 216 y 228; Circunscripción I - Sección J - chacras 237, 238, 239, 240, 241, 245, 246, 247, 248 y 249;
+Circunscripción I - Sección L - Chacras 286, 287, 288, 294, 295, 296, 302, 303, 310, 314, 315, 316, 321, 322,
+323, 324, 329, 330, 331 y 332; Circunscripción I - Sección M - Chacras 341, 349 y 357.-
+RESERVA PARA ENSANCHE URBANO (REU)
+Circunscripción I - Sección E - Chacras 94, 95, 96, 104, parte de la 93, 101, 102 y 103; Circunscripción I,
+Sección H, Chacras 199 y 200; Circunscripción I, Sección M, parte de la Chacra 334; Circunscripción I,
+Sección L - parte de la Chacra 293AREA RURAL
+Considérese Área Rural al resto de la superficie del Partido de Saladillo, excluyendo el Área Urbana y
+Complementaria.-
+
+104
+CAPITULO XI
+PROCEDIMIENTO DE
+MODIFICACION DEL
+CODIGO DE
+ORDENAMIENTO URBANO
+
+105
+XI.1 INICIATIVA INSTITUCIONAL
+El Departamento Ejecutivo podrá proponer al Honorable Concejo Deliberante cambios parciales en función de una propuesta fundada, siempre que no genere alteraciones de carácter genérico al Sector Urbano al que pertenece. Estos cambios deberán ser aprobados por Ordenanza Municipal refrendada por Decreto del Poder
+Ejecutivo Provincial (Art. 83, Ley Nº8.912/77, T.O. Nº3.389/87).
+Cuando se trate de implementación de reglamentaciones particularizadas que no introduzcan modificaciones al Código o se trate de aprobación de proyectos ejecutivos, no se requiere aprobación del Poder Ejecutivo
+Provincial. En este caso cuando la Ordenanza esté promulgada se deberá enviar dos (2) copias para toma de conocimiento de la Subsecretaría de Asuntos Municipales y a la Dirección Provincial de Ordenamiento
+Urbano y Territorial de la Provincia de Buenos. Aires.
+XI.2 INICIATIVA DE LA COMUNIDAD
+Las iniciativas tendientes a la reformulación de las Normas del Código de Ordenamiento Urbano, sin perjuicio de las facultades propias del Honorable Concejo Deliberante según la Ley Orgánica Municipal y de los demás
+Órganos y Reparticiones Municipales Competentes, podrán surgir también de las presentaciones, que en forma fundada, realicen las Entidades Intermedias con domicilio en la ciudad de Saladillo con el objeto de poner a consideración los problemas que, a su juicio, surgen de la aplicación de la normativa vigente. Toda propuesta de modificación parcial podrá inscribirse en el marco del siguiente procedimiento:
+1. Toda entidad intermedia u Organización Barrial de la ciudad de Saladillo, podrá solicitar la reconsideración de las normas establecidas para su barrio o sector del barrio.
+2. Las presentaciones realizadas serán efectuadas conforme las normas administrativas vigentes a la
+O.T.M., quien las procesará y evaluará en base al análisis global de los casos.
+3. Las modificaciones al Código de Ordenamiento iniciativa del Departamento Ejecutivo que involucren la ciudad en su conjunto o importantes extensiones de la misma, deberán ser dadas a conocer a la población mediante Audiencia Pública. Las Audiencias, que serán de carácter extraordinario, deberán ser convocadas con antelación, no siendo vinculantes para el D.E. los resultados obtenidos. No obstante, el Departamento
+Ejecutivo deberá dar a publicidad a la población a través de los medios masivos de comunicación, los contenidos de la consulta, la sistematización de la misma, y todo otro elemento que considere necesario para el interés comunitario.
+4. La O.T.M. elevará al Honorable Concejo Deliberante las propuestas sectoriales y globales del Código que surjan de las iniciativas o reconsideración que hayan sido pertinentes.
+XI.3 ACTUALIZACION PERIODICA
+Se considerará al planeamiento urbano como un proceso dinámico en el que sus normas deben revisarse periódicamente con el objeto de absorber las transformaciones de la realidad, los cambios en el desarrollo registrado y para corregir rumbos no deseados, que pudieran verificarse de la puesta en práctica del Código de Ordenamiento Urbano. El presente Código plantea la racionalidad de su modificación, a partir de una evaluación obligatoria cada cinco (5) años.
+XI.4 COMPATIBILIDAD ENTRE EL CODIGO VIGENTE Y SU MODIFICACION
+Se asegurará la equidad en el tratamiento de las restricciones al dominio que se efectúen para cada zona y cada actividad. Cualquier cambio debe ser generalizado para todos los predios que se encuentren en iguales condiciones y sólo se podrán dictar normas especiales para los casos contemplados en el presente Código.
+XI.5 DIFUSION DE LAS MODIFICACIONES
+Toda propuesta de modificación o cambio normativo deberá comunicarse a los vecinos que pudieran sufrir alguna afectación, en forma personal, mediante las instituciones intermedias, a través de los centros vecinales, o mediante los medios masivos de comunicación.
+
+106
+CAPITULO XII
+SISTEMA CIRCULATORIO
+
+107
+XII.1. CRITERIO GENERAL
+El mejoramiento de la accesibilidad y la estructuración e integración físico-espacial de Áreas y Zonas, así como la vinculación fluida y segura entre las respectivas plantas urbanas y la micro región, posibilitará la materialización de una estructura circulatoria y la fluidez de movimientos dentro de la estructura urbana propuesta.
+Las obras y acciones necesarias estarán contenidas en los respectivos programas y proyectos previstos, siendo su materialización definida en etapas a fin de garantizar un uso adecuado de los recursos disponibles.
+XII.2. CLASIFICACIÓN
+La red vial puede ser considerada como el elemento estructurador más importante del área urbana.
+Dentro de este conjunto de canales que acomodan tránsitos tan diversos como los peatonales y los vehiculares, automóviles, camiones, ómnibus, motocicletas, bicicletas; se puede siempre reconocer una jerarquía que está fundamentada en los volúmenes que transporta que a su vez son una función de las actividades que vinculan.
+Así se puede clasificar a la red vial en:
+Accesos, unen los centros urbanos con las rutas provinciales y nacionales;
+Calles Primarias, unen los principales usos del suelo entre sí con el área central y con los accesos a la ciudad. Están construidas para flujos más intensos, pueden presentar especializaciones como, por ejemplo, tránsito para camiones, o tránsito de vehículos de transporte público;
+Calles secundarias, vinculan a grupos de viviendas o barrios entre sí y con las arterias principales o primarías, conducen volúmenes medios de tránsito, pero todavía sin mayor diferenciación;
+Calles menores, terciarias, circuitos internos, que vinculan las viviendas con calles secundarias y conducen relativamente bajo volúmenes de tránsito, sin mayor especialización.
+
+108
+CAPITULO XIII
+PATRIMONIO
+
+109
+XIII.1. OBJETIVOS
+La preservación del patrimonio cultural de una comunidad constituye un elemento orientado al logro de una identidad local, y a la construcción de valores comunes entre los integrantes de la misma, los cuales potencian sus relaciones de pertenencia y arraigo para con la ciudad y el territorio.
+Las presentes disposiciones tienen como objetivo enmarcar las acciones de protección y rehabilitación del patrimonio Urbano y Rural como herencia de la comunidad, con los valores culturales, sociales y económicos que se les ha incorporado en su evolución. A dichos efectos contempla la variedad de actuaciones que deben ser tenidas en cuenta e incentivarse para: a) potenciar el aprovechamiento del patrimonio social, cultural y económico y recuperar los valores de uso y cambio.
+b) Orientar la rehabilitación del patrimonio, a través de las necesarias, adecuadas y oportunas actuaciones sobre los espacios libres y construidos.
+XIII.2. BIENES PATRIMONIALES
+Los bienes patrimoniales son aquellos a los que la comunidad les ha atribuido algún valor, identificando en ellos valores tales como lo histórico, educativo, auténtico, singular, típico, arqueológico, tradicional, artístico o innovador.
+Todo bien al cual se le reconozca alguno de estos valores, podrá encuadrarse dentro de los alcances de la presente norma, que involucra tanto los espacios construidos, como los espacios libres de la ciudad y su relación entre ambos.
+Los bienes serán considerados patrimoniales una vez inventariados e incorporados en el Registro a crearse a tal efecto.
+Se establecen tres instancias que sistematizan y regulan los modos de intervención sobre los bienes del patrimonio cultural de la Ciudad de Saladillo, observándose la siguiente secuencia:
+1) Elaboración del catálogo.
+2) Propuesta de Preservación (elaboración del pre-inventario).
+3) Elaboración y aprobación del inventario y registro de los bienes.
+La secuencia de actuaciones indicada en los incisos precedentes deberá culminar, en un plazo no mayor a los dieciocho (18) meses contados a partir de la entrada en vigencia del presente código.
+XIII.3. DECLARACION DE INTERES PATRIMONIAL
+Serán declarados de interés patrimonial los bienes públicos o privados que sean relevantes en los siguientes campos de interés:
+A- Histórico-Simbólico-Social: Edificio, sitio o sector del Área Urbana, Complementaria o Rural del
+Partido que ha sustentado o contenido algún hecho de importancia en la historia de la ciudad, de la Provincia o de la Nación, o que, por alguna razón, sea un caso único y referente comunitario. Se incluye en este grupo los bienes públicos y privados que poseen una o varias de las siguientes características: relevancia del propietario, proyectista o constructor, grado de representatividad en la historia oficial, popular o de valor anecdótico, y aquellos que detentan significación relevante como referente urbano para la comunidad.
+B- Valor Artístico- Arquitectónico: Se valora la factura del hecho arquitectónico, comprendiendo las características inherentes a la obra, incluyendo edificios de pureza estilística, de diseño y soluciones de calidad, tanto en detalles constructivos como espaciales. Se considera también si la materialidad del objeto ejemplifica alguna etapa de la construcción de la ciudad. Se incluye, concurrentemente, el grado de representatividad en una corriente estilística o tipológica, ejemplos singulares, importancia por la calidad del proyecto, resolución formal, ornamentación y equipamiento tecnológicamente destacable en su resolución estructural, construcción y calidad de sus materiales.
+C- Ambiental, referida a las características de relación entre el edificio y el entorno, intensidad y modalidad con lo que se dispone sobre el suelo, escala de agrupación de tipos similares y analogías formales y funcionales que mantiene cada edificio con la situación inmediata, conformando un tejido de valor especial desde el punto de vista paisajístico y ambiental. Se incluyen en este grupo: bienes públicos y privados que integran un conjunto homogéneo o conforman un sitio especial que garantice el paisaje urbano, cualidades de parques, y grados de integración de los espacios públicos o privados.
+
+110
+XIII.4. ALCANCES DE LA DECLARACIÓN DE INTERÉS PATRIMONIAL
+La declaración de interés patrimonial comprende: a) La parcela con todas las características topográficas y naturales b) Vegetación que esta incluye c) La materialización de la línea de borde: cerca, reja o muro d) El o los edificios e) Los elementos que hacen al equipamiento, identidad y reconocimiento del bien., a saber: hitos, faroles, veletas, fuentes, etc.
+Las declaraciones de Interés Patrimonial podrán abarcar también áreas, sectores (sitios, conjuntos) urbanos y/o rurales para los cuales el Departamento Ejecutivo establecerá los mecanismos de actuación establecidos en este Código.
+XIII.5. CATALOGO PATRIMONIAL
+Constituye un instrumento de regulación urbanística para los edificios con necesidad de protección patrimonial y de particularización del alcance de la normativa respecto de la calificación urbana asignada al mismo.
+CRITERIOS DE VALORACIÓN
+La catalogación se realizará en base a los siguientes criterios de valoración:
+• Valor urbanístico: refiere a las cualidades que posee un edificio que define o califica la trama, el paisaje urbano o el espacio público.
+• Valor arquitectónico: refiere a los elementos poseedores de calidades de estilo, composición, materiales, coherencia tipológica y otra particularidad relevante. • Valor histórico – cultural: refiere a aquellos elementos testimoniales de una organización social o forma de vida que configuran la memoria histórica colectiva y un uso social actual.
+• Valor singular: refiere a las características irreproducibles o de calidad, en cuanto a los aspectos técnico- constructivos o al diseño de los edificios o sitios.
+Los criterios de valoración anteriormente expuestos deben considerarse en función de los propios elementos a proteger, del análisis del contexto urbano y de los objetivos urbanísticos fijados para el área.
+El catálogo preliminar y la normativa correspondiente, propuestos por el Departamento Ejecutivo y aprobados por Ordenanza del Honorable Concejo Deliberante, serán publicados en el Boletín Municipal.
+Los particulares poseerán sesenta (60) días hábiles, a partir de dicha publicación, para formular cualquier objeción, la cual deberá ser remitida por escrito a la Comisión de Preservación Patrimonial.
+Durante dicho plazo y con anterioridad al mismo, cualquier particular o asociación intermedia puede proponer la inclusión de un bien, para su posterior inclusión firme en el catálogo.
+Vencido dicho plazo, si no mediara presentación alguna, se considerará firme la inclusión en el listado y perdido el derecho a formular objeciones.
+Los niveles de catalogación de los edificios con inclusión firme en catálogo, constarán en las respectivas parcelas y planchetas catastrales, con indicación del número de Boletín Municipal en que fueron publicados.
+El Departamento Ejecutivo denegará cualquier pedido de obra de demolición de edificios incluidos en el
+Catálogo preliminar que se solicite, hasta tanto se resuelva la incorporación firme de edificios en el Catálogo
+Patrimonial.
+XIII.6. PROCEDIMIENTOS DE PROTECCIÓN
+a) Los bienes sujetos a obligación de protección serán declarados como tales dentro del
+Catálogo Patrimonial, el que será aprobado por Ordenanza Municipal b) Todo emprendimiento en algún bien protegido deberá encuadrarse en su correspondiente escala de protección, tipo de actuación y grados de intervención.
+XIV.7. ESCALAS DE PROTECCIÓN
+De acuerdo al tipo de adecuaciones a que se sometan los bienes construidos y los espacios abiertos, se plantean los siguientes niveles de protección:
+
+111
+• Integral
+• Estructural
+• Perceptivo/Contextual
+XIII.7.1. PROTECCIÓN INTEGRAL
+Se encuentran afectados a este nivel, aquellos espacios y edificios de interés especial, cuyo valor histórico y/o arquitectónico los ha constituido en hitos urbanos que los hace merecedores de una protección integral.
+Protege la totalidad de los espacios y edificios, conservando todas sus características arquitectónicas y sus formas de ocupación del espacio.
+XIII.7.2. PROTECCIÓN ESTRUCTURAL
+Se encuentran afectados a este nivel aquellos edificios de carácter singular y tipológico que, por su valor histórico, arquitectónico, urbanístico o simbólico, caracterizan su entorno, califican un espacio urbano o son testimonio de la memoria de la comunidad. Protege el exterior del edificio, su tipología, los elementos básicos que definen su forma de articulación y ocupación del espacio, permitiéndose acciones de carácter constructivo, adecuadas al desarrollo de las actividades presentes y futuras, que no alteren su volumen y características originales.
+XIII.7.3. PROTECCIÓN PERCEPTIVA/CONTEXTUAL
+Se encuentran afectados a este nivel los edificios cuyo valor reconocido es el de constituir la referencia formal y cultural de la zona, justificar y dar sentido al conjunto. Protege la imagen característica del área, previniendo actuaciones contradictorias en el tejido y la morfología.
+XIII.8. TIPOS DE ACTUACIONES
+Los niveles de protección admiten distintas posibilidades de actuación.
+La protección integral admite únicamente actuaciones de conservación. La protección estructural admite las actuaciones de conservación, restauración, remodelación, re funcionalización, equipamiento y reestructuración. Se admitirán actuaciones de renovación solo si media dictamen favorable del órgano competente.
+La protección perceptiva admite además de las actuaciones señaladas en el párrafo anterior, la de renovación.
+XIII.9. GRADOS DE INTERVENCIÓN
+Con el fin de proteger un bien y previniendo actuaciones contradictorias con la preservación de sus valores, la Autoridad de Aplicación evaluará el inmueble estableciendo según el nivel de protección edilicia que le corresponda las intervenciones posibles, según lo siguiente:
+Para cada nivel de protección edilicia, los grados de intervención comprendidos en cada una de las actuaciones se detallan a continuación:
+XIII.9.1. GRADO DE INTERVENCIÓN 1
+Comprende las obras y/o acciones dirigidas a restituir las condiciones originales del edificio o aquellas que a lo largo del tiempo han sido agregadas y forman parte integral del mismo.
+XIV.9.2. GRADO DE INTERVENCIÓN 2
+Comprende las obras dirigidas a adecuar el espacio interior del edificio a condiciones de uso nuevas, respetando los elementos tipológico-formales y estructurales de los mismos.
+XIII.9.3. GRADO DE INTERVENCIÓN 3
+Comprende las obras y/o acciones dirigidas a la adecuación y mejora de las condiciones de habitabilidad del edificio mediante la reforma y/o transformación del espacio interior, que mantengan básicamente las fachadas y el volumen del edificio.
+XIII.9.4. GRADO DE INTERVENCIÓN 4
+propuestas de modificación por aumento de volumen de un edificio, las que deberán ser presentadas previamente para su visado ante la Comisión de Preservación Patrimonial del Partido Saladillo, justificando un mejor uso social del volumen resultante y el resguardo de su calidad arquitectónica.
+
+112
+XIII.10. CONVENIO URBANÍSTICO
+Cualquier propietario de un inmueble que posea valor patrimonial, oficialmente reconocido o no, podrá requerir el dictado de normas particulares para la parcela de que se trata, las que integrarán un Convenio Urbanístico celebrado con el objetivo de salvaguardar dicho patrimonio.
+Este convenio elaborado por el órgano competente, será suscripto entre el propietario y el Sr. Intendente
+Municipal, ad- referéndum del Honorable Consejo Deliberante.
+Entre sus contenidos deberá constar: a) Reconocer con carácter previo a la elaboración de las normas el valor patrimonial del bien, tomando en consideración la concurrencia de las siguientes condiciones:
+• Antigüedad superior a los cincuenta (50) años. De no cumplirse deberá contar con recomendación expresa de la Comisión de Preservación Patrimonial del Partido de Saladillo.
+• No encontrarse sujeto a limitaciones que impidan el uso previsto
+• Que el uso propuesto sea admitido en el Planilla de Usos para la zona correspondiente • Presentar una organización espacial y características constructivas que garanticen la posibilidad de alcanzar las condiciones adecuadas condiciones de habitabilidad, salvo aquellos casos en que la tipología original del bien no lo permita, previa recomendación expresa de la Autoridad de Aplicación.
+b) Determinar los grados de intervención aceptados para su puesta en valor, para lo cual la Comisión de
+Preservación Patrimonial del Partido de Saladillo elaborará el dictamen y el proyecto de convenio urbanístico que será remitido para su consideración al H.C.D. El convenio urbanístico incluirá:
+• La obligatoriedad de proteger el bien patrimonial de que se trata, lo que constará en las escrituras traslativas de dominio, así como en los contratos de locación.
+• El acondicionamiento de las habilitaciones que se otorguen a la efectiva ejecución de los trabajos de protección y la adecuada conservación y mantenimiento del mismo.
+c) Proponer alternativas de compensación de carga que pueda significar la protección buscada.
+El Convenio Urbanístico y las Normas particulares tendrán plena vigencia a partir de la sanción de la pertinente
+Ordenanza aprobatoria por parte del H.C.D.
+Las obligaciones de protección acordadas, permanecerán en vigencia, aunque los bienes fueran enajenados, alquilados o sometidos a cualquier tipo de disposición legal que sobre ellos puedan establecer sus propietarios.
+XIII.11. DEL PROCEDIMIENTO PARA LA APROBACIÓN DE INTERVENCIONES EN
+BIENES INVENTARIADOS
+Toda intervención a realizarse en alguno de los bienes inventariados se ajustará al siguiente procedimiento:
+1- El interesado deberá presentar ante la autoridad competente para su aprobación la siguiente documentación: a) Memoria técnica del tipo de intervención b) Plano Municipal conforme memoria c) Memoria técnica de los aspectos relevantes del edificio existente, si los hubiera, considerando los siguientes tópicos:
+- Aspectos Funcionales
+- Aspectos Morfológicos (Fachada y volumetría propios del edificio y referido a su implantación) -
+Aspectos tipológicos
+- Aspectos tecnológicos y constructivos
+- Estado de Conservación general del edificio.
+- Plano de antecedentes si lo hubiera
+- Plano de localización de especies forestales y /o espacios verdes de valor.
+- Memoria técnica de la protección y tratamiento de los mismos.
+2. La evaluación de la documentación presentada se realizará conforme las siguientes pautas: a) Alturas de las edificaciones linderas.
+b) Tratamiento y/o materialización de la Líneas Municipales teniendo en cuenta la continuidad de existencia de retiros o de conformación de fachada telón.
+c) Mantenimiento de los basamentos y/o diferenciación de zócalos si los hubiera.
+
+113
+d) Correspondencia respecto de la permeabilidad existente o no hacia el corazón de manzana que se registre.
+e) Adecuación al lenguaje arquitectónico dominante en la zona, en particular en lo concerniente a su repertorio compositivo.
+f) Adecuación a la calidad de los materiales y ornamentos empleados en las edificaciones.
+g) No distorsión de las tipologías dominantes.
+Los bienes patrimoniales inventariados quedan sujetos a inspecciones periódicas a fin de garantizar: a) La recuperación y/o conservación de la naturaleza y tratamiento de los materiales en fachadas y cubiertas.
+b) La posibilidad de introducir mejoras de carácter estructural, constructivo o funcional, que no afecten el carácter y composición originarios.
+c) La invariabilidad de los parámetros esenciales de edificabilidad (altura, volumen, tipologías, etc.), en los casos de conservación y renovaciones parciales.
+d) La invariabilidad del parcelamiento original, no admitiéndose nuevas subdivisiones ni englobamientos.
+XIII.12. REGISTRO ÚNICO DE BIENES PATRIMONIALES.
+Créase el Registro Único de Bienes Patrimoniales que contendrá un folio por cada bien inventariado, donde se asentará el nombre del propietario, la zona de ubicación y los indicadores urbanísticos asignados al bien en el inventario.
+XIII.13. ALCANCE
+Derogar toda otra normativa en la parte que se contraponga a lo dispuesto en el presente capítulo.
+
+114
+CERTIFICADO
+URBANÍSTICO (CU)
+
+115
+1 - DATOS
+Domicilio y Teléfono:
+Finalidad por la que solicita el certificado: (marcar lo que corresponda)
+Indicar el uso (describir actividad a desarrollar):
+Firma del Peticionante:
+2 - UBICACIÓN DEL BIEN DE ACUERDO A CATASTRO
+CIRC. SECC. FRAC. CH. QTA MZ PC. SubPC.
+3 - INDICADORES URBANISTICOS
+Localidad: Uso Predominante:
+Zona: Uso Complementario:
+Actual Potencial Frente Lateral Fondo Altura Frente Sup.
+4 - SERVICIOS ESENCIALES
+Indicar SI o NO, según corresponda
+Existente en la parcela
+Previsto para la zona
+5 - CLASIFICACIÓN DE USO
+Según la clasificación de USOS del Código de Ordenamiento Urbano y las normativas vigentes está: PERMITIDO / PROHIBIDO
+lo solicitado en el presente Certificado.
+CROQUIS DE UBICACIÓN
+Firma y Sello de Autoridad
+ALUMBRADO
+PUBLICO
+GAS NATURAL
+USO
+AGUA
+CORRIENTE
+CLOACAS PAVIMENTO
+ENERGÍA
+ELÉCTRICA
+FOS
+MAX
+FOT MAX.
+IP
+%
+Retiros DimensionesDensidad Neta
+CERTIFICADO URBANISTICO
+Saladillo
+Dimensiones de la Parcela:
+Frente (m):
+Fondo (m):
+Apellido y Nombre del Peticionante:
+El presente Certificado tendrá una validez de 60 días a partir del día de su otorgamiento y no garantiza el otorgamiento de la factibilidad definitiva.
+Sec de Obras y Servicios Públicos
+Fecha de Otorgamiento
+CU
+NOMENCLATURA CATASTRAL
+PARTIDA:
+Superficie (m
+2
+):
+Sobre la silueta de la MZ. Con identificación de calles, se indicara la ubicación de la parcela en la manzana, con sus distancias a esquina.
+Habilitación Construcción Ampliación Subdivisión Transferencia de dominio
+
+116
+PLANOS DE
+ZONIFICACIÓN SEGÚN
+USOS (ANEXO 1)
+Planos N°: 1 a 6
+
+MARTIN FIERRO
+VIALE, ADRIAN J.
+SAAVEDRA, MARIANO
+205
+91
+ALMAFUERTE
+SARMIENTO
+MITRE, BARTOLOME
+RIVADAVIA
+SAN MARTIN
+ALVAREZ DE TOLEDO, FRANCISCO
+POSADAS, DR.
+YRIGOYEN , HIPOLITO
+EMPARANZA, FRANCISCO DR.
+BOZAN
+ISIDORO MEDINA
+ZAMORANO
+PEDRO L.V.MARIOTTO
+ERNESTO CHE GUEVARA
+L.P.A. LENZI
+ESTRADA, JOSE M.
+PEREYRA
+LOPE SERRANO, MAESTRO
+ALVEAR, MARCELO T. DE
+IBANEZ FROCHAM, M.
+SAENZ PENA, ROQUE
+ALBERDI JUAN BAUTISTA
+ALISAL, BONIFACIO
+12 DE OCTUBRE
+MORENO
+SOJO, MINISTRO
+ROCA, JULIO A.
+MARTINEZ ENRIQUE
+TTE. JORGE SILVESTRE
+CABO H. GOROSITO
+TABORDA, DR.
+M.P. PEREZ BIANCO
+VALERIO M. DE IRAOLA
+BLAS L. ITURRALDE
+PEDRO C. RODRIGUEZ
+51
+VILLANUEVA, MANUEL
+TOMAS ALVAREZ
+APARICIO L.
+LA MAGNOLIA
+LOS LAURELES
+LOS PERALES
+LOS SAUCES
+LOS ALAMOS
+LOS NOGALES
+LOS EUCALIPTUS
+PAPA FRANCISCO
+EL CEIBO
+LA ARAUCARIA
+158
+167
+DR. C. O. MARTIN
+10 DE DICIEMBRE
+ARIEL HORACIO DELIA
+J.J. OLARTICOECHEA
+ALEM, LEANDRO N.
+BICENTENARIO DE LA INDEPENDENCIA
+9 DE JULIO
+AB. PL. DE MAYO
+M. M. DE GUEMES
+ADELA IZQUIERDO
+292
+M. PL. DE MAYO
+DON DEOGRACIA GARCIA
+ALMAFUERTE
+SARMIENTO
+MITRE
+VOLONTE
+MITRE
+CANTO AURORA
+BYRNE ANA
+ISIDORO MEDINA
+REYNOSO, EMILIANO
+A. GRADOAZO
+INT.HILARIO INDA
+SAAVEDRA, MARIANO
+RENE G. FAVALORO
+LEDESMA, M
+ARTURO JAURETCHE
+CABRAL, M
+AV. AUGUSTO CICARE
+JUSTO, JUAN B.
+ROJAS, RICARDO
+SAENZ PENA, ROQUE
+DE LA TORRE, LISANDRO
+ALFREDO PALACIOS
+TOMAS LISSALDE
+ALBERDI JUAN BAUTISTA
+AV.JUAN M. DE ROSAS
+CAMPANA, MANUEL
+CARLOS ARROSPIDE
+SANGUINETTI, ORLANDO
+JUAN CLAUDIO DEMARIA
+LUIS A.BORRACER
+C.G.A. GUALBERTO
+PTE.H.J.CAMPORA
+ECHEVERRIA, ESTEBAN
+ROSSI, J.A
+EDUARDO DE SANTIBAÑEZ
+CON. LILIA T. BORRACER
+CARLOS A. DAVEL
+HUGO ROLANDO
+DR.JULIO MORENA
+MAESTRO ARGENTINO
+SANCHEZ, M. C DE
+DR. RICARDO GALIANI
+M.B. CORREA DE ARIAS
+ROBERTO DARIENS
+GARCIA COSTA, ROSA
+E. L. BRANDI
+UBALDO B. DI MARCO
+EX COMBATIENTES DE MALVINAS
+PASEO DE LOS INMIGRANTES
+DELLATORRE, JUAN CARLOS
+Vergara, V
+SARMIENTO
+EVA DUARTE DE PERON
+INT. ALEJANDRO ARMENDARIZ
+GONZALEZ, JOAQUIN V.
+SUQUIA, JUAN J.
+VOLONTE, MIGUEL ANGEL
+SEGUI, JAIME
+BOZAN
+INGENIEROS, JOSE
+VIALE, ADRIAN J.
+ACOSTA, MARIANO
+ALFREDO PALACIOS
+IBARBIA, ASENCIO J. DR.
+DR. RAUL R. ALFONSIN
+ROIGT, AURELIANO
+ALMAFUERTE
+SUQUIA, JUAN .J.
+DASSATTI, ARQUINO F.
+SCALABRINI ORTIZ, RAUL
+ACCESO NESTOR KIRCHNER
+BELGRANO
+DR. RICARDO BALBIN
+RIVADAVIA
+8
+434
+7
+278
+279
+11
+12
+435
+10
+281
+440
+16
+280
+277
+86
+98
+15
+96
+93
+49
+74
+69
+73
+47
+90
+48
+19
+22
+78
+41
+24
+50
+23
+318
+40
+294
+71
+82
+9
+179
+54
+81
+80
+33
+30
+83
+58
+32
+31
+286
+79
+76
+282
+46
+379
+378
+376
+377
+329
+331
+84
+373
+95
+191
+35
+228
+367
+67
+190
+36
+371
+189
+27
+141
+248
+143
+369
+341
+246
+365
+322
+21
+104
+380
+18
+372
+202
+199
+311
+249
+187
+271
+192
+272
+295
+252
+270
+106
+392
+391
+185
+296
+105
+232
+360
+231
+268
+362
+176
+34
+267
+159
+230
+160
+274
+355
+287
+217
+385
+383
+382
+384
+150
+324
+152
+151
+149
+406
+265
+242
+245
+17
+233
+285
+303
+386
+108
+260
+399
+398
+315
+43
+316
+240
+29
+387
+257
+344
+338
+284
+368
+25
+326
+65
+441
+45
+407
+42
+266
+26
+310
+125
+56
+97
+89
+99
+51
+75
+276
+85
+39
+333
+87
+314
+77
+203
+238
+14
+62
+239
+328 a
+60
+241
+302
+433
+28
+63
+55
+66
+414
+354
+330
+153
+133
+259
+173
+37
+390
+320
+53
+64
+394
+224
+92
+70
+142
+174
+177
+247
+370
+299
+38
+215
+211
+275
+201
+393
+339
+91
+269
+195
+229
+243
+227
+234
+144
+186
+255
+175
+401
+304
+162
+256
+254
+220
+400
+181
+237
+258
+307
+52
+107
+214
+59
+301
+323
+226
+388
+305
+361
+88
+212
+165
+253
+57
+157
+261
+297
+264
+332
+359
+251
+168
+381
+375
+161
+321
+306
+250
+164
+210
+363
+432
+313
+20
+312
+298
+135
+94
+300
+348
+349
+289
+221
+218
+102
+308
+101
+182
+290
+200
+357
+188
+158
+180
+223
+169
+334
+183
+204
+134
+262
+184
+213
+356
+374
+342
+319
+408
+352
+103
+364
+346
+219
+353
+244
+327
+198
+209
+126
+395
+273
+293
+207
+208
+263
+167
+193
+100
+44
+309
+343
+358
+205
+170
+117
+347
+340
+291
+61
+350
+5
+68
+292
+206
+336
+196
+415
+317
+171
+163
+288
+194
+178
+351
+366
+325
+154
+222
+225
+216
+13
+345
+402
+447
+197
+389
+145
+B
+A
+61A
+51
+1
+20C
+20A
+288c
+52
+288b
+288d
+4
+7
+9
+3
+5
+6
+8
+196E
+20B
+166r
+166w
+288e
+339E
+2
+288a
+61S
+168m
+4c
+339A
+4a
+11
+5c
+7c
+8c
+6c
+7a
+1c
+70
+2c
+C
+62
+19
+25
+60
+29
+21
+61
+77
+17
+74
+8a
+79
+14
+6b
+38
+12
+24
+22
+81
+27
+18
+15
+41
+42
+36
+D
+66
+58
+293r
+67
+30
+32
+71
+43
+53
+80
+72
+6d
+75
+55
+57
+28
+40
+35
+78
+83
+5b
+47
+63
+65
+68
+16
+69
+5a
+31
+88
+1a
+26
+59
+37
+33
+23
+2a
+5d
+7b
+64
+76
+34
+13
+44
+86
+56
+46
+39
+73
+82
+50
+45
+54
+20
+3d
+84
+7d
+1b
+49
+293x
+8d
+6a
+10
+96
+1d
+3b
+220E
+194F
+220B
+61N
+168g
+44c
+16c
+61T
+61E
+16a
+72b
+24c
+24d
+70d
+11c
+20c
+61C
+55c
+40c
+19c
+39d
+11a
+71c
+34c
+69d
+36d
+13c
+22c
+54c
+36c
+59a
+30c
+32c
+18c
+41c
+28c
+59b
+23c
+66c
+25c
+61R
+51a
+68c
+67c
+30a
+61M
+61K
+46c
+34a
+58b
+42c
+69c
+62d
+26c
+21c
+15c
+55a
+47d
+63c
+10a
+24b
+17c
+32a
+65c
+35b
+55b
+58a
+35c
+62b
+67d
+34b
+48c
+14c
+33b
+40d
+20a
+12d
+23a
+11d
+10b
+17d
+12b
+71d
+17b
+36a
+46d
+54b
+36b
+18d
+40b
+23b
+62c
+58c
+61D
+57a
+24a
+59c
+28a
+54a
+26a
+40a
+63a
+53d
+46b
+47a
+35d
+42d
+34d
+13a
+23d
+28b
+29c
+42b
+13d
+45d
+55d
+53b
+45b
+50e
+56d
+12c
+22d
+41a
+65a
+19a
+41d
+66d
+13b
+14a
+42a
+19b
+27d
+63b
+46a
+21d
+30d
+25a
+30b
+18b
+67b
+29a
+47b
+31b
+48d
+22b
+31a
+22a
+29b
+64a
+18a
+25d
+21a
+63d
+41b
+27b
+56b
+35a
+15b
+72a
+19d
+48b
+29d
+64d
+17a
+25b
+45a
+62a
+20b
+72d
+48a
+10d
+28d
+20d
+12a
+336f
+206s
+31c
+31d
+47c
+212F
+212E
+291c
+216T
+291b
+216E
+216N
+216C
+9b
+8b
+94
+9d
+61W
+168r
+291d
+351A
+72c
+166h
+350S
+350W
+339M
+198t
+352C
+38c
+37c
+351B
+44a
+45c
+71b
+351D
+70b
+198v
+352B
+2d
+39b
+351W
+69b
+57c
+71a
+53c
+56c
+37a
+54d
+10c
+57d
+57b
+53a
+58d
+37b
+66b
+21b
+56a
+38a
+67a
+65b
+59d
+65d
+352E
+66a
+198u
+3a
+68a
+352A
+60 a
+333A
+292s
+333C
+61X
+70a
+70c
+2b
+172j
+337f
+171i
+333D
+3c
+333B
+207c
+171j
+205f
+167t
+207a
+292t
+207f
+337t
+4b
+167r
+102j
+102i
+60 c
+220F
+4d
+9f
+336t
+216Y
+334t
+206t
+171r
+220A
+171c
+337r
+60 d
+171a
+60 b
+207d
+335t
+102r
+292r
+220D
+207b
+220C
+197r
+335e
+198b
+337c
+207g
+39a
+171b
+351S
+207r
+336r
+337d
+351G
+335k
+101u
+337g
+171f
+197s
+197y
+207e
+336k
+337x
+337y
+337s
+334s
+167s
+208b
+208a
+336b
+171e
+39c
+337h
+292x
+351C
+207h
+102k
+197x
+291a
+337b
+167k
+336c
+197v
+292m
+205g
+337n
+194G
+205e
+171k
+292p
+336e
+292h
+335c
+292n
+292d
+102s
+292c
+102p
+334n
+171p
+225d
+171n
+102n
+167u
+336g
+336n
+335a
+172p
+292g
+351T
+336s
+197z
+335g
+335b
+167n
+167p
+335n
+206n
+216 FI
+167f
+336a
+197w
+206m
+33c
+188g
+171g
+14b
+351M
+337w
+33a
+292w
+32d
+207n
+27c
+205u
+188h
+351E
+32b
+14d
+15a
+26b
+38b
+188c
+27a
+15d
+26d
+337e
+50b
+337m
+198s
+188d
+64e
+337a
+335p
+335d
+335h
+102m
+167m
+38d
+197af
+334m
+351H
+9h
+198f
+9e
+167e
+352S
+336m
+207m
+335m
+225 h
+50a
+167g
+335w
+167h
+9g
+350C
+197ac
+352M
+197ad
+351F
+197ab
+197ae
+352F
+16d
+16b
+198a
+351N
+350B
+198z
+64b
+172h
+350D
+206g
+291e
+198g
+205t
+350A
+206h
+198m
+171m
+44b
+33d
+171s
+351R
+172u
+205d
+335r
+172n
+205s
+198 K
+172c
+52e
+205b
+103ar
+172b
+205c
+205a
+352T
+103an
+51c
+11b
+260e
+291n
+172e
+172a
+291m
+293d
+103t
+64c
+171h
+198h
+50d
+103x
+103y
+103z
+205v
+103w
+103af
+103at
+172v
+172d
+293h
+172t
+103ay
+103az
+103ax
+103ae
+103ac
+103ad
+103ag
+103aw
+64f
+205m
+103as
+50c
+CIUDAD DE SALADILLO
+ZONIFICACIÓN
+ANEXO I
+PLANO Nº1
+AREA URBANA
+AREA COMPLEMENTARIA
+EVP. ESPACIOS VERDES
+PU. PARQUES URBANOS
+DI. DISTRITO INDUSTRIAL
+EVP1 PLAZA "25 DE MAYO"
+EVP2 PLAZA "FALUCHO"
+EVP3 PLAZA "ESPAÑA"
+EVP4 PLAZA "PARQUE COOPERACIÓN"
+EVP5 PLAZA "PARQUE DEL CARMEN"
+EVP6 PLAZA "PARQUE BARRIO ESPERANZA"
+EVP7 PLAZA "17 DE OCTUBRE"
+EVP8 PLAZA "ISLAS MALVINAS"
+EVP9 PLAZA "PARQUE DIEGUITO"
+EVP10 PLAZA "PARQUE CUEC"
+EVP11 PLAZA "ARMENDARIZ"
+PU1 PARQUE FERROCARRIL ROCA
+PU2 PARQUE FERROCARRIL PROVINCIAL
+PU3 PARQUE Dr. EMPARANZA
+UE. USOS ESPECIFICOS
+UE1- HOSPITAL ZONAL Dr. ALEJANDRO POSADAS
+UE2- COMISARIA SALADILLO
+UE3- OBRAS SANITARIAS
+UE4- CORRALON MUNICIPAL
+UE5- PLANTA DE RESIDUOS SOLIDOS URBANOS
+UE6- CEMENTERIO SANTA MORADA DE LA ESPERANZA
+UE7-TERMINAL DE OMNIBUS
+UE8- AERODROMO PROVINCIAL
+UE9- PLANTA DE TRATAMIENTO DE LIQUIDOS CLOACALES
+UE10- SOCIEDAD RURAL DE SALADILLO
+UE11- TIRO FEDERAL
+UE12- COOPERATIVA ELECTRICA SALADILLO
+DI 1- PEETFOOD
+DI 2- FRIGORIFICO ANGELANI
+DI 3- MOLINO HARINERO SICSA
+DI 4- FRIGORIFICO CLC
+DI 5- SIPSA SECTOR INDUSTRIAL PLANIFICADO
+DI 6- SILOS TREZZA
+DI 7- SILOS COOPERATIVA AGRICOLA-GANADERA SALADILLO
+Limite Area Urbana
+Frentistas Residencial Nº1
+Frentistas Residencial Nº2
+Frentistas Residencial Nº3
+Corredor Comercial Nº1 (CC1)
+Corredor Comercial Nº2 (CC2)
+Corredor Comercial Nº3 (CC3)
+Corredor de Servicio (CS)
+Comercial Administrativo (CA)
+Residencial 1 (R1)
+Residencial 2 (R2)
+Residencial 3 (R3)
+Residencial 4 (R4)
+Distrito de Urbanización Especial (DUE)
+Industrial 1 (I1)
+Industrial 2 (I2)
+Industrial Mixto (IM)
+Area Complementaria 1 (AC1)
+Residencial Extraurbana 1 (RE1)
+Residencial Extraurbana 2 (RE2)
+Reserva Ensanche Urbano (REU)
+Area Complementaria 2 (AC2)
+Area Rural (AR)
+DR. DEPORTIVO RECREATIVO
+DR- 1 CLUB ATLETICO ARGENTINO
+DR- 2 CLUB ATLETICO LA LOLA
+DR- 3 CLUB ATLETICO ORO VERDE
+DR- 4 CLUB ATLETICO HURACAN
+Deportivo Recreativo (DR)
+Distrito Industrial (DI)
+EVP-2
+EVP-1
+EVP-3
+EVP-4
+EVP-5
+EVP-6
+EVP-7
+EVP-8
+EVP-9
+EVP-10
+EVP-11
+EVP-12
+EVP-13
+EVP-14
+EVP-15
+EVP-16
+EVP-17
+EVP-18
+EVP-21
+EVP-19
+EVP-20
+EVP-22
+PU-1
+PU-1
+PU-1
+PU-3
+PU-2
+PU-2
+PU-2
+UE-1
+UE-2
+UE-10
+UE-4
+UE-6
+UE-9
+UE-5
+UE-7
+UE-12
+UE-11
+UE-8
+DI-2
+DI-1
+DI-3
+DI-6
+DI-7
+DI-5
+DI-4
+DR-3
+DR-8
+DR-1
+DR-2
+SISTEMA DE INFORMACIÓN GEOGRÁFICO
+DIRECCIÓN DE PLANEAMIENTO, TIERRA Y
+VIVIENDA
+MUNICIPALIDAD DE SALADILLO
+DR-7
+DR-6
+DR-5
+DR-4
+DR- 5 CLUB ATLETICO URSO
+DR- 6 CLUB DEFENSORES DE ATUCHA
+DR- 7 CLUB ATLETICO APEADERO
+DR- 8 AUTOMOVIL CLUB DE SALADILLO
+Delimitación Administrativo Comercial
+Circunvalación y Accesos
+EVP12 PLAZA "PARQUE BICENTENARIO"
+EVP13 PLAZA "PARQUE PTE. PERON"
+EVP14 PLAZA "PARQUE EDUARDO GALEANO"
+EVP15 PLAZA "PARQUE LOS PIBES"
+EVP16 PLAZA "PARQUE 31 DE JULIO"
+EVP17 PLAZA "PASAJE BOMBEROS"
+EVP18 PLAZA "PLAZA JULIO CORTAZAR"
+EVP19 PLAZA "PADRE RAED"
+EVP20 PLAZA "HIPOLITO YRIGOYEN"
+EVP21 PLAZA "SUSANA E. SOBA"
+EVP22 PLAZA "PARQUE REP. DE ITALIA"
+DUE Nº1 "Barrio 96 Viviendas"
+DUE Nº2 "Barrio Centro Empleados de Comercio"
+DUE Nº3 "Barrio 77 Viviendas"
+DUE Nº4 "Barrio FONAVI"
+DUE: Saladillo Norte
+DUE-1
+DUE-2
+DUE-3
+DUE-3
+DUE-4
+UE-3
+Parques Urbanos (PU)
+Espacios Verdes (EV)
+Uso Específico (UE)
+I1
+I1
+I1
+AC2
+AC2
+AC1
+AC1
+AC1
+AC1
+AC1
+AC1
+AC2
+AC2
+AC2
+AC1
+I2
+I2
+AC2
+AC1
+AC1
+AC1
+AC1
+AC1
+AC1
+AC1
+AC1
+AC2
+REU
+REU
+RE2
+RE1
+RE1
+RE1
+RE1
+RE1
+RE1
+AC
+R1
+R1
+R3
+R3
+R2
+R2
+R4
+R4
+R4
+R4
+R4
+R4
+R4
+R4
+CC1
+CC1
+CC1
+CC1
+CC2
+CC3
+CC3
+AR
+AR
+AR
+AR
+AR
+AR
+AR
+AR
+AR
+CC2
+CC3
+R4
+DUE
+DUE
+RE3
+RE3
+RE1
+RE1
+RE1
+AC1
+AC1
+Residencial Extraurbana 3 (RE3)
+ORDENANZA Nº 97/19 DECRETO Nº 2408/19 RESOLUCION: RESO-2019-1308-GDEBA-MGGP
+ORDENANZA Nº 125/19 DECRETO Nº 3032/19 RESOLUCION: RESO-2022-77-GDEBA-MGGP
+ORDENANZA Nº 12/22 DECRETO Nº 947/22 RESOLUCION: RESO-2022-604-GDEBA-MGGP
+LOCALIDAD
+DE
+SALADILLO NORTE
+NORTE
+--- Fin del documento: cou_partido_de_saladillo_planos.pdf ---
+
+
+--- Inicio del documento: del_carril_calles.pdf ---
+Acceso
+Estación de Ferrocarril
+Lavalle
+Dr. Victor Freiberg
+Santa Fé
+Mendoza
+San Juan
+Av. Rivadavia
+Almafuerte
+Paz
+Jujuy
+Avellaneda
+Juan B.Alberdi
+Della Cabe
+Moreno
+Urquiza
+M.García
+Lamadrid
+Dorrego
+M.T. de Alvear
+H. Yrigoyen
+Pueyrredón
+Caseros
+R.Sáenz.Peña
+Sarmiento
+9 de julio
+25 de mayo
+B.Mitre
+600
+700
+800
+900
+1000
+1100
+1200
+1300
+1400
+1500
+1600
+1700
+1800
+
+1700
+1600
+
+1500
+
+1400
+
+1300
+
+1200
+
+1100
+
+1000
+Entre Ríos
+Tucumán
+Salta
+H. YrigoyenB.Mitre
+M.T.de Alvear
+Gral. Belgrano
+Sin Nombre
+Corrientes
+Santiago Del Estero
+Dr. Salesses Julio
+Sin Nombre
+Acceso Ministro Roberto R. Pisani
+L. Elordieta
+4
+DEL CARRIL
+AREA URBANA
+PARTIDO DE SALADILLO
+SISTEMA DE INFORMACIÓN GEOGRÁFICO
+SUB. SECRETARÍA DE OBRAS PÚBLICAS Y
+PLANEAMIENTO
+MUNICIPALIDAD DE SALADILLO
+NORTE
+--- Fin del documento: del_carril_calles.pdf ---
 
 
 --- Inicio del documento: documento-integral-saladillo-rag.md ---
@@ -13432,6 +18434,235 @@ Los museos modernos buscan superar la visión internalista que presenta el conoc
 --- Fin del documento: museos interactivos de ciencia.pdf ---
 
 
+--- Inicio del documento: nomenclatura_calles_sentidos_y_localidades_saladillo.md ---
+# GUÍA DE NOMENCLATURA URBANA, CALLES, SENTIDOS Y LOCALIDADES DE SALADILLO
+## Base Cartográfica y Vial para el Asistente Virtual ITEC ("Augusto Cicaré")
+
+---
+
+### METADATOS CARTOGRÁFICOS
+- **Jurisdicción**: Partido de Saladillo, Provincia de Buenos Aires, República Argentina.
+- **Fuentes oficiales integradas**:
+- Código de Ordenamiento Urbano (COU) del Partido de Saladillo (Ordenanza de Zonificación y Usos de Suelo).
+- Planos Oficiales de la Subsecretaría de Obras Públicas, Planeamiento y Catastro Municipal.
+- Planos de Redes Viales y Sentidos de Circulación de Planta Urbana 2025 (\`calles_saladillo_2025_4.pdf\`, \`calles_sentido_planta_urbana_ampliado.pdf\`, \`sentido_de_circulacion_2025_2.pdf\`).
+- Informe Técnico N° 2 "Una nueva Localidad en Saladillo: Saladillo Norte" (Observatorio de Estadísticas y Banco Municipal de Datos).
+- Planos de Localidades: Cazón (\`cazon_calles.pdf\`), Del Carril (\`del_carril_calles.pdf\`), Polvaredas (\`polvaredas_calles_2022.pdf\`), Álvarez de Toledo (\`alvareztoledog2022_0.pdf\`).
+- **Fecha de consolidación**: 2025-2026.
+
+---
+
+### 1. PLANTA URBANA DE LA CIUDAD DE SALADILLO (CABECERA)
+
+#### 1.1 Estructura del Trazado Urbano
+La traza fundacional de Saladillo fue concebida en damero perfecto en torno a la Plaza 25 de Mayo (centro cívico e histórico). La cuadrícula urbana central está delimitada y articulada por un sistema de avenidas principales y bulevares:
+- **Ejes Céntricos Primarios (Cuatro Avenidas del Cuadrante Histórico)**:
+1. **Avenida Rivadavia**: Cruza el corazón de la ciudad en sentido Noroeste - Sureste, frente a la Plaza 25 de Mayo, Palacio Municipal y Parroquia Nuestra Señora de la Asunción.
+2. **Avenida San Martín**: Eje perpendicular a Rivadavia, atraviesa la ciudad en sentido Suroeste - Noreste.
+3. **Avenida Belgrano**: Paralela a Rivadavia, eje comercial, institucional y residencial neurálgico.
+4. **Avenida Moreno**: Paralela a San Martín, arteria conectora principal de la planta urbana.
+
+- **Avenidas Circunvalares y Conectores de Borde Urbano**:
+- **Avenida Pereyra**: Eje conector norte-sur.
+- **Avenida Cabral (Manuel Cabral)**: Conector este-oeste.
+- **Avenida Bozán (A. Bozán)**: Bulevar circunvalar este.
+- **Avenida Manuel Ibáñez Frocham (Av. Frocham)**: Bulevar circunvalar oeste que articula el ingreso y egreso rápido.
+- **Avenida Mariano Acosta**: Homenaje al ministro fundador; vincula el sector sur y sudoeste.
+- **Avenida Cornelio Saavedra**: Eje sur de enlace intercomunal.
+- **Avenida Manuel Ledesma**: Arteria conectora de barrios periurbanos.
+- **Avenida Orlando Sanguinetti**: Bulevar conector este.
+- **Avenida Juan Domingo Perón**: Eje de gran circulación hacia accesos y zona sur.
+- **Avenida Augusto Ulderico Cicaré**: Bulevar y acceso emblemático bautizado en honor al genial inventor de helicópteros saladillense, conectando la RN 205 con la planta urbana.
+- **Avenida Aureliano Roight**: Arteria de vinculación barrial y deportiva.
+
+#### 1.2 Nomenclatura Completa de Calles Urbanas (Saladillo Centro y Barrios)
+Las calles de la ciudad de Saladillo convalidan la memoria histórica local, figuras nacionales, pensadores y flora autóctona:
+- **Calles Históricas y Próceres**:
+- Leandro N. Alem
+- Domingo Faustino Sarmiento
+- Bartolomé Mitre
+- Hipólito Yrigoyen
+- General Julio A. Roca
+- Juan B. Justo
+- Alfredo Palacios
+- Joaquín V. González
+- José Manuel Estrada
+- José Ingenieros
+- Esteban Echeverría
+- Dr. Francisco Emparanza
+- Horacio A. Taborda
+- Carlos Arrospide
+- Federico Álvarez de Toledo
+- Juan Carlos Dellatorre (Lisandro de la Torre)
+- Dr. Alejandro Posadas
+- Eduardo De Santibáñez
+- Dassatti (Dasatti)
+- Isidoro Medina
+- Demaría
+- Jaime Seguí
+- Lope Serrano (Maestro L. Serrano)
+- Dr. Lenzi
+- Ibarbia
+- Intendente Alejandro Armendáriz
+- Intendente Héctor Inda
+- Mariotto
+- Roque Sáenz Peña
+- Ernesto "Che" Guevara
+- Papa Francisco
+- Martín Fierro
+- Ricardo Rojas
+- Vergara
+- Viale
+- Volonté
+- Graduazo
+- Suquía
+- Zamorano
+- Sojo
+
+- **Barrios Residenciales con Nombres de Especies Botánicas / Árboles**:
+- Calle El Ceibo
+- Calle La Araucaria
+- Calle Las Acacias
+- Calle Los Nogales
+- Calle Los Plátanos
+- Calle Los Sauces
+- Calle Los Álamos
+
+#### 1.3 Sentidos de Circulación Vehicular (Ordenamiento Urbano 2025)
+Para garantizar la fluidez vehicular y reducir la siniestralidad, la planta urbana opera bajo un sistema de mano única alternada en calles paralelas:
+- **Eje Noroeste - Sureste (Paralelas a Av. Rivadavia y Av. Belgrano)**:
+- Las calles alternan sentidos de circulación únicos entre cuadras consecutivas hacia el Noroeste (hacia Ruta 205 / Saladillo Norte) y hacia el Sureste (hacia Circunvalación Saavedra / Sanguinetti).
+- Las avenidas de doble mano con cantero o bulevar central (Av. Rivadavia, Av. Belgrano, Av. Bozán, Av. Frocham) concentran la distribución principal con cruces semaforizados en intersecciones críticas.
+- **Eje Suroeste - Noreste (Paralelas a Av. San Martín y Av. Moreno)**:
+- Circulación alternada cuadra por cuadra hacia el Noreste y Suroeste conectando Av. Pereyra con Av. Cabral y los accesos periféricos.
+- **Estacionamiento**:
+- Regulado sobre mano derecha según sentido de circulación en la cuadrícula densa del centro cívico, con áreas de carga/descarga y dársenas específicas para motovehículos y bicicletas.
+
+---
+
+### 2. LOCALIDAD DE SALADILLO NORTE
+
+#### 2.1 Origen, Creación y Límites
+- **Categoría**: Nueva localidad del partido creada formalmente como desprendimiento urbano y polo de crecimiento residencial e industrial hacia el norte de la ciudad cabecera.
+- **Radio y Fracción Censal**: Fracción Censal 067070401 (Chacras 165 a 167 y adyacentes).
+- **Conectividad**: Enlazada directamente con Saladillo centro a través de la Ruta Nacional 205 y prolongaciones pavimentadas de la red vial urbana norte.
+- **Infraestructura Educativa e Institucional**:
+- Escuela Primaria N° 11 "República de Costa Rica" (con régimen de jornada extendida).
+- Jardín de Infantes N° 908.
+- Subdelegación y dependencias de fomento barrial y sanitario.
+
+---
+
+### 3. LOCALIDAD DE CAZÓN ("Pueblo del Millón de Árboles")
+
+#### 3.1 Nomenclatura Vial y Trazado
+El trazado urbano de Cazón se distingue porque la totalidad de sus calles llevan nombres de **Provincias Argentinas**:
+- **Calles de Cazón**:
+- Calle Río Negro
+- Calle Córdoba
+- Calle Entre Ríos
+- Calle San Juan
+- Calle Corrientes
+- Calle Salta
+- Calle Santa Fe
+- Calle Santiago del Estero
+- Calle Tucumán
+- Calle Catamarca
+- Calle La Rioja
+- Calle Jujuy
+- Calle Buenos Aires
+- Calle Mendoza
+- Calle San Luis
+- Calle Santa Cruz
+
+- **Puntos Neurálgicos y Accesos de Cazón**:
+- **Acceso Gobernador Dr. Alejandro Armendáriz**: Ingreso asfaltado principal que une la Ruta Nacional 205 con la plaza y la estación.
+- **Estación Cazón** (Ferrocarril General Roca).
+- **Vivero Municipal "Eduardo L. Holmberg"**: Uno de los viveros más extensos e importantes del país (210 hectáreas).
+- **Base de Campamento Municipal**: Espacio educativo, ambiental y turístico.
+- **Alturas Catastrales de Calles**: Tramos numerados entre 700, 800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600, 1700, 1800, 1900 y 2000.
+
+---
+
+### 4. LOCALIDAD DE DEL CARRIL
+
+#### 4.1 Nomenclatura Vial y Trazado
+Segunda localidad más poblada del partido (más de 1.200 habitantes), con estructura urbana centrada en la estación ferroviaria y el boulevard de acceso.
+- **Calles de Del Carril**:
+- **Avenida Rivadavia**: Bulevar cívico principal.
+- Acceso Ministro Roberto R. Pisani (ingreso principal pavimentado desde RN 205).
+- Calle Dr. Víctor Freiberg
+- Calle Lavalle
+- Calle Santa Fe
+- Calle Mendoza
+- Calle San Juan
+- Calle Almafuerte
+- Calle Paz
+- Calle Jujuy
+- Calle Avellaneda
+- Calle Juan B. Alberdi
+- Calle Della Cabe
+- Calle Moreno
+- Calle General Urquiza
+- Calle M. García
+- Calle Lamadrid
+- Calle Manuel Dorrego
+- Calle Marcelo T. de Alvear
+- Calle Hipólito Yrigoyen
+- Calle Pueyrredón
+- Calle Caseros
+- Calle Roque Sáenz Peña
+- Calle Domingo F. Sarmiento
+- Calle 9 de Julio
+- Calle 25 de Mayo
+- Calle Bartolomé Mitre
+- Calle General Manuel Belgrano
+- Calle Entre Ríos
+- Calle Tucumán
+- Calle Salta
+- Calle Corrientes
+- Calle Santiago del Estero
+- Calle Dr. Julio Salesses
+- Calle L. Elordieta
+
+- **Alturas Catastrales**: Manzanas numeradas del 600 al 1800.
+- **Equipamiento**: Estación de Ferrocarril Del Carril, Destacamento Policial, Centro de Atención Médica, Club Social y Deportivo.
+
+---
+
+### 5. LOCALIDAD DE POLVAREDAS
+
+#### 5.1 Conectividad y Trazado
+- **Ubicación y Conectividad**: Situada al este del partido, conectada por la Ruta Provincial 215 y caminos de red terciaria mantenidos permanentemente por la Subsecretaría de Servicios Públicos.
+- **Estructura Urbana**:
+- Trazado ortogonal articulado alrededor del predio ferroviario de la Estación Polvaredas.
+- Delegación Municipal, Plaza San Martín, Jardín de Infantes y Escuela Primaria N° 13.
+- Red de calles que confluyen en el acceso asfaltado intercomunal.
+
+---
+
+### 6. LOCALIDAD DE ÁLVAREZ DE TOLEDO
+
+#### 6.1 Conectividad y Trazado
+- **Ubicación y Conectividad**: Localizada al sudoeste de Saladillo cabecera, con acceso desde la Ruta Provincial 51 y empalmes con caminos troncales rurales.
+- **Estructura Urbana**:
+- Diseñada en torno al cuadro de la Estación Álvarez de Toledo (en honor a la familia patricia fundacional).
+- Capilla, Escuela Primaria, Jardín de Infantes y el Club Álvarez de Toledo.
+- Calles de acceso y perimetrales que integran la vida rural y social de la comunidad.
+
+---
+
+### 7. CÓDIGO DE ORDENAMIENTO URBANO (COU): ZONIFICACIÓN Y USOS
+El COU divide el territorio de Saladillo en zonas con indicadores urbanísticos específicos (FOS, FOT, retiros, usos permitidos):
+- **Zona R1 (Residencial Exclusiva de Baja Densidad)**: Máxima calidad ambiental, viviendas unifamiliares con jardines y retiros obligatorios.
+- **Zona R2 (Residencial Densidad Media)**: Viviendas unifamiliares y multifamiliares de escala barrial, comercios diarios no contaminantes.
+- **Zona R3 (Residencial Densidad Alta / Centro Cívico)**: Área central, apta para edificios en altura, oficinas, servicios profesionales y comercios.
+- **Zona C (Comercial)**: Corredores comerciales prioritarios sobre Avenidas Rivadavia, Belgrano, San Martín, Moreno y Cabral.
+- **Zona I (Industrial y Logística)**: Ubicada en los márgenes de la RN 205 y RP 51 para fábricas, talleres, depósitos, parque industrial y servicios de transporte de cargas sin interferencia con el área residencial.
+- **Zona Rural y Complementaria**: Explotación agropecuaria intensiva y extensiva, agroindustrias y reservas para futura expansión urbana.
+--- Fin del documento: nomenclatura_calles_sentidos_y_localidades_saladillo.md ---
+
+
 --- Inicio del documento: nueva_localidad_saladillo_norte.pdf ---
 1
 Una nueva Localidad en Saladillo: Saladillo Norte.
@@ -13966,6 +19197,34 @@ Restricciones de Generación
 ● Nivel Educativo: Debe reflejar que completó la primaria (6to grado) pero carece de títulos técnicos o secundarios académicos, subrayando su naturaleza de autodidacta.
 ● Precisión de Nomenclature: Utilizar siempre "Matrícula Honoraria" para su reconocimiento profesional y "Labala GFL 2000" para la turbina del CH-2002.
 --- Fin del documento: Perfil Maestro de Entrenamiento IA_ Augusto Ulderico Cicaré.pdf ---
+
+
+--- Inicio del documento: planilla_inicio_expedientes_de_mensura.pdf ---
+Saladillo ……de ……………de 20……
+Exp: …..……Letra: …… Año: ………..
+MUNICIPALIDAD DE SALADILLO
+Intendente Municipal
+Ing. José Luis Salomón
+De mi mayor consideración:
+Me dirijo a usted con el fin de solicitarle la pre-factibilidad para la realización del proyecto de ………………………..……………………………………………………………………
+sobre el bien denominado catastralmente como:
+Propietario:
+• Nombre: …………………………………………………………...………………………………..
+• Mail: ………………………………………………………………………………………………….
+• Teléfono: ……………………………………………………………………………………………
+Responsable / apoderado (con incumbencias) para el seguimiento del expediente y obras:
+• Nombre: ……………………………………………………………………………………..………
+• Mail: ………………………………………………………………………………………………….
+• Teléfono: …………………………………………………………………………………………….
+Para su evaluación se adjuntan a continuación:
+• Documentación para acreditar la propiedad (informe de dominio/escritura, etc.)
+• Memoria síntesis de análisis urbanístico/circulatorio del entorno (decisiones para la ubicación de calles, espacios verdes, equipamiento, etc. en caso de existir).
+• Proyecto de Mensura/división firmada por matriculado.
+• Información respaldatoria del responsable para el seguimiento del expediente en caso de no estar registrado en el municipio (Agrimensor – Arquitecto – Ingeniero - Maestro mayor de obras).
+Sin otro particular y a la espera de una pronta respuesta, lo saludo atentamente.
+Firma Propietario: ……………….…… Firma responsable expte.: ……………......…
+Contacto: Arq. Lisandro González Ojinaga. Dir.planeamiento@saladillo.gob.ar
+--- Fin del documento: planilla_inicio_expedientes_de_mensura.pdf ---
 
 
 --- Inicio del documento: Presentacion-2023.pdf ---
