@@ -43,25 +43,31 @@ export function HistoricalActionsYears({ historicalActions }: HistoricalActionsY
 
   return (
     <div className="mt-16 relative z-10">
-      {/* Badge superior */}
-      <div className="mb-3">
-        <span className="inline-block text-[10px] font-bold tracking-[0.18em] text-[var(--accent-warm)] uppercase px-3 py-1 rounded-full border border-[var(--accent-warm)]/20 bg-[var(--accent-warm)]/5">
-          {dict.impactSection.accionesBadge || 'MEMORIA INSTITUCIONAL'}
-        </span>
-      </div>
+      {/* Estructura de 2 columnas: Columna izquierda (título y texto centrados) / Columna derecha (años centrados) */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center mb-10">
+        {/* Columna Izquierda: Badge, Título y Texto descriptivo al centro */}
+        <div className="flex flex-col items-center text-center">
+          <div className="mb-3">
+            <span className="inline-block text-[10px] font-bold tracking-[0.18em] text-[var(--accent-warm)] uppercase px-3 py-1 rounded-full border border-[var(--accent-warm)]/20 bg-[var(--accent-warm)]/5">
+              {dict.impactSection.accionesBadge || 'MEMORIA INSTITUCIONAL'}
+            </span>
+          </div>
 
-      {/* Fila con el título y los años a la misma altura */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-3">
-        <h2 className="text-lg sm:text-xl md:text-2xl font-black text-white leading-tight tracking-tight">
-          {dict.impactSection.accionesTitleStart || 'ACCIONES DE ITEC'} <br className="hidden sm:inline" />
-          <span className="text-gradient">
-            {dict.impactSection.accionesTitleEnd || 'DESDE SU NACIMIENTO'}
-          </span>
-        </h2>
+          <h2 className="text-lg sm:text-xl md:text-2xl font-black text-white leading-tight tracking-tight mb-3">
+            {dict.impactSection.accionesTitleStart || 'ACCIONES DE ITEC'} <br className="hidden sm:inline" />
+            <span className="text-gradient">
+              {dict.impactSection.accionesTitleEnd || 'DESDE SU NACIMIENTO'}
+            </span>
+          </h2>
 
-        {/* Selector interactivo de años (2022, 2023, 2024, 2025) a la misma altura del título */}
-        <div className="flex flex-wrap items-center gap-3">
-          <div className="flex flex-wrap items-center gap-2 p-1.5 rounded-2xl bg-white/[0.03] border border-white/10 backdrop-blur-md">
+          <p className="text-[var(--text-muted)] text-xs sm:text-sm leading-relaxed whitespace-pre-line max-w-md">
+            {dict.impactSection.accionesDesc || 'Explorá los proyectos, eventos e iniciativas\nque forjaron la historia de ITEC\ndesde sus primeros pasos.'}
+          </p>
+        </div>
+
+        {/* Columna Derecha: Años 2022, 2023, 2024, 2025 al centro */}
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+          <div className="flex flex-wrap items-center justify-center gap-2 p-1.5 rounded-2xl bg-white/[0.03] border border-white/10 backdrop-blur-md">
             {HISTORICAL_YEARS.map((year) => {
               const isSelected = selectedYear === year
               return (
@@ -103,11 +109,6 @@ export function HistoricalActionsYears({ historicalActions }: HistoricalActionsY
           )}
         </div>
       </div>
-
-      {/* Texto descriptivo en 3 renglones debajo del título */}
-      <p className="text-[var(--text-muted)] text-xs sm:text-sm leading-relaxed whitespace-pre-line mb-8 max-w-2xl">
-        {dict.impactSection.accionesDesc || 'Explorá los proyectos, eventos e iniciativas\nque forjaron la historia de ITEC\ndesde sus primeros pasos.'}
-      </p>
 
       {/* Listado desplegable animado de acciones del año seleccionado */}
       <AnimatePresence mode="wait">
