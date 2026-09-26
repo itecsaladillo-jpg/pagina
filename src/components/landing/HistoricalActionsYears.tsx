@@ -55,8 +55,8 @@ export function HistoricalActionsYears({ historicalActions }: HistoricalActionsY
               {dict.impactSection.accionesTitleEnd || 'DESDE SU NACIMIENTO'}
             </span>
           </h2>
-          <p className="text-[var(--text-muted)] text-xs sm:text-sm leading-relaxed">
-            {dict.impactSection.accionesDesc || 'Explorá los proyectos, eventos e iniciativas que forjaron la historia de ITEC desde sus primeros pasos.'}
+          <p className="text-[var(--text-muted)] text-xs sm:text-sm leading-relaxed whitespace-pre-line">
+            {dict.impactSection.accionesDesc || 'Explorá los proyectos, eventos e iniciativas\nque forjaron la historia de ITEC\ndesde sus primeros pasos.'}
           </p>
         </div>
 
