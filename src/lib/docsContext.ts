@@ -18196,6 +18196,3219 @@ ACTIVIDADES PLANIFICADAS PARA EL RESTO DEL AÑO
 --- Fin del documento: labor-actividades-itec-2023-2026.md ---
 
 
+--- Inicio del documento: Memoria 2022-2023.pdf ---
+MEMORIA Y BALANCE 2022-2023
+79° Ejercicio Económico
+
+MEMORIA
+ESTADOS CONTABLES
+INFORMES
+Septuagésimo noveno Ejercicio
+- Finalizado el 30 de junio de 2023 –
+
+NÓMINA DE AUTORIDADES DURANTE EL EJERCICIO
+2022 - 2023
+PRESIDENTE
+VICEPRESIDENTE
+SECRETARIO
+PROSECRETARIO
+TESORERO
+PRO-TESORERO
+VOCALES TITULARES
+SINDICO
+LARA PABLO
+MASSA DANIEL
+GOÑI IGNACIO
+COTIGNOLA FRANCISCO
+PINTO ANA MARIA
+MENGARELLI DANILO
+UGARTAMENDÍA RÚBEN
+BASSI GUSTAVO
+WUIOVICH AMILCAR
+MOLFINO RICARDO
+COOPERATIVA ELECTRICA DE SALADILLO L.T.D.A
+02
+
+Si bien por definición el Consejo de Administración es el órgano elegido por los asociados para que los representen, y sus principales funciones son dirigir y administrar la Cooperativa, en la CES se ha establecido una modalidad de gestión gerencial. Son los integrantes de la Mesa Directiva quienes, en consulta permanente con los demás integrantes del cuerpo colegiado, definen las políticas institucionales y actúan en la concreción de medidas en el quehacer cotidiano de la empresa.
+Este esquema de conducción demanda plena atención para el gerenciamiento del proceso de planeamiento, organización, actuación y control de las operaciones de la empresa para, mediante la coordinación de los recursos humanos y materiales esenciales, alcanzar los objetivos trazados de una manera efectiva y eficiente. Sin embargo además de los aspectos operativos requiere un sustento de acción política institucional para el relacionamiento con otras entidades, empresas y el Estado en sus diversos niveles.
+La gestión se concreta en las acciones que se impulsan a través del diálogo permanente con la comunidad y sus instituciones representativas, buscando permanentemente el beneficio de todos los sectores y de los asociados en particular. De esta manera desde el Consejo de Administración se ha trabajado en diversos temas para concretar proyectos.
+PALABRAS INTRODUCTORIAS
+El contexto de la organización puede definirse como el medio en que se desenvuelve la empresa tanto a nivel interno de la misma como en su entorno, dicho medio afecta positiva o negativamente los productos, servicios, metas y en general, el desarrollo de las actividades de la organización. La exigencia consiste en analizar la información relativa al negocio de la organización; reunir, compilar, evaluar tendencias, prever hechos y sacar conclusiones de los datos que afectan de forma directa e indirecta a la empresa.
+Toda organización se encuentra inmersa en un entorno social, político, tecnológico y económico según la región o país en que se encuentre desempeñando su labor, incluso siempre es afectada por la relaciones internacionales; acercando más el circulo de interacción de la empresa (partes interesadas) encontramos los entes reguladores, el Estado y entidades financieras, entre otras, que aunque no hacen parte directa del desempeño del objeto social de la organización si afecta su gestión.
+El reconocimiento y análisis del contexto ha sido una de las claves para la gestión de la CES durante el período que en la presente Memoria se describe.
+CONTEXTO DE GESTIÓN
+03
+
+Fomentando la construcción colectiva y el fomento del espíritu cooperativista la CES fue anfitriona de un encuentro de federaciones de cooperativas de alimentos de Brasil, Chile y Argentina.
+Integrantes de la Red de Alimentos Cooperativos de
+Argentina, la UNICAFES de Brasil y Campocoop de
+Chile intercambiaron experiencias en el auditorio de la CES. Recibidos por autoridades del Consejo de
+Administración de la CES, SICSA, la Agrícola y el
+Director Provincial de Cooperativismo los cooperativistas de los vecinos países pudieron conocer la importante actividad que impulsan las entidades locales y el modo en que interactúan por el desarrollo local, social y productivo.
+En el mes de octubre del 2022 el Consejo de Administración resolvió que el Contador Pablo Lara continúe en la presidencia, acompañado por Daniel Massa en la vicepresidencia, Ignacio Goñi en la secretaría y Ana
+María Pinto como tesorera. La nómina de cargos se completó con Francisco Cotignola como Pro-secretario y Danilo Mengarelli en la Pro-tesorería, mientras que Amilcar Wuiovich, Rubén Ugartamendía y Gustavo Bassi en calidad de vocales.
+En el orden institucional los mecanismos implementados para redoblar la asistencia a la comunidad en contexto de pandemia se mantuvieron con un modelo de gestión basado en los Programas de responsabilidad social, caracterizados por su espíritu de universalidad, orientados a dar respuestas en los campos de lo social, productivo y cultural, promoviendo de ese modo contención a la ciudadanía en general, y en particular de aquellos que se encontraran en situación de vulnerabilidad. Estas acciones se complementaron interactuando con otras instituciones de bien público, asociaciones de profesionales y del ambiente artístico
+- cultural.
+GESTIÓN COOPERATIVA
+04
+
+Las medidas adoptadas por el gobierno nacional de eliminar los subsidios del servicio de energía a nuevos segmentos de usuarios, sumado al aumento de tarifa habilitado a todos los distritos de la provincia de
+Buenos Aires con la actualización del costo de las tarifas de distribución, generaron inquietud en los consumidores, demandando gestiones activas de parte de la Cooperativa.
+Es sabido que al tratarse de un servicio público, regulado por el Estado, es el gobierno quien establece la tarifa que las empresas distribuidoras deben cobrar a los usuarios, dependiendo de las categorías en que se encuentren encuadrados los mismos y de la región provincial en que se preste el servicio.
+Si bien queda claro que son diversos los factores, ajenos a las distribuidoras, que repercuten en el costo de la energía eléctrica, se destacan la quita de subsidios, la actualización del cuadro tarifario provincial, y otros ítems del componente tarifario como por ejemplo los costos de generación los que impactan sobre la economía de los asociados.
+La UNICAFES es la Unión Nacional de Cooperativas da Agricultura Familiar y Economía Solidaria de Brasil.
+Fundada en 2005, reúne a más de 700 cooperativas de agricultores familiares y de economía solidaria de las distintas regiones de ese país. Tiene como objetivo representar, articular y fomentar el cooperativismo, así como prestar servicios a las cooperativas y mejorar las condiciones de vida de los agricultores familiares y las comunidades rurales.
+Por su parte CAMPOCOOP es la Confederación Nacional de Federaciones de Cooperativas y Asociaciones Silvoagropecuarias de Chile. Fundada en 1969, está integrada por pequeños productores ubicados entre la Región de Coquimbo y la Región de Los Lagos.
+De Argentina participaron referentes de “Alimentos cooperativos”, una red nacional de cooperativas vinculadas a la cadena agroalimentaria. Uno de sus objetivos es la cooperativización de la cadena de valor, apostando a la consolidación de un modelo comercial alternativo. Actualmente nuclea a 150 cooperativas de todo el país y comercializa en diversos puntos alimentos producidos por la agricultura familiar y la economía social y solidaria.
+SEGMENTACIÓN Y ACTUALIZACIÓN
+TARIFARIA
+05
+
+En toda empresa comercial, y las de gestión cooperativa no son una excepción, la gestión de compras es un aspecto fundamental. Se trata del proceso que define las estrategias para la adquisición de suministros de producción, bienes y servicios que ayudan a garantizar el orden en las finanzas.
+En un contexto de economía con inflación la reducción de los costos en la compra permite mejorar las condiciones de venta a los asociados y para tal fin el área de Compras resulta de gran importancia.
+La Gestión de Compras en la CES cuenta con un área específica que se ocupa de la búsqueda, selección, negociación, seguimiento y control de las fuentes externas (proveedores) de materiales (productos, insumos, equipos, maquinaria, repuestos y materiales generales) y servicios que la empresa necesite para el cumplimiento de sus fines.
+Como herramienta para mejorar el funcionamiento operativo de este sector el Consejo de Administración cuenta con un Reglamento de compras. Este documento normativo, desde el período que la presente
+Memoria describe, cuenta de manera complementaria con un nuevo procedimiento de compras que establece una metodología de trabajo para las compras de bienes, así como también para la contratación y/o locación de servicios necesarios para el normal funcionamiento de los distintos sectores de la Cooperativa Eléctrica de Saladillo Ltda.
+Ante este escenario desde la CES se mantuvieron, como acción de responsabilidad social, diferentes herramientas de contención para los sectores más vulnerables, actuando en conjunto con organismos y entidades de bien público para generar una red de acompañamiento a la ciudadanía.
+En el marco de un trabajo de gestión que contempla el acercamiento a referentes políticos y actores de la comunidad, a fin de presentar la inquietud de los asociados, el Consejo de Administración de la CES mantuvo encuentros con concejales de los bloques con representatividad en el legislativo local.
+En las ocasiones se trabajó sobre la evolución de las tarifas a mediano y largo plazo en la provincia adelantando cual sería el impacto que el mismo generaría sobre los socios.
+Las partes coordinaron acciones para promover diferentes herramientas de contención para los sectores más vulnerables, actuando en conjunto el Estado municipal, organismos y entidades de bien público para generar una red de acompañamiento a la ciudadanía.
+GESTIÓN POLITICA
+GESTIÓN DE COMPRAS
+06
+
+Por su parte CESTEL demandó intensas gestiones para realizar compras teniendo en cuenta plazos cortos de entrega, dado que la mayor parte de los materiales e insumos cotizan en dólares. Esta situación generó instancias de incertidumbre debido a la falta de materiales producto de trabas y cambios en las normas que legislan sobre las importaciones.
+Con el fin de dar a conocer los cambios que han impactado sobre las facturas del servicio de energía eléctrica, autoridades de la Cooperativa Eléctrica visitaron Barrios en la ciudad cabecera para brindar información y despejar dudas de los vecinos
+.
+En los encuentros se brindaron detalles sobre la quita de subsidios nacionales, los cambios tarifarios a nivel provincial y cómo se ha reconfigurado a partir del consumo las categorías de usuarios. Esta ronda de encuentros se replicó en localidades del interior, como es el caso de Del Carril.
+Es así que durante el Ejercicio se continuó con el objetivo de unificar las compras, realizando un seguimiento y control hasta el ingreso del bien/es a la CES, interactuando con la administración para su procesamiento.
+El Departamento de compras debe atender las demandas de la totalidad de las áreas de la CES, por lo que en el transcurso de este Ejercicio, entre otras tareas, asistió al área de Seguridad e higiene para brindar buenas condiciones al personal en el ambiente de trabajo.
+Junto al sector servicios sociales se realizaron las compras para la construcción del Panteón 67 y los materiales para el inicio de obra para el Panteón 68.
+El resto de las compras del sector, se realizaron de manera habitual.
+En el Sector Fabrica de columnas se normalizó la entrega de la trenza, material crítico para producción, como así también de los hierros, compras que se realizaron comparando precios ya que todos los proveedores de la CES contaban con stock.
+REUNIONES CON VECINOS
+07
+
+Desde CES Energía se impulsó la campaña “Cuando apagas, ahorras” promoviendo medidas que permitan a los usuarios realizar un mejor uso de los recursos energéticos y de esa manera evitar altos montos en las facturas del servicio.
+La campaña multiplataforma se intensificó en períodos de temperaturas extremas con mensajes en los
+Medios de comunicación, en redes sociales y acciones conjuntas con Defensa Civil, el municipio y entidades intermedias de Saladillo.
+Con un plan integral de inversiones la CES superó un nuevo récord histórico de demanda en Saladillo.
+CES Energía debió afrontar un verano con una nueva marca de consumo de electricidad, en condiciones climáticas extremas que pusieron a prueba una vez más las líneas de distribución y los equipos de transformación.
+A través de una extensa Resolución publicada en el
+Boletín Oficial bonaerense, el Ministerio de Infraestructura y Servicios Públicos actualizó el cuadro de tarifas de la energía eléctrica. Los incrementos empezaron a regir el 1° de abril y con otro ajuste desde el 1° de junio, lo que se reflejó con la llegada de las facturas de esos períodos.
+En el marco de la segmentación tarifaria, la actualización del cuadro no impacta igual en todos los usuarios, sino que depende de las categorías (1, 2 y 3).
+Frente al aumento tarifario del servicio eléctrico y en el marco de un plan de fomento del uso racional y eficiente de la energía, desde la Cooperativa Eléctrica de Saladillo (CES) se ha trabajado para colaborar con el ahorro de sus asociados.
+CAMBIOS SUSTANCIALES
+CAMPAÑA DE USO RACIONAL DE
+ENERGÍA ELÉCTRICA
+UN VERANO CON BUENA ENERGIA
+08
+
+Las inversiones permanentes en los últimos años han posicionado a la Cooperativa Eléctrica de Saladillo entre las prestadoras del servicio de energía con menor índice de reclamos de sus usuarios y de pronta respuesta ante las contingencias que se han generado.
+Los resultados logrados por la CES en calidad de servicio en situaciones climáticas extremas han sido el resultado de una planificación permanente y con prospectiva, que se continúa impulsando y proyecta con la puesta en marcha el Proyecto de anillo energé-
+tico e Internet que unirá a los saladillenses.
+Durante el Ejercicio que en esta Memoria se expone se dio inicio a los trabajos de postación para repotenciar líneas de distribución, y de ese modo puso en marcha el ambicioso proyecto de la Cooperativa
+Eléctrica para elevar la eficiencia del servicio en el interior del Partido de Saladillo y llevar a todas las localidades Internet por fibra óptica.
+Según datos oficiales generados por CAMMESA,
+Compañía Administradora del Mercado Mayorista
+Eléctrico, el 13 de marzo a las 14:45 los saladillenses generaron una demanda máxima de
+23,45 MW (mega watts) de potencia, batiendo de esa manera el récord histórico. Asimismo la energía operada en MWh (mega watss hora) por la CES registró en el primer bimestre del año un incremento del
+13,15% respecto del año anterior.
+La potencia que es el parámetro técnico que permite analizar cuánto se exigen las redes de distribución de la Cooperativa cesó marcadamente a partir de la segunda quincena de marzo y se sostuvo en un valor de demanda media de 15 MW.
+Esta demanda histórica puso a prueba a la infraestructura de distribución de CES Energía, puesto que ha exigido a las redes a estados muy críticos en todos los niveles de tensión. Lo destacable de la situación es que se superaron estas circunstancias sin inconvenientes gracias a las previsiones de inversión y la realización de estudios termográficos sobre los alimentadores principales, que permitieron detectar y solucionar potenciales puntos de falla de la red.
++ RED
+09
+
+Entre los beneficios de esta nueva obra de la CES se enfatiza en que los habitantes de las localidades del interior podrán contar con los servicios de Internet por fibra óptica de alta velocidad y estabilidad de CESTEL, al tiempo que en materia energética se logrará la ampliación de las capacidades técnicas de la red de distribución, con incremento cercano al 25 % en la capacidad de corriente, para la mejora de la calidad de servicio y producto, generando la factibilidad de alimentación a nuevos usuarios.
+Con la mejora de la calidad del servicio eléctrico y el tendido de Fibra óptica se contará, además, con servicios para empresas que deseen invertir en el interior del Partido de Saladillo y potenciar los proyectos productivos rurales ya existentes, dado que la obra contempla el tendido de una red de servicio en la planta urbana de Del Carril.
+Se trata de un trabajo interdisciplinario y promovido por todas las áreas de la CES (CES ENERGÍA – CESPRET – CESTEL) planificado para la interconexión eléctrica y de Internet entre las localidades del interior.
+De esta manera se conseguirá el vínculo físico entre
+Saladillo, ciudad cabecera, con Álvarez de Toledo,
+Polvaredas, Del Carril y Cazón.
+El proyecto, que supera el millón de dólares de inversión global, prevé el tendido de 30 kilómetros de postación en hormigón pretensado y nuevas líneas de distribución de energía, más cerca de 75 Kilómetros de líneas de enlace de Fibra óptica.
+Con el soporte de esa red troncal para Internet y renovadas líneas eléctricas se avanzará en la prestación de nuevos servicios a las comunidades del interior y se profundizará el desarrollo de otras herramientas complementarias como la telemedición, el telecomando y la conexión para cámaras de seguridad en puntos geográficos distantes de la planta urbana de Saladillo.
+Si bien en este Ejercicio se iniciaron a las obras, el trabajo comenzó a fines del 2021 con el diseño, la solicitud de permisos a los organismos oficiales y fundamentalmente, ante un escenario de crecente inflación la compra progresiva de los materiales.
+10
+
+A partir de un proceso se fue definiendo un organigrama. El esquema de organización institucional se orientó a establecer rangos y jerarquías, entre las que potencia la figura de una Administración Central, un sector conformado por profesionales de diversas disciplinas enfocados en la medición, comunicación e interpretación de los efectos de actos y hechos cuantificables, con repercusión económica, relativos al pasado, presente y futuro de todo tipo de gestiones operativas, para facilitar la toma de decisiones y el control de la Cooperativa por parte de sus autoridades.
+El fortalecimiento de la mencionada área administrativa se promovió mediante el diseño estructural y armado del Área Tesorería y Finanzas, dependiente de la Administración Central de la CES, definiendo además su misión, funciones, personal a afectar y procedimientos necesarios en el área, con el diseño y redacción de los procedimientos para la realización de “Pagos” y “Gestión de Cobranzas y Rendición de
+Fondos”. De manera simultánea se trabajó en el dise-
+ño e implementación de una metodología única para la correcta administración de los bienes en inventario disponibles en todos los sectores de la CES (Procedimiento Específico CES 8.4-01), sumando la participación de la Auditoría Externa en los sectores CES
+Energía y CESPRET.
+Esta inversión fortalece además las líneas de distribución para la energía solar que ya se genera con la creación del ya operativo Parque Solar en la Localidad de Cazón y la inminente construcción de dos nuevos Parques solares, uno en Del Carril y otro en
+Polvaredas. Por lo que la obra puesta en marcha dará estructura a esa matriz energética de CES Energía.
+Para comprender la evolución de la Cooperativa y la toma de decisiones durante el Ejercicio que esta Memoria describe resulta necesario contemplar el modelo de gestión en situación de emergencia de pos pandemia que caracterizó al intervalo 2021-2023. Desde entonces el manejo de la Cooperativa se ha centrado en la organización administrativa y el ordenamiento de la empresa mediante un marco conceptual basado en la definición de procedimientos.
+GESTIÓN ADMINISTRATIVA
+11
+
+En el área de la Administración Central se diseñaron y redactaron procedimientos para la realización de
+“Pagos” (PE CES 8.4-03) y “Gestión de Cobranzas y
+Rendición de Fondos” (PE CES 8.4-04).
+Además se implementó una metodología única para la correcta administración de los bienes en inventario disponibles en todos los sectores de la CES (Procedimiento Específico CES 8.4-01) y otra para la solicitud, autorización y tratamiento de la licencia anual ordinaria por parte del personal de la CES, nucleado en los distintos CCT (Procedimiento Específico CES
+7.4-07).
+En relación al trabajo de reordenamiento de la empresa, la tarea desarrollada y los objetivos alcanzados durante el período de referencia se consideran muy satisfactorios. Desde cuestiones centrales como el diseño e implementación, por primera vez, de una estructura orgánico funcional, luego de un análisis riguroso y el estudio de alternativas posibles, hasta la revisión de procesos y el diseño de procedimientos, metodologías y sistemas específicos de trabajo, incluyendo la continua formación de mandos medios, han permitido a la CES organizar más eficientemente la tarea de cada sector, fortalecer su gestión y mejorar permanentemente los servicios prestados al asociado, siendo este último el objetivo rector de todo el trabajo desarrollado.
+En cuanto a la organización operativa laboral del personal se diseñó e implementó una metodología única para la solicitud, autorización y tratamiento de la licencia anual ordinaria por parte del personal de la
+CES, nucleado en los distintos convenios colectivos de trabajo.
+Con la asistencia de un servicio de consultoría externa se trabajó en la puesta en funcionamiento de la Estructura Orgánico Funcional de la Cooperativa, aprobada por el Consejo de Administración.
+El modelo de gestión propuso el diseño de una metodología para el armado, presentación y exposición trimestral de Informes de Gestión sectoriales (CES
+Energía, CESTEL, CESPRET, CESPAZ y Administración Central).
+El trabajo comprendió además el relevamiento, análisis y determinación de la estructura de costos de CESTEL
+y cálculo inicial del costo unitario mensual por Mega bytes para la prestación del servicio de internet por red
+FTTH. (Alternativas de costo, planes y precios, punto de equilibrio y composición).
+También se trabajó en el diseño, prueba e implementación de un sistema de costos de producción y presupuestario para CESPRET que facilitara la determinación de la estructura de costos totales del área.
+12
+
+Entre los avances logrados se encuentra la puesta en marcha del Plan de desarrollo estratégico del sistema de distribución de energía para el Partido de Saladillo.
+Las gestiones desde el Consejo de Administración se enfocaron en lograr la mejora de los diferentes servicios que presta la CES y la generación de nuevas oportunidades para la Cooperativa. En tal sentido se continuaron las gestiones para la concreción del
+Plan Estratégico de Conectividad Total en el interior del Partido de Saladillo para la llegada con “fibra óptica directa al hogar” a las localidades de Álvarez de Toledo, Polvaredas, Del Carril y Cazón, junto con expansión del sistema de distribución de energía, generando con ello igualdad de oportunidades a los habitantes de las localidades del interior.
+Con un trabajo interdisciplinario y promovido por todas las áreas de la CES (CES ENERGÍA – CESPRET – CESTEL) la Cooperativa puso en marcha su proyecto de interconexión eléctrica y de Internet entre las localidades del interior. Con el soporte de una red de fibra óptica y renovadas líneas eléctricas se avanzará en la prestación de nuevos servicios a las comunidades del interior y se profundizará el desarrollo de otras herramientas complementarias como la telemedición y el telecomando en puntos geográficos distantes de la planta urbana de Saladillo.
+La política pública decide qué hacer y la gestión pú-
+blica decide cómo hacerlo, ya que esta se ocupa de la utilización de los medios adecuados para alcanzar un fin colectivo. Se trata de dos caras de la misma moneda y por tanto ambas deben ir de la mano para dar lugar a la decisión pública.
+Al tratarse de una empresa privada de gestión cooperativa la CES demanda una permanente interacción con el entorno institucional y para cumplir con los objetivos trazados, desde el Consejo de se han implementado múltiples políticas con referencias a la forma cooperativa contribuyendo, en algunos casos, a una mayor democratización de la economía y de la sociedad, y en otros a paliar los desequilibrios y ajustes del sistema.
+Como entidad comunitaria la Cooperativa para impulsar sus proyectos de desarrollo estratégico ha interactuado con los diferentes niveles del Estado, promoviendo acuerdos y gestionando con los gobiernos y otros organismos que intervienen en las áreas en las que la CES se constituye como empresa multiservicios. En tal sentido se han realizado múltiples gestiones, siendo acompañados por los técnicos de las diferentes áreas de servicios y producción.
+GESTIÓN POLITICA E INTERACCIÓN
+INSTITUCIONAL
+13
+
+Entre los acuerdos que se destacan, mediante una ampliación de un convenio preexistente, la Cooperativa Eléctrica incrementó su aporte de ancho de banda de internet para más cámaras de seguridad. Además se concretaron convenios para la concreción de obras de alumbrado público como el que dará servicio en el acceso a la ciudad por Ruta Nacional Nº205.
+La responsabilidad social se refiere, por lo general, al impacto que las actividades empresariales producen en los medios social y ambiental. Si bien esa manera de verificar su comportamiento puede aplicarse en las organizaciones cooperativas, mutualistas, fundaciones y diversas asociaciones civiles, las dos primeras tienen, hacia su público interno (asociados y trabajadores), la obligación de demostrar su identidad cooperativista o mutualista mediante sistemas de medición del cumplimiento de sus principios y valores, que son los que las diferencian de todo otro tipo de organizaciones de carácter solidario no lucrativo.
+Esos sistemas de medición integran lo que se denomina Evaluación Social (Balance Social) Cooperativo y Mutual.
+Parte de las inversiones fueron financiadas mediante programas para el desarrollo de infraestructura de internet gestionados desde la CES ante el ENACOM
+lográndose de ese modo la compra de equipamientos tecnológicos para la inserción, integración y desarrollo social que generará el Proyecto “+RED”.
+Siendo el municipio el concedente para la prestación del servicio de distribución de energía en el Partido de Saladillo, existe un vínculo contractual con la Cooperativa Eléctrica. Sin embargo este vínculo interinstitucional se profundiza con permanentes gestiones conjuntas orientadas a resolver demandas de la comunidad concernientes al servicio en cuestión, otros servicios que presta la CES o necesidades e inquietudes de la ciudadanía.
+Tratándose entonces de una asociación de reciprocidad durante el Ejercicio que se expone se han realizado numerosas reuniones a fin de mantener un vínculo fluido con las autoridades municipales. A partir de diferentes negociaciones y encuentros se lograron definir temas de fundamental importancia para el crecimiento del Partido de Saladillo.
+VINCULO CON EL MUNICIPIO
+GESTIÓN SOCIAL
+14
+
+A fines del año 2021 una fuerte tormenta de viento que afectó al partido de Saladillo y causó graves da-
+ños en infraestructura de diversos puntos geográficos. En dicha oportunidad se encomendó a un equipo de especialistas en meteorología determinar el grado de severidad de los vientos que generaron cuantiosas pérdidas económicas al sector productivo y a
+CES Energía en particular. Como acción de compromiso con la comunidad la CES brindó a funcionarios e instituciones el documento encargado a especialistas en meteorología sobre el último tornado que afectó a
+Saladillo.
+El documento ha sido de vital importancia para la gestión de recursos ante el organismo de control provincial, OCEBA desde donde se activaron gestiones y ayuda económica para la Cooperativa.
+Ante el contexto de cambio climático, con amplitud térmica y momentos de temperaturas extremas la
+Cooperativa Eléctrica de Saladillo mantuvo abierta la comunicación con la “Mesa de Alerta Climática” integrada por el Municipio e instituciones intermedias como el Hospital y otros organismos como Defensa
+Civil, Cooperativa Eléctrica y Cámara de Comercio.
+La mesa interinstitucional acompañó las campañas de uso racional de la energía eléctrica y otros recursos, como el agua, sugiriendo además a las empresas y comercios que rediseñen sus horarios de trabajo para evitar el fuerte impacto en la red de energía.
+El Balance social para la CES se expresa en esta
+Memoria mediante una enumeración de los Proyectos que la entidad tiene en marcha. Estas acciones se enmarcan en políticas con continuidad en el tiempo y que son impulsadas desde el Consejo de Administración, a partir de lineamientos que aseguren su universalidad.
+En el entorno actual, cada vez más el concepto de
+Desarrollo Sostenible cobra vigencia. Debemos forjar una economía susceptible de satisfacer necesidades de nuestras sociedades en términos de bienestar a corto, mediano y largo plazo que responda a las necesidades del presente sin comprometer la capacidad de las generaciones futuras.
+En la gestión sustentable la cooperativa impulsa y gestiona activamente con las personas asociadas prácticas de conservación y gestión de la biodiversidad así como el progresivo fortalecimiento de su conciencia ambiental, con un modelo de negocio de gestión ambiental y climáticamente responsable. De esta manera la actividad de la CES propende al aporte eco sistémico en las dinámicas del territorio, el equilibrio entre desarrollo y conservación y en las medidas de mitigación y adaptación al cambio climático, con el impulso de Proyectos de generación de energías de fuentes renovables.
+GESTIÓN MEDIO AMBIENTAL
+DOCUMENTO DE ANÁLISIS CLIMATOLÓGICO
+REGIONAL
+GESTIONES PREVENTIVAS FRENTE A CLIMA
+EXTREMO
+15
+
+Los resultados de las gestiones impulsadas por la
+“Mesa de Alerta Climática” se evidenciaron en la respuesta del sistema de distribución a la ola de calor pronosticada. En el mes de enero del 2022 y del 2023
+la CES afrontó nuevos récords de demanda de energía eléctrica sin presentar fallas en su sistema de distribución.
+La Cooperativa Eléctrica es más que energía. Como empresa del sector Cooperativo es un agente transformador, motor y protagonista del Partido de Saladillo. Estamos en los hogares. Hacemos posible el crecimiento económico y social, abasteciendo a industrias y comercios para generar bienes y productos de origen local. El eje central y motor para la Cooperativa es saber que entre todos los asociados aportamos nuestro esfuerzo al bienestar y el desarrollo de nuestro país y a la mejora de la calidad de vida de los saladillenses. Y no lo hacemos solos, sino conformando una sólida cadena de valor que incluye, a la par de nuestros colaboradores, a proveedores, matriculados, organizaciones de la sociedad civil, autoridades y referentes de las comunidades en las que estamos presentes. Junto a ellos, estamos comprometidos con la seguridad, la protección del ambiente, el desarrollo económico, la promoción de la educación, el deporte, el arte y la cultura.
+BALANCE SOCIAL COOPERATIVO
+TRABAJO SOCIAL
+La Responsabilidad Social para la CES comprende la contribución al desarrollo planificado de la economía y al bienestar social de los socios y familiares.
+Sus Programas tienen como objetivo contribuir al desarrollo económico y social sostenible, proteger el medioambiente, desarrollar sus actividades sin ánimo especulativo. De este modo se trabaja para fomentar la cultura cooperativista y por las satisfacciones de las necesidades materiales, de capacitación, sociales, culturales, morales y espirituales de sus socios y la comunidad en su conjunto.
+Los objetivos del Trabajo Social tienen su origen en las necesidades y problemas que presentan el individuo, la familia, el grupo social y la comunidad, en sus ámbitos micro y macro social. La preocupación esencial es la búsqueda de la satisfacción de dichas necesidades y la solución de los problemas a fin de lograr el bienestar social.
+16
+
+Se espera que en el año 2030 el 34% de la electricidad mundial provenga de energías renovables, como la eólica y solar, y que en el año 2040 este porcentaje llegue al 50%. El futuro de la energía solar fotovoltaica es por lo tanto prometedor y representa una alternativa sostenible, limpia y sin apenas mantenimiento y que ofrece muchos beneficios, siendo los más importantes la no emisión de gases nocivos a la atmósfera y el ahorro.
+La luz solar es un recurso que todos los países del mundo disponen en mayor o menor medida. Por este motivo, si fuésemos capaces de utilizar la energía solar de manera más eficiente, la economía de todos los países cambiaría de forma radical, dejando de depender de grandes empresas así como de terceros países. Es esencial potenciar una mayor independencia energética en los países, lo que redunda en una mayor estabilidad.
+Los avances en materia de energía solar son constantes, y lo que era impensable hace pocos años ya es realidad. La investigación en nuevos materiales están permitiendo fabricar células fotovoltaicas más económicas y que en un futuro no muy lejano, podrán integrarse en construcciones, vehículos o incluso en la ropa.
+La doble dimensión social y económica del cooperativismo plantea la necesidad de compatibilizar ambos factores por cuanto de ello dependen la vigencia y proyección del sector como camino eficiente y estable de desarrollo. Es tarea de la gestión en la CES afianzar el equilibrio financiero y económico para poder generar recursos aplicables a Programas de ayuda social.
+Desde el área de Trabajo Social de la CES, a cargo de una profesional de la disciplina, se promueve el fortalecimiento y la liberación de las personas contemplando los valores del cooperativismo. Dado que para conocer la realidad en la cual está inmersa una persona o familia, se requiere un informe social, en la
+Cooperativa se parte desde ese diagnóstico técnico, para avanzar en alternativas que contribuyan al desarrollo de esas personas.
+El trabajo profesional se orienta a realizar acompa-
+ñamientos tendientes a prevenir la aparición de problemas sociales y/o de sus efectos, con trabajo de campo para la detección de problemáticas sociales, su atención y el trabajo en red con diferentes instituciones del medio local.
+Desde el área durante el desarrollo del Ejercicio que se expone se ha colaborado en la coordinación de los diferentes Programas de responsabilidad con la comunidad de la institución como lo son la entrega de
+Becas, coordinación de espacios en Cooparte, Tercer
+Tiempo, visitas sociales por ayudas especiales, entre otros.
+ENERGIAS LIMPIAS
+17
+
+La apuesta de futuro por la generación distribuida se justifica por los diversos beneficios que ofrece, tanto para la red eléctrica como para la economía y el medioambiente.
+Beneficios en la red eléctrica: Este tipo de modelo provoca una reducción de pérdidas en la red, ya que al generar la electricidad cerca de los puntos de consumo se consigue que haya que transportar menos desde las grandes centrales, lo que hace que las lí-
+neas de transporte y distribución estén menos cargadas y se reduzcan sus pérdidas eléctricas, que para un consumidor doméstico se estiman en un 15-20%.
+Beneficios económicos: La generación distribuida tiene la capacidad de reducir el precio del mercado mayorista de electricidad, ya que se comporta como una disminución de la demanda total de energía, aunque es un ahorro muy difícil de cuantificar. También se le atribuyen otros beneficios económicos, como el aumento de la actividad económica y la generación de empleo.
+Beneficios medioambientales: Son todos los que se dan a consecuencia de utilizar energías renovables, siendo los más importantes la reducción de emisiones de CO2 y otros gases contaminantes, la lucha contra el cambio climático y el aumento de la seguridad de suministro al depender menos de otras energías importadas del exterior.
+El uso de la energía solar en el futuro no solo es importante por los valores sociales y medioambientales que aporta, sino que, si se instalasen paneles fotovoltaicos en una vivienda o se generase por barrios de una ciudad, sería un modelo más eficiente que supondría un importante ahorro para los usuarios.
+Un modelo de futuro que ya se está comenzando a implantar en algunas ciudades es la generación distribuida o descentralizada. Consiste en la generación de energía eléctrica mediante muchas pequeñas fuentes de generación que se instalan cerca de los puntos de consumo (microgeneración). La generación distribuida está basada en la cooperación entre esta microgeneración y la generación de las centrales convencionales. La primera de estas opciones implica el uso de las energías renovables, lo que contribuye a reducir las emisiones de CO2. De esta forma no se depende tanto de las grandes centrales.
+BENEFICIOS DE UN MODELO DE GENERACIÓN
+DISTRIBUIDO
+18
+
+Como parte de las acciones que se realizan, durante el presente Ejercicio se gestó un nuevo Proyecto de fomento del uso racional de energía para los más chicos. De este modo CES Energía produjo material musical que completa las acciones de su obra teatral infantil “Un Click”, una propuesta didáctica orientada a concientizar a los niños sobre la importancia de hacer un uso racional de la energía y proteger su integridad física.
+Con la grabación de Jingles musicales se creó material para ser utilizado como soporte de una campaña que se desarrollará con los establecimientos educativos de nivel inicial y primario, haciendo partícipes a los niños y a sus docentes.
+Además de brindar contenidos didácticos para el objetivo de sembrar conciencia sobre el uso racional de la energía, la obra tiene el fin de generar fuentes de trabajo para actores de la comunidad de Saladillo, puesto que el libreto y la artística estará a disposición de los elencos locales que deseen interpretarlas en diferentes territorios, generando de esa manera oportunidades laborales en la industria cultural.
+Todos estos diversos beneficios han conseguido que la generación distribuida sea uno de los pilares sobre los que apoya la transición energética en muchos paí-
+ses, los cuales están promoviendo mediante políticas públicas este tipo de instalaciones.
+Entendiendo el nuevo esquema de matriz energética la Cooperativa Eléctrica de Saladillo, a través de un programa integral que involucra a todas sus áreas de servicio y producción, está transitando un camino para la generación y promoción de este tipo de energías.
+La política institucional de desarrollo sustentable se apoya en el impulso de acciones de fomento de nuevos proyectos a nivel local, la educación de la ciudadanía sobre el uso responsable de la energía y la concreción de proyectos de generación de energía limpia.
+De esta manera la CES realiza su trabajo a partir de la planificación medioambiental, para en este aspecto ser también una empresa responsable y sustentable procurando concientizar a la ciudadanía en relación al cuidado del medioambiente.
+UN MODELO LOCAL DE DESARROLLO
+SUSTENTABLE
+19
+
+En un acto presidido por el Subsectario de energía provincial, Lic. Gastón Ghioni, quedó formalmente puesto en funcionamiento el parque emplazado en la localidad de Cazón, concretado mediante el Programa Provincial de Incentivos a la Generación Distribuida, y la gestión del Foro Regional Eléctrico de
+Buenos Aires (FREBA).
+La planta posee un total de 550 paneles solares de
+600 W capaces de generar 330 kWp pico y que, mediante un sistema inversor y transformador, inyecta la energía generada a la red de distribución local.
+Durante el acto de inauguración el Subsecretario de energía bonaerense, realizó un anuncio que cambiará la matriz energética del Partido de Saladillo, aportando además soluciones a la región, cuando informó que la Provincia de Buenos Aires lanzó una nueva licitación para módulos monocristalinos de 500 Wp, una convocatoria prevé la instalación de dos parques solares con almacenamiento de energía en batería de litio en las localidades de Polvaredas y Del Carril.
+De este modo, la Subsecretaría de Energía bonaerense avanza con el fomento a las energías renovables tras tener 26 parques fotovoltaicos operativos a través del PROINGED, los cuales suman 8,7 MW de potencia instalada.
+La CES apuesta a un sistema energético sostenible y de costo competitivo, que no tenga impactos sociales y medioambientales tan altos como los que generan las energías convencionales.
+Desde que en el año 2009 la CES Energía celebró un convenio de promoción de estas tecnologías con el Ministerio de Planificación Federal, con inversiones propias, viene desarrollando un Plan de desarrollo de energías renovables generadas.
+En ese marco con el compromiso de la Subsecretaría de Energía de la provincia de Buenos Aires y el
+Programa de Incentivos a la Generación de Energía
+Eléctrica Distribuida (Proinged) Saladillo hizo realidad su primer Parque Solar.
+Con la inauguración del Parque Solar Saladillo I de
+Cazón, Contador Mario Cabitto, la Cooperativa Eléctrica de Saladillo volvió a sus orígenes convirtiéndose nuevamente en generadora – distribuidora de energía.
+INAUGURARON EL PARQUE SOLAR DE
+CAZÓN
+MÁS ENERGÍA CON OTROS DOS PARQUES
+SOLARES PARA SALADILLO
+20
+
+Integrantes del Programa Provincial de Incentivos a la Generación de Energía Distribuida (PROINGED)
+encabezaron el encuentro para brindar detalles de dos obras trascendentales para la mejora de la calidad de servicio eléctrico en el Partido de Saladillo.
+Para que la instalación de los nuevos Parques se concrete el Consejo de Administración debió gestionar los terrenos en las localidades de Del Carril y
+Polvaredas. En el primero de los casos con recursos propios se adquirió un predio ubicado en la intersección del Acceso a la localidad y Ruta Nacional 205.
+Las localidades que se verán beneficiadas de la generación renovable serán Del Carril y Polvaredas, ubicadas hacia la región centro-este del territorio bonaerense, a poco más de 160 kilómetros desde la Ciudad
+Autónoma de Buenos Aires.
+La licitación mediante el sistema llave en mano incluye la operación y mantenimiento del sistema durante un período de 6 meses o el tiempo que mediare entre la Recepción Provisoria y la Recepción Definitiva.
+La central de Del Carril contará con una potencia fotovoltaica nominal de 500 kWp y un banco de baterías de aproximadamente 1300 kWh nominales, considerando una profundidad de descarga del 80%. Mientras que para el caso de Polvaredas, la capacidad del parque solar deberá ser de 250 kWp y su banco de baterías correspondiente de 650 kWh, también considerando una profundidad de descarga del 80%. Para ambas localidades, el pre-pliego de la licitación también aclara que el almacenamiento de energía tendrá que ser a partir de baterías de litio, con sus respectivos cables y terminales adecuados para la potencia del sistema a instalar sobre racks.
+Una semana después de la inauguración del Parque
+Solar Saladillo I de Cazón más de ocho empresas que adquirieron el pliego para ejecutar la obra se reunieron para conocer los predios que la CES dispondrá para dichos complejos energéticos.
+LOS NUEVOS PARQUES
+INVERSIONES PARA LA INSTALACIÓN
+DE LOS PARQUES
+21
+
+Estos proyectos llevados a cabo a través del PROINGED, son financiados por medio del agregado para generación distribuida, depositados en el Fideicomiso
+FITBA y administrados por el FREBA en coordinación con el Ministerio de Infraestructura.
+Mediante la gestión de fondos provenientes de la Federación Interregional de Cooperativas Eléctricas y otros servicios Públicos Bonaerenses (FICE) la Cooperativa Eléctrica de Saladillo efectuó la entrega de un importante subsidio a La Casita de La Vía.
+Se trata de equipamiento de última generación, conformado por un horno convector, una sobadora y una zorra porta bandejas, que permitirá a la institución de bien público reconvertir su cocina en un espacio de
+“Taller de panadería”, con el fin de que se pueda aumentar la productividad, tanto en variedad como en cantidad y calidad, incorporando la elaboración de distintas facturas, bizcochuelos, piononos y diversidad de panes, de manera que se puedan comercializar.
+Para la construcción del Parque en Polvaredas se optó por la figura de comodato, mediante la firma de un acuerdo con una familia de la zona. Mediante gestiones se consiguió un terreno lindero a la Ruta Provincial 93, ubicado entre las localidades de Toledo y
+Polvaredas.
+El Plan de Generación Distribuida Renovable, impulsado de manera conjunta por la Dirección de Energía del Ministerio de Infraestructura y el Foro Regional
+Eléctrico de la Provincia de Buenos Aires -FREBAtiene por objeto incentivar la generación distribuida, trabajando con las distribuidoras y cooperativas eléctricas provinciales y municipales.
+Estos parques se caracterizan por tratarse de instalaciones fotovoltaicas de baja escala (de entre 200 y
+500 kW de potencia), dimensionados para cubrir demandas puntuales en puntos críticos de las redes de distribución, en los que se presentan dificultades de abastecimiento en horas pico de consumo. Además de inyectar energía de forma directa a la red de distribución local, estas pequeñas centrales promueven la diversificación de la matriz eléctrica de la Provincia con el objeto, a mediano plazo, de sustituir la generación distribuida diésel por generación de energía limpia.
+PROGRAMAS DE RESPONSABILIDAD CON LA
+COMUNIDAD
+ACCIÓN SOLIDARIA
+22
+
+Durante el transcurso de este Ejercicio la Cooperativa, a través de su Consejo de Administración colaboró con escuelas del distrito que manifestaron su necesidad de ayuda económica para la compra de materiales, concretándose la entrega de insumos a sus directivos.
+Con el apoyo del Programa de becas de la CES dos jóvenes saladillenses obtuvieron su título universitario durante el desarrollo del Ejercicio que se expone.
+El logro de las jóvenes María Florencia Cirulli, quien culminó la Licenciatura en fonoaudiología, y Carolina
+Faraone Negri, flamante odontóloga, ambas graduadas de la Universidad Nacional de La Plata es fundamento para la continuidad de este beneficio que otorga la Cooperativa.
+La entrega fue viabilizada a través de FICE que permite a sus cooperativas afiliadas otorgar los recursos económicos para este tipo de proyectos, en el marco de sus “Acciones solidarias”, y con el acompañamiento del Instituto Nacional de Asociativismo y Economía
+Social, que a través de su Dirección de Fomento y
+Evaluación de Proyectos del INAES dio curso al pedido de la CES.
+Para la Casita de la Vía la donación de la Cooperativa
+Eléctrica representa la posibilidad de dar un salto cuali-cuantitativo al taller, ya que con la inversión se podrá ampliar la formación de los chicos y las chicas en un oficio (experiencia que les significaría de suma importancia tanto para la búsqueda de trabajo en la comunidad como en la proyección de sus propios emprendimientos económicos), al tiempo que permitirá resolver un problema cotidiano a nivel institucional que son los desayunos y meriendas de los jóvenes que transitan los talleres de Casita, dado que actualmente se encontran comprando insumos semanalmente para poder brindarlos, y significan una importante erogación económica para la institución.
+La educación y el desarrollo territorial son focos de interés para las políticas de atención social en la CES.
+De esta manera se trabaja en red con instituciones educativas a las que por demanda de las mismas se las asiste con la entrega de materiales didácticos y útiles escolares.
+DONACIONES DE ÚTILES Y MATERIAL
+DIDÁCTICO
+BECADAS GRADUADAS
+23
+
+Durante el Ejercicio que esta Memoria relata 25 estudiantes fueron becados por el Programa de la CES
+para que puedan concretar su sueño de alcanzar un título universitario en licenciatura en psicologia, ciencias veterinarias, medicina, licenciatura en nutrición, licenciatura en biotecnología y biología molecular, kinesiología, ingeniería química, aeronáutica, en agrimensura y agronomía, arquitectura, derecho, licenciatura en educación física, en sistemas, artes visuales y profesorado en artes plásticas con orientación en dibujo.
+En una acción conjunta con las asociaciones cooperadoras del Partido de Saladillo, en las zonas en las que CESTEL presta el servicio de Internet, la Cooperativa trabaja articuladamente en la implementación del Programa de Conectividad Escolar.
+El Programa institucional contempla la situación económica de las asociaciones cooperadoras de los establecimientos educativos, bonificando el abono mensual de ancho de banda de Internet a las escuelas que celebraron convenios con la CES.
+Ambas estudiantes durante el tránsito de sus carreras contaron con el acompañamiento de la CES, a través de su Programa de Becas universitarias. De ese modo, y en correspondencia con el principio cooperativo de la solidaridad, los socios de la Cooperativa acompañaron a las jóvenes de la comunidad con una ayuda económica para facilitar sus cursadas universitarias.
+El Programa de becas instrumentado desde la CES
+se concreta a partir de las solicitudes que presentan los estudiantes interesados en recibir apoyo. Dicha solicitud es evaluada por una asistente social que analiza la situación socioeconómica de la familia del aspirante, y sus posibilidades de continuar los estudios superiores. A partir del estudio, todos los años la
+Cooperativa selecciona a quienes serán los beneficiarios de las becas.
+El sistema de selección de los estudiantes es exigente en cuanto requiere que los jóvenes cumplan con su condición de alumnos regulares y la aprobación de un mínimo de materias, sin embargo estas pautas permiten a la institución ser justa con los que no logran acceder a las becas por una cuestión de cupos.
+CONECTIVIDAD ESCOLAR
+24
+
+De manera ininterrumpida Cooparte se ha convertido en un espacio para el desarrollo de las personas con inquietudes artísticas, fomentando la profesionalización de diversas disciplinas y creando oportunidades laborales para los profesionales del ámbito de las artes.
+Con talleres con aranceles muy accesibles como entorno formativo, que aseguran la participación y posibilidades especiales y/o becas para quienes no pueden afrontar la contribución, se brinda una amplia propuesta con diferentes disciplinas que engloban las artes musicales, teatrales, de danza, pintura, tejidos y hasta seminarios y charlas de capacitación.
+Esta propuesta durante el desarrollo del Ejercicio que aquí se presenta se consolidó mediante la modalidad
+“Lado B”, donde los artistas locales reciben todo el apoyo en infraestructura y logística para la realización de actividades, eventos y shows, desde la autogestión.
+El objetivo de la Cooperativa Eléctrica es universalizar el acceso al servicio de conectividad para todas las instituciones educativas del Partido de Saladillo, llegando con el Programa además a otras entidades e instituciones de bien público como Bomberos Voluntarios, bibliotecas públicas, hogares de contención social, talleres protegidos y el hospital que en el transcurso del Ejercicio que se expone se vieron favorecidos con la ayuda de la CES.
+La gestión cultural proporciona herramientas para el impulso cultural desde diversas áreas, con la finalidad de promover, mantener y resaltar las diferentes expresiones culturales en el conjunto de la sociedad.
+Desde el año 2013 la Cooperativa Eléctrica de Saladillo cuenta con un Programa de Gestión Cultural denominado Cooparte que surgió como respuesta a la necesidad de administrar recursos o servicios culturales, a través de herramientas que sirvan para diseñar, llevar a cabo e impulsar proyectos culturales en el ámbito de las industrias culturales y creativas de
+Saladillo.
+GESTIÓN DE LA CULTURA Y EXPRESIÓNES
+ARTÍSTICAS
+25
+
+La modalidad de streaming permitió además al área de telecomunicaciones de la CES la difusión de eventos públicos y populares. De este modo, durante el
+Ejercicio que se presenta, CESTEL brindó ancho de banda para la realización de transmisiones vía streaming, permitiendo a la comunidad de Saladillo trascender las fronteras y mostrarse al mundo.
+Entre las fiestas populares difundidas se destacan la tercera edición de la Fiesta de la Galleta de Piso, o la Expo vivero de Cazón en la que con aportes del departamento técnico se instalaron equipos de conexión y ancho de banda de alta velocidad y estabilidad segurizada.
+Las canciones de la obra de musical infantil “Un Click”
+encomendada por la CES a “Los Gingos” se presentó en el «Festival Sustentable» organizado por el Club
+Atlético Argentino de Quilmes, bajo el lema «acción frente a los plásticos por un futuro sostenible».
+Simultáneamente los días de semana el espacio está abierto para ensayos y clases de elencos teatrales y agrupaciones corales y talleres de tango, ritmos caribeños, danzas nativas y telar, entre otros.
+Con la evolución de las tecnologías los eventos artísticos y culturaes han incorporado la dimensión virtual y como acción de acompañamiento que permite a esas actividades trascender a nivel global, desde CESTEL, y en le marco del Programa Cooparte, se acompaña a diferentes grupos de interés.
+El aporte se concreta brindando el soporte de ancho de banda para la realización de Streaming, mediante
+Internet de Fibra Óptica Directa para que cada evento pueda trascender las fronteras del ámbito local. Para tal fin el departamento técnico dispone equipos de conexión generando un ancho de banda de alta velocidad y estabilidad asegurada que permite realizar transmisiones en vivo online.
+QUE SE VEA
+FIESTAS POPULARES
+SALIMOS DE GIRA
+26
+
+En el marco de las actividades realizadas en conjunto con la Asociación de Músicos Independientes de Saladillo (MUSAI), que mediante un convenio entre las instituciones convierte al auditorio en “Espacio MUSAI”, durante el Ejercicio que se expone se realizó un novedoso “Taller de vientos”, a cargo de destacados referentes de la Asociación Argentina de saxofonistas.
+La actividad de capacitación convocó a músicos de la ciudad y la región, encuentro que culminó con la actuación de GEMA, una banda de música de raíz
+Argentina.
+El seminario fue una de las actividades desarrolladas durante el año, puesto que la Asociación realizó eventos, charlas, capacitaciones, shows y otras actividades artísticas y/o culturales, fortaleciendo el trabajo que se realiza desde Cooparte como espacio de cultura.
+El “Festival Sustentable”, declarado evento de interés cultural por la Municipalidad de Quilmes, contará con la actuación en vivo de los Gingos y múltiples atractivos entre los que se destacan: Juegos acuáticos para concientizar sobre la contaminación que produce el plástico en el planeta, feria de artesanos y emprendedores, talleres sustentables, torneo de metegol,-
+talleres de yoga y meditación, juegos inflables y arte urbano en vivo.
+El musical “Un Click” está impulsado por la Cooperativa Eléctrica de Saladillo como acción de responsabilidad y compromiso social, buscando dar a los niños y niñas herramientas para el cuidado del medio ambiente. Con “Los Gingos” como embajadores musicales –
+en el marco del Proyecto Escuelas de Verano – las canciones de la obra teatral de la CES se han presentado en las ciudades de San Pedro, Salto, Cañuelas,
+Las Flores, Gral. Belgrano y Chascomús, entre otras, con una intensa actividad durante el verano 022-023
+que incluyó una gira artística por costa bonaerense.
+MÚSICA AL VIENTO
+27
+
+Asimismo, la asesora ha debido intervenir en la resolución de conflictos con el personal, negociaciones con los distintos gremios que nuclean a los trabajadores, etc, sin perjuicio del asesoramiento brindado en cada uno de éstos temas a las autoridades de la
+Cooperativa y siguiendo instrucciones de los mismos.
+En el orden administrativo, la asesora legal ha peticionado autorizaciones, concesiones administrativas y licencias, a fines de la contribuir a que la empresa desarrolle su labor en cumplimiento de las normativa legal aplicable.
+También, desde la asesoría se evalúan y formalizan los distintos convenios a firmarse con los distintos organismos gubernamentales, los cuáles se realizan en consonancia con los requerimientos de dichos organismos, como con los usuarios y/o potenciales usuarios. Asimismo y en materia de derecho laboral se ha asesorado en cuanto a la celebración y/o extinción de contratos, presentaciones ante el Ministerio de Trabajo, reclamos sindicales y gremiales, etc. También la asesora es la apoderada y actúa en representación de la institución, ello en base a las facultades y mandatos que le otorga el Consejo de Administración.
+La asesoría letrada es un área que participa en la resolución de conflictos y negociaciones legales, de manera interna y externa. Interviene para que la empresa cumpla con las leyes y regulaciones aplicables en su área, evitando así posibles sanciones y, sobre todo, posibles demandas.
+Durante el Ejercicio, la Asesoría letrada ha continuado siendo el apoyo legal de los miembros del Consejo de
+Administración, atento el asesoramiento, no vinculante, brindado por la Dra. María Natalia Renzi.
+En tal sentido la labor ha sido desarrollada diariamente a través del asesoramiento por parte de la letrada, respecto de aquellos asuntos que tienen que ver con la aplicación de las leyes, normativas y reglamentos en cualquier materia del Derecho.
+Específicamente en el Ejercicio que se cierra, la letrada intervino en el asesoramiento al Consejo de Administración para la suscripción de diferentes acuerdos de pago a efectos de evitar conflictos y en post de salvaguardar los intereses de los usuarios y la responsabilidad de los consejeros.
+ASESORIA LETRADA
+28
+
+Es tarea del área además la intervención para la resolución de conflictos laborales, control horario del personal, de registración y estadística de licencias, adelantos, ausentismo, vacaciones, jubilaciones, despidos y retiros.
+Al tener competencias que se relacionan, en cuanto a la coordinación y bienestar del personal, el área de
+Recursos Humanos en la estructura de la Cooperativa define además las acciones en materia de Seguridad e Higiene. Este trabajo comprende el desarrollo de medidas para mejora del ambiente laboral y la capacitación continua y cuidado integral del personal.
+Desde el área Recursos Humanos durante el presente Ejercicio se trabajó en la gestión del clima laboral y los recursos técnicos como herramienta para la mejora continua de las tareas. Con el apoyo estratégico de un servicio de consultaría externo se trabajó en la creación de procedimientos, con el fin de ordenar las actividades cotidianas operativas para elevar su eficiencia.
+En los lugares de trabajo existen situaciones peligrosas a las que los profesionales y usuarios se encuentran expuestos. De esta manera, interviene la seguridad e higiene en el área laboral, intentando que se cumplan las normas y legislaciones para evitar posibles accidentes de los empleados y eliminar los factores de riesgo en el trabajo.
+La seguridad y salud ocupacional en el trabajo es uno de los aspectos que requiere la gestión de las condiciones de trabajo, la implicación de los trabajadores y la protección social. Esta tarea demanda a la CES
+la permanente y eficaz adaptación a los cambios del personal potenciando sus competencias y propiciando el desarrollo de su inteligencia emocional, creatividad, e innovación en el medio laboral.
+El trabajo en Recursos humanos gestiona sobre la totalidad de las áreas de servicios y producción de la
+Cooperativa, considerando en cada caso las pautas que establecen los diferentes convenios colectivos, las normativas en materia de seguridad e higiene específicas de cada sector, como también las medidas de cuidados personales de cada trabajador.
+Su incumbencia es la coordinación y ejecución de selección de ingresos, ejecución y seguimiento en relación a denuncias de accidentes de trabajo, control y respaldos de novedades de cara a liquidación de haberes, registración, control y entrega de recibos de sueldos, atención de consultas de índole sindical, inspecciones de los organismos de control, inspecciones de ART, SRT, Ministerio de Trabajo y del organismo provincial de desarrollo sostenible, entre otros.
+DESARROLLO DE LAS PERSONAS
+SEGURIDAD E HIGIENE
+29
+
+En cumplimiento con lo establecido por la Ley 19587
+durante el Ejercicio que se expone en esta Memoria se han realizado tareas para contar con un adecuado funcionamiento en la distribución y características de los edificios de trabajo, previendo condiciones de higiene y seguridad. De manera periódica se han concretado mediciones y estudios para determinar indicadores que permitan la prevención y el trabajo en condiciones deseables de los trabajadores.
+Entre las medidas de control se enumeran los estudios ergonómicos integrados, los señalados bajo normas IRAM de puestos de extintores, de amplitud de puestos fijos y en móviles y reposición, la aptitud de los botiquines de primeros auxilios, y el control permanente en los vehículos utilizados, optimizando las condiciones de circulación, de acuerdo a la normativa de tránsito vigente.
+La seguridad e higiene en el trabajo permite que se construya un ambiente laboral adecuado y justo. De este modo, los trabajadores pueden desarrollar su actividad en un espacio seguro, sin riesgos de accidentes y con las condiciones de higiene necesarias para que se desarrolle la actividad.
+Esta tarea, que al mismo tiempo depende de la colaboración de las personas que trabajan en la empresa, demanda actividades de formación del personal en la materia, para que sean capaces de asumir este compromiso.
+En la CES la gestión de la salud y seguridad está cargo de profesionales especializados que se ocupan de la prevención y gestión de la salud ocupacional. Su tarea se fundamenta en las normativas vigentes para el cuidado integral de la salud del personal y quienes visitan las instalaciones de la Cooperativa.
+La salud laboral es un área multidisciplinar relacionada con la salud y la calidad de vida de las personas en el ambiente de trabajo. De esta manera se busca el bienestar físico, mental y social, por lo que desde el sector de Recursos humanos se ha trabajado con medidas y controles preventivos en materia de sanidad.
+30
+
+Cabe destacar que se efectúan certificaciones sobre cada una de las torres de la CES, a fin de garantizar la seguridad estructural y eléctrica de las mismas, en pro de trabajar en condiciones ideales de seguridad.
+Como acción rutinaria de las mediciones reglamentarias, conforme a lo establecido para cada actividad, se cumplió con los parámetros de la resolución 84/12
+SRT, las puestas a tierra, y medición de ruido, según la Resolución 85/12 SRT.
+En cuanto a la reducción de la siniestralidad y teniendo en cuenta lo pautado por la Resolución 299/11SRT
+se han establecido relevamientos periódicos de inspección y controles, cumpliendo así con la selección, entrega y registro de ropa de trabajo y elementos de protección personal, manteniendo las características y validaciones específicas de cada unidad de negocio.
+El registro en los puestos de trabajo para el cuidado
+El registro en los puestos de trabajo para el cuidado integral y protección de los empleados se ejecutó con controles en los sistemas de iluminación de emergencia, elementos de protección personal, instalaciones y tableros eléctricos, con una debida colocación de se-
+ñalética sobre seguridad conforme a la norma IRAM
+10005.
+La protección integral del personal comprende medidas precautorias para el trabajo desarrollado en la vía pública, bajo cobertura de programas de seguridad acorde a las tareas que cada sector realiza.
+Durante el presente Ejercicio se ha continuado con los trabajos sobre las torres de comunicación de la
+CES, con mantenimientos y actualizaciones por parte de personal propio del área de telecomunicaciones, siendo capacitado por el área de seguridad laboral, para efectuar el trabajo de modo seguro.
+31
+
+Asimismo en los distintos puestos de trabajo se han realizado relevamientos y acondicionamientos de los sistemas de iluminación de emergencia, concretando las mejoras con la coordinación del personal de mantenimiento, y controlando los extintores en base a la norma IRAM 3517-2.
+La reanimación cardiopulmonar, mejor conocida como RCP, es un procedimiento ideado para reanimar a personas que hayan dejado de respirar o cuyo corazón haya dejado de latir. La técnica combina las compresiones torácicas con la respiración artificial para mantener el flujo de sangre y la circulación de oxígeno al cerebro. Una buena aplicación de RCP, además de reanimar, es la diferencia entre ganar tiempo para que llegue una ambulancia y se administre un tratamiento más específico, o la muerte.
+Brindando elementos para el desarrollo de las tareaas operativas, durante el Ejercicio que se presenta en esta Memoria se realizaron mejoras en la antena y equipo base para optimizar la comunicación entre los trabajadores, fortaleciendo la intercomunicación mediante la incorporación de equipos Handys Baofeng en los vehículos, siendo estos fundamentales para la seguridad en las maniobras a realizar en las líneas.
+La prevención antisiniestral parte del diagnóstico y se proyecta mediante un informe pormenorizado de cumplimiento de condiciones de seguridad, salubridad y habitabilidad, indicadas en el marco normativo vigente (Nacional, Provincial y Municipal). En las CES
+este procedimiento se complementa con acciones de capacitación específicas y simulacros de evacuación y extinción de incendios.
+PREVENCIÓN DE SINIESTROS
+CAPACITACIÓN EN PRIMEROS AUXILIOS
+32
+
+Contemplando que un personal capacitado en reanimación cardiopulmonar (RCP) es clave para salvaguardar la salud y seguridad dentro de cualquier espacio laboral en la CES se realizó una campaña de formación. Este método puede salvar vidas y se utiliza normalmente en siniestros que conllevan ataques al corazón o comas, tales como incendios, caídas o atragantamientos.
+Las capacitaciones de personal se diversificaron, partiendo con la inducción general a la seguridad e higiene, procedimientos de actuación ante casos de emergencias, uso de elementos de protección, prevención en levantamiento de cargas y transportes seguros, utilización de protección respiratoria y capacitación primeros auxilios básicos.
+La evaluación de impacto es un proceso que permite a las empresas medir y gestionar el impacto ambiental, social y económico de sus actividades, productos o servicios. Esto es importante no solo para cumplir con la legislación y normativas aplicables, sino también para mejorar la sostenibilidad y la responsabilidad social de la empresa.
+Desde el área de Seguridad e higiene de la CES se desarrollan estudios de impacto ambiental simplificado, que forman parte de la debida autorización en el desarrollo de los proyectos de distribución eléctrica urbana y rural, y cruces viales de acuerdo a la normativa provincial y nacional según sea el ámbito de aplicación.
+En concordancia con las políticas de gestión empresarial responsable, como objetivo de desarrollo sostenible, la CES colabora sinérgicamente con las gestiones municipales, particularmente en lo vinculado a la separación de residuos de largo periodo de descomposición. En este proceso La Cooperativa ha ratificado su compromiso con esta preclara acción, favoreciendo el reingreso de los mismos en cadenas productivas, formando parte así, de la economía circular de los materiales.
+IMPACTO MEDIO AMBIENTAL
+33
+
+De esta manera la CES aporta a esta economía sostenible el estimado de 1,5 toneladas de material reutilizable, anualmente. Paralelamente se contribuye en la reducción de materiales de difícil desintegración al basural de nuestra localidad.
+Calificar a un servicio de público indica que se trata, por una parte, de una actividad con una regulación estatal que limita la capacidad privada de decidir sobre sus cuestiones centrales para impedir el aprovechamiento de las condiciones monopólicas. Por otra parte, puede indicar que su prestación garantiza su libre accesibilidad (según condiciones) para todo aquel que lo necesita.
+La Cooperativa Eléctrica de Saladillo es concesionaria del servicio público de energía eléctrica a través de su área específica CES Energía.
+De esta manera tiene el área de concesión para la distribución eléctrica municipal para abastecer los
+2.736 km² del Partido de Saladillo, y en calidad de
+Agente del Mercado Eléctrico Mayorista con vinculación a la red de transporte opera a través de la ET
+Transba Saladillo 132/33/13,2 kV cuya operación y mantenimiento se encuentra a cargo de la empresa
+Transportista por Distribución Provincial (Transba
+S.A.), con instalaciones se encuentran en el km 187,5
+de la ruta nacional N° 205.
+El punto de suministro en alta tensión tiene actualmente una capacidad instalada de 60 MVA, conformada por dos transformadores de 30/20/30 MVA cada uno. De dicha subestación se desprende alimentadores en diferentes niveles de tensión. En el nivel de 33
+kV cuenta con un alimentador hacia “25 de Mayo”, perteneciente a la empresa de distribución provincial
+(EDEN S.A.), otro hacia “Roque Pérez”, perteneciente a la empresa de distribución provincial (EDEN S.A.)
+y un tercer alimentador hacia “Gral Alvear”, perteneciente a la empresa de distribución provincial (EDEA
+S.A.). La Cooperativa Eléctrica de Saladillo, no posee alimentadores en este nivel de tensión.
+CESENERGIA
+34
+
+En el nivel de 13,2 kV posee cinco alimentadores (2,
+3, 4, 5 y 6) hacia la red de distribución del Partido de
+Saladillo, todos pertenecientes a la CES.
+En el aspecto comercial la mejora continua en atención al usuario es uno de las premisas para la gestión de la CES, y durante el Ejercicio que se expone se ha materializado con acciones que le permitan a CES
+Energía brindar un mejor servicio.
+Es así que durante este periodo que se presenta se han realizado trabajos para la implementación una nueva página web, con anclaje de una oficina virtual que permitirá realizar trámites a distancia, una aplicación para celulares y un sistema de recolección de reclamos por medio de IVR, sigla en inglés que significa atendedor de respuesta de voz interactiva para mejorar la atención de usuarios. Todas estas aplicaciones se encuentran desarrolladas y en etapa de implementación.
+Los parámetros técnicos son en el sector de distribución de energía los indicadores que permiten evaluar la evolución de la empresa. Dichos datos son complementarios a la información administrativa y comercial.
+Entre los principales indicadores que en esta presentación se exponen mediante cuadros analíticos se reconocen ítems como energía operada en el ejercicio, histórico de energía operada en MWh, energía comprada en el transcurso del Ejercicio en MWh, energía comprada a CAMMESA, energía comprada a EDEA
+S. A., energía facturada, pérdidas de energía totales, evolución de la cantidad de usuarios en el Ejercicio, entre otros.
+La Cooperativa Eléctrica de Saladillo tiene en la actualidad tres puntos de compra para el abastecimiento de energía que luego distribuye a los usuarios a través de la red de distribución.
+INDICADORES COMERCIALES
+ENERGIA OPERADA EN EL EJERCICIO
+HISTÓRICO DE ENERGIA OPERADA
+EN MWH
+ENERGÍA COMPRADA EN EL EJERCICIO
+EN MWH
+35
+
+Principalmente a través de la ET Transba como Agente del Mercado Mayorista se adquiere el 99,2% del total de la energía, siguiéndole en importancia, la energía generada por el parque solar Cazón y el punto de abastecimiento de EDEA en el Paraje La Barrancosa.
+ENERGÍA COMPRADA A CAMMESA
+ENERGÍA COMPRADA AL PROINGED
+(PS CAZÓN)
+ENERGÍA COMPRADA A EDEA S.A
+ENERGÍA FACTURADA
+36
+
+En el transcurso del Ejercicio correspondiente al año comprendido entre los meses julio 2022 y junio 2023
+se solicitaron a la Oficina Técnica la cantidad de 162
+presupuestos que se distribuyen en la ubicación de nuestro partido como lo indica la siguiente tabla
+De los presupuestos solicitados se concretaron una cantidad de 71 (44%). Estos presupuestos incluyen obras en media y baja tensión, subestaciones en el área rural y urbana, loteos, ampliaciones de obras existentes entre otras. Dichas obras, capitalizaron a
+Cooperativa por un monto de cercano a los 300 millones de pesos.
+PÉRDIDAS DE ENERGÍA TOTALES
+EVOLUCIÓN DE LA CANTIDAD
+DE USUARIOS EN EL EJERCICIO
+PRESUPUESTOS SOLICITADOS
+POR NUEVOS EMPRENDIMIENTOS
+OBRAS EJECUTADAS POR
+NUEVOS EMPRENDIMIENTOS
+37
+
+En una empresa responsable de la distribución de energía los indicadores de infraestructuras permiten analizar cómo se distribuyen los equipamientos, las características de sus redes y elementos que las componen para brindar el servicio. Por tal motivo en esta
+Memoria se exponen algunos de los parámetros que permiten evaluar el estado de situación al cierre del
+Ejercicio.
+Los resultados alcanzados en calidad de servicio, que se manifiestan en la estabilidad del mismo y el modo en que ha respondido la red de distribución, con sus componentes, en situaciones de temperaturas extremas. Estos logros son producto, en parte, de la permanente planificación con prospectiva y de una consecuente inversión por parte de la Cooperativa, que la sitúa entre las más eficientes del sector.
+Las inversiones se clasifican en obras de mantenimiento y nuevas obras. Las primeras incluyen tareas de mantenimiento predictivo y correctivo, como así también la actualización de equipos existentes y la colocación de nuevos elementos tanto sean de maniobra, como de protección para la red.
+El recambio de postes de madera por columnas de hormigón en las líneas rurales son una inversión que torna más resistentes y confiables a la red. El proveedor de dichos elementos es la fábrica de columnas
+CESPRET. Entre los trabajos de mejora durante el presente Ejercicio se enumeran: o Línea de Media Tensión 13,2 kV trifásica sobre ruta 51 hacia La Margarita.
+o Línea de Media Tensión 13,2 kV trifásica y bifásica sobre ruta 91 hacia La Campana.
+o Línea de Media Tensión 13,2 kV trifásica sobre camino real hacia Blaquier.
+INFORMACIÓN TÉCNICA-OPERATIVA
+INDICADORES DE
+INFRAESTRUCTURAS
+KM DE RED POR UBICACIÓN Y
+NIVEL DE TENSIÓN
+INVERSIONES REALIZADAS
+OBRAS DE MANTENIMIENTO
+38
+
+o Línea de Media Tensión 13,2 kV trifásica sobre camino real entre Álvarez de Toledo y Cazón (inicio de los trabajos con la reutilización de la postación de hormigón de la obra Toledo –Polvaredas.
+o Línea de Media Tensión 13,2 kV trifásica sobre camino real entre Polvaredas y Del Carril (inicio de los trabajos con la reutilización de la postación de hormigón de la obra Toledo –Polvaredas.
+Además se han realizado tareas complementarias de mantenimiento sobre las redes de media y baja tensión que comprenden el recambio de crucetas de madera por crucetas de hormigón, recambio de aisladores, reparación y mantenimiento de subestaciones transformadoras y cambio de transformadores dañados por descargas atmosféricas, recambio de equipos de protección y maniobra (seccionadores y descargadores), sustitución de líneas de baja tensión convencionales por cable preensamblado, reposición de tapas de gabinetes de medición y ejecutado un plan de poda rural y urbana.
+En este Ejercicio se han realizado inversiones tanto en el sector urbano como rural por $44.603.114,10.
+Todas las inversiones que se realizan para la mejora de la calidad del servicio y ampliación de las redes de distribución son contempladas por un Plan de obras detallado en la presente Memoria y que para el intervalo comprendido entre los años 2022 y 2023, en el marco del Contrato de Concesión, Inversiones y
+Régimen de Aprovisionamiento de Energía Eléctrica,
+Artículos 19 y 20, Resoluciones Ministeriales 61/09,
+Resolución OCEBA 85/09, Nota OCEBA 2544/10, fue elevado antes del 31 de octubre.
+El Plan presentado de Obras a realizar incluyó inversiones para la telemedición rural, Ruta 50 “Paraje La
+Barrancosa”, telemedición urbana, Barrio PRO.CRE.
+AR, reemplazo de reguladores de tensión en zona del ex peaje, reemplazo de reguladores de tensión en acceso a Del Carril, y la instalación de un nuevo CT
+13,2/0,400 kV (200 kVA): calle Manuel Campaña e/
+Almafuerte y Sarmiento.
+El monto total del mencionado plan de Obras al momento de ser presentado ante el OCEBA fue de $
+34.475.051,69. Asimismo fue ejecutado en su totalidad, cumpliendo con el 100% de las inversiones previstas según lo presentado oportunamente.
+OBRAS NUEVAS
+39
+
+En este periodo se continuó con el desarrollo de la obra del V Alimentador que consistió en la readecuación de los cruces existentes en media tensión sobre la Avda. Ledesma, intersección con Avda. Saavedra,
+J. B. Gonzales, Avda. Moreno y Av. Frocham. Estas obras incluyeron movimientos de estructuras existentes, colocación de elementos de maniobras como seccionadores para la posible reconfiguración del sistema, evitando de esta manera el corte de suministro eléctrico al momento de realizar el tendido del conductor.
+Esto permitió realizar el tendido del conductor de la etapa II, que tiene su inicio en la intersección de la calle Alem y Armendáriz y su culminación en la intersección de las calles Armendáriz y Avda. Ledesma y posteriormente el tramo que va por la Av. Ledesma entre Armendáriz y Tomás Lissalde.
+En el transcurso de este Ejercicio como obras complementarias se realizó la interconexión entre el alimentador 9sala5 y 9sala6 realizado Av. Ledesma y
+Av. Saavedra, y la interconexión entre el alimentador 9sala5 y 9sala6 realizado en Av. Ledesma y Av.
+Pereyra quedando pendiente la interconexión entre el alimentador 9sala5 y 9sala3 a realizar en Av. Ledesma y Moreno. Momentáneamente resuelto con la obra realizada en Ac. Ledesma y Av. Pereyra y el cruce de vías en la intersección con la calle Armendáriz y Alem.
+La inversión histórica en esta obra desde el año 2018
+al cierre del presente Ejercicio asciende aproximadamente a los $88.000.000.
+La ejecución de esta obra se inició a fines de mayo del 2023 y tiene como objetivo reemplazar la red de media tensión existente por otra totalmente nueva con postación y cruceta de hormigón, herrajes y aislación de mejores prestaciones a las existentes y el recambio de la totalidad del conductor de mayor sección al actual en lo más de 12 km de longitud de la traza entre ambas localidades.
+OBRAS DEL QUINTO ALIMENTADOR
+LÍNEA MEDIA TENSIÓN
+TOLEDO-POLVAREDAS
+40
+
+Esta inversión no sólo mejorará la calidad de servicio y de producto de toda la zona del área de influencia, sino que también podrá atender el crecimiento urbano y rural de la demanda prevista para los próximos años de ese sector geográfico.
+Se consideró además en su diseño, la posibilidad de incorporar sobre la estructura de la red eléctrica, el tendido de fibra óptica a las localidades del interior del
+Partido de Saladillo a llevarse a cabo por el área de
+CESTEL.
+Al cierre de este ejercicio la obra se encuentra en ejecución. La inversión actualizada de la totalidad de la obra asciende aproximadamente a $140.000.000.
+Las principales obras realizadas en el plan verano se relacionan con las necesidades de mayor demanda que devienen del periodo estival. Las preponderantes contemplaron la construcción de un nuevo Centro de Transformación en Taborda y Emparanza de 160
+kVA, otro en Sanguinetti y Alem de 100 kVA. Y un tercero en San Martín y Saavedra de 160 kVA.
+Además se ejecutaron obras de reemplazo de conductores por otros de mayor sección, recambio de conductores en el circuito de salida de baja tensión de transformadores con el agregado de protecciones acorde a la demanda en varios Centros de Transformación de la red de distribución.
+También se adquirieron tres (3) reguladores de media tensión nuevos que servirán de backup de los 15 reguladores existentes e instalados en la red de media tensión.
+A su vez, durante el mes de enero se llevó a cabo una termografía de los alimentadores que permitió detectar situaciones de potenciales fallas que fueron subsanadas y evitó la salida de servicio de los mismos en situaciones críticas de alta demanda.
+PLAN VERANO- INVIERNO
+2022-2023
+41
+
+Estas acciones permitieron superar sin mayores inconvenientes la ola de calor de 5 meses de duración en forma sostenida iniciada a mediados de octubre del 2022 y que finalizará a mediados de marzo del
+2023, considerando en ese período una alta exigencia de toda la red eléctrica de distribución con un valor récord de 23,448 MW de demanda registrado el 13 de marzo de 2023 a las 14:45 hs.
+Las inversiones en obras del Plan Verano en este ejercicio ascendieron a $ 28.861.447,90.
+La planificación técnica estratégica, con una visión a mediano y largo plazo, y las correspondientes inversiones impulsadas por el Departamento técnico, ha posicionado a CES Energía entre las distribuidoras más eficientes de la Provincia de Buenos Aires.
+En el primer trimestre del año 2023 han quedado operativas con el sistema de telemedición la Ruta
+45 de Grandes Demandas que permite hacer con el seguimiento de 204 suministros; la Ruta 50 Rural de la zona de “La Barrancosa” con 32 suministros y el
+Barrio PRO.CRE.AR con el monitoreo de 226 suministros.
+En el proyecto impulsado desde CES Energía ha sido muy valioso el trabajo entre las áreas, puesto que los técnicos de CESTEL han desarrollado una interface virtual de acceso que conecta de manera remota, a través de su fibra óptica, cada uno de los medidores de los usuarios de energía con el tablero central de control de la administración, permitiendo el seguimiento de la evolución del consumo de cada usuario en tiempo real.
+Entre los objetivos buscados con estos nuevos recursos tecnológicos se encuentran la lectura de los registros de los medidores de forma remota, validar magnitudes eléctricas a distancia, controlar de anomalías, cotejar los datos de interconexiones a fin de controlar los datos diariamente para realizar las transacciones económicas de energía con CAMMESA, tener la posibilidad de realizar balances de energía y analizar la evolución de la demanda. Esta tecnología lleva a la Cooperativa hacia la eficiencia generando para los usuarios mayores derechos.
+Si bien la puesta en funcionamiento de la telemedición genera mejoras en la calidad de trabajo del personal técnico y administrativo, aporta múltiples herramientas para “con un solo instrumento poder realizar trazabilidad y supervisión del servicio.
+TELEMEDICIÓN DE SUMINISTROS
+URBANOS Y RURALES
+BENEFICIOS DEL SISTEMA
+42
+
+Son los usuarios quienes tendrán más elementos para conocer en tiempo real las condiciones del servicio y consumos realizados, ya que los nuevos equipos instalados permiten, además de tomar el estado del medidor de forma remota y en tiempo real, generar alertas ante posibles fallas.
+Técnicamente, además, con el uso de estas herramientas se inicia un proceso de gestión eficiente de pérdidas, puesto que se podrá medir la energía que pasa por el centro de transformación, para ser cotejada en simultáneo con los usuarios conectados y de ese modo determinar en forma precisa las pérdidas por subestación.
+En este periodo comienzan las tareas de dos nuevas etapas de telemedición que se agregarán a la ruta de
+Medianas y Grandes Demandas que ya se encuentra telemedida en su totalidad. En este caso, luego de aprobadas las propuestas por la Mesa Directiva se avanzó con la telemedición de dos pruebas pilotos.
+Una rural por GSM/GPRS y otra urbana utilizando una red Wi Fi con el aporte de CESTEL en la configuración del equipamiento usado en la telecomunicación de los medidores.
+Al término de este Ejercicio se finalizó con la instalación de la totalidad del equipamiento en los 38
+usuarios de la Ruta 50 en el primer semestre de este ejercicio. Esto permite realizar la lectura de cada suministro en forma remota evitando la lectura in-situ con el toma estado, permitiendo una mejor gestión del trabajo, eliminado errores y gastos de movilidad.
+Se está trabajando desde el área de sistemas para generar la lectura automática de toda la ruta en un solo proceso para su facturación.
+Además, la lectura remota del suministro permite interrogar el medidor determinado si está activo y con qué nivel tensión lo que permite ahorrar viajes ante reclamos de falta de suministro por parte de los usuarios como así también responder con información on-line los reclamos de baja o sobre tensión.
+El servicio de Telelectura de medidor a través de la red de telefonía celular, incluye la resolución de IP
+Pública fija y Puerto con plataforma ARDEREG que permite interrogación a requerimiento en redes celulares (no requiere IP fija) un sistema de telelectura automático con interfaz para vinculación con sistema de facturación y el toma estado a través de SMS.
+MEDICIÓN RURAL POR GPRS
+RUTA 50 “LA BARRANCOSA”
+43
+
+La inversión realizada para los 38 medidores fue de
+U$D 6.460 + IVA y el costo mensual del servicio para la telectura es de U$D 51,30 + IVA.
+El barrio Procrear está constituido por 324 parcelas, cantidad potencial a conectar en el proyecto piloto iniciado, utilizando tecnología provista por la empresa
+ARDEREG y soporte WI FI aportado por el área de
+CESTEL.
+Al cierre de este ejercicio se encontraban conectados 254 usuarios, quedando mínimamente otros 70
+usuarios que se irán incorporando cuando soliciten los nuevos suministros.
+Se logró adquirir el equipamiento de telemedición para los cuatro (4) Centros de Transformación que abastecen a la totalidad de los usuarios del Barrio
+Procrear.
+La instalación de este equipamiento permitirá realizar la primera gestión de pérdidas en tiempo real de las instalaciones de la Cooperativa. Para ello se instaló en cada Centro de Transformación un conjunto de tres (3) transformadores de corriente de 800/5 (A),
+Clase 0,5 y un Medidor Cirwatt B, Indirecto 6/1 (A),
+Clase 0,5 S. La inversión de este equipamiento fue una inversión en tecnología de más de un millón de pesos.
+El servicio de telelectura de medidor a través de la red de WIFI de la Cooperativa incluye IP pública y puerto con canal de comunicación vivo para conexión al medidor con software del fabricante de medidor, sistema automático con interfaz para vinculación con sistema de facturación y función de interrogación a demanda.
+MEDICIÓN URBANA POR WI-FI
+BARRIO PROCREAR
+44
+
+La inversión proyectada para los 324 potenciales medidores es de U$D16.200 + IVA y el costo mensual del servicio para la telectura es de U$D162 + IVA además del costo de inversión en la telemedición totalizador de los Centros de Transformación indicado anteriormente.
+Al tratarse de un servicio público la prestación la distribución de energía se encuentra reglamentada por
+Leyes, normas y regulaciones. Estos aspectos demandan al área administrativa la gestión ante los organismos de control de competencia y el cumplimiento de las pautas fijadas. Por tal motivo en la presente exposición se detallan los principales ítems sobre los que se ha trabajado y se han presentado durante el transcurso del Ejercicio.
+En forma semestral se realiza la presentación de la información en lo concerniente a calidad de servicio que involucra la frecuencia de cortes y la duración de los mismos tanto en media como en baja tensión, cuya tarea se lleva a cargo a través de la atención de los reclamos registrados por el sector de guardia las 24
+horas del día a lo largo del año.
+En lo que respecta a este ejercicio y por el concepto de multas por Calidad de Servicio para los semestres
+40 y 41 se reflejó en los siguientes parámetros.
+Dentro de los parámetros de calidad también se debe registrar la Calidad de Producto Técnico que tiene en cuenta el valor de la tensión de suministro registrado por un analizador de red homologado por el Organismo de Control por el término de 7 días consecutivos.
+Para esto el Organismo de Control selecciona a su criterio los puntos de suministros tanto en usuarios como en subestaciones que se deberán controlar dentro de cada semestre.
+En lo que respecta a este ejercicio y por el concepto de multas por Calidad de Producto para los semestres 40 y 41 se refleja en el cuadro
+CAMPAÑA DE CONTROL DE CALIDAD DE
+SERVICIO Y CALIDAD DE PRODUCTO (RES
+OCEBA 1095/04)
+CUMPLIMIENTO DE NORMATIVAS ANTE EL ORGANISMO DE
+CONTROL (OCEBA)
+45
+
+Cabe destacar que a partir del Semestre 41 las multas por calidad de servicio se incrementaron notablemente debido al aumento en los valores del costo de kWh
+No Suministrado, tanto para las pequeñas demandas
+(Tarifas T1) como para las Medianas y Grandes Demandas (T2 y T3).
+Costo del kWh No Suministrado Tarifa T1:
+• Semestre 40: $70,25
+• Semestre 41: $152,38
+% de Aumento: 116,91%% de Aumento: 116,91%
+Costo del kWh No Suministrado Tarifa T2 y T3:
+• Semestre 40: $268,21
+• Semestre 41: $497,30
+% de Aumento: 85,41%% de Aumento: 85,41%
+Este indicador permite conocer cuál es la duración media de un corte de suministro medido en horas. Se mide en (horas / usuario-semestre).
+• Semestre 40: 1,058
+• Semestre 41: 2,653
+% de Aumento: 250,7%% de Aumento: 250,7%
+Este parámetro permite conocer cuál es la cantidad de cortes de suministro por usuario en un periodo de tiempo determinado. Se mide en (interrupciones
+/ usuario-semestre)
+• Semestre 40: 2,262
+• Semestre 41: 4,036
+% de Aumento: 178,43%% de Aumento: 178,43%
+El crecimiento de los indicadores junto con el aumento del valor del costo de la energía no suministrada explica el gran incremento de los valores de las multas en pesos.
+INDICADOR DE LA DURACIÓN DE
+INTERRUPCIÓN MEDIA POR USUARIO.
+(SAIDI)
+INDICADOR DE FRECUENCIA DE
+INTERRUPCIÓN MEDIA POR USUARIO.
+(SAIFI)
+46
+
+En el período aquí detallado se continuó con la campaña de Control de Seguridad en la Vía Pública (SVP)
+que tiene que ver con la detección de potenciales riesgos y su regularización como puede ser la colocación de tapas de medidores rotas por vandalismo, señalización de riesgos de instalación con cartelería, colocación de aisladores en riendas, acondicionar cables de preensamblado de baja tensión en columnas terminales y frente de edificios, realizar mediciones de puesta a tierra, etc. entre otras tipificaciones indicadas en la resolución OCEBA 595/06.
+Las anomalías presentadas ante el Organismo de
+Control con registro fotográfico previo de la anomalía detectada y de la adecuación realizada en cada caso fueron, Res. OCEBA 595/06, octubre 2022: fecha de presentación 15/12/2022, Res. OCEBA 595/06, noviembre 2022: fecha de presentación 15/12/2022 y
+Res. OCEBA 595/06, diciembre 2022: fecha de presentación 05/01/2023.
+En el mes de febrero del 2023 el OCEBA realizó una auditoría de Calidad de Producto y Calidad de servicio como así también de Seguridad en la vía Pública.
+De acuerdo a lo establecido en las resoluciones respectivas, la Cooperativa realizó las presentaciones a través de la página web en forma cuatrimestral de la información referente al estado del parque de transformadores.
+Las fechas de las presentaciones fueron en los meses de Septiembre del año 2022, enero y mayo del
+2023.
+Ente de las acciones de control a los que se le realiza a la Cooperativa se encuentra el referido al correcto funcionamiento de los medidores de energía eléctrica, dentro del marco de la Resolución mencionada. Para tal fin y en este período que se presenta, se recibió en el Laboratorio de Mediciones Eléctricas al auditor del
+OCEBA, verificando el correcto funcionamiento de los diferentes lotes de medidores.
+Se informó al OCEBA con correo electrónico en fecha de 22 diciembre 2022 la actualización de la base de datos para la campaña de la Res 314 del año 2023.
+Al momento del cierre de este ejercicio se aguarda la presencia del auditor externo para cumplimentar la entrega de la información requerida.
+CAMPAÑA DE SEGURIDAD VIAL
+EN LA VIA PÚBLICA (RES OCEBA
+595/06)
+CAMPAÑA DE CONTROL AMBIENTAL DE
+SUBESTACIONES (RES OCEBA 811/02 Y
+103/13)
+CAMPAÑA DE CONTROL DE LOTES
+DE MEDIDORES (RES OCEBA 314/02)
+47
+
+En vigencia del Marco Regulatorio de la Actividad
+Eléctrica de la Provincia de Buenos Aires, conformado por la Ley N° 11769 (T. O. Decreto N° 1.868/04), su Decreto Reglamentario N° 2.479/04, el Contrato de Concesión suscripto, las Resoluciones OCEBA N°
+394/04, 599/07 y 103/13, esta Cooperativa presenta periódicamente en el mes de noviembre de cada año el plan de Emergencias y Contingencias que tiene por fin presentar los lineamientos generales que deben observarse priorizando elementos vulnerables ante posibles fallas operativas; técnicas, de naturaleza climática o provocadas de duración indeterminada, incluyendo además restricción de demanda por crisis energética y cuestiones ambientales.
+Este plan, además de presentarse ante el OCEBA, se presenta a la municipalidad de Saladillo.
+Complementariamente se notifica a las entidades de salud, Hospital Dr. Posadas y Clínica de Saladillo para que mantengan operativos los grupos electrógenos disponibles ante cualquier emergencia eléctrica nacional, provincial o local que provoquen falta de suministros por fuerza mayor.
+Las notas que se mencionaron en los párrafos anteriores se presentaron en las siguientes fechas: Nota al OCEBA presentada el 11 de noviembre del 2022, nota al Intendente Municipal, Ing. José Luis Salomón presentada el 10 de noviembre de 2022, nota al director de la Clínica de Saladillo Dr. Pablo Delía presentada el 10 de octubre de 2022, nota al director del Hospital Zonal Dr. Posadas, Dr. Javier Piñeyro presentada el 10 de octubre de 2022.
+Al igual que el organismo de control OCEBA, la Dirección provincial de energía de la provincia de buenos aires demanda presentaciones de información y estadísticas que surgen de relevamientos y mediciones del estado de situación del sistema eléctrico de la CES.
+Por requerimiento de la Dirección Provincial de Energía y con el fin de documentar los activos de la Cooperativa, se realizó una campaña de relevamiento de la postación de Baja Tensión del casco urbano.
+CUMPLIMIENTO CON LA (DPE)
+PLAN DE EMERGENCIAS Y
+CONTINGENCIAS
+RELEVAMIENTO Y DIGITALIZACIÓN
+DE INSTALACIONES
+48
+
+Con un trabajo integrado de las áreas de energía y telecomunicaciones, el personal de la CES impulsó un relevamiento de la totalidad de las líneas y los postes que las soportan. La tarea generó información detallada del estado del plantel externo, conformado por columnas, líneas de distribución de energía e internet y equipos que se utilizan para repotenciar los servicios.
+Con el relevamiento se registró información de cada punto de servicio, con detalles en fotos georeferenciadas, lo que permitirá ubicar cada elemento desde un centro de control de manera remota. Esa información agregó datos al Sistema de Información Georeferenciada (GIS) desarrollado en la CES hace algunas dé-
+cadas, el cual es permanentemente actualizado.
+El trabajo permitió relevar 9.580 soportes, con datos de georreferenciación, cantidad de ternas, servicios asociados, y con registro fotográfico de cada uno de los apoyos.
+En el transcurso del Ejercicio que se expone CES
+Energía realizó, de acuerdo a las exigencias legales y técnicas de metrología, la certificación del banco de contraste de medidores con técnicos de INTI (Instituto Nacional de Tecnología Industrial).
+Esta homologación permite verificar la clase de los medidores nuevos y aquellos usados que nuestro laboratorio repara para toda la curva de funcionamiento del medidor garantizando la precisión y exactitud de los mismos tanto electromecánicos como electrónicos que se colocan a los usuarios.
+El proceso de certificación se realizó en un equipo para ensayo de medidores de energía eléctrica marca Electromedidor, modelo TRICAR II, con medidor patrón de energía marca LANDIS&GYR, modelo
+TVH4.32, transformadores de aislamiento de tensión y un contrastador portátil marca CB LAB.
+CUMPLIMIENTO CERTIFICACIÓN DE
+EQUIPOS DE MEDICIÓN Y CONTRASTE
+49
+
+El telurímetro es un equipo para realizar mediciones de la resistencia de puesta a tierra y para medir la resistividad del terreno. Su calibración permite contar con indicadores precisos, por tal motivo en mayo de 2023 se realizó la calibración anual del equipo de medición de Puestas a Tierra (Telurímetro marca SONEL, modelo MRU-120, N° de serie AA1516) con el cual se lleva la campaña de medición de las puestas a tierra de los Centros de transformación que posee la
+Cooperativa en su Red de Distribución.
+La Cooperativa viene incursionando en la gestión de diferentes proyectos de generación de energías renovables ante organismos de financiación desde hace varios años.
+Desde CES Energía se han gestionado tres parques solares ante el Programa de Incentivos a la Generación de Energías Renovables (PROINGED).
+El lunes 24 de Octubre del 2022 quedó inaugurada la primera Planta de Generación Solar del Partido de Saladillo que fuera construida en la localidad de
+Cazón tramitada por la Cooperativa ante programa de gestión público/privada dedicado al incentivo de la
+Generación Distribuida Renovable en la Provincia de
+Buenos Aires (PROINGED), cuya gestión se encuentra a cargo de una Unidad de Coordinación Operativa
+(UCOP), integrada por representantes del Ministerio de Infraestructura y el Foro Regional Eléctrico de la provincia de Buenos Aires (FREBA).
+El predio sobre el cual se construyó el parque fue cedido mediante comodato gratuito por parte de la Municipalidad de Saladillo. Características técnicas del
+Parque Solar Cazón están dadas por una potencia total de 330 kW potencia pico, On Grid, 550 paneles solares capaces de generar un consumo estimado equivalente al de 150 hogares de tarifa T1R.
+La obra demandó una inversión en la adjudicación de
+U$S 375.909,44
+CERTIFICACIÓN DE TELURÍMETRO
+ENERGÍAS RENOVABLES
+PARQUE SOLAR CAZÓN
+50
+
+El nombre Contador Mario Ariel Cabitto, fue impuesto al PS Cazón en homenaje a quien fuera Directivo del Foro Regional Eléctrico de la provincia de Buenos
+Aires (FREBA) e integrante del PROINGED desde su creación por el sector Cooperativo, y que fuera uno de los impulsores del Parque Solar en Saladillo.
+En este ejercicio y a partir del mes de marzo 2023, la
+Cooperativa comenzó a percibir el pago por la O&M
+del Parque de acuerdo al Convenio suscripto con el
+Proinged cuyo reconocimiento por este concepto está compuesto por un costo base mensual y un costo adicional según la potencia del parque expresados en dólares estadounidenses y pesificados a la cotización del dólar tipo vendedor del Banco Nación a la fecha del cálculo correspondiente.
+Durante este periodo, el Subsecretario de Energía de la Provincia de Buenos Aires Lic. Gastón Ghioni anunció la instalación de dos en la inauguración del
+Parque Solar Cazón dos nuevos parques solares en
+Partido de Saladillo a instalarse en las localidades de
+Del Carril y Polvaredas. En los nuevos complejos, además de paneles solares, se instalarán bancos de baterías para acumular energía en los periodos de radiación solar y – posteriormente – inyectar a la red durante los momentos de mayor necesidad, siendo la primera experiencia en la provincia de Buenos Aires para generación On-Grid.
+Posteriormente desde el Proinged se realizó el llamado a licitación para la construcción de los mismos, llevando a cabo la visita de obra de las empresas oferentes el 31 de octubre del 2022. Luego de la recepción de las ofertas, el organismo provincial adjudicó las obras a la empresa BGH quien en el transcurso de este Ejercicio dió inicio a las tareas preliminares.
+En el caso del parque solar en Del Carril se instalarán
+910 paneles solares de 550 Wp cada uno, y un banco de baterías de litio de 1290 kWh, con una inversión total de U$S 1.875.000.
+NUEVOS PARQUES DE GENERACIÓN
+SOLAR CON ALMACENAMIENTO
+PLANTA SOLAR DEL CARRIL
+51
+
+La obra se ejecutará en un terreno que la Cooperativa adquirió en este ejercicio no sólo para instalar el
+Parque Solar sino también para una futura Estación
+Transformadora de 33/13,2 kV de 5 MVA por la cual viene gestionando desde hace un tiempo vinculada a la línea de Subtransmisión Saladillo - Roque Pérez.
+Este parque se caracterizará en el aspecto técnico y tecnológico por contar con una Potencia total de 550
+kW potencia pico., generados a través de la instalación de 910 paneles solares y el presupuesto de adjudicación se estima en U$S 1.875.000. Su capacidad de generación se estima en el equivalente al de 250
+hogares de tarifa T1R.
+Planta Solar Polvaredas: El Parque Solar Polvaredas contará con un total de 455 paneles de 550 Wp y un banco de baterías de 774 kWh con una inversión de
+U$S 956.777,81. El mismo se montará en un terreno privado mediante la realización de un convenio entre el propietario y la Pcia de Buenos Aires por el plazo de vida útil del mismo.
+Las características de este proyecto están dadas por una Potencia total de 250 kW potencia pico, mediante la instalación de 455 paneles solares 455, un monto total de adjudicación de U$S 956.777,81 y una capacidad de generación se estima en el equivalente al de
+110 hogares de tarifa T1R.
+52
+
+Al cierre de este ejercicio las obras de sendos Parques Solares se encuentran en su fase inicial de construcción. Se espera para el mes de agosto del 2023 la primera inspección de avance de obra por parte del
+Proinged.
+Los cambios en la matriz de generación de energía han dado lugar a la aparición de un nuevo perfil de usuario. El usuario de energía eléctrica que obtiene la autorización de la empresa distribuidora para generar energía renovable con destino al autoconsumo e inyectar los eventuales excedentes a la red eléctrica pública es reconocido como usuario generador.
+La Cooperativa Eléctrica de Saladillo ha sido pionera en el fomento de este tipo de generación, alentando y acompañando el desarrollo de proyectos en el orden local.
+En el cuadro siguiente se muestran los usuarios generadores que se fueron conectando en forma cronológica a través del tiempo bajo la modalidad On Grid y que se encuentran activos al cierre de este ejercicio que aquí se presenta.
+La Ley 27.424: Régimen de Fomento a la Generación Distribuida de Energía Renovable Integrada a la Red Eléctrica Pública, Sancionada el 30/11/2017,
+Publicada en BO el 27/12/2017 y Reglamentada por
+Decreto 986/18 de fecha 01/11/18., sentó las bases a nivel nacional para la generación de energía eléctrica de origen renovable por parte de usuarios de la red de distribución, para su autoconsumo, con eventual inyección de excedentes a la red, y establecer la obligación de los prestadores del servicio público de distribución de facilitar dicha inyección.
+USUARIOS GENERADORES
+53
+
+Posteriormente, mediante la Ley Provincial 15.325.
+Reg. 10-05-22., la Provincia de Buenos Aires adhiere a los beneficios promocionales, impositivos, fiscales y de financiamiento establecidos en la Ley Nacional N°
+27.424 que establece el Régimen de Fomento a la Generación Distribuida de Energía Renovable integrada a la Red Eléctrica Pública en la Nación Argentina. Declara de Interés Provincial la Generación de energía
+Eléctrica de Fuentes Renovables para autoconsumo y eventual inyección de excedente a la red eléctrica de distribución provincial. Luego se promulgó el Decreto
+2371/22 que designa como Autoridad de Aplicación de la Ley Nº 15.325 al Ministerio de Infraestructura y
+Servicios Públicos o a la repartición que en el futuro la reemplace y determina que la Autoridad de Aplicación establecerá las condiciones técnicas, jurídicas, económicas, contractuales, tarifarias y todas aquellas que resulten necesarias para conferir viabilidad a la generación de energía eléctrica de origen renovable en la provincia de Buenos Aires.
+En el presente año se reglamenta la Resolución
+463/23 (30-03-23) por la cual se pretende aprobar las condiciones técnicas, jurídicas, económicas, contractuales, tarifarias que resultan necesarias para conferir viabilidad a la generación domiciliaria de origen renovable en el área bajo la competencia y jurisdicción de la Provincia de Buenos Aires, por parte de los
+USUARIOS GENERADORES para su autoconsumo, y la eventual inyección de excedentes a la red de distribución.
+Estos avances en la legislación provincial, hizo que se demorara el ingreso de nuevos usuarios generadores ya que la ley provincial contempla inicialmente una doble medición lo que llevó a la necesidad de redactar un reglamento de acometidas que aún se encuentra en desarrollo por parte de organismos provinciales.
+En el mes de mayo del 2023 se llevó a cabo la
+Asamblea Anual Ordinaria y Extraordinaria del Foro
+Regional Eléctrico de la Provincia de Buenos Aires
+-FREBA-, conformado por 200 cooperativas eléctricas y las cuatro distribuidoras de energía de DESA, realizada en la Ciudad de Salto, en la Pcia de Bs. As.
+En función de lo consensuado entre los representantes, y por unanimidad, se propuso la continuidad de los actuales cargos directivos y técnicos del Foro.
+Como parte del Comité Técnico Provincial, desde el año 2018 se encuentra en representación del sector
+Cooperativo la Cooperativa Eléctrica de Saladillo.
+Dentro de las funciones del Comité Técnico se destacan las de seleccionar los proyectos de inversión en la red de distribución troncal y/o de alta tensión dentro de la Provincia de Buenos Aires, verificar que las iniciativas de los proyectos de inversión cumplan con las características técnicas requeridas por la legislación nacional y provincial.
+REPRESENTACIÓN DE LA COOPERATIVA
+EN EL COMITÉ TÉCNICO DEL FREBA
+54
+
+Además es función del Comité difundir entre los miembros del FREBA las características de las iniciativas de proyectos de inversión y las opiniones que
+TRANSBA o TRANSENER tengan al respecto como
+Miembros Asesores, a los fines de facilitar la formación de coaliciones entre Asociados para la selección competitiva de proyectos de inversión, con excepción de la información confidencial.
+También incumbe al Comité tratar y dictaminar, dentro del “mecanismo de selección de proyectos”, acerca de todas las presentaciones por objeciones y/o solicitudes de compensación que puedan presentar los miembros del FREBA, antes de la votación y aprobación final de los proyectos.
+Desde del área de CES energía se planteó al Consejo de Administración la importancia de planificar los inicios de gestión de ampliación de la ET Transba Saladillo en función del crecimiento de la demanda de los últimos años y la proyección del crecimiento a 10
+años vista, con el fin de mantener el normal suministro eléctrico a todos los usuarios. Por tal motivo, durante este ejercicio se continuó con los requerimientos de información para completar los análisis preliminares con los datos aportados por las empresas Provinciales EDEN S. A. y EDEA S. A. que sumados a los de la
+Cooperativa Eléctrica de Saladillo, determinan la demanda total de la estación transformadora Transba S.
+A. 132/33/13,2 kV.
+La planificación de la iniciativa contempla realizar en informe de proyección de saturación de la ET Saladillo y diseñar un Cronograma que contenga en forma cronológica y englobando de la forma más precisa posible, tanto los análisis previos, como así también los estudios técnicos necesarios efectuar, la elaboración de la documentación y los trámites ineludibles a realizar, para ejecutar las obras que permitan ampliar la capacidad de abastecimiento de energía en la zona de concesión de la Cooperativa Eléctrica de Saladillo en el nivel de Alta Tensión en forma anticipada a su saturación.
+Además se proyecta elaborar con detalle un presupuesto que contemple los alcances económicos de la ampliación necesaria y determinar la participación de la inversión correspondiente a la Cooperativa Eléctrica de Saladillo a completar con el desembolso económico del resto de los beneficiarios de la ampliación
+(EDEN S. A. y EDEA S. A.) con los cuales se debe lograr un acuerdo entre partes.
+AMPLIACIÓN ESTACIÓN TRANSFORMADORA DE TRANSBA S.A
+55
+
+Una vez definida la inversión de la obra requerida, determinar las posibles fuentes de financiamiento.
+Concretado eso iniciar el proceso de tramitación ante los organismos nacionales y ante las autoridades regulatorias provinciales como así también los alcances que requiere la Solicitud de Acceso compuesta por la documentación solicitada en el Anexo 16 – Punto 2.
+Reglamento de acceso a la capacidad existente y ampliación del sistema de transporte de energía eléctrica, título i - acceso a la capacidad de transporte existente.
+Como Anexo a la Solicitud, se deberán presentar los
+Estudios Eléctricos asociados, en un todo de acuerdo con el Procedimiento Técnico N° 1 – Etapa 1.
+En síntesis para avanzar con el proyecto se deberá realizar en primera instancia la solicitud de financiabilidad y de Acceso, estudios eléctricos (E.E) y estudios de impacto ambiental (E.I.A.) si corresponde. Seguidamente la confección de Pliegos para adjudicación de transformador, reactancia y reactor.
+Además se deberá realizar la adjudicación de transformador, reactancia y reactor, la confección de Pliegos para adjudicación de equipamiento en 132 kV. Se deberá considerar la aprobación de la empresa Transba S. A. y adjudicación equipamiento en 132 kV, como también la confección de Pliegos para adjudicación de
+Obra Civil y Montaje Electromecánico y la ejecución de la obra civil y montaje electromecánico.
+Al cierre de este Ejercicio la Cooperativa se encuentra dispuesta determinar el costo de la inversión.
+Desde el sector de energía se inició la realización del proyecto de alumbrado público de la ruta nacional
+N° 205 entre los Km. 179,200 y 180,800 que será presentado a la Municipalidad de Saladillo para su elevación y gestión de permiso de inicio de obras a la
+Dirección Nacional de Vialidad (DNV).
+El mencionado proyecto está conformado por dos etapas, la primera comprendida por el tramo de Ruta
+Nacional 205 entre los Km 180,030 a Km 180,800 y una segunda también sobre Ruta Nacional 205 entre los Km 179,200 a Km 180,030.
+La obra contempla la realización de una obra de iluminación en la zona de circulación vial de acceso a la ciudad de Saladillo en la ruta nacional N° 205, cumpliendo con los niveles de luminosidad exigidos por la Dirección Nacional de Vialidad para lo cual se dispone colocar luminarias individuales de 12 m de altura libre con brazo simple de 2,50 m y luminaria con dispositivo LED de 276 W y 36.940 lúmenes.
+OBRA DE ILUMINACIÓN RUTA 205
+CONVENIO CON LA MUNICIPALIDAD
+56
+
+Las luminarias que se presentan en este proyecto para su aprobación se ubicarán de acuerdo a planimetrías del proyecto, considerando una distancia promedio de separación de 40 m.
+La disposición de las luminarias será en sistema de iluminación unilateral, prolongándose aproximadamente unos 450 m para cada lado de sus ramales, considerando como centro de carga la ubicación del
+Centro de Transformación que las abastece.
+En el mes de junio del presente año se firmó el acuerdo entre la Municipalidad y la Cooperativa Eléctrica de
+Saladillo para la ejecución de la obra que contempla una inversión de $71.537.103,91
+En el mes de diciembre del 2022 se llevó a cabo una reunión técnica para analizar los resultados y correcciones de lo presentado para el año 2021 y lo que se deberá informar como Alta, Bajas y Modificaciones para el cumplimiento de la Resolución 17/2021 - Contabilidad Regulatoria - Inventario, entre integrantes del estado provincial de la Dirección Provincial de Energía
+(DPE) y el Organismo de Control Eléctrico de la Pcia de Bs. As (OCEBA) con representantes de la Federaciones de Cooperativas de FACE, FEDECOBA, FICE,
+FACE y APEBA participando la Cooperativa Eléctrica de Saladillo como representante de ésta última.
+Se informó por parte de los Organismos de la PBA
+que se realizarán, en forma individual a cada Cooperativa, las devoluciones sobre las presentaciones realizadas y las correcciones o rectificaciones a aquellas que resulten observadas. También se confirmó que la presentación de las altas, bajas y modificaciones de inventario 2022.
+En este tema, cabe señalar que la Cooperativa viene cumpliendo con el requerimiento de información establecido por la Autoridad de Aplicación del Marco
+Regulatorio Eléctrico.
+En el Ejercicio anterior la Cooperativa completó los diferentes requerimientos de información solicitados por el Ministerio de Infraestructura y Servicios Públicos de la provincia de Buenos Aires, en el marco del proceso de “Renovación de las Licencias Técnicas”, conforme Resolución M.I.y.S.P. N° 600/22.
+Esta presentación tiene como propósito permitir a las distribuidoras eléctricas municipales de la Provincia de Buenos Aires, gestionar la autorización para la
+Renovación de las Licencias Técnicas necesaria para continuar con la prestación del servicio público en el
+Área de Concesión.
+CONTABILIDAD REGULATORIA
+RENOVACIÓN DE LICENCIA TÉCNICA
+57
+
+El 21 de abril del 2023 año se completó la información complementaria adeudada del Módulo 6, inciso c,
+“Nota del Municipio” cuyo nombre es “N091-06.c_Nota del Municipio”, donde la Municipalidad de Saladillo presta conformidad a la petición realizada por la Cooperativa para prorrogar por el término de 30 años el
+Contrato de Concesión del Servicio de Distribución de
+Energía Eléctrica en el Partido de Saladillo, otorgada inicialmente mediante la Ordenanza N° 33/1999 por el término de 25 años y sus modificatorias N° 17/2000
+y 03/2021, condicionada a la obtención de la Licencia
+Técnica expedida por la autoridad de aplicación, según la Ley 11.769 y a la autorización del Honorable
+Concejo Deliberante.
+Desde el desarrollo de las primeras redes capilares de telefonía básica en el país, las cooperativas de servicios se constituyeron como actores fundamentales para garantizar acceso universal a la comunicación en las décadas de maduración del servicio de telefonía fija.
+En la actualidad el sector de las telecomunicaciones de la Argentina, que ha desarrollado al servicio de Internet como innovación, está signado por regulaciones que establecen que estas prestaciones son un servicio público esencial y en competencia.
+El panorama de prestadores cooperativos de diversos servicios TIC y audiovisuales se ha complejizado en cuanto a la prestación simultánea de servicios digitales convergentes, promovidos por las inversiones genuinas realizadas en cada una de las áreas de servicio.
+El despliegue territorial de cada cooperativa, a través de redes alámbricas e inalámbricas, tiene como principal desafío acrecentar las zonas servidas con Fibra
+Óptica al Hogar en capacidades y niveles de calidad competitivos respecto de otros prestadores con dominancia en su escala comercial y habilitación normativa para paquetizar distinta clase servicios.
+En Saladillo la Cooperativa Eléctrica a través de su área de telecomunicaciones CESTEL lidera el sector con un plantel externo para la prestación del servicio de fibra óptica directa al hogar. De este modo, con la incorporación de nuevas tecnologías y en un contexto de evolución permanente del negocio de las telecomunicaciones, CESTEL ha registrado grandes cambios con una notable expansión de cobertura, que se manifiesta en un crecimiento técnico y del negocio.
+Durante el desarrollo del Ejercicio que se expone la
+Cooperativa puso en marcha un ambicioso plan de conectividad en materia de telecomunicaciones, mediante su Proyecto + RED, que pretende llegar con el servicio de internet por medio de fibra óptica a localidades del interior del Partido de Saladillo.
+CESTEL
+58
+
+Con la generación de nuevas prestaciones, bajo el concepto de Triple Play y una moderna red que ha convertido a la empresa en la única en Saladillo con capacidad para brindar el servicio de fibra óptica al hogar, se ha ganado terreno puesto que en el Ejercicio que se presenta se concretó un ambicioso plan de obras diseñado por personal de CESTEL cuya estrategia central se orientó a la proyección del negocio mediante el desarrollo y expansión del plantel externo.
+Las cooperativas argentinas TIC han sido el único actor del sector que ha cumplido con los límites tarifarios dispuestos por el Gobierno Nacional (decreto
+690/2020), incluso a pesar de los grandes perjuicios que ello ha generando a la situación económico-financiera de cada cooperativa por el desfasaje entre los valores autorizados y los costos crecientes por la inflación y los insumos dolarizados.
+Siendo conscientes de las restricciones macroeconó-
+micas y cambiarias que llevaron a reformular las licencias automáticas de importación y de giros de pagos en divisas extranjeras, esas situaciones han paralizado las posibilidades de acceder al equipamiento, los insumos y servicios necesarios para las comunicaciones.
+Frente a ese contexto que afectó a la totalidad de las
+Cooperativas del sector de las telecomunicaciones desde CESTEL se impulsaron medidas comerciales y gestiones a fin de mejorar la compra de insumos para la prestación del servicio. De este modo el área administrativa realizó negociaciones tarifarias con proveedores mayoristas logrando por resultado la ampliación del ancho de banda y la obtención de mejores precios en dólares, para procurar el equilibrio económico del área.
+Desde hace algunos años el sector de telecomunicaciones en la CES ha dejado de ser una línea comercial que brinda el servicio de telefonía, para incorporar la idea más amplia de telecomunicaciones, creando una nueva manera de entender el negocio.
+Con la generación de planes que brindan diferentes propuestas a los usuarios y el compromiso de mantener valores al alcance de todos se trabajó en la gestión intensamente.
+Al cierre del Ejercicio que se expone el número de usuarios ha crecido de manera planificada, paulatina y constante. Es así que cuenta con más de mil quinientos abonados de telefonía y supera las cinco mil conexiones de Internet, de los cuales cerca del
+93% posee conectividad mediante el servicio de Fibra
+Óptica directa al hogar, el porcentaje residual a través de ADSL y solo un centenar de usuarios de conexión inalámbrica.
+CONTEXTO DE LAS TELECOMUNICACIONES EVOLUCIÓN COMERCIAL
+59
+
+Cabe señalar que el modelo de negocio se orienta a la plena cobertura mediante una red de fibra óptica y si bien existen aún algunos servicios mediante conexión inalámbrica, se trata de excepciones para enlaces en zonas rurales, puesto que es un sistema que no ofrece estabilidad para la prestación del servicio.
+En cuanto a la prestación del servicio de televisión, conforme a un contrato de reciprocidad con la cableoperadora local TeVe Centro, se continúa prestado el servicio con un total de conexiones cercana a las dos mil quinientas y el registro de un leve crecimiento del número de adherentes.
+El funcionamiento operativo del área de telecomunicaciones de la CES demanda continuas inversiones y una planificación constante del negocio. La competitividad se mantiene a partir de la apuesta a nuevas tecnologías que permitan innovar y sumar nuevos servicios.
+Como antes se mencionó el mayor logro de inversiones durante el presente Ejercicio fue la puesta en marcha del tendido de fibra óptica en barrios en los que no se prestaba el servicio, dejando totalmente servido el Barrio PROCREAR, e inicio de la obra de anillo para la conectividad de las localidades del interior.
+Con la obra de conectividad el nuevo barrio no solo ha incorporado el servicio de triple play, sino que también se ha convertido en la primera zona de la ciudad en contar con telemedición del servicio de energía eléctrica. Para tal fin el equipo de CESTEL realizó el estudio de la conexión para telemedición de acuerdo a lo solicitado por CES Energía, analizando varias alternativas, realizando maquetas, colaborando en la etapa de prueba y finalmente se implementando la configuración en el Barrio.
+PLAN DE OBRAS E INVERSIONES
+60
+
+Frente al crecimiento demográfico que está manifestando Saladillo y la creciente demanda de servicios, los trabajos de conectividad y expansión geográfica
+CESTEL contemplaron además la realización de presupuestos de obra de fibra óptica para distintos loteos. Los emprendimientos privados agregan valor a sus propuestas inmobiliarias al poder ofrecer nuevos servicios.
+Las obras de mantenimiento y desarrollo del sector son planificadas bajo el análisis de aspectos relacionados a la evolución del negocio en el mundo, a nivel nacional y local desde el punto de vista comercial y tecnológico. De esta manera para el próximo Ejercicio se ha presentado un proyecto de actualización de servidores y licencias para los equipos que manejan los sistemas de gestión interna.
+Puesto que el sector de telecomunicaciones es una de las áreas que demanda inversión permanente en reposición de equipos y en proyección para la expansión del servicio durante el Ejercicio que se expone se implementó el servicio de conexión a TeVe Centro a través de fibra óptica, haciendo un punto a punto entre el nodo del cableoperador y el nodo de Arsat.
+Además se concretó la interconexión entre los nodos de CESTEL en la ciudad de Saladillo, se dio inicio al proyecto de migración de central NEC, al tiempo que se implementó la aplicación para móviles del Jsat para los técnicos y una interface automática entre
+Jsat y BCM (controlador de servicios de internet).
+Por otra parte y con el fin de optimizar la calidad de servicio en zona rural se comenzó una obra eléctrica en el nodo de El Mangrullo para independizar la conexión eléctrica de la torre y los equipos.
+Los ataques de red distribuidos a menudo se conocen como ataques de denegación distribuida de servicio
+(DDoS). Este tipo de ataque aprovecha los límites de capacidad específicos que se aplican a cualquier recurso de red, tal como la infraestructura que habilita el sitio web de la empresa. El ataque DDoS envía varias solicitudes al recurso web atacado, con la intención de desbordar la capacidad del sitio web para administrar varias solicitudes y de evitar que este funcione correctamente.
+INVERSIONES OPERATIVAS
+CIBERATAQUES
+61
+
+Frente al creciente número de casos que afectaron al servicio, en materia de calidad de servicio y seguridad para los usuarios desde el área administrativa y técnica se contrataron servicios de mitigación de ataques a distintos proveedores, lo que mejora la seguridad de navegación a los abonados.
+De modo complementario se comenzó a implementar el TR-069, un protocolo para los servicios de Internet, que automatiza la gestión y permite operar a distancia. Se trata de una importante herramienta que ayuda a mantener la seguridad de dispositivos y datos. El mismo fue diseñado para ayudar a los proveedores de servicios a gestionar los equipos de los clientes de forma remota. Para ello, TR-069 utiliza una conexión segura, cifrada y autentificada.
+Con el inicio de trabajos de postación y tendido de líneas de fibra óptica, CESTEL puso en marcha el ambicioso proyecto de la Cooperativa Eléctrica para llevar a todas las localidades de Saladillo Internet por fibra óptica.
+La obra, que supera el millón de dólares de inversión global entre CESTEL y CES Energía, prevé un trabajo integral de las áreas que contempla el tendido de
+30 kilómetros de postación en hormigón pretensado y nuevas líneas de distribución de energía, y más cerca de 75 Kilómetros de líneas de enlace de Fibra óptica para unir la Ciudad de Saladillo con las localidades de
+Toledo, Polvaredas y Del Carril.
+Con el soporte de una red de fibra óptica y renovadas líneas eléctricas se avanzará en la prestación de nuevos servicios a las comunidades del interior y se profundizará el desarrollo de otras herramientas complementarias como la telemedición, el telecomando y la conexión para cámaras de seguridad en puntos geográficos distantes de la planta urbana de Saladillo.
+Entre los beneficios de esta nueva obra de la CES se enfatiza en que los habitantes de las localidades del interior podrán contar con los servicios de Internet por fibra óptica de alta velocidad y estabilidad de CESTEL, al tiempo que en materia energética se logrará la ampliación de las capacidades técnicas de la red de distribución, con incremento cercano al 25 % en la capacidad de corriente, para la mejora de la calidad de servicio y producto, generando la factibilidad de alimentación a nuevos usuarios.
++RED
+62
+
+Para la concreción del proyecto y su financiamiento desde el área de telecomunicaciones se han realizado intensas gestiones y un continuo seguimiento para lograr el otorgamiento a la CES de anticipos no retornables (ANR) de parte del Ente Nacional de Comunicaciones ENACOM. Con los fondos conseguidos se ha podido avanzar con parte de la ejecución de la obra.
+Con el interés puesto en mejorar la calidad de atención a sus asociados, la Cooperativa Eléctrica de Saladillo (CES) ha generado una nueva herramienta de comunicación, con la incorporación del servicio IVR –
+del inglés Interactive Voice Response, expresión que en español suele traducirse como respuesta de voz interactiva o unidad de respuesta automática.
+Esta nueva herramienta busca brindar una pronta respuesta a consultas, gestiones e inquietudes que realicen los usuarios, dado que cada llamada que ingresa es atendida instantáneamente y dirigida al área específica, a través del enrutamiento de llamadas, considerando la inquietud por la cual se están comunicando con la CES.
+Ofrecer un servicio de calidad es mucho más que los saladillenses cuenten con energía, telefonía, Internet y servicios sociales. Es también estar disponibles, cerca de los vecinos para atender sus inquietudes.
+La CES desarrolló este nuevo canal de comunicación para permitir a sus usuarios obtener una respuesta ágil y eficiente a sus consultas en un mayor rango horario. Un medio cómodo y moderno para aclarar dudas, encontrar información y donde podrá realizar diversas gestiones sin necesidad de moverse de su casa o lugar de trabajo.
+Para la puesta en marcha de este servicio el área de telecomunicaciones ha participado con aportes técnicos mediante la instalación y configuración de un servidor para el IVR al tiempo que se implementó el sistema para atención automática telefónica de CESTEL.
+Durante el Ejercicio que se expone y como parte de las acciones de responsabilidad ambiental CESTEL
+continuó con su campaña a través de la cual invita a los usuarios a adherirse de manera voluntaria para recibir las facturas de los servicios de manera virtual.
+ATENCIÓN AL CLIENTE
+CAMPAÑA ECOLÓGICA DE CESTEL
+63
+
+La iniciativa que tiene como propósito cuidar el medioambiente permite participar de un sorteo mensual por un mes de abono gratuito a aquellos los usuarios que se inscriban. Para participar los usuarios de CESTEL solo deben completar un formulario. Desde el mes siguiente a la adhesión están recibiendo su factura por mail y participando de los sorteos.
+Entre los cambios más importantes que se esperan en el futuro de las telecomunicaciones, pueden citarse la presencia cada vez más activa de la inteligencia artificial en todas las facetas y la consolidación industrial de la informática en la nube.
+Estos pronósticos que demandan un servicio cada vez más estable y seguro interpelan a CESTEL para proyectarse como la prestadora de ancho de banda más eficiente, accesible, económica y con disponibilidad geográfica en Saladillo. Para tal fin se requiere una permanente planificación e inversiones.
+Entre las obras a corto y mediano plazo el sector de telecomunicaciones de la CES tiene en su agenda continuar con el proceso de centralización de los nodos de internet, la ampliación del tendido de fibra óptica en la zona del CFR Las Margaritas, la concreción de obras troncales en los tramos entre Saladillo hasta
+Alvarez de Toledo y Cazón, el tendido de una red de fibra óptica directa al hogar en la planta urbana de Del
+Carril y continuar con la migración de la central NEC
+para la prestación del servicio de telefonía básica.
+La fábrica de pretensados de hormigón de la Cooperativa, CESPRET, es una unidad de negocios muy bien posicionada en el segmento, con una importante cartera de clientes del sector eléctrico provincial y de inversores de otros sectores como lo son los desarrollos inmobiliarios. El área de energía de la propia empresa es otro de los compradores que demanda productos de la fábrica, al igual que CESPAZ desde donde se encarga la construcción de los panteones.
+La permanente demanda comercial ha permitido a
+CESPRET mostrar un crecimiento de ventas en el período que la presente Memoria informa, a pesar de haberse desarrollado en un contexto macroeconómico mundial y nacional que presentó barreras al desempeño del negocio.
+OBRAS PARA LA PROYECCIÓN
+DE CESTEL
+CESPRET
+64
+
+La producción, que en el Ejercicio próximo anterior se vio afectada por la pandemia, muestra en este una recuperación que impactó en la productividad con la fabricación de 4.311 unidades de columnas más de
+400 módulos de nichos y más de 900 accesorios.
+En el aspecto social la productividad repercutió de manera positiva en la generación de empleo, puesto la fábrica pudo retomar su funcionamiento operativo con tres turnos de operarios, dos abocados a la línea de producción de columnas y el tercero en la de accesorios, a los que se suma una cuadrilla de mantenimiento y soldadura, tareas de armadura para soldadura y carga y descarga de camiones.
+Si bien los precios y el contexto inflacionario generaron dificultades para la compra de insumos y materias primas en el Ejercicio que se expone se normalizó la entrega de trenzas de hierro, insumo central para la producción de columnas de hormigón pretensado. De esta manera la fábrica de columnas y elementos de hormigón de la Cooperativa pudo retomar las gestiones de cotizaciones, registrando una recuperación en las ventas.
+CESPRET es reconocida en el sector cooperativo como empresa proveedora. Es así que el mayor volumen de facturación corresponde a entidades cooperativas dedicadas a la distribución de energía, seguido por distribuidoras eléctricas, empresas del sector privado y un margen inferior a la propia Cooperativa
+Eléctrica de Saladillo.
+El equipo comercial ha venido dando respuesta a los pedidos de las distribuidoras de energía más importantes que operan en territorio bonaerense como lo son Edes, Edesur, Edelap y otras cooperativas eléctricas, entre las que se encuentran las de Coronel Dorrego, Las Flores, Colón , Carlos Tejedor, San Sebastián, Brandsen, Salto, Ramallo, Azul, Olavarría, San
+Miguel del Monte, Lujan y Mariano Moreno. Además la fábrica ha vendido columnas y elementos a empresa privadas agrupadas en el fideicomiso Laurella,
+Montajes Correa, Myselec, JDA Construcciones, Leymer, Ingeniería Toledo, Mor S.A. y Dielectric.
+Por otra parte con la puesta en marcha del Proyecto +
+RED que impulsan CESTEL y CES Energía con el fin de concretar la interconexión con un anillo de internet y energía para unir la ciudad de Saladillo con las localidades del interior, CESPRET ha provisto de elementos pretensados y columnas a la propia Cooperativa.
+CARTERA DE CLIENTES
+65
+
+Para la fabricación de los productos se utiliza hormigón de alta resistencia. El mismo es controlado de manera exhaustiva durante las diferentes etapas de elaboración, como así también el producto terminado, al que se realizan ensayos destructivos y no destructivos, para certificar su calidad, en función de las pautas establecidas por las Normas IRAM-NIME.
+Dicha demanda exige optimizar los tiempos de producción, como también cumplir con la totalidad de las normas de calidad con los productos. es así que durante el transcurso del ejercicio que se expone se han realizado pruebas de resistencia y control de calidad a los productos fabricados.
+Los controles prevén la realización de ensayos de las columnas para comprobar su calidad en la fase elástica, visual y rotura.
+Asegurar la protección del personal y disminuir los riesgos de accidentes en el ambiente laboral demanda a la gestión el permanente control de las medidas previstas por las normativas en las que interviene el área de Higiene y Seguridad laboral.
+Para cumplir con las pautas de protección las tareas de mantenimiento se enfocan en el cuidado de los equipos de manera que sean elementos seguros para el personal que lo utiliza al tiempo que eficaz para el proceso de producción.
+A fin de cumplir con dicha prerrogativa, durante la
+Ejercicio que se desarrolla en esta Memoria, entre las obras de mayor envergadura se realizó el control y manteniendo de los equipos, con ensayos de calderas en cumplimiento de normas nacionales y equipos de uso para la producción, como también de aquellos elementos que son sometidos a presión. En este particular el Ministerio de Trabajo, Empleo y Seguridad social exige realizar controles, inspecciones y ensayos de los aparatos sometidos a presión para verificar su correcto funcionamiento y asegurar que cuenten con las medidas de protección y seguridad adecuadas.
+CONTROL DE CALIDAD
+MANTENIMIENTO Y MEJORAS
+66
+
+Para la presentación ante el Organismo Provincial para el Desarrollo Sostenible (OPDS), se da cumplimiento a la documentación la inspección y extensión de vida útil referida a informes técnicos.
+Además del mantenimiento general de los elementos utilizados para la tarea operativa de fabricación en la línea de producción, durante la Ejercicio que se releva en esta Memoria, entre las obras de mayor envergadura se realizó el manteniento y puesta en valor de los silos de almacenamiento de cemento, siendo arenados y pintados por personal propio del sector.
+Brindar contención para generar “tranquilidad en un momento de dolor” no es un slogan en CESPAZ, sino que el lema de trabajo para quienes forman parte del sector de Servicios Sociales de la Cooperativa Eléctrica.
+El área desde su creación, el 1 de septiembre de
+1982, se fue consolidando como un espacio para propiciar igualdad de posibilidades a los saladillenses, quienes hasta entonces debían hacer frente a los servicios de sepelios sin contar con un sistema solidario.
+La apertura del sector coincidió con el interés de la familia Acquaviva de desvincularse del negocio, abriéndose la oportunidad de crear para la comunidad un sistema de adhesión voluntaria. Desde entonces
+CESPAZ asiste a sus asociados con la prestación de servicios de sepelios y nichos.
+Al tratarse de un sistema solidario, para acceder al servicio los adherentes abonan mensualmente una cuota mínima, que exime de todo gasto al usuario al momento de ser necesario un servicio.
+Esta actividad comercial impulsada por la CES está avalada por un importante número de clientes que requieren el asesoramiento y gestión. Para la prestación del servicio la entidad, a través de sus salas propias, pone a disposición vehículos equipados para el traslado.
+El área de servicios sociales demanda una atención peramente de la sensibilidad de los usuarios, la administración del sector requiere trabajo en equipo y el compromiso con las tareas de todo el personal para alcanzar la satisfacción de los asociados por el asesoramiento y acompañamiento en un tránsito especial.
+CESPAZ
+CUARENTA AÑOS DE SERVICIO
+67
+
+De esta manera, desde hace 40 años CESPAZ acompaña a las familias del Partido de Saladillo en momentos de dolor, mediante un sistema que brinda igualdad de condiciones al momento de requerir un servicio.
+Quienes aún no se encuentren adheridos, aunque no tengan medidor a su nombre, pueden hacerlo abonando una cuota mínima mensual. Estar reempadronados y tener la cuota al día son condiciones obligatorias para acceder a la prestación del servicio.
+La Economía social ofrece soluciones aportando recursos y servicios sobre los cuales fundar una integración social potencialmente eficaz. Un claro ejemplo es el área de servicios sociales de la Cooperativa Eléctrica de Saladillo, CESPAZ, cuya esencia se basa en brindar las mismas oportunidades a todos sus asociados, y el modelo de negocio se enfoca en la sustentabilidad desde una visión social y solidaria.
+Al tratarse de un esquema solidario el sistema se sostiene mediante el aporte de una cuota mínima mensual de los asociados. Con ese recurso genuino se impulsan las mejoras en el sector, al tiempo que se realizan inversiones de infraestructura que permitan cumplir con el objeto del área.
+En relación a las prestaciones durante el Ejercicio que en esta Memora se presenta se realizaron 330
+sepelios, es decir un promedio de 27.5 servicios mensuales. El 88% de los servicios solicitados correspondieron a asociados por medidor o bajo la modalidad denominada mostrador.
+Al respecto se observó un incremento de un 5% en asociados que requirieron la prestación. Por otra parte un 2% de los servicios fue contratado a CESPAZ
+por particulares no asociados, mientras que el 5% fue cubierto mediante un acuerdo de asistencia social que la Cooperativa mantiene con el área de Bienestar Social municipal. Con relación a las adhesiones al servicio de sepelio y nicho o cremación, se ha mantenido el número de asociados manifestándose un paulatino incremento.
+DESARROLLO COMERCIAL
+68
+
+En un contexto macroeconómico de inflación con la permanente suba de los costos operativos y contemplando que se registraron cambios sustanciales en las tarifas de otros servicios que impactan sobre la economía doméstica, el Consejo de Administración determinó mantener el valor de la cuota por el servicio de CESPAZ durante el año 2022 realizando una actualización mínima a inicios del 2023. De esta manera la cuota social correspondiente al servicio de sepelio y nicho/cremación registró un incremento que para el grupo familiar conviviente (hasta 6 personas) en el domicilio en el que se encuentra instalado el medidor, pasó de $748 a $990. Estas medidas que fueron necesarias para equilibrar las cuentas del sector, no acompañaron los desfasajes inflacionarios de los diferentes componentes de la estructura de costos de
+CESPAZ.
+Durante el desarrollo del presente Ejercicio en el cementerio local se continuó con la construcción de panteones de doble cuerpo. Los mismos están a cargo de personal de CESPRET y eventualmente de alguna contratación a terceros. Las inversiones permitieron finalizar la construcción de los panteones números 66
+y 67 que proveyeron 320 nichos estándar. Al cierre de este Ejercicio existe una disponibilidad de 111 nichos de tamaño normal y 9 de tamaño especial, por lo que se encuentra en construcción el panteón número 68
+con capacidad para 160 nichos estándar.
+Los módulos conforman una galería cerrada de unidades terminadas con tapas y accesorios. Con la obra se procura dotar de infraestructura al cementerio de Saladillo, como parte de un proceso de inversiones continuas que le permitan a CESPAZ brindar sus prestaciones con eficiencia.
+Si bien los panteones son construidos por la CES
+en el predio del cementerio municipal el uso de ese espacio público está acordado mediante un convenio entre la Cooperativa y el Municipio local. Por tal motivo el mantenimiento y limpieza del cementerio es responsabilidad de la gestión municipal, sin embargo con el fin de mantener la higiene del complejo de panteones, CESPAZ posee contratos de locación de servicios para esas tareas.
+INVERSIÓN EN INFRAESTRUCTURA
+MANTENIMIENTO DEL COMPLEJO
+DE PANTEONES
+69
+
+Estas prestaciones tercerizadas contemplan además desinfecciones periódicas en todos los sectores del área de servicios sociales, al tiempo que se cuenta con la asistencia de una empresa especializada para la recolección de residuos patológicos y personal para limpieza de salas funerarias y oficinas. Los servicios contratados también incluyen contratos de locación para el traslado.
+El mantenimiento de nichos requiere un relevamiento permanente para determinar su estado. Debido al paso del tiempo las metálicas de los ataúdes deben ser reemplazadas y para tal fin es necesario el consentimiento de los familiares. Teniendo en cuenta esta situación se implementó una campaña de comunicación para llevar a cabo un recambio de materiales. En aquellos casos en que no se presentaron descendientes se realizaron actuaciones notariales dando testimonio del procedimiento.
+La presentación de la Memoria y Balance a nuestros asociados tiene por objeto brindar información detallada para que cuenten con herramientas valorativas sobre el desempeño de los representantes en la gestión.
+Es así que con este documento, al finalizar el Ejercicio, apelamos a la voluntad de nuestros Delegados para acompañar con su aprobación la tarea realizada, en un marco de responsabilidad social.
+Solicitamos de este modo la aprobación de la presente Memoria y Balance, donde expresamos en hechos la voluntad de haber querido fortalecer a nuestra noble institución mediante acciones y decisiones iluminadas por el espíritu y los valores del cooperativismo.
+CAMPAÑA DE RECAMBIO DE
+METÁLICAS
+PALABRAS FINALES
+70
+
+71
+--- Fin del documento: Memoria 2022-2023.pdf ---
+
+
+--- Inicio del documento: Memoria 2023-2024.pdf ---
+NÓMINA DE AUTORIDADES DURANTE EL EJERCICIO
+2023 - 2024
+PRESIDENTE
+VICEPRESIDENTE
+SECRETARIO
+PROSECRETARIO
+TESORERO
+PRO-TESORERO
+VOCALES TITULARES
+SINDICO
+LARA PABLO
+MASSA DANIEL
+GOÑI IGNACIO
+COTIGNOLA FRANCISCO
+MENGARELLI DANILO
+PINTO ANA MARÍA
+BASSI GUSTAVO
+MONETTI EDGARDO
+RIMOLO MATEO
+MOLFINO RICARDO
+COOPERATIVA ELECTRICA DE SALADILLO L.T.D.A
+
+En la evolución de las instituciones y empresas cooperativas cada ejercicio contable que finaliza es tiempo de balances, económicos y contables, pero también del balance social que permite evaluar la responsabilidad frente a los socios y con su función social respecto a la sociedad en su conjunto, de quienes están a cargo del Consejo de Administración.
+Ese Balance Social que mide los beneficios adicionales a los meramente económicos que las cooperativas transfieren a sus grupos de influencia: socios, empleados y comunidad en su conjunto, se expresa en la Memoria y este documento representa además un material que año tras año va reflejando la historia de la entidad y el camino que ha recorrido.
+La presente Memoria que expone los resultados obtenidos en el octogésimo Ejercicio pretende también constituir un texto homenaje a los pioneros de la Cooperativa Eléctrica de Saladillo y a las mujeres y hombres que en estos 80 años han dado lo mejor de sí para que esta empresa haya podido trascender en el tiempo y proyectarse hacia el futuro.
+La actual conducción a cargo del Consejo de Administración, en el ochenta aniversario de la CES, eleva un especial reconocimiento a quienes han pasado por la vida política institucional, a su personal de estas últimas ocho décadas y, especialmente, a la comunidad de Saladillo que da razón de existencia a nuestra querida Cooperativa.
+CES
+La CES llega a sus 80 años de vida cumpliendo con el mito fundacional de los pioneros que la conformaron, aportar soluciones a su comunidad y ser promotora del desarrollo local, social y productivo.
+||| GRANDES HITOS DE LA CES | El surgimiento del cooperativismo en el sector del servicio de energía eléctrica en la Argentina ha tenido una impronta particular con respecto a lo sucedido en otros países, donde solía completar la obra estatal extendiendo las prestaciones a ámbitos rurales. Aquí, las cooperativas eléctricas se crearon en pueblos o ciudades pequeñas para competir y eliminar a las empresas que ya prestaban el servicio de manera deficiente. Al principio, con sus propias centrales de generación y distribución, luego incluidas en las redes nacionales, asumieron la distribución de la energía. Solo más tarde se plantearon extender la cobertura a la zona rural, pues a pesar de alguna iniciativa temprana, esto fue sobre todo desde las décadas de 1960-1970.
+En la provincia de Buenos Aires el 57% del mercado de distribución eléctrica es atendido actualmente por empresas privadas, pero un 43% es servido por 199
+cooperativas de servicios eléctricos y 1 sociedad de economía mixta. La mayoría surgió para atender a los centros urbanos del interior provincial, para extenderse luego a las zonas rurales circundantes.
+01
+PALABRAS INTRODUCTORIAS
+UNA HISTORIA CIRCULAR | Volver a las fuentes
+
+todas las instalaciones eléctricas en la provincia por parte de la empresa. Para 1953 tenían 450 acciones suscriptas, sin embargo, aún no poseían una usina propia, razón que al año siguiente llevó a pensar en la disolución de la Cooperativa, lo que no se concretó.
+Ese mismo año, luego de una década de gestiones, se hablaba en la Asamblea extraordinaria, del “tiempo cooperativista” y por fin se pudo realizar la compra de un lote al Municipio para instalar la usina (en pago de una parte de las acciones que suscribía). Por otro lado, la Cooperativa solicitaba a la CESA que les vendiera los edificios de la usina y redes distribuidoras.
+Al inicio de 1955 seguían las tratativas para comprar los equipos, ya que el Banco de Crédito Industrial les había negado un crédito para comprar equipos usados. Ya con el gobierno militar, debieron comprar un nuevo terreno frente al Ferrocarril porque los anteriores eran insuficientes. En 1956, la Federación Argentina de Cooperativas Eléctricas (FACE) intervino a favor de que se les otorgara el permiso de cambio para compras. Finalmente, en octubre de 1961 la
+Cooperativa se hizo cargo del servicio eléctrico local, como distribuidora y administradora de energía eléctrica. Un año más tarde se obtuvo el voto favorable para el convenio con la Dirección Eléctrica de Buenos
+Aires (DEBA).
+1965 // La adquisición de las redes distribuidoras junto a la compra posterior del terreno, permitió a la
+Cooperativa combinar en el año 1965 su accionar con la Dirección de Energía de la Provincia de Buenos
+Aires (DEBA).
+En esta dirección podemos ubicar la trayectoria de la
+Cooperativa Eléctrica de Saladillo que, como otras de la provincia de Buenos Aires, surgió en 1944 como reacción a las falencias de la Compañía Eléctrica del
+Sud Argentino (CESA) que brindaba el servicio en el casco urbano. Esta compañía integraba una empresa norteamericana, la Electric Bond and Share Company
+(EBASCO) que agrupaba varias sociedades anónimas, compañías eléctricas de los Andes, del Este, del
+Norte, del Centro y del Sud, bajo el apelativo de Grupo
+ANSEC.
+1944 // La Cooperativa Eléctrica de Saladillo (CES)
+fue fundada en una asamblea realizada el 21 de octubre de 1944, por un importante grupo de vecinos previsores que temían quedar sin servicio eléctrico al haber vencido y no renovado el contrato con la
+Compañía del Sur Argentino particular que hasta ese momento lo prestaba. La asamblea – 86 asambleístas - eligió un Consejo de Administración, estudió y aprobó un proyecto de estatuto social, e inició la venta de acciones.
+La reunión de vecinos tuvo lugar en el Centro de Comercio Propiedad e Industria local, entidad que apoyó la formación de la Cooperativa.
+La concreción de la usina propia se demoró bastantes años. En 1951 se dirigieron en carta a la Compañía del
+Sud Argentino, pero sin obtener respuestas. Mientras, seguían las tratativas con el gobierno de Domingo
+Mercante, aunque al año siguiente seguían sin obtener resultados, atribuyéndolo a la situación internacional, la falta de divisas y la suspensión momentánea de
+02
+CES
+
+Rural del país. Anteriormente se habían encarado obras a través de fuentes de financiamiento privadas u oficiales pero sin un plan nacional.
+Recién en 1973 se iniciaba el proceso en Saladillo en las pequeñas localidades rurales del partido, comenzando con Del Carril, para luego extenderse a Álvarez de Toledo y Polvaredas, para lo que se solicitó apoyo al Ministerio de Gobierno, que derivó la solicitud a DEBA. No obstante, ésta fue denegada. A la vez el problema iba ligado a otro -de candente actualidad aún hoy- como era el estado de los caminos rurales, muchos de ellos no asfaltados y que se afectaban seriamente en épocas de lluvias, lo que también retrasaba la concreción de las obras de electrificación.
+En octubre de 1974 un grupo de vecinos de la zona rural del partido contiguo de Roque Pérez solicitaron el servicio eléctrico a la CES por ser la única que podía llegar a la zona. Por este motivo, se hicieron las tratativas ante el Municipio con el fin de obtener el permiso correspondiente. La electricidad llegaría a
+37 familias, en una línea de 25 kilómetros. Asimismo se solicitaba nuevamente apoyo económico a DEBA
+para concretar la línea a Toledo y Polvaredas, recibiendo, en esta ocasión, una respuesta afirmativa y en enero de 1975 se inauguraba la instalación de la nueva línea. Mientras tanto, otros proyectos ocupaban a los miembros del Consejo de administración, en vistas a ampliar la acción de la Cooperativa. Uno de ellos fue el de instalar una planta pasteurizadora de leche.
+Con los permisos obtenidos y avances realizados en
+1972 se concretaron diversas gestiones y obras para la electrificación rural. En este sentido, en el paraje denominado La Campana se venían realizando reuniones con los vecinos desde hacía dos años, con el fin de extender el fluido. Esto se vinculaba con intereses propios de la localidad, porque había “un importante negocio de la zona” que tenía interés, a la vez que se afirmaba que se beneficiarían los vecinos que estaban sobre esa línea. Por este motivo, la CES estaba en contacto con el Comité de Electrificación Rural de la Provincia, ya que la zona entraría en el Plan de
+Electrificación Rural. Por otra parte, ese mismo año la
+Cooperativa Eléctrica de la localidad rural de Del Carril decidió traspasar la concesión del servicio eléctrico a la CES, a la vez entonces la Cooperativa apelaba a la Municipalidad de Saladillo para lograr que se ampliara la concesión a todo el partido. Esto, significaba un promisorio avance, ya que quedaría comprendida en los servicios la zona rural. Durante esta etapa la
+Cooperativa estaba asociada a Federación Argentina de Cooperativas Eléctricas (FACE), a la que llamaba su “entidad madre”, la que suministró apoyo económico en forma de préstamo para la electrificación rural.
+A su objetivo fundacional como federación de cooperativas la FACE anexó la ejecución del Plan de Electrificación Rural iniciado en 1970, en el que operó como canalizadora de los préstamos que el Banco Interamericano de Desarrollo otorgaba a través del Banco de la Nación Argentina y la Secretaría de Energía.
+Este fue el Primer Plan Nacional de Electrificación
+03
+CES
+
+segundo grado con radio de acción en la provincia de
+Buenos Aires, la Federación Interregional de Cooperativas Eléctricas (FICE), la CES se afilió a la misma.
+1982 // Se adquiere el fondo de comercio de una funeraria para crear CESPAZ, un sistema solidario de servicios sociales para propiciar igualdad de posibilidades a los Saladillenses.
+El área de Servicios Sociales de la CES desde su creación, el 1 de septiembre de 1982, se fue consolidando como un espacio para propiciar igualdad de posibilidades a los Saladillenses, quienes hasta entonces debían hacer frente a los servicios de sepelios sin contar con un sistema solidario. La apertura del sector coincidió con el interés de la familia Acquaviva de desvincularse del negocio, abriéndose la oportunidad de crear para la comunidad un sistema de adhesión voluntaria. Desde entonces CESPAZ asiste a sus asociados con la prestación de servicios de sepelios y nichos.
+Al tratarse de un sistema solidario, para acceder al servicio los adherentes abonan mensualmente una cuota mínima, que exime de todo gasto al usuario al momento de ser necesario un servicio. Esta actividad comercial impulsada por la CES está avalada por un importante número de clientes que requieren el asesoramiento y gestión. Para la prestación del servicio la entidad, a través de sus salas propias, pone a disposición vehículos equipados para el traslado.
+Sin embargo esta propuesta, que abarcó las discusiones de las próximas asambleas, no se concretó. Un año más tarde el 17 de marzo de 1976 fueron aprobados los estatutos, que debieron reformarse para adecuarse a la ley y a la normativa del Instituto Nacional de Acción Cooperativa (INAC), con lo cual quedaba reconocida su personería jurídica, llamándose Cooperativa Eléctrica y de Servicios de Saladillo ltda.
+Para 1983 la CES ya servía a los pueblos rurales de
+Del Carril, Polvaredas, Cazón, Reynoso y Esther, pero la población rural dispersa aún sufría fuertes deficiencias con un servicio no generalizado. En la década de
+1990 la privatización de los servicios públicos alcanzó a la electricidad, en el sector de generación, transporte y distribución, sin embargo “las cooperativas eléctricas fueron reconocidas en los marcos regulatorios provinciales como distribuidores concesionarios del servicio público de electricidad en virtud de su naturaleza, y de sus antecedentes históricos en la constitución y prestación del servicio eléctrico”.
+La Cooperativa Eléctrica continuó con su accionar sobre todo en reparación y mantenimiento del servicio en el medio rural, con colocación de reguladores automáticos de media tensión, cambio de postes de madera por columnas de hormigón, etc. A la vez se iba ampliando la cobertura en servicios a los asociados y diversificando los emprendimientos empresarios. Cuando surgió en 1994 una nueva entidad de
+04
+CES
+
+empresas prestadoras de un nuevo servicio que permitiría una conexión global nunca antes imaginada.
+Sin embargo este gran adelanto tecnológico, por su costo de desarrollo, era solo accesible para las grandes empresas ubicadas en las grandes urbes. Para las prestadoras de este nuevo servicio la inversión en las ciudades del interior no resultaba comercialmente viable, por lo que no existían posibilidades de que
+Saladillo contara con Internet.
+Ante esta situación la CES interpretó la necesidad de la comunidad como un mandato para instalar el primer espacio “navegatorio” de la ciudad y la región.
+De este modo con la adquisición del ancho de banda necesario y nuevas computadoras comenzó a brindar un servicio en el edificio del Consejo de Administración, adaptado para la nueva área.
+Los años 90 trajeron consigo la privatización de los servicios de telecomunicaciones en Argentina, un momento crucial que desencadenó la proliferación de proveedores de servicios de Internet. Esta apertura a la competencia no solo redujo los costos de conexión, sino que también allanó el camino para una adopción más amplia de Internet en hogares y negocios.
+Fue la Cooperativa Eléctrica quien tomó la iniciativa de desarrollar el servicio a principios del nuevo milenio, puesto que las empresas de alcance nacional no veían rentable la inversión en una ciudad como
+Saladillo. Con la compra de ancho de banda inició el negocio de distribuidor local, como prestadora del servicio de Internet dial-up, un sistema cuyas conexiones se realizan a través de una llamada telefónica local utilizando un aparato denominado módem o modulador/demodulador.
+De esta manera, desde hace 40 años CESPAZ acompaña a las familias del Partido de Saladillo en momentos de dolor, mediante un sistema que brinda igualdad de condiciones al momento de requerir un servicio.
+1995 // Se crea la unidad de negocios CESPRET, fábrica de pretensados de hormigón.
+En julio de 1995 entró en funcionamiento una fábrica de columnas y accesorios de hormigón premoldeados, denominada CESPRET que abastece las necesidades de la Cooperativa, pero también le permite ser proveedora de importantes distribuidoras del país y otras cooperativas con un portafolio de más de 500
+productos. El área genera fuentes de trabajo demandando mano de obra local y por lo tanto generando un beneficio social. En efecto, las cooperativas de servicios cumplen un rol social preponderante con respecto a los habitantes de las localidades en donde actúan, es decir que no se limitaron a brindar el servicio para el cual fueron inicialmente creadas, sino que fueron ampliándose constantemente hasta la actualidad. En las pequeñas y medianas localidades donde funcionan se convierten en la principal prestadora de servicios a la población y en el medio rural prácticamente en la única manera de acceder a los mismos.
+2000 // Se habilita el primer navegatorio de Internet de la ciudad - dial-up - que se pone a disposición de toda la comunidad.
+A fines de la década del noventa en Argentina irrumpe un nuevo modo de concebir la realidad, con la aparición de la “realidad virtual” que impone la Internet. Las grandes ciudades del mundo ven el surgimiento de
+05
+CES
+
+La avanzada de CESTEL en el mercado de las telecomunicaciones a nivel local fue progresiva, sumando adherentes a un servicio que se diferenció por ser de una empresa cooperativa local, comprometida con la calidad y formadora de precios en un rubro no regularizado, por entonces, por el Estado.
+El proyecto telefónico cooperativista contempló en sus inicios, para una primera etapa, la colocación de
+600 líneas en el microcentro de la ciudad, mediante el uso de una central telefónica propia.
+2013 // Se firma una carta de intención para llevar adelante proyectos de generación eléctrica a partir de la obtención de biogas.
+En el año del septuagésimo aniversario de su creación, como hito refundacional, la Cooperativa Eléctrica de Saladillo (CES) comenzó a volver a sus orígenes como generadora de energía en un nuevo contexto, con la intensión de gestar proyectos de gran envergadura orientados a la generación de “energías limpias”.
+La primera aproximación a la idea fue mediante la realización de estudios de pre factibilidad y la firma de una “carta de intención para llevar adelante proyectos de generación eléctrica a partir de la obtención de biogas” entre las autoridades de la CES y los titulares de las firmas radicadas en Saladillo y General Alvear,
+TRANSCOM y CARPANE del Grupo Riccillo.
+2004 // Con la compra de una central de telefonía se concreta la interconexión de CESTEL la red nacional de telecomunicaciones.
+A inicios del mes de mayo del 2004 la Cooperativa
+Eléctrica de Saladillo dio otro importante paso hacia la puesta en funcionamiento del servicio de telefonía al quedar sellado el contrato entre CESTEL y la empresa Telefónica de Argentina. En un acto celebrado en el edificio de la empresa Telefónica de Argentina, en el que participaron miembros de la Mesa Directiva de la CES se definieron los términos en que se llevaría adelante el acuerdo de interconexión entre la red de telecomunicaciones de esa prestadora nacional y la central de telefonía adquirida anteriormente por la
+Cooperativa de Saladillo.
+El primer contrato se extendió por tres años, y contemplaba que la empresa Telefónica de Argentina habilitara el uso de dos tramas, una de corta y otra de larga distancia, para que la Cooperativa pudiera conectar a sus usuarios con los usuarios telefónicos de otras empresas prestadoras del servicio.
+Si bien la firma del contrato representó una gestión formal, se convirtió en un hecho histórico, dado que con el acuerdo se cristalizó el sueño de contar con una empresa local prestadora del servicio, que en materia de comunicaciones contemplara las necesidades de los saladillenses.
+06
+CES
+
+Con una importante inversión CESTEL, el área de telecomunicaciones de la Cooperativa Eléctrica de Saladillo, en el mes de diciembre del 2014 conectó dos servicios de internet por fibra óptica directa, a modo de prueba, en una progresiva ampliación de su área de cobertura. El plan de obras contempló la posterior expansión de los servicios de telefonía e internet por medio de fibra óptica directa al hogar hasta barrios en los que no se brindaban, o a aquellos lugares en los que ya se brindaba servicio pero no había más capacidad disponible.
+A mediados del 2015 CESTEL se encuentra brindando servicio de Fibra Óptica al Hogar en la zona comprendida entre la Avda. Bozán y Ledesma, entre Moreno y Cabral. A su vez, ya ha finalizado la instalación de la fibra óptica en la zona del Barrio Cooperativa
+Esperanza, al igual que en la zona comprendida por
+Avenida Belgrano hasta Sanguineti y desde Saavedra hasta Cabral, entre la Ruta 205 y desde Saavedra hasta Sanguinetti entre la ruta y las vías, como también tendidos troncales finalizados en el Barrio de las
+272 viviendas.
+2018 // Se instala el primer sistema de generación de energía domiciliario, constituyéndose la CES en el primer usuario consumidor del Partido de Saladillo.
+En el año 2009 la Cooperativa Eléctrica de Saladillo celebró un convenio de promoción de estas tecnologías con el Ministerio de Planificación Federal y desde entonces con inversiones propias viene desarrollando un Plan de desarrollo de energías renovables generadas. Con este modelo en diciembre de 2018, se concretó la instalación en las oficinas de la CES
+El acuerdo de trabajar en conjunto para concretar el proyecto indicaba que se instalaría una planta para obtener biogás a partir de las excretas porcinas y bovinas de la empresa Transcom, pudiéndose utilizar además forrajes con el objeto de incrementar la generación, o sustituir las excretas de animales si el emprendimiento lo requiriera.
+2014 // Con una fuerte inversión en un plantel externo troncal de Fibra óptica la CES se convierte en la primera prestadora del servicio de Internet de Saladillo y la región en llegar con Fibra óptica directa al hogar.
+La tecnología de telecomunicaciones FTTH (del inglés Fiber To The Home), también conocida como fibra hasta la casa o fibra hasta el hogar, enmarcada dentro de las tecnologías, se basa en la utilización de cables de fibra óptica y sistemas de distribución ópticos adaptados a esta tecnología para la distribución de servicios avanzados, como el Triple play: que permite acceder a los servicios de Internet de alta velocidad, telefonía y video, a los hogares y negocios de los abonados.
+El uso de esta tecnología fue tomando fuerza, especialmente en Estados Unidos, Japón y países de
+Europa, donde muchos operadores incorporaron el servicio la fibra óptica con el objetivo de proponer servicios muy atractivos para el usuario (música, vídeos, fotos, etc.)
+07
+CES
+
+De este modo la CES concretaba un proyecto en el marco de las acciones para convertirse en una empresa privada, de gestión cooperativa, generadora de energías limpias.
+2021 // Se lanza el Proyecto de interconexión +
+RED.
+Con un trabajo interdisciplinario y promovido por todas las áreas de la CES se lanza el proyecto de interconexión integral eléctrica y de Internet de Fibra
+Óptica entre las localidades del interior. + RED establece el vínculo físico de servicios entre Saladillo, ciudad cabecera, con Álvarez de Toledo, Polvaredas,
+Del Carril y Cazón. Internet FOD | Tele medición |Seguridad.
+Tendido de 30 kilómetros de postación en hormigón pretensado y nuevas líneas de distribución de energía + Cerca de 75 Kilómetros de líneas de enlace de
+Fibra óptica, uniendo la Ciudad de Saladillo con las localidades de Toledo, Polvaredas y Del Carril, con una inversión global cercana a 1 millón 300 mil dó-
+lares.
+Ampliación de las capacidades técnicas de la red de distribución, con incremento cercano al 25 % en la capacidad de corriente, para la mejora de la calidad de servicio y producto, generando la factibilidad de alimentación a nuevos usuarios.
+de un sistema de generación de energía On Grid por medio de paneles fotovoltaicos en silicio policristalino de 13,44 kWp de potencia nominal.
+2020 // Se conecta al primer usuario particular generador domiciliario de Saladillo.
+En el mes de diciembre del 2020, en un contexto en el que las nuevas tecnologías aplicadas a la generación de energías limpias y renovables se afianzan a nivel mundial, la Cooperativa Eléctrica de Saladillo realizó la conexión del primer usuario generador de Saladillo, a partir del uso de fuente de energía solar. La experiencia del primer usuario prosumidor adoptó la modalidad de sistema “On Grid”, sistemas fotovoltaicos, en una iniciativa desarrollada como emprendimiento de interés del usuario en una zona en la que existía conexión a la red pública de electricidad.
+2021 // Se pone en marcha la planta generación de bioenergía del Grupo Riccillo.
+Con el apoyo y acompañamiento de la CES en la investigación y estudios de viabilidad previos, y aportes gestionados ante PROINGED (Programa Provincial de gestión Público-Privada dedicado al incentivo de la
+Generación Distribuida Renovable en todo el ámbito de la provincia de Buenos Aires) por el Grupo Riccillo, en el mes de diciembre del año 2021 se puso en marcha su planta de generación de bioenergía, ubicada en el partido bonaerense de General Alvear con la generación de 1MWh.
++ LINEAS
++ CALIDAD DE SERVICIO
+08
+CES
+
+Es la SOSTENIBILIDAD una palabra clave en este aspecto, pero como concepto en sentido amplio que abarca los campos de lo económico, social y ambiental.
+2023 // Inicio de obras en simultáneo para la construcción de dos nuevos parques solares en las localidades de Del Carril y Polvaredas.
+Una semana después de la inauguración del Parque
+Solar Saladillo I de Cazón, donde la Subsecretaría de energía bonaerense realizara el anuncio de la creación de dos nuevos Parque Solares en Del Carril y Polvaredas, más de ocho empresas que adquirieron el pliego para ejecutar la obra se reunieron para conocer los predios que la CES dispuso para dichos complejos energéticos.
+En el mes de febrero con la firma de las actas de inicio de obras entre el PROINGED y la empresa BGH, a cargo de la ejecución de los trabajos, la Cooperativa Eléctrica local da un nuevo paso a la generación de energía “limpia”.
+Los dos nuevos parques solares ubicados en las localidades de Polvaredas y Del Carril, novedosos por ser proyectados “con almacenamiento de energía en batería de litio”, han permitido a la Subsecretaría de
+Energía bonaerense - a través del PROINGED - avanzar con su plan estratégico para generar de energía mediante fuentes renovables.
+Estas obras ponen en marcha un cambio sustancial a la matriz energética del Partido de Saladillo, aportando además soluciones a la región. En primera instancia mejorando la calidad del servicio a los vecinos de las localidades del interior, pero también dotando de energía a la zona, creando las condiciones para la instalación de nuevos emprendimientos productivos.
+Nuevo servicios de Internet por fibra óptica de alta velocidad y estabilidad de CESTEL para los habitantes de las localidades del interior, con iguales prestaciones que en la ciudad cabecera.
+La Red de Fibra óptica permite la transmisión de datos para la incorporación de la “Telemedición” y la conexión de Cámaras de seguridad ubicadas en las localidades del interior, con el Control central de monitoreo ubicado en la ciudad de Saladillo.
+Con la mejora de la calidad del servicio eléctrico y el tendido de Fibra óptica se contará con servicios para empresas que deseen invertir en el interior del Partido de Saladillo. La obra contempla el tendido de una red de fibra óptica en la planta urbana de Del Carril.
+La optimización de la red eléctrica y las nuevas líneas para el servicio de Internet permitirá potenciar los proyectos productivos y educativos rurales en la zona.
+2022 // La CES vuelve a sus orígenes, convirtiéndose nuevamente en generadora – distribuidora de energía, al haber inaugurado su primer Parque de Generación de energía Solar en la localidad de Cazón.
+En su vida institucional la CES fue adaptándose a los diferentes contextos, modelos energéticos y demandas de la sociedad. Naciendo como generadora de energía en su vieja usina, pasando a ser meramente una distribuidora, en este nuevo siglo se ha reconvertido nuevamente en generadora de energía, con criterio sostenible.
++ PRODUCCIÓN
+09
++ IGUALDAD DE OPORTUNIDADES
++ INFRAESTRUCTURA
++ TECNOLOGÍAS
+CES
+
+en el Partido de Saladillo, utilizando los datos obtenidos en una torre de medición de vientos, propiedad de la Provincia de Buenos Aires instalada en el partido de Saladillo. Los fondos de los estudios iniciales han sido financiados con recursos del PROINGED.
+Las empresas son sistemas abiertos que están en continua interacción con el entorno. El contexto en el que desarrollan su actividad son todos aquellos factores fuera de los límites de la empresa o el conjunto de elementos externos a la organización que pueden afectar su actuación. Se trata del conjunto de factores que inciden directa o indirectamente en la formulación y logro de los objetivos de la organización.
+El análisis del contexto permite identificar, entender y dimensionar las relaciones o niveles de incidencia que dichos factores ejercen sobre la empresa, pudiéndose así evaluar el desempeño de la gestión o comprender el momento en el que se han tomado las decisiones.
+Para hacer el análisis del contexto es importante contemplar aspectos básicos como lo político-legal, económico, socio-cultural y tecnológico, sin embargo en
+Argentina el político y económico, con énfasis particular en su macroeconomía son los factores de mayor preponderancia.
+Las localidades del interior del Partido de Saladillo se verán beneficiadas con el fortalecimiento del flujo de energía inyectada desde esos puntos, sin embargo ambas obras serán un aporte sustantivo al sistema eléctrico en general.
+En Del Carril, el Parque Saladillo II, cuenta con una potencia fotovoltaica nominal de 500 kWp y un banco de baterías de aproximadamente 1300 kWh nominales, considerando una profundidad de descarga del
+80%. Mientras que para el caso de Saladillo III, en
+Polvaredas, la capacidad del parque solar es de 250
+kWp y su banco de baterías correspondiente de 650
+kWh, también considerando una profundidad de descarga del 80%.
+Para ambas localidades, el pliego de la licitación contempla el almacenamiento de energía a partir de baterías de litio, con sus respectivos cables y terminales adecuados para la potencia del sistema a instalar sobre racks, lo que los distingue de otros Parque Solares construidos hasta el momento.
+Los Parques solares gestionados desde la CES son viables con el compromiso puesto de manifiesto por el Foro Regional Eléctrico de Buenos Aires (FREBA)
+para potenciar la matriz energética de Saladillo.
+Más allá de posicionarse como empresa distribuidora líder en el país, como generadora de energías
+“limpias” al contar con tres Parques Solares, la CES
+busca fortalecer su proyecto por lo que de manera simultánea a la concreción de esos parques ha presentado un pedido de factibilidad para un proyecto de generación eólica de 10,8 MW de potencia y una producción anual neta de energía generada de 44,9
+GWh, mediante la instalación de 3 aerogeneradores
+10
+CONTEXTO DE GESTIÓN
+CES
+
+El desarrollo de las actividades de la CES se dio en un contexto inflacionario que se intensificó hacia diciembre del 2023 por el efecto de una devaluación de la tasa de cambio oficial y la eliminación de controles de precios. La inflación mes a mes alcanzó su punto máximo en un 25.5 por ciento en diciembre del
+2023, disminuyendo al 13.2 por ciento para febrero.
+El gobierno implementó medidas de protección social que incluyeron duplicar en términos nominales los principales programas sociales (asignación universal por hijo y apoyo alimentario) y bonos extraordinarios a jubilados de bajos ingresos. Sin embargo aunque la asistencia social esté bien dirigida, se observó que el valor real de los beneficios sociales, incluidas las pensiones y transferencias sociales, cayó un 30 por ciento interanual para febrero de 2024.
+En cuanto a los subsidios el objetivo del Gobierno entrante fue pasar de un esquema generalizados a otro focalizado, en el que se tenga en cuenta los ingresos del hogar, la cantidad de miembros y la zona bioambiental del país en la que viva. Este nuevo esquema impactó sobre el negocio de una de las áreas más importantes de la CES, dado que la quita de subsidios no representa o no reporta incrementos en los ingresos de los distribuidores, debido a que si bien facturan mayores importes, también les aumenta en la misma proporción los costos de adquirir la energía eléctrica en el Mercado Mayorista.
+La particularidad del Ejercicio que se presenta en esta
+Memoria está dada en el plano político por la existencia de dos modelos de gestión del Estado Nacional diametralmente opuestos en lo ideológico y en la manera de pensar la economía. Al inicio del Ejercicio gobernaba un Frente electoral con políticas en las que el Estado estaba presente regulando las actividades económicas, con un esquema de subsidios a los usuarios de servicios públicos como energía eléctrica y gas, entre otros. En el segundo semestre del transcurso del Ejercicio el Ejecutivo nacional pasó a manos de un gobierno conformado por una alianza electoral política que planteó un cambio drástico de modelo de gestión, a partir de ideales libertarios que proponen un esquema de desregulación del mercado, presencia del Estado y profundos cambios en el esquema de subsidios.
+En el plano macroeconómico, según un informe del
+Banco Mundial la economía se contrajo en un 1.6 por ciento en 2023, debido a desequilibrios macroeconó-
+micos persistentes y a una severa sequía que provocó una disminución del 26 por ciento en la producción agrícola respecto al año. Asimismo el documento estima que el PIB real se contraiga un 2.8 por ciento adicional en 2024, debido al plan de estabilización que está siendo implementado por el nuevo gobierno, que incluye el realineamiento de precios relativos y la eliminación de desequilibrios fiscales y externos. El documento estima que la economía crezca un 5 por ciento en 2025, impulsada por condiciones climáticas mejoradas, inversiones en el sector energético y la normalización de la producción agrícola.
+11
+CES
+
+Puesto que la elección de los integrantes del Consejo de administración es una de las principales funciones de la Asamblea General, en un acto con la presencia de los Delegados, las autoridades de la CES dieron cumplimiento a las presentaciones de los documentos correspondientes al último año contable.
+Lo especial de esta Asamblea estuvo dado en que con el inicio del nuevo Ejercicio la Cooperativa inicio un camino rumbo a la celebración de su optagésimo aniversario. En la reunión se presentaron la Memoria y el Balance que como novedad, y conforme a la política de sustentabilidad que impulsa la empresa, es totalmente digital, pudiéndose acceder a la misma desde el sitio web de la CES.
+Ante el contexto descripto durante el desarrollo del
+Ejercicio que se presenta los cuatros sectores que forman parte de la actividad de la Cooperativa Electrica de Saladillo debieron afrontar escenarios de alta inflación. Este aspecto se visibiliza en que si se debe actualizar a valores corrientes los importes del primer mes del Ejercicio en cuestión y llevarlo a los valores del mes de cierre del mismo, se lo debe multiplicar por 3,49. Estos valores, que surgen del IPC (Índice de Precios al Consumidor), tornan incomparables a los distintos parámetros con Ejercicios anteriores, sin un ajuste por inflación mediante. No obstante es importante destacar la situación económica particular de cada uno de los sectores que integran la actividad de la CES, puesto que el impacto no ha sido de igual magnitud en cada uno de ellos.
+En el cooperativismo el Consejo de Administración es el órgano responsable de la gestión de las operaciones sociales y administrativas de la entidad, siempre en el marco del estatuto, las resoluciones y directivas de la Asamblea, la ley vigente y las resoluciones emitidas por el órgano de control.
+GESTIÓN POLITICA
+12
+CES
+
+empresa enfocado en la plena participación de los
+Jefes de Áreas en el desarrollo de las operaciones y de las actividades. De esa manera se tomaron decisiones sobre distribución y asignación de recursos, control de las operaciones y diseño de acciones correctivas.
+En cuanto al vínculo con la comunidad y sus instituciones fueron también los integrantes de la Mesa
+Directiva los responsables de comunicar e informar sobre la marcha de la empresa y las decisiones adoptadas.
+Como parte de la puesta en acción del principio de integración la CES forma parte de Federaciones, con el fin de aportar mejoras a los intereses de sus miembros y sus comunidades, colaborando por todos los medios con otras cooperativas.
+En el transcurso del Ejercicio que se presenta la
+Cooperativa Eléctrica de Saladillo fue sede del primer encuentro del año de la Asociación Prestadores
+Eléctricos de la Provincia de Buenos Aires (Apeba), actividad encabezada por integrantes de la mesa directiva del organismo que contó con la participación de otros importantes dirigentes del sector eléctrico cooperativo bonaerense.
+Entre las ciudades representadas por sus distribuidoras ante la Federación están las Cooperativas Eléctricas de Azul, Olavarría, Necochea, Tres Arroyos,
+Tandil, Colón, Luján, Nueve de Julio, Pergamino,
+Saladillo, Salto, San Pedro, Zárate y Chacabuco, teniendo a su cargo la prestación del servicio eléctrico de 440.000 usuarios bonaerenses.
+13
+De acuerdo a lo fijado por el orden del día se proclamó la única lista que, por finalización de mandato de los
+Consejeros Rubén Ugartamendía y Amilcar Wuiovich contó con el ingreso de dos nuevos asociados, Edgardo Monetti y Mateo Rímolo, al tiempo que confirmó la continuidad en sus cargos de los Consejeros
+Pablo Lara, Ignacio Goñi, Francisco Cotignola, Daniel
+Massa, Pinto Ana María, Danilo Mengarelli, Gustavo
+Bassi y, en calidad de Síndico, a Ricardo Molfino por un nuevo período.
+En la gestión cooperativa el Consejo de Administración es quien debe fijar las políticas y las estrategias correspondientes, trazar planes de acciones pertinentes para cada área, asumir cualquier responsabilidad inherente a la conducción y, cumplimentar las prescripciones estatutarias. Habitualmente el cuerpo colegiado instruye al gerente para ejecutar o resolver a través de sus colaboradores inmediatos, las decisiones y directivas emanadas del Consejo de Administración.
+Durante el último año de gestión fue la Mesa Directiva la responsable del manejo integral de la empresa. Tomando un rol gerencial el presidente del Consejo asumió la responsabilidad del cargo, siendo acompañado por los demás integrantes del Consejo de Administración en la toma de decisiones estratégicas.
+El proceso de gerenciamiento por parte del Consejo de Administración, centrado en la responsabilidad de la mesa Directiva, impulsó un reordenamiento de la
+GESTIÓN COOPERATIVA
+CES
+ELECCIÓN DE CONSEJEROS
+
+14
+En el encuentro se expuso la situación de las distribuidoras cooperativas integrantes de Apeba y las líneas de acción para la gestión conjunta a corto y mediano plazo. Al respecto desde la CES se elevaron inquietudes puestas de manifiesto por usuarios y autoridades locales relevadas durante una serie de reuniones que la conducción de la Cooperativa ha mantenido con diferentes sectores de la comunidad.
+La Federación APEBA está integrada por un grupo de entidades unidas por un interés común, para afrontar los desafíos del sector, mediante la participación activa de sus integrantes y en defensa de sus comunidades.
+El servicio eléctrico en la Provincia de Buenos Aires es brindado por Distribuidoras Provinciales y Municipales a más de 2.000.000 de usuarios (exceptuando a los pertenecientes de Distribuidoras de Jurisdicción
+Nacional).
+Las cooperativas poseen una serie de principios y valores distintivos que las convierten en el mejor modelo económico para conseguir una sociedad más justa y sostenible. Estos valores son los de ayuda mutua, responsabilidad, democracia, igualdad, equidad y solidaridad. En relación a este último desde la CES se acompaña a la comunidad con diferentes acciones y
+Programas de compromiso social. Esta actitud suele trascender las fronteras del orden local, mediante la asistencia cuando alguna entidad hermana atraviesa situaciones de crisis debido a alguna contingencia.
+Durante el desarrollo del Ejercicio que se expone, un trágico temporal afectó al sur bonaerense dejando sin servicio de energía eléctrica a una amplia zona, dado que el viento afectó las redes de distribución de luz dejando sin electricidad a varias ciudades. Ante la situación, junto a otras cooperativas de la Provincia de
+Buenos Aires, una cuadrilla conformada por operarios de CES Energía acudió a asistir a la comunidad de
+Punta Alta. El equipo viajó para prestar servicio en la zona fuertemente afectada por el temporal, con un equipo de hidrogrúa para realizar trabajos de recomposición de líneas de distribución.
+ACCIÓN SOLIDARIA
+CES
+
+Durante el Ejercicio que se presenta la Cooperativa ha ratificado su compromiso con la seguridad del Partido de Saladillo mediante la incorporación de nuevo equipamiento y la ampliación de la conectividad hacia las localidades del interior.
+La seguridad pública además de contar con los aportes de la CES para su sistema de monitoreo, durante el presente Ejercicio ha sumado obras de infraestructura vial, con la concreción de la obra de iluminación de un tramo de la Ruta Nacional N205, comprendido entre los kilómetros 177.500 y 180.500, en inmediaciones al acceso a la ciudad.
+La obra se concretó por contrato de “Ejecución-mano de obra y materiales de la iluminación” mediante un acuerdo con el municipio de Saladillo y contempló la instalación de columnas de iluminación de 2,5 metros entre sí cada 36 metros con módulos de 250W.
+15
+El personal de CES Energía se puso a disposición de jefe del centro de operaciones desde donde se asignaron las tareas a las diferentes cuadrillas de otras
+Cooperativas que se sumaron al trabajo de restitución del servicio de una vasta zona del Partido bonaerense.
+La conducción de la Cooperativa Eléctrica ha realizado numerosas reuniones a fin de mantener un vínculo fluido con las autoridades municipales y de diversos organismos y entidades con representación en la comunidad. A partir de diferentes negociaciones y encuentros se lograron definir temas de fundamental importancia para el crecimiento del Partido de Saladillo.
+Saladillo en materia de seguridad se ha convertido en una de las ciudades bonaerenses con una red de monitoreo más desarrolladas. Este logro se sustenta en un convenio entre el Municipio local y la CES, quien aporta sin cargo el uso de su fibra óptica como medio de transmisión de los datos que demandan las cámaras de seguridad.
+VINCULO CON ORGANISMOS Y ENTIDADES
+SEGURIDAD PÚBLICA
+CES
+
+En cuanto a inversiones en obras de ampliación y potenciación de la red de distribución con impacto comunitario, durante el transcurso del Ejercicio que se presenta se realizó un importante trabajo sobre lí-
+neas de media tensión en el barrio falucho con el fin de adaptar el tendido para que pueda inaugurarse un nuevo Centro de Salud.
+Las nuevas instalaciones del CAPS Asencio Ibarbia son el resultado de la articulación entre la provincia y el municipio y la CES, con una inversión total del Estado provincial de 190 millones de pesos que dotó al centro de salud con consultorios de atención general, odontología y ginecología; enfermería y vacunatorio; y un salón de usos múltiples.
+La inversión ejecutada por CES Energía además de servir al nuevo CAPS con la potencia necesaria para el funcionamiento de la aparatología, contempló un rediseño de la red de distribución que ante contingencias en el servicio de energía permitirá realizar maniobras técnicas.
+16
+La Provincia de Buenos Aires está construyendo edificios en diferentes municipios destinados a centralizar las delegaciones de organismos públicos bonaerenses en un solo lugar, con el objetivo de acercar al Estado provincial a la comunidad, facilitar la realización de trámites administrativos y mejorar las condiciones de trabajo del personal.
+Contribuyendo para que este proyecto se concrete en Saladillo desde CES Energía se han realizado trabajos para la potenciación de la obra de energía eléctrica que servirá al edificio en construcción donde funcionará la Casa de la Provincia de Buenos Aires.
+Se trata de una inversión que contempla la ampliación de la potencia en la red de distribución y una nueva configuración de la misma que facilitará las maniobras en caso de ser necesario, frente a posibles contingencias y generará alivio a los equipos instalados en la actual disposición, lo que redundará en mejora de la calidad de servicio para los usuarios en general.
+GESTIÓN CIUDADANA
+CES
+
+Desde CES Energía se puso en marcha la campa-
+ña “Cuando apagas, ahorras” promoviendo medidas que permitan a los usuarios realizar un mejor uso de los recursos energéticos y de esa manera evitar altos consumos y por lo tanto elevados montos en las facturas del servicio.
+Con la difusión de material gráfico y una intensa campaña comunicacional en los Medios y redes sociales se sugirió a los usuarios mejorar los hábitos de consumo de energía eléctrica. Estas campañas se acentuaron en épocas del año de temperaturas extremas y especialmente ante el cambio de tarifas ejecutado por el gobierno nacional y provincial.
+Mediante diferentes herramientas comunicacionales y como acción de acompañamiento a los usuarios del servicio de energía se realizaron campañas informativas, con la generación de material didáctico en
+17
+Frente a los cambios en el esquema de subsidios a los consumos de energía eléctrica y la actualización tarifaria que afectó a diferentes segmentos de usuarios, dando respuesta a la solicitud de información requerida por un grupo ciudadanos autoconvocados, autoridades de la CES brindaron detalles requeridos en cuanto a cómo está conformado el cuadro tarifario y las diferentes regiones en que se divide la provincia, de qué manera el Estado nacional y provincial fijan las tarifas y cómo deben ser aplicadas por las distribuidoras, conforme a lo que regula el organismo de control por tratarse de un servicio público regulado por el Estado.
+La acción permitió a los usuarios conocer el funcionamiento de un sistema energético en el que CES Energía tiene la responsabilidad de tomar medidas en el ámbito local para ayudar a quienes más lo necesiten, para lo que desde la Cooperativa existe una permanente lectura y análisis de la situación económica y social que le facilita la conducción tomar decisiones al momento de acompañar a los asociados.
+CAMPAÑA DE USO RACIONAL DE LA ENERGIA
+CES
+CAMPAÑA POR SEGMENTACIÓN
+GESTIÓN COMUNITARIA
+
+no existe un sindicato específico. Estos empleados negocian su remuneración y beneficios directamente con el empleador.
+Esta situación, que históricamente ha generado dificultades a la gestión para lograr condiciones igualitarias y justas, especialmente para quienes ocupan puestos jerárquicos, ha sido abordada durante el
+Ejercicio que se presenta con la entrada en vigencia de un Acuerdo Laboral del Personal Fuera de Convenio específico para la Cooperativa Eléctrica de Consumo y Otros Servicios de Saladillo Ltda.
+El documento contractual ha sido desarrollado contemplando las características de la estructura orgánico - funcional de la cooperativa y de los contratos colectivos de trabajo de aplicación vigente en el ámbito de la CES. El acuerdo arriba a una verdadera planta de cargos del personal fuera de convenio (incluyendo funciones a desempeñar, evaluación, categoría resultante, sueldo básico), lo cual constituye el eje central del mismo.
+Entre las ventajas del citado acuerdo, puede mencionarse que resulta beneficioso para los trabajadores que se encuentran fuera de convenio, ya que el acuerdo es atractivo y, eso, implica mejores RRHH
+para la Cooperativa.
+18
+diferentes soportes, advirtiendo sobre el impacto que generaría el aumento de tarifa eléctrica en Provincia de Buenos Aires, y la necesidad de encontrarse bien encuadrados para mantener el beneficio del subsidio a quien le correspondiera.
+Parte de las intervenciones de CES Energía se orientaron a ayudar a los usuarios a comprender el funcionamiento del Registro de Acceso a los Subsidios a la
+Energía (RASE)
+Si bien la empresa genera empleo directo para más de un centenar de trabajadores, vinculados con relación de dependencia, y la mayoría se encuentra encuadrada en algún convenio colectivo de trabajo, conforme a las tareas que desempeñan, existen algunos que están fuera de convenio. Un empleado fuera de convenio es aquel cuyas condiciones laborales no están reguladas por un sindicato. Esto generalmente incluye a personal jerárquico y a aquellos en roles donde
+CES
+GESTIÓN DE PERSONAL
+
+Con la asistencia del Grupo GC, consultora externa enfocada en la gestión y mejora de procesos empresariales, mejora de productividad y eficiencia operativa contratada por la CES, se impulsó un proceso de organización administrativa, comercial y operativa.
+Dicha planificación se completó con el armado estructural del Área Tesorería y Finanzas, dependiente de la Administración Central, avanzando en el diseño y redacción de los procedimientos de “Planificación Financiera” (PE CES 8.4-04) y “Régimen de Caja Chica o Fondo Fijo” (IT CES 8.4-03).
+||| Gestión de compras | La Gestión de Compras en la CES cuenta con un área específica que se ocupa de la búsqueda, selección, negociación, seguimiento y control de los agentes externos (proveedores) de materiales (productos, insumos, equipos, maquinaria, repuestos y materiales generales) y servicios que la empresa necesite para el cumplimiento de sus fines.
+El sector es responsable de una fórmula de equilibrio que integra bienes de alta calidad y que reúnan las especificaciones que la empresa demanda, cumpliendo con los requerimientos operativos de la organización.
+19
+Asimismo evita discrecionalidad en los sueldos y condiciones de contratación del personal fuera de convenio, pero, al mismo tiempo, deja margen de acción para la gestión (los básicos establecidos son los mí-
+nimos para cada categoría); como también evita, a lo largo del tiempo y por la existencia del COOP y sus cláusulas de actualización, negociaciones salariales particulares y; premia el cumplimiento real de objetivos de trabajo de interés para la CES.
+Con un modelo de gestión en la que la Mesa Directiva gerencia el funcionamiento operativo y la planificación estratégica de la Cooperativa, la nueva conformación del cuerpo colegiado ha dado continuidad a los Proyectos institucionales en marcha y planificado nuevas iniciativas en las diferentes áreas de servicios y producción. Como eje transversal a la totalidad de los sectores este Consejo, en materia de control de gestión, avanzó en el diseño, implementación, seguimiento y medición de indicadores y metas de desempeño de los principales procesos y áreas de la CES
+(CES Energía, CESTEL, CESPAZ, CESPRET y Administración Central), con el objetivo último de preparar el Cuadro de Mando Integral de la Cooperativa, aún en desarrollo.
+GESTIÓN ADMINISTRATIVA
+CES
+
+Trabajando en equipo, junto al responsable de sector y responsable de seguridad e higiene, se instalaron cámaras de seguridad en los edificios de Belgrano
+Nº 3384, Sarmiento Nº 3347, 12 de Octubre Nº 2984.
+En cuanto al Sector de Servicios Sociales se realizaron gestiones de compras para la finalización del
+Panteón 68 e inicio del Panteón 69. Además se acompañó con la adquisición de insumos y elementos para la mejora del sistema de calefacción/aire acondicionado de todas las salas, en tres de ellas, instalándose además un nuevo equipo frio calor, a fin de brindar un mejor servicio.
+Asimismo se acompañó en el proceso de adhesión al sistema Farcam, para adquirir una nueva unidad
+Toyota Hiace Furgon 0 km, con el fin de reemplazar la unidad actual.
+En CESPRET se asistió a la gestión administrativa para las compras del sector, en relación a los materiales solicitados, de acuerdo a los pedidos del período, registrándose en este Ejercicio la normalización de la entrega de la trenza, material crítico para producción, como así también del resto de los materiales necesarios para la fabricación de columnas y otros productos de la fábrica.
+En un proceso de expansión territorial del área de telecomunicaciones, desde la oficina de compras se asistió intensamente en la adquisición de insumos,
+20
+Es así que la tarea implica una articulación permanente con las diferentes áreas de la Cooperativa y que, durante el desarrollo del Ejercicio que se expone en esta Memoria, contempló la continuidad de una línea de trabajo orientada a la búsqueda de la unificación de las compras, seguimiento, control hasta el ingreso del bien/es a la CES, como también su administración para el procesamiento, dejando todos los comprobantes desde la comparativa hasta su pago, disponibilizados en el Sistema, generando de ese modo transparencia y buen funcionamiento al sector.
+Como acción trascendental del área, durante el Presente Ejercicio se realizó la contratación en forma externa, del desarrollo informático de un Módulo de Solicitudes de Compra, sobre un nuevo entorno web, con el objetivo de sistematizar las actividades inherentes a la detección de necesidades de compra de bienes y/o contratación de servicios y su solicitud a los responsables de efectuar la gestión de dichas operaciones. El módulo en desarrollo articulará sus operaciones con la posición de inventarios, por un lado, y con el Módulo de Órdenes de Compra, por el otro.
+Recibiendo la demanda de todos los sectores de la empresa, el Departamento de compras en el transcurso de este Ejercicio, asistió al área de Seguridad e higiene para brindar buenas condiciones al personal en el ambiente de trabajo, conforme a las pautas que establece el protocolo en cada área.
+CES
+
+medioambiental. Es una empresa creada en los valores del cooperativismo, con principios acordados internacionalmente para construir un mundo mejor a través de la equidad, la igualdad y la justicia social.
+Gracias a estos valores, las cooperativas de todo el mundo permiten a la gente trabajar junta para crear empresas sostenibles que generan prosperidad.
+Más allá de ser una empresa privada que genera fuentes de trabajo directos e indirectos la CES orienta sus Proyectos al desarrollo local, social y productivo, destinando recursos a sus Programas integrales con políticas universales para la asistencia de necesidades sociales y, por otra parte, fomentar el desarrollo cultural con acciones concretas en el área de la educación y las artes.
+Los Proyectos que la CES tiene en marcha, y que se describen en esta Memoria, se enmarcan en políticas con continuidad en el tiempo y son impulsadas desde el Consejo de Administración, a partir de lineamientos que aseguren su universalidad.
+Los Programas institucionales de la CES son coordinados por un equipo transdisciplinario desde la
+Secretaría del Consejo de Administración en conjunto con el área de Relaciones institucionales y la de
+Trabajo Social. De manera interrelacionada el trabajo se orienta a promover la participación organizada de
+21
+equipos y todo lo necesario para la concreción de las nuevas obras de red troncal con tendido de fibra óptica desde Saladillo a Toledo, desde Toledo a Cazón y desde allí a Del Carril, tendido de fibra óptica en la planta urbana en Del Carril y todo lo inherente al buen funcionamiento del sector.
+||| SOSTENIBILIDAD ECONÓMICA Y SOCIAL | La
+Cooperativa Eléctrica nació de su gente. Fueron los vecinos de una incipiente ciudad quienes con visión de futuro y un claro compromiso de responsabilidad social, hacen hoy 80 años, acordaron poner esfuerzo y compromiso para el bienestar y el desarrollo de Saladillo, y la mejora de la calidad de vida de su gente.
+Desde su fundación, teniendo por estandarte los valores de la cooperación, la CES apuesta al desarrollo económico desde una perspectiva integral, sostenible y en armonía con el bienestar local. Así, en cada una de las localidades donde está presente no llega solo como una prestadora de servicio, sino como parte activa de esa comunidad, con Programas y Proyectos que buscan impactar de manera positiva.
+La CES, como empresa privada de gestión cooperativa, es un motor natural de asociación colaborativa y prosperidad para todos, dado que las cooperativas desarrollan la sostenibilidad económica, social y
+CES
+GESTIÓN SOCIAL Y COMUNITARIA
+
+del aspirante, y sus posibilidades de continuar los estudios superiores. A partir del estudio, todos los años la Cooperativa selecciona a quienes serán los beneficiarios de las becas.
+El sistema de selección de los estudiantes es exigente en cuanto requiere que los jóvenes cumplan con su condición de alumnos regulares y la aprobación de un mínimo de materias, sin embargo estas pautas permiten a la institución ser justa con los que no logran acceder a las becas por una cuestión de cupos.
+En el transcurso del ciclo lectivo comprendido durante el desarrollo del Ejercicio que se expone se ha acompañado a estudiantes que siguen las carreras de informática, psicología, arquitectura, medicina, nutrición, ingeniería en sistemas, ingeniería agrónoma, ingeniería química, ingeniería industrial, ciencia de datos de las organizaciones, veterinaria, artes visuales, derecho y educación física.
+BECADOS GRADUADOS
+Cada título que obtiene un beneficiario del Programa de Becas de la CES es un aliciente para sostener dicho incentivo vigente. Cuando estos estudiantes se gradúan y regresan a Saladillo lo hacen con conocimientos para contribuir al desarrollo social y productivo de toda la comunidad.
+22
+personas, grupos y comunidades para mejorar su calidad de vida, a partir de acciones a nivel individual, familiar, grupal y comunitario, buscando favorecer el ejercicio, la rehabilitación y el desarrollo de conductas participativas.
+||| Programa Becas de estudio | En el marco del programa institucional de fomento de la educación, un nuevo año se entregaron las becas a jóvenes que cursan carreras universitarias. El Programa de becas de la Cooperativa Eléctrica de Saladillo se orienta a contribuir al desarrollo de las personas, dando oportunidades a jóvenes que desean realizar estudios terciarios y/o universitarios.
+Como es tradición cada año al inicio del ciclo lectivo, con una charla informativa sobre los alcances del Programa institucional, padres y alumnos beneficiados participaron de una reunión en la que además se hizo la primera entrega de la ayuda que la CES realiza de manera mensual.
+Durante el ciclo lectivo concordante con el Ejercicio que en esta Memoria se expone se asistió a 30 estudiantes. El Programa de becas instrumentado desde la CES se concreta a partir de las solicitudes que presentan los estudiantes interesados en recibir apoyo.
+Dicha solicitud es evaluada por una asistente social que analiza la situación socioeconómica de la familia
+CES
+
+Con este concepto desde la CES, a través del área de
+Recursos Humanos y las jefaturas de los diferentes sectores de servicios y producción se articulan visitas guiadas de jóvenes estudiantes del medio local.Este tipo de visitas son muy frecuentes con estudiantes de carreras técnicas que ven en la CES oportunidades de salida laboral, y durante las cursadas de sus tecnicaturas, un espacio de aprendizaje. Si bien la CES es una empresa que representa, más allá de lo técnico, un modelo de gestión por tratarse de una cooperativa, para los alumnos que cursan modalidades como
+Maestro Mayor de Obra, Programación o Electromecánica, es además un entorno productivo en el que se puede aprender.
+||| Programa de pasantías | Como acción de intercambio interinstitucional y en el marco de un proyecto de pasantías que se impulsa desde la Cooperativa
+Eléctrica de Saladillo (CES), alumnos de la Escuela
+Técnica Nro. 1 de Saladillo tuvieron durante el desarrollo del Ejercicio una experiencia en calidad de pasantes en CESTEL.
+La actividad se desarrolló durante un trimestre y en el marco de un proyecto de integración que busca potenciar las habilidades de las personas bajo la modalidad de prácticas profesionalizantes.
+23
+Durante el Ejercicio que se describe Horacio Tiseira ha obtenido su título de Profesor en Artes Plásticas, con orientación en dibujo, mientras que Gastón Serrani se convirtió en Ingeniero Aeroespacial, logrando su título universitario en el Departamento Aeronáutico de la Facultad de Ingeniería de la Universidad de La
+Plata.
+Las visitas a empresas son experiencias vivenciales sobre el funcionamiento real de un entorno productivo para los estudiantes, y un método que permite el contacto con las empresas donde se desarrollan las tareas que han servido de contenido para el aprendizaje en las aulas.
+CES
+INTERACCIÓN EDUCATIVA
+
+Su misión se orienta a contribuir a mejorar las condiciones de vida de las personas con discapacidad intelectual y/o psicosocial, promoviendo el conocimiento y desarrollo de sus competencias para su desempe-
+ño en ámbitos de trabajo reales.
+El Programa propone una mirada integral de la persona, con aceptación de las diferencias, fomentando el respeto por el otro y el trabajo en equipo.
+El funcionamiento operativo de “CRECES” se sustenta en la adhesión a Programas de inclusión laboral estatales, como también de entidades de bien público y/o Fundaciones, contemplados en la legislación vigente. Para la inserción de cada persona se contempla la celebración de un convenio, acuerdo o contrato en particular, articulando con las instituciones a las que esté vinculada dicha persona, ya sean Escuelas
+Especiales, Talleres Protegidos u otros organismos y entidades públicas y privadas.
+24
+De esta manera los estudiantes interactuaron en el ámbito de la Cooperativa realizando tareas que les permiten adoptar saberes como experiencia previa para en un futuro insertarse en el mercado laboral.
+La actividad es pensada desde la Cooperativa en el marco de otras acciones que buscan potenciar el desarrollo de las personas, ya que de esa manera se fortalece también el sistema educativo.
+Desde el año 1997 la Cooperativa Eléctrica de Saladillo (CES) viene realizando un trabajo de integración, incorporando como práctica de inserción laboral a grupos de alumnos de la Escuela Especial Nº501,
+Escuela Técnica, Centro de Formación Rural y CETIDIM, entre otras instituciones.
+||| Programa CRECES | El Programa “CRECES” de la
+CES tiene por objetivo brindar oportunidades de inserción laboral para la promoción de la inclusión de las personas con capacidades especiales, a partir de la perspectiva transversal de Derechos Humanos, contemplando al desarrollo laboral de las personas como un Derecho.
+CES
+
+Con los beneficios que otorga la Cooperativa Eléctrica las instituciones hacen uso de ancho de banda del servicio de CESTEL para el desarrollo de sus actividades operativas que demanden conectividad.
+De esta manera el Programa de “Inclusión Digital” de
+CESTEL se presenta como un Programa Universal de asistencia social que la Cooperativa impulsa para facilitar a las organizaciones de la sociedad civil el acceso a Internet. Con este Programa la Cooperativa ratifica su estrategia de sustentabilidad al poner el foco en la capacidad de las personas, organizaciones y redes que potencian la creación de valor compartido a través de conexiones robustas, dinámicas y sostenibles.
+|| Programa Tercer Tiempo | El deporte como herramienta de contención social se visibiliza en las escuelas de fútbol de los clubes de barrio. Además de formarse en la práctica deportiva cientos de niños y pre adolescentes periódicamente son acogidos al finalizar los entrenamientos con un refrigerio.
+En Alianza social con instituciones deportivas del medio local, para la contención de niños y jóvenes, la Cooperativa Eléctrica de Saladillo impulsa el Programa ‘Tercer tiempo: un momento para compartir’.
+Se trata de una ayuda económica a clubes sociales y deportivos para garantizarles la merienda a los niños y niñas que concurren a sus escuelitas de fútbol.
+25
+Desde hace algunos años CESPRET mantiene un estrecho vínculo con las entidades educativas, con la realización de visitas guiadas en la planta de producción y hasta con la incorporación de alumnos de la Escuela de educación Especial a su planta permanente. En estos casos los chicos son preparados para trabajar a la par del resto de los operarios.
+A través de un estudio pre-ocupacional se entrevista a los aspirantes y después de un período de adaptación, si están conformes con la tarea a desempeñar, son efectivizados bajo el convenio de trabajo en el que se encuentran contratados los operarios, recibiendo los beneficios salariales y sociales al igual que sus compañeros de planta.
+|| Programa CESTEL en tu Escuela | En cumplimiento de sus objetivos de compromiso social, y atendiendo a una necesidad comunitaria, la CES implementa el Programa “Inclusión digital”, orientado a brindar servicio de Internet con abonos especiales a instituciones sin fines de lucro, organizaciones no gubernamentales y establecimientos educativos que brindan servicios y desarrollan actividades comunitarias en la
+Ciudad de Saladillo.
+CES
+
+Con ese espíritu durante el Ejercicio que se expone
+Cooparte, el Programa de fomento de la cultura, que alberga en su seno múltiples disciplinas y actividades a modo de centro de cultura, cumplió 10 años de existencia. En el camino recorrido fue mutando conforme a las inquietudes de los artistas locales y a situaciones de coyuntura.
+Su creación, en el año 2013, convocó a la comunidad artística a generar un punto de encuentro en el que la CES se prestaba como colaboradora brindando las instalaciones y los recursos para realizar encuentros mensuales con diferentes expresiones. Fueron los músicos, artistas plásticos, actores, creativos, fotó-
+grafos quienes propusieron sus inquietudes y desde la CES se los acompañó con la logística y recursos para dar forma al espacio.
+26
+El desarrollo de este proyecto de responsabilidad con la comunidad tiene como finalidad generar espacios de integración social, dando respuesta a problemáticas emergentes que afectan a los más pequeños insertos en espacios deportivos, y que se encuentran en situación de vulnerabilidad económica y social. El
+Programa elaborado con el aporte profesional de la asistente social de la CES, al igual que el de Becas, cuenta con un reglamento de funcionamiento que propicia la igualdad de aportes a las entidades deportivas.
+|| Programa Cooparte | Las prácticas colaborativas en la cultura y el arte motorizan un trabajo colectivo de creación donde lo relevante es la presencia de la comunidad a través de grupos de interés que, a partir de la sumatoria de sus saberes específicos, construyen de manera cooperativa espacios de crecimiento y desarrollo de las personas.
+CES
+
+saberes y oportunidades laborales para artistas con capacidad de enseñanza abriendo las puertas a elencos teatrales, corales y agrupaciones de danzas de diferentes géneros y hasta de sectores académicos y educativos que cuentan con el espacio para actividades de capacitación.
+Durante el Ejercicio que aquí se presenta se desarrollaron innumerables actividades, es así que pensando en el incentivo de la creatividad y generando oportunidades para la enseñanza de conocimientos y habilidades con potencial de salida laboral, se abrió el espacio a un Taller de Telar, orientado a la enseñanza del tejido en diferentes soportes de telares aztecas, circular y bastidor.
+Al mismo tiempo se realizaron Seminarios con referentes internacionales de diferentes disciplinas del arte que llegaron a Cooparte de la mano de los profesores de los Talleres, destacándose el seminario “el abrazo como punto de encuentro” a cargo del bailarín, coreógrafo y maestro de tango, Jonathan Spitel.
+Considerado por el público y por sus pares uno de los mejores del mundo.
+27
+Poco a poco artistas con conocimientos pedagógicos y capacidad de enseñanza encontraron en Cooparte un lugar para el dictado de cursos, seminarios y hasta la realización de encuentros. De esta manera nacieron los “Talleres para Cooparte” que con una cuota mínima mensual generó oportunidad de trabajo a profesores de danzas, teatro, pintura, dibujo, fotografía y otras áreas de expresión artística.
+A través del tiempo el Programa institucional ha creado vínculo con otras entidades y grupos de interés artístico, firmando convenios de reciprocidad para que los mismos hagan uso del espacio, o mediante aportes y beneficios para el desarrollo de sus actividades.
+Durante la Pandemia del COVID – 19 Cooparte se convirtió en un espacio virtual, para “estar cerca manteniendo la distancia” con la realización de Streaming en conjunto con la Asociación de Músicos Independientes MUSAI, llevando arte local al mundo vía Internet, con el auspicio de CESTEL, y generando espacios de recaudación de fondos para la entidad que nucleaba a los músicos locales.
+Con el levantamiento del aislamiento y la denominada
+“vuelta a la normalidad” el espacio se afianzó con un nuevo formato denominado “Lado B”, a través del cual brinda sin cargo todo el apoyo de infraestructura, logística y servicios necesarios para la creación, por autogestión, a todos aquellos que soliciten el beneficio.
+De manera simultánea los Talleres para Cooparte se han convertido en un espacio de intercambio de
+CES
+
+La jornada de capacitación e intercambio entre integrantes del ensamble, con más de 65 clarinetistas, estuvo a cargo del Maestro Bojorquez quien dictó su clase virtualmente desde Mexico, para que los asistentes pudieran hacer una introducción a la Técnica
+Alexander para clarinetistas, y la reeducación como herramienta para la prevención de lesiones con una clase especial.
+El Ensamble de Clarinetes de la Provincia de Buenos
+Aires (ECpBA) es un proyecto pedagógico-artístico que reúne a clarinetistas profesionales, estudiantes y aficionados provenientes de distintos puntos de la
+Provincia. Tiene por objetivo, tanto el crecimiento y perfeccionamiento técnico e interpretativo del ejecutante, como así también el desarrollo artístico y pedagógico que brinda el aprendizaje de tocar en grupo realizando conciertos abiertos al público.
+28
+Sus giras internacionales hacen que el tango Argentino sea muy esperado en diferentes continentes como
+Asia, Europa y América. Como coreógrafo, bailarín y director de ballet ha desarrollado su talento en diferentes continentes representando al tango y a la argentina.
+La actividad de extensión contó también con el desarrollo de un seminario internacional de clarinetes, con la llegada de un contingente de clarinetistas, en el marco de las actividades previstas para la XVII Convivencia clarinetística de Saladillo, coordinado por Julieta Ugartemendía.
+CES
+
+Desde el 2015 LAM organiza este encuentro/festival/
+fiesta en la que elencos de distintas partes de nuestro país se hacen presentes para mostrar su arte en su sala y es ahí donde, una vez más, está la CES acompañando las iniciativas artísticas y culturales que le permiten a Saladillo proyectarse.
+De esta manera Cooparte es el espíritu vivo de la
+Cultura local. La CES ha interpretado que la Cultura tiene un rol clave en la construcción de comunidades más enriquecidas, resilientes e integradas. Visibilizar y fortalecer la cultura local democratiza su acceso, promueve expresiones comunitarias y ofrece oportunidades de desarrollo.
+En forma ininterrumpida Cooparte se ha convertido en un espacio para el desarrollo de las personas con inquietudes artísticas, fomentando la profesionalización de diversas disciplinas y creando oportunidades laborales para los profesionales del ámbito de las artes.
+29
+En la disciplina danza el Taller a cargo del profesor e intérprete Martín Del Valle realizó seminarios y una master Class de bachata a cargo de la profesora profesional Marina Abrego, bailarina con experiencia a nivel internacional en Europa y México donde ha participado de diferentes eventos y competencias.
+Extramuros la gestión cultural de la CES proporciona herramientas para el impulso cultural desde diversas áreas, con la finalidad de promover, mantener y resaltar las diferentes expresiones culturales en el conjunto de la sociedad. De manera constante CESTEL
+le pone fibra a cada proyecto que impulsa el Multiespacio LAM y durante el desarrollo del Ejercicio que se expone brindó, un año más, soporte de ancho de banda al encuentro de teatro “Luz de Sala”, evento que reunió a elencos teatrales de toda Provincia de
+Buenos Aires.
+CES
+
+“Los Gingos”, el diseño de gráficas “Mil y un valores”, y la creación de una secuencia de jingles musicales con contenido orientado a brindar sugerencias para ahorrar energía y el cuidado físico de las personas al utilizarla.
+El material musical es el soporte de una campaña radial, disponible además en el sitio web de la CES, para los establecimientos educativos de nivel inicial y primario interesados en desarrollar el tema de sustentabilidad y cuidado del medioambiente, haciendo partícipes a los niños y a sus docentes.
+La obra de teatro, sus canciones y todo el material didáctico se encuentra disponible en las plataformas virtuales de la CES y el área de vínculo con la Comunidad de la Cooperativa dispuesta a coordinar encuentros y actividades con los establecimientos educativos.
+30
+Es por todo esto que llega a su primera década creando un espacio en el que los asociados de la CES, y la comunidad toda, viven una experiencia diferente de vínculo con la Cooperativa.
+||| Proyecto de educación ambiental | Pensando en la sustentabilidad y en la formación de los más peque-
+ños la CES puso en marcha su campaña “Mejor energía” orientada a brindar herramientas didácticas para que los niños y niñas de nivel inicial conozcan el modelo de generación de energías limpias y aprendan a hacer un uso seguro y racional de la energía eléctrica.
+La campaña se sustenta en el desarrollo de charlas para alumnos de salita de 4 y 5 años nivel de inicial en el auditorio de la Cooperativa. La acción de responsabilidad social se enmarca en un trabajo integral que desde el área de Energía de la Cooperativa se viene impulsando a partir de la creación de la obra de teatro infantil “Un Click” y composición de canciones junto a
+CES
+
+31
+Pequeños cuidados es el nombre de una campaña de prevención de la CES para los más chicos. De manera simultánea al desarrollo del Proyecto de educación ambiental la Cooperativa Eléctrica cuenta con una campaña preventiva de seguridad.
+Estar atentos es el primer paso para evitar accidentes es por eso que, con el fin de concientizar a la ciudadanía y cuidar la vida de los usuarios, propiciando el cuidado físico de las personas y de la comunidad en la que se presta el servicio.
+La acción está orientada a la prevención haciendo partícipes a los niños, proponiendo material didáctico desde el sitio web de CES Energía https://www.
+coopsal.com.ar/seguridad.php con el aporte de una didáctica galería con divertidas sugerencias para los más pequeños.
+En el sitio los docentes cuentan con videos y gráficas en las que se abordan aspectos relacionados a la seguridad en la vía pública, y el uso consiente y racional de la energía.
+Los contenidos han sido desarrollados por artistas locales por iniciativa de la CES pensando en los niños y niñas que asisten al nivel inicial y primario.
+||| Ciencia y Tecnología | En el mes el noviembre del
+2023 una asociación civil saladillense puso en marcha la primera exposición interactiva en innovación, tecnología, emprendedurismo y ciencia de la región.
+El principal objetivo de la organización fue promover y divulgar, desde temprana edad, el conocimiento como pilar del crecimiento sostenible de nuestra comunidad y sociedad en general.
+Compartiendo objetivos con la Asociación, desde un primer momento la CES se comprometió en patrocinar la realización del evento en calidad de sponsor y acompañar con logística de ancho de banda y mejoras en materia de redes de energía para que se desarrollara la expo.
+CES
+CAMPAÑA DE USO DE LA ENERGIA
+
+32
+Asimismo, como empresa privada de gestión cooperativa la CES formó parte de la agenda de charlas presentando su proyecto de energías limpias.
+La solidaridad como valor surge voluntariamente en la CES con la disposición para aunar esfuerzos con respecto a necesidades o intereses de las entidades de bien público de Saladillo. Si bien no existe a nivel institucional un Programa que defina las políticas de ayuda a las ONGs permanentemente se da respuesta a pedidos coyunturales de las mismas.
+El acompañamiento se concreta con bonificación de servicios que la CES presta a las instituciones, con el aporte de recursos económicos, donaciones de equipos e insumos y hasta actividades de capacitación por parte de profesionales de la Cooperativa al personal de las entidades de bien público.
+En el Ejercicio que aquí se expone se concretaron donaciones de equipos, altiempo que profesionales de la CES brindaron capacitación de a bomberos de
+Saladillo.
+Entre la Asociación de Bomberos Voluntarios y la Cooperativa Eléctrica de Saladillo existe un vínculo diario, propio de entidades que están al servicio permanente de la comunidad.
+Habitualmente, como servidores públicos, asisten a los vecinos en situaciones de emergencia y ese trabajo lleva a los bomberos y al personal de la CES a compartir situaciones de riesgo. Teniendo en cuenta experiencias compartidas personal de la Cooperativa
+Eléctrica local brindó una capacitación sobre riesgo eléctrico y corte seguro de sumistro eléctrico a los domicilio”.
+Los contenidos de formación contemplaron “el riesgo eléctrico, distancias de seguridad, niveles de tensión, identificación de las líneas, EPP requeridos para las maniobras” y la presentación de un “procedimiento de trabajo seguro para maniobrar en las líneas de energía ante emergencias”.
+Donación de equipos y elementos: Para actuar en contingencias en las que existen líneas eléctricas o elementos con tensión se requieren equipos y elementos especiales, es por eso que la Cooperativa
+Eléctrica ha donado al cuerpo activo de Bomberos un detector de tensión a distancia (baja/media tensión), guantes de guantes dieléctricos, guantes de protección mecánica y una tijera para pértiga Bahco.
+CES
+ACCIÓN SOLIDARIA
+
+33
+Ese valor construido y compartido voluntariamente entre grupos de personas u organizaciones con respecto a fines, necesidades y aspiraciones comunes mediante compromisos recíprocos asumidos individualmente como responsabilidades propias, se manifiesta también en los entornos educativos.
+Es a las escuelas y a sus cooperadoras que se acompaña con beneficios especiales, a través de los Programas institucionales de la CES, y mediante donaciones específicas que surgen como respuesta a las demandas de los establecimientos educativos.
+Durante el Ejercicio que se expone, a través de su
+Consejo de Administración, la CES colaboró con escuelas del distrito que manifestaron su necesidad de ayuda económica para la compra de materiales, concretándose la entrega de insumos a sus directivos.
+|| Trabajo Social | En el campo de lo social la CES
+ha generado Programas culturales, deportivos, artísticos y productivos orientados a la inclusión social, la equidad, la generación de oportunidades y el desarrollo social de las personas de diferentes grupos de interés.
+La importancia que reviste para la Cooperativa el área social conlleva el trabajo con los sectores de la comunidad más vulnerables. Para el diagnóstico de situación y llegar a quienes necesitan gestiones especiales, la CES cuenta con una Asistente Social que cumple una diversidad de roles que traducidos al quehacer diario se cumplen en acciones como orientadora, educadora, coordinadora, gestora y planificadora.
+Desde el área se realizan diagnósticos socio-ambientales para diferentes problemáticas, aportando información ante las demandas de los pacientes electro dependientes, con problemas de salud (no incluidos en electro dependientes) y vecinos en situación de vulnerabilidad que gestionan beneficios en la CES.
+Con el trabajo de la profesional se evalúan además las solicitudes de becas universitarias al tiempo que se acompaña a los becados en el proceso de estudio para que cumplan con los requisitos para acceder al beneficio que otorga la CES.
+CES
+
+34
+De manera colaborativa el área trabaja con el sector de Recursos Humanos en la confección, control, sistematización de los legajos del personal de la CES y con el área de Relaciones Institucionales en la recepción de solicitudes y coordinación para la realización de talleres, charlas, conferencias y otras actividades.
+La sostenibilidad ambiental representa una forma de convivir en equilibrio con nuestro entorno y prevenir una escasez que puede poner en riesgo la humanidad, lo cual hace de este tema algo necesario para cada persona, organización y gobierno dentro del planeta.
+La gestión ambiental y desarrollo sostenible son las dos caras de una misma moneda, un conjunto de estrategias que tiene como finalidad crear un menor impacto de las actividades humanas en el medio ambiente y hacer el desarrollo económico más sustentable. Con ese espíritu la CES trabaja en sus diferentes áreas de servicios y producción procurando minimizar el impacto negativo sobre el ambiente, sin dejar de crear políticas de desarrollo económico y social.
+Considerando que la gestión ambiental es el conjunto de acciones que se realizan para prevenir, mitigar y corregir los impactos negativos que las actividades humanas generan sobre el medio ambiente en la
+CES se trabaja desde el área de Recursos Humanos y Seguridad e Higiene en la implementación de pautas y procedimientos que contribuyen al equilibrio medioambiental. Estas acciones abarcan desde la planificación, el diseño, la ejecución, el seguimiento y la evaluación de proyectos, hasta la educación, la sensibilización y la participación del personal de la
+Cooperativa, dado que la gestión ambiental efectiva implica tener en cuenta los principios de precaución, prevención, responsabilidad compartida, equidad intergeneracional e intrageneracional, y desarrollo sostenible. Estos principios orientan la toma de decisiones y la implementación de medidas que buscan armonizar el desarrollo económico, social y ambiental.
+|| Programa + Energía | Se denomina “energías renovables” o “limpias” a aquellas fuentes energéticas basadas en la utilización del sol, el viento, el agua o la biomasa vegetal o animal, entre otras. Se caracterizan por no utilizar combustibles fósiles – como sucede con las energías convencionales -, sino recursos capaces de renovarse ilimitadamente.
+CES
+GESTIÓN MEDIOAMBIENTAL
+
+35
+Los pronósticos en materia de nuevas tecnologías indican que espera que en el año 2030 el 34% de la electricidad mundial provenga de energías renovables, como la eólica y solar, y que en el año 2040 este porcentaje llegue al 50%. El futuro de la energía solar fotovoltaica es por lo tanto prometedor y representa una alternativa sostenible, limpia y sin apenas mantenimiento y que ofrece muchos beneficios, siendo los más importantes la no emisión de gases nocivos a la atmósfera y el ahorro.
+Con estas perspectivas al mediano plazo la CES es pionera en el ámbito de la Provincia de Buenos Aires con la puesta en marcha de su Programa “+ Energía”
+que posee en marcha un parque solar en la localidad de Cazón y en construcción avanzada dos nuevos complejos ubicados en las localidades de Del Carril y Polvaredas.
+Los avances en materia de energía solar son constantes, y lo que era impensable hace pocos años ya es realidad. La investigación en nuevos materiales está permitiendo fabricar células fotovoltaicas más económicas y tecnologías de almacenaje con mayor capacidad.
+En un modelo de futuro inmediato la generación distribuida o descentralizada reconvertirá la actual matriz energética y Saladillo, con las iniciativas de CES
+Energía, también es pionera.
+En la ciudad ya existen sistemas de usuarios con capacidad de inyectar energía a la red, como lo hace desde algunos años el sistema instalado en las oficinas de la administración central de la CES.
+La generación distribuida o descentralizada consiste en la generación de energía eléctrica mediante muchas pequeñas fuentes de generación que se instalan cerca de los puntos de consumo (micro generación).
+La generación distribuida está basada en la cooperación entre los micros generadores y la generación de las centrales convencionales, mediante el uso de las energías renovables.
+Un año después de inaugurado el Parque Solar Cazón que opera la Cooperativa Eléctrica de Saladillo está funcionando con excelentes resultados. Según los registros que arroja la telemedición el complejo solar está generando la energía suficiente para abastecer a la localidad de Cazón con energías limpias y un excedente que le permite “exportar 57 kW por fase hasta la ruta 205”.
+CES
+BUENA ENERGIA
+
+36
+El Parque de la Cooperativa Eléctrica de Saladillo, así como otros proyectos, se concretó con compromiso del Programa Provincial de Incentivos a la Generación
+Distribuida, de manera conjunta con el Foro Regional
+Eléctrico de Buenos Aires (FREBA) e implica además un trabajo con las autoridades del municipio, que en este caso, ha aportado el predio para la instalación de los paneles, cuyo potencial de generación está previsto en los 330 kWp. La planta posee un total de 550
+paneles solares de 600w capaces de generar 330Kwp pico y que, mediante un sistema de inversor y transformador, inyecta la energía generada a la red de distribución local.
+Este sistema se complementará con lo que generen los dos nuevos parques en construcción, financiados con recursos del agregado tarifario gestionado en forma conjunta entre la Subsecretaría de Energía de
+Buenos Aires, el Foro Regional Eléctrico (FREBA) y el Programa de Incentivos a la Generación Eléctrica
+Distribuida (PROINGED) de la Provincia de Buenos
+Aires.
+Las obras en marcha contemplan la construcción en
+Del Carril del Parque Saladillo II, con una potencia fotovoltaica nominal de 500 kWp y un banco de baterías de aproximadamente 1.300 kWh nominales, considerando una profundidad de descarga del 80%.
+Mientras que para el caso del Saladillo III, en Polvaredas, la capacidad del parque solar se estima en los
+250 kWp con un banco de baterías de 650 kWh, también considerando una profundidad de descarga del
+80%.
+De esta manera, ocho décadas después de su fundación, con el Parque Solar en pleno funcionamiento y dos en marcha, la Cooperativa vuelve a sus orígenes, convirtiéndose nuevamente en generadora – distribuidora de energía.
+La actividad impulsada desde la Asesoría Letrada representa una labor estratégica, en cuanto de la misma depende el orden legal de la institución. Con el crecimiento que ha manifestado en los últimos años la Cooperativa, la consulta jurídica se ha intensificado notablemente. En tal sentido, además del seguimiento de las causas que involucran a la entidad, desde el área a cargo de la abogada Natalia Renzi se ha realizado un intenso apoyo técnico profesional.
+CES
+ASESORIA LETRADA
+
+37
+Si bien la asesoría profesional comprende el acompañamiento en cuestiones legales al Consejo de Administración, en la práctica las tareas realizadas desde el área implican además el abordaje de aspectos jurídicos generales que afectan a las diversas áreas de servicios y producción de la CES, en temas reglamentarios y operativos, y que demandan un abordaje o revisión profesional.
+En cuestiones operativas la asesoría letrada ha intervenido en la resolución de conflictos entre trabajadores y de carácter gremial, habiendo logrado resolver diferencias, siempre en post del bienestar tanto de los mismos como, especialmente, en beneficio de la
+Cooperativa.
+Como parte del trabajo se continuó litigando en juicios iniciados por distintos trabajadores, habiendo salido, en el corriente año, sentencia favorable en primera instancia en el juicio por cumplimiento de contrato efectuado por un trabajador, siendo confirmada dicha sentencia por la Cámara de Apelaciones y habiendo quedado firme la misma. El reclamo inicial de la acción de referencia era de $ 10.433.350,41, suma que actualizada a la fecha por inflación daría un total de más de cien millones de pesos ($100.000.000) que la
+Cooperativa no tuvo que abonar por las resoluciones favorables dictadas por los mencionados organismos del estamento judicial.
+Cumpliendo con el mandato y facultades otorgadas para representar a la Cooperativa ha participado en el cierre de acuerdos, convenios y/u otros instrumentos jurídicos, en post de darle un marco legal a cada una de las decisiones tomadas por el Consejo de administración en concordancia con la legislación vigente, salvaguardando los intereses de los usuarios y la responsabilidad de los consejeros.
+La tarea impulsada en el Ejercicio que en la presente Memoria se expone, en un contexto de grandes cambios en el sistema eléctrico, especialmente en el esquema de subsidios y tarifas, con una situación de deuda por parte de las distribuidoras, tuvo énfasis en el seguimiento de la situación con CAMMESA (Compañía Administradora del Mercado Mayorista Eléctrico Sociedad Anónima). La gestión por parte de la asesoría letrada se orientó realizar presentaciones, contestaciones, recursos administrativos y/o judiciales y medidas cautelares, entre otras.
+Por otra parte durante el transcurso del Ejercicio que se expone se debieron realizar gestiones para la renovación de dos documentos contractuales fundamentales, como los son la Licencia Técnica y el Contrato de concesión del servicio de energía eléctrica.
+CES
+
+38
+En tal sentido desde la asesoría letrada se impulsaron las gestiones para la presentación de la documentación requerida para la renovación de la Licencia Técnica que le permite a CES Energía operar el servicio público de distribución de energía eléctrica en el
+Partido de Saladillo. La normativa establece módulos de información que deben acreditar los concesionarios municipales para obtener la renovación de su
+Licencia Técnica. El procedimiento, a efectos de verificar el cumplimiento de los recaudos exigidos, da intervención a la Dirección Provincial de Energía, a la
+Dirección Provincial de Regulación y al Organismo de
+Control de Energía de Buenos Aires (OCEBA).
+En relación al Contrato de concesión, autorización otorgada por el Poder Ejecutivo municipal, con aprobación del Concejo Deliberante a la distribuidora para prestar el servicio público de distribución y comercialización dentro del área, desde la asesoría letrada se impulsaron las gestiones ante la Municipalidad de Saladillo -Poder Concedente-, para obtener la prórroga de la concesión para brindar el servicio de energía eléctrica por el término de 30 años. Sin la descripta concesión la Cooperativa no podría operar como prestadora del servicio eléctrico, razón por la cual, es por demás importante haber logrado la prórroga sin haber habido, por parte del poder concedente, obstá-
+culo, restricción y/o impedimento alguno.
+En la administración de empresas el área de recursos humanos (RRHH) se orienta a la organización del trabajo que aporta el conjunto de los colaboradores.
+Como parte de la gestión el área de incumbencia en la CES se ocupa de seleccionar, contratar, formar, emplear y retener a los colaboradores de la entidad.
+El objetivo básico del área es alinear bajo las directrices políticas de la Cooperativa a su personal con la estrategia de la organización, lo que permite desarrollar un proyecto, a partir de las personas, para enfrentar los desafíos que plantea la competencia comercial. Es imprescindible resaltar que no se administran personas ni recursos humanos, sino que se administra con las personas, viéndolas como agentes activos y proactivos dotados de inteligencia, creatividad y competencias.
+En el área de RRHH de la CES se realizan tareas de reclutamiento y selección, contratación, inducción, capacitación, administración y gestión del personal, como también la atención permanente de inquietudes y peticiones del personal.
+CES
+DESARROLLO DE LAS PERSONAS
+
+39
+Para poder ejecutar la estrategia de la organización es fundamental la administración de los Recursos humanos, para lo cual se deben considerar conceptos tales como la comunicación organizacional, el liderazgo, el trabajo en equipo, la negociación y la cultura organizacional.
+El objetivo principal de esta área es apoyar la política de la entidad mediante diversas acciones que alinean el desarrollo del personal con los objetivos y direcciones de cada área de la empresa. Para garantizar transparencia y uniformidad en los criterios y procesos, la gestión del área se sustenta en los procedimientos institucionales CES, que facilitan y clarifican ciertos procedimientos desde el marco legal vigente.
+De esta manera, se trabaja en atender las inquietudes del personal para satisfacer sus necesidades, coordinando y ejecutando la selección de nuevos ingresos.
+En los aspectos administrativos desde el área se controlan y respaldan las novedades relacionadas con la liquidación de haberes, se registran, controlan y entregan los recibos de sueldos, atienden consultas de índole sindical, supervisando las inspecciones de los organismos de control, al tiempo que se gestionan las inspecciones de ART, SRT, Ministerio de Trabajo y organismos provinciales de desarrollo sostenible.
+También es responsabilidad del sector administrar los legajos del personal, registrando toda la información necesaria para agilizar la documentación a lo largo de la vida laboral, participar en la resolución de conflictos laborales, controlar los horarios del personal, gestionar el control, registro y estadística de licencias, adelantos, ausentismo, vacaciones, jubilaciones, despidos y retiros.
+Para el cuidado físico de las personas se llevan a cabo y da seguimiento a las denuncias de accidentes laborales, mientras que en cuanto a las presentaciones que respaldan y mantienen la gestión de prevención del personal, se han ejecutado y actualizado las declaraciones juradas (DDJJ) que aseguran la funcionalidad y cumplimiento en materia de prevención, vinculando a la ART en servicio en aspectos como exámenes médicos periódicos y acompañamiento ante posibles enfermedades profesionales.
+Durante el desarrollo del Ejercicio que esta Memoria expone desde el área se ha cumplido íntegramente con la realización de los exámenes médicos periódicos para todo el personal involucrado, así como con los exámenes médicos establecidos en los convenios colectivos de trabajo (C.C.T.) correspondientes, incluyendo también los exámenes psicotécnicos.
+CES
+
+40
+A traves de la implementación y/o ampliación de medios tecnológicos (ampliación de flota con localizadores satelitales sobre los vehículos e implementación en algunos establecimientos y ampliación en otros, de cámaras de vigilancia y control, se mejoró la gestión del área, aportando detalles sobre controles y seguridad en la totalidad de los establecimientos de la CES.
+El virus que causa la gripe suele cambiar de cepa año tras año. Normalmente llega a nuestros primeros fríos el virus que atacó Europa en el último invierno. Por eso los países del hemisferio sur cuentan con la posibilidad de una vacuna preventiva antes de que se manifiesten los primeros casos.
+Como cada año, desde la CES se ha impulsado una nueva campaña de vacunación para su personal, de carácter voluntaria, como acción de cuidado de la salud de todos los que trabajan en la entidad.
+La vacunación contra la gripe, según afirman los infectólogos, “es muy importante en los grupos de riesgo porque previene la enfermedad y además, disminuye enormemente posibles complicaciones”.
+Además, campañas realizadas anteriormente han permitido mejorar el presentismo entre el personal de la Cooperativa.
+||| SEGURIDAD E HIGIENE |
+Si bien se trata de una disciplina específica con un área a cargo de profesionales especializados para hacer efectiva la gestión de la seguridad e higiene, en la CES esta actividad está vinculada al área de recursos humanos, por lo que durante el transcurso del Ejercicio que se expone se trabajó sobre el diseño de prácticas basadas en la capacitación y la puesta en práctica de protocolos, como también en el cumplimiento de las leyes y normas sobre el ambiente laboral y las personas.
+La seguridad e higiene en el ámbito laboral es el conjunto de conocimientos y técnicas dedicadas a reconocer, evaluar y controlar aquellos factores del ambiente, psicológicos o tensionales, que provienen del trabajo y que pueden causar enfermedades o deteriorar la salud.
+CES
+GESTIÓN DE NOVEDADES Y ACOMPAÑAMIENTO
+EN LOS CONTROLES
+CAMPAÑA ANTRIGRIPAL
+
+41
+Dado que es política de la CES actuar tomando todas las medidas necesarias para proteger la seguridad y la salud de sus trabajadores, reduciendo al máximo el efecto adverso a la salud, que resulten como consecuencia de su labor, durante el Ejercicio que se expone se han implementado medidas y controles preventivos en materia de sanidad, orientados a promover el bienestar físico, mental y social de los trabajadores.
+En cumplimiento con la Ley 19.587 se han llevado a cabo acciones para asegurar un adecuado funcionamiento en la distribución y características de los edificios de trabajo, garantizando condiciones óptimas de higiene y seguridad. De manera periódica, se han realizado mediciones y estudios para determinar indicadores que faciliten la prevención y permitan a los trabajadores desempeñarse en condiciones deseables.
+Asimismo se han mantenido los servicios de desinfección periódicos, brindados por una empresa habilitada para procedimientos relacionados a prevención ante insectos como de otros vectores indeseados.
+Es importante destacar que, a lo largo del año, se trabaja siguiendo los parámetros establecidos por la Ley
+19.587 y sus decretos reglamentarios, especialmente en lo relacionado con mediciones y estudios que promueven la prevención y aseguran condiciones laborales adecuadas para los trabajadores.
+En ese marco se realizaron y/o actualizaron estudios de carga de fuego, estudios ergonómicos integrados, como también controles preventivos en diversas áreas en los puestos de extintores según normas
+IRAM, supervisión y reposición de botiquines de primeros auxilios, tanto en puestos fijos como en mó-
+viles, inspección y mantenimiento de vehículos para optimizar las condiciones de circulación conforme a la normativa de tránsito vigente.
+También se ha ejecutado el control de los sistemas de iluminación de emergencia, verificación de los elementos de protección personal, inspección de instalaciones y tableros eléctricos, con la elaboración
+CES
+
+42
+de informe sobre la implementación de cartelería de seguridad según la norma IRAM 10005, al tiempo que se llevaron a cabo las renovaciones de las mediciones reglamentarias, de acuerdo con los requerimientos de la actividad com lo son la Medición de iluminación según los parámetros establecidos en la Resolución
+84/12 de la SRT; la Medición de puestas a tierra conforme a la Resolución 900/15 de la SRT y la Medición de ruido, siguiendo los parámetros de la Resolución
+85/12 de la SRT.
+A través de relevamientos periódicos de inspección y controles, se cumple con lo establecido en la res.
+299/11SRT, en lo referente a selección, entrega y registro de ropa de trabajo y elementos de protección personal, manteniendo las características y validaciones específicas de cada unidad de negocio
+Como acción de fomento del desarrollo personal en el ámbito laboral, la Cooperativa Eléctrica de Saladillo (CES) impulsa permanentemente actividades de capacitación. Como parte de las propuestas de desarrollo y educación se puso en marcha un plan de incentivación de capacitación del personal.
+Con la aplicación de diversos recursos se desarrolló un cronograma de capacitación anual, en diversas temáticas de prevención generales y especificas según tareas, entre las que se destacan la inducción de seguridad, prevención de accidentes generales de trabajo, accidente intinere, uso de elementos de protección personal, prevención de incendios y uso de extintores manuales, primeros auxilios básicos y
+RCP, plan de evacuación – roles a desarrollar.
+CES
+
+43
+Asimismo se capacitó en actuación de levantamiento manual de cargas, prevención ante riesgo eléctrico, prevención para desarrollo seguro de trabajo en altura, capacitación teórico-práctica de seguridad en trabajos en torres, trabajo seguro en proximidad con líneas eléctricas, desarrollo de simulacro de evacuación y trabajo seguro sobre tareas específicas, entre otras.
+En lo referente a los cuidados del personal que realiza tareas en la vía pública se trabaja bajo cobertura de programas de seguridad acorde a las tareas que cada sector realiza. Dec. 911/96 SRT.
+Los trabajos de riesgo son contemplados a partir de la prevención de accidentes y la capacitación específica del personal a cargo.
+Dado que personal propio del área realiza perió-
+dicamente mantenimientos y actualizaciones en las torres de comunicación de la CES, el mismo es capacitado por el departamento de seguridad laboral para que sea un trabajo seguro.
+CES
+
+44
+Es importante destacar que se realizan certificaciones en cada una de las torres de la CES, con el objetivo de garantizar tanto la seguridad estructural cómo eléctrica, lográndose que se opere bajo condiciones óptimas de seguridad.
+La tarea de prevención implica además controles estructurales, a través de un plan de mantenimiento periódico anual mediante el que se controlan y registran acciones de prevención en los establecimientos.
+Las inspecciones contemplan además la medición de niveles de iluminación res 84/12 srt, en los distintos puestos de trabajo, control de sistemas de iluminación de emergencia trabajando en las mejoras, a través de coordinación con personal de mantenimiento, control de extintores en base IRAM
+3517-2 control de detección de incendio, control en botiquines de primeros auxilios, entre otros.
+En el marco de prevención antisiniestral, se realizaron acciones de capacitación específicas y simulacros de evacuación y extinción de incendios.
+CES
+
+45
+Desde hace 80 años la responsabilidad y el compromiso de vecinos de Saladillo han permitido a la comunidad contar con un servicio de energía estable a través del tiempo. Ese concepto de sostenibilidad empresaria se refleja en el crecimiento sostenido de la Cooperativa Eléctrica que se ha consolidado como distribuidora del servicio eléctrico y en una empresa multiservicios, con expansión territorial de su red eléctrica y la concreción de nuevos proyectos amigables con el medioambiente.
+Hacen ya ocho décadas que la Cooperativa Eléctrica de Saladillo mantiene la concesión eléctrica municipal para abastecer los 2.736 km² del Partido de
+Saladillo. Para prestar el servicio público de electricidad es Agente del Mercado Eléctrico Mayorista con vinculación a la red de transporte a través de la ET
+Transba Saladillo 132/33/13,2 kV cuya operación y mantenimiento se encuentra a cargo de la empresa
+Transportista por Distribución Provincial (Transba S.
+A.) cuyas instalaciones se encuentran en el km 187,5
+de la ruta nacional N° 205.
+El punto de suministro en alta tensión tiene actualmente una capacidad instalada de 60 MVA, conformada por dos transformadores de 30/20/30 MVA
+cada uno. De dicha subestación se desprenden alimentadores en diferentes niveles de tensión. En el nivel de 33 kV, un alimentador hacia “25 de Mayo”, un alimentador hacia “Roque Pérez” y un alimentador hacia “Gral Alvear”, todos ellos pertenecientes a la empresa de distribución provincial (EDEA S. A.).
+Cabe consignar que si bien CES Energía no posee alimentadores en este nivel de tensión, en el nivel de
+13,2 kV cuenta con cinco alimentadores (2, 3, 4, 5 y
+6) hacia la red de distribución del Partido de Saladillo, todos ellos de su propiedad.
+CES
+CESENERGIA
+
+46
+||| Parámetros técnicos | La red de distribución de la energía eléctrica o sistema de distribución de energía eléctrica es la parte del sistema de suministro eléctrico cuya función es la entrega de energía desde la subestación de distribución hasta los usuarios finales.
+Para la descripción de cada sistema de distribución existen parámetros técnicos que permiten detallar las características del mismo.
+Algunos de ellos son los utilizados para cuantificar y calificar al sistema de acuerdo al estado de sus componentes, o para medir indicadores como la tensión, la potencia eléctrica y la energía eléctrica producida/
+consumida. Sin embargo para brindar información precisa y pormenorizada en el presente documento se exponen las características en sus parámetros fundamentales, al cierre de este Ejercicio.
+||| Gestión administrativa y comercial | La prestación del servicio eléctrico que comprende la distribución de energía demanda la gestión administrativa y comercial operativa, que atiende los pedidos de los clientes, la facturación, y el seguimiento de cobro, como algunas de las principales tareas.
+Para elevar la eficiencia del sector administrativo, en un contexto de creciente adopción de tecnología por parte de la ciudadanía, durante este periodo que se presenta se ha implementado una nueva oficina virtual, un complejo de servicios virtuales (y reales) que ayudan a los usuarios a llevar a realizar de manera remota trámites, gestiones y reclamos.
+Con el lema “Gestiones al alcance de tu mano” la
+Cooperativa Eléctrica de Saladillo ha creado una nueva herramienta virtual que tiene como objetivo facilitar las gestiones que deban hacer los usuarios. La herramienta de gestión virtual está disponible en el nuevo sitio web institucional, www.coopsal.com.ar o de modo directo en https://www.coopsal.com.ar/EXTRA/OFICINA/login.php
+CES
+NUEVAS TECNOLOGÍAS DE SERVICIO
+
+47
+Con la creación de una nueva página web se ha desarrollado una nueva herramienta digital que permite a los usuarios del servicio contar con acceso a sus facturas, datos detallados de los consumos, y lecturas efectuadas a sus medidores.
+El canal de comunicación abierto por esta vía, completamente desarrollado por personal propio, permite hacer extensiva la relación con los usuarios por medio de información de cortes de servicio, avisos de deudas, la realización de trámites virtuales y la implementación de la factura digital y sin papel que reduce costos, y a la vez mejora la relación con el medio ambiente.
+De manera complementaria, y para el uso intensivo de los correos electrónicos como medios de notificación, se ha implementado una nueva plataforma de envío de mails masivos, al tiempo que para el óptimo uso del sistema de recolección de reclamos por medio de IVR, sigla en inglés que significa atendedor de respuesta de voz interactiva para mejorar la atención de usuarios, se ha completado el traspaso de la telefonía a tecnología IP reemplazando la antigua central analógica, lo que permitirá realizar una mejor asignación de recursos para atención a los usuarios por este medio.
+||| Indicadores comerciales | Los indicadores comerciales son instrumentos de gestión que permiten medir y cuantificar la evolución del negocio, y de esa manera mostrar los cambios y progresos de la empresa hacia un resultado específico. En el caso del negocio de la distribución de energía eléctrica un indicador básico es la energía operada.
+CES
+ENERGIA OPERADA EN EL EJERCICIO
+HISTÓRICO DE ENERGIA OPERADA EN MWH
+
+48
+La Cooperativa Eléctrica de Saladillo tiene en la actualidad tres puntos de compra para el abastecimiento de energía que luego distribuye a los usuarios a través de su red de distribución.
+Estos tres puntos de compra están principalmente a través de la ET Transba, como agente del mercado mayorista y a quien se le ha adquirido el 99,3%
+del total de la energía, y en menor porcentaje en el componente se encuentran la energía generada por el parque solar Cazón y el punto de abastecimiento de EDEA en el Paraje La Barrancosa. Asimismo, hay inyección de excedentes por parte de los usuarios prosumidores.
+Entre los períodos 2 al 6 se vio afectada la generación del complejo debido a la salida de servicio de un transformador por robo del equipo.
+CES
+ENERGÍA COMPRADA A CAMESSA
+ENERGÍA COMPRADA A EDEA S.A
+ENERGIA COMPRADA A PROINGED (PS CAZÓN)
+ENERGÍA COMPRADA EN EL EJERCICIO EN MWH
+
+49
+En el transcurso del Ejercicio correspondiente al año comprendido entre los meses julio 2023 y junio 2024
+se solicitaron a la Oficina Técnica la cantidad de 69
+presupuestos para diferentes obras con ubicación en diversos puntos geográficos del Partido de Saladillo.
+||| Obras ejecutadas por nuevos emprendimientos
+| De los presupuestos solicitados se concretaron una cantidad de 35 (50,7%). Estos presupuestos incluyen obras en media y baja tensión, subestaciones en el área rural y urbana, loteos, ampliaciones de obras
+CES
+ENERGÍA FACTURADA
+PÉRDIDA DE ENERGIA TOTALES
+EVOLUCIÓN DE LA CANTIDAD DE USUARIOS EN
+EL EJERCICIO
+PRESUPUESTOS SOLICITADOS POR NUEVOS
+EMPRENDIMIENTOS
+ENERGÍA COMPRADA A PROSUMIDORES
+
+50
+existentes entre otras. Dichas obras, capitalizaron a la Cooperativa por un monto de cercano a los 200 millones de pesos.
+||| Información técnica – operativa | Los indicadores de datos técnicos y operativos permiten describir el estado de la infraestructura con la que se cuenta para prestar el servicio de distribución. Se trata de una herramienta analítica diseñada para evaluar la capacidad del sistema para desarrollar su actividad productiva.
+Para describir el estado de situación el detalle de indicadores de infraestructura es una referencia.
+En este indicador se detalla la existencia operativa de líneas, discriminadas en su nivel de tensión. De la información se desprende que CES Energía a culminado el presente Ejercicio con cerca de 1.500 kilómetros de líneas, de las cuales en su mayor proporción están afectadas a la distribución de energía a la zona rural.
+CES
+KILOMETROS DE RED POR UBICACIÓN Y NIVEL
+DE TENSIÓN
+CANTIDAD DE TRANSFORMADORES POR ZONA
+
+51
+||| Planes de obras | En cada Ejercicio CES Energía, como empresa concesionaria, debe proponer al organismo de control OCEBA un plan de obras de ejecución anual, que genere mejoras en el sistema eléctrico para mantener y/o elevar la eficiencia del mismo.
+Respetando la normativa y los tiempos de presentación, el equipo técnico del área de redes de energía eleva una propuesta al Consejo de Administración, previamente consensuada con el área económica financiera del sector de administración central, para ser enviado al OCEBA.
+De manera simultánea, en vísperas de cada invierno y verano, la distribuidora debe planificar campañas tendientes a analizar el estado de su sistema eléctrico, determinando sus fortalezas técnicas y debilidades a fin de afrontar etapas de máxima demanda provocadas por temperaturas ambiente extremas. De este modo, al igual que con el plan anual, se preparan programas de inversiones que prevén trabajos de medición de redes, control de equipos, mantenimiento de ellos y ejecución de nuevas obras.
+En el ítem de inversiones en el sistema de distribución, comprendido por la red y los equipos que sobre la misma operan, se encuentran tanto los trabajos de mejoras y mantenimiento, como también las nuevas obras.
+Las obras de mantenimiento incluyen tareas de mantenimiento predictivo y correctivo, como así también la actualización de equipos existentes y la colocación de nuevos elementos, tanto sea de maniobra como de protección para la red.
+Las obras realizadas en mejoras de mantenimiento e inversión por los conceptos anteriormente mencionados en materiales y mano de obra han sido importantes en este periodo, como se detalla en los cuadros de resultado del sector de energía.
+Entre algunas de las obras más relevantes realizadas en zonas urbanas y rurales durante el periodo que se expone se destacan el recambio de postes de madera por columnas de hormigón en las líneas rurales de
+Media Tensión 13,2 kV trifásica camino a la Laguna
+Indio Muerto, sobre camino real hacia Blaquier y la línea que alimenta Copello.
+CES
+INVERSIONES REALIZADAS
+OBRAS DE MANTENIMIENTO
+
+52
+A las mencionadas inversiones se suman las tareas de mantenimiento realizadas en las redes de media y baja tensión con recambio de crucetas de madera por crucetas de hormigón, recambio de aisladores, reparación y mantenimiento de subestaciones transformadoras y cambio de transformadores dañados por descargas atmosféricas, recambio de equipos de protección y maniobra (seccionadores y descargadores), sustitución de líneas de baja tensión convencionales por cable preensamblado, y reposición de tapas de gabinetes de medición.
+Los proyectos detallados y ejecutados son sólo algunas de las acciones de inversión y mantenimiento para el periodo que aquí se presenta. Entre otras tareas se destacan la poda rural, el recambio de medidores, e instalación de nuevos equipos automáticos de despejes de fallas.
+La poda y despunte de árboles demanda una inversión importante e horas hombre y materiales. La tarea se realiza en el sector urbano de la localidad cabecera como en las localidades del interior del Partido de
+Saladillo (Del Carril, Polvaredas, Álvarez de Toledo y
+Cazón) con corte de ramas por debajo de las líneas de media tensión y centros de transformación en forma total y para los cinco (5) alimentadores de 13,2 kV.
+Estas tareas se realizan de acuerdo a las posibilidades y permisos establecidos por la Municipalidad de
+Saladillo en forma conjunta. También se han llevado a cabo tareas de poda en toda la red de media tensión del sector rural en el resto del área de concesión, disponiendo para eso personal propio y una cuadrilla de poda contratada durante todo el año.
+Las inversiones orientadas a la ampliación de la capacidad operativa cuentan con obras nuevas y surgen de un plan de inversión estructurado conforme a la demanda. En el marco de lo establecido por el
+Contrato de Concesión, Inversiones y Régimen de
+Aprovisionamiento de Energía Eléctrica, CES energía ha presentado su Plan de Obras a realizar en el término de 12 meses, desde la fecha de la presentación del mencionado Plan.
+Los trabajos contemplados para el Ejercicio que aquí se presentan permitieron a la CES avanzar en la concreción de obras de “Vinculación del V Alimentador” con la derivación por calles Saavedra, Moreno,
+CES
+OBRAS NUEVAS
+
+53
+Pereyra y Frocham, considerándose en etapas y por un monto total de plan de Obras al momento de presentado ante el OCEBA que rondó los 55 millones de pesos. Dichas obras complementarias a la obra denominada V Alimentador, corresponden a la vinculación de este Alimentador principal en 13,2 kV con sub alimentadores de derivación tanto a la parte urbana como rural.
+Todas estas vinculaciones tienen como fin descomprimir los alimentadores ya existentes. Las derivaciones se proyectan realizar con conductor de aleación de aluminio de 70 mm² de sección transversal.
+Las derivaciones por calles Pereyra y Saavedra tienen como objetivo la vinculación del Alimentador en
+Media Tensión recientemente construido, con sub alimentadores existentes y que están destinados exclusivamente al sector rural, siendo el de Calle Pereyra el que alimentará a las localidades de Álvarez de Toledo y Polvaredas, con sus respectivas zonas rurales aledañas, comprendiendo un total aproximado de 823
+usuarios.
+La derivación por calle Moreno está destinada al sector urbano, suburbano y rural. Por otra parte la trazada por Frocham tiene como objetivo la vinculación del
+Alimentador en Media Tensión denominado V Alimentador, con un Sub alimentador existente destinado exclusivamente al sector rural, al igual que el de calle
+Sanguinetti.
+El Plan de Obras fue ejecutado en su totalidad, cumpliendo con el 100% de las inversiones previstas según lo presentado oportunamente.
+La ejecución de esta obra se encuentra en su fase final ya que algunas particularidades, como el difícil acceso desde la vía pública en algunos tramos de la traza, hizo demorar la finalización de la misma.
+Esta importante obra tiene como objetivo reemplazar totalmente la red existente dándole mayor capacidad de transmisión de energía, como así también elevar sustancialmente la calidad de servicio prestada a los usuarios de las localidades del interior.
+CES
+LINEA DE MEDIA TENSIÓN TOLEDO -
+POLVAREDAS
+
+54
+Dentro de los 12 kilómetros de esta obra, que vincula las localidades de Toledo y Polvaredas, se consideró reemplazar la red de media tensión existente por otra totalmente nueva con postación y cruceta de hormigón, herrajes y aislación de mejores prestaciones a las existentes y el recambio de la totalidad del conductor de aleación de aluminio de 35 mm2 por uno nuevo de 50 mm2. Dicha obra también favoreció la concreción de un nuevo tendido de fibra óptica para
+CESTEL sobre la misma postación de la red eléctrica.
+Con el tendido de nuevas líneas de distribución y la instalación de subestaciones CES Energía fortaleció su red para enfrentar los picos máximos de demandas de verano e invierno, con pronósticos de temperaturas extremas. Los planes contemplaron inversiones en media y baja tensión para distribuir de manera estratégica las cargas, en función a la demanda en las diferentes zonas de la ciudad cabecera y del Partido de Saladillo, tanto en los picos de máxima demanda de verano como de invierno.
+Dichos planes se ajustaron a las pautas establecidas por la Resolución del OCEBA 009-23 y entre los trabajos impulsados se destacan la repotenciación de
+SET MT/BT N°490 con reemplazo de transformador del Centro de Transformación MT/BT N° 490 pasando de 200 kVA a 250 kVA. Repotenciación SET MT/
+BT N°507 con reemplazo de transformador del Centro de Transformación MT/BT N° 507 pasando de 250
+kVA a 315 kVA. Repotenciación SET MT/BT N°621
+con reemplazo de transformador del Centro de Transformación MT/BT N°621 pasando de 100 kVA a 160
+kVA. Repotenciación SET MT/BT N°1009 con cambio de transformador del Centro de Transformación MT/
+BT N° 1009 pasando de 160 kVA a 250 kVA, además de una redistribución de líneas de BT en la SET MT/
+BT N° 1124, mediante la cual se redistribuyen circuitos de baja tensión en la SET N° 1124 a fin de descargar las subestaciones SET N°14 y SET N°4.
+Al mismo tiempo, como parte de los planes, se presentaron las obras de mantenimiento preventivo y predictivo de las líneas existentes de la distribuidora, destacándose los trabajos de poda y despunte.
+En este aspecto, como medida preventiva, la Cooperativa lleva un constante trabajo en la realización de poda tanto en la zona urbana como rural del
+CES
+PLANES ESTACIONALES 2023/2024
+
+55
+arbolado que puedan tener interferencias con las lí-
+neas de baja y media tensión afectando la calidad de servicio eléctrico. Los trabajos realizados se concentraron principalmente en Alimentadores y sub-Alimentadores de 13,2 kV de toda el área de Concesión y en los circuitos de baja tensión localizados principalmente en la planta urbana.
+Entre las inversiones se destaca también el cambio en la postación de elementos de madera por columnas de hormigón. En tal sentido se ejecutaron obras en líneas de distribución rurales en diferentes puntos geográficos del partido con un recambio cercano al centenar de postes, entre los dos planes (invierno y verano).
+Las inversiones para afrontar los picos de consumo masivo de verano e invierno contaron con un plan de relevamiento termográfico en los 5 alimentadores principales que tienen inicio en la Estación Transformadora de Transba S. A. y abastecen del servicio eléctrico a los sub-Alimentadores distribuidos en toda el área de concesión del Partido de Saladillo. Con esta tarea se relevaron los Alimentadores 9SALA2, 3,
+4, 5 y 6. Una vez terminada la etapa de mediciones se continuó con el relevamiento en anillos urbanos en media tensión.
+De manera simultánea se impulsó una campaña de medición de carga y equilibrio de fases en transformadores de distribución, manteniendo los equipos de monitoreo de transformadores de distribución (DTM, por sus siglas en inglés de Distribution Transformer
+Monitoring) en 16 centros de transformación urbanas principales que incluyen por cada punto de monitoreo 1 medidor ACE SL7000 clase 0,5s equipado con sensores externos de corriente tipo bobina Rogowski
+3 (3000) A, gabinete exterior, porta fusible Riel DIN
+vinculado a un software de monitoreo para el control de balance de energía - seguimiento de pérdidas, monitorización de transformadores - preservación de activos y de calidad de voltaje.
+El instrumental ha permitido además la medición de variables como corrientes, energías activas, reactivas, aparentes, Fase 1, 2, 3 y total. Intervalo mínimo:
+1 min.; eventos, alarmas; registros de energía / demanda; calidad de tensión (cut / sag / swel); armónicos (alarma THD); voltaje en MT; pérdidas técnicas del transformador (activo y reactivo); temperatura del aceite / punto caliente; envejecimiento del transformador; factor de carga; alarma de temperatura (umbral configurable); gestión externa de la sonda de temperatura en el puerto RS.
+CES
+PLAN DE RELAVAMIENTO TERMOGRÁFICO
+
+56
+Estas mediciones se complementan con los relevamientos sistemáticos a efectos de determinar posibles puntos calientes que transformen vulnerables los alimentadores de 13,2 kV ante eventuales aumentos de demanda en las estaciones críticas del año. Dicho relevamiento se aplica sobre las líneas de media tensión urbanas en anillos céntricos.
+El personal de CES Energía ha ejecutado un relevamiento de los Centros de Transformación MT/BT de la planta urbana para adecuar el TAP en los transformadores y así mantener la calidad de producto a los usuarios.
+||| Obras y servicios | La distribución de energía es la actividad principal del sector en la Cooperativa del cual derivan otras relacionadas al rubro mediante la prestación de servicios en ejecución de obras. Es así que en el presente Ejercicio se han concretado obras para el sector público y privado y prestado servicios en materia energética que constituyen una fuente de ingresos para la Cooperativa.
+En el mes de mayo del 2024 se dio por iniciada una obra suscripta con la Municipalidad de Saladillo para realizar la iluminación vial de la ruta 205 comprendida en dos tramos con una traza total aproximada de
+1.800 metros de longitud conformada por 42 luminarias de les de 276 W cada una, mediante el sistema de iluminación unilateral, cuyo proyecto realizado por la Cooperativa Eléctrica de Saladillo fuera aprobado sin observaciones por la Dirección Nacional de Vialidad.
+La obra prevista para un plazo de ejecución de 80
+días se concretó mediante un convenio firmado entre la Municipalidad y la Cooperativa Eléctrica de Saladillo con un presupuesto total de u$s237.432,72 que traducidos al tipo de cambio de esa fecha representó unos $71.537.103,91.
+CES
+PLAN DE RELAVAMIENTO DE SUBESTACIONES
+TRANSFORMADORAS MT/BT
+OBRAS DE ILUMINACIÓN RUTA NACIONAL 205 -
+CONVENIO CON LA MUNICIPALIDAD
+
+57
+El Programa de energías renovables impulsado desde para la generación de energías “limpias” en el transcurso de su desarrollo generó oportunidades de prestación de servicios a CES Energía, que durante el Ejercicio que se presenta ingresos a la Cooperativa por $96.585.084,01 más IVA.
+El Proyecto de construcción de los Parques solares demandó tareas que fueron ejecutadas por CES
+Energía en calidad de contratista de la empresa BGH, adjudicataria de la obra de los parques solares Del
+Carril y Polvaredas y del PROINGED por los parques solares de Cazón, Del Carril y Polvaredas.
+Los servicios prestados a la empresa BGH se relacionan con la obra de abastecimiento eléctrico en media tensión a ambos parques solares, la construcción de los Centros de Transformación, las salidas en baja tensión desde los Centros de Transformación hasta los shelter, la vinculación eléctrica desde el tablero principal hasta el inversor para el caso del parque solar Polvaredas, y las obras relacionadas con la seguridad de las instalaciones como el enclavamiento mecánico de los transformadores a las plataformas de hormigón de los Centros de Transformación y la construcción de un tablero de alarma sonoro lumínico para cada parque.
+En el caso del Parque Solar Saladillo I – Cazón se realizaron las tareas de restitución del transformador de 315 kVA que fuera robado, concretándose la mano de obra y montaje del mismo en el Centro de Transformación, con la restitución de la salida en baja tensión y la construcción de un tablero de alarma sonoro lumínico.
+CES
+SERVICIOS PRESTADOS A TERCEROS EN EL
+MARCO DE PROGRAMA ENERGÍAS RENOVABLES
+
+58
+Servicios prestados a BGH en los parques de Del Carril y Polvaredas
+Servicios prestados al PROINGED en los parques Cazón, Del Carril y Polvaredas
+||| Proyectos relevantes | Como parte del plan de mejora continua técnica y de infraestructura en el transcurso del Ejercicio que se presenta se proyectaron trabajos especiales de envergadura.
+Planteada la necesidad desde el área técnica de CES
+Energía al Consejo de Administración de realizar la ampliación de la ET Transba Saladillo en el Ejercicio anterior, se decidió desde el órgano político de la Cooperativa contratar a la Comercializadora de energía
+COMESA S. A. a efectos de ponderar la inversión proyectada en tal emprendimiento y definir de grado de participación económica de nuestra entidad, junto al resto de los distribuidores beneficiaros.
+El inicio de las gestiones para la ampliación se debe concretar a la brevedad para evitar la posible saturación de la ET en el año 2027, tal como establecen los estudios realizados. Al cierre de este Ejercicio la evaluación económica está en vías de ser presentada al
+Consejo de Administración por parte de Comesa S. A.
+Junto a la necesidad de realizar la ampliación de la
+ET Transba Saladillo surge la demanda de construcción de dos nuevos alimentadores en 13,2 kV para aumentar la capacidad de traslado de la energía desde el punto de abastecimiento de la empresa transportista hasta los diferentes puntos de la red de distribución de la Cooperativa. Esta obra es primordial para contener el crecimiento vegetativo proyectado y la instalación de nuevos emprendimientos comerciales e industriales en el futuro, como así también de cualquier aumento necesario de la demanda de los usuarios existentes. Al cierre de este Ejercicio se está culminando la evaluación económica inicial del proyecto.
+CES
+AMPLIACIÓN ET TRANSBA S.A
+PROYECTO DE NUEVOS ALIMENTADORES EN
+13,2KV
+DETALLE DE INGRESOS POR TRABAJOS A
+TERCEROS
+
+59
+Continuando con el plan de reconversión de medición tradicional a redes inteligentes se presentaron al
+Consejo de Administración dos nuevos proyectos de trabajos. El plan de impulso de la telemedición incluyó la telemedición y Gestión de Energía por Wi Fi de
+Álvarez de Toledo, Cazón y Barrio Los Troncos, como también por GPRS del área Rural de la Ruta 43.
+El plan de telemedición WI FI presentado considera incorporar al sistema de telelectura a los usuarios de las localidades de Álvarez de Toledo y Cazón y también del Barrio Los Troncos, haciendo uso del recurso estratégico de la fibra óptica en esos lugares con el fin de reducir costos operativos y de logística, como así también realizar una mejor gestión de la energía y de calidad de servicio, utilizando todo el equipamiento de medición adaptable para reducir costos de implementación.
+Dentro de las variantes existentes al momento de la decisión de realizar la telemedición por Wi FI se resolvió utilizar una tecnología de protocolo abierto que permita utilizar más de una marca o modelo de medidor y a su vez utilizar todos los medidores existentes que pudieran ser aptos para la colocación del captor óptico (módem) sin necesidad de realizar el reemplazo de los mismos.
+Por tal motivo se resolvió avanzar con una prueba piloto en el Barrio Procrear para evaluar las prestaciones de los equipamientos, su funcionamiento, adaptación del personal para su instalación e interacción tecnológica y el ensamble con los procesos comerciales y de facturación. Los resultados llevan a que en este informe se proponga analizar la posibilidad de incrementar los usuarios telemedidos con dicha tecnología en esta segunda etapa.
+Considerando la posibilidad de ir incorporando nuevas zonas de telemedición, donde la Cooperativa llega con la red de fibra óptica en diferentes sectores urbanos, se plantea sumar a las localidades de
+Álvarez de Toledo y Cazón como así también el Bario
+Los Troncos.
+Para la ejecución del plan se ha realizado una clasificación de usuarios existentes al momento de la evaluación del proyecto, que determina en Álvarez de Toledo 208 usuarios en la Ruta 35.
+La Ruta 34 que comprende a Cazón cuenta con un total de 153, mientras que en el Barrio Los Troncos
+181.La inversión necesaria para este plan de trabajo ronda los USD 35.921,20 más IVA.
+CES
+TELEMEDICIÓN DE SUMINISTROS URBANOS Y
+RURALES
+
+60
+De la misma manera se presentó un plan de telemedición rural por GPRS para incorporar al sistema de telelectura los usuarios de la ruta 43, con el fin de reducir costos operativos y de logística.
+En caso de concretarse este plan de trabajo se incrementaría la cantidad de usuarios telemedidos con tecnología GSM/GPRS a 310 usuarios considerando los ya instalados en la ruta 150 del Paraje La Barrancosa, se llegaría a cubrir con telemedición el 50% de la superficie del partido de Saladillo, incluyendo los
+Parajes de La Razón, La Campana, Blaquier, Toledo
+Rural, Polvaredas Rural, Los Guaicos, Del Carril rural y usuarios en zona de Concesión del Partido de Roque Pérez. La inversión necesaria para este plan de trabajo ronda los USD 63.820,88 más IVA.
+|| Regulación del mercado eléctrico | Al tratarse de un servicio público la distribución de energía se encuentra regulada por el Estado. Existen reglas definidas para cada eslabón de la cadena, desde la generación hasta el consumo. El Ente Nacional Regulador de la Electricidad (ENRE) regula en el orden nacional la actividad eléctrica y controla que las empresas del sector - generadoras, transportistas y distribuidoras -
+cumplan con las obligaciones establecidas en el Marco Regulatorio y en los Contratos de Concesión.
+Por su parte en territorio bonaerense existen dos niveles de control a las distribuidoras, los que realiza el
+Organismo de Control de Energía Eléctrica de la Provincia de Buenos Aires (OCEBA), una entidad autárquica, creada para ejercer el control y la fiscalización del cumplimiento de las obligaciones establecidas en el Marco Regulatorio Eléctrico (MRE) y de los contratos de concesión, por un lado y el control municipal que es la consignataria del servicio, a la CES en el caso de Saladillo.
+Teniendo en cuenta las normativas y regulaciones establecidas por la legislación y resoluciones que instruyen de manera dinámica cambios en los requerimientos, desde CES Energía se trabaja para dar cumplimiento a los mismos.
+CES
+
+61
+En tal sentido durante el presente Ejercicio se presentó la información de INVENTARIO Eléctrico y No Eléctrico para el cumplimiento de DISPO-2024-108-GDEBA-DPEMIYSPGPl - Contabilidad Regulatoria
+– Inventario 2023. En este tema, cabe señalar que la
+Cooperativa viene cumpliendo regularmente con el requerimiento de información anual establecido por la
+Autoridad de Aplicación del Marco Regulatorio Eléctrico. De manera simultánea se realizó la presentación de datos de las redes eléctricas cumpliendo la Disposición 2/2022 de la dirección provincial de energía de la provincia de buenos aires (DPE).
+Durante el desarrollo del Ejercicio que se expone, en relación a los requisitos planteados por el OCEBA se destaca el impulso de una campaña de Control de Calidad de Servicio y Calidad de Producto (Resolución
+OCEBA 1095/04). Estas acciones que se dividen en períodos semestrales, para el presente ejercicio semestre 42 del 01/06/2023 al 31/11/2023 e incluyó el período estival y el semestre 43 comprendido entre el 01/12/2023 al 31/05/2024 con un período de altas temperaturas y máximas demandas.
+Para estos requerimientos se realizó la presentación de la información en lo concerniente a calidad de servicio que involucra la frecuencia de cortes y la duración de los mismos tanto en media como en baja tensión, cuya tarea se lleva a cargo a través de la atención de los reclamos registrados por el sector de guardia las 24 horas del día a lo largo del año.
+Es sabido que en la calidad del servicio influyen las temperaturas, las inclemencias del tiempo y los cortes provocados por agentes aguas arriba. Todas las fallas de la distribuidora son penalizadas con multas.
+Dentro de los parámetros de calidad también se debe registrar la Calidad de Producto Técnico que tiene en cuenta el valor de la tensión de suministro registrado por un analizador de red homologado por el Organismo de Control por el término de 7 días consecutivos.
+Para esto el Organismo de Control selecciona a su criterio los puntos de suministros tanto en usuarios como en subestaciones que se deberán controlar dentro de cada semestre.
+CES
+CALIDAD DE SERVICIO Y PRODUCTO
+
+62
+En la Calidad del Producto influyen las temperaturas, y la calidad del producto recibidas en los puntos de compra de la energía de CAMMESA y EDEA.
+Los montos de multas de calidad se basan en un cálculo de cantidad de Energía no Suministrada (Calidad de Servicio) y cantidad de Energía Suministrada en malas condiciones, multiplicado por un valor de costo de la energía.
+Para la Calidad del Servicio Técnico el valor de la
+Energía No Suministrada depende del tipo de usuario, mientras que, para el Producto Técnico, el costo de la
+Energía Suministrada en malas condiciones se valoriza en su totalidad al valor más costoso. Los costos de la Energía No Suministrada van en concordancia con las tarifas, y se incrementan en consecuencia
+También existen registros de cómo afecta a los usuarios la falla en el servicio y este dato se lo denomina indicador de la duración de interrupción media por usuario, y permite conocer cuál es la duración media de un corte de suministro medido en horas, por usuario por semestre.
+Por otra parte está el indicador de la frecuencia de interrupción media por usuario para conocer cuál es la cantidad de cortes de suministro por usuario en un periodo de tiempo determinado y se mide en interrupciones por usuario en un semestre.
+CES
+
+63
+Con el fin de concientizar a la ciudadanía y mejorar la calidad de vida de los usuarios, fomentando su cuidado físico y el de la comunidad en la que se presta el servicio, desde el área energía se trabajó sobre la seguridad en la vía pública (SVP). La campaña, cumpliendo con los requisitos del ente regulador, se orientó a la prevención, haciendo partícipes a los ciudadanos.
+Respondiendo a lo establecido por el plan de contingencias, se ha trabajado con la comunicación en los momentos de crisis. Es decir en aquellos casos en que por algún factor el funcionamiento normal del servicio se ve afectado y es anormal.
+Al respecto, cumpliendo con las Resoluciones específicas del OCEBA esta distribuidora presentó su plan de Emergencias y Contingencias que tiene por fin presentar los lineamientos generales que deben observarse priorizando elementos vulnerables ante posibles fallas operativas; técnicas, de naturaleza climática o provocadas de duración indeterminada, incluyendo además restricción de demanda por crisis energética y cuestiones ambientales.
+Este plan además de presentarse ante el OCEBA se elevó a la municipalidad de Saladillo, activando acciones de notificación complementariamente a las entidades de salud, Hospital Dr. Posadas y Clínica de
+Saladillo para que mantengan operativos los grupos electrógenos disponibles ante cualquier emergencia eléctrica nacional, provincial o local que provoquen falta de suministros por fuerza mayor.
+En el aspecto operativo del servicio, durante el período que se expone se continuó con la campaña de
+Control de Seguridad en la Vía Pública (SVP) para la detección de potenciales riesgos y su regularización como puede ser la colocación de tapas de medidores rotas por vandalismo, señalización de riesgos de instalación con cartelería, colocación de aisladores en riendas, acondicionar cables de preensamblado de baja tensión en columnas terminales y frente de edificios, realizar mediciones de puesta a tierra, entre otras tipificaciones indicadas en la resolución OCEBA
+595/06.
+Todas las acciones fueron ratificadas por el organismo de control, mediante una auditoría de Calidad de
+Producto y Calidad de servicio, como así también de
+Seguridad en la vía Pública.
+CES
+CAMPAÑA DE SEGURIDAD EN LA VÍA PÚBLICA
+
+64
+El riesgo ambiental en el mercado de la energía eléctrica, con la medición de su impacto en el medio y el cumplimiento de la normativa vigente han sido parte de las actividades de este sector de la CES.
+De acuerdo a lo establecido en las resoluciones respectivas, la Cooperativa realizó las presentaciones a través de la página web en forma cuatrimestral de la información referente al estado del parque de transformadores.
+||| Energía renovable | Desde CES Energía se ha impulsado un Programa de energías renovables que propone importantes inversiones para la generación de energías “limpias”. Ese plan cuenta ya con un Parque de generación de energía solar en Cazón funcionando y dos más próximos a inaugurarse en las localidades de Del Carril y Polvaredas.
+La Cooperativa Eléctrica de Saladillo tiene el privilegio de contar con tres parques solares On-Grid radicados en su área de concesión, y esa ventaja comparativa en relación a otras distribuidoras la posiciona en el sector eléctrico cooperativista, no solo en el aspecto de desarrollo sino que también en lo tecnológico.
+Dos de esos parques cuentan con sistemas de acumulación de energía en baterías de litio. Esta particularidad la hace pionera en cuanto a la operación y mantenimiento, dado que no existe en el ámbito de la Provincia de Buenos Aires generación de energías renovables con esta condición.
+Esas nuevas tecnologías demandan la formación y capacitación de los cuadros técnicos del área de energía para que puedan operar dichas plantas solares, condición que ya se ha iniciado durante el transcurso del Ejercicio que aquí se expone.
+Cabe destacar que si bien las gestiones para la instalación de los tres parques solares fueron iniciadas por la Cooperativa, la concreción de las obras de los mismos fueron financiados con recursos contemplados en el agregado tarifario, y la gestión a través de la UCOP (Unidad de Coordinación Operativa) que fomenta las actividades de generación, desarrollo, evaluación y seguimiento de los proyectos dentro del
+Programa Provincial de Incentivos a la Generación de Energía Distribuida (PROINGED), organismo que promovió la aprobación de los mismos.
+CES
+CAMPAÑA DE CONTROL AMBIENTAL EN
+SUBESTACIONES
+
+65
+El parque solar Cazón “Cdro Mario Cabitto” se encuentra bajo la operación y mantenimiento de la Cooperativa Eléctrica de Saladillo, bajo convenio con el
+PROINGED. Tiene una capacidad de generación instalada de 330 kWp sin almacenamiento de energía, con 550 paneles de 600 Wp. cada uno distribuidos en
+4 islas montados bajo el sistema este-oeste. La inversión de este parque realizada en ejercicios anteriores fue de U$S375.909,44.
+La generación de energía de este parque equivale a alimentar eléctricamente a 150 hogares residenciales encuadrados en la tarifa T1R de consumo medio.
+Durante el transcurso del Ejercicio que aquí se presenta el parque solar de Cazón sufrió el robo del trasformador de 315 kVA., como así también de cables de baja tensión y elementos complementarios. Por tal motivo, el transformador y demás instalaciones fueron restituidas por el PROINGED y a su vez se realizaron mejoras en la seguridad de las instalaciones, algunas de ellas de infraestructura como lo fue la fijación con enclavamiento del trasformador a la estructura de hormigón y la instalación de un sistema de alarma lumínico sonoro, instalados para actuar ante la falta de suministro.
+En cuanto a los avances registrados, en el presente
+Ejercicio se iniciaron las construcciones de los parques solares de Del Carril y Polvaredas, previamente licitados por el PROINGED durante el Ejercicio anterior. La adjudicataria de la construcción de ambos parques fue la empresa BGH S. A.
+El parque solar Del Carril, con una capacidad de generación instalada de 500 kWp y almacenamiento de energía, comprendió la instalación de 910 paneles solares de 550 Wp cada uno, y un banco de baterías de litio de 1290 kWh, con una inversión total de
+U$S 1.875.000. La obra fue ejecutada en un terreno adquirido por la Cooperativa donde también se tiene previsto instalar una futura Estación Transformadora de 33/13,2 kV vinculada a la línea de Subtransmisión
+Saladillo - Roque Pérez con la finalidad de abastecer la localidad de Del Carril y como así también a una importante zona de influencia.
+CES
+PARQUE SOLAR SALADILLO II - DEL CARRIL
+PARQUE SOLAR SALADILLO I - CAZÓN
+
+66
+La generación de energía del parque solar Del Carril equivale a alimentar eléctricamente a 250 hogares residenciales encuadrados en la tarifa T1R de consumo medio.
+Poco antes del cierre del Ejercicio, a inicios del mes de junio de 2024 se iniciaron las pruebas de funcionamiento, arrojando excelentes resultados en los indicadores de generación de energía.
+En el parque solar Polvaredas, con una capacidad de generación instalada de 250 kWp y almacenamiento de energía, se colocaron un total de 455 paneles de
+550 Wp y un banco de baterías de 774 kWh con una inversión de U$S 956.777,81. El mismo se montará en un terreno privado mediante la realización de un convenio entre el propietario y la Provincia de Buenos
+Aires por el plazo de vida útil del mismo.
+La generación de energía del parque solar Polvaredas equivale a alimentar eléctricamente a 110 hogares residenciales encuadrados en la tarifa T1R de consumo medio
+Al cierre de este Ejercicio se están por iniciar las pruebas de funcionamiento de parque de Polvaredas.
+La generación distribuida es la producción de electricidad con pequeñas instalaciones que, técnicamente habilitadas, se pueden conectar al sistema eléctrico nacional. Estas tecnologías para producir energía eléctrica de modo sostenible están siendo utilizadas en Saladillo por los denominados “usuarios generadores”, una figura en la que la Cooperativa Eléctrica local ha sido pionera desde que en el año 2018
+instaló en sus oficinas un “sistema de generación de energía On Grid” que utilizando paneles fotovoltaicos provee energía al edificio e inyecta el excedente a la red de distribución.
+CES
+USUARIOS GENERADORES
+PARQUE SOLAR SALADILLO III - POLVAREDAS
+
+67
+En el año 2017 fue publicada en el boletín oficial la
+Ley Nacional 27.424 de Régimen de Fomento a la Generación Distribuida de Energía Renovable Integrada a la Red Eléctrica Pública, la cual sentó las bases a nivel nacional para la generación de energía eléctrica de origen renovable por parte de usuarios de la red de distribución, para su autoconsumo, con eventual inyección de excedentes a la red, y establecer la obligación de los prestadores del servicio público de distribución de facilitar dicha inyección.
+Luego, en el año 2022 la Provincia de Buenos Aires reglamento la Ley Provincial 15.325 adhiriendo a los beneficios promocionales, impositivos, fiscales y de financiamiento establecidos en la Ley Nacional N°
+27.424 que establece el Régimen de Fomento a la
+Generación Distribuida de Energía Renovable integrada a la Red Eléctrica Pública en la Nación Argentina. Declarada de Interés Provincial, la Generación de energía Eléctrica de Fuentes Renovables para autoconsumo y eventual inyección de excedente a la red eléctrica de distribución provincial. Luego se promulgó el Decreto 2371/22 que designa como Autoridad de Aplicación de la Ley Nº 15.325 al Ministerio de
+Infraestructura y Servicios Públicos o a la repartición que en el futuro la reemplace y determina que la Autoridad de Aplicación establecerá las condiciones técnicas, jurídicas, económicas, contractuales, tarifarias y todas aquellas que resulten necesarias para conferir viabilidad a la generación de energía eléctrica de origen renovable en la provincia de Buenos Aires.
+Posteriormente, en el año 2023, se reglamenta la Resolución 463/23 por la cual se pretende aprobar las condiciones técnicas, jurídicas, económicas, contractuales, tarifarias que resultan necesarias para conferir viabilidad a la generación domiciliaria de origen renovable en el área bajo la competencia y jurisdicción de la Provincia de Buenos Aires, por parte de los
+USUARIOS GENERADORES para su autoconsumo, y la eventual inyección de excedentes a la red de distribución.
+Finalmente, en el año 2024 el Organismo de Control
+Eléctrico de la Provincia de Buenos Aires publicó la resolución OCEBA 52/24 - Reglamento de acometida
+Generación Distribuida por lo cual se formaliza la posibilidad de aquellos usuarios, nuevos o existentes,
+CES
+
+68
+que cuenten con generación de energía renovables en su propiedad y quieran inyectar energía excedente a la red del Distribuidor puedan hacerlo.
+Si bien hasta el momento este modo de generación particular de energía eléctrica no estaba reglamentada, con la promulgación de la Ley Provincial N°15325, se han establecido pautas para conectar generación distribuida con inyección de excedente de energía a la red del distribuidor.
+Cumpliendo con las disposiciones y requisitos establecidos la Cooperativa Eléctrica de Saladillo definió un Instructivo para conectar generación distribuida con inyección de excedente de energía a la red del distribuidor como documento de consulta de todos los usuarios interesados.
+||| Representación de la CES en el FREBA | La Cooperativa Eléctrica de Saladillo está asociada al Foro
+Regional Eléctrico de la Provincia de Buenos Aires
+(FREBA), una asociación civil sin fines de lucro, que agrupa a distribuidores provinciales y municipales de la provincia de Buenos Aires, y a Transener y TRANSBA como miembros asesores.
+En el ámbito de la representación institucional la CES
+se ha comprometido en consolidar su presencia en múltiples foros del sector cooperativo, energético y para la defensa de los intereses de los consumidores y usuarios. Directamente o a través de sus representantes la Cooperativa Eléctrica participa en diferentes órganos.
+Durante el desarrollo del presente Ejercicio se llevó a cabo la Asamblea Anual Ordinaria y Extraordinaria del FREBA, conformado por 200 cooperativas eléctricas y las cuatro distribuidoras de energía de DESA.
+Por unanimidad se propuso la continuidad de los actuales cargos directivos y técnicos, entre los que se encuentra por la representación del sector Cooperativo la Cooperativa Eléctrica de Saladillo, en el Comité
+Técnico Provincial, por sexto año consecutivo, desde el año 2018.
+CES
+
+69
+Dicho órgano profesional está conformado por once ingenieros en total, de los cuales tres pertenecen al sector Cooperativo y los restantes ocho al sector de las empresas Provinciales.
+Dentro de las funciones del Comité Técnico, se encuentran las de seleccionar los proyectos de inversión en la red de distribución troncal y/o de alta tensión dentro de la Provincia de Buenos Aires, como también verificar que las iniciativas de los proyectos de inversión cumplan con las características técnicas requeridas por la legislación nacional y provincial, y difundir entre los miembros del FREBA las características de las iniciativas de proyectos de inversión y las opiniones que TRANSBA o TRANSENER tengan al respecto como miembros asesores, a los fines de facilitar la formación de coaliciones entre asociados para la selección competitiva de proyectos de inversión.
+Son funciones del organismo además tratar y dictaminar, dentro del “mecanismo de selección de proyectos”, acerca de todas las presentaciones por objeciones y/o solicitudes de compensación que puedan presentar los miembros del FREBA, antes de la votación y aprobación final de los proyectos.
+CES
+
+70
+Para el área de telecomunicaciones de la Cooperativa, CESTEL, la planificación responde a la idea fundacional del sector de participar en el mercado local del servicio con propuestas que fomenten la competencia entre empresas en beneficio de los usuarios y la invocación tecnológica en favor del desarrollo local, aportando herramientas para el aumento de la productividad, la conectividad y el acceso eficiente a la información, generando empleos, emprendimientos e innovación.
+La estrategia de crecimiento del área se define a partir del análisis continuo de la evolución de los servicios, la tecnología y los modelos de negocios, con el desafío de tratar de adaptarlos a la realidad cooperativa y especialmente a la escala local. Y la escala es uno de los desafíos más importantes, puesto que todos los negocios que surgen en materia de telecomunicaciones son a gran escala, entonces se debe planificar para hacer posible el negocio.
+Para mantener su competitividad las empresas de telecomunicaciones del mundo están evolucionando hacia empresas tecnológicas, en un proceso que requiere de visión y enfoque, y hacer frente a los altos costos de capital. Para superar estos obstáculos, en
+CESTEL se trabaja buscando renovar permanentemente las tecnologías y su modelo de negocio para ampliar su oferta con servicios de valor añadido que satisfagan las expectativas de sus clientes.
+La actualización tecnológica permanente se ha venido logrando con una gestión ajustada a los aspectos económicos y financieros del sector, volcando los beneficios generados a nuevas inversiones de expansión, con el fin de sumar usuarios para aumentar el volumen de ingresos y mantener un proyecto de crecimiento sostenido.
+Desde hace tres Ejercicios CESTEL ha mantenido el punto de equilibrio en lo económico. El aumento de abonados y una sostenida demanda del servicio ha sido parte de estos resultados. En este Ejercicio se aumentó la facturación a valores constantes y por ende la utilidad, la que se reinvierte constantemente en función de llegar a los lugares más alejados de la ciudad cabecera con el servicio.
+El incremento neto de abonados al servicio de internet fue cercano a los 700 nuevos usuarios en el transcurso del Ejercicio que aquí se presenta.
+CES
+CESTEL
+
+71
+El modelo de negocio y la evolución tecnológica hicieron que mientras los abonados a los servicios inalámbricos y ADSL caen, crecen significativamente los usuarios de los servicios de internet por red de fibra óptica directa al hogar ofrecidos por la Cooperativa. Al cierre del Ejercicio 2023 – 2024 CESTEL se ha afianzado con su expansión territorial.
+Esta tendencia ha sido tomada como una fortaleza en la gestión administrativa del sector y considerada para negociar tarifas con proveedores mayoristas, ampliando de esa manera el ancho de banda y obteniendo mejores precios de compra en dólares.
+La eficiencia del personal técnico y administrativo ha propiciado la competitividad del sector, brindando un servicio de calidad y, como suscribe el mito fundacional, con el valor más bajo del mercado local. El logro de los objetivos se han producido con el apoyo incondicional del Consejo de Administración y la Sindicatura de la Cooperativa, tanto en el aspecto político como económico, acompañando los proyectos de inversión y colaborando en gestiones.
+En ese camino, hacia finales del Ejercicio que en esta
+Memoria se describe, con la asistencia del Grupo GC, consultora externa enfocada en la gestión y mejora de procesos empresariales, mejora de productividad y eficiencia operativa contratada por la CES, se inició un estudio de factibilidad para que la CES, a través de CESTEL, se convierta en un Operador Local de los servicios de telefonía móvil de imowi, Operador
+Móvil Virtual (OMV) de la Cámara de Cooperativas de Telecomunicaciones (CATEL). La telefonía móvil completaría, en caso de materializarse el proyecto, la oferta integral de servicios de comunicaciones prestados por la CES, a través CESTEL, y permitiría su ingreso al llamado cuádruple play (telefonía fija + telefonía móvil + internet + televisión).
+De esta manera, CESTEL es parte del progreso de
+Saladillo y durante el transcurso del Ejercicio que se presenta quedó evidenciado con los avances de obras de envergadura que le permiten al Partido de
+Saladillo crecer. Con la concreción del Proyecto “+
+Red”, impulsado entre los diferentes sectores de la
+CES, se pudo realizar el tendido de fibra óptica troncal que une la ciudad cabecera de Saladillo con Álvarez de Toledo, Cazón y Del Carril con aportes genuinos de la CES y la adjudicación de ANR (Aportes No
+Reembolsables) otorgados por el Enacom.
+Las obras ejecutadas permiten brindar en las localidades del interior la misma calidad de servicio que en
+Saladillo y entre los trabajos concretados se destaca el tendido de un plantel externo de fibra óptica en Del
+Carril para brindar servicio de internet en esa localidad, con una inversión cercana a los 300 mil dólares, más impuestos.
+CES
+
+72
+||| Seguridad virtual | Brindar un servicio de calidad es además generar condiciones de seguridad para el sistema operativo del área de telecomunicaciones como para los usuarios. En tal sentido desde CESTEL
+se trabaja permanentemente en la actualización de las defensas frente a amenazas y ataques cibernéticos.
+Los ataques de red distribuidos a menudo se conocen como ataques de denegación distribuida de servicio
+(DDoS). Este tipo de acecho aprovecha los límites de capacidad específicos que se aplican a cualquier recurso de red, tal como la infraestructura que habilita el sitio web de la empresa. El ataque DDoS envía varias solicitudes al recurso web atacado, con la intención de desbordar la capacidad del sitio web para administrar varias solicitudes y de evitar que este funcione correctamente.
+Las motivaciones para llevar a cabo un ataque DDoS
+varían ampliamente, al igual que los tipos de personas y organizaciones ansiosas por perpetrar esta forma de ciberataque. Algunos ataques son llevados a cabo por personas enojadas y hacktivistas que desean derribar los servidores de una empresa simplemente para hacer una declaración, divertirse explotando la debilidad cibernética o expresando desaprobación.
+Otros ataques de denegación de servicio distribuido están motivados financieramente, como un competidor que interrumpe o cierra las operaciones en línea de otro negocio para robarle los clientes mientras tanto. Otros implican extorsión, en donde los perpetradores atacan a una empresa e instalan software de rehenes o ransomware en sus servidores.
+Para evitar estos inconvenientes desde CESTEL se han incorporado servicios de mitigación DDOs en coordinación técnica con Telecom y Telefónica de Argentina. Los sistemas de protección anti-DDoS o de mitigación DDos están diseñados para detectar y mitigar ataques DDoS en tiempo real, permitiendo que sus servicios en línea continúen funcionando normalmente incluso durante un ataque.
+||| Nuevas tecnologías | En el camino de incorporación de tecnología para mejorar el funcionamiento operativo, desde el área técnica de CESTEL se actualizan permanentemente las herramientas de trabajo. De esta manera durante el Ejercicio que se expone se implementó un servidor TR-069, una aplicación informática que permite a los proveedores de servicios y fabricantes de equipos gestionar, configurar y
+CES
+
+73
+actualizar a distancia los dispositivos conectados a la red de sus clientes, también conocida como ACS, es decir, servidor de autoconfiguración. TR-069 es una especificación técnica desarrollada por Broadband
+Forum (BBF) para normalizar el intercambio de datos entre un dispositivo y el servidor de gestión.
+Esta aplicación proporciona una forma sencilla y eficaz de gestionar un gran número de dispositivos de forma remota, brindando la posibilidad de configurar rápida y fácilmente nuevos dispositivos, actualizar el firmware y solucionar problemas sin tener que enviar a un técnico a las instalaciones del cliente.
+||| Servicios y proyectos colaborativos | Sin dudas el desarrollo del Proyecto de la CES “+ Red” habría sido inviable sin el trabajo conjunto de los diferentes sectores de servicios y producción de toda la Cooperativa. Sin embargo dicha acción es solo un ejemplo del modo en que CESTEL se involucra en diferentes
+Proyectos tecnológicos de la Ces y junto a otros organismos e instituciones.
+Entre los trabajos y servicios realizados en telecomunicaciones de manera colaborativa en Proyectos se destacan la continuidad de tareas de conexión para telemedición de acuerdo a lo solicitado por CES Energía, la conectividad de los Parques solares en construcción, con la conexión y configuración de servicios de Fibra óptica para brindar conectividad de internet a los parques solares de CES Energía ubicados en
+Cazón y Polvaredas.
+Asimismo mediante convenios con el municipio se ampliaron la cantidad de servicios bonificados brindados en Saladillo para la conexión de cámaras de seguridad, ampliándose el área de cobertura.
+||| Proyección del sector | Desde el área de telecomunicaciones se ha venido trabajado sobre dos aspectos centrales. La gestión comercial para la mejora competitiva y de la eficiencia administrativa en relación a la reducción de los costos operativos, por un lado, y la mejora tecnológica continua, con la búsqueda de nuevas alternativas que reduzcan los costos, mejoren la operatividad y generen una mejor calidad de servicio al usuario, por otra parte.
+El proceso de mejora continua demanda un plan de obras, inversiones y modificaciones en el sistema que para el Ejercicio 2024 – 2025 contempla entre las principales actualizaciones la centralización de los nodos de internet, la ampliación de la fibra óptica en la zona donde se encuentra el CFR Las Margaritas, concretar la migración de la central de telefonía NEC
+y una actualización del NOC Central (interconexión de proveedores, equipamiento de transmisión de datos -ópticos-, etc.)
+CES
+
+74
+El desarrollo del Ejercicio que se presenta en esta
+Memoria y Balance ha estado signado por las variaciones de la macroeconomía nacional que demandó una intensa gestión conjunta entre el Consejo de Administración y la conducción de la Fábrica de Columnas CESPRET, con acciones tendientes a mantener su capacidad productiva y comercial, en un contexto en el que se registró una merma en la realización de obras de infraestructura eléctrica, por parte de empresas distribuidoras en general y de proyectos del sector privado.
+La situación económica impactó en el aspecto comercial de la fábrica con una sustancial disminución de demanda por parte del sector productivo y de distribución de energía, que conforman gran parte de la cartera de clientes de CESPRET.
+Este periodo de baja pronunciada de la economía industrial se vio reflejada en la facturación de CESPRET, en todos sus segmentos de venta, producto de un mercado en el que los desarrolladores privados se mantuvieron expectantes, las cooperativas distribuidoras de energía en un proceso de adaptación entre costos y tarifas, y las distribuidoras importantes totalmente ausentes del mercado.
+El escenario de recesión del mercado afectó a la fá-
+brica de columnas y elementos de hormigón de la
+Cooperativa sin embargo, a través del incremento del stock de productos elaborados, se gestionaron los recursos y la situación de crisis para evitar con éxito la suspensión del personal.
+En el primer semestre del Ejercicio se realizaron 2637
+columnas lo que generó un volumen de facturación de 325 Millones de pesos, mientras que en el segundo tramo de este Ejercicio se elaboraron 2390, con un total de facturación en el orden de los 294 Millones de pesos, es decir que hubo un menor número de columnas producidas que en el primer semestre, con el doble de los valores de costo. La producción contempló además la elaboración de 163 módulos para nichos de panteones.
+Como estrategia operativa en la gestión económica de la fábrica ante este comportamiento de la demanda, en un contexto de creciente inflación, hacia el inicio del Ejercicio de concretó un importante acopio de materia prima. Esa acción, con énfasis en la compra de hierro y cordón trenzado de acero, permitió mantener los niveles de producción y, por lo tanto, activa la fábrica en todo el periodo, transformando el stock de materias prima en producto elaborado a la espera de su comercialización.
+CES
+CESPRET
+
+75
+A diferencia de lo registrado durante el desarrollo de Ejercicios anteriores, la industria siderúrgica tuvo disponibilidad de materia prima con facilidades para diferir pagos, aspecto que como estrategia comercial se transfirió a las ventas que se estimularon con el acompañamiento de los proveedores, para ofrecer un plazo de financiación prudencial a los compradores.
+En materia financiera la diferencia de tipo de cambio con el dólar, el elevado valor de la construcción y la falta de herramientas financieras más rentables, afectaron fuertemente el desarrollo productivo. En una fábrica cuya capacidad productiva y estructura operativa son rígidas se dificultó la búsqueda de nuevos modelos de negocios, la producción de nuevos productos y por lo tanto nuevos mercados, dado que dicha reconversión requerirían un cambio total en el perfil de negocios de CESPRET.
+Luego de meses de escasa actividad comercial, con una profundización después de diciembre del 2024, la venta comenzó a reactivarse hacia fines del Ejercicio.
+Al cierre del mismo el sector cuenta con niveles de stock importantes para abastecer la demanda y soportar el proceso productivo.
+El desfasaje cambiario de fin de año 2023 duplicó el costo de producción, los que debieron ser trasladados a la comercialización, no obstante los niveles de producción se mantuvieron a cambio de reducir stock de materias primas y mediante la optimización de compras de lo estrictamente necesario para mantener la producción.
+En cuanto a la gestión administrativa con la asistencia del Grupo GC, consultora externa enfocada en la gestión y mejora de procesos empresariales, mejora de productividad y eficiencia operativa en la CES, se efectuó un análisis y balance de la producción de
+CESPRET para el primer trimestre del 2024, a fin de evaluar el impacto de lo antedicho, planificándose repetir la acción periódicamente.
+Como parte de los trabajos de seguimiento de la gestión empresarial de CESPRET desde el Consejo de Administración se solicitó la mejora del Sistema de Costos de Producción y Presupuestación para el sector, necesario para la correcta determinación de la estructura de costos totales del área. La tarea, que se encuentra en etapa de testeo con pruebas de presupuestación comparativa, está a cargo de un equipo conformado por personal del área Cómputos y de
+CESPRET.
+||| Mantenimiento y mejoras | A diferencia de Ejercicios anteriores la situación económica y financiera del área no permitió la ejecución de obras de mejora de envergadura. Sin embargo se trabajó con personal de planta en el mantenimiento de las instalaciones y equipos de la línea de producción.
+CES
+
+76
+Para cumplir con las pautas de protección de los operarios las tareas de mantenimiento se centraron en el cuidado de los equipos de manera que sean elementos seguros para el personal que lo utiliza al tiempo que eficaz para el proceso de producción. Las tareas de mantenimiento operativas contemplaron ensayos de calderas en cumplimiento de normas nacionales y equipos de uso para la producción, como también de aquellos elementos que son sometidos a presión.
+||| Control de calidad | Certificando la calidad de los productos que se entregan, por demanda de los compradores, se realizaron ensayos destructivos y no destructivos de columnas para probar sus límites.
+El control del hormigón de alta resistencia, realizado con el objetivo de que el material que utilizado en la estructura cumpla con las especificaciones, comprende el seguimiento exhaustivo durante las diferentes etapas de elaboración, como así también del producto terminado, al que se realizan ensayos conforme a las pautas establecidas por las Normas IRAM-NIME, documentos que surgen del trabajo de un grupo de especialistas que acuerdan las condiciones mínimas que debe tener un producto, servicio o sistema de gestión.
+CES
+
+77
+CESPAZ es uno de los ejemplos de “mutualismo” más importantes que se registran en Saladillo, en el que la comunidad, por adhesión voluntaria, realiza un aporte mínimo mensual para sostener un servicio que genera beneficios a todos.
+El área de servicios sociales de la CES se sostiene a partir de la decisión política institucional de generar igualdad entre los ciudadanos mediante el impulso de políticas universales. Con su aporte los asociados tienen la posibilidad de disponer del servicio, mientras que para las personas en situación de vulnerabilidad social que no pueden afrontar dicho compromiso, a través de un acuerdo entre el municipio y la Cooperativa, se brinda un beneficio especial que les permite acceder a una prestación digna.
+Habiendo cumplido 40 años, desde el inicio del Ejercicio que se presenta, el área transitó el cambio de responsable de área por haberse acogido al beneficio jubilatorio quien se desempeñaba en el cargo.
+A partir de la búsqueda de un nuevo jefe de área, conforme al procedimiento del área de recursos humanos, se definió un perfil profesional con habilidades de gestión comercial. En tal sentido, a fin de fortalecer los aspectos económicos y financieros del sector para que, sin dejar de tener un perfil social con tarifas accesibles, el área logre el equilibrio se trabajó desde el
+Consejo de Administración junto al nuevo encargado.
+El proceso de transición entre la encargada saliente y el nuevo responsable se ejecutó dando continuidad a la gestión anterior, documentando todos los procesos establecidos, redactándose en esa instancia la “Memoria descriptiva y Manual de procedimientos - CESPAZ”, un documento que dejó registro de la gestión impulsada por la Lic. Cecilia Pachame, la estructura del sector, datos económicos, financieros y procesos y procedimientos como diagnóstico y punto de partida de la nueva etapa administrativa.
+Para la puesta en marcha de la nueva etapa de gestión, a cargo de Sebastián Lucero, desde el Consejo de Administración a través de su comisión de servicios sociales y en peramente articulación con la administración central de la CES, se definieron lineamientos de trabajo centrados en el ordenamiento administrativo, la planificación comercial y la búsqueda del equilibrio económico del sector mediante el aumento de la masa societaria.
+Durante el Ejercicio que en esta Memoria se presenta el número de servicios ascendió a los 369, es decir un promedio de 38 por mes, entre los que se cuenta un 84% de los servicios prestados a asociados, un
+5,7% contratados a CESPAZ por particulares no asociados, y un 4,3% realizados mediante un acuerdo de asistencia social que la Cooperativa mantiene con el área de Bienestar Social municipal, registrándose un aumento interanual de prestación de servicios del orden del 28%
+CES
+CESPAZ
+
+78
+Al cierre del Ejercicio la disponibilidad operativa comprende la existencia de 178 nichos estándar, 8 especiales y 24 pequeños, con un panteón e 160 nichos estándar en construcción.
+||| Campaña de nuevos socios | Con el fin de sumar nuevos adherentes desde el área de Comunicación y relaciones institucionales de la CES se coordinó para
+CESPAZ una campaña multiplataforma centrada en los valores del servicio que brinda la Cooperativa.
+El trabajo cuenta con herramientas de comunicación tradicional, con participación en Medios locales y el apoyo de una estrategia de Marketing digital para redes sociales.
+Como parte de la campaña se ha desarrollado una nueva vía de gestión virtual que permite a los interesados concretar la inscripción desde cualquier dispositivo móvil. De esta manera “adherirse a CESPAZ es fácil, económico”, propuso la campaña para que toda la comunidad cuente con el con solo completar un formulario online. La campaña previó además como beneficio que quienes se adhirieran durante el desarrollo de la misma no tuvieran período de carencia en el uso de un servicio.
+Como punto de partida para avanzar en la concreción de los objetivos trazados se realizó un diagnóstico que contempló la evaluación del estado edilicio, mobiliario, vehicular, y un estudio que reflejara la situación financiera, económica y operativa del sector. En tal sentido, a inicios del año 2024, se re determinaron los costos operativos del sector.
+Se analizó el punto de equilibrio de los servicios y se trabajó en el cálculo de las cuotas a abonar por los beneficiarios, bajo distintos escenarios y supuestos, delineándose además recomendaciones para mejorar el desempeño económico financiero del área.
+||| Nueva unidad de traslado | El plan de trabajo trazado establece objetivos a corto plazo, como la actualización de activos operativos, destacándose en este ítem la necesidad de adquirir una nueva unidad de traslados.
+CES
+
+79
+Como acción de mejora de las prestaciones y cumpliendo el plan, durante el transcurso del presente
+Ejercicio se adquirió una nueva morguera a través del sistema FARCAM. De esta manera, con la incorporación de un furgón utilitario Toyota Hiace, se modernizó la flota, completando un plan de inversiones que viene generando mejoras en las salas, capacitando al personal y especialmente construyendo nuevos panteones en los cementerios de Del Carril y Saladillo.
+||| Inversión en infraestructura | Las inversiones en obras de adecuación de las instalaciones y parque automotor fueron gestionadas con el fin de mantener el estándar del servicio. Para ello durante este Ejercicio se reacondicionaron salas y se finalizó el Panteón número 68 en el cementerio de Saladillo, dio inicio a la construcción del número 69, y a la mejora y parquización de los panteones de CESPAZ ya existentes en el cementerio de Saladillo.
+La inversión en infraestructura registró también avances en Del Carril, donde el área de servicios sociales de la Cooperativa Eléctrica de Saladillo puso en marcha la construcción de un nuevo panteón de dos módulos en el cementerio de esa localidad, con una capacidad de 36 nichos y tareas a cargo de personal de CESPRET, la fábrica de columnas y elementos de hormigón de la Cooperativa.
+||| Gestión administrativa | En el aspecto meramente administrativo se ha puesto en marcha un proceso de gestión que contempla el diseño de diagramas de flujos para facilitar el entendimiento de dichos procesos, y para el desarrollo del sistema de CESPAZ a cargo de los técnicos del sector de cómputos de la
+CES, con la colaboración del Grupo GC, consultora externa enfocada en la gestión y mejora de procesos empresariales, mejora de productividad y eficiencia operativa contratada por la CES.
+CES
+
+80
+En la búsqueda de la mejora de la eficiencia en el presente Ejercicio se inició el desarrollo de un sistema interno de gestión de reclamos. Dicha herramienta permite la gestión de reclamos de una manera integral, ofreciendo en primer lugar una vía práctica para generar reclamos y solicitudes, y desde el punto de vista de los trabajadores, para trabajar sobre los mismos en equipo, compartiendo la información. La incorporación del sistema en desarrollo demanda contar con información digitalizada, por lo que su puesta en funcionamiento motorizó un proceso de digitalización de documentos e informatización de procesos que antes eran manuales.
+La vinculación del personal en los aspectos operativos y de clima laboral contempla reuniones periódicas donde todos los miembros del equipo de trabajo pueden presentar inquietudes y sugerencias. La gestión del área desde una modalidad de corresponsabilidad horizontal, ha afianzado el compromiso y la responsabilidad de los empleados, lo que genera un trabajo cooperativo y una mayor eficacia operativa. Para tal fin se estableció el trabajo en conjunto de las tareas administrativas como modalidad, con énfasis en el manejo de datos, mantenimiento vehicular, control de stock, entre otras tareas secundarias, además de su desempeño como funebreros, reduciendo a la mínima expresión los tiempos ociosos e incrementando la productividad.
+||| Capacitación interna | Como acción de fortalecimiento de las capacidades de su personal, la Cooperativa Eléctrica de Saladillo (CES) realizó un curso orientado a la capacitación quienes prestan servicios en CESPAZ.
+La actividad, a cargo de referentes del área de seguridad e higiene de la Cooperativa, fue parte del proceso de mejoramiento de la calidad del servicio que se brinda a la comunidad, puesto que los servicios sociales son una prestación que requiere una especial atención, que comprende como primera misión acompañar a los asociados en un momento de dolor, y por lo tanto demanda una preparación integral del personal del área.
+CES
+
+81
+Una vez más, con el apoyo de los saladillenses, el Consejo de Administración ha gestionado los destinos de la
+Cooperativa construyendo en comunidad una ciudad que sea orgullo de nuestra gente, renovando un compromiso basado en los valores de la cooperación y la solidaridad, para dar respuesta a las diversas necesidades comunitarias, con el firme objetivo de lograr un intenso y amplio desarrollo de la región, y mejorando la calidad de vida de nuestros ciudadanos.
+Por ese motivo es que se solicita a los asociados la aprobación de la presente Memoria y Balance, donde expresamos en hechos la voluntad de haber querido fortalecer a nuestra noble institución mediante acciones y decisiones iluminadas por el espíritu de quienes hace ocho décadas imaginaron una entidad próspera y al servicio de la comunidad.
+PALABRAS FINALES
+CES
+
+CES
+82
+
+83
+CES
+
+CES
+84
+--- Fin del documento: Memoria 2023-2024.pdf ---
+
+
+--- Inicio del documento: Memoria 2024-2025.pdf ---
+MEMORIA
+ESTADOS CONTABLES
+INFORMES
+Octogésimo Primer Ejercicio
+-Finalizado el 30 de junio de 2025 –
+
+NÓMINA DE AUTORIDADES DURANTE EL EJERCICIO
+2024 - 2025
+PRESIDENTE
+VICEPRESIDENTE
+SECRETARIO
+PROSECRETARIO
+TESORERO
+PRO-TESORERO
+VOCALES TITULARES
+SINDICO
+LARA PABLO
+MASSA DANIEL
+GOÑI IGNACIO
+COTIGNOLA FRANCISCO
+MENGARELLI DANILO
+RIMOLO MATEO
+BASSI GUSTAVO
+MONETTI EDGARDO
+BARREIRO MARCELA
+MOLFINO RICARDO
+COOPERATIVA ELECTRICA DE SALADILLO L.T.D.A
+AUDITOR EXTERNO
+FARETTA JORGE A.
+
+La presentación del Balance y la Memoria trasciende el aspecto meramente administrativo que, conforme lo establecido por la Ley de Cooperativas y el estatuto, obliga a informar mediante esos documentos cual ha sido el funcionamiento de la institución. Se trata de una instancia de comunicación que invita a la reflexión y al intercambio de ideas entre los asociados acerca de los avances logrados y las inquietudes en relación al futuro de la Cooperativa.
+En este informe, no solo se detallan los resultados económicos que reflejan la solidez y eficiencia de nuestra gestión, sino que también se destacan los logros sociales y los beneficios que hemos generado para nuestra comunidad.
+La presentación del Balance y la Memoria en la vida institucional de las empresas es un punto de inflexión que permite el análisis, no solo de su funcionamiento operativo, sino que también el de la sociedad que da contexto y razón de existir a la misma.
+Con el cierre de este ejercicio económico, a través de esta Memoria, se concreta la presentación de los resultados económicos financieros mediante la exposición del Balance General, Informe del Síndico, de la
+Auditoría y demás cuadros analíticos, correspondientes al cierre de las operaciones que se produjeron al
+30 de junio de 2024, como herramienta para brindar información a nuestros asociados.
+A lo largo del octogésimo primer Ejercicio hemos trabajado para mejorar nuestros servicios, optimizar
+CES
+nuestros recursos y fortalecer nuestra relación con la comunidad. En las siguientes páginas, podrán encontrar un resumen detallado de nuestros logros y desafíos, así como las iniciativas que hemos implementado para seguir creciendo y beneficiando a nuestros asociados.
+Dado que la empresa es una manifestación de trabajo colectivo, un conjunto de esfuerzos armonizados para la realización de un fin común, la visión de nuestra gestión en relación a la Cooperativa ha buscado desarrollar la actividad bajo los principios de racionalidad económica empresarial que le permitan a la
+CES obtener niveles adecuados de eficiencia y eficacia económica, pero también productiva y social. Con esos objetivos fundamentales hemos confiado en el capital humano de la empresa las acciones operativas para fortalecer el presente de la entidad, pensando en el mañana.
+Una vez más, con el apoyo de los saladillenses, dimos un nuevo paso adelante. Convencidos de estar construyendo en comunidad una ciudad que sea orgullo de nuestra gente, renovamos nuestro compromiso basado en los valores de la cooperación y la solidaridad, para dar respuesta a las diversas necesidades comunitarias, con el firme objetivo de lograr un intenso y amplio desarrollo de la región, mejorando la calidad de vida de nuestros ciudadanos.
+Agradecemos a todos los que han contribuido a este esfuerzo conjunto y esperamos que este informe sea de utilidad para comprender mejor nuestra labor y nuestros objetivos para el futuro.
+01
+PALABRAS INTRODUCTORIAS
+
+El contexto económico y social de Argentina entre junio de 2024 y junio de 2025 – período en el que se desarrolló del octogésimo primer Ejercicio - presentó un panorama de recuperación económica y desafíos estructurales. La economía del país manifestó un crecimiento del 5,5% en 2025, impulsado por la inversión privada y las exportaciones, en un contexto de mayor orden macroeconómico y de inflación contenida. Sin embargo, en este período persistieron problemas estructurales como la alta informalidad laboral y la baja productividad, que limitan el potencial de crecimiento a largo plazo.
+La estabilización del tipo de cambio y ciertos indicadores financieros mostraron una mejora respecto al convulsionado 2024, detallado en la Memoria y
+Balance antecedente, pero con un crecimiento proyectado heterogéneo y con grandes desafíos, especialmente en el orden comercial. En ese contexto, a pesar de un repunte de la economía, en un escenario de estabilización propiciado por una disminución del déficit fiscal, la emisión monetaria y el proteccionismo económico, el crecimiento no resultó uniforme.
+Según indicadores la industria y la construcción cayeron en el primer trimestre de 2025, al tiempo que el salario real de los trabajadores formales se redujo, limitando la recuperación del consumo interno.
+Sin embargo, en una medición interanual el Instituto
+Nacional de Estadística y Censos (INDEC) indicó que la actividad de la construcción aumentó un 13,9% entre junio de 2024 y el mismo mes de 2025.
+El contexto de gestión en una empresa se refiere al conjunto de factores externos e internos que influyen en su funcionamiento y desarrollo. Estos elementos incluyen el entorno económico, político, social, cultural y tecnológico en el que se encuentra la empresa, así como sus propias características internas, como su estructura organizativa, su cultura empresarial y su estrategia de negocio.
+El conocimiento del contexto es esencial para el éxito de una empresa, ya que le permite identificar oportunidades y amenazas, adaptarse a los cambios del entorno y tomar decisiones informadas. Al mismo tiempo una lectura de contexto brinda herramientas para la comprensión del momento histórico en el que la conducción de la Cooperativa ha tomado las decisiones.
+A su vez, la gestión del contexto implica la capacidad de la empresa de adaptarse y responder a los cambios en el entorno externo e interno. Esto puede requerir la implementación de nuevas estrategias, la reorganización de la empresa o la adopción de nuevas tecnologías. La gestión del contexto también implica la capacidad de la empresa de influir en el entorno en el que opera, a través de la innovación, la responsabilidad social corporativa y la participación en iniciativas comunitarias.
+Si bien el plano económico es uno de los pilares de la sostenibilidad del negocio, la marcha de la realidad social se presenta como un indicador a contemplar en cuanto al análisis del contexto.
+02
+CES
+CONTEXTO DE GESTIÓN
+
+En el caso del área de servicios sociales el contexto se afrontó con acciones de gestión para conseguir un punto de equilibrio entre los costos operativos y los ingresos provenientes de las adhesiones de los asociados.
+Para la fábrica de pretensados de hormigón el impacto de la mejora en las tarifas energéticas de todas las distribuidoras se tradujo en una oportunidad para mejorar las ventas de columnas y productos asociados. Este factor, sumado a que al cierre del Ejercicio anterior el sector disponía de un importante stock, y debido a una desaceleración de la inflación, permitieron a CESPRET mantenerse en el mercado. Sin embargo, es importante destacar que si bien el volumen de facturación se incrementó durante el período analizado las ventas se concretaron en un valor cercano al de los costos de producción, al tiempo que algunos ítems de los costos operativos como los salarios del personal y sus cargas contributivas también se incrementaron.
+En el área de telecomunicaciones el contexto econó-
+mico de estabilización del índice inflacionario permitió la replanificación de las compras e insumos y de tecnologías que, en algunos casos, registraron bajas en sus valores en dólares, aspectos que permitieron al sector aumentar la facturación y por ende la utilidad.
+Estos beneficios han sido reinvertidos constantemente en función de llegar con servicios a sectores geográficos más alejados de la ciudad cabecera.
+En ese mismo período la inflación, que alcanzó el
+211% en 2023, disminuyó mostrando una desaceleración auspiciada por una política monetaria restrictiva y un tipo de cambio flotante. Es así que desde junio de
+2024 a junio de 2025 mostró una tendencia a la baja, aunque con variaciones mensuales. La mensual en junio de 2024 era del 4,6%, mientras que en el mismo mes del año siguiente midió 1,6%. De esta manera la inflación interanual en Argentina en julio de 2025 fue del 36,6%.
+Este contexto descripto durante el desarrollo del Ejercicio que se expone impactó de manera diferente en cada uno de los cuatros sectores que forman parte de la actividad global de la Cooperativa Eléctrica de
+Saladillo.
+En el área de energía permitió consolidar el pasivo contraído en Ejercicios anteriores, en tiempos de pandemia y de congelamiento de tarifas, mediante la firma de un acuerdo con la Compañía Administradora del Mercado Mayorista Eléctrico S.A. (Cammesa).
+Asimismo, a inicios del presente Ejercicio se comenzó a abonar la totalidad de la factura de compra de energía mensual.
+Estos cambios fueron viables debido a una readecuación de la tarifa eléctrica que permitió una mejor diferencia entre la compra y venta de la energía para optimizar la situación financiera del área y afrontar los compromisos operativos que cada mes demanda la prestación del servicio de energía.
+03
+CES
+
+lograr la sostenibilidad económica, social y ambiental.
+De esta manera y dando continuidad a políticas transversales que se han venido desarrollando a través del tiempo con la sucesión de diferentes Consejos de Administración, durante el desarrollo del Ejercicio que se presenta en esta Memoria, desde la Mesa Directiva se trabajó en la supervisión de la gestión operativa de la cooperativa asegundo el cumplimiento de los objetivos y políticas establecidas en conjunto desde el Consejo de Administración, evaluando el desempeño de la empresa.
+El modelo de gestión institucional se basa en una administración política de perfil gerencial, en la que son los integrantes de la Mesa Directiva quienes, en consulta permanente con los demás integrantes del cuerpo colegiado, definen las políticas institucionales y actúan en la concreción de medidas en el quehacer cotidiano de la empresa.
+Este esquema de conducción demanda plena atención para el desarrollo del proceso de planeamiento, organización, actuación y control de las operaciones de la empresa para, mediante la coordinación de los recursos humanos y materiales esenciales, alcanzar los objetivos trazados de una manera efectiva y eficiente. Es así que además de los aspectos operativos requiere un sustento de acción política institucional para el relacionamiento con otras entidades, empresas y el Estado en sus diversos niveles.
+En síntesis, la situación económica y financiera global de la Cooperativa, en contexto nacional, ha manifestado durante el desarrollo del Ejercicio que se expone una mejora significativa que la empresa a capitalizado en obras de infraestructura e incorporación de bienes y tecnologías. Estos beneficios le han permitido a la
+CES concretar una permanente modernización para la sustancial mejora de la calidad de sus servicios.
+La gestión política en los consejos de administración del cooperativismo se refiere a las funciones y responsabilidades relacionadas con la dirección estratégica, la toma de decisiones y la representación de la cooperativa ante sus miembros y la comunidad.
+En términos generales, algunas de las funciones que conciernen a la acción política de los concejeros son la definición de la estrategia y los objetivos de la empresa, estableciendo la visión, misión y objetivos, en consonancia con los intereses de sus miembros y la comunidad.
+Estas funciones basadas en el compromiso con los valores y principios del cooperativismo han sido puestas en acción desde el Consejo de Administración con la planificación de aspectos económicos y sociales que permitieran a la CES cumplir con el objetivo de
+04
+CES
+GESTIÓN POLITICA
+
+La reunión permitió realizar un balance de la gestión, con una mirada retrospectiva del camino recorrido por la sucesión de saladillenses que a través del tiempo se comprometieron con la Cooperativa.
+Dando cumplimiento a las normativas que legislan el funcionamiento de las Cooperativas, las autoridades a cargo del Consejo de Administración en la primera reunión del cuerpo colegiado, después de la Asamblea anual y con la oficialización y proclamación la lista, procedieron a distribuir entre los consejeros Titulares los cargos a cubrir.
+En relación a la distribución de los cargos se resolvió que Pablo Lara continuara a cargo de la presidencia, acompañado por Daniel Massa en la vicepresidencia, Ignacio Goñi en la secretaría y Danilo Mengarelli como tesorero. La nómina de cargos se completó con Mateo Rímolo como Protesorero, mientras que
+Gustavo Bassi, Edgardo Monetti y Marcela Barreiro se desempeñaron como vocales.
+La gestión se concreta en las acciones que se impulsan a través del diálogo permanente con la comunidad y sus instituciones representativas, buscando permanentemente el beneficio de todos los sectores y de los asociados en particular. De esta manera desde el Consejo de Administración se ha trabajado en diversos temas para concretar proyectos.
+Puesto que la Cooperativa Eléctrica de Saladillo fue fundada en una asamblea realizada en octubre de
+1944, la convocatoria para la presentación de la Memoria y Balance del 80° Ejercicio, del 31 de octubre de
+2024, fue además un acto de relevancia institucional.
+80 años después de su constitución la CES se ha convertido en una empresa privada de gestión cooperativa multiservicios, que en su vida institucional supo adaptarse a los diferentes contextos, modelos energéticos y demandas de la comunidad, con un criterio sostenible.
+En la Asamblea los delegados procedieron a la elección de una nueva consejera para el reemplazo de
+Ana Pintos, quien culminó su mandato al finalizar el
+Ejercicio. Marcela Barreiro, nueva integrante del Consejo de Administración ingresó para desempeñarse en el cargo por el término de tres años, como lo establece el estatuto.
+05
+CES
+NUEVAS AUTORIDADES
+
+La CES llegó a sus 80 años de vida cumpliendo con el mito fundacional de los pioneros que la conformaron, aportar soluciones a su comunidad y ser promotora del desarrollo local, social y productivo.
+La tarea basada en los valores de la cooperación han sido un anclaje social que le han permitido a la CES
+obtener el reconocimiento de su comunidad, como entidad comprometida con su medio.
+Atendiendo a ese valor empresarial desde el gobierno municipal se realizó un acto en conmemoración de los 80 años de la creación de la Cooperativa Eléctrica de Saladillo.
+Desde la gestión municipal se resaltó el importante rol que cumple la Cooperativa Eléctrica en nuestro medio como empresa proveedora de servicios, como así también su función social, haciéndose entrega de un presente consistente en un cuadro con los recortes periodísticos de época del momento fundacional de la CES en octubre del año 1944.
+En la reunión convocada por el Síndico de la CES,
+Ricardo Molfino, se conformaron las Comisiones Internas de Trabajo, dando continuidad de ese modo a la gestión que se venía impulsando por cada uno de los consejeros y asignando tareas a la entrante.
+Quienes han realizado su aporte a la vida institucional de la CES permanecerán vivos en la memoria, habiendo trascendido con su obra.
+En este segmento desde el Consejo de Administración, se realiza un reconocimiento especial a aquellos amigos en el cooperativismo fallecidos durante el desarrollo del presente Ejercicio.
+Recordamos y valoramos el paso por esta Cooperativa de José Luis Garabento, Rubén Ugartamendia,
+Fabián Savone y Ricardo Macchiaroli, procurando dar continuidad al legado de dedicación y compromiso que ellos dejaron.
+06
+CES
+RECONOCIMIENTO
+ANIVERSARIO DE LA CES
+
+Los acuerdos suscritos y los resultados litigiosos obtenidos reflejan el compromiso de la Cooperativa con el desarrollo local, la sostenibilidad y la defensa irrestricta de los intereses de los socios.
+Autoridades de la CES concretaron la firma para un crédito de 30 millones de pesos que permitirá a la
+Cooperativa llegar a la localidad de Polvaredas con el servicio de Internet de Fibra Óptica Directa al Hogar, procurando de esa manera brindar igualdad de oportunidades a todos los habitantes del Partido de
+Saladillo.El beneficio otorgado por “Fuerza Solidaria”, en el marco de un convenio con el Ministerio de Desarrollo Agrario de la Provincia de Buenos Aires, es el primer crédito de este fideicomiso al que accede la CES.
+El objetivo del Fideicomiso “Fuerza Solidaria” es fomentar y fortalecer procesos asociativos y solidarios en la Provincia de Buenos Aires, a partir del acceso a instrumentos crediticios y esquemas de capacitación y asistencia técnica”.
+Los fondos otorgados serán destinados a un nuevo tendido y ampliación de la red de fibra óptica en la localidad de Polvaredas, para que sus habitantes e instituciones puedan acceder a un servicio de internet de alta calidad, equiparable al disponible en la ciudad cabecera.
+Para los integrantes del Consejo de Administración de la cooperativa, la gestión jurídica implica asegurar el cumplimiento normativo y estatutario. Con ese objetivo la gestión plantea los desafíos de generar y concretar acuerdos estratégicos, lo que requiere definir objetivos, formular políticas y supervisar la implementación de los mismos.
+Las responsabilidades incluyen la dirección y representación de la cooperativa, la toma de decisiones sobre asuntos operativos y financieros, velar por el adecuado funcionamiento de la empresa y la promoción de la cooperación.
+Durante el avance del Ejercicio que se expresa en esta Memoria la gestión jurídico-administrativa, con el aporte de la asesoría letrada y de cada sector específico de servicios y producción, ha estado orientada a consolidar proyectos estratégicos, regularizar situaciones financieras críticas y expandir los servicios en beneficio de la comunidad.
+07
+CES
+GESTIÓN JURÍDICA Y ACUERDOS ESTRATÉGICOS
+CRÉDITO FIBRA ÓPTICA
+
+tura para la generación de energías limpias en zonas en las que se requiere una repotenciación del sistema de distribución.
+De manera simultánea, y también con la asesoría legal de la profesional a cargo de dicha área, se propuso a los delegados la venta de terrenos ubicados en la plata urbana de Saladillo, implementándose la acción mediante la asistencia de profesionales inmobiliarios.
+El PROINGED (Programa Provincial de Incentivos a la Generación de Energía Distribuida) es un programa de la Provincia de Buenos Aires, coordinado por el Ministerio de Infraestructura y el FREBA, que promueve y ejecuta proyectos de energías renovables, incluyendo el desarrollo de parques solares de pequeña escala. Su objetivo es diversificar la matriz energética, sustituir la generación diésel por energía limpia, e inyectar energía localmente para mejorar la calidad del servicio eléctrico y abastecer la demanda de localidades. Los parques solares desarrollados por PROINGED también pueden contar con sistemas de acumulación mediante baterías para optimizar el uso de la energía generada, como lo son los casos del Saladillo II (Del Carril) Saladillo III (Polvaredas) de
+Ces Energía.
+Con este nuevo crédito otorgado por el gobierno provincial, y el soporte de una red de fibra óptica y renovadas líneas eléctricas se avanza en la prestación de nuevos servicios a los habitantes del interior y se profundiza el desarrollo de otras herramientas complementarias como la telemedición, el telecomando y la conexión para cámaras de seguridad en puntos geográficos distantes de la planta urbana de Saladillo.
+Con visión estratégica y proyección a futuro en cuanto a la creciente demanda energética en el Partido de
+Saladillo, la CES adquirió una chacra en cercanías al acceso de la localidad de Cazón, sobre Ruta Nacional
+N°205 para la futura implementación de una granja solar.
+La operación inmobiliaria fue planteada en una reunión informativa al cuerpo de delegados, poniéndose a consideración de los mismos el plan de negocios que proyecta la capitalización de la empresa y el crecimiento estratégico del área de energía, mediante la ampliación de su infraestruc08
+CES
+CONTRATOS CON PROINGED - PARQUES SOLARES
+ADQUISICIÓN DE INMUEBLE EN CAZÓN
+
+Desde el PROINGED se trabajó en el diseño e implementación de un sistema de última tecnología para mini redes, incluyendo asimismo obras complementarias de eficiencia energética en las que participó
+CES Energía con la provisión de materiales y herramientas de aproximadamente 100 artículos, por un monto superior a los 75 mil dólares.
+Con la instalación actual, se estima que un 40% de la demanda energética será atendida con energía fotovoltaica, otro 37% será atendida por la energía almacenada en baterías de ión Litio implicando un ahorro estimado de 85.000 litros al año de gasoil, lo que se traduce a 285 toneladas/año de CO2 evitados.
+En el último año, las cooperativas eléctricas de la provincia de Buenos Aires han enfrentado una situación financiera crítica, marcada por una elevada deuda con CAMMESA y la posibilidad de intervenciones por parte del gobierno nacional. En ese contexto se intimó a las cooperativas a refinanciar sus deudas.
+Desde el Consejo de administración se trabajó intensamente con la asesoría letrada y personal técnico del área de energía a fin de regularizar la deuda histórica mediante un plan de pagos y un plan de obras comprometido.
+La puesta en funcionamiento y operatividad de dos nuevos parques solares, en el marco del proyecto del
+PROINGED, contempló un proceso de construcción y adjudicación de la operación de los parques solares una vez puestos en funcionamiento.
+Como parte de las gestiones del Consejo de Administración, con el acompañamiento de la asesoría letrada, se procedió a la suscripción de contratos con el
+PROINGED para la puesta en funcionamiento de los parques solares de Del Carril, en un predio de propiedad de la Cooperativa y en la localidad de Polvaredas, en un predio cedido en comodato para tal fin por un usuario.
+El Foro Regional Eléctrico de la provincia de Buenos
+Aires (FREBA) a través del PROINGED concretó un
+Proyecto de Generación Híbrida con acumulación que permitirá por primera vez a los habitantes de la Isla
+Martín García disponer de electricidad durante las 24
+horas del día, mediante el aprovechamiento de recursos renovables, ofreciendo la oportunidad de brindar mejores servicios turísticos a sus visitantes y mejor calidad de vida.
+09
+CES
+ACUERDO CON CAMMESA
+PROYECTOS EXTRAMUROS
+
+Haciendo uso de esta herramienta estatutaria el Consejo de Administración, en el transcurso del Ejercicio que se expone convocó a los delegados en dos oportunidades, incorporando en el orden del día cuestiones relacionadas al presente y proyectos futuros de la entidad.
+En un contexto en el que las energías renovables están resignificando la matriz energética, el Consejo de Administración convocó a los delegados para participar de una Asamblea informativa en la que se presentaron nuevos proyectos en materia de gestión de la comercialización.
+En la reunión los referentes técnicos y responsables de las diferentes áreas de la Cooperativa explicaron a los asociados que se desempeñan como delegados cómo se conforma el mapa de generación, transporte y distribución de la energía en Argentina y el rol que desempeñan sus diferentes actores.
+Del documento celebrado se desprende que la CES
+se compromete a elevar un reporte trimestral de avances de un plan de obras que se debió presentar como parte del acuerdo, como lo deben hacer todas las cooperativas.
+Con esta acción, además de la regularización de deuda se ha evitado ejecuciones legales y medidas cautelares, asegurando la continuidad del servicio, lográndose consolidar el pasivo contraído en Ejercicios anteriores – en tiempos de pandemia y de congelamiento de tarifas – para ser cancelado mediante un plan de pago de 72 meses, con un año de gracia. Asimismo, desde el mes de junio del 2024 se comenzó a pagar la totalidad de la factura de compra de energía mensual. Estos cambios fueron viables debido a recomposición de la tarifa eléctrica.
+La Reunión informativa de delegados en una cooperativa tiene como implicancia principal facilitar la participación democrática de los asociados y garantizar una representación equilibrada de sus intereses, optimizando la toma de decisiones y asegurando la correcta gobernanza de la cooperativa. Esta reunión, también conocida como de segundo grado, es un mecanismo clave para la participación de los asociados cuando la presencia masiva en una asamblea general es difícil, promoviendo la eficiencia, la transparencia y la confianza en la gestión cooperativa.
+10
+CES
+CONVOCATORIAS A DELEGADOS
+REUNIÓN INFORMATIVA - COMERCIALIZACIÓN DE
+ENERGIA
+
+Un mercado eléctrico “totalmente desregulado” que genera una “alarma encendida” y grandes incertidumbres. Por eso, las cooperativas buscan esta forma jurídica les permita ingresar como comercializadores y obtener una ventaja a la hora de comprar energía. La principal preocupación es cómo las pequeñas distribuidoras podrán competir en la compra de energía con “empresas” del mercado como Edenor o Edesur,
+Se considera “impensado” que una cooperativa individualmente pueda competir en este escenario, remarcaron.
+Entre las cooperativas que se sumarán inicialmente se encuentran Zárate, Parada Robles, Piedritas,
+Rancho, Pergamino, Azul, Tres Arroyos, Saladillo,
+Brandsen, Villa Lía (Buenos Aires); Armstrong (Santa
+Fe); Gualeguaychú (Entre Ríos); Comodoro Rivadavia (Chubut); Alto Verde y Algarrobo de San Martín
+(Mendoza); Río Grande (Tierra del Fuego); y FACE
+Nacional. La figura jurídica de Sociedad Anónima es crucial, porque las cooperativas no pueden ingresar al mercado eléctrico como comercializadoras bajo su figura legal actual.
+Durante el último trimestre del Ejercicio que se expone y frente a los avances registrados en sus diferentes áreas de servicios y producción, con un amplio plan de obras e inversiones el Consejo de Administración convocó a los delegados en una asamblea extraordiContemplando la evolución de la matriz energética nacional y la participación de CES Energía en la misma, en el encuentro se puso a consideración su adhesión a un grupo de Cooperativas distribuidoras integradas para la comercialización de energía y la prestación de servicios relacionados, acción que en el marco de la promoción de las energías renovables generaría nuevas oportunidades a la CES.
+Para dar este nuevo paso desde el Consejo se solicitó a los delegados el aval para avanzar en los nuevos proyectos de comercialización, pedido que fue aprobado por unanimidad.
+Frente a los procesos desregulatorios del mercado eléctrico que el Gobierno nacional ha plasmado en el
+Decreto 450, un grupo de cooperativas eléctricas está dando un paso estratégico: la constitución de una Sociedad Anónima (SA) para comercializar energía. El objetivo principal es poder comprar al “mejor precio posible”.
+11
+CES
+ASAMBLEA EXTRAORDINARIA - ENERGIA
+RENOVABLES
+
+La gestión cooperativa interinstitucional se refiere a la cooperación y articulación de diferentes organizaciones cooperativas para alcanzar objetivos comunes, combinando esfuerzos y recursos en beneficio de sus asociados y de la comunidad. Este enfoque implica la coordinación de procesos de gestión, la ayuda mutua, el intercambio de información y la puesta en práctica de estrategias conjuntas para fortalecer las capacidades de cada entidad, mejorar su producción o servicios, y obtener beneficios compartidos.
+El fomento del Cooperativismo es uno de los pilares para la CES. Con diversas iniciativas se activan los valores del movimiento procurando potenciar la integración de las entidades locales del sector al sistema productivo, acompañando la conformación de nuevas cooperativas, impulsando su desarrollo productivo-comercial, fortaleciendo sus capacidades para la autogestión y su participación en los entramados socio-productivos locales.
+Como parte de la puesta en acción del principio de integración la CES forma parte de Federaciones, con el fin de mejorar a los intereses de sus miembros y sus comunidades, colaborando por todos los medios con otras cooperativas en el orden local y nacional.
+Durante el desarrollo del Ejercicio que se expone la
+Cooperativa Eléctrica de Saladillo fue anfitriona del encuentro de la Asociación Prestadores Eléctricos de la Provincia de Buenos Aires (Apeba), actividad naria para poner a consideración nuevos proyectos de
+CES Energía con un fuerte impacto para el desarrollo de Saladillo.
+En dicha oportunidad, junto a referentes técnicos y responsables de las diferentes áreas de la Cooperativa, se brindó información a los asociados que se desempeñan como delegados poniendo a consideración de los mismos las acciones previstas para el impulso de nuevos proyectos relacionados a las energías renovables, que permitirán el desarrollo sostenible de la
+Cooperativa y de toda la comunidad.
+En el encuentro se puso a consideración la venta de un terreno propiedad de la CES ubicado sobre avenida Mariano Acosta y 12 de octubre, al tiempo que se propuso la adquisición de una chacra en inmediaciones a la localidad de Cazón, sobre Ruta Nacional
+N°205, donde se proyecta instalar un cuarto parque de generación de energía solar.
+12
+CES
+INTEGRACIÓN COOPERATIVA
+
+El servicio eléctrico en la Provincia de Buenos Aires es brindado por Distribuidoras Provinciales y Municipales a más de 2.000.000 de usuarios finales (exceptuando a los pertenecientes de Distribuidoras de
+Jurisdicción Nacional). La CES cuenta con representante en el directorio de la Federación APEBA, entidad integrada por un grupo de cooperativas eléctricas unidas por un interés común, para afrontar los desafíos del sector, mediante la participación activa de sus integrantes y en defensa de sus comunidades.
+Con la organización del Ministerio de desarrollo agrario provincial, se realizó en Saladillo el cierre del curso para Cooperativas y el impacto de los balances sociales que surgen de la gestión empresarial participativa.
+Las capacitaciones estuvieron orientadas a fortalecer la identidad cooperativa y promover la participación basada en sus valores y principios.
+Dirigido a integrantes de consejos de administración y sindicatura, asociados/as y/o responsables de educación y cooperativas agropecuarias/agroalimentarias domiciliadas y con desarrollo de sus actividades en la Provincia de Bs. As., la capacitación aportó herramientas para una gestión estratégica y con responsabilidad social.
+13
+encabezada por integrantes de la mesa directiva del organismo y que contó con la participación de otros importantes dirigentes del sector eléctrico cooperativo bonaerense.
+En el encuentro se expuso la situación actual de las distribuidoras cooperativas integrantes de Apeba y las líneas de acción para la gestión conjunta a corto y mediano plazo. Al respecto desde la CES se elevaron inquietudes puestas de manifiesto por usuarios y autoridades locales relevadas durante una serie de reuniones que la conducción de la Cooperativa ha venido teniendo.
+Entre las ciudades representadas por sus distribuidoras ante la Federación están las Cooperativas Eléctricas de Azul, Olavarría, Necochea, Tres Arroyos,
+Tandil, Colón, Luján, Nueve de Julio, Pergamino, Saladillo, Salto, San Pedro, Zárate y Chacabuco, teniendo a su cargo la prestación del servicio eléctrico de
+440.000 usuarios bonaerenses.
+CES
+VISIÓN DEL COOPERATIVISMO
+
+14
+Desde el año 2012, acompañando una iniciativa de la agrupación de Veteranos de Guerra de Malvinas de
+Saladillo, la Cooperativa Eléctrica (CES) inició acciones de “Malvinización”.
+En el último trimestre del Ejercicio que se expone y en el marco de las actividades del recordatorio de la
+“Gesta de Malvinas” referentes del Consejo de Administración de la Cooperativa se reunieron con Veteranos de Guerra de Saladillo y aplicaron las insignias con la leyenda “Saladillo tiene Héroes” en nuevas unidades móviles de la empresa.
+La iniciativa de que todas las unidades de la CES
+cuenten con una insignia de reconocimiento a los Veteranos saladillenses surgió hace más de una década y desde ese momento cada vehículo que se incorpora a la flota los tiene presente.
+Un total de 30 unidades que forman parte del parque automotor de la Cooperativa llevan la insignia que recuerda a los fallecidos durante la Guerra de Malvinas y a quienes participaron para defender nuestra Soberanía Nacional.
+Las cooperativas aportan al desarrollo local al generar empleo, mantener la riqueza dentro de la comunidad y fortalecer el tejido social, mientras que, para el desarrollo productivo tecnológico, facilitan el acceso a infraestructura y tecnología, promueven la innovación, la formalidad y el control de procesos, y actúan como un canal para la comercialización de producciones locales, fomentando la sostenibilidad y la economía circular.
+CES
+DESARROLLO LOCAL Y PRODUCTIVO
+HÉROES PARA EL COOPERATIVISMO
+
+En lo operativo, a través de su área de telecomunicaciones y de distribución de energía eléctrica, se aportó el servicio de ancho de banda de fibra óptica directa al hogar de CESTEL y la potenciación de la red eléctrica en los espacios en los que se realizó la
+Expo.
+La acción de apoyo a este evento que busca potenciar el desarrollo local, social y productivo de Saladillo coincide con el propósito de la CES de apostar a un crecimiento sostenible.
+La Cooperativa Eléctrica de Saladillo mantiene vínculos con organismos gubernamentales, a través de la promoción del cooperativismo, con entidades financieras para acceder a capital y créditos, otras cooperativas para la fomentar el apoyo mutuo en el movimiento cooperativo, organizaciones no gubernamentales colaborando en proyectos sociales o ambientales, y la comunidad en general poniendo en acción la responsabilidad social y mediante la inversión en el desarrollo local.
+Estos vínculos se rigen por la autonomía cooperativa, los valores de ayuda mutua, democracia y solidaridad, y el objetivo de satisfacer las necesidades de sus asociados, no de maximizar el lucro. De esta manera, durante el transcurso del Ejercicio 2024-2025
+la conducción de la CES ha realizado numerosas reuniones a fin de mantener un vínculo fluido con las autoridades municipales y de diversos organismos y entidades con representación en la comunidad.
+15
+Como parte del fomento de las acciones que traccionan el progreso la CES participa activamente en el campo social y productivo, aportando a esa matriz políticas innovadoras y apostando a nuevos desafíos con proyección al futuro.
+Un año más, al inicio del Ejercicio que se expone, además de ser uno de los principales sponsors de la
+Expo ITEC 024, evento científico tecnológico, la CES
+participó presentando su programa de energías renovables de generación, uso y promoción de las “energías limpias”.
+Integrada activamente a la agenda de actividades, en el evento se presentó “Máquinas y Humanos: la última risa”, una obra musical de teatro que toma la esencia y algunas canciones de “Un Clic”, la producción teatral de la CES, que promueve el uso racional de la energía.
+Además, en el ciclo de charlas, técnicos de CES
+Energía presentaron el programa integral de energías renovables de la Cooperativa, donde contaron como generar energías limpias y ser parte de la nueva matriz energética.
+CES
+VINCULO CON ORGANISMOS Y ENTIDADES
+
+inicio de este nuevo Ejercicio, con la entrega del Acta de Recepción Provisoria por parte de la Municipalidad de Saladillo el 31 de julio del 2024.
+El documento de Recepción Definitiva de la obra fue otorgado por la Municipalidad el 31 de enero del 2025
+una vez vencido el plazo de garantía de obra. Cabe destacar que en todo ese lapso no se sucedieron inconvenientes con los materiales ni por cuestiones de montaje de todo lo provisto por la Cooperativa.
+La obra de 1.800 metros de longitud conformada por
+42 luminarias de led de 276 W cada una, mediante el sistema de iluminación unilateral fue inaugurada el 31
+de julio con presencia de autoridades municipales, de la Cooperativa Eléctrica y público en general.
+16
+Con el soporte de una red troncal para la distribución de ancho de banda la CES brinda la prestación de servicios en la ciudad cabecera y en las comunidades del interior. Con el desarrollo de nuevas tecnologías e inversiones desde CESTEL se ha concretado la instalación de nuevas cámaras de última generación en puntos estratégicos e integración en un centro de monitoreo unificado.
+Mapeo de densidad de cobertura de cámaras de video vigilancia online.
+Para la adecuación contractual de este servicio desde la asesoría letrada se propuso la firma de adendas al contrato original suscripto con la Municipalidad de
+Saladillo, con el objetivo de incrementar la cobertura, densidad y tecnología del sistema de cámaras para disuadir el delito y optimizar el trabajo de las fuerzas de seguridad.
+La obra de iluminación de la Ruta Nacional N°205 que se iniciara en el Ejercicio anterior, se ha culminado al
+CES
+OBRA DE ILUMINACIÓN RUTA N°205
+AMPLIACIÓN DEL SISTEMA DE VIDEOVIGILANCIA
+
+Con una importante inversión de la CES y la intervención de una cuadrilla contratada se efectúa la poda de alzada y corte de ramas del arbolado público, con
+“chipeado de residuos orgánicos en toda la zona concesionada. Las tareas son sobre las líneas de Media
+Tensión y Centros de Transformación, buscando evitar la interferencia de las ramas con las instalaciones eléctricas y así eliminar el peligro de fallas.
+Resulta muy importante la concreción de las tareas de poda ya que el crecimiento de las ramas de los árboles afecta la correcta prestación del servicio, hecho que se intensifica exponencialmente los días de vientos y lluvia particularmente. Por tal motivo, esta es una inversión imprescindible para disminuir los factores que interfieren la calidad del servicio.
+En toda empresa comercial, y las de gestión cooperativa no son una excepción, la gestión de compras es un aspecto fundamental. Se trata del proceso que define las estrategias para la adquisición de suministros de producción, bienes y servicios que ayudan a garantizar el orden en las finanzas.
+17
+El convenio firmado en el acuerdo entre la Municipalidad y la Cooperativa Eléctrica de Saladillo para la ejecución de la obra, arrojó un monto superior a los 237
+mil dólares, que traducidos al tipo de cambio de esa fecha representó unos 71 millones y medio de pesos.
+Con una importante inversión de la CES un año más se realizaron trabajos de despeje de líneas sobre el arbolado público municipal.
+Debido al permanente mantenimiento que demandan las líneas de distribución de energía, la Cooperativa
+Eléctrica de Saladillo (CES) impulsa trabajos de poda correctiva para despejar las ramas del arbolado público municipal que generan interrupciones en el servicio.
+Se sabe que un alto porcentaje de las fallas eléctricas son producto de la intervención del arbolado sobre los cables de distribución del servicio, por lo que para la tarea se tiene en cuenta todo arbolado que interfiere en la calidad del servicio eléctrico, ya sea de baja o media tensión, en particular en la planta urbana de
+Saladillo y en las localidades del interior del Partido.
+CES
+GESTIÓN DE COMPRAS
+PODA CORRECTIVA
+
+Con la expansión de la infraestructura edilicia de
+CESPAZ, desde la oficina de compras se realizaron gestiones de compras para la finalización del Panteón 69 e inicio del Panteón 70 en el cementerio local, como también trabajos de mejora en los techos de los
+Panteones 54 y 55 que manifestaban problemas de filtraciones.
+Además, se acompañó con la adquisición de insumos y elementos para la renovación de sanitarios en la sala velatoria “B”, la renovación estética del frente de la oficina comercial y la entrega de un nuevo equipo celular para reforzar el sistema de atención al cliente.
+Como parte de un plan de renovación de flota se asistió al área de servicios sociales en el proceso de compra de una nueva unidad de cortejo, marca Toyota
+Yaris cero kilómetros. Dado que se trata de un modelo sedan, de catálogo comercial, se debió realizar la adaptación para las prestaciones específicas.
+Con el sector de fábrica de columnas, además de la gestión de compras corrientes se interactuó en el desarrollo de un Plan de mejoras en dos etapas para el sector, que comprende la modernización de Hormigonera y el reemplazo de moldes para la producción.
+18
+La Gestión de Compras en la CES cuenta con un área específica que se ocupa de la búsqueda, selección, negociación, seguimiento y control de las fuentes externas (proveedores) de materiales (productos, insumos, equipos, maquinaria, repuestos y materiales generales) y servicios que la empresa necesite para el cumplimiento de sus fines.
+Como herramienta para mejorar el funcionamiento operativo de este sector el Consejo de Administración cuenta con un Reglamento de compras. Este documento normativo cuenta de manera complementaria con un procedimiento de compras que establece una metodología de trabajo para las compras de bienes, así como también para la contratación y/o locación de servicios necesarios para el normal funcionamiento de los distintos sectores de la Cooperativa Eléctrica de Saladillo Ltda.
+Por demanda de cada área desde la oficina de compras de planificó la adquisición de productos y servicios para cuestiones operativas o interviniendo en procesos de desarrollo y construcciones que se realizaron.
+De manera transversal se ejecutaron compras para dotar a la empresa de elementos de seguridad e higiene para el personal, en el ambiente de trabajo, en función al protocolo establecido para cada área, realizando la tarea en equipo, junto al responsable de cada sector y el responsable del área de seguridad e higiene.
+CES
+
+El balance social de las cooperativas abarca aspectos de desempeño interno, dados por las condiciones laborales, capacitación, salud y seguridad de los empleados y socios, y desempeño externo que comprende contribuciones a la comunidad, relaciones con otras organizaciones y el Estado, poniendo en acción los principios cooperativos.
+Su objetivo es medir el impacto socioeconómico de la cooperativa más allá de las cifras financieras, reflejando su compromiso con la responsabilidad social y la identidad cooperativa.
+Los principios cooperativos son pautas generales por medio de las cuales las cooperativas ponen en práctica sus valores y la Cooperativa Eléctrica de Saladillo es una entidad comprometida con su entorno social, cultural y económico, por lo que, mediante el impulso de proyectos institucionales basados en políticas universales, tienden a dar respuesta a las necesidades de su comunidad.
+Actuando como reguladora de precios del mercado a partir de la libre competencia, en el aspecto económico ha forzado a otras empresas del sector privado a realizar inversiones y mantener los valores de su tarifa, en aquellos servicios no regulados por el Estado.
+Asimismo, ha actuado de manera complementaria y solidaria a la par de los organismos del Estado y las
+Organizaciones no gubernamentales de la comunidad, contribuyendo a resolver problemáticas.
+19
+En el área de telecomunicaciones, sector con demandas específicas en el segmento de tecnologías, la gestión de compras se efectuó por vínculos directos con proveedores habituales y a través del sistema de compras agrupadas con otras cooperativas a fin de mejorar el precio de los materiales.
+La presentación de la Memoria y Balance permite describir el funcionamiento de la empresa durante un lapso de tiempo determinado. La información que se pone a disposición de los asociados explica el contexto y la evolución del negocio que se detalla en el asiento contable. Sin embargo, hay acciones, tal vez no del todo cuantificables o intangibles, que corresponden con el accionar de la Cooperativa en relación a su comunidad.
+GESTIÓN SOCIAL Y COMUNITARIA
+CES
+BALANCE SOCIAL COOPERATIVO
+
+El objetivo de la CES se enfoca en mejorar la calidad de vida de la población a través del desarrollo de capacidades, la promoción de la salud, la educación, la equidad y la sostenibilidad ambiental, fortaleciendo así el bienestar económico, social y ambiental de la comunidad.
+Además de la ayuda institucional que se plasma en donaciones específicas, conforme a demandas de instituciones u organismos no gubernamentales el acercamiento a la comunidad, generando nuevas experiencias de vínculo de los saladillenses con su cooperativa, se construye mediante Programas como el de becas, “CESTEL va a la Escuela”, “Cooparte” y
+“Tercer tiempo”.
+La CES cuenta con un Programa institucional de acompañamiento a estudiantes de nivel universitario que comprende la entrega de becas de estudio a jó-
+venes que cursan sus carreras universitarias fuera de la ciudad. El mismo se concreta a partir de las solicitudes que presentan los estudiantes interesados en recibir apoyo. Dicho pedido es evaluado por una asistente social que analiza la situación socioeconómica de la familia del aspirante, y sus posibilidades de continuar los estudios superiores. A partir del estudio, todos los años la Cooperativa selecciona a quienes serán los beneficiarios de las becas.
+El sistema de selección de los estudiantes es exigente en cuanto requiere que los jóvenes cumplan con su condición de alumnos regulares y la aprobación de un
+20
+En el campo de lo social, la CES ha generado Programas culturales, deportivos, artísticos y productivos orientados a la inclusión social, la equidad, la generación de oportunidades y el desarrollo social de las personas de diferentes grupos de interés.
+Por lo expuesto, resulta necesario que al cierre de este Ejercicio se presenten algunas de las actividades de la Cooperativa en el plano social mostrando lo que puede denominar responsabilidad social asumida.
+Proponiendo programas integrales con políticas universales desde la CES se trabaja en la asistencia de necesidades sociales, al tiempo que se busca fomentar el desarrollo cultural con acciones concretas en el área de la educación y las artes.
+Estos programas comprenden iniciativas que van más allá de las obligaciones legales de la empresa como tal, para generar un impacto positivo y duradero en la sociedad, integrando prácticas éticas, sociales y ambientales en su modelo de gestión.
+CES
+PROGRAMAS DE RESPONSABILIDAD SOCIAL
+PROGRAMA DE BECAS
+
+la CES a través de su área de telecomunicaciones desde el año 2019 cuenta con su Programa de Ayuda
+“CESTEL va a la escuela”.
+Pensado como Programa de carácter universal al que puedan acceder las escuelas saladillenses, la acción se concreta con la bonificación del abono mensual de ancho de banda de Internet a establecimientos educativos que solicitan el beneficio. Este Programa se aplica en establecimientos educativos en los que hay disponibilidad técnica del servicio de CESTEL, tanto en la ciudad cabecera de Saladillo, como en las localidades del interior del Partido.
+21
+mínimo de materias, sin embargo, estas pautas permiten a la institución ser justa con los que no logran acceder a las becas por una cuestión de cupos.
+En el transcurso del ciclo lectivo comprendido durante el desarrollo del Ejercicio que se expone se ha acompañado a un total de 35 estudiantes que siguen las carreras de informática, psicología, arquitectura, medicina, nutrición, ingeniería en sistemas, ingeniería agrónoma, ingeniería química, ingeniería industrial, ciencia de datos de las organizaciones, veterinaria, artes visuales, derecho y educación física.
+En el transcurso del desarrollo del Ejercicio que aquí se describe Milagros Di Zeo obtuvo su título de arquitecta de la Facultad de Arquitectura de la Universidad
+Nacional de La Plata.
+Considerando que la Escuela no es ajena al complejo proceso de incorporación de nuevas tecnologías de la información y la comunicación, y teniendo en cuenta la situación económica que atraviesan las asociaciones cooperadoras de los establecimientos educativos,
+CES
+CESTEL VA A LA ESCUELA
+
+Las prácticas profesionalizantes en las escuelas técnicas de la Provincia de Buenos Aires son actividades formativas obligatorias que buscan que los estudiantes consoliden y apliquen saberes y habilidades para el mundo laboral, acercándolos a su futuro perfil profesional a través de formatos como pasantías en empresas, proyectos productivos institucionales o comunitarios, y empresas simuladas. Estas prácticas, reguladas por la Ley de Educación Técnico Profesional, permiten a los estudiantes del último año de las tecnicaturas integrar los conocimientos adquiridos con las prácticas productivas, fomentando el desarrollo de competencias profesionales y la articulación con el sector socio productivo.
+Durante el transcurso del Ejercicio que se expone la
+Cooperativa Eléctrica de Saladillo recibió a alumnos de la orientación de técnicos en programación de la
+Escuela Técnica Nro. 1 de Saladillo, quienes realizaron tareas específicas del sector, como también a alumnas de la carrera de administración del CFR “Las
+Margaritas” que se integraron al área administrativa de CESPAZ para la ejecución de una campaña de promoción del servicio.
+22
+Al cierre del 81° Ejercicio CESTEL beneficia con disponibilidad de Internet sin cargo, o de telefonía, a un número superior a los 30 establecimientos educativos de nivel inicial, primario y secundario, entre los que se cuentan los recientemente incorporados al Programa con la llegada del servicio a Del Carril y el cuartel de bomberos voluntarios de esa localidad, como ocurre en la ciudad cabecera, o de otras instituciones de bien público.
+Con sentido de responsabilidad social y dando respuesta a necesidades en el campo sanitario la Cooperativa Eléctrica de Saladillo realizó un nuevo aporte al Hospital Doctor Posadas de Saladillo.
+La ayuda se concretó con la entrega de electrocardió-
+grafos para el área de cardiología y guardia general.
+De este modo desde la CES se trabaja en la asistencia de necesidades sociales, con recursos genuinos del aporte de los socios que benefician al conjunto de la comunidad. La CES es una empresa saladillense y el Hospital Posadas es un bien de todos los habitantes de Saladillo y la región.
+CES
+PRÁCTICAS PROFESIONALIZANTES
+ACCIÓN COOPERATIVA / DONACIONES AL
+HOSPITAL
+
+Durante el Ejercicio que se expone se acompañó a las escuelas de fútbol de Jacobo Urso y Oro Verde creando espacios para asegurar la integración social, la igualdad y dando respuesta a problemáticas emergentes que afectan a los más pequeños insertos en espacios deportivos, y que se encuentran en situación de vulnerabilidad económica y social.
+Cooparte es el Programa institucional con el que la
+CES fomenta el desarrollo del arte y la cultura, partiendo de la identificación de las necesidades y el potencial artístico cultural de la comunidad.
+En forma ininterrumpida Cooparte se ha convertido en un espacio para el desarrollo de las personas con inquietudes artísticas, fomentando la profesionalización de diversas disciplinas y creando oportunidades laborales para los profesionales del ámbito de las artes. Desde el año 2013 constituye una herramienta de articulación con la comunidad para la diversificación de actividades artísticas a partir de la producción de eventos, la difusión de disciplinas del arte y la participación de los ciudadanos en entornos formativos con talleres, seminarios, masterclass y capacitaciones.
+Dando continuidad a las líneas de acción propuestas desde su creación, durante el desarrollo del Ejercicio que se expone Cooparte ha colaborado brindando las instalaciones y los recursos para realizar sus actividades a diferentes expresiones. De esta manera con los “Talleres para Cooparte”, actividades recreativas – formativas que con una cuota mínima
+23
+El trabajo de articulación interinstitucional se completa con otras acciones que buscan potenciar el desarrollo de las personas, ya que de esa manera se fortalece también el sistema educativo. Es así que desde el año
+1997 se impulsan acciones de prácticas de inserción laboral a grupos de alumnos de la Escuela Especial
+Nº501 y CETIDIM, entre otras entidades educativas del medio.
+Entre los Programas de fortalecimiento de las redes de contención social que impulsa la CES “Tercer tiempo, un momento para compartir” propone la inclusión asegurando accesibilidad a través del trabajo en equipo.
+En Alianza social con instituciones deportivas del medio local, para la contención de niños y jóvenes, la
+CES procura promover hábitos saludables, fortalecer la resiliencia y el bienestar emocional, y desarrollar habilidades sociales como la cooperación y el liderazgo.
+CES
+PROGRAMA COOPARTE
+PROGRAMA TERCER TIEMPO
+
+tos de meditación, danzas circulares y un cierre con show de la banda local Lágrimas y Alienado.
+Extramuros la gestión cultural de la CES proporciona herramientas para el impulso cultural desde diversas áreas, con la finalidad de promover, mantener y resaltar las diferentes expresiones culturales en el conjunto de la sociedad. De manera constante CESTEL
+le pone fibra a cada proyecto que impulsa el Multiespacio LAM y durante el desarrollo del Ejercicio que se expone brindó, un año más, soporte de ancho de banda al encuentro de teatro “Luz de Sala”, evento que reunió a elencos teatrales de toda Provincia de
+Buenos Aires.
+24
+mensual generan oportunidad de trabajo a profesores de danzas, teatro, pintura, dibujo, fotografía y otras áreas de expresión artística, se abrió las puertas del espacio a los saladillenses con inquietud artística.
+Con esta apertura a la comunidad elencos de teatro, agrupaciones corales, aficionados a la pintura y la fotografía como también a la danza, con sus diversos géneros de música, permiten a los saladillenes expresarse a través de estas múltiples disciplinas artísticas.
+De lunes a viernes se desarrollan las actividades de danzas árabes, tango, folclore, ritmos caribeños y, orientados a los más chicos, hasta un taller de Ukelele.
+Entre las actividades desarrolladas durante el último año se realizaron eventos culturales, seminarios capacitaciones y presentaciones de libros de autores locales.
+Angelina Jazmín Tejera, autora del libro “La idea desborda” hizo la presentación de la obra literaria en Cooparte en el marco de un evento que contó además con la proyección de contenidos audiovisuales, momenCES
+
+Pensando en el incentivo de la expresión artística de los más chicos, la Cooperativa Eléctrica de Saladillo abriró el espacio de Cooparte en su auditorio a dos nuevas disciplinas de la música con un Taller de
+Ukelele y la conformación de un Coro infantil.
+La actividad a cargo de la Profesora Cintia Varelli, con una amplia trayectoria en educación musical se orientó a niñas y niños desde los 8 años en adelante con interés en aprender el lenguaje musical, con instrumentos y su propia voz.
+Como parte de su integración con la comunidad el coro infantil participó de “La Noche de los Foodtrucks”, evento público organizado por la Banda local Los
+Quelonios, realizó visitas de interacción en el Hogar de niños Golondrinas y cantó Villancicos en la feria de navidad, al tiempo que participó del encuentro provincial de coros realizado en Saladillo por la Agrupación coral local.
+25
+Desde el 2015 LAM organiza este encuentro/festival/
+fiesta en la que elencos de distintas partes de nuestro país se hacen presentes para mostrar su arte en su sala y es ahí donde, una vez más, está la CES acompañando las iniciativas artísticas y culturales que le permiten a Saladillo proyectarse.
+La Cooperativa Eléctrica de Saladillo, a través de
+Cooparte como nexo de gestión y CESTEL en las soluciones técnicas apoya los eventos artísticos y culturales aportando ancho de banda de internet.
+Con el ancho de Banda de CESTEL los eventos cuentan con el servicio para la realización de emisiones por streaming de video en alta calidad y actividades en línea como talleres o clases a distancia.
+Durante el Ejercicio que se expone la CES ha participado auspiciando eventos populares en la ciudad cabecera de Saladillo, como el aniversario de la ciudad, la Fiesta de la Galleta de piso, la Feria provincial de artesanos o Expo Itec, como también en localidades del interior acompañando a la organización de la Fiesta del pollo en Del Carril o expo Vivero y Expo Cactus en Cazón.
+CES
+TALLERES DE UKELELE Y CORO PARA LOS MAS
+PEQUEÑOS
+EVENTOS ARTISTICO CULTURALES Y FIESTAS
+POPULARES
+
+Durante los meses en que se ha desarrollado el presente Ejercicio desde el área de Trabajo Social de la CES, partiendo de informes socio-ambientales, se ha trabajado sobre los Programas institucionales como el de otorgamiento de becas, “Tercer Tiempo”
+atendiendo además la situación de personas electro dependientes y especialmente realizando permanentemente revisiones del encuadre de tarifas de familias en situación de vulnerabilidad social.
+Las cooperativas eléctricas son organizaciones que proporcionan servicios de energía eléctrica a sus miembros, quienes son a su vez los propietarios y usuarios del servicio. El consejo de administración de la cooperativa eléctrica es el órgano de gobierno que toma decisiones estratégicas y supervisa la gestión de la organización. En este contexto, la asesoría letrada juega un papel crucial en el apoyo al consejo de administración en la toma de decisiones informadas y efectivas.
+La asesoría tiene como objetivo principal proporcionar orientación y apoyo experto en áreas específicas que requieren conocimientos técnicos y especializados. La tarea profesional comprende el análisis y evaluación de información, el asesoramiento estraté-
+gico para que la cooperativa cumpla con las normas y regulaciones aplicables, identificando y evaluando, además, los riesgos que enfrenta la entidad para proporcionar recomendaciones para mitigarlos.
+26
+La intervención en lo social es una convocatoria, una demanda que implica un estar con el otro desde diferentes aspectos que se vinculan con la resolución de inconvenientes, problemas y complejidades que se presentan en la vida cotidiana y que se expresan de manera fuertemente singular.
+El campo disciplinar del Trabajo Social, busca comprender cómo se expresan los problemas sociales en la vida cotidiana y elaborar estrategias para operar en ellos, es por eso que la tarea en el campo del trabajo social comprende tanto la facilitación de la accesibilidad a un recurso como las posibilidades de comunicación con otros.
+Contemplando las problemáticas que desde el enfoque cooperativo se pueden hacer frente, la CES
+cuenta con un área social a cargo de una profesional abocada a la detección y atención de problemáticas.
+Desde el área se impulsan acciones de asistencia a personas y grupos. Los trabajos se concretan a nivel individual, familiar, grupal y comunitario, buscando favorecer el ejercicio, la rehabilitación, el desarrollo de conductas participativas sociales y el trabajo en red con diferentes instituciones.
+CES
+ASESORÍA LETRADA
+TRABAJO SOCIAL
+
+Asimismo, en el litigio de acciones en el ámbito laboral en una causa en la que se demandaba a la CES
+por daños y perjuicios por parte de un ex empleado se consiguió el rechazo de la acción demandada mediante argumentación jurídica sólida por parte de la asesoría letrada, logrando la evitación de un significativo desembolso económico y consolidación de jurisprudencia favorable.
+La gestión de cobro coactivo y ejecutivo desde la asesoría letrada implica representar y defender a la Cooperativa frente a un proceso administrativo o judicial donde la entidad busca recuperar una deuda a través de medios coercitivos, como el embargo y el remate de bienes, o actuando activamente para iniciar estos procesos en nombre de un acreedor. Implica el conocimiento de los mecanismos de ejecución forzosa, la presentación de defensas y la gestión de los actos administrativos y judiciales relacionados con el proceso. En tal sentido durante el desarrollo de Ejercicio que se expone desde el área de legales se logró la procedencia de acciones ejecutivas contra deudores morosos, optimizando la recuperación de créditos a favor de la Cooperativa.
+Como parte de sus incumbencias la asesoría letrada debe impulsar las acciones contencioso-administrativas destinadas a la anulación de actos administrativos ilegítimos, la declaración de certeza sobre
+27
+Como parte del trabajo que viene impulsando desde hace más de una década la Dra. María Natalia Renzi, a cargo de la asesoría letrada, se continuó actuando en estricto cumplimiento de los principios de transparencia y gobierno corporativo para la defensa de los intereses sociales y patrimoniales de la entidad.
+Durante el desarrollo del Ejercicio iniciado en junio del año 2024, se obtuvieron resoluciones judiciales favorables y sentencias firmes en múltiples procesos, consolidando la seguridad jurídica de la Cooperativa y preservando su patrimonio.
+Los resultados alcanzados responden a una estrategia litigiosa robusta y ética, orientada a la protección del interés colectivo.
+Entre los litigios con resultados favorables para la empresa cooperativa, en el ámbito de la justicia civil y comercial se logró el rechazo de una acción interpuesta por un ex empleado demandante, consiguiéndose para la CES el beneficio de la preservación patrimonial al evitar el desembolso de recursos económicos de la Cooperativa.
+CES
+GESTIÓN DE COBRO COACTIVO Y EJECUTIVO
+ACCIONES CONTENCIOSO - ADMINISTRATIVAS
+GESTIÓN JUDICIAL Y RESULTADOS OBTENIDOS
+
+A lo largo del periodo comprendido por el desarrollo del Ejercicio que se expone, se realizaron trabajos de gestión, interactuando con los sectores del organigrama que dan estructura a la organización.
+En tal sentido, se llevaron adelante de forma simultánea tareas de administración de recursos del personal, a fin de facilitar los propósitos de las distintas unidades de negocio, promoviendo la mayor conformidad y desarrollo del personal involucrado e intentando potenciar los valores que hacen al bien de la institución.
+En relación directa a lo anterior, el esquema de trabajo se concreta mediante los fundamentos que brindan los procedimientos de gestión institucionales de la
+CES, los cuales aportan transparencia y homogeneidad en los criterios y cometidos, con bases en la normativa legal vigente y adaptados a la particularidad y estructura institucional, facilitando algunas de las mencionadas tareas del sector que ocupa al área de
+Recursos humanos.
+28
+situaciones jurídicas en disputa, la reparación de da-
+ños y perjuicios que pueda causar la Administración, la cesación de vías de hecho administrativas, la impugnación de ordenanzas municipales, la responsabilidad patrimonial de la provincia o municipios, y la aplicación o ejecución de tributos. Es fundamental, en los casos enumerados, que previamente se hayan agotado los recursos administrativos y se cumplan los plazos legales.
+Durante el desarrollo del Ejercicio que se expone se obtuvieron sentencias favorables en procesos iniciados contra actos de autoridades administrativas y municipales. Con esta acción se consiguió una defensa exitosa del marco legal cooperativo y anulación de actos lesivos para la autonomía y el normal funcionamiento de la entidad.
+El desarrollo de las personas en la Cooperativa como ente empleador abarca la evaluación del potencial y las habilidades del personal afectado a las tareas operativas, la creación de planes de formación y desarrollo de carrera, la gestión del desempeño y la motivación, así como el establecimiento de un entorno de aprendizaje continuo que beneficia tanto a los trabajadores como a la organización. Su objetivo es mejorar las capacidades del personal para alcanzar los objetivos de la empresa y garantizar su crecimiento a largo plazo.
+CES
+DESARROLLO DE LAS PERSONAS
+
+información, control de descuentos, acreditaciones y otras deducciones, control horario y procesamiento, como así también entregas y validaciones.
+Como parte del trabajo se efectúan registros documentales y administran los legajos de personal donde, bajo procedimiento aprobado, se almacena toda la información de distintas índoles sobre el personal de CES para dar soporte a los requerimientos de seguridad social, salud ocupacional, previsional, legal, etc. De este modo se documenta toda la información vinculada a datos personales, familiares, control, registración y estadística de licencias, adelantos, ausentismo, vacaciones, jubilaciones, despidos y retiros de necesidad para la agilidad de documentación durante la vida laboral y posterior alcance previsional.
+También es el área de desarrollo de las personas la que actúa en las gestiones y actualizaciones vinculadas a seguros generales del personal, articulando acciones con el área de compras, aseguradoras encargadas de sectores y entidades solicitantes.
+29
+De esta manera se trabaja en la cobertura de la necesidades e inquietudes del personal, asesorando en la adaptación normativa, roles, alcances, particularidades económicas, resolución de conflictos, necesidades extraordinarias, licencias, etc.
+El trabajo requiere además la coordinación de la selección de ingresos y captación de personal, generación de perfiles según necesidades, a fin de reclutamiento dependiendo del contexto específico de las demandas del sector, como también gestiones sobre servicios de empresas y personal externo; articulando con el área legal, en relación al control y seguimiento en aspectos legales y laborales que deben contar quienes prestan servicios a la entidad.
+En relación a la accidentología, se realizan trabajos combinados con el área de seguridad e higiene, ART, como así también medicina laboral, a fin de lograr alcanzar la mejor eficiencia profesional en relación a prevención, ejecución de restablecimiento saludable del personal afectado y gestiones de reintegro.
+El aspecto administrativo requiere al área de Recursos Humanos el control y respaldo de novedades de cara a liquidación de haberes, articulando con los encargados de sector, reportes horarios y grillas de funcionamiento. Trabajando de forma conjunta con el área específica de liquidación se realizan labores de registro de datos, asegurando la concordancia de la
+CES
+
+En relación a presentaciones que dan soporte y vigencia a la gestión de prevención del personal Se realizaron y actualizaron las DDJJ que garantizan funcionalidad y cumplimiento en materia de prevención, vinculando a la ART en servicio.
+El desarrollo de la prevención y gestión de la higiene y salud ocupacional en un ambiente laboral comprende la identificación y evaluación de riesgos, la implementación de medidas de control, como controles de ingeniería, prácticas de trabajo y EPP, la formación del personal, el monitoreo continuo de las condiciones de trabajo, y el cumplimiento de normativas para proteger la salud e integridad física y mental de los trabajadores, promoviendo un ambiente de trabajo seguro y saludable.
+El Sistema de Gestión de Seguridad y Salud en el
+Trabajo (SG-SST) abarca una disciplina que trata de prevenir las lesiones y las enfermedades causadas por las condiciones de trabajo, además de la protección y promoción de la salud de los empleados.
+30
+La tarea comprende también la gestión de consultas de índole sindical, para lo que se trabaja principalmente con el área de legales, articulando con delegados y mesas sindicales, al igual que frente a trámites de trabajadores próximos a jubilarse y ex empleados en la misma condición. En tal sentido, se facilitan las tareas que favorecen acreditar sus aportes como así también los de la entidad, a fin de lograr los requerimientos normativos, a través de certificaciones y atenciones en las auditorías de control de ANSES sobre los mismos.
+La gestión de auditorías de organismos de control ha sido parte de la tarea impulsada desde el área cumpliendo con los requerimientos de los distintos organismos que dan estructura a los estándares nacionales normativos. De esta manera, se reciben, gestionan y se acreditan cumplimientos ante organismos vinculados a medioambiente, ministerio de trabajo, superintendencia de riesgo de trabajo, ART, sector previsional, etc. dando solvencia en esas áreas.
+Durante el desarrollo del Ejercicio que esta Memoria expone desde el área se ha cumplido íntegramente con la realización de los exámenes médicos periódicos para todo el personal involucrado, así como con los exámenes médicos establecidos en los convenios colectivos de trabajo (C.C.T.) correspondientes, incluyendo también los exámenes psicotécnicos.
+CES
+SEGURIDAD E HIGIENE
+
+31
+Tiene el objetivo de mejorar las condiciones laborales y el ambiente en el trabajo, además de la salud en el trabajo, que conlleva la promoción del mantenimiento del bienestar físico, mental y social de los empleados.
+Esta gestión consistente en realizar un desarrollo de un proceso lógico y por etapas, se basa en la mejora continua, con el fin de anticipar, reconocer, evaluar y controlar todos los riesgos que puedan afectar a la seguridad y la salud en el trabajo.
+La seguridad y salud en el trabajo debe ser liderada por el jefe de cada área, con la participación de todos los empleados, garantizando la aplicación de las medidas de seguridad y salud en el trabajo, el mejoramiento del comportamiento de los empleados, las condiciones y el medio ambiente laboral, y el control eficaz de los peligros y riesgos en el lugar de trabajo.
+Los indicadores son formulaciones generalmente matemáticas con las que se busca reflejar una situación determinada. Un indicador es una relación entre variables cuantitativas o cualitativas que permite observar la situación y las tendencias de cambios generadas en el objeto o fenómeno observado, en relación con objetivos y metas previstas e impactos esperados.
+Estos indicadores pueden ser valores, unidades, índices, series estadísticas, etc. Son las herramientas fundamentales de la evaluación.
+Los indicadores son útiles para varios fines, como evaluar la gestión, identificar oportunidades de mejoramiento, adecuar a la realidad objetivos, metas y estrategias, sensibilizar a las personas que toman decisiones y a quienes son objeto de las mismas, acerca de las bondades de los programas y tomar medidas preventivas a tiempo.
+Durante el Ejercicio que se expone, se llevó adelante un proceso de renovación en las mediciones reglamentarias, según corresponde a cada actividad, con la Medición de iluminación, bajo los parámetros establecidos en resolución 84/12 SRT.; Medición de Puestas a Tierra, res. 900/15 srt y la medición de Ruido, bajo parámetros de res. 85/12 SRT.
+CES
+ESTUDIOS, MEDICIONES Y GESTIONES
+CONJUNTAS A TODAS LAS ÁREAS
+
+32
+Por medio de un plan de mantenimiento periódico anual, se controlan y registran acciones de prevención en los establecimientos; niveles de iluminación res 84/12 SRT, en los distintos puestos de trabajo, control de sistemas de iluminación de emergencia trabajando en las mejoras, a través de coordinación con personal de mantenimiento, control de extintores en base a IRAM 3517-2, control de detección de incendio en sector administración, control en botiquines de primeros auxilios, etc.
+A través de relevamientos periódicos de inspección y controles, se cumple con lo establecido en la res.
+299/11SRT, en lo referente a selección, entrega y registro de ropa de trabajo y Elementos de Protección
+Personal, manteniendo las características y validaciones específicas de cada unidad de negocio. La norma establece la obligatoriedad de los empleadores de suministrar a sus trabajadores Elementos de Protección
+Personal (EPP) y ropa de trabajo que estén certificados por organismos reconocidos y de calidad garantizada. Además, crea un formulario obligatorio para registrar y dejar constancia de la entrega de estos elementos, el cual debe ser firmado por el trabajador y conservado por la empresa.
+La capacitación anual en prevención de riesgos laborales comprende la formación de los empleados para identificar y controlar riesgos en el trabajo, abarcando aspectos como la seguridad, higiene industrial, ergonomía, y psicosociología laboral, a través de un plan que define políticas y compromisos de la empresa, con el objetivo de lograr ambientes de trabajo más sanos y seguros según las normativas vigentes.
+Estas actividades por sector, conforme a las incumbencias de cada área, requieren un plan que establezca las políticas y los compromisos de la empresa en materia de prevención.
+CES
+CAPACITACIÓN CONTINUA
+
+33
+Con actividades de formación a cargo de especialistas en cada tema se fomenta la participación de los trabajadores en debates y reflexiones sobre las condiciones laborales.
+Todas las actividades son documentadas mediante un registro de la capacitación, incluyendo temas, contenidos, duración, fechas, responsables, y la entrega de certificados a los participantes, e incluyen evaluaciones y simulacros para verificar la efectividad de la capacitación.
+Con estas premisas, desde el área de seguridad y salud en el trabajo se diagramó un cronograma de capacitación anual abordando con el mismo temáticas relacionadas con la inducción de seguridad. El programa de contenidos contempló el tratamiento de la prevención de accidentes generales de trabajo, accidente itinere, uso de elementos de protección personal, prevención de incendios y uso de extintores manuales, primeros auxilios básicos y RCP.
+La seguridad de los trabajos eléctricos en espacios públicos abarca la protección de cuadrillas y ciudadanos mediante la aplicación de procedimientos de trabajo seguro, como el corte y bloqueo de la tensión, la verificación de ausencia de carga, la puesta a tierra, la delimitación de áreas de trabajo y el uso de equipos de protección personal. También incluye la señalización adecuada de las obras, el control de riesgos asociados a instalaciones defectuosas o en contacto con el agua, y el respeto a distancias de seguridad.
+Las capacitaciones contaron con tramos teóricos y prácticos, asegurándose que las tareas realizadas en la vía pública se realicen bajo cobertura de programas de seguridad acorde a las tareas que cada sector realiza y conforme al Dec. 911/96 SRT, norma que detalla los derechos y responsabilidades de empleadores y trabajadores, las medidas de seguridad a implementar en cada etapa de la obra, y el uso obligatorio de un Servicio de Higiene y Seguridad para prevenir accidentes laborales y enfermedades profesionales.
+El trabajo en líneas en altura, torres y antenas comprende una serie de medidas de seguridad e higiene, que incluyen la evaluación de riesgos, la provisión y
+CES
+SEGURIDAD EN LA VÍA PÚBLICA
+
+34
+uso de Equipos de Protección Personal (EPP) adecuados (como cascos, arneses, y líneas de vida), la capacitación rigurosa de los operarios, la inspección constante de los equipos y estructuras, la implementación de sistemas de protección colectiva, y la prohibición de trabajar en condiciones climáticas adversas.
+Como parte de los trabajos asistidos en materia de seguridad e higiene, durante el período que describe esta Memoria, se continuaron realizando las labores sobre las torres de comunicación de la CES, desarrollando los mantenimientos y actualizaciones con la celeridad que demanda el servicio brindado, realizado por personal propio del área, capacitado por el área de seguridad laboral, para efectuar el trabajo de modo seguro. Cabe destacar que se efectúan certificaciones sobre cada una de las torres de la CES, a fin de garantizar la seguridad estructural y eléctrica de las mismas, en pro de trabajar en condiciones ideales de seguridad.
+Un plan de prevención antisiniestral laboral contempla la evaluación de riesgos, la definición de vías de escape, la instalación y ubicación de equipos de emergencia (extintores, señalización, iluminación), la capacitación del personal, la realización de simulacros de evacuación, el establecimiento de un plan de respuesta a emergencias y el cumplimiento de la normativa legal vigente para garantizar la seguridad de los trabajadores y el establecimiento.
+CES
+PREVENCIÓN ANTISINIESTRAL
+
+35
+En el marco de prevención antisiniestral, se realizaron acciones de capacitación específicas, simulacros de evacuación y extinción de incendios.
+En cuanto a los riesgos de contingencias se trabajó en un plan de evacuación, con desarrollo de simulacro de evacuación, definiendo los roles a desempeñar y la prevención ante riesgo eléctrico.
+La integración de las áreas de servicios y producción como empresa multiservicios demanda una gestión transversal de la sostenibilidad ambiental. Ese propó-
+sito parte de la identificación del impacto potencial de las actividades que impulsa la CES, con el diseño de medidas para prevenirlos o mitigarlos, y un plan de vigilancia para controlar la efectividad de dichas medidas y la ejecución del proyecto. El objetivo principal es realizar una valoración preliminar de las repercusiones y proponer las acciones necesarias para minimizar los efectos negativos sobre el entorno.
+Con este objetivo se desarrollan estudios de impacto ambiental simplificado, los cuales forman parte de la debida autorización en el desarrollo de los proyectos de distribución eléctrica urbana y rural, y cruces viales de acuerdo a la normativa provincial y nacional según sea el ámbito de aplicación.
+En concordancia con las políticas de gestión empresarial responsable, como objetivo de desarrollo sostenible, la CES colabora sinérgicamente con las gestiones municipales, particularmente en lo vinculado a la separación de residuos de largo periodo de descomposición.
+En tal sentido, continua su compromiso con esta preclara acción, favoreciendo el reingreso de los residuos en cadenas productivas, formando parte así, de la economía circular de los materiales.
+De esta manera la CES aporta a esta economía sostenible el estimado de 1,5 toneladas de material reutilizable, anualmente. Paralelamente, se contribuye en la reducción de materiales de difícil desintegración al basural de nuestra localidad.
+CES
+PROTECCIÓN MEDIOAMBIENTAL
+
+36
+Si bien con el devenir de las décadas la CES se ha convertido en una empresa multiservicios, la razón fundacional de la Cooperativa ha sido la prestación del servicio eléctrico a la comunidad local, en todo el
+Partido de Saladillo.
+En su nacimiento el desafío fue generar energía de manera convencional, en una usina. Sin embargo, la evolución tecnológica y los cambios del contexto, especialmente los relacionados a la matriz energética nacional, fueron llevando a la CES a adaptarse a cada momento histórico, convirtiéndose en distribuidora y en estos días volcándose a la generación de energías renovables.
+En materia operativa para la distribución de la electricidad es Agente del Mercado Eléctrico Mayorista con vinculación a la red de transporte a través de la Estación Transformadora Saladillo 132/33/13,2 kV cuya operación y mantenimiento se encuentra a cargo de la empresa Transportista por Distribución Provincial
+(Transba S. A.) con instalaciones en el km 187,5 de la ruta nacional N° 205.
+En este Ejercicio se han iniciado las gestiones para presentar la obra de ampliación de la ET Transba Saladillo y solicitar sea declarada financiable por parte de la provincia de Buenos Aires.
+La ampliación incluye incorporar un nuevo Transformador de Potencia de 30/20/30 MVA, una Reactancia de 33 kV y un Reactor creador de Neutro artificial de
+13,2 kV con el fin de disponer una nueva salida en 33
+kV y dos nuevas salidas en 13,2 kV para la Cooperativa Eléctrica de Saladillo.
+Area de concesión para la distribución de energía a cargo de CES Energía.
+La capacidad instalada de 60 MVA está conformada por dos transformadores de 30/20/30 MVA cada uno, en el punto de suministro en alta tensión. De La subestación transformadora se desprenden alimentadores en diferentes niveles de tensión. En el nivel de 33
+kV, un alimentador hacia “25 de Mayo”, un alimentador hacia “Roque Pérez” y un alimentador hacia “Gral
+Alvear”, todos ellos pertenecientes a la empresa de distribución provincial (EDEA S. A.), mientras que la
+Cooperativa Eléctrica de Saladillo, no posee alimentadores en este nivel de tensión, no obstante en el nivel de 13,2 kV cuenta con cinco alimentadores (2,
+3, 4, 5 y 6) hacia la red de distribución del Partido de
+Saladillo, todos ellos de su propiedad.
+CES
+CES ENERGIA
+PARÁMETROS TÉCNICOS
+
+37
+La gestión administrativa y comercial en una distribuidora de energía eléctrica comprende varias áreas y procesos clave para asegurar la eficiencia y la calidad del servicio.
+En términos operativos existen dos grandes etapas del proceso. Una signada por la compra mayorista del insumo eléctrico que comprende el análisis de la posible demanda. Por otra parte, está la distribución a los usuarios con toda la gestión administrativa y comercial que incluye la facturación y los cobros, la gestión de contratos de clientes, la atención a reclamos, la promoción de servicios, y el control de la demanda y el suministro, todo con el fin de asegurar la rentabilidad de la empresa y la satisfacción del cliente a través de un servicio eficiente y de calidad.
+Como parte de los requerimientos establecidos por el marco regulatorio desde la Administración Central, con el trabajo técnico del área de energía, se realizaron las presentaciones de documentos contables y parámetros técnicos a los organismos correspondientes.
+El 05 de julio del 2024 se presentó la información de
+INVENTARIO Eléctrico y No Eléctrico para el cumplimiento de DISPO-2024-108-GDEBA-DPEMIYSPGPl
+– Contabilidad Regulatoria – Inventario 2023, gestión que cabe señalar que la Cooperativa viene cumpliendo regularmente con el requerimiento de información anual establecido por la Autoridad de Aplicación del
+Marco Regulatorio Eléctrico.
+Como parte de un plan de mejora continua impulsado mediante la adopción de nuevas tecnologías, el área administrativa de CES Energía durante el desarrollo del Ejercicio que se expone ha incorporado diversas herramientas digitales, sumando a sus redes eléctricas soportes inteligentes para la gestión remota de la red, la integración de renovables y la detección de fraudes.
+De manera simultánea se han creado aplicaciones de gestión para optimizar la experiencia de los usuarios al realizar trámites o pedidos a la empresa, en el marco de un proyecto que propone a los socios una mayor eficiencia que les facilita el acceso a información y la resolución de incidencias. Como parte de esta acción se ha afianzado el uso del sistema de recolección de reclamos por medio de IVR, sigla en inglés que significa atendedor de respuesta de voz interactiva para mejorar la atención de usuarios.
+Frente a los cambios que planteó un nuevo esquema en relación a los subsidios, desde CES Energía se realizó una campaña informativa para acompañar en el proceso a quienes debían inscribirse para mantener el beneficio de tarifa social de energía.
+CES
+GESTIÓN ADMINISTRATIVA Y COMERCIAL
+CONTABILIDAD REGULATORIA
+HERRAMIENTAS DE GESTIÓN
+CAMPAÑA ANTE NUEVO ESQUEMA DE SUBSIDIOS
+
+38
+Como acción de asesoramiento a los usuarios se generaron contenidos audiovisuales y gráficos explicando cómo está configurado el sistema de segmentación que establece diferentes categorías de usuarios, definidos por el Estado, conforme a su nivel de ingresos.
+Los indicadores comerciales en el sector de energía eléctrica son métricas cuantitativas que miden el desempeño de la empresa en áreas como ventas, ingresos, costos y la satisfacción del cliente, con el fin de evaluar y mejorar la eficiencia operativa y estratégica.
+Algunos ejemplos son los ingresos por ventas, el costo de la energía adquirida, la eficiencia en la facturación y cobro, y los indicadores de calidad del servicio que impactan la satisfacción del cliente.
+Se trata de indicadores que en esta Memoria permiten transparentar los cambios y progresos del sector hacia los resultados definidos.
+Estos indicadores son cuantificables y se miden para evaluar el desempeño de los procesos, actividades y metas del negocio, y saber cuán cerca se está de los objetivos estratégicos y operativos.
+En una distribuidora de energía eléctrica, la energía operada se refiere a la energía eléctrica que la empresa administra, opera y distribuye a los usuarios finales a través de su red eléctrica. Esto incluye el mantenimiento de la infraestructura de distribución, la gestión del flujo de energía desde las subestaciones hasta los hogares, negocios e industrias, y la garantía del suministro continuo a un área geográfica específica, asegurando que la demanda de los consumidores sea satisfecha.
+Como se detalla en cuadro en el período comprendido entre el mes de junio 2024 y junio 2025 CES Energía operó un volumen de energía superior a los noventa y tres mil Mega Watts hora continuo a un área geográfica específica, asegurando que la demanda de los consumidores sea satisfecha.
+CES
+INDICADORES COMERCIALES
+ENERGIA OPERADA EN EL EJERCICIO
+
+39
+Cerca del 99 % de la energía operada fue adquirida a la Compañía Administradora del Mercado Mayorista
+Eléctrico S.A. mientras que en inferiores proporciones a la Empresa Distribuidora de Energía Atlántica y una porción de menor importancia en volumen, pero sí en calidad de energía que proviene de la generación de energía solar en los Parques de la CES y de los usuarios prosumidores.
+La Cooperativa Eléctrica de Saladillo tiene en la actualidad tres puntos de compra para el abastecimiento de energía que luego distribuye a los usuarios a través de la red de distribución.
+Estos tres puntos de compra están principalmente a través de la ET Transba, como agente del mercado mayorista y a quien se le ha adquirido el 99,3% del total de la energía, y en menor porcentaje en el componente se encuentran la energía generada por los parques solares de Cazón, Del Carril y Polvaredas, como también del punto de abastecimiento de EDEA
+en el Paraje La Barrancosa. Además, se registra inyección de excedentes por parte de los usuarios prosumidores.
+CES
+ENERGÍA COMPRADA A CAMMESA
+ENERGÍA COMPRADA A EDEA S.AHISTÓRICO DE ENERGÍA OPERADA EN MWH
+ENERGÍA COMPRADA EN EL EJERCICIO EN MWH
+
+40
+En el transcurso del Ejercicio correspondiente al año comprendido entre los meses julio 2024 y junio 2025 se solicitaron a la Oficina Técnica la cantidad de 93 presupuestos de interesados en contar con nuevos suministros o ampliación de la capacidad de los existentes. Esa cantidad representó un incremento del 38% al realizado en el Ejercicio anterior. Los mismos se distribuyen en diferentes puntos geográficos del Partido de
+Saladillo.
+CES
+PRESUPUESTOS SOLICITADOS POR NUEVOS
+EMPRENDIMIENTOS
+ENERGÍA COMPRADA A PROINGED (PS CAZÓN)
+ENERGÍA COMPRADA A PROSUMIDORES
+ENERGÍA FACTURADA
+PÉRDIDAS DE ENERGÍA TOTALES
+EVOLUCIÓN DE LA CANTIDAD DE USUARIOS EN
+EL EJERCICIO
+
+41
+En el gráfico se puede observar cómo de generó la expansión de la red y sus componentes, conforme a la demanda de los usuarios. El mayor porcentaje de pedidos ha sido en la zona de los Cuarteles I y IV, como también en la planta urbana, correspondiendo en la mayoría de los casos a desarrollos inmobiliarios conocidos como loteos.
+El crecimiento de los desarrollos inmobiliarios implica la transformación de áreas rurales en urbanas mediante la creación de nuevas urbanizaciones y lotes, lo que responde a la demanda habitacional y comercial y, a su vez, genera debates sobre el uso del suelo y el impacto en los ecosistemas naturales.
+Una planificación urbana adecuada es fundamental para gestionar el crecimiento de las ciudades de manera ordenada, protegiendo los recursos naturales y garantizando una buena calidad de vida para todos los ciudadanos. Este proceso de urbanización no es nuevo en el Partido de Saladillo, pero está experimentando una aceleración impulsada por diversas necesidades sociales y económicas.
+Este fenómeno genera nuevas demandas e inversiones a la Cooperativa, además de una replanificación permanente en el aspecto comercial y técnico.
+De los presupuestos solicitados se concretaron un número de 54, lo que representa el 57% de lo proyectado. Estos presupuestos incluyen obras en media y baja tensión, subestaciones en el área rural y urbana, loteos y ampliaciones de obras existentes entre otras.
+Los costos incurridos durante el desarrollo de los proyectos se convierten en un activo en el balance general. De esta manera las obras realizadas como inversión en líneas de distribución y sus diferentes componentes se traducen en esta Memoria como una capitalización que, en el presente Ejercicio, significó un monto de cercano a los 1.400 millones de pesos.
+CES
+OBRAS EJECUTADAS POR NUEVOS EMPRENDIMIENTOS
+
+42
+Los indicadores técnicos y operativos en una red de distribución eléctrica son métricas clave para evaluar el funcionamiento, la eficiencia y la calidad del servicio de la red, que incluyen la frecuencia y duración de las interrupciones (SAIFI, SAIDI), la calidad de la energía suministrada (factores de tensión), y la eficiencia energética (consumo por unidad de actividad). Estos indicadores permiten a las empresas de distribución identificar problemas, optimizar la inversión en mantenimiento y asegurar la satisfacción del cliente.
+Se trata de una herramienta analítica que a los fines informativos de la presente Memoria permite describir las características del sistema de distribución de CES
+Energía para desarrollar su actividad.
+En este indicador se detalla la existencia operativa de líneas, discriminadas en su nivel de tensión. De la información se desprende que CES Energía ha culminado el presente Ejercicio con cerca de 1.500 kilómetros de líneas, de las cuales en su mayor proporción están afectadas a la distribución de energía a la zona rural.
+Los transformadores son dispositivos esenciales en la red eléctrica que modifican los niveles de voltaje de la corriente para transmitir energía de forma eficiente a larga distancia, reducirla para un uso seguro en hogares e industrias, y garantizar la estabilidad y fiabilidad del suministro eléctrico al aislar diferentes secciones de la red.
+Los transformadores permiten que distintas partes de la red operen con diferentes voltajes, lo que contribuye a la estabilidad general del sistema y ayuda a aislar problemas o sobrecargas, minimizando el impacto en los usuarios finales.
+La cantidad de transformadores necesarios en una red de distribución eléctrica depende de la carga eléctrica de la zona, ya que cada transformador tiene una capacidad específica en kVA (kilovoltiamperios) para abastecer a un cierto número de hogares o clientes, por lo que la cantidad se determina a través de un
+CES
+TRANSFORMADORES POR ZONA
+INFORMACIÓN TÉCNICA - OPERATIVA
+KILÓMETROS DE RED POR UBICACIÓN Y NIVEL
+DE TENSIÓN
+
+43
+cálculo de ingeniería que considera estos factores de consumo y la topología de la red.
+En su red de distribución, al cierre del Ejercicio que se expone, CES Energía cuenta con un total de 1171
+transformadores a lo largo de su red de distribución.
+La planificación de las obras en el área de CES Energía contempla dos aspectos centrales, el crecimiento vegetativo impulsado por el desarrollo comunitario, y las inversiones estratégicas que la Cooperativa realiza con una visión a mediano y largo plazo para optimizar la gestión de costos, la reducción de pérdidas y la protección del medio ambiente.
+El diseño detallado del sistema, incluyendo la capacidad de cargas, el uso de materiales seguros y eficientes, y la integración de tecnologías modernas para garantizar un suministro continuo y confiable es considerado en el plan de obras de la CES. La potenciación de sectores con demandas críticas y la expansión hacia lugares sin prestación son factores que se analizan al momento de definir prioridades como también la ubicación de componentes clave como centros de transformación, comprimiendo de manera estricta con las normativas.
+CES
+PLANES DE OBRAS
+
+44
+En cada Ejercicio CES Energía como empresa concesionaria, debe proponer al organismo de control OCEBA un plan de obras de ejecución anual, que genere mejoras en el sistema eléctrico para mantener y/o elevar la eficiencia del mismo. En el ítem de inversiones en el sistema de distribución que se detalla en el
+Balance se incluyen todos los elementos que componen la red y los equipos que sobre la misma operan, como también los trabajos de mejoras, mantenimiento y nuevas obras.
+El plan de mantenimiento que se impulsa en CES
+Energía en la red eléctrica incluye la inspección, limpieza, reparación de equipos como transformadores, control de vegetación cercana a las líneas, y la monitorización constante del sistema para prevenir fallos y garantizar un suministro eléctrico seguro y continuo.
+Se enfoca en la ejecución de tareas preventivas y correctivas para mantener la eficiencia y la confiabilidad de la red, utilizando tecnologías avanzadas para detectar problemas antes de que ocurran.
+Durante el desarrollo del Ejercicio que se expone las obras de mantenimiento comprendieron tareas de predictivas y correctivas, como así también la actualización de equipos existentes y la colocación de nuevos elementos tanto sea de maniobra como de protección para la red.
+Entre los trabajos de magnitud se destaca el recambio de postes de madera por columnas de hormigón en líneas rurales de Media Tensión 13,2 kV trifásica en los parajes de La Margarita, Reynoso y San Benito, además de inversiones en toda la extensión de las redes de media y baja tensión.
+Estos trabajos contemplaron el recambio de crucetas de madera por crucetas de hormigón, recambio de aisladores, reparación y mantenimiento de subestaciones transformadoras y cambio de transformadores dañados por descargas atmosféricas, recambio de equipos de protección y maniobra (seccionadores y descargadores), sustitución de líneas de baja tensión convencionales por cable preensamblado y reposición de tapas de gabinetes de medición, entre otras.
+CES
+OBRAS DE MANTENIMIENTO
+
+45
+El Contrato de Concesión de la Provincia de Buenos
+Aires obliga a la concesionaria a invertir en la infraestructura eléctrica necesaria para asegurar el servicio de distribución y comercialización de energía, a mantener la calidad del servicio exigida, y a aplicar el régimen tarifario y el cuadro tarifario que regulan los precios de la energía eléctrica. Además, la concesionaria debe atender toda demanda de servicio que se presente dentro de su área de concesión.
+Las inversiones orientadas a la ampliación de la capacidad operativa cuentan con obras nuevas y surgen de un plan de inversión estructurado conforme a la demanda. En el marco de lo establecido por el Contrato de Concesión, Inversiones y Régimen de Aprovisionamiento de Energía Eléctrica, CES Energía ha ejecutado su Plan de Obras en el término de 12 meses, desde la fecha de la presentación del mencionado Plan.
+El monto total previsto para la ejecución del Plan de
+Obras al momento de ser presentado ante el organismo de control bonaerense (OCEBA) ascendió a los
+299.645.422,77 pesos.
+Los trabajos contemplados para el Ejercicio que aquí se presentan permitieron a la CES avanzar en la concreción de obras para normalizar líneas de media tensión sobre Avda. Cabral, pasando Dellatorre, como también las líneas de media tensión sobre Avda. Saavedra, pasando Dellatorre.
+Las inversiones contemplaron la construcción de un nuevo Centro de transformación en la calle Dassatti entre Bozán y Alisal.
+Además, se ejecutaron trabajos de mantenimiento sobre subalimentadores que alimentan a los parajes de La Margarita y San Benito y el reacondicionamiento de Centros de transformación Urbanos.
+El plan de inversiones ejecutado propuso el traslado del Centro de transformación N°473 a calle Rojas, entre M.T. de Alvear y Frocham, el reacondicionamiento del Centro de transformación N°507, la extensión de LMT sobre Avda. Pereyra y la colocación de un seccionador bajo carga en Alimentación a Parque
+Industrial.
+Sin lugar a dudas el proyecto de telemedición ha sido uno de los aspectos innovadores en el Plan de obras elevado al ente que otorga la concesión, que se ve reflejado en el presente Ejercicio en una inversión que ha permitido avanzar con el plan de digitalización para la lectura de consumo en tiempo real de los usuarios.
+CES
+TELEMEDICIÓN Y MONITOREO DE CENTROS DE
+TRANSFORMACIÓN URBANOS
+OBRAS NUEVAS
+
+46
+El proyecto concretado ha permitido además contar con un sistema de monitoreo en tiempo real de los centros de transformación urbanos, un sistema que ofrece beneficios clave como la detección temprana de fallas, lo que mejora la confiabilidad y seguridad de la red; la optimización del mantenimiento gracias al mantenimiento predictivo, reduciendo costos operativos y prolongando la vida útil de los equipos.
+Esta gestión eficiente del consumo energético reduce costos y disminuye la huella de carbono, al tiempo que permite la toma de decisiones basada en datos para una gestión más informada y eficiente de la energía.
+El Plan Estacional una medida preventiva de ingeniería eléctrica que procura asignar recursos, mediante una programación estratégica, para asegurar la provisión del insumo eléctrico en momentos de picos de consumo que generalmente se registran en épocas de temperaturas extremas.
+Como empresa distribuidora CES Energía debe adelantar un proyecto cada año especificando cuáles serán las medidas a adoptar para evitar interrupciones en el suministro eléctrico causadas por la sobrecarga de la red.
+Estos planes consisten en realizar inspecciones y tareas de mantenimiento preventivo en las instalaciones lextricas antes de la llegada de las estaciones extremas, de esta manera la CES puede optimizar recursos y reducir los costos asociados con reparaciones y mantenimientos no programados,
+Es así que, en cumplimiento de lo resuelto por el Organismo de Control de la Provincia de Buenos Aires, se planteó llevar adelante las obras que se detallan en los cuadros siguientes, contemplando los picos de consumo para el Plan Verano como para el Plan
+Invierno.
+CES
+PLANES ESTACIONALES 2024/2025
+
+47
+CES
+PLAN INVIERNO 2025
+Al cierre del Balance que en esta Memoria se describe este plan se encuentra en ejecución con un presupuesto superior a los 125 millones de pesos. A la fecha de finalización del ejercicio se han iniciado algunas obras cuyo grado de avance se detallan a continuación.
+PLAN VERANO
+Este plan de obras se ejecutó para afrontar la temporada estival 2024 – 2025 en un período comprendido dentro del Ejercicio que aquí se presenta demandando inversiones cercanas a los 300 millones de pesos.
+
+48
+El sistema de distribución de energía eléctrica en la Provincia de Buenos Aires está regido por reglas definidas para cada eslabón de la cadena, desde la generación hasta el consumo, a través de un ente Nacional Regulador de la Electricidad (ENRE) regula en el orden nacional la actividad eléctrica y controla que las empresas del sector.
+Al tratarse de una distribuidora que desarrolla su actividad en territorio bonaerense CES Energía, a su vez, debe cumplir con los requerimientos establecidos por la normativa provincial que controla un organismo autárquico (OCEBA) y con lo establecido por el contrato de concesión con el Estado municipal, consignatario del servicio.
+Dando cumplimiento a los requerimientos regulatorios, durante el desarrollo del Ejercicio que se expone se realizaron las presentaciones, impulsaron acciones y concretaron obras.
+Durante el desarrollo del Ejercicio que se expone, en relación a los requisitos planteados por el OCEBA se destaca el impulso de una campaña de Control de Calidad de Servicio y Calidad de Producto (Resolución
+OCEBA 1095/04).
+Estas acciones que se dividen en períodos semestrales, para el presente Ejercicio semestre 42 del
+01/06/2024 al 31/11/2024 e incluyó el período estival y el semestre 45 comprendido entre el 01/12/2024 al
+31/05/2025 que incluyó el período de altas temperaturas y máximas demandas.
+Frente a estos requerimientos se realizó la presentación de la información en lo concerniente a calidad de servicio que involucra la frecuencia de cortes y la duración de los mismos tanto en media como en baja tensión, cuya tarea se lleva a cargo a través de la atención de los reclamos registrados por el sector de guardia las 24 horas del día a lo largo del año. En concepto de multas por Calidad de Servicio para los semestres 44 y 45 se reflejó lo siguiente:
+Los montos de multas de calidad se basan en un cálculo de cantidad de Energía no Suministrada (Calidad de Servicio) y cantidad de Energía Suministrada en malas condiciones, multiplicado por un valor de costo de la energía.
+Para la Calidad del Servicio Técnico el valor de la
+Energía No Suministrada depende del tipo de usuario, mientras que, para el Producto Técnico, el costo de la Energía Suministrada en malas condiciones se valoriza en su totalidad al valor más costoso.
+CES
+REQUERIMIENTO DEL MERCADO ELÉCTRICO
+CALIDAD DE SERVICIO Y PRODUCTO
+
+49
+Los costos de la Energía No Suministrada van en concordancia con las tarifas, y se incrementan en consecuencia.
+Dentro de los parámetros de calidad también se debe registrar la Calidad de Producto Técnico que tiene en cuenta el valor de la tensión de suministro registrado por un analizador de red homologado por el Organismo de Control por el término de 7 días consecutivos.
+Para esto el Organismo de Control selecciona a su criterio los puntos de suministros tanto en usuarios como en subestaciones que se deberán controlar dentro de cada semestre.
+En la Calidad del Producto influyen las temperaturas, y la calidad del producto recibidas en los puntos de compra de la energía de CAMMESA y EDEA.
+Para la Calidad del Servicio Técnico el valor de la
+Energía No Suministrada depende del tipo de usuario, mientras que, para el Producto Técnico, el costo de la Energía Suministrada en malas condiciones se valoriza en su totalidad al valor más costoso. Los costos de la Energía No Suministrada van en concordancia con las tarifas, y se incrementan en consecuencia.
+También existen registros de cómo afecta a los usuarios la falla en el servicio y este indicador se denomina indicador de la duración de interrupción media por usuario, y permite conocer cuál es la duración media de un corte de suministro medido en horas, por usuario por semestre.
+Por otra parte, está el indicador de la frecuencia de interrupción media por usuario que permite conocer cuál es la cantidad de cortes de suministro por usuario en un periodo de tiempo determinado y se mide en interrupciones por usuario en un semestre.
+CES
+
+50
+Fomentando el cuidado físico de los vecinos de la comunidad en la que presta el servicio, CES Energía impulsó acciones preventivas, basadas en relevamientos, orientadas a fortalecer las medidas de seguridad en la vía pública (SVP).
+La tarea se orientó a la detección de potenciales riesgos y su regularización, como también con trabajos de colocación de tapas de medidores rotas por vandalismo, señalización de riesgos de instalación con cartelería, colocación de aisladores en riendas, acondicionamiento de cables de preensamblado de baja tensión en columnas terminales y frente de edificios, y la medición de puesta a tierra, entre otras tipificaciones indicadas en la resolución OCEBA 595/06.
+Asimismo, entre el mes de agosto de 2024 y julio del
+2025 se presentaron testimonios de las anomalías ante el Organismo de Control con registro fotográfico previo de la anomalía detectada y de la adecuación realizada.
+El plan de emergencias y contingencias de energía eléctrica es un conjunto de medidas y procedimientos establecidos para garantizar el abastecimiento de electricidad y evitar o mitigar los cortes de servicio.
+CES
+CAMPAÑA DE SEGURIDAD EN LA VÍA PÚBLICA
+PLAN DE EMERGENCIAS Y CONTINGENCIAS
+
+51
+En vigencia del Marco Regulatorio de la Actividad
+Eléctrica de la Provincia de Buenos Aires, conformado por la Ley N° 11769 (T. O. Decreto N° 1.868/04), su Decreto Reglamentario N° 2.479/04, el Contrato de Concesión suscripto, las Resoluciones OCEBA N°
+394/04, 599/07 y 103/13, esta Cooperativa presenta periódicamente en el mes de noviembre de cada año el plan de Emergencias y Contingencias que tiene por fin presentar los lineamientos generales que deben observarse priorizando elementos vulnerables ante posibles fallas operativas; técnicas, de naturaleza climática o provocadas de duración indeterminada, incluyendo además restricción de demanda por crisis energética y cuestiones ambientales.
+Este plan, además de presentarse ante el OCEBA, fue elevado a la municipalidad de Saladillo y notificado complementariamente a las entidades de salud,
+Hospital Dr. Posadas y Clínica de Saladillo para que mantengan operativos los grupos electrógenos disponibles ante cualquier emergencia eléctrica nacional, provincial o local que provoquen falta de suministros por fuerza mayor.
+La generación de energía solar es una fuente de energía renovable y sostenible que ofrece numerosos beneficios para el medio ambiente, la economía y la sociedad en general.
+La energía solar es una fuente de energía limpia y renovable que no emite gases de efecto invernadero ni otros contaminantes que contribuyen al cambio climático. Algunos de los beneficios ambientales de la energía solar son la reducción de la huella de carbono, dado que la energía solar puede ayudar a reducir la dependencia de las fuentes de energía fósiles y disminuir las emisiones de gases de efecto invernadero.
+El Programa de energías renovables de la Cooperativa Eléctrica de Saladillo (CES) se centra en la generación distribuida de energía solar para mejorar el servicio eléctrico local, reducir la dependencia de combustibles fósiles y promover un modelo energé-
+tico más limpio.
+El complejo de parques solares de CES Energía comprende la operación de un parque solar en la localidad de Cazón (Parque Solar CES Saladillo I – Cdor.
+Mario Cabito) que inyecta energía a la red, y otros dos parques con baterías para almacenar energía, ubicados en localidades de Del Carril (Parque Solar
+CES Saladillo II) y Polvaredas (Parque Solar CES Saladillo III), integrando la red de Generación Distribuida
+Renovable de la Provincia de Buenos Aires.
+CES
+ENERGÍA RENOVABLE
+
+52
+El parque solar Cazón “Cdro Mario Cabitto” se encuentra bajo la operación y mantenimiento de la Cooperativa Eléctrica de Saladillo, bajo convenio con el
+PROINGED. Tiene una capacidad de generación instalada de 330 kWp sin almacenamiento de energía, con 550 paneles de 600 Wp. Cada uno distribuidos en
+4 islas montados bajo el sistema este-oeste.
+Durante el periodo que aquí se presenta la Cooperativa ha realizado diferentes trabajos de mantenimiento como el corte de pasto, operatividad de las cámaras de seguridad y estación meteorológica, recambio de conectores MC4 y limpieza de paneles entre otras tareas.
+El parque solar Del Carril, con una capacidad de generación instalada de 500 kWp y almacenamiento de energía, cuenta con 910 paneles solares de 550 Wp cada uno, y un banco de baterías de litio de 1290 kWh.
+La obra fue ejecutada en un terreno de la Cooperativa donde también se tiene previsto instalar una futura
+Estación Transformadora de 33/13,2 kV vinculada a la línea de Subtransmisión Saladillo – Roque Pé-
+rez con la finalidad de abastecer la localidad de Del
+Carril y como así también a una importante zona de influencia. La generación de energía del parque solar
+Del Carril equivale a alimentar eléctricamente a 250
+hogares residenciales encuadrados en la tarifa T1R
+de consumo medio.
+Por su parte el parque solar Saladillo III – Polvaredas tiene una capacidad de generación instalada de 250
+kWp y almacenamiento de energía, con un total de
+455 paneles de 550 Wp y un banco de baterías de
+774 kWh.
+Al cierre de este Ejercicio los complejos Saladillo II y
+III continúan bajo la operación y mantenimiento de la empresa BGH, contratista que llevó adelante las tareas de provisión de materiales y montaje, ya que los mismos se encuentran dentro del periodo de garantía de obra.
+Vencido este plazo, dichos parques solares serán transferidos a la Cooperativa para realizar la operación y mantenimiento, bajo el convenio suscripto con el FREBA/PROINGED, acuerdo con vigencia de 36
+meses renovables automáticamente por un período igual.
+CES
+PARQUE SOLAR SALADILLO - CAZÓN
+PARQUES SOLARES SALADILLO II - DEL CARRIL /
+SALADILLO III - POLVAREDAS
+
+53
+Como parte del desarrollo estratégico y en un contexto en el que las energías renovables ganan espacio en la matriz energética, el Consejo de Administración decidió llevar adelante un proyecto para la construcción de un cuarto parque solar.
+Como primer paso del proceso se evaluaron locaciones con potencial de acuerdo a las características edáficas y geográficas, considerando además la ubicación de las líneas eléctricas y las cargas de las mismas.
+Después de tratativas con la intensión de sumar al proyecto al municipio, el Consejo de Administración resolvió avanzar de manera independiente con la adquisición de una parcela de 16 hectáreas en la intersección de la Ruta Nacional N°205 y acceso a Cazón, donde se prevé la instalación de una planta solar entre con capacidad para generar entre 1 y 3 MWp.
+En el aspecto técnico desde el área se han iniciado intercambios con potenciales proveedores de materiales y mano de obra, a fin de determinar las necesidades y tecnología disponible en el mercado, las que serán convalidadas mediante la elaboración de un proyecto propio con la confección de los pliegos necesarios y posterior llamado a un concurso de precios.
+La generación de energías limpias para la CES surge como una política institucional a fines de la década del 2000.
+Mediante un convenio público privado y con la firma de cartas de intención se sentaron las bases para un proyecto que en etapas fuera permitiendo el desarrollo de nuevas tecnologías.
+El Plan de desarrollo de energías renovables generadas se plasmó en primera instancia con un proyecto piloto de instalación en la sede de CES energía de un “sistema de generación de energía eléctrica por medio de paneles fotovoltaicos”. Teniendo esa referencia vecinos de Saladillo comenzaron a desarrollar proyectos domiciliarios convirtiéndose en “usuarios prosumidores”.
+La generación distribuida es la producción de electricidad con pequeñas instalaciones que, técnicamente habilitadas, se pueden conectar al sistema eléctrico nacional.
+CES
+PROYECTO PARQUE SOLAR SALADILLO IV -
+CAZÓN
+USUARIOS GENERADORES
+
+54
+Por tal motivo en el año 2024 el Organismo de Control
+Eléctrico de la Provincia de Buenos Aires publicó la resolución OCEBA 52/24 – Reglamento de acometida Generación Distribuida por lo cual se formaliza la posibilidad de aquellos usuarios, nuevos o existentes, que cuenten con generación de energía renovables en su propiedad y quieran inyectar energía excedente a la red del Distribuidor puedan hacerlo.
+Si bien hasta el momento este modo de generación particular de energía eléctrica no estaba reglamentada, con la promulgación de la Ley Provincial N°15325, se han establecido pautas para conectar generación distribuida con inyección de excedente de energía a la red del distribuidor. Cumpliendo con las disposiciones y requisitos establecidos la Cooperativa Eléctrica de Saladillo definió un Instructivo para conectar generación distribuida con inyección de excedente de energía a la red del distribuidor como documento de consulta de todos los usuarios interesados.
+Estas tecnologías para producir energía eléctrica de modo sostenible están siendo utilizadas en Saladillo por los denominados “usuarios generadores”, una figura en la que la Cooperativa Eléctrica local ha sido pionera desde que en el año 2018 instaló en sus oficinas un “sistema de generación de energía On Grid”
+que utilizando paneles fotovoltaicos provee energía al edificio e inyecta el excedente a la red de distribución.
+Durante el desarrollo del Ejercicio que se expone la
+Cooperativa Eléctrica de Saladillo, cumpliendo con las disposiciones emanadas de las resoluciones provinciales vigentes en la materia, ha generado un instructivo para conectar generación distribuida con inyección de excedente de energía a la red del distribuidor como documento de consulta de todos los usuarios interesados. Dicha información se publicó en la página web de la Cooperativa.
+En el sitio web de la CES // https://www.coopsal.com.
+ar/energia-renv.php // los interesados en convertirse en usuarios generadores encontrarán el “Reglamento de Acometidas” y el “Instructivo para conectar generación distribuida”.
+El Foro Regional Eléctrico de la Provincia de Buenos
+Aires (FREBA)es una asociación civil sin fines de lucro, que tiene por objetivo brindar a sus asociados el asesoramiento técnico, económico, legal y regulatorio necesario para ampliar y mejorar el sistema de transporte y subtransmisión de energía eléctrica en la provincia de Buenos Aires.
+CES
+REPRESENTACIÓN DE LA CES EN EL FREBA
+
+55
+El propósito de FREBA es abordar la problemática del
+Sistema de Transporte Eléctrico y gestionar su crecimiento en la provincia de Buenos Aires. Esta labor se enfoca desde una perspectiva centralizada, respaldada por el consenso de todos sus miembros, garantizando un desarrollo coordinado y armónico a lo largo del tiempo.
+La Cooperativa Eléctrica de Saladillo está asociada al Foro Regional Eléctrico de la Provincia de Buenos
+Aires (FREBA) y cuenta con representación en el organismo. Durante el desarrollo del presente Ejercicio se llevó a cabo la Asamblea Anual Ordinaria y Extraordinaria del organismo, donde se propuso la continuidad de los actuales cargos directivos y técnicos, entre los que se encuentra por la representación del sector
+Cooperativo la Cooperativa Eléctrica de Saladillo en el
+Comité Técnico Provincial. Dicho órgano profesional está conformado por once ingenieros en total, de los cuales tres pertenecen al sector Cooperativo y los restantes ocho al sector de las empresas Provinciales.
+El Foro Regional Eléctrico de la provincia de Buenos
+Aires (FREBA) a través del PROINGED concretó un
+Proyecto de Generación Híbrida con acumulación que permitirá por primera vez a los habitantes de la Isla
+Martín García disponer de electricidad durante las 24
+horas del día, mediante el aprovechamiento de recursos renovables, ofreciendo la oportunidad de brindar mejores servicios turísticos a sus visitantes y mejor calidad de vida.
+Desde el PROINGED se trabajó en el diseño e implementación de un sistema de última tecnología para mini redes, incluyendo asimismo obras complementarias de eficiencia energética en las que participó
+CES Energía con la provisión de materiales y herramientas de aproximadamente 100 artículos, por un monto superior a los 75 mil dólares.
+Con la instalación actual, se estima que un 40% de la demanda energética será atendida con energía fotovoltaica, otro 37% será atendida por la energía almacenada en baterías de ión Litio implicando un ahorro estimado de 85.000 lts. Al año de gasoil, lo que se traduce a 285 tn/año de CO2 evitados.
+CES
+INTERVENCIÓN EN PROYECTOS FREBA
+
+56
+La “proyección técnico-tecnológica” refiere al proceso planificado y metódico para diseñar, construir y evaluar un sistema que permita la evolución con perspectiva. Este proceso que abarca la identificación de problemas actuales o potenciales, el diseño de la solución, la organización, la ejecución, y la evaluación de los resultados para asegurar su viabilidad técnica, funcional y su relación con el contexto social y econó-
+mico, en CES Energía se manifiesta con la planificación de acciones y proyectos.
+La calidad del servicio ha sido un factor distintivo de
+CES Energía que ha posicionado a la Cooperativa de
+Saladillo entre las prestadoras de mayor estabilidad técnica a nivel provincial.
+Frente al crecimiento vegetativo del número de usuarios, la radicación de nuevas empresas y los cambios en el uso por parte de los consumidores residenciales, la matriz energética local demanda cada vez más energía, y para contar con un servicio de calidad CES
+Energía ha trazado un plan de inversiones para la concreción de la ampliación de la Subestación Transformadora ubicada en el predio de TRANSBA, sobre la ruta 205, km 187,5.
+En función a lo planteado por el Departamento Técnico de CES Energía sobre los informes de proyección de saturación de la ET Transba y estimación económica durante el Ejercicio anterior, el Consejo de Administración aprobó dar inicio formal a las gestiones de ampliación de la ET.
+Esta inversión se fundamenta en los informes técnicos de proyección generados desde el Departamento
+Técnico del área de energía sobre la potencial saturación del punto de abastecimiento de la CES para los próximos años, el estudio técnico realizado por COMESA S. A., y el diagnóstico ratificado por el informe recibido de la propia TRANSBA en el mes de septiembre de 2024 respecto a situaciones relevantes para la temporada 2024-2025 cuyo pronóstico adelantó la posibilidad de cortes de energía por la saturación de la demanda en la ET Saladillo.
+Al respecto el estudio realizado por COMESA S.A., indica los pasos obligatoriamente a cumplir por cualquier Agente del MEM que quiera realizar una ampliación del Sistema de Transporte, según lo establecido en el Procedimiento Técnico N° 1 y en los que la ampliación de la ET Transba Saladillo se encuadra.
+CES
+AMPLIACIÓN ET TRANSBA S.A
+PROYECCIÓN TÉCNICO-TECNOLOGICA
+
+57
+Es importante mencionar que la ampliación de la ET
+afecta como aportantes de la ampliación a otras distribuidoras que se abastecen de dicha instalación, como es el caso de las empresas provinciales EDÉN
+y EDEA. Por tal motivo se estima un porcentaje de participación de la inversión que deberá ser aceptado por cada uno de los integrantes o en su defecto determinado por Cammesa.
+Los costos generales estimados de cada alternativa comprenden el agregado de un tercer transformador, con un presupuesto de 4 millones de dólares, el reemplazo de los dos transformados existentes por otros dos de mayor capacidad por un valor de 5.3 millones de dólares y la construcción de una segunda Estación
+Transformadora por un monto superior a los 12 millones y medio de dólares.
+En recuadro se detalla el porcentaje de participación acordado entre las partes en función del promedio ponderado de potencia de cada beneficiario.
+Se indica que la inversión a llevar a cabo deberá ser determinada porcentualmente a las empresas beneficiarias de la obra de la que forman parte la CES y las distribuidoras provinciales EDEN S. A. y EDEA S. A.
+Junto a la presentación de la obra en el Comité Técnico provincial del FREBA, para lograr sea declarada financiable con el Agregado Tarifario (AT), es necesario presentar las obras aguas abajo como justificación del requerimiento de ampliación de la ET Transba
+Saladillo. Por tal motivo, complementariamente, se presentó una estimación de costos del proyecto de dos nuevos alimentadores en 13,2 kV denominados
+VII y VIII (etapa I), cuyo presupuesto es cercano al millón y medio de dólares.
+Junto a la presentación de la obra en el Comité Técnico provincial del FREBA, para lograr sea declarada financiable con el Agregado Tarifario (AT), es necesario presentar las obras aguas abajo como justificación del requerimiento de ampliación de la ET Transba Saladillo. Por tal motivo, complementariamente, se presentó una estimación de costos del proyecto de dos nuevos alimentadores en 13,2 kV denominados VII y
+VIII (etapa I), cuyo presupuesto es cercano al millón y medio de dólares.
+En forma simultánea a la ampliación de la ET Transba
+S.A., la Cooperativa Eléctrica de Saladillo debe considerar la colocación de dos nuevos alimentadores que permitan transportar el crecimiento de la demanda para los próximos 10 años.
+Es por eso que durante este Ejercicio se llevó a cabo la elaboración de un presupuesto preliminar para dicha obra, como también los trabajos de agrimensura que se encuentran gestionando el cierre de este Ejercicio.
+CES
+PROYECTO NUEVOS ALIMENTADORES
+
+58
+El Proyecto integral resulta de trascendental importancia puesto que la ejecución del mismo permitirá evitar a CES Energía restricciones de nuevos requerimientos o ampliaciones de los usuarios en el futuro inmediato, contemplando el extenso lapso de tiempo que se requiere en este tipo de obras desde que se inician las gestiones hasta su puesta en servicio.
+La telemedición en el servicio de energía eléctrica es un sistema de comunicación a distancia que utiliza medidores inteligentes (o contadores de telemedida)
+para recopilar y transmitir automáticamente datos de consumo energético de forma remota, eliminando la necesidad de lecturas presenciales. Esto permite un seguimiento continuo y detallado del consumo, el control del servicio (incluyendo cortes y reconexiones), y la mejora de la eficiencia energética tanto para las empresas distribuidoras como para los usuarios finales.
+Entre las ventajas de este sistema se destaca el control eficiente del consumo de los usuarios y gestionar la red detectando anomalías o pérdidas de forma temprana.
+Con la telemedición los usuarios pueden monitorear su consumo en tiempo real y tomar decisiones informadas para optimizar su uso de la energía, lo que puede llevar a ahorros, al tiempo que en términos técnicos operativos se pueden realizar cortes y reconexiones de servicio de forma remota, reduciendo costos y tiempos, o realizar análisis continuos de datos para detectar problemas en el suministro.
+Durante el desarrollo del Ejercicio que se expone desde el área técnica de CES Energía se ha avanzado en el plan de expansión de esta tecnología. Dicho plan de telemedición rural se ejecutó en la ruta eléctrica 43 con tecnología GPRS (Servicio General de Radio por Paquetes), un método de comunicación inalámbrica basado en redes celulares 2G que permite a los medidores inteligentes transmitir automá-
+CES
+PROGRAMA DE TELEMEDICIÓN
+
+59
+ticamente los datos de consumo eléctrico de forma remota y continua. Para incorporar al sistema de telelectura los usuarios de la mencionada ruta, con el fin de reducir costos operativos y de logística, se utilizó equipamiento de medición adaptable.
+La inversión en materiales volcada a este trabajo fue cercana a los 54 millones y medio de pesos, más de
+10 millones en mano de obra y un total de más de 65
+millones de pesos.
+Superficie de la ruta de distribución rural N°43.
+El trabajo para la telemedición de la Ruta 43 se inició a mediados del mes de noviembre del 2024 con una capacitación en campo a todo el personal que iba a participar del cambio de medidores e instalación de los módems y antenas. Días después se inició el recambio de equipamiento con varios grupos de trabajo en forma simultánea, finalizando el mismo a mediados del mes de febrero del 2025.
+Los días trabajados fueron intermitentes por diferentes razones. La más importante fue la demora en la recepción por parte del proveedor de la segunda tanda de módems y antenas lo que se tradujo en un atraso de unos 20 días para la finalización del objetivo trazado.
+Con la puesta en servicio de la ruta 43 la Cooperativa incorporó el 50% de la superficie rural al sistema de telemedición, alcanzando más de 300 usuarios rurales telemedidos, si se considera la ruta 50 del Paraje
+La Barrancosa realizada durante Ejercicios anteriores.
+Al finalizar la ejecución de la Telemedición de la Ruta
+43, el Departamento Técnico presentó el tercer plan de telemedición con el que se pretende incorporar 3
+rutas adicionales para darle continuidad al objetivo inicialmente proyectado.
+CES
+TELEMEDICIÓN EN NUEVAS RUTAS
+
+60
+En este caso, se contemplan las rutas rurales del norte del Partido de Saladillo, siendo las rutas 41,
+42 y 44.
+Cabe consignar que la digitalización de los medidores para la medición remota demanda el recambio de medidores un trabajo previo de relevamiento. Las tareas planificadas contemplan equipos de
+Trabajos con personal propio propuestos para las tareas de toma testados, conexiones y de laboratorio.
+El total de suministros telemedidos que se incorporarán con estas tres nuevas rutas es de 496, lo cual además tener toda la superficie rural más distante telemedida permitirá contar más de 800
+usuarios telemedidos, considerando a los existentes en la ruta 50 y 43 ya realizadas.
+El plan integral supone además la ejecución de una cuarta etapa donde se deberán considerar las rutas que contienen los suministros del Cuartel I más cercanos a la planta urbana. Cumpliendo ese objetivo se llegaría a telemedir el 100% de los usuarios rurales.
+Las cooperativas de telecomunicaciones cumplen un rol estratégico en Argentina al garantizar el acceso a servicios de conectividad en zonas donde los grandes operadores no poseen presencia suficiente o muestran menor interés comercial. Actualmente, se estima la existencia de alrededor de 547 cooperativas que prestan servicios de telefonía, internet y/o televisión por cable en el país, de las cuales 95 operan en territorio de la Provincia de Buenos Aires y la CES
+es una de ella. Su aporte resulta clave para reducir las brechas digitales y favorecer la inclusión social, especialmente en comunidades rurales y localidades de menor escala.
+CESTEL, al igual que otras cooperativas, mantiene su vocación de servicio, priorizando la conectividad como derecho social más que como negocio, en contraposición con la lógica de los grandes operadores.
+Esto hace que la expansión se planifique siguiendo las necesidades de las poblaciones chicas, valorando el desarrollo local y social como objetivo.
+Con esa visión y el impulso de políticas universales desde el área de telecomunicaciones se ha continuado con el Proyecto de expansión llegando con el servicio a más barrios extraurbanos y localidades del interior.
+CES
+CESTEL
+UBICACIÓN GEOGRÁFICA DE LAS RUTAS
+
+61
+Para el área de telecomunicaciones la planificación comercial debe articular la sostenibilidad económica con los factores que hacen al cumplimiento de la sostenibilidad social, dado que es motivo fundacional del sector en la CES el objetivo de articular como reguladora de precios, dando de ese modo más beneficios a la comunidad.
+En el transcurso del desarrollo del Ejercicio que se expone el organismo regulador fue intervenido mediante sucesivos decretos, lo que generó incertidumbre respecto a programas de financiamiento y subsidios para cooperativas y medios comunitarios.
+Es sabido que, si bien comparten espacio con grandes compañías, las cooperativas enfrentan dificultades de financiamiento, acceso a infraestructura mayorista y economías de escala que favorecen a los actores dominantes.
+En este nuevo escenario CESTEL ha consolidado sus vínculos con entidades cooperativas del sector como acción estratégica para mantener su competitividad.
+Durante el desarrollo del Ejercicio que se expone desde el área de telecomunicaciones se intensificaron las acciones para brindar soluciones y facilitar las gestiones a los usuarios.
+Generando nuevas herramientas digitales y promocionando las existentes se buscó mejorar la experiencia a los asociados.
+Las formas de gestión online brindan a los usuarios conveniencia, permitiendo interactuar desde cualquier lugar y hora, y seguridad gracias a tecnologías como el cifrado, además de control y transparencia sobre los gastos al facilitar el registro de las transacciones, y una mayor flexibilidad al ofrecer diversas opciones como tarjetas y billeteras virtuales. En ese sentido desde CESTEL se implementó una forma de pago online para los usuarios, para que puedan pagar por billeteras virtuales o con tarjeta de débito desde un entorno seguro y de forma automatizada.
+Sumando tecnologías a la gestión de atención al usuario, durante el presente Ejercicio CESTEL implementó IVR para atención telefónica y registro de incidentes de forma automatizada. Los sistemas IVR
+(Respuesta de Voz Interactiva) permiten reducir costos operativos mediante la automatización de tareas, mejorar la experiencia del cliente al ofrecer autoservicio las 24 horas, todos los días del año, y dirigir llamadas eficientemente, aumentar la productividad al liberar agentes para tareas complejas, y proporcionar datos valiosos para la mejora continua del servicio.
+CES
+GESTIÓN COMERCIAL
+ATENCIÓN AL USUARIO
+
+62
+Los trabajos de incorporación de IVR se extendieron como tarea técnica del sector a las otras áreas de servicios y producción de la cooperativa, con la implementación de la central de internos de la CES con tecnología IP.
+Ser parte de un grupo de Cooperativas asociadas es una acción de fortalecimiento y proyección estratégica, es por eso que la CES, a través de su área de telecomunicaciones se ha sumado a CATEL – https://
+catel.org.ar/es/asociadas/ - una asociación de cooperativas de servicios públicos de la República Argentina interesadas en promover la mejora y el desarrollo de nuevos servicios.
+De esta manera CESTEL se ha integrado a un equipo, conformado por 50 empresas cooperativas, enfocado en la cooperación técnica e investigación a través de la realización de programas y actividades que impulsen el desarrollo de las TIC en la Argentina y en la región.
+El futuro inmediato dependerá de la capacidad de las cooperativas de telecomunicaciones para adaptarse a un mercado más liberalizado y sostener su vocación comunitaria.
+Con el objetivo de mantener su competitividad, otorgando beneficios a sus comunidades, desde CESTEL se ha ampliado la red de vínculos institucionales formando parte de una red de Cooperativas para la compra de insumos de tecnología, a través de Coopenet, de grupos cooperativos de compras como el
+Farcam que ya integraba CES Energía.
+En el marco del 80 aniversario de la CES y del vigésimo de CESTEL, el área de telecomunicaciones protagonizó otro acontecimiento histórico, al convertirse en la primera empresa en llegar con servicio de Internet de fibra óptica directa al hogar en Del Carril.
+Celebrando el 161 aniversario de Saladillo, los 80
+años de la Cooperativa Eléctrica de Saladillo y a punto de cumplir 20 años CESTEL, se realizó el lanzamiento oficial del servicio de Fibra Óptica Directa al
+CES
+CESTEL EN DEL CARRIL
+INTEGRACIÓN COOPERATIVA
+
+63
+Hogar de CESTEL, en las puertas del edificio de la delegación municipal, primer lugar en el que funcionó el servicio.
+Como acción de compromiso con la comunidad se firmaron actas acuerdo con los directivos de los establecimientos educativos de nivel inicial, primario y secundario de Del Carril para que estas instituciones reciban el beneficio del Programa “CESTEL en tu escuela”, al igual que con el jefe de bomberos voluntarios de la localidad, entidad que cuenta desde ese momento con el servicio gratuito de parte de la Cooperativa, como ocurre en la ciudad cabecera.
+En el mes de junio del 2023 CESTEL puso en marcha el ambicioso proyecto de la Cooperativa Eléctrica para llevar a todas las localidades de Saladillo Internet por fibra óptica.
+La obra, que superó el millón de dólares de inversión global entre CESTEL y CES Energía, contempló un trabajo integral de las áreas que contempla el tendido de 30 kilómetros de postación en hormigón pretensado, nuevas líneas de distribución de energía, y más cerca de 75 Kilómetros de líneas de enlace de Fibra óptica para unir la Ciudad de Saladillo con las localidades de Toledo, Polvaredas y Del Carril.
+El tendido de fibra óptica troncal, que une las localidades de Saladillo con Alvarez de Toledo, Álvarez de
+Toledo – Cazón y Álvarez de Toledo – Del Carril, se realizó principalmente con aportes de la CES y también la adjudicación de ANR (Aportes No Reembolsables) otorgados por el Enacom. La inversión contempló además el tendido de plantel de fibra óptica en la localidad de Del Carril para llegar a cada hogar.
+Tendido de red de fibra óptica en la planta urbana de Del Carril.
+Con el soporte de una red de fibra óptica y renovadas líneas eléctricas se avanzará en la prestación de nuevos servicios a las comunidades del interior y se profundizará el desarrollo de otras herramientas complementarias como la telemedición, el telecomando y la conexión para cámaras de seguridad en puntos geográficos distantes de la planta urbana de Saladillo.
+Entre los beneficios de esta nueva obra de la CES
+se enfatiza en que los habitantes de las localidades del interior cuentan con los servicios de Internet por fibra óptica de alta velocidad y estabilidad de CESTEL, al tiempo que en materia energética se logrará la ampliación de las capacidades técnicas de la red de distribución en la capacidad de corriente, para la mejora de la calidad de servicio y producto, generando la factibilidad de alimentación a nuevos usuarios.
+CES
+RESEÑA DE LA OBRA
+
+64
+El crecimiento del plantel externo con sistema de fibra óptica que permite llegar directo a los hogares se presenta como un valor diferencial de CESTEL, tanto en la ciudad cabecera como en las localidades del interior del Partido de Saladillo.
+La actividad comercial ha permitido al área de telecomunicaciones continuar con el criterio de expansión conforme a las características del plantel externo existente y las posibilidades que el mimo brinda.
+El mapa conforma un triángulo geográfico que une la ciudad cabecera con Cazón, Del Carril y Toledo, con el proyecto en marcha durante el último año para llegar con cobertura total a la planta urbana de Polvaredas.
+Las nuevas inversiones permitieron llegar a barrios extraurbanos en los que ninguna empresa llegaba con servicio de fibra óptica. De esta manera, con una obra ejecutada por personal de CESTEL, se concretó la conectividad con FTTH (Fibra óptica directa al hogar) en la zona del CFR Las Margaritas.
+Esta distribución del tendido permite brindarle el servicio a cerca de 1300 usuarios de telefonía fija, mediante el uso de tecnologías IP, un sistema que conecta llamadas de voz a través de una conexión a
+Internet en lugar de la red telefónica tradicional. Los teléfonos IP digitalizan la voz, la envían como datos a través de la red (LAN o Internet) usando protocolos
+IP, y la reciben y reconfiguran en el otro extremo, permitiendo comunicaciones más flexibles y rentables.
+Si bien la telefonía básica demuestra una tendencia decreciente en el número de usuarios, los existentes demandan calidad de servicio y para tal fin desde el sector se realizó la migración total de las líneas telefónicas que estaban en una central analógica a una central IP, sin afectar a los usuarios finales. Con este salto tecnológico se procedió al apagado de la central
+Neax, equipo que permitió iniciar a CESTEL sus actividades hace dos décadas, reduciendo el consumo energético del edificio considerablemente.
+CES
+COBERTURA
+
+65
+En cuanto a la llegada con ancho de banda, y en comparación con los usuarios de telefonía básica, los asociados con internet superan los 6.200 abonos con conectividad de fibra directa al hogar y más de 130 a través del sistema ADSL, al tiempo que con sistema inalámbrico se mantienen cerca de un centenar de puntos conectados.
+Al mismo tiempo, en alianza estratégica mediante un acuerdo celebrado con la empresa prestadora del servicio de televisión por cable TV Centro se llega a más de 2.400 abonados, algunos de ellos bajo el concepto de triple play.
+La actualización tecnológica permanente se ha venido logrando con una gestión ajustada a los aspectos económicos y financieros del sector, volcando los beneficios generados a nuevas inversiones de expansión, con el fin de sumar usuarios para aumentar el volumen de ingresos y mantener un proyecto de crecimiento sostenido.
+Con el fin de ampliar su capacidad operativa en puertos y la velocidad del servicio desde el área de telecomunicaciones de la CES se ejecutaron permanentes inversiones y renovación de los equipos.
+Como parte de un programa de mejora continua se efectuaron trabajos de actualización de su Nodo
+Central mejorando la interconexión de proveedores y equipamiento de transmisión de datos entre otras tareas, inversión que aumentó la capacidad de prestación para mejorar a los usuarios su experiencia de navegación con una mejor calidad de servicio.
+La prestación de servicios en el campo de las telecomunicaciones demanda un constante replanteo del esquema de distribución de ancho de banda, en función a la demanda y una permanente inversión para la actualización de los equipos, conforme evoluciona la tecnología que se utiliza para brindar los servicios a los abonados.
+Desde CESTEL se proyecta con vocación de servicio, priorizando la conectividad como derecho social más que como negocio. En tal sentido, considerando el cierre de la Cooperativa que brindaba servicio de telefonía básica en la localidad de Polvaredas, el Proyecto de expansión para el siguiente Ejercicio está centrado en la ejecución de la obra de cableado y conformación de una red para la distribución de ancho de banda, por fibra óptica directa al hogar, en esa localidad.En plan de obras contempla además la implementación de servicio telefónico en localidades del interior
+CES
+PROYECCIÓN DEL SECTOR
+ACTUALIZACIÓN TECNOLÓGICA
+
+66
+La planta de fabricación de columnas y elementos pretensados CESPRET se caracteriza por la ejecución de procesos industrializados con un control de calidad estricto para producir elementos de alta resistencia y durabilidad.
+Para poder participar en un mercado altamente competitivo sus principales características incluyen la preparación y tensado de armaduras de acero de alta resistencia antes del vertido del hormigón, moldes específicos para la geometría deseada, uso de hormigón de alta resistencia, sistemas de curado controlados y un proceso de desmoldeo y acabado para obtener piezas prefabricadas que se transportan a obra.
+El mercado de columnas y elementos pretensados ha mostrado una recuperación gradual en 2024 y 2025
+en Argentina, impulsado por una mejora en la actividad de la construcción y un repunte en la demanda de insumos. Aunque la inflación de costos continuó siendo alta, se ha observado una desaceleración en comparación con el año anterior, lo que genera un panorama más estable para el sector.
+Durante el transcurso del Ejercicio que se expone en esta Memoria el impacto de la mejora en las tarifas energéticas de todas las distribuidoras se tradujo para la fábrica de pretensados de hormigón en oportunidad de ventas de columnas y productos asociados. Este factor, sumado a que al cierre del Ejercicio anterior el sector disponía de un importante stock, y debido a una desaceleración de la inflación, permitieron a CESPRET mantenerse en el mercado. Al respecto, es importante destacar que si bien el volumen de facturación se incrementó durante el período analizado las ventas se concretaron en un valor cercano al de los costos de producción, al tiempo que algunos ítems de los costos operativos como los salarios del personal y sus cargas contributivas también se incrementaron.
+El desarrollo de las operaciones comerciales permitió sostener el plantel de personal cumpliendo con las cargas sociales correspondientes en tiempo y forma.
+A nivel nacional el mercado de elementos pretensados demostró una fase de recuperación, beneficiándose de una mejora en la actividad de la construcción y una estabilización macroeconómica, lo que abre buenas perspectivas para el futuro. En el transcurso del Ejercicio este clima económico se reflejó en un nivel productivo que alcanzó un total de 4.093 columnas de hormigón pretensado, 495 accesorios para líneas eléctricas y 398 módulos de nichos.
+CES
+PRODUCCIÓN
+CESPRET
+
+67
+En relación a la productividad cabe destacar que en el desarrollo del Ejercicio se logró sostener el nivel de ventas gracias al stock acumulado durante el período
+2023/2024, lo que permitió responder con agilidad a la creciente demanda.
+Las principales materias primas utilizadas para esa producción fueron trenzas de acero y hierros de distintas medidas (entre 6 mm y 20 mm), fundamentales para mantener los estándares de calidad estructural requeridos.
+Durante el período analizado, se observó un sostenimiento de las ventas, fundamentalmente a partir de la demanda por parte de la distribuidora de energía eléctrica en la Ciudad de Buenos Aires y 12 partidos del conurbano bonaerense, Edesur S.A., compañía eléctrica de referencia. Además de las ventas realizadas a la misma, se consolidaron relaciones comerciales con otras distribuidoras regionales, cooperativas eléctricas y desarrolladores privados, lo que permitió diversificar la cartera de clientes y ampliar la cobertura comercial.
+El plan de mantenimiento y mejoras en la fábrica de pretensados de hormigón incluye la inspección y el mantenimiento preventivo y correctivo de equipos y estructuras (como motores, sistemas hidráulicos, cables de tensión y grúas), la monitorización del estado de los activos, la gestión de repuestos y la mejora de procesos productivos. Se enfoca en identificar puntos críticos, establecer cronogramas de intervención, capacitar al personal, optimizar la disponibilidad de recursos y cumplir con las normativas de seguridad y medioambientales.
+En el transcurso del segundo semestre del año 2024
+y junio del 2025 CESPRET puso en marcha un plan de mejoras tecnológicas e infraestructurales, que se verá reflejado plenamente en el Ejercicio 2025/2026.
+Entre las mejoras proyectadas se destacan la automatización de la planta hormigonera y la mejora de procesos y eficiencia con la identificación de puntos críticos y optimización de recursos, para lo que se realizó un relevamiento de los moldes.
+El proyecto de automatización de la hormigonera ha sido designado a la firma Betonmac, cuya implementación está programada para diciembre de 2025.
+CES
+MANTENIMIENTO Y MEJORAS
+ACTIVIDAD COMERCIAL
+
+68
+Durante este período se avanzó con tareas de limpieza, reacondicionamiento general, cableado, y modificaciones en sensores y sistemas de pesaje.
+Por otra parte, el relevamiento de moldes en la fábrica de pretensados contempló la verificación de resistencia, geometría y dimensiones, superficie y textura, limpieza y operatividad, y la aptitud para las armaduras.
+Con el trabajo de diagnóstico se buscó garantizar que los moldes soporten las presiones del hormigón, mantengan la forma exacta del producto, permitan un acabado liso, no tengan residuos, y posibiliten el correcto emplazamiento de las armaduras de pretensado.
+En términos administrativos y como parte de la futura inversión se solicitaron presupuestos para la reparación y/o reemplazo de dos moldes, incluyendo la compra de 16 tramos de 1.500 mm cada uno, con el objetivo de modernizar el parque de moldes y aumentar la eficiencia.
+La gestión de recursos humanos en el área de producción de pretensados abarca la administración de personal, el cumplimiento de la legislación laboral, el reclutamiento y selección de personal calificado, la capacitación y desarrollo de habilidades, la gestión de la seguridad laboral y la salud ocupacional especí-
+fica del sector, la administración de la compensación y los beneficios, y el fomento de un ambiente laboral productivo que mejore la productividad y reduzca la rotación de empleados, adaptándose a los desafíos del sector y la era digital.
+La plantilla de personal incorporó durante el desarrollo del Ejercicio cuatro operarios, específicamente destinados a tareas de mantenimiento de planta, con el objetivo de garantizar la operatividad continua de la base productiva.
+Además, se trabajó en la mejora del plan de capacitación en seguridad, tanto para personal ingresante como activo, con foco en procedimientos de trabajo seguro, uso de dispositivos, elementos y accesorios de protección de riesgos específicos y buenas prácticas operativas.
+CES
+GESTIÓN DE PERSONAL
+
+69
+CESPAZ es el área de Servicios Sociales de la Cooperativa Eléctrica de Saladillo (CES), creada con el propósito de brindar asistencia solidaria a los asociados y a la comunidad. Su misión principal es acompañar en momentos sensibles mediante la prestación del servicio de sepelios y nichos, ofreciendo tranquilidad y contención en circunstancias de dolor.
+Fundada en los valores de la cooperación y la solidaridad, CESPAZ busca generar igualdad entre los ciudadanos impulsando políticas de carácter universal, garantizando que todos los asociados tengan acceso a los mismos beneficios. La adhesión al servicio es inclusiva, ya que pueden incorporarse asociados aun cuando no sean usuarios de otros servicios de la Cooperativa, lo que refuerza su carácter social y comunitario.
+La personalidad de las empresas la construyen las personas que trabajan en ella bajo las directrices de su cultura. Se da por hecho que en todas las empresas un buen trato hacia las personas es fundamental para transmitir confianza y seguridad. Sin embargo, en el caso de las prestadoras de servicios sociales, este aspecto resulta fundamental, ya que se trabaja para gestionar una fase de la vida muy delicada a nivel emocional.
+En el sector de servicios sociales el grupo de foco presenta un perfil ultrasensible, muy susceptible a los errores, que en la mayoría de los casos encuentra consuelo en la calidad del servicio, la que representa una muestra de respeto.
+La calidad del servicio en CESPAZ se conforma de la capacidad administrativa y técnica de su personal como también de la infraestructura y equipamiento disponible para las prestaciones. La mejora permanente del sector demanda actualización e inversiones.
+Al mismo tiempo la gestión del sector requiere un gerenciamiento administrativo que contemple la sustentabilidad económica para dar continuidad a la empresa, fortaleciendo los aspectos financieros para que, sin dejar de tener un perfil social con tarifas accesibles, el área cumpla con su misión.
+Durante el desarrollo del Ejercicio que se presenta desde el Consejo de Administración, a través de su comisión de servicios sociales y en peramente articulación con la administración central de la CES, se definieron lineamientos de trabajo centrados en el ordenamiento administrativo, la planificación comercial y la búsqueda del equilibrio económico del sector mediante el aumento de la masa societaria.
+CES
+CESPAZ
+
+70
+En el aspecto institucional cooperativo desde el área se generaron vínculos con otras entidades, entre las que se destaca el intercambio con las Cooperativas
+Eléctricas de Monte, Las Flores y Marcos Juárez, prestadoras de servicios socaires, con las que se ha fortalecido el vínculo y la ayuda recíproca mediante la creación de un grupo de interconsultas en aspectos relacionados a la gestión, tarifas y cuestiones operativas.
+Los sistemas de gestión son una herramienta o marco que utiliza métricas cuantificables para medir el desempeño de una organización en relación con sus objetivos estratégicos. Estos sistemas ayudan a evaluar la eficiencia y eficacia de los procesos, proporciona datos para la toma de decisiones, facilita el monitoreo del progreso hacia las metas y sirve como una “brú-
+jula” para orientar las acciones y asegurar la mejora continua.
+La implementación de un sistema de gestión desarrollado a nivel interno permitió generar indicadores clave para la toma de decisiones, al tiempo que realizar una evaluación estadística de la tarea realizada.
+Cabe señalar que el rubro comercial de servicios sociales en Saladillo está conformado por dos prestadoras locales. Ambas empresas son privadas, con sistema de adhesión pre paga y voluntaria, siendo
+CESPAZ de gestión cooperativa.
+Con los parámetros de la evolución del negocio del sector se continuó realizando el cálculo de costos mensual y la definición de tarifa en busca del punto de equilibrio (sin utilidades/ganancias), con el propósito de establecer una cuota con el valor más bajo posible, sin que la medida genere pérdidas ni déficit.
+Durante el período de tiempo comprendido por el
+Ejercicio que se describe, del total de fallecidos en el Partido de Saladillo el 96% fueron servicios realizados por CESPAZ, mientras que el 4% restante se llevaron a cabo por la otra prestadora. Esto indica que en la actualidad el sector de la CES atiende a la gran mayoría de los servicios, factor que impacta en los costos operativos y motivo por el cual resulta imperiosa la fidelización de los clientes ocasionales y potenciales socios para el Plan de Sustentabilidad del sector.
+La unidad de negocios presenta al cierre del Ejercicio que se expone 6769 socios activos lo que re -
+presenta, considerando a las personas incluidas en los grupos familiares, un total de 24.160 adherentes con cobertura.
+CES
+GESTIÓN ADMINISTRATIVA
+
+71
+Esa masa societaria es atendida por plantel conformado por seis agentes funerarios y un encargado.
+Durante el Ejercicio que se describe el sector realizó un total de 392 servicios, representando un incremento del 6,2% con respecto al periodo anterior, con un promedio de 34 servicios por mes, con picos de más de 40 durante los meses de julio y agosto 2024; entre los que se cuenta un 88,28% (346 activos) de los servicios prestados a los asociados, 6,88% (27
+particulares) contratados de forma particular, y 4,84%
+(19 indigentes) realizados mediante un acuerdo con el área de bienestar social del municipio de Saladillo.
+En cuanto al stock de insumos para las operaciones de los servicios, al cierre del Ejercicio el sector dispone de 81 nichos estándar, 7 especiales y 22 peque-
+ños, con la ejecución de obra de un nuevo panteón
+(número 71) con capacidad de 160 nichos.
+En el plano comercial, respondiendo al perfil social cooperativo de la empresa, se trabaja para sostener el valor de la cuota mensual de adhesión.
+Si bien las tarifas entre las empresas locales son semejantes continúan siendo más económicas que en otras ciudades si se considera que en Las Flores,
+Chacabuco, Chivilcoy, Marcos Juárez (Cba), por citar algunos ejemplos, la tarifa se encuentra por encima de los 10 mil pesos mensuales.
+El equilibrio económico del sector permite planificar más beneficios comunitarios.
+Es así que durante este Ejercicio desde el Consejo de
+Administración se planteó la inquietud de generar planes especiales de cobertura, mediante la adhesión de un familiar a cargo, para los adultos mayores que se encuentran en geriátricos en Saladillo y partidos aledaños. Para su puesta en servicio y asegurar una cobertura universal, el proyecto prevé la realización de un relevamiento en conjunto con cada institución que brinda a los abuelos.
+Como parte de las acciones de gestión se trabajó también en el sistema de reclamos, atendiendo las inquietudes de los adherentes y realizando un seguimiento de las mismas con una información permanente sobre su estado de avances.
+Es así que en el último año se han recibido 55 reclamos, de los cuales 32 fueron resueltos, la gran mayoría de ellos relacionados a detalles edilicios en los panteones y por demoras en la fabricación de las plaCES
+
+72
+cas identificatorias de nichos, quedando solo 23 pendientes en los que actualmente se está trabajando.
+En cuanto a la mejora de la experiencia del usuario se trabajó en la incorporación de dos líneas de telefonía celular rotativas para la atención al público, por llamadas o WhatsApp.
+La integridad de los datos en una base de datos se refiere a garantizar que los datos sean precisos, completos, consistentes y válidos a lo largo de su ciclo de vida.
+Su objetivo es asegurar que los datos no sean corrompidos o alterados por modificaciones no autorizadas o errores, tanto accidentales como intencionados, preservando así su fiabilidad y corrección en todas las etapas, desde su creación hasta su eliminación.
+Con ese objetivo el área administrativa de CESPAZ
+realizó una campaña de actualización de datos domiciliarios y de contacto de los socios más antiguos, visitándolos personalmente en sus domicilios. Se actualizaron más de 500 socios que presentaban anomalías y se cargaron en el nuevo sistema de gestión.
+Además, se iniciaron relevamientos en nichos cuya concesión se encuentra vencida, junto a un relevamiento de datos de contacto de los familiares para ser convocados, para que decidan sobre el destino de los restos, como también ejecutando convocatorias a través de los medios de comunicación, por edicto judicial.
+Con el objetivo de posicionar la marca CESPAZ, fidelizar a los adherentes y conseguir nuevos adeptos desde el área de comunicación y relaciones institucionales se trabajó con la gestión de CESPAZ en el impulso de campañas comerciales.
+Las mediciones de impacto de las acciones mostraron una buena tasa de conversión – adhesión e interés de parte de adultos mayores, quienes valoran la cobertura como de primera necesidad. En el segmento más joven, si bien la llegada a esta franja etaria a través de redes sociales y medios digitales es más eficiente, la tasa de adhesión e interés disminuye. En ese segmento de potenciales socios se mejoró el número de adherentes con la implementación de gestiones vía WhatsApp, ya que una gran proporción, manifestaban no tener tiempo de acudir a la oficina de forma personal.
+CES
+INTEGRIDAD DE DATOS
+CAMPAÑAS DE ADHESIÓN Y MARCA
+
+73
+De modo complementario a la Campaña de Adherentes impulsada como acción comercial para, a partir del ingreso de nuevos socios, amortiguar el impacto de futuros aumentos en los costos operativos, se trabajó de manera interinstitucional con el Centro de Formación Rural Femenino “Las Margaritas”.
+Con un sistema de pasantías se incorporó a estudiantes de la carrera de Administración y gestión de las organizaciones de la entidad educativa para la gestión comercial. La tarea consistió en contactar de manera directa a más de 400 socios de CES Energía que aún no contaban con el servicio de CESPAZ, lográndose por resultado generar nuevas adhesiones que significan en términos económicos un ingreso mensual de más de 4 millones de pesos.
+Considerando que existen mutuales y obras sociales que ofrecen a sus afiliados servicios de sepelios y nichos sin contar con infraestructura propia, mediante de la subcontratación de los mismos, como parte de las acciones de promoción del servicio, y en la búsqueda de sumar nuevos clientes se trabajó en la gestión corporativa.
+El plan de gestión se concretó con acuerdos con instituciones que brindan servicios fúnebres a sus afiliados mediante convenios con empresas prestadoras, u otorgan subsidios para gastos de sepelio y cremación. En este sentido se concretaron convenios con la Policía de la Provincia de Buenos Aires, a través de su Seccional local y alrededores, y empresas aseguradoras como Prevenir ART, para poder cubrir los servicios de sus beneficiarios sin acudir a Bienestar
+Social y sin necesidad de tener que abonar de forma particular.
+CES
+SERVICIOS CORPORATIVOS
+
+74
+En el ámbito de la prestación de servicios sociales, los servicios funerarios complejos son aquellos que van más allá de lo básico, incluyendo el traslado internacional, la gestión de trámites especiales ante diversas instituciones, la preparación tanatoestética avanzada, la organización de ceremonias personalizadas que requieren alta coordinación, el apoyo psicológico profesional, y la gestión de seguros y aspectos legales y burocráticos especializados.
+En el transcurso del año 2025 CESPAZ debió realizar este tipo de servicios con un caso de traslado internacional desde la República Federativa de Brasil, en el que intervino el Consulado Argentino de Río de Janeiro, la Embajada Argentina, y especialmente el personal del área que con su compromiso y proactividad movilizaron a los involucrados y realizaron todas las gestiones necesarias para que el trabajo operativo se concretara en tiempo récord, para concretar la velación en Saladillo.
+La realización de un servicio cuádruple es otro de los casos de servicios complejos que se debió resolver durante el Ejercicio. Ante la demanda el personal del sector realizó las gestiones para darle celeridad a las autopsias, acompañar a los dolientes en los trámites necesarios ante la fiscalía interviniente y hasta convocando a otras cooperativas para sumar vehículos a la caravana fúnebre.
+El servicio requirió preparación tanatoestética avanzada. Cabe señalar que, en ambos casos, las familias manifestaron su conformidad y agradecimiento a la
+Cooperativa, destacando el profesionalismo de los agentes funerarios de CESPAZ que demostraron una vez más, estar a la altura de los acontecimientos en acontecimientos de alto impacto comunitario.
+En un proceso de mejora continua se adquirió un vehículo marca Toyota Yaris cero kilómetros para carrozar como fúnebre cerrado en reemplazo la actual flota vehicular.
+Para financiar la operación, sin comprometer la situación económica del área, se resolvió vender la mayoría del parque automotor en desuso del sector a través de una oferta pública, solventando el total de la inversión.
+CES
+NUEVA UNIDAD DE FLOTA
+SERVICIOS COMPLEJOS
+
+75
+Dado que se trata de un modelo sedan, de catálogo comercial se debió realizar la adaptación para las prestaciones específicas.
+La evolución de la demanda de servicios muestra una marcada tendencia incremental, traccionada principalmente por el aumento demográfico del Partido, dato que evidencia la proyección del sector y la necesidad de planificación estructural en el mismo.
+Durante el transcurso del Ejercicio que se expone las inversiones en obras de adecuación de las instalaciones y parque automotor fueron gestionadas con el fin de mantener el estándar del servicio.
+Como parte de las inversiones necesarias para la actualización de la infraestructura edilicia y disponibilidad de nichos durante el Ejercicio que se expone se han construido y proyectado nuevos panteones para los servicios. Estos trabajos de expansión en el cementerio local sumaron a la infraestructura al Panteón número 70 y permitieron además la reparación de fallas estructurales en panteones preexistentes.
+Cabe señalar que si bien se trata de un espacio municipal el servicio de mantenimiento de los panteones en el cementerio de la ciudad cabecera lo gestiona la
+Cooperativa, mediante un servicio tercerizado.
+Desde la gestión se ha procurado la mejora de la calidad de los servicios mediante la inversión en obras de mantenimiento de la infraestructura edilicia.
+Los trabajos se orientaron a la refacción total de los sanitarios de la Sala B.
+En cuanto a las mejoras edilicias se trabajó en la comunicación visual y estética de la oficina comercial con el recambio de cartelería externa.
+CES
+INVERSIÓN EN INFRAESTRUCTURA
+
+76
+CES
+El Consejo de Administración reafirma con esta Memoria el camino recorrido en unidad y cooperación, convencidos de que cada acción emprendida ha tenido como propósito fortalecer a nuestra Cooperativa y proyectarla hacia un futuro próspero.
+Consolidar una ciudad que sea orgullo de nuestra gente y sostener un compromiso basado en la solidaridad, la participación y el esfuerzo colectivo, ha sido y seguirá siendo nuestra mayor responsabilidad.
+Cada logro alcanzado es fruto de la confianza de nuestros asociados y del compromiso de quienes, día a día, trabajan convencidos de que juntos podemos construir una comunidad mejor.
+Por ello, solicitamos a los asociados la aprobación de la presente Memoria y Balance, entendiendo que en sus páginas se refleja no sólo la gestión realizada, sino también la continuidad de aquel legado que, hace más de ocho décadas, dio origen a esta institución. Una entidad que sigue creciendo, fiel a sus principios y siempre al servicio de nuestra comunidad.
+PALABRAS FINALES
+--- Fin del documento: Memoria 2024-2025.pdf ---
+
+
 --- Inicio del documento: municipalidad_septiembre_2023.pdf ---
 PARADIGMAS DEL
 SIGLO XXI
