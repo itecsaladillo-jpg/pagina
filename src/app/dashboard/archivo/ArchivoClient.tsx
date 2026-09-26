@@ -13,9 +13,12 @@ import {
   Search, 
   Sparkles,
   Link as LinkIcon,
-  Tag
+  Tag,
+  Pencil,
+  X,
+  Save
 } from 'lucide-react'
-import { createArchivoAccionAction, deleteArchivoAccionAction } from './actions'
+import { createArchivoAccionAction, updateArchivoAccionAction, deleteArchivoAccionAction } from './actions'
 import type { ArchivoAccion, ArchivoYear } from '@/types/database'
 
 interface ArchivoClientProps {
@@ -30,17 +33,82 @@ export function ArchivoClient({ initialAcciones }: ArchivoClientProps) {
   const [searchQuery, setSearchQuery] = useState('')
   const [isPending, startTransition] = useTransition()
 
-  // Estado del formulario
+  // Estado del formulario de creación
   const [title, setTitle] = useState('')
   const [socialUrl, setSocialUrl] = useState('')
   const [year, setYear] = useState<string>('') // Vacío por defecto para obligar a seleccionar
   const [category, setCategory] = useState('')
   const [description, setDescription] = useState('')
   
+  // Estado para la edición de un evento
+  const [editingAccion, setEditingAccion] = useState<ArchivoAccion | null>(null)
+  const [editTitle, setEditTitle] = useState('')
+  const [editSocialUrl, setEditSocialUrl] = useState('')
+  const [editYear, setEditYear] = useState<string>('')
+  const [editCategory, setEditCategory] = useState('')
+  const [editDescription, setEditDescription] = useState('')
+  const [editError, setEditError] = useState<string | null>(null)
+  const [isEditSubmitting, setIsEditSubmitting] = useState(false)
+
   // Feedback
   const [formError, setFormError] = useState<string | null>(null)
   const [formSuccess, setFormSuccess] = useState<string | null>(null)
   const [deletingId, setDeletingId] = useState<string | null>(null)
+
+  const handleStartEdit = (item: ArchivoAccion) => {
+    setEditingAccion(item)
+    setEditTitle(item.title)
+    setEditSocialUrl(item.social_url)
+    setEditYear(String(item.year))
+    setEditCategory(item.category || '')
+    setEditDescription(item.description || '')
+    setEditError(null)
+  }
+
+  const handleSaveEdit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!editingAccion) return
+
+    setEditError(null)
+
+    if (!editTitle.trim()) {
+      setEditError('El título del evento es obligatorio.')
+      return
+    }
+    if (!editSocialUrl.trim()) {
+      setEditError('El link a la publicación de redes sociales es obligatorio.')
+      return
+    }
+    if (!editYear) {
+      setEditError('Es obligatorio seleccionar un año (2022, 2023, 2024 o 2025).')
+      return
+    }
+
+    setIsEditSubmitting(true)
+    try {
+      const res = await updateArchivoAccionAction({
+        id: editingAccion.id,
+        title: editTitle.trim(),
+        social_url: editSocialUrl.trim(),
+        year: Number(editYear),
+        category: editCategory.trim() || 'General',
+        description: editDescription.trim() || undefined
+      })
+
+      if (res.success && res.data) {
+        setAcciones(prev => prev.map(a => a.id === res.data.id ? res.data : a))
+        setEditingAccion(null)
+        setFormSuccess('¡Evento actualizado con éxito en el Archivo!')
+        setTimeout(() => setFormSuccess(null), 4000)
+      } else {
+        setEditError(res.error || 'Ocurrió un error al actualizar el evento.')
+      }
+    } catch (err: any) {
+      setEditError(err?.message || 'Error inesperado al actualizar el evento.')
+    } finally {
+      setIsEditSubmitting(false)
+    }
+  }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -363,15 +431,30 @@ export function ArchivoClient({ initialAcciones }: ArchivoClientProps) {
                       )}
                     </div>
 
-                    <button
-                      type="button"
-                      onClick={() => handleDelete(item.id, item.title)}
-                      disabled={deletingId === item.id}
-                      className="text-slate-500 hover:text-red-400 p-1.5 rounded-lg hover:bg-red-500/10 transition-colors cursor-pointer"
-                      title="Eliminar este evento del archivo"
-                    >
-                      <Trash2 size={15} />
-                    </button>
+                    <div className="flex items-center gap-1">
+                      {/* Botón de edición con icono de lápiz a la izquierda del cesto de basura */}
+                      <button
+                        type="button"
+                        onClick={() => handleStartEdit(item)}
+                        className="text-slate-400 hover:text-cyan-400 p-1.5 rounded-lg hover:bg-cyan-500/10 transition-colors cursor-pointer"
+                        title="Editar este evento del archivo"
+                        aria-label={`Editar evento ${item.title}`}
+                      >
+                        <Pencil size={15} />
+                      </button>
+
+                      {/* Botón de eliminación */}
+                      <button
+                        type="button"
+                        onClick={() => handleDelete(item.id, item.title)}
+                        disabled={deletingId === item.id}
+                        className="text-slate-500 hover:text-red-400 p-1.5 rounded-lg hover:bg-red-500/10 transition-colors cursor-pointer"
+                        title="Eliminar este evento del archivo"
+                        aria-label={`Eliminar evento ${item.title}`}
+                      >
+                        <Trash2 size={15} />
+                      </button>
+                    </div>
                   </div>
 
                   <h4 className="text-base font-bold text-white group-hover:text-blue-300 transition-colors leading-snug">
@@ -417,6 +500,157 @@ export function ArchivoClient({ initialAcciones }: ArchivoClientProps) {
           </div>
         )}
       </div>
+
+      {/* ── Modal de Edición de Acción del Archivo ── */}
+      <AnimatePresence>
+        {editingAccion && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 15 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 15 }}
+              transition={{ duration: 0.2 }}
+              className="relative w-full max-w-2xl rounded-3xl border border-white/10 bg-gradient-to-b from-slate-900/95 to-black/95 p-6 sm:p-8 shadow-2xl shadow-cyan-500/10 overflow-hidden"
+            >
+              <div className="flex items-center justify-between pb-5 border-b border-white/10">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-2xl bg-cyan-500/20 border border-cyan-500/30 flex items-center justify-center text-cyan-300">
+                    <Pencil size={18} />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-bold text-white tracking-tight">
+                      Editar Evento o Acción Histórica
+                    </h3>
+                    <p className="text-xs text-[var(--text-muted)]">
+                      Modificá los datos del evento publicado en el archivo.
+                    </p>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => setEditingAccion(null)}
+                  className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+                  title="Cerrar ventana"
+                >
+                  <X size={18} />
+                </button>
+              </div>
+
+              {editError && (
+                <div className="mt-4 p-4 rounded-2xl bg-red-500/10 border border-red-500/20 text-red-300 text-xs flex items-center gap-3">
+                  <AlertCircle size={16} className="flex-shrink-0" />
+                  <span>{editError}</span>
+                </div>
+              )}
+
+              <form onSubmit={handleSaveEdit} className="mt-5 space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div className="sm:col-span-2 space-y-1">
+                    <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-300">
+                      Título del Evento <span className="text-pink-400">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={editTitle}
+                      onChange={e => setEditTitle(e.target.value)}
+                      required
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-black/60 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500"
+                    />
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-300">
+                      Año <span className="text-pink-400">*</span>
+                    </label>
+                    <select
+                      value={editYear}
+                      onChange={e => setEditYear(e.target.value)}
+                      required
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-cyan-500/40 text-cyan-300 text-sm font-bold focus:outline-none cursor-pointer"
+                    >
+                      <option value="2025">2025</option>
+                      <option value="2024">2024</option>
+                      <option value="2023">2023</option>
+                      <option value="2022">2022</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-1">
+                    <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
+                      <LinkIcon size={12} className="text-pink-400" />
+                      <span>Link en Redes Sociales <span className="text-pink-400">*</span></span>
+                    </label>
+                    <input
+                      type="url"
+                      value={editSocialUrl}
+                      onChange={e => setEditSocialUrl(e.target.value)}
+                      required
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-black/60 border border-white/10 text-white text-sm focus:outline-none focus:border-pink-500"
+                    />
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
+                      <Tag size={12} className="text-cyan-400" />
+                      <span>Categoría o Eje Temático</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={editCategory}
+                      onChange={e => setEditCategory(e.target.value)}
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-black/60 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-1">
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-300">
+                    Descripción o Síntesis
+                  </label>
+                  <textarea
+                    value={editDescription}
+                    onChange={e => setEditDescription(e.target.value)}
+                    rows={3}
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-black/60 border border-white/10 text-white text-sm focus:outline-none focus:border-blue-500 resize-none"
+                  />
+                </div>
+
+                <div className="pt-3 flex items-center justify-end gap-3 border-t border-white/10">
+                  <button
+                    type="button"
+                    onClick={() => setEditingAccion(null)}
+                    disabled={isEditSubmitting}
+                    className="px-4 py-2.5 rounded-xl text-xs font-bold text-slate-300 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+                  >
+                    Cancelar
+                  </button>
+
+                  <button
+                    type="submit"
+                    disabled={isEditSubmitting}
+                    className="px-5 py-2.5 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-blue-600 to-cyan-500 hover:shadow-lg hover:shadow-cyan-500/20 transition-all cursor-pointer flex items-center gap-2"
+                  >
+                    {isEditSubmitting ? (
+                      <>
+                        <div className="w-3.5 h-3.5 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+                        <span>Guardando cambios...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Save size={14} />
+                        <span>Guardar Cambios</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+              </form>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }

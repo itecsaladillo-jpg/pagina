@@ -68,6 +68,61 @@ export async function createArchivoAccionAction(formData: {
   }
 }
 
+export async function updateArchivoAccionAction(formData: {
+  id: string
+  title: string
+  social_url: string
+  year: number | string
+  category?: string
+  description?: string
+}) {
+  const member = await getCurrentMember()
+  if (!member || !['admin', 'coordinador'].includes(member.role)) {
+    return { success: false, error: 'No tenés permisos para realizar esta acción.' }
+  }
+
+  if (!formData.id) {
+    return { success: false, error: 'Identificador de evento inválido.' }
+  }
+
+  const parseResult = CreateArchivoSchema.safeParse(formData)
+  if (!parseResult.success) {
+    const errorMsg = parseResult.error.issues.map(e => e.message).join('. ')
+    return { success: false, error: errorMsg }
+  }
+
+  const { title, social_url, year, category, description } = parseResult.data
+
+  try {
+    const supabase = await createClient()
+    const { data, error } = await supabase
+      .from('archivo_acciones')
+      .update({
+        title,
+        social_url,
+        year,
+        category: category?.trim() || 'General',
+        description: description?.trim() || null,
+      })
+      .eq('id', formData.id)
+      .select()
+      .single()
+
+    if (error) {
+      console.error('[updateArchivoAccionAction] Error Supabase:', error.message)
+      return { success: false, error: `Error al actualizar en base de datos: ${error.message}` }
+    }
+
+    revalidatePath('/dashboard/archivo')
+    revalidatePath('/')
+
+    return { success: true, data }
+  } catch (err: any) {
+    console.error('[updateArchivoAccionAction] Exception:', err)
+    return { success: false, error: err?.message || 'Error inesperado al actualizar el evento.' }
+  }
+}
+
 export async function deleteArchivoAccionAction(id: string) {
   const member = await getCurrentMember()
   if (!member || !['admin', 'coordinador'].includes(member.role)) {

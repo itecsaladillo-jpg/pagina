@@ -817,7 +817,7 @@ Detalle:
 | 19 | `app/dashboard/eventos-presenciales/semaforoActions.ts` | `registrarVotoNegativo`, `verificarVotoDispositivo`, `obtenerEstadoSemaforo`, `resetearSemaforo` |
 | 20 | `app/dashboard/saladillo-for-export/actions.ts` | `aprobarTestimonioAction`, `rechazarTestimonioAction`, `setEmbajadorAction`, `crearTestimonioAdminAction`, `eliminarTestimonioAction` (requieren admin) |
 | 21 | `app/dashboard/whatsapp/actions.ts` | `getTemplatesAction`, `saveTemplateAction`, `deleteTemplateAction`, `logWhatsAppSendAction`, `getContactsAction`, `getGroupsAction`, `getGroupWithContactsAction`, `saveContactAction`, `saveContactsBulkAction`, `deleteContactAction`, `importMembersToContactsAction`, `saveGroupAction`, `deleteGroupAction`, `setGroupContactsAction`, `updateUnifiedContactAction`, `deleteUnifiedContactAction` (admin) |
-| 22 | `app/dashboard/archivo/actions.ts` | `createArchivoAccionAction`, `deleteArchivoAccionAction` (admin/coordinador: validación Zod año 2022-2025, link red social, revalida `/dashboard/archivo` y `/`) |
+| 22 | `app/dashboard/archivo/actions.ts` | `createArchivoAccionAction`, `updateArchivoAccionAction`, `deleteArchivoAccionAction` (admin/coordinador: validación Zod año 2022-2025, link red social, revalida `/dashboard/archivo` y `/`) |
 | — | `app/actions/saladillo-export.ts` | `crearTestimonioSaladilloExport` (pública, upload foto a Storage + insert estado pendiente) |
 | — | `components/capacitaciones/actions.ts` | `voteLivePollAction` (cookie dedup httpOnly 24h) |
 
