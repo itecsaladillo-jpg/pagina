@@ -42,71 +42,68 @@ export function HistoricalActionsYears({ historicalActions }: HistoricalActionsY
   const actions: HistoricalAction[] = selectedYear ? (data[selectedYear] || []) : []
 
   return (
-    <div className="mt-14 relative z-10">
-      {/* Título interactivo solicitado: AÑOS ANTERIORES: 2022, 2023, 2024, 2025 */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-2">
-        <div className="flex flex-wrap items-center gap-x-2 gap-y-3">
-          <h3 className="text-xl sm:text-2xl md:text-3xl font-black text-white tracking-tight uppercase flex items-center gap-2">
-            <span className="text-[var(--text-secondary)]">
-              {dict.impactSection.aniosAnteriores || 'AÑOS ANTERIORES:'}
+    <div className="mt-20 pt-12 border-t border-white/10 relative z-10">
+      {/* Título con idéntico tratamiento estético a "UN MOTOR QUE MUEVE A SALADILLO" */}
+      <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-10">
+        <div className="space-y-4 max-w-3xl">
+          <span className="inline-block text-xs font-bold tracking-[0.2em] text-[var(--accent-warm)] uppercase px-4 py-1.5 rounded-full border border-[var(--accent-warm)]/20 bg-[var(--accent-warm)]/5">
+            {dict.impactSection.accionesBadge || 'MEMORIA INSTITUCIONAL'}
+          </span>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-white leading-[1.1] tracking-tighter">
+            {dict.impactSection.accionesTitleStart || 'ACCIONES DE ITEC'} <br className="hidden sm:inline" />
+            <span className="text-gradient">
+              {dict.impactSection.accionesTitleEnd || 'DESDE SU NACIMIENTO'}
             </span>
-          </h3>
+          </h2>
+          <p className="text-[var(--text-muted)] text-base md:text-lg leading-relaxed">
+            {dict.impactSection.accionesDesc || 'Explorá los proyectos, eventos e iniciativas que forjaron la historia de ITEC desde sus primeros pasos.'}
+          </p>
+        </div>
 
-          <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
-            {HISTORICAL_YEARS.map((year, idx) => {
+        {/* Selector interactivo de años (2022, 2023, 2024, 2025) */}
+        <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+          <div className="flex flex-wrap items-center gap-2 p-1.5 rounded-2xl bg-white/[0.03] border border-white/10 backdrop-blur-md">
+            {HISTORICAL_YEARS.map((year) => {
               const isSelected = selectedYear === year
-              const isLast = idx === HISTORICAL_YEARS.length - 1
-
               return (
-                <div key={year} className="inline-flex items-center">
-                  <button
-                    type="button"
-                    onClick={() => handleYearClick(year)}
-                    aria-label={`Ver acciones del año ${year}`}
-                    aria-expanded={isSelected}
-                    className={`
-                      cursor-pointer px-3.5 py-1.5 rounded-xl font-black text-base sm:text-lg md:text-xl transition-all duration-300
-                      flex items-center gap-1.5 relative select-none
-                      ${
-                        isSelected
-                          ? 'bg-gradient-to-r from-blue-600 to-cyan-500 text-white shadow-[0_0_20px_rgba(59,130,246,0.5)] scale-105 border border-cyan-300/40'
-                          : 'bg-white/[0.04] text-slate-300 hover:text-white hover:bg-white/[0.1] border border-white/10 hover:border-blue-400/40 hover:scale-105'
-                      }
-                    `}
-                  >
-                    <span>{year}</span>
-                    {isSelected ? (
-                      <ChevronDown size={16} className="text-white animate-bounce" />
-                    ) : (
-                      <span className="w-1.5 h-1.5 rounded-full bg-blue-400/40 group-hover:bg-blue-400" />
-                    )}
-                  </button>
-                  {!isLast && (
-                    <span className="text-slate-500 font-bold text-base sm:text-lg md:text-xl ml-1 mr-0.5 select-none">
-                      ,
-                    </span>
+                <button
+                  key={year}
+                  type="button"
+                  onClick={() => handleYearClick(year)}
+                  aria-label={`Ver acciones del año ${year}`}
+                  aria-expanded={isSelected}
+                  className={`
+                    cursor-pointer px-4 py-2 rounded-xl font-black text-base sm:text-lg transition-all duration-300
+                    flex items-center gap-2 relative select-none
+                    ${
+                      isSelected
+                        ? 'bg-gradient-to-r from-blue-600 via-cyan-500 to-blue-500 text-white shadow-[0_0_25px_rgba(59,130,246,0.6)] scale-105 border border-cyan-300/40'
+                        : 'text-slate-300 hover:text-white hover:bg-white/[0.08] border border-transparent hover:border-white/10'
+                    }
+                  `}
+                >
+                  <Calendar size={16} className={isSelected ? 'text-cyan-200' : 'text-slate-400'} />
+                  <span>{year}</span>
+                  {isSelected && (
+                    <ChevronDown size={16} className="text-white animate-bounce" />
                   )}
-                </div>
+                </button>
               )
             })}
           </div>
+
+          {selectedYear && (
+            <button
+              type="button"
+              onClick={() => setSelectedYear(null)}
+              className="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-white px-3.5 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 transition-colors cursor-pointer self-start sm:self-auto"
+            >
+              <X size={14} />
+              <span>Cerrar</span>
+            </button>
+          )}
         </div>
-
-        {selectedYear && (
-          <button
-            type="button"
-            onClick={() => setSelectedYear(null)}
-            className="self-start md:self-center inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-white px-3 py-1.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 transition-colors cursor-pointer"
-          >
-            <X size={14} />
-            <span>Cerrar listado</span>
-          </button>
-        )}
       </div>
-
-      <p className="text-xs sm:text-sm text-[var(--text-muted)] mt-2">
-        Hacé click en cada año para explorar el archivo histórico de acciones y sus publicaciones en redes sociales.
-      </p>
 
       {/* Listado desplegable animado de acciones del año seleccionado */}
       <AnimatePresence mode="wait">

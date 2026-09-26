@@ -230,7 +230,7 @@ export function ImpactSectionClient({ actions, articles, historicalActions }: an
           </div>
         )}
 
-        {/* Debajo de la última acción del año en curso: AÑOS ANTERIORES: 2022, 2023, 2024, 2025 */}
+        {/* ACCIONES DE ITEC DESDE SU NACIMIENTO: 2022, 2023, 2024, 2025 */}
         <HistoricalActionsYears historicalActions={historicalActions} />
       </div>
 
