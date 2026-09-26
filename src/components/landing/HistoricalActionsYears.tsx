@@ -45,17 +45,17 @@ export function HistoricalActionsYears({ historicalActions }: HistoricalActionsY
     <div className="mt-20 pt-12 border-t border-white/10 relative z-10">
       {/* Título con idéntico tratamiento estético a "UN MOTOR QUE MUEVE A SALADILLO" */}
       <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-10">
-        <div className="space-y-4 max-w-3xl">
-          <span className="inline-block text-xs font-bold tracking-[0.2em] text-[var(--accent-warm)] uppercase px-4 py-1.5 rounded-full border border-[var(--accent-warm)]/20 bg-[var(--accent-warm)]/5">
+        <div className="space-y-3 max-w-2xl">
+          <span className="inline-block text-[10px] font-bold tracking-[0.18em] text-[var(--accent-warm)] uppercase px-3 py-1 rounded-full border border-[var(--accent-warm)]/20 bg-[var(--accent-warm)]/5">
             {dict.impactSection.accionesBadge || 'MEMORIA INSTITUCIONAL'}
           </span>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-white leading-[1.1] tracking-tighter">
+          <h2 className="text-lg sm:text-xl md:text-2xl font-black text-white leading-tight tracking-tight">
             {dict.impactSection.accionesTitleStart || 'ACCIONES DE ITEC'} <br className="hidden sm:inline" />
             <span className="text-gradient">
               {dict.impactSection.accionesTitleEnd || 'DESDE SU NACIMIENTO'}
             </span>
           </h2>
-          <p className="text-[var(--text-muted)] text-base md:text-lg leading-relaxed">
+          <p className="text-[var(--text-muted)] text-xs sm:text-sm leading-relaxed">
             {dict.impactSection.accionesDesc || 'Explorá los proyectos, eventos e iniciativas que forjaron la historia de ITEC desde sus primeros pasos.'}
           </p>
         </div>
