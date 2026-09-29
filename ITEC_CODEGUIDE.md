@@ -16,7 +16,7 @@
 6. [Autenticación y Autorización](#6-autenticación-y-autorización)
 7. [Seguridad](#7-seguridad)
 8. [Base de Datos (Supabase)](#8-base-de-datos-supabase)
-9. [Sistema de IA](#9-sistema-de-ia)
+9. [Sistema de IA (Documento Maestro IA_ITEC.md)](#9-sistema-de-ia)
 10. [Sistema de Noticias Multicanal](#10-sistema-de-noticias-multicanal)
 10.1 [Módulo WhatsApp](#101-módulo-whatsapp-sept-2026)
 11. [Páginas Públicas — Detalle Funcional](#11-páginas-públicas--detalle-funcional)
@@ -32,6 +32,7 @@
 21. [Flujo de Datos y Patrones](#21-flujo-de-datos-y-patrones)
 22. [Quirks y Gotchas Conocidos](#22-quirks-y-gotchas-conocidos)
 23. [Stakeholders y sus Interfaces](#23-stakeholders-y-sus-interfaces)
+24. [Matriz de Agentes y Suite de Verificación Funcional](#24-matriz-de-agentes-y-suite-de-verificación-funcional)
 
 ---
 
@@ -91,7 +92,7 @@ La landing incluye streaming en vivo de YouTube y barra inferior de sponsors con
 | `build` | `next build` | Build de producción |
 | `start` | `next start` | Servidor de producción |
 | `lint` | `eslint` | Linting (ESLint 9 flat config + eslint-config-next) |
-| `sync-docs` | `node scripts/generateDocsContext.mjs` | Lee PDF/TXT/MD de `/docs` → limpia texto → genera `src/lib/docsContext.ts` (constante `DOCS_CONTEXT`) + `docsContext.json` (~1.73M chars). Alimenta nivel P2 del RAG con corpus institucional completo, anuarios estadísticos oficiales de Saladillo (N° 1, 2 y 3 año 2025), censos INDEC e indicadores socioeconómicos locales. Ejecutar después de subir documentos nuevos. |
+| `sync-docs` | `node scripts/generateDocsContext.mjs` | Lee PDF/TXT/MD de `/docs` → limpia texto → genera `src/lib/docsContext.ts` (constante `DOCS_CONTEXT`) + `docsContext.json` (~2.47M chars). Alimenta nivel P2 del RAG con el corpus institucional completo: Memorias y Balances contables (2022-2023, 2023-2024, 2024-2025 con nómina de autoridades y estados contables), planos viales y sentidos de circulación 2025, Código de Ordenamiento Urbano (COU), ordenanzas y censos de Saladillo Norte, Cazón, Del Carril, Polvaredas, Álvarez de Toledo, y los anuarios estadísticos oficiales de Saladillo (N° 1, 2 y 3 año 2025 con censos INDEC e indicadores socioproductivos locales). Ejecutar después de subir documentos nuevos. |
 | `extract-docs` | `node scripts/extractPdfText.js` | Predecesor simple: extrae texto plano de PDFs a JSON (CommonJS, pdf-parse) |
 | `ingest-vector` | `node --dns-result-order=ipv4first --env-file=.env.local scripts/ingestDocsToVector.mjs [archivo.md]` | Pipeline pgvector: limpia embeddings previos (o solo del archivo si se pasa argumento) → chunking 900 chars/overlap 120 → embeddings Gemini `gemini-embedding-001` (batches de 20, 768 dims) → inserta en tabla `documents` vía REST con service_role. |
 | `agent-get-context` | `node scripts/agent-get-context.mjs` | Script de diagnóstico que consulta `news_flashes` y `itec_actions` para ver contexto dinámico de la BD |
@@ -493,6 +494,9 @@ Todas las tablas realtime de clase están en publicación `supabase_realtime`. R
 
 ## 9. Sistema de IA
 
+> 📘 **DOCUMENTO MAESTRO DEL ASISTENTE VIRTUAL (`IA_ITEC.md`):**  
+> La especificación técnica completa y exhaustiva del Asistente Virtual (arquitectura de extremo a extremo, cascada RAG 5 niveles, modelos gratuitos, prompts, presupuesto de 48s, inyección en vivo de base de datos, seguridad, auditoría y hoja de ruta de ampliación) se encuentra documentada en el archivo maestro [`IA_ITEC.md`](./IA_ITEC.md) en la raíz del repositorio. Cualquier agente o desarrollador que trabaje en el Asistente IA debe consultar dicho documento como contexto rector.
+
 ### 9.1 REGLA DE ORO: Modelos Gratuitos
 > Todos los endpoints del asistente DEBEN usar modelos FREE. Los providers activos son **OpenCode** (`mimo-v2.5-free` con `x-session-id`), **OpenRouter** (`openrouter/free` auto-router) y **Google Gemini** (`gemini-3.8-flash`, `gemini-3.6-flash`, `gemini-flash-latest`). Costo objetivo: $0.
 
@@ -545,6 +549,12 @@ Recuperación de contexto en 5 niveles. **Orden de resolución:** P1 → P2 → 
 - Export: `recuperarContextoRAG(query, supabase, sessionId?)` → `{contexto, nivel, score}`. Contexto máximo 3200 chars (`MAX_CONTEXT_CHARS`), sin etiquetas de fuente. `nivel` solo para logging interno (nunca se expone al LLM).
 - Compatible con Edge Runtime (funciones puras, fetch + regex, sin dependencias Node pesadas).
 - ⚠️ Para `services/ai.ts` (comunicación multicanal), los timeouts de Gemini son 20s (vs 18s del asistente) para dar margen a prompts de 4 textos generados en paralelo.
+
+### 9.5.1 Regla de Oro de Preponderancia Temporal de Documentos RAG (Migración 079)
+Del total de la información obtenida en todos los documentos almacenados en el RAG, se le debe dar **SIEMPRE mayor preponderancia, jerarquía e importancia a la información cuya data sea más actual**.
+- **Fundamento:** En los documentos figura la fecha o año de publicación (o período de relevamiento): siempre la información de documentos cuya publicación sea la más cercana a la fecha actual tendrá la mayor importancia para utilizarla en los razonamientos, análisis, cálculos y respuestas de la IA ITEC.
+- **Resolución de conflictos:** Ante divergencias o evoluciones históricas entre documentos de diferentes años (ej. censos de población, balances económicos, obras públicas, nómina de autoridades o zonificación urbana), **la información del documento de publicación más reciente prevalece de manera absoluta**.
+- **Implementación:** Codificada en la migración `079_preponderancia_temporal_documentos_rag.sql`, en `src/lib/ai/constants.ts` (`FALLBACK_PROMPT`, `ANTI_HALLUCINATION_RULES_STRICT`, `POLITICA_RESPUESTA_INTEGRAL`) y reforzada en `IA_ITEC.md`.
 
 ### 9.6 Conversaciones Guardadas (`src/lib/rag/conversacionesGuardadas.ts`)
 - `detectarComandoGuardar(mensaje)`: regex español ("guardá esta conversación", etc.).
@@ -774,7 +784,7 @@ Sidebar con submenús `<details>` colapsables color-coded:
 
 Detalle:
 - **Miembros** (`/dashboard/miembros`): aprobar/rechazar/activar/desactivar, roles, comisiones. Integra correos pre-aprobados (`allowed_emails`) como filas sintéticas `status:'pre-aprobado'`. Modelo 1 miembro → 1 comisión.
-- **Archivo Histórico de Acciones** (`/dashboard/archivo`): ABM de eventos y proyectos históricos (2022 a 2025) mediante `ArchivoClient`. Formulario con validación Zod (`createArchivoAccionAction`): título (min 3 caracteres), URL a redes sociales válida (Instagram, Facebook, LinkedIn, YouTube, X o web institucional), año restringido estrictamente a `2022 | 2023 | 2024 | 2025`, categoría y descripción opcional. Filtro interactivo por año en tiempo real y eliminación con confirmación (`deleteArchivoAccionAction`). Revalida instantáneamente `/dashboard/archivo` y `/`.
+- **Archivo Histórico de Acciones** (`/dashboard/archivo`): ABM de eventos y proyectos históricos (2022 a 2025) mediante `ArchivoClient`. Formulario con validación Zod (`createArchivoAccionAction`): título (min 3 caracteres), URL a redes sociales válida (Instagram, Facebook, LinkedIn, YouTube, X o web institucional), año restringido estrictamente a `2022 | 2023 | 2024 | 2025`, categoría y descripción opcional. **Edición interactiva in-place con botón lápiz** a la izquierda del cesto de basura (`updateArchivoAccionAction`) que despliega un modal pre-poblado con los datos del hito para su modificación ágil. Filtro interactivo por año en tiempo real y eliminación con confirmación (`deleteArchivoAccionAction`). Revalida instantáneamente `/dashboard/archivo` y `/`.
 - **Settings** (`/dashboard/settings`): identidad visual del sitio + gestión de API keys (`api_settings`) con prioridad sobre env vars (forms: `SettingsForm`, `ApiKeysSettingsForm`).
 - **Entrenamiento del Asistente**: editar system prompt (`ai_prompt_settings`), upload/delete/list docs del bucket, botón sync (`syncDocsAction`).
 - **Encuestas en Vivo**: CRUD (`PollManager`), activar/desactivar, pantalla de proyección, analytics históricas (Recharts), marcar completada.
@@ -1056,6 +1066,9 @@ Server Action     →  getCurrentMember() → Zod → mutate → revalidatePath(
 30. **React 19 y cascading renders en contextos:** En `src/contexts/LanguageContext.tsx`, la lectura de `localStorage` durante la hidratación debe diferirse mediante `queueMicrotask` para evitar advertencias de React 19 por renders en cascada y desincronización con el servidor.
 31. **Turbopack y decodificación ICO:** El compilador de Turbopack en Next.js 16 procesa los iconos con un parser estricto que exige que las imágenes PNG dentro de un contenedor `.ico` estén en formato **RGBA**. Si se guardan en RGB sin canal alfa, Turbopack arroja el error de compilación: `Format error decoding Ico: The PNG is not in RGBA format!`.
 32. **RAG Cascade P1 y valores NaN:** La búsqueda vectorial sobre Supabase `match_documents` puede devolver valores no numéricos si existen registros corruptos. En `src/lib/rag/ragCascade.ts`, la función `buscarEnVectorStore` valida explícitamente `!isNaN(item.similarity)` antes de evaluar el umbral y siempre fuerza `outputDimensionality: 768` en `generarEmbedding` para garantizar paridad con pgvector.
+33. **Preponderancia temporal en RAG (Regla de Oro, mig. 079):** Ante discrepancias históricas entre documentos de diferentes fechas o relevamientos (ej. balances contables de diferentes ejercicios, censos, obras públicas o cambios de sentido de circulación de calles), la IA ITEC debe otorgar **máxima jerarquía y preponderancia absoluta a la información del documento cuya fecha de publicación sea la más cercana al presente**.
+34. **Suite de Verificación Funcional (`.agents/`):** En `.agents/agents/` y `.agents/skills/` se encuentra implementada la suite de verificación con 11 agentes especializados orquestados por `itec-verify-coordinator.md`. Permite auditar conexiones de Supabase, endpoints, cascada RAG, roles, breaking changes de Next.js 16 y flujo de eventos en tiempo real de forma reproducible.
+35. **Corpus documental institucional expandido (~2.47 MB):** Al agregar documentos en `/docs`, siempre debe ejecutarse `npm run sync-docs` para compilar y regenerar `src/lib/docsContext.ts` y `src/lib/docsContext.json`. El corpus actual integra las Memorias y Balances 2022-2025, el Código de Ordenamiento Urbano (COU), planos viales de Saladillo y localidades del interior, y los Anuarios Estadísticos 2024-2025.
 
 ---
 
@@ -1074,4 +1087,44 @@ Server Action     →  getCurrentMember() → Zod → mutate → revalidatePath(
 
 ---
 
-*Mantener este documento actualizado con cada cambio estructural relevante. Última revisión: septiembre 2026 (post-migración 075, módulo WhatsApp, corrección endpoints/modelos IA, trigger enforce_matias_admin, logo_url medios_prensa).*  
+## 24. Matriz de Agentes y Suite de Verificación Funcional
+
+Para el mantenimiento, escalabilidad y aseguramiento de calidad del proyecto, las responsabilidades técnicas se organizan en dos conjuntos de agentes complementarios:
+
+### 24.1 Equipo de Agentes de Desarrollo Especializados (11 Agentes)
+
+| Agente | Especialización | Responsabilidades Principales |
+|--------|----------------|-------------------------------|
+| `itec-ai-architect` | Arquitectura de IA y RAG | Endpoints `/api/asistente` y `/api/chat`, cascada RAG 5 niveles, modelos gratuitos, prompt maestro y directrices en [`IA_ITEC.md`](./IA_ITEC.md). |
+| `itec-db-security-admin` | Base de datos y Seguridad | Esquema Supabase, migraciones SQL en `supabase/migrations/`, RLS y seguridad de RPCs. |
+| `itec-frontend-next16` | Frontend y App Router | Next.js 16.3.0, React 19, `proxy.ts`, layouts responsivos, Server y Client Components. |
+| `itec-ui-designer` | Diseño Visual y UI | Sistema de diseño "Técnica · Humana · Vanguardista", Tailwind CSS v4, animaciones Framer Motion y glassmorphism. |
+| `itec-multichannel-comm` | Comunicación Multicanal | Flujo de 1 noticia $\rightarrow$ 4 versiones, gacetillas con Resend, y reportes de impacto mensual. |
+| `itec-realtime-events-dev` | Eventos y Aula Virtual | Semáforo v3 con `dispositivo_id`, nubes de palabras, encuestas en vivo y streaming híbrido en tiempo real. |
+| `itec-whatsapp-crm` | Módulo WhatsApp Masivo | Plantillas dinámicas, normalización E.164 (`+54 9 ...`), agenda consolidada 6 fuentes y auditoría de envíos. |
+| `itec-partners-sponsors` | Sponsors y Alianzas | Portal privado con `private_token`, tiers comerciales, alianzas estratégicas y Saladillo for Export. |
+| `itec-education-certificates` | Educación y Certificados | Pasaporte Digital QR (`/certificados/[codigo]`), capacitaciones (`trainings`) y Mapa Productivo local. |
+| `itec-integrations-cloud` | Servicios Cloud Externos | Google Drive API con Service Account, YouTube Live Streaming/Videoteca, Supabase Storage. |
+| `itec-qa-auditor` | Auditoría Técnica de Calidad | Verificación de breaking changes de Next.js 16 (`await params/cookies()`), validación de builds (`npm run build`) y tipado estricto. |
+
+### 24.2 Suite de Agentes y Skills de Verificación Funcional (11 Agentes en `.agents/`)
+
+Orquestados por [`itec-verify-coordinator.md`](./.agents/agents/itec-verify-coordinator.md):
+
+| Agente de Verificación | Skill Asociada | Foco de Verificación |
+|---|---|---|
+| `itec-verify-coordinator` | [`skills/itec-verify-coordinator.md`](./.agents/skills/itec-verify-coordinator.md) | Orquestador maestro y consolidación de reportes de auditoría |
+| `itec-verify-db-connection` | [`skills/itec-verify-db-connection.md`](./.agents/skills/itec-verify-db-connection.md) | Conexiones `server.ts`, `client.ts`, Service Role y RLS críticas |
+| `itec-verify-ai-assistant` | [`skills/itec-verify-ai-assistant.md`](./.agents/skills/itec-verify-ai-assistant.md) | Endpoints IA, deadline de 48s, cascada RAG 5 niveles y proveedores |
+| `itec-verify-auth-members` | [`skills/itec-verify-auth-members.md`](./.agents/skills/itec-verify-auth-members.md) | OAuth, trigger `handle_new_user()`, `proxy.ts` y pre-aprobaciones |
+| `itec-verify-events-realtime` | [`skills/itec-verify-events-realtime.md`](./.agents/skills/itec-verify-events-realtime.md) | Eventos presenciales, Semáforo v3, deduplicación y Aula Virtual Realtime |
+| `itec-verify-multichannel-comm` | [`skills/itec-verify-multichannel-comm.md`](./.agents/skills/itec-verify-multichannel-comm.md) | `/api/news/process` (4 canales), gacetillas Resend y reportes Ollama |
+| `itec-verify-education-certificates` | [`skills/itec-verify-education-certificates.md`](./.agents/skills/itec-verify-education-certificates.md) | Certificados QR (`await params`), capacitaciones y Mapa Productivo |
+| `itec-verify-partners-sponsors` | [`skills/itec-verify-partners-sponsors.md`](./.agents/skills/itec-verify-partners-sponsors.md) | Sponsors por tiers, portal privado, `obtener_socios_publicos` y Saladillo Export |
+| `itec-verify-whatsapp-crm` | [`skills/itec-verify-whatsapp-crm.md`](./.agents/skills/itec-verify-whatsapp-crm.md) | Normalización `waPhone.ts`, agenda unificada, grupos N:M y logs |
+| `itec-verify-integrations-cloud` | [`skills/itec-verify-integrations-cloud.md`](./.agents/skills/itec-verify-integrations-cloud.md) | Google Drive Service Account, YouTube video ID regex y buckets Storage |
+| `itec-verify-frontend-next16` | [`skills/itec-verify-frontend-next16.md`](./.agents/skills/itec-verify-frontend-next16.md) | `npm run build`, React 19, i18n (`dictionary.ts`) y boundaries de error |
+
+---
+
+*Mantener este documento actualizado con cada cambio estructural relevante. Última revisión: septiembre 2026 (incorporación de IA_ITEC.md como especificación maestra de IA, Memorias y Balances 2022-2025, planos viales y COU, suite de verificación funcional itec-verify-*, y regla de oro de preponderancia temporal RAG).*  
