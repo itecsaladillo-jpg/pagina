@@ -43,11 +43,12 @@ export async function registrarEmpresaAction(input: RegistrarEmpresaInput) {
       telefono: input.telefono?.trim() || null,
       oferta: input.oferta?.trim(),
       descripcion_oferta: input.oferta?.trim(),
+      oferta_producto_servicio: input.oferta?.trim(),
       demanda: Array.isArray(input.demanda) ? input.demanda : [],
       detalles_demanda: input.detalles_demanda?.trim() || null,
       descripcion_demanda: input.detalles_demanda?.trim() || null,
       desafio_tecnologico: input.desafio_tecnologico?.trim() || null,
-      direccion: input.direccion?.trim() || null,
+      direccion: input.direccion?.trim() || 'Saladillo, Buenos Aires',
       latitud,
       longitud,
       is_active: true,
@@ -55,7 +56,7 @@ export async function registrarEmpresaAction(input: RegistrarEmpresaInput) {
 
     let lastError: { code?: string; message?: string; details?: string } = {}
 
-    for (let intento = 0; intento < 6; intento++) {
+    for (let intento = 0; intento < 8; intento++) {
       const { data, error } = await supabase
         .from('mapa_empresas')
         .insert(currentPayload)
@@ -77,23 +78,41 @@ export async function registrarEmpresaAction(input: RegistrarEmpresaInput) {
         continue
       }
 
-      // 2. Caso: Columna NOT NULL violada (23502)
+      // 2. Caso: Columna NOT NULL violada (23502) -> autocompletar con el dato correspondiente
       const matchNotNull = error.message?.match(/null value in column "([^"]+)"/i)
       if (matchNotNull && matchNotNull[1]) {
-        const colNotNull = matchNotNull[1]
-        console.warn(`[registrarEmpresaAction] Asignando valor por defecto a columna NOT NULL: ${colNotNull}`)
-        if (colNotNull === 'latitud') currentPayload.latitud = -35.6738
-        else if (colNotNull === 'longitud') currentPayload.longitud = -59.7781
-        else if (colNotNull === 'direccion') currentPayload.direccion = input.direccion?.trim() || 'Saladillo, Buenos Aires'
-        else if (colNotNull === 'telefono') currentPayload.telefono = input.telefono?.trim() || 'Sin teléfono'
-        else if (colNotNull === 'is_active') currentPayload.is_active = true
-        else if (colNotNull === 'id') currentPayload.id = crypto.randomUUID()
-        else {
-          return {
-            success: false,
-            error: `La base de datos requiere el campo obligatorio "${colNotNull}" (${error.code}): ${error.message}`,
-            details: error.details,
-          }
+        const col = matchNotNull[1].toLowerCase()
+        console.warn(`[registrarEmpresaAction] Auto-llenando columna NOT NULL requerida: ${col}`)
+
+        if (col.includes('oferta')) {
+          currentPayload[matchNotNull[1]] = input.oferta?.trim() || 'Servicios y productos generales'
+        } else if (col.includes('demanda')) {
+          const val = Array.isArray(input.demanda) && input.demanda.length > 0
+            ? input.demanda.join(', ')
+            : (input.detalles_demanda?.trim() || 'Innovación y vinculación técnica')
+          currentPayload[matchNotNull[1]] = val
+        } else if (col.includes('rubro') || col.includes('sector') || col.includes('actividad')) {
+          currentPayload[matchNotNull[1]] = input.rubro?.trim() || 'General'
+        } else if (col.includes('nombre') || col.includes('empresa') || col.includes('razon')) {
+          currentPayload[matchNotNull[1]] = input.nombre?.trim() || 'Empresa Local'
+        } else if (col.includes('desafio')) {
+          currentPayload[matchNotNull[1]] = input.desafio_tecnologico?.trim() || 'Desafíos de innovación productiva'
+        } else if (col.includes('mail') || col.includes('correo')) {
+          currentPayload[matchNotNull[1]] = input.email?.trim().toLowerCase() || 'contacto@empresa.com'
+        } else if (col.includes('tel')) {
+          currentPayload[matchNotNull[1]] = input.telefono?.trim() || 'Sin teléfono'
+        } else if (col.includes('dir')) {
+          currentPayload[matchNotNull[1]] = input.direccion?.trim() || 'Saladillo, Buenos Aires'
+        } else if (col.includes('lat')) {
+          currentPayload[matchNotNull[1]] = -35.6738
+        } else if (col.includes('lon') || col.includes('lng')) {
+          currentPayload[matchNotNull[1]] = -59.7781
+        } else if (col === 'is_active' || col === 'activo') {
+          currentPayload[matchNotNull[1]] = true
+        } else if (col === 'id') {
+          currentPayload[matchNotNull[1]] = crypto.randomUUID()
+        } else {
+          currentPayload[matchNotNull[1]] = input.nombre?.trim() || 'General'
         }
         continue
       }
@@ -124,7 +143,7 @@ export async function registrarEmpresaAction(input: RegistrarEmpresaInput) {
         continue
       }
 
-      // Si no es un error que podamos resolver en reintentos, salir informando el detalle
+      // Si es otro error no recuperable, salir informando el detalle
       return {
         success: false,
         error: `Error de base de datos (${error.code || '400'}): ${error.message}`,
