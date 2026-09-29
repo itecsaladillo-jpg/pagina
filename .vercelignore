@@ -1,9 +1,9 @@
 .git
 .next
 node_modules
-docs
-sponsors
-scratch
+/docs
+/sponsors
+/scratch
 .agent
 .agents
 .opencode
