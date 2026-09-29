@@ -3,7 +3,7 @@
 import { useState, useRef, KeyboardEvent } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { createClient } from '@/lib/supabase/client'
+import { registrarEmpresaAction, registrarAlumnoAction } from '@/app/actions/mapa-empresas'
 import { useLanguage } from '@/contexts/LanguageContext'
 
 // ─── Tipos ───────────────────────────────────────────────────────────────────
@@ -169,8 +169,7 @@ export default function RegistroMapaPage() {
     setEnviando(true)
     setError(null)
     try {
-      const supabase = createClient()
-      const { error: sbError } = await supabase.from('mapa_empresas').insert({
+      const res = await registrarEmpresaAction({
         nombre: empresa.nombre,
         rubro: empresa.rubro,
         email: empresa.email,
@@ -183,9 +182,12 @@ export default function RegistroMapaPage() {
         latitud: LAT_SALADILLO,
         longitud: LNG_SALADILLO,
       })
-      if (sbError) throw sbError
+      if (!res.success) {
+        throw new Error(res.error || 'Error al enviar. Intentá nuevamente.')
+      }
       setExito('empresa')
     } catch (err: unknown) {
+      console.error('[registro-mapa] Error insertando empresa:', err)
       const msg = err instanceof Error ? err.message : 'Error al enviar. Intentá nuevamente.'
       setError(msg)
     } finally {
@@ -238,15 +240,17 @@ export default function RegistroMapaPage() {
     setEnviando(true)
     setError(null)
     try {
-      const supabase = createClient()
-      const { error: sbError } = await supabase.from('alumnos_talentos').insert({
+      const res = await registrarAlumnoAction({
         escuela: alumno.escuela,
         especialidad: alumno.especialidad,
         habilidades: alumno.habilidades,
       })
-      if (sbError) throw sbError
+      if (!res.success) {
+        throw new Error(res.error || 'Error al enviar. Intentá nuevamente.')
+      }
       setExito('alumno')
     } catch (err: unknown) {
+      console.error('[registro-mapa] Error insertando alumno:', err)
       const msg = err instanceof Error ? err.message : 'Error al enviar. Intentá nuevamente.'
       setError(msg)
     } finally {

@@ -266,7 +266,7 @@ export async function POST(req: NextRequest) {
         adminClient.from('public_articles').select('title, slug, excerpt, content').eq('is_published', true).order('created_at', { ascending: false }).limit(15),
         adminClient.rpc('obtener_socios_publicos'),
         adminClient.from('videos').select('title, ai_summary').eq('is_active', true).order('display_order', { ascending: true }).limit(15),
-        adminClient.from('mapa_empresas').select('nombre_empresa, sector, descripcion_oferta, descripcion_demanda').limit(10),
+        adminClient.from('mapa_empresas').select('*').limit(10),
         recuperarContextoRAG(mensaje, adminClient, sessionId),
       ])
 
@@ -296,7 +296,7 @@ export async function POST(req: NextRequest) {
         ? `\n\n## Videoteca ITEC:\n${videosResult.value.data.map((v: any) => `- "${v.title}": ${(v.ai_summary || '').slice(0, 250)}`).join('\n')}` : ''
         
       const mapaContext = mapaResult.status === 'fulfilled' && mapaResult.value.data?.length
-        ? `\n\n## Empresas en el Mapa Productivo:\n${mapaResult.value.data.map((m: any) => `- ${m.nombre_empresa} (${m.sector})${m.descripcion_oferta ? `, Oferta: ${m.descripcion_oferta}` : ''}${m.descripcion_demanda ? `, Demanda: ${m.descripcion_demanda}` : ''}`).join('\n')}` : ''
+        ? `\n\n## Empresas en el Mapa Productivo:\n${mapaResult.value.data.map((m: any) => `- ${m.nombre_empresa || m.nombre || 'Empresa'} (${m.sector || m.rubro || 'General'})${m.descripcion_oferta || m.oferta ? `, Oferta: ${m.descripcion_oferta || m.oferta}` : ''}${m.descripcion_demanda || m.detalles_demanda ? `, Demanda: ${m.descripcion_demanda || m.detalles_demanda}` : ''}`).join('\n')}` : ''
 
       // ── Ensamblado priorizado: RAG PRIMERO (más relevante para la query),
       // luego contexto vivo de la DB. NUNCA se trunca este bloque. ──
