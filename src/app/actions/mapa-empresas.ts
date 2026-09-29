@@ -55,6 +55,7 @@ export async function registrarEmpresaAction(input: RegistrarEmpresaInput) {
     }
 
     let lastError: { code?: string; message?: string; details?: string } = {}
+    const estrategiasAplicadas = new Set<string>()
 
     for (let intento = 0; intento < 10; intento++) {
       const { data, error } = await supabase
@@ -93,33 +94,84 @@ export async function registrarEmpresaAction(input: RegistrarEmpresaInput) {
       }
 
       // 2. Caso: Error de array malformado (22P02: malformed array literal: "xxx")
-      // Esto ocurre cuando una columna en PostgreSQL es de tipo ARRAY (TEXT[]) pero recibió un string plano
+      // Esto ocurre cuando una columna en PostgreSQL es de tipo ARRAY (TEXT[]) pero recibió un string plano,
+      // o un trigger intentó asignar un string a una columna de tipo array.
       const matchArrayLit = error.message?.match(/malformed array literal: "([^"]+)"/i)
       if (matchArrayLit && matchArrayLit[1]) {
-        const literalVal = matchArrayLit[1]
-        console.warn(`[registrarEmpresaAction] Corrigiendo columna array que recibió string plano: "${literalVal}"`)
+        const literalVal = matchArrayLit[1].trim()
+        console.warn(`[registrarEmpresaAction] Corrigiendo error 22P02 con literal: "${literalVal}"`)
 
         let corregido = false
-        // Si demanda era string, reconvertir a array JS
-        if (typeof currentPayload.demanda === 'string') {
-          currentPayload.demanda = demandaArray.length > 0 ? demandaArray : [literalVal]
-          corregido = true
-        }
-        // Si rubro era string y falló como array literal, convertir rubro a array
-        if (typeof currentPayload.rubro === 'string' && currentPayload.rubro.toLowerCase() === literalVal.toLowerCase()) {
-          currentPayload.rubro = [currentPayload.rubro]
-          corregido = true
-        }
-        // Si sector era string y falló como array literal
-        if (typeof currentPayload.sector === 'string' && currentPayload.sector.toLowerCase() === literalVal.toLowerCase()) {
-          currentPayload.sector = [currentPayload.sector]
-          corregido = true
+
+        // A. Buscar en currentPayload cualquier columna string cuyo valor coincida total o parcialmente con literalVal
+        const matchingKeys = Object.entries(currentPayload)
+          .filter(([_, v]) => typeof v === 'string' && (
+            (v as string).trim().toLowerCase() === literalVal.toLowerCase() ||
+            (v as string).trim().toLowerCase().includes(literalVal.toLowerCase()) ||
+            literalVal.toLowerCase().includes((v as string).trim().toLowerCase())
+          ))
+          .map(([k]) => k)
+
+        for (const k of matchingKeys) {
+          const strategyKey = `array_${k}_${literalVal}`
+          if (!estrategiasAplicadas.has(strategyKey)) {
+            estrategiasAplicadas.add(strategyKey)
+            console.log(`[registrarEmpresaAction] Convirtiendo campo '${k}' a array JS: [${JSON.stringify(currentPayload[k])}]`)
+            currentPayload[k] = [currentPayload[k]]
+            corregido = true
+          } else {
+            // Si ya se intentó convertir a array y la base de datos sigue fallando (por ejemplo por trigger conflictivo),
+            // removemos la columna de la inserción directa o la unificamos
+            const removeKey = `remove_${k}`
+            if (!estrategiasAplicadas.has(removeKey)) {
+              estrategiasAplicadas.add(removeKey)
+              console.log(`[registrarEmpresaAction] Removiendo campo conflictivo '${k}' de la inserción directa`)
+              if (k.includes('demanda')) {
+                if (Array.isArray(currentPayload.demanda)) {
+                  currentPayload.demanda = [...(currentPayload.demanda as string[]), literalVal]
+                } else {
+                  currentPayload.demanda = [literalVal]
+                }
+              }
+              delete currentPayload[k]
+              corregido = true
+            }
+          }
         }
 
-        // Si ya era array y PostgreSQL aún exige formato literal nativo {...}
-        if (!corregido && Array.isArray(currentPayload.demanda)) {
-          const elementos = (currentPayload.demanda as string[]).map(s => `"${s.replace(/"/g, '\\"')}"`).join(',')
-          currentPayload.demanda = `{${elementos}}`
+        // B. Si ninguna clave de currentPayload coincidió directamente con literalVal
+        if (!corregido) {
+          if (typeof currentPayload.demanda === 'string') {
+            currentPayload.demanda = demandaArray.length > 0 ? demandaArray : [literalVal]
+            corregido = true
+          } else if (Array.isArray(currentPayload.demanda)) {
+            const nativeKey = 'demanda_native_format'
+            if (!estrategiasAplicadas.has(nativeKey)) {
+              estrategiasAplicadas.add(nativeKey)
+              const elementos = (currentPayload.demanda as string[]).map(s => `"${s.replace(/"/g, '\\"')}"`).join(',')
+              currentPayload.demanda = `{${elementos}}`
+              corregido = true
+            } else {
+              const dropDemanda = 'drop_demanda_array'
+              if (!estrategiasAplicadas.has(dropDemanda)) {
+                estrategiasAplicadas.add(dropDemanda)
+                delete currentPayload.demanda
+                if (!currentPayload.descripcion_demanda) {
+                  currentPayload.descripcion_demanda = demandaString
+                }
+                corregido = true
+              }
+            }
+          }
+        }
+
+        // C. Fallback para posibles triggers en Supabase: si detalles_demanda está presente y causó conflicto
+        if (!corregido && currentPayload.detalles_demanda) {
+          console.warn('[registrarEmpresaAction] Removiendo detalles_demanda para evitar fallo de trigger con demanda')
+          if (!currentPayload.descripcion_demanda) {
+            currentPayload.descripcion_demanda = currentPayload.detalles_demanda
+          }
+          delete currentPayload.detalles_demanda
           corregido = true
         }
 
