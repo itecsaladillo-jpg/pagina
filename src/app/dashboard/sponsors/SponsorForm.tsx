@@ -1,6 +1,8 @@
-﻿'use client'
+'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
+import * as XLSX from 'xlsx'
+import { FileSpreadsheet } from 'lucide-react'
 import { createSponsorAction, updateSponsorAction } from './actions'
 import { createClient } from '@/lib/supabase/client'
 import { z } from 'zod'
@@ -77,6 +79,8 @@ export function SponsorForm({ sponsor, onClose }: Props) {
   const [logoMonocromoPreview, setLogoMonocromoPreview] = useState<string | null>(sponsor?.logo_monocromo_url || null)
   const [logoColorPreview, setLogoColorPreview] = useState<string | null>(sponsor?.logo_color_url || null)
   const [uploadingLogos, setUploadingLogos] = useState(false)
+  const [excelMessage, setExcelMessage] = useState<string | null>(null)
+  const excelInputRef = useRef<HTMLInputElement>(null)
 
   const handleLogoChange = (file: File | null, tipo: 'monocromo' | 'color') => {
     if (tipo === 'monocromo') {
@@ -100,6 +104,75 @@ export function SponsorForm({ sponsor, onClose }: Props) {
       .upload(filePath, file, { cacheControl: '3600', upsert: false })
     if (error) throw error
     return supabase.storage.from('sponsors-logos').getPublicUrl(filePath).data.publicUrl
+  }
+
+  const handleExcelUpload = async (file: File) => {
+    try {
+      setExcelMessage(null)
+      const buffer = await file.arrayBuffer()
+      const workbook = XLSX.read(buffer, { type: 'array' })
+      const firstSheet = workbook.Sheets[workbook.SheetNames[0]]
+      const rows: any[][] = XLSX.utils.sheet_to_json(firstSheet, { header: 1, defval: '' })
+
+      if (!rows || rows.length === 0) {
+        setExcelMessage('La planilla Excel está vacía.')
+        return
+      }
+
+      let startIndex = 0
+      const firstColA = String(rows[0]?.[0] || '').trim().toLowerCase()
+      const headerKeywords = ['nombre', 'empresa', 'razon', 'razón', 'sponsor', 'plantilla']
+      if (headerKeywords.some(kw => firstColA.includes(kw))) {
+        startIndex = 1
+      }
+
+      const validRows = rows.slice(startIndex).filter(r => r[0] && String(r[0]).trim() !== '' && String(r[0]).trim() !== '-')
+      if (validRows.length === 0) {
+        setExcelMessage('No se encontraron registros de empresas en la planilla.')
+        return
+      }
+
+      // Si estamos editando o ya hay un nombre escrito, buscar por coincidencia
+      const currentName = (formData.nombre_empresa || '').trim().toLowerCase()
+      let selectedRow = validRows[0]
+      if (currentName) {
+        const found = validRows.find(r => String(r[0] || '').trim().toLowerCase() === currentName)
+        if (found) selectedRow = found
+      }
+
+      // Mapeo exacto:
+      // Columna A (0): Nombre Empresa
+      // Columna B (1): Actividad
+      // Columna C (2): Página Web
+      // Columna D (3): Teléfono
+      // Columna E (4): Email
+      // Columna F (5): Zona de Influencia
+      const rawName = String(selectedRow[0] || '').trim()
+      const rawActividad = String(selectedRow[1] || '').trim()
+      let rawWeb = String(selectedRow[2] || '').trim()
+      const rawTel = String(selectedRow[3] || '').trim()
+      const rawEmail = String(selectedRow[4] || '').trim()
+      const rawZona = String(selectedRow[5] || '').trim()
+
+      if (rawWeb && rawWeb !== '-' && !/^https?:\/\//i.test(rawWeb)) {
+        rawWeb = `https://${rawWeb}`
+      }
+
+      setFormData(prev => ({
+        ...prev,
+        nombre_empresa: rawName && rawName !== '-' ? rawName : prev.nombre_empresa,
+        actividad: rawActividad && rawActividad !== '-' ? rawActividad : prev.actividad,
+        website_url: rawWeb && rawWeb !== '-' ? rawWeb : prev.website_url,
+        telefono: rawTel && rawTel !== '-' ? rawTel : prev.telefono,
+        email: rawEmail && rawEmail !== '-' ? rawEmail : prev.email,
+        zona_influencia: rawZona && rawZona !== '-' ? rawZona : prev.zona_influencia,
+        // Los campos no provistos (como nombre_contacto) quedan intactos o vacíos
+      }))
+
+      setExcelMessage(`Plantilla completada con datos de "${rawName}" desde .xlsx. Recordá completar Nombre de Contacto manualmente.`)
+    } catch (err: any) {
+      setExcelMessage(`Error al leer archivo .xlsx: ${err.message}`)
+    }
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -185,13 +258,38 @@ export function SponsorForm({ sponsor, onClose }: Props) {
               {sponsor ? 'Editar Sponsor' : 'Nuevo Sponsor'}
             </h3>
           </div>
-          {sponsor && (
-            <a href={`/sponsors/${sponsor.id}`} target="_blank"
-              className='text-[10px] text-blue-400 hover:text-blue-300 uppercase tracking-widest transition-all'>
-              Ver portal →
-            </a>
-          )}
+          <div className='flex items-center gap-2'>
+            <input
+              type='file'
+              ref={excelInputRef}
+              accept='.xlsx, .xls'
+              className='hidden'
+              onChange={e => e.target.files?.[0] && handleExcelUpload(e.target.files[0])}
+            />
+            <button
+              type='button'
+              onClick={() => excelInputRef.current?.click()}
+              className='text-[11px] px-2.5 py-1 rounded-lg border border-emerald-500/40 text-emerald-300 bg-emerald-500/10 hover:bg-emerald-500/20 transition-all flex items-center gap-1 font-medium'
+              title='Autocompletar los campos de esta plantilla desde un archivo .xlsx'
+            >
+              <FileSpreadsheet className='w-3.5 h-3.5 text-emerald-400' />
+              Completar desde .xlsx
+            </button>
+            {sponsor && (
+              <a href={`/sponsors/${sponsor.id}`} target="_blank"
+                className='text-[10px] text-blue-400 hover:text-blue-300 uppercase tracking-widest transition-all'>
+                Ver portal →
+              </a>
+            )}
+          </div>
         </div>
+
+        {excelMessage && (
+          <div className='mb-3 p-2.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 text-xs flex items-center justify-between'>
+            <span>{excelMessage}</span>
+            <button type='button' onClick={() => setExcelMessage(null)} className='text-emerald-400 hover:text-white font-bold ml-2'>×</button>
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} className='space-y-3'>
           <div className='grid grid-cols-1 sm:grid-cols-3 gap-3'>

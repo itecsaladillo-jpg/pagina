@@ -68,6 +68,8 @@ export async function createArchivoAccionAction(formData: {
   }
 }
 
+const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
+
 export async function updateArchivoAccionAction(formData: {
   id: string
   title: string
@@ -95,18 +97,62 @@ export async function updateArchivoAccionAction(formData: {
 
   try {
     const supabase = await createClient()
-    const { data, error } = await supabase
-      .from('archivo_acciones')
-      .update({
-        title,
-        social_url,
-        year,
-        category: category?.trim() || 'General',
-        description: description?.trim() || null,
-      })
-      .eq('id', formData.id)
-      .select()
-      .single()
+    const isUuid = UUID_REGEX.test(formData.id)
+
+    let targetId: string | null = null
+
+    if (isUuid) {
+      targetId = formData.id
+    } else {
+      // Si el id es estático (ej: '2023-1' proveniente del fallback),
+      // buscamos si en la base de datos ya existe este evento por su título
+      const { data: existing } = await supabase
+        .from('archivo_acciones')
+        .select('id')
+        .ilike('title', title)
+        .maybeSingle()
+
+      if (existing?.id) {
+        targetId = existing.id
+      }
+    }
+
+    let data
+    let error
+
+    if (targetId) {
+      // Actualizar registro existente en la base de datos
+      const res = await supabase
+        .from('archivo_acciones')
+        .update({
+          title,
+          social_url,
+          year,
+          category: category?.trim() || 'General',
+          description: description?.trim() || null,
+        })
+        .eq('id', targetId)
+        .select()
+        .single()
+      data = res.data
+      error = res.error
+    } else {
+      // Si no existe con UUID ni por título, lo insertamos como nuevo registro en la base de datos
+      const res = await supabase
+        .from('archivo_acciones')
+        .insert({
+          title,
+          social_url,
+          year,
+          category: category?.trim() || 'General',
+          description: description?.trim() || null,
+          created_by: member.id,
+        })
+        .select()
+        .single()
+      data = res.data
+      error = res.error
+    }
 
     if (error) {
       console.error('[updateArchivoAccionAction] Error Supabase:', error.message)
@@ -135,14 +181,18 @@ export async function deleteArchivoAccionAction(id: string) {
 
   try {
     const supabase = await createClient()
-    const { error } = await supabase
-      .from('archivo_acciones')
-      .delete()
-      .eq('id', id)
+    const isUuid = UUID_REGEX.test(id)
 
-    if (error) {
-      console.error('[deleteArchivoAccionAction] Error Supabase:', error.message)
-      return { success: false, error: `Error al eliminar el evento: ${error.message}` }
+    if (isUuid) {
+      const { error } = await supabase
+        .from('archivo_acciones')
+        .delete()
+        .eq('id', id)
+
+      if (error) {
+        console.error('[deleteArchivoAccionAction] Error Supabase:', error.message)
+        return { success: false, error: `Error al eliminar el evento: ${error.message}` }
+      }
     }
 
     revalidatePath('/dashboard/archivo')

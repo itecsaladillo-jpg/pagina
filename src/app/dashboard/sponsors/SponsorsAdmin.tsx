@@ -1,9 +1,11 @@
 'use client'
 
 import { useState } from 'react'
+import { FileSpreadsheet } from 'lucide-react'
 import SponsorRegistrationForm from '@/components/dashboard/sponsors/SponsorRegistrationForm'
 import { SponsorForm } from './SponsorForm'
 import { StrategicPartnerModal } from '@/components/dashboard/sponsors/StrategicPartnerModal'
+import { ImportSponsorsModal } from '@/components/dashboard/sponsors/ImportSponsorsModal'
 import { createAccionAction, deleteAccionAction, deleteSponsorAction, createReporteAction } from './actions'
 import { deleteStrategicPartner } from './partner-actions'
 import { generateInvitationAction } from '../actions/invitations'
@@ -56,6 +58,7 @@ export function SponsorsAdmin({ initialSponsors, initialAcciones, initialPartner
   const [partners, setPartners] = useState<StrategicPartner[]>(initialPartners)
   const [activeTab, setActiveTab] = useState<'sponsors' | 'acciones' | 'reportes'>('sponsors')
   const [showSponsorForm, setShowSponsorForm] = useState(false)
+  const [showImportModal, setShowImportModal] = useState(false)
   const [editingSponsor, setEditingSponsor] = useState<any>(null)
   const [showAccionForm, setShowAccionForm] = useState(false)
   const [loadingAccion, setLoadingAccion] = useState(false)
@@ -221,8 +224,24 @@ export function SponsorsAdmin({ initialSponsors, initialAcciones, initialPartner
                 <h3 className="text-lg font-bold text-white">Sponsors</h3>
                 <p className="text-[var(--text-muted)] text-xs">Socios comerciales por nivel de patrocinio</p>
               </div>
-              <button onClick={() => { setEditingSponsor(null); setShowSponsorForm(true) }}
-                className="btn-primary text-xs py-2 px-4 rounded-xl">+ NUEVO SPONSOR</button>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setShowImportModal(true)}
+                  className="text-xs py-2 px-3.5 rounded-xl flex items-center gap-1.5 border border-emerald-500/40 text-emerald-300 bg-emerald-500/10 hover:bg-emerald-500/20 hover:border-emerald-500/60 transition-all font-semibold shadow-sm"
+                  title="Importar y completar plantillas de sponsors desde planilla .xlsx"
+                >
+                  <FileSpreadsheet className="w-4 h-4 text-emerald-400" />
+                  IMPORTAR .XLSX
+                </button>
+                <button
+                  type="button"
+                  onClick={() => { setEditingSponsor(null); setShowSponsorForm(true) }}
+                  className="btn-primary text-xs py-2 px-4 rounded-xl font-semibold"
+                >
+                  + NUEVO SPONSOR
+                </button>
+              </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {sponsors.map(s => (
@@ -300,6 +319,16 @@ export function SponsorsAdmin({ initialSponsors, initialAcciones, initialPartner
             <SponsorRegistrationForm
               onClose={() => setShowSponsorForm(false)}
               onCreated={(s) => setSponsors(prev => [s, ...prev])}
+            />
+          )}
+
+          {showImportModal && (
+            <ImportSponsorsModal
+              existingSponsors={sponsors}
+              onClose={() => setShowImportModal(false)}
+              onSuccess={(refreshed) => {
+                setSponsors(refreshed)
+              }}
             />
           )}
         </div>
