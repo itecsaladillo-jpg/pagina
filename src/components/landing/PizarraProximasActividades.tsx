@@ -61,7 +61,7 @@ export function PizarraProximasActividades({ actividades }: Props) {
               Pizarra de Próximas Actividades
             </h3>
             <p className="text-xs text-[var(--text-muted)] font-medium">
-              Agenda de encuentros, talleres y eventos de Saladillo
+              Agenda de encuentros, talleres y eventos de ITEC Saladillo
             </p>
           </div>
         </div>
