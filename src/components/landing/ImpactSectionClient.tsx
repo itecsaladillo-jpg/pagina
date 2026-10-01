@@ -9,6 +9,7 @@ import Link from 'next/link'
 import { useLanguage } from '@/contexts/LanguageContext'
 import { toUtcLocalDate } from '@/lib/dates'
 import { HistoricalActionsYears } from './HistoricalActionsYears'
+import { PizarraProximasActividades } from './PizarraProximasActividades'
 
 interface ImpactCardProps {
   item: any
@@ -175,7 +176,7 @@ function ImpactCard({ item, idx }: ImpactCardProps) {
   )
 }
 
-export function ImpactSectionClient({ actions, articles, historicalActions }: any) {
+export function ImpactSectionClient({ actions, articles, historicalActions, proximasActividades = [] }: any) {
   const { dict } = useLanguage()
 
   const currentYear = new Date().getFullYear()
@@ -199,7 +200,7 @@ export function ImpactSectionClient({ actions, articles, historicalActions }: an
       <div className="max-w-7xl mx-auto w-full px-6 relative z-10">
         
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 items-start">
-          {/* Primera fila: Título + 2 Cards */}
+          {/* Columna izquierda: Título ¨UN MOTOR QUE MUEVE A SALADILLO¨ */}
           <div className="lg:col-span-1 space-y-6 lg:pt-0">
             <span className="inline-block text-xs font-bold tracking-[0.2em] text-[var(--accent-warm)] uppercase px-4 py-1.5 rounded-full border border-[var(--accent-warm)]/20 bg-[var(--accent-warm)]/5 mb-4">
               {dict.impactSection.badge}
@@ -214,18 +215,17 @@ export function ImpactSectionClient({ actions, articles, historicalActions }: an
             </p>
           </div>
 
-          <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-10 mt-12 lg:mt-0">
-            {displayItems.slice(0, 2).map((item: any, idx: number) => (
-              <ImpactCard key={idx} item={item} idx={idx} />
-            ))}
+          {/* Columna derecha: Pizarra de Próximas Actividades */}
+          <div className="lg:col-span-2 mt-8 lg:mt-0 h-full">
+            <PizarraProximasActividades actividades={proximasActividades} />
           </div>
         </div>
 
-        {/* Filas siguientes: 3 Cards por fila — sin límite */}
-        {displayItems.length > 2 && (
-          <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-            {displayItems.slice(2).map((item: any, idx: number) => (
-              <ImpactCard key={idx + 2} item={item} idx={idx + 2} />
+        {/* Fila siguiente: Todas las noticias y novedades (las que estaban arriba ahora bajan aquí) */}
+        {displayItems.length > 0 && (
+          <div className="mt-14 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+            {displayItems.map((item: any, idx: number) => (
+              <ImpactCard key={idx} item={item} idx={idx} />
             ))}
           </div>
         )}

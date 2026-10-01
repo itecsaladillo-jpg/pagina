@@ -672,7 +672,22 @@ export interface Database {
         Insert: Omit<ArchivoAccion, 'id' | 'created_at'>
         Update: Partial<Omit<ArchivoAccion, 'id' | 'created_at'>>
       }
+      proximas_actividades: {
+        Row: ProximaActividad
+        Insert: Omit<ProximaActividad, 'id' | 'created_at' | 'updated_at'>
+        Update: Partial<Omit<ProximaActividad, 'id' | 'created_at'>>
+      }
     }
   }
+}
+
+export interface ProximaActividad {
+  id: string
+  created_at: string
+  updated_at: string
+  titulo: string
+  lugar: string
+  fecha: string
+  is_active: boolean
 }
 
