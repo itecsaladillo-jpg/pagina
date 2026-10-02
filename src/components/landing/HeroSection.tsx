@@ -7,6 +7,7 @@ import { createClient } from '@/lib/supabase/client'
 import { useLanguage } from '@/contexts/LanguageContext'
 import { MembersAccessButton } from '@/components/auth/MembersAccessButton'
 import { StreamingPlayer } from '@/components/landing/StreamingPlayer'
+import { extractYouTubeId } from '@/lib/youtube'
 
 export function HeroSection() {
   const { dict } = useLanguage()
@@ -71,21 +72,46 @@ export function HeroSection() {
     }
   }, [])
 
-  // Fetch streaming status (cache 30s alineado con el ISR del endpoint)
+  // Fetch streaming status + suscripción en tiempo real
   useEffect(() => {
+    const supabase = createClient()
+
     const fetchStreamingStatus = async () => {
       try {
         const response = await fetch('/api/streaming/status')
         if (!response.ok) return
         const data = await response.json()
-        setStreamingActive(data.isActive)
-        setStreamingUrl(data.youtubeUrl)
+        setStreamingActive(Boolean(data.streaming_enabled ?? data.isActive))
+        setStreamingUrl(data.youtubeUrl ?? null)
       } catch {
         // silently fail - streaming no es crítico
       }
     }
 
     fetchStreamingStatus()
+
+    // Suscripción Realtime a cambios en streaming_config
+    const channel = supabase
+      .channel('streaming_config_realtime')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'streaming_config',
+        },
+        (payload: { new?: { streaming_enabled?: boolean; youtube_url?: string } }) => {
+          if (payload.new) {
+            setStreamingActive(Boolean(payload.new.streaming_enabled))
+            setStreamingUrl(payload.new.youtube_url || null)
+          }
+        }
+      )
+      .subscribe()
+
+    return () => {
+      supabase.removeChannel(channel)
+    }
   }, [])
 
   return (
@@ -244,9 +270,9 @@ export function HeroSection() {
           </div>
 
           {/* DERECHA — Streaming Player o Palabras iluminadas */}
-          <div className="relative flex flex-col items-start animate-fade-up delay-200" style={{ animationFillMode: 'both' }}>
+          <div className="relative flex flex-col items-start w-full md:w-auto animate-fade-up delay-200" style={{ animationFillMode: 'both' }}>
             
-            {streamingActive && streamingUrl ? (
+            {streamingActive && streamingUrl && extractYouTubeId(streamingUrl) ? (
               <StreamingPlayer youtubeUrl={streamingUrl} />
             ) : (
               <>

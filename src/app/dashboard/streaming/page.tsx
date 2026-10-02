@@ -10,6 +10,7 @@ import {
 } from 'lucide-react'
 import { getStreamingStatus } from './actions'
 import { StreamingControls } from './StreamingControls'
+import { CopyOverlayButton } from './CopyOverlayButton'
 
 export default async function StreamingPage() {
   const member = await getCurrentMember()
@@ -148,17 +149,7 @@ export default async function StreamingPage() {
                     <p className="text-xs font-semibold text-zinc-300">{overlay.label}</p>
                     <p className="text-[10px] text-zinc-600 font-mono mt-0.5 truncate max-w-[150px]">{overlay.path}</p>
                   </div>
-                  <button
-                    onClick={() => {
-                      if (typeof window !== 'undefined') {
-                        navigator.clipboard.writeText(`${window.location.origin}${overlay.path}`)
-                        alert('¡Enlace copiado al portapapeles!')
-                      }
-                    }}
-                    className="p-1.5 rounded-lg bg-zinc-900 border border-zinc-800 text-zinc-500 hover:text-white transition-colors text-[10px] font-bold uppercase tracking-wider"
-                  >
-                    Copiar URL
-                  </button>
+                  <CopyOverlayButton path={overlay.path} />
                 </div>
               ))}
             </div>
