@@ -1,6 +1,7 @@
 export const dictionary = {
   es: {
     navbar: {
+      memoria: 'Memoria',
       acciones: 'Acciones',
       videoteca: 'Videoteca',
       nosotros: 'Nosotros',
@@ -386,6 +387,7 @@ export const dictionary = {
   },
   en: {
     navbar: {
+      memoria: 'Memory',
       acciones: 'Actions',
       videoteca: 'Video Library',
       nosotros: 'About Us',
@@ -771,6 +773,7 @@ export const dictionary = {
   },
   pt: {
     navbar: {
+      memoria: 'Memória',
       acciones: 'Ações',
       videoteca: 'Videoteca',
       nosotros: 'Nós',

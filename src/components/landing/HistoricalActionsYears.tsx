@@ -54,7 +54,7 @@ export function HistoricalActionsYears({ historicalActions }: HistoricalActionsY
   const actions: HistoricalAction[] = selectedYear ? (data[selectedYear] || []) : []
 
   return (
-    <section className="mt-20 relative z-10 rounded-3xl p-6 sm:p-9 lg:p-12 bg-gradient-to-b from-white/[0.04] via-white/[0.015] to-transparent border border-white/10 backdrop-blur-xl shadow-2xl overflow-hidden">
+    <section id="memoria-institucional" className="mt-20 relative z-10 rounded-3xl p-6 sm:p-9 lg:p-12 bg-gradient-to-b from-white/[0.04] via-white/[0.015] to-transparent border border-white/10 backdrop-blur-xl shadow-2xl overflow-hidden scroll-mt-20 sm:scroll-mt-24">
       {/* Resplandores ambientales decorativos */}
       <div className="absolute -top-24 -left-24 w-80 h-80 bg-blue-600/10 blur-[100px] rounded-full pointer-events-none" />
       <div className="absolute -bottom-24 -right-24 w-80 h-80 bg-cyan-500/10 blur-[100px] rounded-full pointer-events-none" />

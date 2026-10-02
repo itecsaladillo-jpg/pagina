@@ -15,13 +15,12 @@ export function Navbar() {
   const [claseEnVivo, setClaseEnVivo] = useState(false)
   const pathname = usePathname()
 
-  const dynamicLinks = [
+  const standardLinks = [
+    { label: dict.navbar.memoria || 'MEMORIA', href: '/#memoria-institucional' },
     { label: dict.navbar.videoteca, href: '/#videoteca' },
     { label: dict.navbar.nosotros, href: '/#equipo' },
     { label: dict.navbar.sponsors, href: '/#socios' },
     { label: dict.navbar.ideas, href: '/#ideas' },
-    { label: dict.navbar.mapa, href: '/mapa-productivo', highlight: true },
-    { label: dict.navbar.miembros, href: '/login' },
   ]
 
   useEffect(() => {
@@ -110,8 +109,7 @@ export function Navbar() {
 
         {/* Desktop nav — Unificado y alineado a la derecha */}
         <div className="hidden lg:flex items-center gap-1.5 ml-auto shrink-0">
-          {/* Primeros 5 enlaces */}
-          {dynamicLinks.slice(0, 5).map((link) => {
+          {standardLinks.map((link) => {
             return (
               <a
                 key={link.href}
@@ -166,7 +164,7 @@ export function Navbar() {
           <MembersAccessButton
             className="text-[9px] uppercase tracking-wider px-1.5 opacity-75 hover:opacity-100 hover:text-blue-400 transition-all flex items-center justify-center text-center w-auto whitespace-normal leading-[1.15] shrink-0 bg-transparent border-none cursor-pointer"
           >
-            <span>{dynamicLinks[5].label}</span>
+            <span>{dict.navbar.miembros}</span>
           </MembersAccessButton>
         </div>
 
@@ -187,7 +185,7 @@ export function Navbar() {
       {/* Mobile menu */}
       {menuOpen && (
         <div className="absolute top-full left-0 w-full lg:hidden glass border-t border-[var(--border-subtle)] px-6 py-4 flex flex-col items-end gap-3 z-50">
-          {dynamicLinks.filter(l => !l.highlight && l.href !== '/login').map((link) => (
+          {standardLinks.map((link) => (
             <a
               key={link.href}
               href={link.href}
@@ -237,7 +235,7 @@ export function Navbar() {
           <MembersAccessButton
             className="btn-outline text-xs py-2 px-4 w-fit justify-end text-right leading-tight bg-transparent cursor-pointer"
           >
-            <span>{dynamicLinks[5].label}</span>
+            <span>{dict.navbar.miembros}</span>
           </MembersAccessButton>
         </div>
       )}

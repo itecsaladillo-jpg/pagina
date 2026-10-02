@@ -193,8 +193,11 @@ export function HeroSection() {
                 </Link>
               </div>
 
-              {/* Fila secundaria: Videoteca, Sponsors, Nosotros, Buzón de Ideas */}
+              {/* Fila secundaria: Memoria, Videoteca, Sponsors, Nosotros, Buzón de Ideas */}
               <div className="flex flex-wrap items-center gap-2">
+                <a href="#memoria-institucional" className="btn-outline text-[10px] uppercase tracking-wider py-1.5 px-4 border-dashed opacity-70 hover:opacity-100 transition-all">
+                  {dict.navbar.memoria || 'MEMORIA'}
+                </a>
                 <a href="#videoteca" className="btn-outline text-[10px] uppercase tracking-wider py-1.5 px-4 border-dashed opacity-70 hover:opacity-100 transition-all">
                   {dict.navbar.videoteca}
                 </a>
