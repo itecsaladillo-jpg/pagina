@@ -174,12 +174,12 @@ export function HeroSection({
         style={{ top: '45%' }}
       />
 
-      {/* Layout dos columnas */}
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-8 md:px-16">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-12 md:gap-8">
+      {/* Layout dos columnas con máximo espacio horizontal */}
+      <div className="relative z-10 w-full max-w-[1700px] mx-auto px-6 sm:px-10 lg:pl-16 lg:pr-8">
+        <div className="flex flex-col lg:flex-row items-center justify-between gap-10 lg:gap-8 xl:gap-12 w-full">
 
-          {/* IZQUIERDA — Logo */}
-          <div className="flex flex-col items-start gap-6 animate-fade-up -translate-y-[30px] relative">
+          {/* IZQUIERDA — Logo y Botones */}
+          <div className="flex flex-col items-start gap-6 animate-fade-up -translate-y-[20px] relative shrink-0 w-full lg:w-auto">
             
             {/* Gradiente de fondo específico para el logo (Glow) */}
             <div 
@@ -291,10 +291,18 @@ export function HeroSection({
           </div>
 
           {/* DERECHA — Streaming Player o Palabras iluminadas */}
-          <div className="relative flex flex-col items-start w-full md:w-auto animate-fade-up delay-200" style={{ animationFillMode: 'both' }}>
-            
+          <div
+            className={`relative flex flex-col animate-fade-up delay-200 ${
+              streamingActive && streamingUrl && extractYouTubeId(streamingUrl)
+                ? 'flex-1 w-full items-center justify-center min-w-0'
+                : 'items-start w-full md:w-auto shrink-0'
+            }`}
+            style={{ animationFillMode: 'both' }}
+          >
             {streamingActive && streamingUrl && extractYouTubeId(streamingUrl) ? (
-              <StreamingPlayer youtubeUrl={streamingUrl} />
+              <div className="w-full flex items-center justify-center py-2">
+                <StreamingPlayer youtubeUrl={streamingUrl} />
+              </div>
             ) : (
               <>
                 <div className="relative py-8">
