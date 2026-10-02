@@ -8,6 +8,7 @@ import { useLanguage } from '@/contexts/LanguageContext'
 import { MembersAccessButton } from '@/components/auth/MembersAccessButton'
 import { StreamingPlayer } from '@/components/landing/StreamingPlayer'
 import { extractYouTubeId } from '@/lib/youtube'
+import { useStreaming } from '@/contexts/StreamingContext'
 
 interface HeroSectionProps {
   initialStreamingActive?: boolean
@@ -19,6 +20,7 @@ export function HeroSection({
   initialStreamingUrl = null,
 }: HeroSectionProps = {}) {
   const { dict } = useLanguage()
+  const { setIsStreamingShowing } = useStreaming()
   const FRASES_HERO = [
     "Construimos futuro desde la raíz: potenciando saberes, impulsando pymes y abriendo horizontes en Saladillo. Si logramos encender la chispa de los grandes inventores de mañana, todo este viaje habrá valido la pena.",
     "Aportamos valor al trabajo diario y al motor pyme de Saladillo. Cada joven capacitado es una promesa viva; si descubrimos a tiempo al próximo gran creador local, habremos cumplido nuestra misión y allí estaremos para acompañar su camino.",
@@ -29,6 +31,12 @@ export function HeroSection({
   const [isMounted, setIsMounted] = useState(false)
   const [streamingActive, setStreamingActive] = useState(initialStreamingActive)
   const [streamingUrl, setStreamingUrl] = useState<string | null>(initialStreamingUrl)
+
+  const isStreamingValid = Boolean(streamingActive && streamingUrl && extractYouTubeId(streamingUrl))
+
+  useEffect(() => {
+    setIsStreamingShowing(isStreamingValid)
+  }, [isStreamingValid, setIsStreamingShowing])
 
   useEffect(() => {
     setIsMounted(true)

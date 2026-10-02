@@ -1,14 +1,23 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import { usePathname } from 'next/navigation';
 import { useLanguage, Language } from '@/contexts/LanguageContext';
+import { useStreaming } from '@/contexts/StreamingContext';
 import { Globe, Check } from 'lucide-react';
 
 export function FloatingLanguageSelector() {
+  const pathname = usePathname();
+  const { isStreamingShowing } = useStreaming();
   const { language, setLanguage } = useLanguage();
   const [open, setOpen] = useState(false);
   const [scrollOculto, setScrollOculto] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  // Ocultar si la página principal está mostrando el reproductor de streaming
+  if (pathname === '/' && isStreamingShowing) {
+    return null;
+  }
 
   const languages: { code: Language; name: string; flag: string }[] = [
     { code: 'es', name: 'Español', flag: '🇪🇸' },

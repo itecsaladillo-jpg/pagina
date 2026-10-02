@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next'
 import { Inter } from 'next/font/google'
 import { LanguageProvider } from '@/contexts/LanguageContext'
+import { StreamingProvider } from '@/contexts/StreamingContext'
 import './globals.css'
 import ChatWidgetWrapper from '@/components/chat/ChatWidgetWrapper'
 
@@ -62,9 +63,11 @@ export default function RootLayout({
       </head>
       <body className="font-[var(--font-inter)]">
         <LanguageProvider>
-          {children}
+          <StreamingProvider>
+            {children}
+            <ChatWidgetWrapper />
+          </StreamingProvider>
         </LanguageProvider>
-        <ChatWidgetWrapper />
       </body>
     </html>
   )

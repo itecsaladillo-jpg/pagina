@@ -62,14 +62,6 @@ export function StreamingPlayer({ youtubeUrl }: StreamingPlayerProps) {
           />
         </div>
       </div>
-
-      {/* Live indicator bar */}
-      <div className="mt-3 flex items-center justify-center gap-2">
-        <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
-        <span className="text-xs text-red-400 font-bold uppercase tracking-wider">
-          Transmisión en vivo — ITEC Saladillo
-        </span>
-      </div>
     </div>
   )
 }

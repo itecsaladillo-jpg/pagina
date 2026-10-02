@@ -135,8 +135,10 @@ export default async function HomePage() {
         <Footer />
       </div>
 
-      {/* Selector de Idiomas: fuera del wrapper para anclarse al viewport, junto al asistente */}
-      <FloatingLanguageSelector />
+      {/* Selector de Idiomas: se oculta si la página principal está mostrando el reproductor de streaming */}
+      {!Boolean(initialStreaming.isActive && initialStreaming.youtubeUrl) && (
+        <FloatingLanguageSelector />
+      )}
     </main>
   )
 }
