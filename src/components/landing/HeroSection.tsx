@@ -193,27 +193,42 @@ export function HeroSection() {
                 </Link>
               </div>
 
-              {/* Fila secundaria: Memoria, Videoteca, Sponsors, Nosotros, Buzón de Ideas */}
-              <div className="flex flex-wrap items-center gap-2">
-                <a href="#memoria-institucional" className="btn-outline text-[10px] uppercase tracking-wider py-1.5 px-4 border-dashed opacity-70 hover:opacity-100 transition-all">
+              {/* Fila secundaria: Memoria, Videoteca, Nosotros, Sponsors, Buzón de Ideas (3 botones por fila) */}
+              <div className="grid grid-cols-3 gap-2 w-full max-w-md">
+                <a
+                  href="#memoria-institucional"
+                  className="btn-outline text-[9px] sm:text-[10px] uppercase tracking-wider py-1.5 px-2 sm:px-3 border-dashed opacity-70 hover:opacity-100 transition-all text-center justify-center whitespace-nowrap"
+                >
                   {dict.navbar.memoria || 'MEMORIA'}
                 </a>
-                <a href="#videoteca" className="btn-outline text-[10px] uppercase tracking-wider py-1.5 px-4 border-dashed opacity-70 hover:opacity-100 transition-all">
+                <a
+                  href="#videoteca"
+                  className="btn-outline text-[9px] sm:text-[10px] uppercase tracking-wider py-1.5 px-2 sm:px-3 border-dashed opacity-70 hover:opacity-100 transition-all text-center justify-center whitespace-nowrap"
+                >
                   {dict.navbar.videoteca}
                 </a>
-                <a href="#equipo" className="btn-outline text-[10px] uppercase tracking-wider py-1.5 px-4 border-dashed opacity-70 hover:opacity-100 transition-all">
+                <a
+                  href="#equipo"
+                  className="btn-outline text-[9px] sm:text-[10px] uppercase tracking-wider py-1.5 px-2 sm:px-3 border-dashed opacity-70 hover:opacity-100 transition-all text-center justify-center whitespace-nowrap"
+                >
                   {dict.navbar.nosotros}
                 </a>
-                <a href="#socios" className="btn-outline text-[10px] uppercase tracking-wider py-1.5 px-4 border-dashed opacity-70 hover:opacity-100 transition-all">
+                <a
+                  href="#socios"
+                  className="btn-outline text-[9px] sm:text-[10px] uppercase tracking-wider py-1.5 px-2 sm:px-3 border-dashed opacity-70 hover:opacity-100 transition-all text-center justify-center whitespace-nowrap"
+                >
                   {dict.navbar.sponsors}
                 </a>
-                <a href="#ideas" className="btn-outline text-[10px] uppercase tracking-wider py-1.5 px-4 border-dashed opacity-70 hover:opacity-100 transition-all">
+                <a
+                  href="#ideas"
+                  className="btn-outline text-[9px] sm:text-[10px] uppercase tracking-wider py-1.5 px-2 sm:px-3 border-dashed opacity-70 hover:opacity-100 transition-all text-center justify-center whitespace-nowrap"
+                >
                   {dict.navbar.ideas}
                 </a>
               </div>
 
-              {/* Separador visual + Acceso Miembros */}
-              <div className="flex items-center gap-3 mt-1 pt-3 border-t border-white/5">
+              {/* Separador visual + Acceso Miembros (desplazado 25px hacia abajo) */}
+              <div className="flex items-center gap-3 mt-[25px] pt-3 border-t border-white/5">
                 <MembersAccessButton className="text-[10px] uppercase tracking-wider py-1.5 px-4 rounded-full font-semibold
                   bg-white/5 border border-white/10 text-[var(--text-secondary)]
                   hover:bg-white/10 hover:border-white/20 hover:text-white
