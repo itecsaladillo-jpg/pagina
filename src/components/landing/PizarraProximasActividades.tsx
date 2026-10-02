@@ -3,9 +3,8 @@
 import { useState, useEffect } from 'react'
 import { Calendar, MapPin, ChevronRight } from 'lucide-react'
 import { motion } from 'framer-motion'
-import { format } from 'date-fns'
-import { es } from 'date-fns/locale'
 import type { ProximaActividad } from '@/types/database'
+import { formatPizarraFechaUTC3, formatBadgeUTC3 } from '@/lib/dates'
 
 const CUATRO_HORAS_MS = 4 * 60 * 60 * 1000
 
@@ -43,28 +42,6 @@ export function PizarraProximasActividades({ actividades }: Props) {
     const fechaMs = new Date(act.fecha).getTime()
     return !isNaN(fechaMs) && now >= fechaMs && now <= fechaMs + CUATRO_HORAS_MS
   })
-
-  const formatFecha = (fechaStr: string) => {
-    try {
-      const d = new Date(fechaStr)
-      if (isNaN(d.getTime())) return fechaStr
-      return format(d, "EEEE d 'de' MMMM · HH:mm 'hs'", { locale: es })
-    } catch {
-      return fechaStr
-    }
-  }
-
-  const formatBadgeDia = (fechaStr: string) => {
-    try {
-      const d = new Date(fechaStr)
-      if (isNaN(d.getTime())) return { dia: '--', mes: '---' }
-      const dia = format(d, 'dd')
-      const mes = format(d, 'MMM', { locale: es }).toUpperCase().replace('.', '')
-      return { dia, mes }
-    } catch {
-      return { dia: '--', mes: '---' }
-    }
-  }
 
   return (
     <motion.div
@@ -143,8 +120,8 @@ export function PizarraProximasActividades({ actividades }: Props) {
         ) : (
           <div className="space-y-2.5 max-h-[315px] overflow-y-auto pr-1 custom-scrollbar">
             {proximasTres.map((actividad, index) => {
-              const { dia, mes } = formatBadgeDia(actividad.fecha)
-              const fechaTexto = formatFecha(actividad.fecha)
+              const { dia, mes } = formatBadgeUTC3(actividad.fecha)
+              const fechaTexto = formatPizarraFechaUTC3(actividad.fecha)
               const fechaMs = new Date(actividad.fecha).getTime()
               const estaEnCurso = !isNaN(fechaMs) && now >= fechaMs && now <= fechaMs + CUATRO_HORAS_MS
 

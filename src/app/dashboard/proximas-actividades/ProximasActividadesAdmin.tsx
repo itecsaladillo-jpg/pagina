@@ -2,8 +2,12 @@
 
 import { useState, useTransition } from 'react'
 import { Calendar, MapPin, Plus, Pencil, Trash2, CheckCircle2, AlertCircle, X, Clock } from 'lucide-react'
-import { format } from 'date-fns'
-import { es } from 'date-fns/locale'
+import {
+  getUTC3Parts,
+  composeUTC3ISO,
+  getOffsetDayUTC3,
+  formatFechaLargaUTC3,
+} from '@/lib/dates'
 import type { ProximaActividad } from '@/types/database'
 import {
   createActividadAction,
@@ -40,16 +44,9 @@ export function ProximasActividadesAdmin({ initialActividades }: Props) {
 
   const HORARIOS_PRESET = ['09:00', '10:00', '14:00', '16:00', '18:00', '18:30', '19:00', '19:30', '20:00', '20:30']
 
-  // Helpers de fecha rápida
-  const formatDateToYMD = (d: Date) => {
-    const pad = (n: number) => String(n).padStart(2, '0')
-    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`
-  }
-
+  // Helpers de fecha en huso horario institucional UTC-3
   const setFechaOffset = (daysOffset: number) => {
-    const d = new Date()
-    d.setDate(d.getDate() + daysOffset)
-    setFechaDate(formatDateToYMD(d))
+    setFechaDate(getOffsetDayUTC3(daysOffset))
   }
 
   const resetForm = () => {
@@ -66,12 +63,11 @@ export function ProximasActividadesAdmin({ initialActividades }: Props) {
     setTitulo(actividad.titulo)
     setLugar(actividad.lugar)
     try {
-      const d = new Date(actividad.fecha)
-      if (!isNaN(d.getTime())) {
-        const pad = (n: number) => String(n).padStart(2, '0')
-        setFechaDate(formatDateToYMD(d))
-        setHora(pad(d.getHours()))
-        setMinuto(pad(d.getMinutes()))
+      const parts = getUTC3Parts(actividad.fecha)
+      if (parts) {
+        setFechaDate(parts.fechaDate)
+        setHora(parts.hora)
+        setMinuto(parts.minuto)
       } else {
         setFechaDate('')
         setHora('19')
@@ -88,15 +84,12 @@ export function ProximasActividadesAdmin({ initialActividades }: Props) {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
-  // Vista previa formateada en español
+  // Vista previa formateada en español en UTC-3
   const getPreviewTexto = () => {
     if (!fechaDate) return null
     try {
-      const [y, m, d] = fechaDate.split('-').map(Number)
-      if (!y || !m || !d) return null
-      const dateObj = new Date(y, m - 1, d, Number(hora || 0), Number(minuto || 0))
-      if (isNaN(dateObj.getTime())) return null
-      return format(dateObj, "EEEE d 'de' MMMM, yyyy 'a las' HH:mm 'hs'", { locale: es })
+      const isoStr = composeUTC3ISO(fechaDate, hora, minuto)
+      return formatFechaLargaUTC3(isoStr)
     } catch {
       return null
     }
@@ -119,13 +112,13 @@ export function ProximasActividadesAdmin({ initialActividades }: Props) {
       return
     }
 
-    const [year, month, day] = fechaDate.split('-').map(Number)
-    const localDate = new Date(year, month - 1, day, Number(hora || 0), Number(minuto || 0), 0)
-    if (isNaN(localDate.getTime())) {
+    // Componer la fecha explícitamente en UTC-3
+    const fechaISO = composeUTC3ISO(fechaDate, hora, minuto)
+    const dateObj = new Date(fechaISO)
+    if (isNaN(dateObj.getTime())) {
       setMessage({ type: 'error', text: 'La fecha u hora seleccionada no es válida.' })
       return
     }
-    const fechaISO = localDate.toISOString()
 
     startTransition(async () => {
       if (editingId) {
@@ -481,9 +474,7 @@ export function ProximasActividadesAdmin({ initialActividades }: Props) {
 
               return actividades.map((act) => {
                 const actDate = new Date(act.fecha)
-                const formattedDate = !isNaN(actDate.getTime())
-                  ? format(actDate, "EEEE d 'de' MMMM, yyyy 'a las' HH:mm 'hs'", { locale: es })
-                  : act.fecha
+                const formattedDate = formatFechaLargaUTC3(act.fecha)
 
                 const isEditingThis = editingId === act.id
                 const actTime = actDate.getTime()
