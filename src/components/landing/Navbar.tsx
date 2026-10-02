@@ -24,8 +24,9 @@ export function Navbar() {
   ]
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 100)
-    window.addEventListener('scroll', onScroll)
+    const onScroll = () => setScrolled(window.scrollY > 150)
+    window.addEventListener('scroll', onScroll, { passive: true })
+    onScroll()
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
@@ -74,12 +75,19 @@ export function Navbar() {
 
 
   const isHome = pathname === '/'
+  const isVisible = !isHome || scrolled
   const showSolidNavbar = !isHome || scrolled
 
   return (
     <nav
-      className={`sticky top-0 z-50 w-full transition-all duration-300 border-b border-[var(--border-subtle)] flex items-center ${
-        showSolidNavbar ? 'h-[60px]' : 'h-[72px]'
+      className={`z-50 w-full transition-all duration-300 border-b border-[var(--border-subtle)] flex items-center ${
+        isHome
+          ? `fixed top-0 left-0 ${
+              isVisible
+                ? 'translate-y-0 opacity-100 pointer-events-auto h-[60px]'
+                : '-translate-y-full opacity-0 pointer-events-none h-[72px]'
+            }`
+          : 'sticky top-0 h-[60px]'
       }`}
       style={{
         background: showSolidNavbar 

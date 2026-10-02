@@ -196,7 +196,7 @@ export function ImpactSectionClient({ actions, articles, historicalActions, prox
   const displayItems = currentYearItems.length > 0 ? currentYearItems : allFeedItems
 
   return (
-    <section id="seccion-impacto" className="pt-36 sm:pt-40 lg:pt-48 pb-16 relative overflow-hidden bg-black scroll-mt-28 sm:scroll-mt-36">
+    <section id="seccion-impacto" className="pt-24 sm:pt-28 lg:pt-32 pb-16 relative overflow-hidden bg-black scroll-mt-20 sm:scroll-mt-24">
       <div className="max-w-7xl mx-auto w-full px-6 relative z-10">
         
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 items-start">
