@@ -273,7 +273,7 @@ export default function RegistroMapaPage() {
       <div className="min-h-screen grid-bg flex items-center justify-center p-6">
         <div className="glass rounded-3xl p-10 max-w-md w-full text-center animate-fade-up">
           <Link href="/" className="inline-block mb-6 cursor-pointer hover:opacity-80 transition-opacity">
-            <Image src="/logoitectrans_v2.png" alt="ITEC" width={110} height={35} className="mx-auto" />
+            <Image src="/logoitectrans_v2.png" alt="ITEC" width={110} height={42} className="mx-auto h-auto" />
           </Link>
           <div className="text-6xl mb-6">
             {exito === 'empresa' ? '🏭' : '🎓'}
@@ -308,8 +308,8 @@ export default function RegistroMapaPage() {
             src="/logoitectrans_v2.png" 
             alt="Logo ITEC" 
             width={140} 
-            height={45} 
-            className="mx-auto"
+            height={54} 
+            className="mx-auto h-auto"
             priority
           />
         </Link>

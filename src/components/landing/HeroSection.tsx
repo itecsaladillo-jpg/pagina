@@ -144,7 +144,7 @@ export function HeroSection() {
               src="/logoitectrans_v2.png"
               alt="ITEC Saladillo"
               width={400}
-              height={150}
+              height={154}
               className="w-64 sm:w-80 md:w-96 h-auto object-contain drop-shadow-2xl relative z-10"
               priority
             />
