@@ -22,41 +22,84 @@ export function ProximasActividadesAdmin({ initialActividades }: Props) {
   // Form State
   const [titulo, setTitulo] = useState('')
   const [lugar, setLugar] = useState('')
-  const [fecha, setFecha] = useState('')
+  const [fechaDate, setFechaDate] = useState('')
+  const [hora, setHora] = useState('19')
+  const [minuto, setMinuto] = useState('00')
 
   // UI State
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
   const [deletingId, setDeletingId] = useState<string | null>(null)
   const [isPending, startTransition] = useTransition()
 
-  // Helper para convertir ISO string a formato input datetime-local (YYYY-MM-DDTHH:mm)
-  const toLocalInputValue = (isoStr: string) => {
-    try {
-      const d = new Date(isoStr)
-      if (isNaN(d.getTime())) return ''
-      const pad = (n: number) => String(n).padStart(2, '0')
-      return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`
-    } catch {
-      return ''
-    }
+  // Opciones para selectors
+  const HORAS_OPCIONES = Array.from({ length: 24 }, (_, i) => String(i).padStart(2, '0'))
+  const BASE_MINUTOS = ['00', '05', '10', '15', '20', '25', '30', '35', '40', '45', '50', '55']
+  const minutosOpciones = BASE_MINUTOS.includes(minuto)
+    ? BASE_MINUTOS
+    : Array.from(new Set([...BASE_MINUTOS, minuto])).sort()
+
+  const HORARIOS_PRESET = ['09:00', '10:00', '14:00', '16:00', '18:00', '18:30', '19:00', '19:30', '20:00', '20:30']
+
+  // Helpers de fecha rápida
+  const formatDateToYMD = (d: Date) => {
+    const pad = (n: number) => String(n).padStart(2, '0')
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`
+  }
+
+  const setFechaOffset = (daysOffset: number) => {
+    const d = new Date()
+    d.setDate(d.getDate() + daysOffset)
+    setFechaDate(formatDateToYMD(d))
   }
 
   const resetForm = () => {
     setEditingId(null)
     setTitulo('')
     setLugar('')
-    setFecha('')
+    setFechaDate('')
+    setHora('19')
+    setMinuto('00')
   }
 
   const handleStartEdit = (actividad: ProximaActividad) => {
     setEditingId(actividad.id)
     setTitulo(actividad.titulo)
     setLugar(actividad.lugar)
-    setFecha(toLocalInputValue(actividad.fecha))
+    try {
+      const d = new Date(actividad.fecha)
+      if (!isNaN(d.getTime())) {
+        const pad = (n: number) => String(n).padStart(2, '0')
+        setFechaDate(formatDateToYMD(d))
+        setHora(pad(d.getHours()))
+        setMinuto(pad(d.getMinutes()))
+      } else {
+        setFechaDate('')
+        setHora('19')
+        setMinuto('00')
+      }
+    } catch {
+      setFechaDate('')
+      setHora('19')
+      setMinuto('00')
+    }
     setMessage(null)
 
     // Scroll suave hacia el formulario
     window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  // Vista previa formateada en español
+  const getPreviewTexto = () => {
+    if (!fechaDate) return null
+    try {
+      const [y, m, d] = fechaDate.split('-').map(Number)
+      if (!y || !m || !d) return null
+      const dateObj = new Date(y, m - 1, d, Number(hora || 0), Number(minuto || 0))
+      if (isNaN(dateObj.getTime())) return null
+      return format(dateObj, "EEEE d 'de' MMMM, yyyy 'a las' HH:mm 'hs'", { locale: es })
+    } catch {
+      return null
+    }
   }
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -71,15 +114,23 @@ export function ProximasActividadesAdmin({ initialActividades }: Props) {
       setMessage({ type: 'error', text: 'Por favor completá el lugar de la actividad.' })
       return
     }
-    if (!fecha) {
-      setMessage({ type: 'error', text: 'Por favor seleccioná la fecha y hora.' })
+    if (!fechaDate) {
+      setMessage({ type: 'error', text: 'Por favor seleccioná la fecha de la actividad.' })
       return
     }
+
+    const [year, month, day] = fechaDate.split('-').map(Number)
+    const localDate = new Date(year, month - 1, day, Number(hora || 0), Number(minuto || 0), 0)
+    if (isNaN(localDate.getTime())) {
+      setMessage({ type: 'error', text: 'La fecha u hora seleccionada no es válida.' })
+      return
+    }
+    const fechaISO = localDate.toISOString()
 
     startTransition(async () => {
       if (editingId) {
         // Actualizar
-        const res = await updateActividadAction(editingId, { titulo, lugar, fecha })
+        const res = await updateActividadAction(editingId, { titulo, lugar, fecha: fechaISO })
         if (res.success && res.data) {
           setActividades((prev) =>
             prev.map((item) => (item.id === editingId ? res.data! : item))
@@ -91,7 +142,7 @@ export function ProximasActividadesAdmin({ initialActividades }: Props) {
         }
       } else {
         // Crear
-        const res = await createActividadAction({ titulo, lugar, fecha })
+        const res = await createActividadAction({ titulo, lugar, fecha: fechaISO })
         if (res.success && res.data) {
           setActividades((prev) => [...prev, res.data!].sort(
             (a, b) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime()
@@ -213,22 +264,147 @@ export function ProximasActividadesAdmin({ initialActividades }: Props) {
               </div>
             </div>
 
-            {/* FECHA */}
-            <div className="space-y-2">
-              <label htmlFor="fecha" className="block text-xs font-bold uppercase tracking-wider text-zinc-300">
-                Fecha y Hora <span className="text-rose-400">*</span>
-              </label>
-              <div className="relative">
-                <Calendar size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-500" />
-                <input
-                  id="fecha"
-                  type="datetime-local"
-                  value={fecha}
-                  onChange={(e) => setFecha(e.target.value)}
-                  required
-                  className="w-full bg-black/40 border border-white/10 rounded-xl pl-10 pr-4 py-3 text-white placeholder-zinc-500 focus:outline-none focus:border-[var(--accent-warm)] focus:ring-1 focus:ring-[var(--accent-warm)] transition-all text-sm [color-scheme:dark]"
-                />
+            {/* SECCIÓN FECHA Y HORA */}
+            <div className="md:col-span-2 bg-black/30 border border-white/10 rounded-2xl p-4 sm:p-5 space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                {/* FECHA */}
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <label htmlFor="fechaDate" className="block text-xs font-bold uppercase tracking-wider text-zinc-300">
+                      Fecha del Evento <span className="text-rose-400">*</span>
+                    </label>
+                  </div>
+
+                  <div className="relative">
+                    <Calendar size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-500 pointer-events-none" />
+                    <input
+                      id="fechaDate"
+                      type="date"
+                      value={fechaDate}
+                      onChange={(e) => setFechaDate(e.target.value)}
+                      required
+                      className="w-full bg-black/40 border border-white/10 rounded-xl pl-10 pr-4 py-3 text-white placeholder-zinc-500 focus:outline-none focus:border-[var(--accent-warm)] focus:ring-1 focus:ring-[var(--accent-warm)] transition-all text-sm [color-scheme:dark] cursor-pointer"
+                    />
+                  </div>
+
+                  {/* Atajos rápidos de fecha */}
+                  <div className="flex flex-wrap items-center gap-1.5 pt-1">
+                    <span className="text-[10px] uppercase font-bold text-zinc-500 mr-1">Atajos:</span>
+                    <button
+                      type="button"
+                      onClick={() => setFechaOffset(0)}
+                      className="text-xs px-2.5 py-1 rounded-lg border border-white/10 bg-white/5 hover:bg-white/10 text-zinc-300 hover:text-white transition-all cursor-pointer"
+                    >
+                      Hoy
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setFechaOffset(1)}
+                      className="text-xs px-2.5 py-1 rounded-lg border border-white/10 bg-white/5 hover:bg-white/10 text-zinc-300 hover:text-white transition-all cursor-pointer"
+                    >
+                      Mañana
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setFechaOffset(7)}
+                      className="text-xs px-2.5 py-1 rounded-lg border border-white/10 bg-white/5 hover:bg-white/10 text-zinc-300 hover:text-white transition-all cursor-pointer"
+                    >
+                      +7 Días
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setFechaOffset(15)}
+                      className="text-xs px-2.5 py-1 rounded-lg border border-white/10 bg-white/5 hover:bg-white/10 text-zinc-300 hover:text-white transition-all cursor-pointer"
+                    >
+                      +15 Días
+                    </button>
+                  </div>
+                </div>
+
+                {/* HORA */}
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <label className="block text-xs font-bold uppercase tracking-wider text-zinc-300">
+                      Horario de Inicio <span className="text-rose-400">*</span>
+                    </label>
+                    <span className="text-[11px] text-zinc-400 font-mono">
+                      {hora}:{minuto} hs
+                    </span>
+                  </div>
+
+                  {/* Selectores de Hora y Minuto directos (sin problemas de scroll de rueda) */}
+                  <div className="flex items-center gap-2">
+                    <div className="relative flex-1">
+                      <Clock size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-500 pointer-events-none" />
+                      <select
+                        value={hora}
+                        onChange={(e) => setHora(e.target.value)}
+                        className="w-full bg-black/40 border border-white/10 rounded-xl pl-10 pr-3 py-3 text-white focus:outline-none focus:border-[var(--accent-warm)] focus:ring-1 focus:ring-[var(--accent-warm)] transition-all text-sm appearance-none cursor-pointer [color-scheme:dark]"
+                        title="Seleccionar hora"
+                      >
+                        {HORAS_OPCIONES.map((h) => (
+                          <option key={h} value={h} className="bg-[#0b101b] text-white">
+                            {h} hs
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <span className="text-lg font-bold text-zinc-500">:</span>
+
+                    <div className="flex-1">
+                      <select
+                        value={minuto}
+                        onChange={(e) => setMinuto(e.target.value)}
+                        className="w-full bg-black/40 border border-white/10 rounded-xl px-3 py-3 text-white focus:outline-none focus:border-[var(--accent-warm)] focus:ring-1 focus:ring-[var(--accent-warm)] transition-all text-sm appearance-none cursor-pointer [color-scheme:dark]"
+                        title="Seleccionar minutos"
+                      >
+                        {minutosOpciones.map((m) => (
+                          <option key={m} value={m} className="bg-[#0b101b] text-white">
+                            {m} min
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+
+                  {/* Horarios habituales frecuentes */}
+                  <div className="flex flex-wrap items-center gap-1.5 pt-1">
+                    <span className="text-[10px] uppercase font-bold text-zinc-500 mr-1">Comunes:</span>
+                    {HORARIOS_PRESET.map((hp) => {
+                      const [hPreset, mPreset] = hp.split(':')
+                      const isSelected = hora === hPreset && minuto === mPreset
+                      return (
+                        <button
+                          key={hp}
+                          type="button"
+                          onClick={() => {
+                            setHora(hPreset)
+                            setMinuto(mPreset)
+                          }}
+                          className={`text-xs px-2 py-0.5 rounded-lg border transition-all cursor-pointer font-mono ${
+                            isSelected
+                              ? 'border-[var(--accent-warm)] bg-[var(--accent-warm)]/15 text-[var(--accent-warm)] font-bold shadow-sm'
+                              : 'border-white/10 bg-white/5 hover:bg-white/10 text-zinc-300 hover:text-white'
+                          }`}
+                        >
+                          {hp}
+                        </button>
+                      )
+                    })}
+                  </div>
+                </div>
               </div>
+
+              {/* Vista previa en vivo */}
+              {fechaDate && (
+                <div className="pt-2 border-t border-white/5 flex items-center gap-2 text-xs text-amber-300/90 bg-amber-500/5 px-3.5 py-2.5 rounded-xl border border-amber-500/20">
+                  <Calendar size={14} className="text-[var(--accent-warm)] flex-shrink-0" />
+                  <span>
+                    Programado para: <strong className="capitalize text-white">{getPreviewTexto()}</strong>
+                  </span>
+                </div>
+              )}
             </div>
           </div>
 
