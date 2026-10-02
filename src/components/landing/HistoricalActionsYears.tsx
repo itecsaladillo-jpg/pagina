@@ -169,7 +169,7 @@ export function HistoricalActionsYears({ historicalActions }: HistoricalActionsY
                   group relative text-left p-4 sm:p-5 rounded-2xl transition-all duration-300 cursor-pointer overflow-hidden border
                   ${
                     isSelected
-                      ? 'bg-gradient-to-br from-blue-600 via-cyan-600 to-blue-700 text-white border-cyan-300/80 shadow-[0_0_35px_rgba(6,182,212,0.35)] scale-[1.02]'
+                      ? 'bg-gradient-to-br from-cyan-600/80 via-blue-800/80 to-[#0a1835]/95 text-white border-cyan-400/40 shadow-[0_8px_25px_rgba(6,182,212,0.18)] scale-[1.01]'
                       : 'bg-white/[0.025] hover:bg-white/[0.07] text-slate-300 hover:text-white border-white/10 hover:border-blue-400/40 hover:shadow-[0_0_20px_rgba(59,130,246,0.15)] hover:scale-[1.01]'
                   }
                 `}
@@ -178,20 +178,20 @@ export function HistoricalActionsYears({ historicalActions }: HistoricalActionsY
                 <div 
                   className={`
                     absolute top-0 left-0 right-0 h-1 transition-all duration-300
-                    ${isSelected ? 'bg-cyan-200' : 'bg-transparent group-hover:bg-blue-400/40'}
+                    ${isSelected ? 'bg-gradient-to-r from-cyan-400 to-blue-600' : 'bg-transparent group-hover:bg-blue-400/40'}
                   `} 
                 />
 
                 {/* Tag contextual y contador */}
                 <div className="flex items-center justify-between gap-2 mb-2">
                   <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md ${
-                    isSelected ? 'bg-black/20 text-cyan-100 border border-white/20' : 'bg-white/5 text-slate-400 border border-white/5'
+                    isSelected ? 'bg-black/30 text-cyan-200 border border-cyan-400/20' : 'bg-white/5 text-slate-400 border border-white/5'
                   }`}>
                     {meta.tag}
                   </span>
                   
-                  <span className={`text-[11px] font-semibold flex items-center gap-1 ${isSelected ? 'text-cyan-100' : 'text-slate-400'}`}>
-                    <span className={`w-1.5 h-1.5 rounded-full ${isSelected ? 'bg-cyan-200 animate-ping' : 'bg-blue-400/60'}`} />
+                  <span className={`text-[11px] font-semibold flex items-center gap-1 ${isSelected ? 'text-cyan-200' : 'text-slate-400'}`}>
+                    <span className={`w-1.5 h-1.5 rounded-full ${isSelected ? 'bg-cyan-300' : 'bg-blue-400/60'}`} />
                     {yearActionsCount} {yearActionsCount === 1 ? 'hito' : 'hitos'}
                   </span>
                 </div>
@@ -202,12 +202,12 @@ export function HistoricalActionsYears({ historicalActions }: HistoricalActionsY
                     {year}
                   </span>
                   {isSelected && (
-                    <ChevronDown size={18} className="text-white animate-bounce" />
+                    <ChevronDown size={18} className="text-cyan-300/80 animate-bounce" />
                   )}
                 </div>
 
                 {/* Subtítulo del período */}
-                <p className={`text-xs mt-1.5 line-clamp-1 font-medium ${isSelected ? 'text-blue-100' : 'text-[var(--text-muted)] group-hover:text-slate-300'} transition-colors`}>
+                <p className={`text-xs mt-1.5 line-clamp-1 font-medium ${isSelected ? 'text-blue-200/80' : 'text-[var(--text-muted)] group-hover:text-slate-300'} transition-colors`}>
                   {meta.subtitle}
                 </p>
 
@@ -233,7 +233,7 @@ export function HistoricalActionsYears({ historicalActions }: HistoricalActionsY
             {/* Barra de cabecera del año activo */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-white/5">
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-blue-600 to-cyan-500 flex items-center justify-center text-white font-black text-lg shadow-lg shadow-blue-500/25 border border-cyan-300/30">
+                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-cyan-600/90 to-blue-900 flex items-center justify-center text-white font-black text-lg shadow-md shadow-blue-950/40 border border-cyan-400/30">
                   {selectedYear}
                 </div>
                 <div>
