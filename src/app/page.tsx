@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { unstable_cache } from 'next/cache';
 import nextDynamic from 'next/dynamic'
+import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 import { Navbar } from '@/components/landing/Navbar'
 import { HeroSection } from '@/components/landing/HeroSection'
 import { Footer } from '@/components/landing/Footer'
@@ -18,8 +19,6 @@ const ImpactSection = nextDynamic(() => import('@/components/landing/ImpactSecti
 const VideotecaSection = nextDynamic(() => import('@/components/landing/VideotecaSection').then(m => m.VideotecaSection))
 
 // Cachear la lectura del filesystem por 1 hora (3600s):
-// evita fs.readdirSync/fs.statSync en cada request (I/O síncrono en serverless).
-// El cache-buster ?v=mtimeMs es determinístico (sin Date.now() en SSR → sin errores de hidratación).
 const getSponsorLogos = unstable_cache(
   async () => {
     try {
@@ -48,8 +47,65 @@ const getSponsorLogos = unstable_cache(
   { revalidate: 3600 }
 );
 
+async function getInitialStreaming() {
+  try {
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.PUBLIC_SUPABASE_URL
+    const supabaseKey =
+      process.env.SUPABASE_SERVICE_ROLE_KEY ||
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
+      process.env.PUBLIC_SUPABASE_ANON_KEY
+
+    if (!supabaseUrl || !supabaseKey || !supabaseUrl.startsWith('http')) {
+      return { isActive: false, youtubeUrl: null }
+    }
+
+    const supabase = createSupabaseClient(supabaseUrl, supabaseKey, {
+      auth: { persistSession: false },
+    })
+
+    // 1. Probar streaming_config
+    try {
+      const { data: configData } = await supabase
+        .from('streaming_config')
+        .select('streaming_enabled, youtube_url')
+        .eq('id', 'default')
+        .maybeSingle()
+
+      if (configData) {
+        return {
+          isActive: Boolean(configData.streaming_enabled),
+          youtubeUrl: configData.youtube_url ? configData.youtube_url.trim() : null,
+        }
+      }
+    } catch {
+      // Fallback
+    }
+
+    // 2. Fallback api_settings (Service Role para saltar RLS)
+    const [activeRes, urlRes, enabledRes, genericUrlRes] = await Promise.all([
+      supabase.from('api_settings').select('value').eq('key', 'streaming_active').maybeSingle(),
+      supabase.from('api_settings').select('value').eq('key', 'streaming_youtube_url').maybeSingle(),
+      supabase.from('api_settings').select('value').eq('key', 'streaming_enabled').maybeSingle(),
+      supabase.from('api_settings').select('value').eq('key', 'youtube_url').maybeSingle(),
+    ])
+
+    const activeVal = enabledRes.data?.value || activeRes.data?.value
+    const urlVal = urlRes.data?.value || genericUrlRes.data?.value
+
+    return {
+      isActive: activeVal === 'true',
+      youtubeUrl: urlVal ? urlVal.trim() : null,
+    }
+  } catch {
+    return { isActive: false, youtubeUrl: null }
+  }
+}
+
 export default async function HomePage() {
-  const sponsorLogos = await getSponsorLogos();
+  const [sponsorLogos, initialStreaming] = await Promise.all([
+    getSponsorLogos(),
+    getInitialStreaming(),
+  ]);
 
   return (
     <main className="relative min-h-screen bg-black text-white pb-16">
@@ -59,7 +115,10 @@ export default async function HomePage() {
       {/* Navbar global */}
       <Navbar />
 
-      <HeroSection />
+      <HeroSection
+        initialStreamingActive={initialStreaming.isActive}
+        initialStreamingUrl={initialStreaming.youtubeUrl}
+      />
 
       {/* Secciones de contenido estructuradas limpiamente */}
       <div>

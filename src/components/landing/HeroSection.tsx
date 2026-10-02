@@ -9,7 +9,15 @@ import { MembersAccessButton } from '@/components/auth/MembersAccessButton'
 import { StreamingPlayer } from '@/components/landing/StreamingPlayer'
 import { extractYouTubeId } from '@/lib/youtube'
 
-export function HeroSection() {
+interface HeroSectionProps {
+  initialStreamingActive?: boolean
+  initialStreamingUrl?: string | null
+}
+
+export function HeroSection({
+  initialStreamingActive = false,
+  initialStreamingUrl = null,
+}: HeroSectionProps = {}) {
   const { dict } = useLanguage()
   const FRASES_HERO = [
     "Construimos futuro desde la raíz: potenciando saberes, impulsando pymes y abriendo horizontes en Saladillo. Si logramos encender la chispa de los grandes inventores de mañana, todo este viaje habrá valido la pena.",
@@ -19,8 +27,8 @@ export function HeroSection() {
   const [claseEnVivo, setClaseEnVivo] = useState(false)
   const [fraseIndex, setFraseIndex] = useState(0)
   const [isMounted, setIsMounted] = useState(false)
-  const [streamingActive, setStreamingActive] = useState(false)
-  const [streamingUrl, setStreamingUrl] = useState<string | null>(null)
+  const [streamingActive, setStreamingActive] = useState(initialStreamingActive)
+  const [streamingUrl, setStreamingUrl] = useState<string | null>(initialStreamingUrl)
 
   useEffect(() => {
     setIsMounted(true)
@@ -72,13 +80,15 @@ export function HeroSection() {
     }
   }, [])
 
-  // Fetch streaming status + suscripción en tiempo real
+  // Fetch streaming status + suscripción en tiempo real (anti-cache con timestamp)
   useEffect(() => {
     const supabase = createClient()
 
     const fetchStreamingStatus = async () => {
       try {
-        const response = await fetch('/api/streaming/status')
+        const response = await fetch(`/api/streaming/status?t=${Date.now()}`, {
+          cache: 'no-store',
+        })
         if (!response.ok) return
         const data = await response.json()
         setStreamingActive(Boolean(data.streaming_enabled ?? data.isActive))
@@ -90,7 +100,7 @@ export function HeroSection() {
 
     fetchStreamingStatus()
 
-    // Suscripción Realtime a cambios en streaming_config
+    // Suscripción Realtime a cambios en streaming_config y api_settings
     const channel = supabase
       .channel('streaming_config_realtime')
       .on(
@@ -105,6 +115,17 @@ export function HeroSection() {
             setStreamingActive(Boolean(payload.new.streaming_enabled))
             setStreamingUrl(payload.new.youtube_url || null)
           }
+        }
+      )
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'api_settings',
+        },
+        () => {
+          fetchStreamingStatus()
         }
       )
       .subscribe()

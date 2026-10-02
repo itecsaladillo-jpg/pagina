@@ -1,6 +1,7 @@
 'use server'
 
 import { createClient } from '@/lib/supabase/server'
+import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 import { getCurrentMember } from '@/services/auth'
 import { revalidatePath } from 'next/cache'
 import { extractYouTubeId } from '@/lib/youtube'
@@ -12,39 +13,60 @@ export interface StreamingStatus {
   videoId: string | null
 }
 
+function getServiceSupabase() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.PUBLIC_SUPABASE_URL
+  const key =
+    process.env.SUPABASE_SERVICE_ROLE_KEY ||
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
+    process.env.PUBLIC_SUPABASE_ANON_KEY
+
+  if (!url || !key || !url.startsWith('http')) return null
+  return createSupabaseClient(url, key, { auth: { persistSession: false } })
+}
+
 /**
  * Obtiene el estado actual del streaming para el panel de administración.
  */
 export async function getStreamingStatus(): Promise<StreamingStatus> {
   try {
-    const supabase = await createClient()
+    const adminSupabase = getServiceSupabase()
+    const supabase = adminSupabase || (await createClient())
 
     // 1. Intentar desde streaming_config
-    const { data: configData, error: configError } = await supabase
-      .from('streaming_config')
-      .select('streaming_enabled, youtube_url')
-      .eq('id', 'default')
-      .maybeSingle()
+    try {
+      const { data: configData, error: configError } = await supabase
+        .from('streaming_config')
+        .select('streaming_enabled, youtube_url')
+        .eq('id', 'default')
+        .maybeSingle()
 
-    if (!configError && configData) {
-      const isEnabled = Boolean(configData.streaming_enabled)
-      const url = configData.youtube_url || ''
-      return {
-        isActive: isEnabled,
-        streaming_enabled: isEnabled,
-        youtubeUrl: url,
-        videoId: extractYouTubeId(url),
+      if (!configError && configData) {
+        const isEnabled = Boolean(configData.streaming_enabled)
+        const url = configData.youtube_url || ''
+        return {
+          isActive: isEnabled,
+          streaming_enabled: isEnabled,
+          youtubeUrl: url,
+          videoId: extractYouTubeId(url),
+        }
       }
+    } catch {
+      // Fallback a api_settings
     }
 
     // 2. Fallback a api_settings
-    const [activeResult, urlResult] = await Promise.all([
+    const [activeResult, urlResult, enabledResult, genericUrlResult] = await Promise.all([
       supabase.from('api_settings').select('value').eq('key', 'streaming_active').maybeSingle(),
       supabase.from('api_settings').select('value').eq('key', 'streaming_youtube_url').maybeSingle(),
+      supabase.from('api_settings').select('value').eq('key', 'streaming_enabled').maybeSingle(),
+      supabase.from('api_settings').select('value').eq('key', 'youtube_url').maybeSingle(),
     ])
 
-    const isActive = activeResult.data?.value === 'true'
-    const url = urlResult.data?.value || ''
+    const activeVal = enabledResult.data?.value || activeResult.data?.value
+    const urlVal = urlResult.data?.value || genericUrlResult.data?.value
+
+    const isActive = activeVal === 'true'
+    const url = urlVal || ''
 
     return {
       isActive,
@@ -64,7 +86,7 @@ export async function getStreamingStatus(): Promise<StreamingStatus> {
 }
 
 /**
- * Guarda y actualiza de forma unificada y atómica la configuración de streaming.
+ * Guarda y actualiza de forma unificada y persistente la configuración de streaming.
  */
 export async function saveStreamingConfigAction({
   streaming_enabled,
@@ -91,44 +113,53 @@ export async function saveStreamingConfigAction({
     }
   }
 
-  const supabase = await createClient()
+  const userSupabase = await createClient()
+  const adminSupabase = getServiceSupabase()
+  const clientToUse = adminSupabase || userSupabase
 
-  // 1. Actualizar tabla principal streaming_config
-  const { error: configError } = await supabase
-    .from('streaming_config')
-    .upsert(
-      {
-        id: 'default',
-        streaming_enabled,
-        youtube_url: cleanUrl,
-        updated_at: new Date().toISOString(),
-      },
-      { onConflict: 'id' }
-    )
+  // 1. Actualizar tabla streaming_config (si existe)
+  try {
+    const { error: configError } = await clientToUse
+      .from('streaming_config')
+      .upsert(
+        {
+          id: 'default',
+          streaming_enabled,
+          youtube_url: cleanUrl,
+          updated_at: new Date().toISOString(),
+        },
+        { onConflict: 'id' }
+      )
 
-  if (configError) {
-    console.error('[saveStreamingConfigAction] Error en streaming_config:', configError.message)
-    // Continuamos para intentar guardar en api_settings como fallback si la tabla aún no fue migrada
+    if (configError) {
+      console.warn('[saveStreamingConfigAction] streaming_config upsert error:', configError.message)
+    }
+  } catch (err) {
+    console.warn('[saveStreamingConfigAction] Error en streaming_config:', err)
   }
 
-  // 2. Sincronizar en api_settings para retrocompatibilidad
+  // 2. Sincronizar en api_settings (para redundancia total y lectura garantizada)
   try {
+    const stringVal = streaming_enabled ? 'true' : 'false'
     await Promise.all([
-      supabase.from('api_settings').upsert(
-        { key: 'streaming_active', value: streaming_enabled ? 'true' : 'false' },
-        { onConflict: 'key' }
-      ),
-      supabase.from('api_settings').upsert(
-        { key: 'streaming_youtube_url', value: cleanUrl },
-        { onConflict: 'key' }
-      ),
+      clientToUse.from('api_settings').upsert({ key: 'streaming_active', value: stringVal }, { onConflict: 'key' }),
+      clientToUse.from('api_settings').upsert({ key: 'streaming_enabled', value: stringVal }, { onConflict: 'key' }),
+      clientToUse.from('api_settings').upsert({ key: 'streaming_youtube_url', value: cleanUrl }, { onConflict: 'key' }),
+      clientToUse.from('api_settings').upsert({ key: 'youtube_url', value: cleanUrl }, { onConflict: 'key' }),
     ])
   } catch (apiErr) {
     console.warn('[saveStreamingConfigAction] Warning sync api_settings:', apiErr)
   }
 
-  revalidatePath('/dashboard/streaming')
-  revalidatePath('/')
+  // 3. Revalidar todas las rutas afectadas
+  try {
+    revalidatePath('/')
+    revalidatePath('/', 'layout')
+    revalidatePath('/dashboard/streaming')
+  } catch (revalErr) {
+    console.warn('[saveStreamingConfigAction] Revalidate warning:', revalErr)
+  }
+
   return { success: true }
 }
 
