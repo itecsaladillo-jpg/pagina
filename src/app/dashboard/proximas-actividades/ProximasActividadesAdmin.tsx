@@ -447,13 +447,13 @@ export function ProximasActividadesAdmin({ initialActividades }: Props) {
 
       {/* Listado de Próximas Actividades */}
       <div className="space-y-4">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5">
           <h3 className="text-lg font-bold text-white flex items-center gap-2.5">
             <Clock size={18} className="text-[var(--accent-warm)]" />
             Actividades Programadas ({actividades.length})
           </h3>
           <span className="text-xs text-zinc-400">
-            Visible en la Pizarra del Landing Page
+            La pizarra pública muestra las <strong>3 más próximas</strong> (se ocultan pasadas 4 hs)
           </span>
         </div>
 
@@ -467,38 +467,79 @@ export function ProximasActividadesAdmin({ initialActividades }: Props) {
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-3.5">
-            {actividades.map((act) => {
-              const actDate = new Date(act.fecha)
-              const formattedDate = !isNaN(actDate.getTime())
-                ? format(actDate, "EEEE d 'de' MMMM, yyyy 'a las' HH:mm 'hs'", { locale: es })
-                : act.fecha
+            {(() => {
+              const nowMs = Date.now()
+              const CUATRO_HORAS_MS = 4 * 60 * 60 * 1000
+              const vigentesTop3Ids = actividades
+                .filter((a) => {
+                  const t = new Date(a.fecha).getTime()
+                  return !isNaN(t) && nowMs <= t + CUATRO_HORAS_MS
+                })
+                .sort((a, b) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime())
+                .slice(0, 3)
+                .map((a) => a.id)
 
-              const isEditingThis = editingId === act.id
+              return actividades.map((act) => {
+                const actDate = new Date(act.fecha)
+                const formattedDate = !isNaN(actDate.getTime())
+                  ? format(actDate, "EEEE d 'de' MMMM, yyyy 'a las' HH:mm 'hs'", { locale: es })
+                  : act.fecha
 
-              return (
-                <div
-                  key={act.id}
-                  className={`bg-[#0b101b] border rounded-2xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-all duration-300 ${
-                    isEditingThis
-                      ? 'border-[var(--accent-warm)] bg-[var(--accent-warm)]/5 ring-1 ring-[var(--accent-warm)]/30'
-                      : 'border-white/5 hover:border-white/15'
-                  }`}
-                >
-                  <div className="space-y-1.5 flex-1 min-w-0">
-                    <h4 className="text-base font-bold text-white tracking-tight truncate">
-                      {act.titulo}
-                    </h4>
-                    <div className="flex flex-wrap items-center gap-y-1.5 gap-x-4 text-xs text-zinc-400">
-                      <span className="inline-flex items-center gap-1.5 text-amber-300/90 font-medium capitalize">
-                        <Calendar size={13} className="text-[var(--accent-warm)] flex-shrink-0" />
-                        {formattedDate}
-                      </span>
-                      <span className="inline-flex items-center gap-1.5 text-zinc-300">
-                        <MapPin size={13} className="text-indigo-400 flex-shrink-0" />
-                        {act.lugar}
-                      </span>
+                const isEditingThis = editingId === act.id
+                const actTime = actDate.getTime()
+                const isEnCurso = !isNaN(actTime) && nowMs >= actTime && nowMs <= actTime + CUATRO_HORAS_MS
+                const isFinalizada = !isNaN(actTime) && nowMs > actTime + CUATRO_HORAS_MS
+                const isVisibleEnPizarra = vigentesTop3Ids.includes(act.id)
+
+                return (
+                  <div
+                    key={act.id}
+                    className={`bg-[#0b101b] border rounded-2xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-all duration-300 ${
+                      isEditingThis
+                        ? 'border-[var(--accent-warm)] bg-[var(--accent-warm)]/5 ring-1 ring-[var(--accent-warm)]/30'
+                        : isEnCurso
+                        ? 'border-emerald-500/40 bg-emerald-500/[0.03]'
+                        : 'border-white/5 hover:border-white/15'
+                    }`}
+                  >
+                    <div className="space-y-1.5 flex-1 min-w-0">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <h4 className="text-base font-bold text-white tracking-tight truncate">
+                          {act.titulo}
+                        </h4>
+
+                        {/* Badge de estado en el admin */}
+                        {isEnCurso ? (
+                          <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-[10px] font-extrabold uppercase tracking-wider">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
+                            En Curso
+                          </span>
+                        ) : isVisibleEnPizarra ? (
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-400/10 border border-amber-400/20 text-amber-300 text-[10px] font-bold">
+                            Visible en Pizarra
+                          </span>
+                        ) : isFinalizada ? (
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-zinc-800 border border-zinc-700 text-zinc-400 text-[10px] font-medium">
+                            Finalizada (+4h)
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-300 text-[10px] font-medium">
+                            En Cola
+                          </span>
+                        )}
+                      </div>
+
+                      <div className="flex flex-wrap items-center gap-y-1.5 gap-x-4 text-xs text-zinc-400">
+                        <span className="inline-flex items-center gap-1.5 text-amber-300/90 font-medium capitalize">
+                          <Calendar size={13} className="text-[var(--accent-warm)] flex-shrink-0" />
+                          {formattedDate}
+                        </span>
+                        <span className="inline-flex items-center gap-1.5 text-zinc-300">
+                          <MapPin size={13} className="text-indigo-400 flex-shrink-0" />
+                          {act.lugar}
+                        </span>
+                      </div>
                     </div>
-                  </div>
 
                   {/* Acciones: Editar y Eliminar */}
                   <div className="flex items-center gap-2 flex-shrink-0 self-end sm:self-center">
@@ -548,7 +589,8 @@ export function ProximasActividadesAdmin({ initialActividades }: Props) {
                   </div>
                 </div>
               )
-            })}
+            })
+          })()}
           </div>
         )}
       </div>
